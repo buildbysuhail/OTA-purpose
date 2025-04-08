@@ -4,13 +4,12 @@ import { useState, Fragment } from "react"
 
 import { Listbox, Transition } from "@headlessui/react"
 // import { format } from "date-fns"
-import  ERPButton  from "../../../../components/ERPComponents/erp-button";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ERPButton from "../../../../components/ERPComponents/erp-button"
+import ERPInput from "../../../../components/ERPComponents/erp-input"
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 import { Check, X, ChevronDown } from "lucide-react"
-import { User } from "./test-inv-master- devgrid"
 import { dateTrimmer } from "../../../../utilities/Utils"
-import { User1 } from "./test-inv-master-";
+import type { User1 } from "./test-inv-master-"
 
 interface DataGridProps {
   data: User1[]
@@ -44,69 +43,70 @@ export default function DataGrid({ data, onUpdateData }: DataGridProps) {
   }
 
   return (
-    <div className="border border-gray-500 rounded-md overflow-hidden">
+    <div className="border border-gray-100 rounded-md overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-muted/50">
-              <th className="text-left p-2 font-medium">Name</th>
-              <th className="text-left p-2 font-medium">Email</th>
-              <th className="text-left p-2 font-medium">Role</th>
-              <th className="text-left p-2 font-medium">Status</th>
-              <th className="text-left p-2 font-medium">Last Login</th>
-              <th className="text-left p-2 font-medium">Actions</th>
+            <tr className="bg-[#f9f9fa]">
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap">
+                Name
+              </th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap">
+                Email
+              </th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap">
+                Role
+              </th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap">
+                Status
+              </th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap">
+                Last Login
+              </th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700 border-b border-gray-100 text-sm whitespace-nowrap">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center p-4">
+                <td colSpan={6} className="text-center p-4 border-b border-gray-100">
                   No data available
                 </td>
               </tr>
             ) : (
               data.map((user) => (
-                <tr key={user.id} className="border-t border-gray-500 hover:bg-muted/50">
-                  <td className="p-2">
+                <tr key={user.id} className="hover:bg-gray-50">
+                  <td className="p-3 px-4 border-b border-r border-gray-100">
                     {editingId === user.id ? (
-                    //   <Input
-                    //     value={editValues.name || ""}
-                    //     onChange={(e) => handleEditChange("name", e.target.value)}
-                    //     className="h-8"
-                    //   />
                       <ERPInput
-                      noLabel
-                      id="name"
-                      type="text"
-                     className="h-8"
-                      value={editValues.name || ""}
-                      onChange={(e) => handleEditChange("name", e.target.value)}
-                    />
-                 
+                        noLabel
+                        id="name"
+                        type="text"
+                        className="h-8"
+                        value={editValues.name || ""}
+                        onChange={(e) => handleEditChange("name", e.target.value)}
+                      />
                     ) : (
                       user.name
                     )}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3 px-4 border-b border-r border-gray-100">
                     {editingId === user.id ? (
-                    //   <Input
-                    //     value={editValues.email || ""}
-                    //     onChange={(e) => handleEditChange("email", e.target.value)}
-                    //     className="h-8"
-                    //   />
                       <ERPInput
-                      noLabel
-                      id="email"
-                      type="text"
-                     className="h-8"
-                     value={editValues.email || ""}
-                     onChange={(e) => handleEditChange("email", e.target.value)}
-                    />
+                        noLabel
+                        id="email"
+                        type="text"
+                        className="h-8"
+                        value={editValues.email || ""}
+                        onChange={(e) => handleEditChange("email", e.target.value)}
+                      />
                     ) : (
                       user.email
                     )}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3 px-4 border-b border-r border-gray-100">
                     {editingId === user.id ? (
                       <Listbox value={editValues.role || ""} onChange={(value) => handleEditChange("role", value)}>
                         <div className="relative">
@@ -155,7 +155,7 @@ export default function DataGrid({ data, onUpdateData }: DataGridProps) {
                       user.role
                     )}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3 px-4 border-b border-r border-gray-100">
                     {editingId === user.id ? (
                       <Listbox value={editValues.status || ""} onChange={(value) => handleEditChange("status", value)}>
                         <div className="relative">
@@ -214,66 +214,39 @@ export default function DataGrid({ data, onUpdateData }: DataGridProps) {
                       </span>
                     )}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3 px-4 border-b border-r border-gray-100">
                     {editingId === user.id ? (
-                    //   <Input
-                    //     type="datetime-local"
-                    //     value={editValues.lastLogin ? new Date(editValues.lastLogin).toISOString().slice(0, 16) : ""}
-                    //     onChange={(e) => handleEditChange("lastLogin", new Date(e.target.value).toISOString())}
-                    //     className="h-8"
-                    //   />
                       <ERPDateInput
-                        noLabel            
+                        noLabel
                         className="h-8"
                         onChange={(e) => handleEditChange("lastLogin", e.target.value)}
                         value={editValues.lastLogin ? new Date(editValues.lastLogin).toISOString().slice(0, 16) : ""}
                         id="date"
                         type="date"
-                      
-                    />
-            
+                      />
                     ) : (
-                
                       dateTrimmer(`${user.lastLogin}`)
                     )}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3 px-4 border-b border-gray-100">
                     {editingId === user.id ? (
                       <div className="flex space-x-2">
-                         <ERPButton
-            type="button"
-             variant="primary"
-             className="h-8 w-8 p-0"
-          
-            startIcon={ <Check className="h-4 w-4" />}
-            onClick={saveEditing}
-           
-        />
-                      <ERPButton
-            type="button"
-             className="h-8 w-8 p-0"
-            startIcon={   <X className="h-4 w-4" />}
-            onClick={cancelEditing}
-           
-        />
-                        {/* <Button size="sm" variant="ghost" onClick={saveEditing} className="h-8 w-8 p-0">
-                          <Check className="h-4 w-4" />
-                        </Button> */}
-                        {/* <Button size="sm" variant="ghost" onClick={cancelEditing} className="h-8 w-8 p-0">
-                          <X className="h-4 w-4" />
-                        </Button> */}
+                        <ERPButton
+                          type="button"
+                          variant="primary"
+                          className="h-8 w-8 p-0"
+                          startIcon={<Check className="h-4 w-4" />}
+                          onClick={saveEditing}
+                        />
+                        <ERPButton
+                          type="button"
+                          className="h-8 w-8 p-0"
+                          startIcon={<X className="h-4 w-4" />}
+                          onClick={cancelEditing}
+                        />
                       </div>
                     ) : (
-                    //   <Button size="sm" variant="ghost" onClick={() => startEditing(user)} className="h-8">
-                    //     Edit
-                    //   </Button>
-                                  <ERPButton
-                                  type="button"
-                                   className="h-8"
-                                title="Edit"
-                                  onClick={() => startEditing(user)}
-                                 
-                              />
+                      <ERPButton type="button" className="h-8" title="Edit" onClick={() => startEditing(user)} />
                     )}
                   </td>
                 </tr>

@@ -15,7 +15,7 @@ export default function QuickCreate() {
     };
     
   return (
-    <div className="p-6 bg-white rounded-lg shadow-sm max-w-3xl mx-auto border mb-2">
+    <div className="p-6 dark:bg-dark-bg bg-white rounded-lg shadow-sm max-w-3xl mx-auto border mb-2">
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800 border-b pb-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ export default function QuickCreate() {
         {quickCreateItems.map((item, index) => (
           <button
             key={index}
-            className="flex flex-col items-center p-4 bg-gray-100 rounded-lg hover:bg-gray-300 transition-colors h-28"
+            className="flex flex-col items-center p-4 dark:bg-dark-bg-card dark:hover:bg-dark-hover-black bg-gray-100 rounded-lg hover:bg-gray-300 transition-colors h-28"
             onClick={() => handleClick(item.path)}
           >
             <div className="flex-grow flex items-center justify-center">

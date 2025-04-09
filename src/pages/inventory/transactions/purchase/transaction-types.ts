@@ -576,6 +576,7 @@ export interface TransactionFormState {
   autoCalculation?: boolean;
   priceCategory: string;
   netTotal: number;
+  netAmount: number;
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -759,7 +760,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   foreignCurrency: false,
   enableDebitAccount: false,
   enableTaxNumber: false,
-  netTotal: 0
+  netTotal: 0,
+  netAmount: 0
 }
 export interface PrintTransProps {
   masterAccount: string;

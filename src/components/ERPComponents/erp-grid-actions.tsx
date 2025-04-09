@@ -6,13 +6,12 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import { useDispatch } from 'react-redux';
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import ERPAlert from "./erp-sweet-alert";
-import ERPSweetAlert from "./erp-sweet-alert";
 import { useTranslation } from "react-i18next";
 
 type ActionType = {
   type: "link" | "popup";
   path?: string;
-  visible?: boolean,
+  visible?: boolean;
   action?: (payload: popupDataProps) => void;
 };
 
@@ -47,7 +46,7 @@ type ERPGridActionsProps = {
   edit?: ActionType;
   view?: ActionType;
   delete?: DeleteActionType;
-  itemId?: any; // Add this to pass the item ID
+  itemId?: any;
 };
 
 const api = new APIClient();
@@ -61,9 +60,9 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const dispatch = useDispatch();
-  const { t } = useTranslation('main')
+  const { t } = useTranslation('main');
+
   const handleDelete = async () => {
-    debugger;
     setIsDeleting(true);
     try {
       if (deleteAction.action) {
@@ -111,7 +110,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
           <button
             onClick={handleClick}
             disabled={type === "delete" && isDeleting}
-            className="ti-btn-link"
+            className="ti-btn-link actions-padding"
             type="button">
             {isDeleting && type === "delete" ? (
               <CircularProgress size={20} />

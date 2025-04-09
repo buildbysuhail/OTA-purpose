@@ -21,7 +21,7 @@ const ProductDetailsIndia: React.FC<{
     <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
       <div className="flex flex-wrap gap-1 border border-gray-200 rounded-md p-2">
         <div className="flex flex-wrap gap-1 w-full">
-          <div className="flex flex-1 flex-wrap gap-1 min-w-[250px]">
+          <div className="flex flex-1 flex-wrap gap-1">
             <ERPInput
               {...getFieldProps("product.minimumStock")}
               label={t("stock_min")}

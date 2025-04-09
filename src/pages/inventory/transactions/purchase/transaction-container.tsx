@@ -11,7 +11,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { isChooseVoucherEnabled } from "../../../../components/common/content/transaction-routes";
 import TransactionForm from "./transaction";
 import VoucherSelector from "../../../transaction-base/voucher-selector";
-// import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
+import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
 import { useNavigate } from "react-router-dom";
 
 const api = new APIClient();
@@ -72,7 +72,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
     voucherNo: number;
   }>({ voucherPrefix: "", formType: input.formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<{ready: boolean, input: any, data: any}>({ready: false, input: null, data: null});
-  // const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
+  const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
   const [prevState, setPrevState] = useState({
     voucherType: undefined as string | undefined,
@@ -87,14 +87,14 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
     financialYearID: undefined as number | undefined,
   });
 
-  // const goBack = async () => {
-  //   const has = await hasUnsavedChanges();
-  //   if (has) {
-  //     setIsModalOpen(true);
-  //   } else {
-  //     navigate(-1);
-  //   }
-  // };
+  const goBack = async () => {
+    const has = await hasUnsavedChanges();
+    if (has) {
+      setIsModalOpen(true);
+    } else {
+      navigate(-1);
+    }
+  };
   // const goBack = () => {
   //   navigate(-1); // Goes back to the previous page
   // };
@@ -235,8 +235,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
             ></VoucherSelector>
           }
           closeModal={() => {
-            setOpenVoucherSelector(false); 
-            // goBack() 
+            setOpenVoucherSelector(false); goBack() 
           }}
           onSubmit={() => {
             setOpenVoucherSelector(false);

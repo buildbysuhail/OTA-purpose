@@ -61,33 +61,7 @@ const BankReconciliation = () => {
   useEffect(() => {
     handleShow();
   }, [key]);
-  const handleSelectionChange = (e: any) => {
-    if (Array.isArray(e.selectedRowKeys)) {
-      const selectedKeys = e.selectedRowKeys.map((row: any) =>
-        typeof row === "object" ? row.id : row
-      );
-
-      const updatedTransactions = data.map((transaction: any) => {
-        if (selectedKeys.includes(transaction.id)) {
-          return {
-            ...transaction,
-            bankDate:
-              transaction.bankDate == null
-                ? dateChangeState === "today"
-                  ? moment().local().format("DD/MM/YYYY")
-                  : transaction.chequeDate
-                : transaction.bankDate,
-          };
-        }
-        return transaction;
-      });
-      console.log("123");
-      setData(updatedTransactions);
-      setSelectedKeys(selectedKeys);
-    } else {
-      setSelectedKeys([]);
-    }
-  };
+ 
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
@@ -156,6 +130,7 @@ const BankReconciliation = () => {
         id: index + 1,
         selected: false,
         clicked: false,
+        initialStatus: row.checkStatus,
       }));
       console.log("1234");
       setData({
@@ -242,69 +217,7 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, changeToPending: false }));
     }
   };
-  const handleSetPending = async (cellInfo: any, __data: any) => {
-    setLoading((prev) => ({ ...prev, print: true }));
-    const _data = cellInfo.data;
-    try {
-      if (_data.status === "B") {
-        ERPAlert.show({
-          icon: "info",
-          text: t("bounced_cheque_cannot_be_changed"),
-          title: "",
-        });
-        return;
-      }
-
-      if (!_data.bankDate) {
-        ERPAlert.show({
-          icon: "info",
-          text: t("bank_date_is_required"),
-          title: "",
-        });
-        return;
-      }
-
-      ERPAlert.show({
-        icon: "question",
-        text: t("change_the_transaction_to_pending"),
-        title: t("changing_to_pending"),
-        onConfirm: () => {
-          setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
-          try {
-            const res = api
-              .putAsync(Urls.bankReconciliation, {
-                chequeDate: _data.bankDate,
-                accTransactionDetailID: _data.accTransactionDetailID,
-              })
-              .then((res: any) => {
-                setData((prev: any) => {
-                  const updatedData = prev?.map((item: any) => {
-                    if (
-                      item.accTransactionDetailID ===
-                      _data.accTransactionDetailID
-                    ) {
-                      return {
-                        ...item,
-                        checkStatus: "p", // Update the status to pending
-                      };
-                    }
-                    return item;
-                  });
-                  return updatedData;
-                });
-                // dataGridRef.current?.instance().repaint()
-              });
-          } catch (error) {
-            console.error("Error updating transaction:", error);
-          } finally {
-            setLoading((prev) => ({ ...prev, print: false })); // Reset loading after API call
-          }
-        },
-      });
-    } catch (error) {
-      console.error("Error in handleSetPending:", error);
-    }
-  };
+ 
   const columns: DevGridColumn[] = useMemo(
     () => [
       {

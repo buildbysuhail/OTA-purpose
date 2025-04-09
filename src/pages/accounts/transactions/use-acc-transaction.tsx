@@ -59,6 +59,7 @@ import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
 import localData from "../../../enums/local-datas";
+import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 
 
 interface FormElementState {
@@ -769,20 +770,18 @@ export const useAccTransaction = (
   const validate = (): boolean => {
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
-      const demoExpiryDate = new Date(clientSession.demoExpiryDate);
-      const transactionDate = new Date(
-        formState.transaction.master.transactionDate
-      ); // Assuming `dtpTransDate` is a Date object
-      const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
+        const demoExpiryDate = moment(clientSession.demoExpiryDate, "DD/MM/YYYY", true);
+        const transactionDate = moment(formState.transaction.master.transactionDate);
+        const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
         .local()
         .toDate();
 
       const daysUntilExpiry = Math.floor(
-        (demoExpiryDate.getTime() - transactionDate.getTime()) /
+        (demoExpiryDate.toDate().getTime() - transactionDate.toDate().getTime()) /
           (1000 * 60 * 60 * 24)
       );
       const daysSinceSoftwareDate = Math.floor(
-        (transactionDate.getTime() - softwareDate.getTime()) /
+        (transactionDate.toDate().getTime() - softwareDate.getTime()) /
           (1000 * 60 * 60 * 24)
       );
 
@@ -1164,6 +1163,8 @@ export const useAccTransaction = (
     return master;
   };
   const preSave = async () => {
+    
+        // dispatch(formStateHandleFieldChange({fields: {prev: undefined}}));
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true

@@ -135,10 +135,6 @@ import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/rpt
 import IncomExpenseStatement from "../../../pages/accounts/reports/incomeexpense/income-expense-statement";
 import BankStatementReport from "../../../pages/accounts/reports/bank-statement-report";
 import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
-import CreditPurchaseSummaryReport from "../../../pages/accounts/reports/credit-purchase-summary-report";
-import PartyMonthwisePurchaseSummaryReport from "../../../pages/accounts/reports/Party-monthwise-purchase-summary-report";
-import PurchaseOrderTransitReport from "../../../pages/accounts/reports/Purchase-order-transit-report";
-import PurchaseTaxReport from "../../../pages/accounts/reports/Purchase-Tax-report";
 import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
 import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
@@ -148,15 +144,19 @@ import StockTransfer from "../../../pages/inventory/reports/stock-transfer-repor
 import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
 import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
 import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
-import DailyStatementAllReport from "../../../pages/accounts/reports/daily-statement-all-report ";
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
-import DailyStatementPurchaseReport from "../../../pages/accounts/reports/daily-statement-purchase-report";
-import DailySalesStatementReport from "../../../pages/accounts/reports/daily-statement-sales-report";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
 import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
+import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
+import DailyStatementAllReport from "../../../pages/inventory/reports/daily-statement-all-report/daily-statement-all-report ";
+import DailyStatementPurchaseReport from "../../../pages/inventory/reports/daily-statement-purchase-report/daily-statement-purchase-report";
+import DailySalesStatementReport from "../../../pages/inventory/reports/daily-statement-sales-report/daily-statement-sales-report";
+import PartyMonthwisePurchaseSummaryReport from "../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report";
+import PurchaseOrderTransitReport from "../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
+import PurchaseTaxReport from "../../../pages/inventory/reports/Purchase-Tax-report/Purchase-Tax-report";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));

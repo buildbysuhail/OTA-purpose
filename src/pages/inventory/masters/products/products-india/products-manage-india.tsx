@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -8,24 +8,30 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
+import { PathValue, productDto, ProductFieldPath } from "../products-type";
 
 const api = new APIClient();
+
 export const ProductManageIndia: React.FC<{
+  appSettings: ApplicationSettingsType;
   formState: any;
-  handleFieldChange: (
-    fields:
-      | string
-      | {
-        [fieldId: string]: any;
-      },
-    value?: any
-  ) => void;
+  handleFieldChange: <Path extends ProductFieldPath>(
+      fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+      value?: PathValue<productDto, Path>
+    ) => void;
 
   getFieldProps: (fieldId: string, type?: any) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
-
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings }) => {
+  
   const { t } = useTranslation("inventory");
-
+    const productNameRef = useRef<HTMLInputElement>(null);
+useEffect(() => {
+  productNameRef?.current?.focus()
+  productNameRef?.current?.select()
+},[productNameRef])
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -50,6 +56,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder={t("enter_product_code")}
                   required={false}
                   className="w-full"
+                  disabled={!getFieldProps("product.manual").value}
                   onChangeData={(data: any) => handleFieldChange("product.productCode", data.product.productCode)}
                 />
 
@@ -74,7 +81,8 @@ export const ProductManageIndia: React.FC<{
 
             <div className="flex items-center gap-1 mb-3">
               <ERPDataCombobox
-                {...getFieldProps("product.productName")}
+              ref={productNameRef}
+                {...getFieldProps("product.productId")}
                 id="productName"
                 field={{
                   id: "productName",
@@ -82,7 +90,8 @@ export const ProductManageIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_products
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
+                onTextChange={(data: any) => handleFieldChange("product.productName", data)}
+                // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
                 label={t("product_name")}
                 className="w-full"
                 required={true}
@@ -127,7 +136,7 @@ export const ProductManageIndia: React.FC<{
                     debugger;
                     handleFieldChange("product.productGroupID", data.value);
                     const sds = await api.getAsync(`${Urls.group_category__}${data.value}`);
-                    handleFieldChange("product.groupCategory", sds);
+                    handleFieldChange("product.groupCategoryID", sds);
                   }
                   }
                   label={t("product_group")}
@@ -150,7 +159,7 @@ export const ProductManageIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_groupcategory
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.groupCategory)}
+                onChangeData={(data: any) => handleFieldChange("product.groupCategoryID", data.groupCategory)}
                 label={t("group_category")}
                 className="flex-1 min-w-[240px]"
               />
@@ -212,6 +221,7 @@ export const ProductManageIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.mu")}
                 label={t("mu")}
+                disabled={!appSettings.productsSettings.allowMultiUnits}
                 // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
                 onChange={(e) => handleFieldChange('product.mu', e.target.checked)}
               />
@@ -219,6 +229,7 @@ export const ProductManageIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.mr")}
                 label={t("mr")}
+                disabled={!appSettings.productsSettings.allowMultirate}
                 // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
                 onChange={(e) => handleFieldChange('product.mr', e.target.checked)}
               />
@@ -414,15 +425,15 @@ export const ProductManageIndia: React.FC<{
 
             <div className="flex flex-wrap gap-1">
               <ERPDataCombobox
-                {...getFieldProps("product.defaultVendor")}
+                {...getFieldProps("product.defaultVendorID")}
                 field={{
-                  id: "defaultVendor",
+                  id: "defaultVendorID",
                   valueKey: "id",
                   labelKey: "name",
                   getListUrl: Urls.data_acc_ledgers,
                 }}
                 className="flex-1 min-w-[240px]"
-                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.defaultVendor)}
+                onChangeData={(data: any) => handleFieldChange("product.defaultVendorID", data.defaultVendorID)}
                 label={t("default_vendor")}
               />
 

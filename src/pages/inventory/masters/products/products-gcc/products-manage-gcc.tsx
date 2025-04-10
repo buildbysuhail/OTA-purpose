@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
@@ -10,8 +10,10 @@ import initialProductData from "../products-data";
 import { productDto } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
+import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 
 export const ProductManageGcc: React.FC<{
+  appSettings: ApplicationSettingsType;
   formState: any;
   handleFieldChange: (
     fields:
@@ -23,9 +25,13 @@ export const ProductManageGcc: React.FC<{
   ) => void;
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings }) => {
   const { t } = useTranslation("inventory");
-
+      const productNameRef = useRef<HTMLInputElement>(null);
+useEffect(() => {
+  productNameRef?.current?.focus()
+  productNameRef?.current?.select()
+},[productNameRef])
 
   return (
     <div className="w-full modal-content">
@@ -163,13 +169,17 @@ export const ProductManageGcc: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.mu")}
                 label={t("mu")}
-                onChange={(data) => handleFieldChange("product.mu", data.target.checked)}
+                disabled={!appSettings.productsSettings.allowMultiUnits}
+                // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
+                onChange={(e) => handleFieldChange('product.mu', e.target.checked)}
               />
 
               <ERPCheckbox
                 {...getFieldProps("product.mr")}
                 label={t("mr")}
-                onChange={(data) => handleFieldChange("product.mr", data.target.checked)}
+                disabled={!appSettings.productsSettings.allowMultirate}
+                // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
+                onChange={(e) => handleFieldChange('product.mr', e.target.checked)}
               />
             </div>
 

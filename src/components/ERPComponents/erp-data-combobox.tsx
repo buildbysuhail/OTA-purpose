@@ -64,6 +64,7 @@ interface ERPDataComboboxProps {
   handleChangeData?: (id: string, value: any) => void;
   onChangeData?: (data: any) => void;
   onChange?: (value: any) => void;
+  onTextChange?: (value: any) => void;
   onSelectItem?: (item?: any) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -110,6 +111,7 @@ interface ERPDataComboboxProps {
   useMUI?: boolean;
   variant?: "filled" | "outlined" | "standard" | "normal";
   localInputBox?: inputBox; // Local styling preferences
+  name?: any; 
 }
 
 interface RowProps {
@@ -371,6 +373,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       onBlur,
       onKeyDown,
       onKeyUp,
+      onTextChange,
       disableEnterNavigation,
       options,
       field,
@@ -900,6 +903,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         setDisplayValue("");
       } else {
         setInitial(final);
+        setInputValue(final?.label);
       }
       // if (value == -2 && items != undefined && items != null && items.length > 0) {
 
@@ -953,6 +957,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       if (!value.trim()) {
         setFilteredItems(items);
       }
+      onTextChange && onTextChange(value)
     };
 
     const moveToNextInputField = (event: React.KeyboardEvent<any>) => {
@@ -1660,12 +1665,19 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 autoFocus={autoFocus}
                 title={initial?.label || ""}
                 value={
-                  isOpen
-                    ? inputValue
-                    : truncateText(
-                        initial?.label || "",
-                        ref as React.RefObject<HTMLInputElement>
-                      )
+                  // isOpen
+                  //   ? 
+                  
+                  truncateText(
+                    inputValue || "",
+                    ref as React.RefObject<HTMLInputElement>
+                  )
+                    // inputValue
+                    // : 
+                    // truncateText(
+                    //     initial?.label || "",
+                    //     ref as React.RefObject<HTMLInputElement>
+                    //   )
                 }
                 readOnly={disabled}
                 disabled={disabled}
@@ -1699,7 +1711,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
               >
                 {enableClearOption &&
-                  (initial || inputValue) &&
+                  (initial) &&
                   !noXMarkIcon && (
                     <button
                       type="button"

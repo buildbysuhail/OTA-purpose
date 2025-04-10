@@ -2,7 +2,7 @@ import { productDto } from "./products-type";
 
 const initialProductData: productDto = {
   product: {
-    productID: 1,
+    productID: 0,
     productCode: "",
     productName: "",
     productGroupID: 0,
@@ -155,18 +155,14 @@ const initialProductData: productDto = {
       msp: 0
     }
   ],
-  units: [
-    
-  ],
+  units: [],
   nutrients: [
     {
       nutrients: "",
       valuePerServing: 0
     }
   ],
-  supplierProducts: [
-    
-  ],
+  supplierProducts: [],
   multiUnits: [
     // {
     //   productBatchID: 0,
@@ -189,6 +185,7 @@ const initialProductData: productDto = {
     calculateMarkUpValue: true,
     showDisplayCost: true
   },
+  productImageString: ""
 };
 
 export default initialProductData;

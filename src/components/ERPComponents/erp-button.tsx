@@ -30,6 +30,8 @@ type ERPButtonProps = {
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
+  backgroundColor?: string;
+  foreColor?: string;
   onEnterPress?: () => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -38,6 +40,8 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
     {
       title,
       disabled,
+      backgroundColor,
+      foreColor,
       loading,
       startIcon,
       onClick,
@@ -142,7 +146,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-to={jumpTo}
         data-jump-target={jumpTarget}
         style={{
-          backgroundColor: isFocused 
+          backgroundColor:backgroundColor? backgroundColor : isFocused 
           ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})` 
           : undefined,
           marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,

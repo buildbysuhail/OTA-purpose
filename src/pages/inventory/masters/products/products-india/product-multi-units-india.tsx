@@ -302,7 +302,7 @@ const ProductMultiUnitsIndia: React.FC<{
             />
 
             <Column
-              dataField="salePrice"
+              dataField="salesPrice"
               allowEditing
               caption={t("sale_price")}
               dataType="number"

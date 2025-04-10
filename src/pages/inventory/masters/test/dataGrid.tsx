@@ -1,334 +1,309 @@
-"use client"
+// dataGrid.tsx
+"use client";
 
-import { useState, Fragment, useRef, type KeyboardEvent, useEffect, type ReactNode } from "react"
-import { Listbox, Transition } from "@headlessui/react"
-import ERPInput from "../../../../components/ERPComponents/erp-input"
-import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox"
-
-import { Check, ChevronDown } from "lucide-react"
-import { dateTrimmer } from "../../../../utilities/Utils"
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../../redux/store";
+import { dateTrimmer } from "../../../../utilities/Utils";
+import { type ReactNode } from "react";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import { Loader2, Plus, Search } from "lucide-react";
+import GridPreferenceChooser from "../../../../components/ERPComponents/erp-gridpreference";
+import type { DevGridColumn, GridPreference, ColumnPreference } from "../../../../components/types/dev-grid-column";
 
 // Generic type for any data object
-type DataItem = Record<string, any>
+type DataItem = Record<string, any>;
 
 // Column definition type
 export interface ColumnDefinition<T extends DataItem> {
-  field: keyof T
-  header: string
-  width?: string
-  editable?: boolean
-  type?: "text" | "number" | "date" | "select" | "custom"
-  options?: string[] | { value: string; label: string }[]
-  formatter?: (value: any) => ReactNode
-  editor?: (props: {
-    value: any
-    onChange: (value: any) => void
-    onKeyDown: (e: KeyboardEvent) => void
-    onBlur: () => void
-    ref: (el: HTMLElement | null) => void
-  }) => ReactNode
+  field: keyof T;
+  header: string;
+  width?: string;
+  type?: "text" | "number" | "date" | "select" | "custom";
+  editable?: boolean;
+  options?: any;
+  formatter?: (value: any) => ReactNode;
 }
 
 interface DataGridProps<T extends DataItem> {
-  data: T[]
-  columns: ColumnDefinition<T>[]
-  keyField: keyof T
-  onUpdateData: (item: T) => void
-  className?: string
-}
-
-type CellPosition = {
-  rowId: string | number
-  field: string
+  data: T[];
+  columns: ColumnDefinition<T>[];
+  keyField: keyof T;
+  gridId: string; // Identifier for the table instance
+  className?: string;
+  rowHeight?: number;
+  height?: number;
+  onAddData?: (newItem: T) => void; // Optional custom add data handler
 }
 
 export default function DataGrid<T extends DataItem>({
   data,
   columns,
   keyField,
-  onUpdateData,
+  gridId,
   className = "",
+  rowHeight = 50,
+  height = 800,
+  onAddData,
 }: DataGridProps<T>) {
-  const [editingCell, setEditingCell] = useState<CellPosition | null>(null)
-  const [editValues, setEditValues] = useState<Record<string, Partial<T>>>({})
-  const inputRefs = useRef<Record<string, HTMLElement | null>>({})
+  const listRef = useRef<List>(null);
+  const appState = useAppSelector((state: RootState) => state.AppState?.appState);
 
-  // Start editing a specific cell
-  const startEditing = (rowId: string | number, field: string) => {
-    const column = columns.find((col) => col.field === field)
-    if (column && column.editable !== false) {
-      // If we don't have edit values for this row yet, initialize them
-      if (!editValues[rowId]) {
-        const item = data.find((item) => item[keyField] === rowId)
-        if (item) {
-          setEditValues((prev) => ({
-            ...prev,
-            [rowId]: { ...item },
-          }))
-        }
-      }
+  // Internal state management
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [gridPreferences, setGridPreferences] = useState<GridPreference | null>(null);
 
-      setEditingCell({ rowId, field })
+  // Define getVisibleColumns first to avoid TDZ
+  const getVisibleColumns = (): ColumnDefinition<T>[] => {
+    if (!gridPreferences?.columnPreferences) {
+      return columns;
     }
-  }
 
-  // Save the current cell and optionally move to the next cell
-  const saveCell = (rowId: string | number, moveToNext = true) => {
-    const item = data.find((item) => item[keyField] === rowId)
-    if (item && editValues[rowId]) {
-      // Update the data through the parent component
-      onUpdateData({ ...item, ...editValues[rowId] })
+    const prefMap = new Map<string, ColumnPreference>();
+    gridPreferences.columnPreferences.forEach((pref) => {
+      prefMap.set(pref.dataField, pref);
+    });
 
-      // Clear the edit values for this row to ensure we're using the updated data
-      setEditValues((prev) => {
-        const newValues = { ...prev }
-        delete newValues[rowId]
-        return newValues
+    return columns
+      .filter((col) => {
+        const pref = prefMap.get(col.field as string);
+        return !pref || pref.visible !== false;
       })
+      .map((col) => {
+        const pref = prefMap.get(col.field as string);
+        if (pref) {
+          return {
+            ...col,
+            width: pref.width ? `${pref.width}px` : col.width,
+            editable: pref.readOnly ? false : col.editable,
+          };
+        }
+        return col;
+      })
+      .sort((a, b) => {
+        const prefA = prefMap.get(a.field as string);
+        const prefB = prefMap.get(b.field as string);
+        const orderA = prefA ? prefA.displayOrder : 999;
+        const orderB = prefB ? prefB.displayOrder : 999;
+        return orderA - orderB;
+      });
+  };
 
-      if (moveToNext) {
-        moveToNextCell()
-      } else {
-        setEditingCell(null)
-      }
-    }
-  }
+  // Calculate total width of visible columns
+  const calculateTotalWidth = () => {
+    const visibleColumns = getVisibleColumns();
+    return visibleColumns.reduce((total, column) => {
+      const width = column.width ? parseInt(column.width, 10) : 150; // Default width of 150px if not specified
+      return total + width;
+    }, 0);
+  };
 
-  // Move to the next cell in the grid
-  const moveToNextCell = () => {
-    if (!editingCell) return
+  const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
 
-    const { rowId, field } = editingCell
-    const editableColumns = columns.filter((col) => col.editable !== false).map((col) => String(col.field))
-    const currentColIndex = editableColumns.indexOf(field)
-
-    // If we're at the last column, move to the first column of the next row
-    if (currentColIndex === editableColumns.length - 1) {
-      const currentRowIndex = data.findIndex((item) => item[keyField] === rowId)
-
-      // If there's a next row, move to it
-      if (currentRowIndex < data.length - 1) {
-        const nextRowId = data[currentRowIndex + 1][keyField]
-        setEditingCell({ rowId: nextRowId, field: editableColumns[0] })
-      } else {
-        // We're at the last cell of the last row
-        setEditingCell(null)
-      }
-    } else {
-      // Move to the next column in the same row
-      setEditingCell({ rowId, field: editableColumns[currentColIndex + 1] })
-    }
-  }
-
-  // Handle value changes
-  const handleEditChange = (rowId: string | number, field: string, value: any) => {
-    setEditValues((prev) => ({
-      ...prev,
-      [rowId]: { ...(prev[rowId] || {}), [field]: value },
-    }))
-  }
-
-  // Handle keyboard events
-  const handleKeyDown = (e: KeyboardEvent, rowId: string | number) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      e.stopPropagation()
-      saveCell(rowId, true)
-    } else if (e.key === "Escape") {
-      e.preventDefault()
-      setEditingCell(null)
-    } else if (e.key === "Tab") {
-      e.preventDefault()
-      saveCell(rowId, true)
-    }
-  }
-
-  // Focus the input when editing starts
+  // Update table width when columns or preferences change
   useEffect(() => {
-    if (editingCell) {
-      const refKey = `${editingCell.rowId}-${editingCell.field}`
-      setTimeout(() => {
-        const element = inputRefs.current[refKey]
-        if (element) {
-          element.focus()
-        }
-      }, 10)
-    }
-  }, [editingCell])
+    setTableWidth(calculateTotalWidth());
+  }, [columns, gridPreferences]);
 
-  // Add a blur handler to save changes when clicking outside
-  const handleBlur = (rowId: string | number) => {
-    // Small timeout to allow for click events on dropdowns
+  // Load preferences from localStorage based on gridId
+  useEffect(() => {
+    const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
+    if (savedPreferences) {
+      try {
+        setGridPreferences(JSON.parse(savedPreferences));
+      } catch (error) {
+        console.error("Error parsing saved grid preferences:", error);
+      }
+    }
+  }, [gridId]);
+
+  const visibleColumns = useMemo(() => getVisibleColumns(), [columns, gridPreferences]);
+
+  // Filter data based on search term
+  const filteredData = useMemo(() => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return data.filter((item) => {
+      return visibleColumns.some((col) => {
+        const value = item[col.field];
+        return String(value).toLowerCase().includes(searchTermLower);
+      });
+    });
+  }, [data, visibleColumns, searchTerm]);
+
+  // Add data handler (relies on onAddData prop)
+  const handleAddData = () => {
+    if (isLoading || !onAddData) return;
+    setIsLoading(true);
+    // Simulate adding a new item (customize based on your needs)
+    const newItem = { ...data[0], [keyField]: `user-${Date.now()}-${data.length}` } as T;
     setTimeout(() => {
-      if (editingCell?.rowId === rowId) {
-        saveCell(rowId, false)
-      }
-    }, 100)
-  }
+      onAddData(newItem);
+      setIsLoading(false);
+    }, 1000);
+  };
 
-  // Default cell renderers based on type
-  const renderDefaultCell = (item: T, column: ColumnDefinition<T>) => {
-    const field = String(column.field)
-    const value = item[column.field]
-    const rowId = item[keyField]
-    const isEditing = editingCell?.rowId === rowId && editingCell?.field === field
-    const refKey = `${rowId}-${field}`
+  // Handle grid preference changes
+  const handleApplyPreferences = (preferences: GridPreference) => {
+    setGridPreferences(preferences);
+    localStorage.setItem(`gridPreferences_${gridId}`, JSON.stringify(preferences));
+  };
 
-    // If column has a custom editor and we're editing, use it
-    if (isEditing && column.editor) {
-      return column.editor({
-        value: editValues[rowId]?.[column.field] ?? value,
-        onChange: (newValue) => handleEditChange(rowId, field, newValue),
-        onKeyDown: (e) => handleKeyDown(e, rowId),
-        onBlur: () => handleBlur(rowId),
-        ref: (el) => (inputRefs.current[refKey] = el),
-      })
-    }
-
-    // Otherwise use default editors based on type
-    if (isEditing) {
-      switch (column.type) {
+  // Convert columns to DevGridColumn for GridPreferenceChooser
+  const gridColumns: DevGridColumn[] = useMemo(() => {
+    return columns.map((col) => {
+      let dataType: DevGridColumn["dataType"];
+      switch (col.type) {
         case "text":
-        case "number":
-          return (
-            <ERPInput
-              noLabel
-              id={`${field}-${rowId}`}
-              type={column.type === "number" ? "number" : "text"}
-              className="h-8"
-              value={editValues[rowId]?.[column.field] ?? value}
-              onChange={(e) =>
-                handleEditChange(rowId, field, column.type === "number" ? Number(e.target.value) : e.target.value)
-              }
-              onKeyDown={(e) => handleKeyDown(e, rowId)}
-              onBlur={() => handleBlur(rowId)}
-              ref={(el) => (inputRefs.current[refKey] = el)}
-              autoFocus
-            />
-          )
-
-        case "date":
-          return (
-            <ERPDateInput
-              noLabel
-              className="h-8"
-              onChange={(e) => handleEditChange(rowId, field, e.target.value)}
-              value={
-                editValues[rowId]?.[column.field]
-                  ? new Date(editValues[rowId]?.[column.field] as string).toISOString().slice(0, 10)
-                  : value
-                    ? new Date(value as string).toISOString().slice(0, 10)
-                    : ""
-              }
-              id={`date-${rowId}`}
-              type="date"
-              onBlur={() => handleBlur(rowId)}
-              onKeyDown={(e) => handleKeyDown(e, rowId)}
-              ref={(el) => (inputRefs.current[refKey] = el)}
-            />
-          )
-
+          dataType = "string"; // Map "text" to "string"
+          break;
         case "select":
-          if (!column.options) return value
-
-          const options = column.options.map((opt) => (typeof opt === "string" ? { value: opt, label: opt } : opt))
-
-          return (
-            <ERPDataCombobox
-              noLabel
-              id={`${field}-${rowId}`}
-              field={{
-                id: `${field}-${rowId}`,
-                required: true,
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              onChange={(e) => {
-                // Handle the selected value correctly
-                handleEditChange(rowId, field, e.target.value)
-              }}
-              value={editValues[rowId]?.[column.field] ?? value}
-              className="h-8"
-              options={options}
-              onBlur={() => handleBlur(rowId)}
-              onKeyDown={(e) => handleKeyDown(e, rowId)}
-              ref={(el) => (inputRefs.current[refKey] = el)}
-            />
-          )
-
+          dataType = "string"; // Map "select" to "string" (assuming string values)
+          break;
+        case "custom":
+          dataType = "string"; // Fallback for "custom" to "string"; adjust if needed
+          break;
+        case "number":
+        case "date":
+          dataType = col.type; // Use directly if compatible
+          break;
         default:
-          return value
+          dataType = "string"; // Default to "string" if undefined or unrecognized
       }
-    }
 
-    // Display mode (not editing)
-    const isEditable = column.editable !== false
+      return {
+        dataField: col.field as string,
+        caption: col.header,
+        width: col.width ? parseInt(col.width, 10) : 150,
+        dataType: dataType,
+        alignment: "left" as const,
+        isLocked: !col.editable,
+        showInPdf: true,
+        allowEditing: col.editable ?? true,
+        allowSorting: true,
+        allowResizing: true,
+        allowFiltering: true,
+        visible: true,
+      };
+    });
+  }, [columns]);
+
+  // Cell renderer
+  const renderCell = (item: T, column: ColumnDefinition<T>) => {
+    const value = item[column.field];
     const displayValue = column.formatter
       ? column.formatter(value)
       : column.type === "date"
-        ? dateTrimmer(`${value}`)
-        : value
+      ? dateTrimmer(`${value}`)
+      : value;
 
     return (
-      <div
-        className={`w-full h-full py-2 ${isEditable ? "cursor-pointer" : ""}`}
-        onClick={() => isEditable && startEditing(rowId, field)}
+      <td
+        className="p-3 px-4 border-r border-gray-100"
+        style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
       >
-        {displayValue}
-      </div>
-    )
-  }
+        <div className="w-full h-full py-2">{displayValue}</div>
+      </td>
+    );
+  };
+
+  // Row renderer for FixedSizeList
+  const Row = ({ index, style }: ListChildComponentProps) => {
+    const item = filteredData[index];
+    return (
+      <tr
+        style={style}
+        className="flex hover:bg-gray-50 border-b border-gray-100"
+        key={String(item[keyField])}
+      >
+        {visibleColumns.map((column) => renderCell(item, column))}
+      </tr>
+    );
+  };
 
   return (
-    <div
-      className={`border border-gray-100 rounded-md overflow-hidden ${className}`}
-      onClick={(e) => {
-        // If we click on the table container but not on an input or cell, exit edit mode
-        if ((e.target as HTMLElement).classList.contains("border-gray-100")) {
-          setEditingCell(null)
-        }
-      }}
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-[#f9f9fa]">
-              {columns.map((column) => (
-                <th
-                  key={String(column.field)}
-                  className="text-left py-3 px-4 font-medium text-gray-700 border-b border-r border-gray-100 text-sm whitespace-nowrap"
-                  style={{ width: column.width }}
-                >
-                  {column.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center p-4 border-b border-gray-100">
-                  No data available
-                </td>
-              </tr>
-            ) : (
-              data.map((item) => (
-                <tr key={String(item[keyField])} className="hover:bg-gray-50">
-                  {columns.map((column, colIndex) => (
-                    <td
-                      key={`${String(item[keyField])}-${String(column.field)}`}
-                      className={`p-3 px-4 border-b ${colIndex < columns.length - 1 ? "border-r" : ""} border-gray-100`}
-                    >
-                      {renderDefaultCell(item, column)}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+    <div className={``}
+    style={{ width: `${tableWidth}px`, minWidth: `${tableWidth}px` }}>
+      {/* Toolbar */}
+      <div
+        className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-2 p-4w-full"
+      >
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-2.5 top-0.3 h-4 w-4 text-muted-foreground" />
+          <ERPInput
+            id="Search"
+            type="text"
+            placeholder="Search..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <GridPreferenceChooser
+            gridId={gridId}
+            columns={gridColumns}
+            onApplyPreferences={handleApplyPreferences}
+          />
+          <ERPButton
+            type="button"
+            className="primary shrink-0"
+            loading={isLoading}
+            startIcon={<Plus className="h-4 w-4 mr-2" />}
+            onClick={handleAddData}
+            title="Add Record"
+            disabled={!onAddData}
+          />
+        </div>
       </div>
+      <div className={`border border-gray-100 rounded-md  ${className} w-full`}
+      //  style={{ minWidth: `${tableWidth}px`,width:`${tableWidth}px` }}
+       >
+      {/* Header */}
+      <table className="w-full">
+        <thead>
+          <tr className="bg-[#f9f9fa] flex" style={{ width: `${tableWidth}px` }}>
+            {visibleColumns.map((column) => (
+              <th
+                key={String(column.field)}
+                className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-100 text-sm whitespace-nowrap"
+                style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
+              >
+                {column.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+      </table>
+
+      {/* Virtualized Body */}
+      {filteredData.length === 0 ? (
+        <div
+          className="text-center p-4 border-b border-gray-100"
+          style={{ minWidth: `${tableWidth}px`, display: "flex" }}
+        >
+          No data available
+        </div>
+      ) : isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <List
+          ref={listRef}
+          height={height}
+          itemCount={filteredData.length}
+          itemSize={rowHeight}
+          width={tableWidth}
+          className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400"
+          style={{ direction: appState?.dir === "rtl" ? "rtl" : "ltr", overflowX: "auto" }}
+        >
+          {Row}
+        </List>
+      )}
+        </div>
     </div>
-  )
+  );
 }

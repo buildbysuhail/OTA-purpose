@@ -35,6 +35,7 @@ interface DataGridProps<T extends DataItem> {
   className?: string;
   rowHeight?: number;
   height?: number;
+  isLoading?:boolean;
   onAddData?: (newItem: T) => void; // Optional custom add data handler
 }
 
@@ -47,13 +48,14 @@ export default function DataGrid<T extends DataItem>({
   rowHeight = 50,
   height = 800,
   onAddData,
+  isLoading,
 }: DataGridProps<T>) {
   const listRef = useRef<List>(null);
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
 
   // Internal state management
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [gridPreferences, setGridPreferences] = useState<GridPreference | null>(null);
 
   // Define getVisibleColumns first to avoid TDZ
@@ -136,13 +138,15 @@ export default function DataGrid<T extends DataItem>({
   // Add data handler (relies on onAddData prop)
   const handleAddData = () => {
     if (isLoading || !onAddData) return;
-    setIsLoading(true);
+    // setIsLoading(true);
     // Simulate adding a new item (customize based on your needs)
     const newItem = { ...data[0], [keyField]: `user-${Date.now()}-${data.length}` } as T;
-    setTimeout(() => {
-      onAddData(newItem);
-      setIsLoading(false);
-    }, 1000);
+    onAddData(newItem);
+    // if use this when need load to adding
+    // setTimeout(() => {
+    //   onAddData(newItem);
+    //   setIsLoading(false);
+    // }, 1000);
   };
 
   // Handle grid preference changes
@@ -201,7 +205,7 @@ export default function DataGrid<T extends DataItem>({
 
     return (
       <td
-        className="p-3 px-4 border-r border-gray-100"
+        className="p-3 px-4 border-r border-gray-300"
         style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
       >
         <div className="w-full h-full py-2">{displayValue}</div>
@@ -258,7 +262,7 @@ export default function DataGrid<T extends DataItem>({
           />
         </div>
       </div>
-      <div className={`border border-gray-100 rounded-md  ${className} w-full`}
+      <div className={`border border-gray-300 rounded-md  ${className} w-full`}
       //  style={{ minWidth: `${tableWidth}px`,width:`${tableWidth}px` }}
        >
       {/* Header */}
@@ -278,19 +282,34 @@ export default function DataGrid<T extends DataItem>({
         </thead>
       </table>
 
-      {/* Virtualized Body */}
-      {filteredData.length === 0 ? (
+      {/* Virtualized Body 
+        {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+
+          {filteredData.length === 0 ? (
         <div
-          className="text-center p-4 border-b border-gray-100"
+          className="text-center p-4 border-b border-gray-300"
           style={{ minWidth: `${tableWidth}px`, display: "flex" }}
         >
           No data available
         </div>
-      ) : isLoading ? (
+      ) :
+      */}
+     {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      ) : (
+      ) :filteredData.length === 0 ? (
+        <div
+          className="text-center p-4 border-b border-gray-300"
+          style={{ minWidth: `${tableWidth}px`, display: "flex" }}
+        >
+          No data available
+        </div>
+      ) :
+       (
         <List
           ref={listRef}
           height={height}

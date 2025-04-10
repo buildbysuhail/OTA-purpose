@@ -28,7 +28,7 @@ const generateDummyData = (count: number): User1[] => {
 
 const TestInvMaster = () => {
   const [data, setData] = useState<User1[]>([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   // Column definitions
   const allColumns: ColumnDefinition<User1>[] = [
     { field: "name", header: "Name", type: "text", editable: true, width: "150px" },
@@ -68,10 +68,12 @@ const TestInvMaster = () => {
   // Initial data load simulation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setData(generateDummyData(100000));
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+      setData(generateDummyData(100000))
+      setIsLoading(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   // Custom add data handler
   const handleAddData = (newItem: User1) => {
@@ -86,6 +88,7 @@ const TestInvMaster = () => {
         keyField="id"
         gridId="test-inv-master" // Unique identifier for this table instance
         onAddData={handleAddData}
+        isLoading={isLoading}
       />
     </div>
   );

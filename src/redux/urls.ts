@@ -332,6 +332,7 @@ const Urls = {
   excess_stock: "/Inventory/RptStockReport/ExcessStockReport/",
   shortage_stock: "/Inventory/RptStockReport/ShortageStockReport/",
   branch_transfer_out: "/Inventory/RptStockReport/BranchTransferOut/",
+  purchase_gst_daily_summary:"/api/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
   //Report End
   //Inventory Reports Starts
   //Purchase

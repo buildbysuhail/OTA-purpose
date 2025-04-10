@@ -157,6 +157,7 @@ import DailySalesStatementReport from "../../../pages/inventory/reports/daily-st
 import PartyMonthwisePurchaseSummaryReport from "../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report";
 import PurchaseOrderTransitReport from "../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/inventory/reports/Purchase-Tax-report/Purchase-Tax-report";
+import PurchaseTaxGSTDailySummary from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -470,6 +471,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
         <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
+        <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary />} />
 
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}

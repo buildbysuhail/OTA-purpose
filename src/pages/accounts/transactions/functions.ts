@@ -76,6 +76,7 @@ export const validateTransactionDate = (
   let isValid = true;
   let message = "Transaction date is valid.";
 
+
   // Financial period validation
   if (!userSession.finFrom || !userSession.finTo) {
     ERPToast.show("Invalid Financial year!", "warning");
@@ -200,6 +201,6 @@ export const setTransactionForHistory = (
       ledgerID: _formState.row.ledgerID == null || _formState.row.ledgerID == ""  || _formState.row.ledgerID == 0 ? "" : _formState.row.ledgerID,
       //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
       //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
-       projectId: _formState.row.projectId == null || _formState.row.projectId == "" || _formState.row.projectId == 0 ? "" : _formState.row.projectId },
+       projectID:  _formState.row.projectID == undefined || _formState.row.projectID == null || _formState.row.projectID == "" || _formState.row.projectID == 0 ? 0 : _formState.row.projectID },
   }
 };

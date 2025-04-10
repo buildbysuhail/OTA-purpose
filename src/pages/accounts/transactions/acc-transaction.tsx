@@ -2758,12 +2758,12 @@ debugger;
               >
                 <i className="ri-add-circle-fill pr-2 text-lg" />
                 <span className="text-amber-700">{t("add_items")}</span>
-                <span className="pl-1 text-gray-500">{t("optional")}</span>
+                <span className="pl-1 text-gray-500"></span>
               </button>
 
               {/* Billed Items */}
               <div className="bg-[#385080] mb-1 p-1 mt-[5px] rounded-sm text-white">
-                <h2 className="font-light text-sm">{t("billed_items")}</h2>
+                <h2 className="font-light text-sm">{t("line_items")}</h2>
               </div>
 
               <ErpDevGrid
@@ -2838,6 +2838,11 @@ debugger;
                 onClick={() => save()}
                 variant="secondary"
                 className="flex-1 rounded-none !m-0"
+                disabled={
+                  formState.formElements.pnlMasters?.disabled ||
+                  formState.transaction.details == null ||
+                  formState.transaction.details.length == 0
+                }
               />
               <ERPButton
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2848,6 +2853,11 @@ debugger;
                 }}
                 variant="primary"
                 className="flex-1 rounded-none !m-0"
+                disabled={
+                  formState.formElements.pnlMasters?.disabled ||
+                  formState.transaction.details == null ||
+                  formState.transaction.details.length == 0
+                }
               />
             </div>
           </div>

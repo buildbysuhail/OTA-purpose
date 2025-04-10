@@ -165,14 +165,14 @@ useEffect(() => {
               />
 
               <ERPDataCombobox
-                {...getFieldProps("product.section")}
+                {...getFieldProps("product.sectionID")}
                 field={{
                   id: "section",
                   valueKey: "id",
                   labelKey: "name",
                   getListUrl: Urls.data_sections
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.section", data.section)}
+                onChangeData={(data: any) => handleFieldChange("sectionID", data.sectionID)}
                 label={t("section")}
                 className="flex-1 min-w-[240px]"
               />
@@ -181,14 +181,14 @@ useEffect(() => {
             <div className="flex flex-wrap gap-2 mb-3">
               <div className="flex flex-1 min-w-[240px] items-center gap-2">
                 <ERPDataCombobox
-                  {...getFieldProps("product.baseUnit")}
+                  {...getFieldProps("product.basicUnitID")}
                   field={{
-                    id: "baseUnit",
+                    id: "basicUnitID",
                     valueKey: "id",
                     labelKey: "name",
                     getListUrl: Urls.data_units,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.baseUnit)}
+                  onChangeData={(data: any) => handleFieldChange("product.basicUnitID", data.BasicUnitID)}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
@@ -212,26 +212,26 @@ useEffect(() => {
 
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <ERPCheckbox
-                {...getFieldProps("product.upcBarcode")}
+                {...getFieldProps("upcBarcode")}
                 label={t("upc_barcode")}
                 // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
-                onChange={(e) => handleFieldChange('product.upcBarcode', e.target.checked)}
+                onChange={(e) => handleFieldChange('upcBarcode', e.target.checked)}
               />
 
               <ERPCheckbox
-                {...getFieldProps("product.mu")}
+                {...getFieldProps("mu")}
                 label={t("mu")}
                 disabled={!appSettings.productsSettings.allowMultiUnits}
                 // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
-                onChange={(e) => handleFieldChange('product.mu', e.target.checked)}
+                onChange={(e) => handleFieldChange('mu', e.target.checked)}
               />
 
               <ERPCheckbox
-                {...getFieldProps("product.mr")}
+                {...getFieldProps("mr")}
                 label={t("mr")}
                 disabled={!appSettings.productsSettings.allowMultirate}
                 // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
-                onChange={(e) => handleFieldChange('product.mr', e.target.checked)}
+                onChange={(e) => handleFieldChange('mr', e.target.checked)}
               />
             </div>
 
@@ -258,9 +258,9 @@ useEffect(() => {
 
               <div className="flex flex-1 min-w-[240px] items-center">
                 <ERPCheckbox
-                  {...getFieldProps("product.isWeighingScaleItem")}
+                  {...getFieldProps("product.isWeighingScale")}
                   label={t("is_weighing_scale_item")}
-                  onChange={(e) => handleFieldChange('product.isWeighingScaleItem', e.target.checked)}
+                  onChange={(e) => handleFieldChange('product.isWeighingScale', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.product.isWeighingScaleItem)}
                 />
               </div>
@@ -270,43 +270,43 @@ useEffect(() => {
           <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-4">
             <div className="flex flex-wrap gap-1 mb-3">
               <ERPInput
-                {...getFieldProps("product.purchasePrice")}
+                {...getFieldProps("product.stdPurchasePrice")}
                 label={t("purchase_price")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.purchasePrice", data.product.purchasePrice)}
+                onChangeData={(data: any) => handleFieldChange("product.stdPurchasePrice", data.product.stdPurchasePrice)}
               />
 
               <ERPInput
-                {...getFieldProps("product.salesPrice")}
+                {...getFieldProps("product.stdSalesPrice")}
                 label={t("sales_price")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.salesPrice", data.product.salesPrice)}
+                onChangeData={(data: any) => handleFieldChange("product.stdSalesPrice", data.product.stdSalesPrice)}
               />
 
               <ERPInput
-                {...getFieldProps("product.markup")}
+                {...getFieldProps("markup")}
                 label={t("markup") + "%"}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.markup", data.product.markup)}
+                onChangeData={(data: any) => handleFieldChange("markup", data.markup)}
               />
 
               <ERPInput
-                {...getFieldProps("product.displayCost")}
+                {...getFieldProps("batch.displayCost")}
                 label={t("display_cost")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.displayCost", data.product.displayCost)}
+                onChangeData={(data: any) => handleFieldChange("batch.displayCost", data.batch.displayCost)}
               />
 
               <ERPInput
@@ -320,44 +320,44 @@ useEffect(() => {
               />
 
               <ERPInput
-                {...getFieldProps("product.opStock")}
+                {...getFieldProps("batch.openingStock")}
                 label={t("op_stock")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.opStock", data.product.opStock)}
+                onChangeData={(data: any) => handleFieldChange("batch.openingStock", data.batch.openingStock)}
               />
 
               <ERPInput
-                {...getFieldProps("product.msp")}
+                {...getFieldProps("batch.msp")}
                 label={t("msp")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.msp", data.product.msp)}
+                onChangeData={(data: any) => handleFieldChange("batch.msp", data.batch.msp)}
               />
 
               <ERPInput
-                {...getFieldProps("product.stock")}
+                {...getFieldProps("batch.stock")}
                 label={t("stock")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.stock", data.product.stock)}
+                onChangeData={(data: any) => handleFieldChange("batch.stock", data.batch.stock)}
               />
             </div>
 
             <div className="mb-3">
               <ERPInput
-                {...getFieldProps("product.foreignLanguage")}
+                {...getFieldProps("product.secondLanguage")}
                 label={t("foreign_language")}
                 placeholder=""
                 required={false}
                 className="w-full"
-                onChangeData={(data: any) => handleFieldChange("product.foreignLanguage", data.product.foreignLanguage)}
+                onChangeData={(data: any) => handleFieldChange("product.secondLanguage", data.product.secondLanguage)}
               />
             </div>
 
@@ -366,37 +366,37 @@ useEffect(() => {
                 <ERPCheckbox
                   {...getFieldProps("product.batchCriteria")}
                   label={t("batch_criteria")}
-                  onChange={(e) => handleFieldChange('product.batchCriteria', e.target.checked)}
+                  onChange={(e) => handleFieldChange('batchCriteria', e.target.checked)}
                   className="flex-1 min-w-[120px]"
                 // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
                 />
               </div>
 
               <ERPDataCombobox
-                {...getFieldProps("product.batchCriteriaType")}
+                {...getFieldProps("product.batchCriteria")}
                 field={{
-                  id: "batchCriteriaType",
+                  id: "batchCriteria",
                   valueKey: "value",
                   labelKey: "label",
                   getListUrl: Urls.data_batchcriteria,
                 }}
                 className="flex-1 min-w-[120px]"
                 noLabel={true}
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.batchCriteriaType)}
+                onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.batchCriteria)}
               />
             </div>
 
             <div className="flex flex-wrap gap-2 mb-3 items-end">
               <ERPDataCombobox
-                {...getFieldProps("product.productType")}
-                id="productType"
+                {...getFieldProps("product.itemType")}
+                id="itemType"
                 field={{
-                  id: "productType",
+                  id: "itemType",
                   required: true,
                   valueKey: "value",
                   labelKey: "label",
                 }}
-                onChangeData={(data: any) => { handleFieldChange("product.productType", data.productType) }}
+                onChangeData={(data: any) => { handleFieldChange("product.itemType", data.itemType) }}
                 label={t("product_type")}
                 className="flex-1 min-w-[240px]"
                 options={[
@@ -417,7 +417,7 @@ useEffect(() => {
                 <ERPCheckbox
                   {...getFieldProps("product.details")}
                   label={t("details")}
-                  onChange={(e) => handleFieldChange('product.details', e.target.checked)}
+                  onChange={(e) => handleFieldChange('details', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
                 />
               </div>
@@ -438,13 +438,13 @@ useEffect(() => {
               />
 
               <ERPInput
-                {...getFieldProps("product.avgCost")}
+                {...getFieldProps("batch.aPC")}
                 label={t("avg_cost")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 disabled={true}
-                onChangeData={(data: any) => handleFieldChange("product.avgCost", data.product.avgCost)}
+                onChangeData={(data: any) => handleFieldChange("batch.aPC", data.batch.aPC)}
                 className="flex-1 min-w-[140px]"
               />
             </div>

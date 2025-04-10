@@ -45,7 +45,14 @@ export interface productDto {
   config: ProductLocalConfig;
   productImageString: string;
   multiUnits: ProductUnitDto[]; // newly created
-  barcode: string;
+  barcode: string;  
+  sectionID:number;
+  upcBarcode:boolean;
+  mu:boolean;
+  mr:boolean;
+  markup:number;
+  batchCriteria:boolean;
+  details:boolean;
 }
 
 export interface DeetailsDto {}
@@ -186,6 +193,8 @@ export interface ProductBatchInputDto {
   prevProductBatchID?: number;
   supplierWiseBatchCreation?: boolean;
   baseUnitRemarks: string;
+  aPC:number;
+  stock:number;
 }
 
 export type ProductBatchValidationDto = {};

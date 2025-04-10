@@ -113,7 +113,9 @@ const initialProductData: productDto = {
     selectedUnitID: 0,
     prevProductBatchID: 0,
     supplierWiseBatchCreation: true,
-    baseUnitRemarks: ""
+    baseUnitRemarks: "",
+    aPC: 0,
+    stock: 0
   },
   moreInfo: {
     id: 0,
@@ -185,7 +187,15 @@ const initialProductData: productDto = {
     calculateMarkUpValue: true,
     showDisplayCost: true
   },
-  productImageString: ""
+  productImageString: "",
+  barcode: "",
+  sectionID: 0,
+  upcBarcode: false,
+  mu: false,
+  mr: false,
+  markup: 0,
+  batchCriteria: false,
+  details: false
 };
 
 export default initialProductData;

@@ -10,7 +10,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
   const { t } = useTranslation("accountsReport")
   return (
     <div className="grid grid-cols-1 gap-4">
-      {/* Report Type Options - First Row */}
+          {/* Report Type Options - First Row
       <div className="flex items-center gap-2">
         <ERPCheckbox
           {...getFieldProps("dailySummary")}
@@ -27,9 +27,9 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           label={t("Tax Wise")}
           onChangeData={(data) => handleFieldChange("taxWise", data.taxWise)}
         />
-      </div>
+      </div> */}
 
-      {/* Report Type Options - Second Row */}
+      {/* Report Type Options - Second Row
       <div className="flex items-center gap-2">
         <ERPCheckbox
           {...getFieldProps("taxWiseHSN")}
@@ -46,9 +46,9 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           label={t("Detailed")}
           onChangeData={(data) => handleFieldChange("detailed", data.detailed)}
         />
-      </div>
+      </div> */}
 
-      {/* Report Format Options */}
+      {/* Report Format Options
       <div className="flex items-center gap-2">
         <ERPCheckbox
           {...getFieldProps("registerFormat")}
@@ -60,8 +60,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           label={t("Adv Register Format")}
           onChangeData={(data) => handleFieldChange("advRegisterFormat", data.advRegisterFormat)}
         />
-      </div>
-
+      </div> */}
       {/* Date Options */}
       <div className="flex items-center gap-2">
         <ERPCheckbox

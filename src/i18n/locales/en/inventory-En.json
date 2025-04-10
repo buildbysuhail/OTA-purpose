@@ -363,5 +363,9 @@
     "multi_barcode":"Multi Barcode",
     "cancel":"Cancel",
     "nutrients":"Nutrients",
-    "value_per_serving":"Value per serving"
+    "value_per_serving":"Value per serving",
+
+    //report
+    "purchase_gst_report":"GST Purchase Tax Report",
+    "purchase_return_gst_report":"GST Purchase Return Tax Report"
 }

@@ -122,7 +122,12 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
             labelKey: "name",
           }}
           className="w-full"
-          onSelectItem={(data) => handleFieldChange("taxCategoryID", data.value)}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              taxCategoryID: data.value,
+              taxCategoryName: data.label
+          });
+        }}
         />
       </div>
 
@@ -142,7 +147,12 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
             labelKey: "name",
           }}
           className="w-full"
-          onSelectItem={(data) => handleFieldChange("formType", data.value)}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              formTypeId: data.value,
+              formType: data.label
+          });
+        }}
         />
       </div>
 

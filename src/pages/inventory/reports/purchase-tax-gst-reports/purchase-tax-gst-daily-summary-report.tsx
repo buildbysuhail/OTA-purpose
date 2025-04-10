@@ -5,23 +5,14 @@ import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseSummaryFilter, { PurchaseSummaryFilterInitialState } from "../purchase-summary-report/purchase-summary-report-filter";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import moment from "moment";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 
 
 const PurchaseTaxGSTDailySummary = () => {
-  const { t } = useTranslation("accountsReport");
- const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
-   const userSession = useSelector((state: RootState) => state.UserSession);
-   const clientSession = useSelector((state: RootState) => state.ClientSession);
-   const applicationSettings = useSelector(
-     (state: RootState) => state.ApplicationSettings
-   );
-   const columns: DevGridColumn[] = useMemo(() => {
-     const baseColumns: DevGridColumn[] = [
+  const { t } = useTranslation("inventory");
+ const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+     const columns: DevGridColumn[] = [
        {
          dataField: "date",
          caption: t("date"),
@@ -59,7 +50,7 @@ const PurchaseTaxGSTDailySummary = () => {
        {
          dataField: "gstPercentage",
          caption: t("GST%"),
-         dataType: "string",
+         dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
@@ -220,30 +211,6 @@ const PurchaseTaxGSTDailySummary = () => {
          },
        }
      ];
-     // Filter columns based on the `visible` property
-     return baseColumns
-       .filter((column) => {
-         if (column.dataField == "exchangeRate") {
-           return filter.voucher_form !== "Import";
-         }
-         if (column.dataField == "uPI" || column.dataField == "cardAmt") {
-           return applicationSettings.accountsSettings.allowMultiPayments;
-         }
-         if (column.dataField == "printCount") {
-           return userSession.dbIdValue == "543140180640";
-         }
-         return true;
-       })
-       .map((column) => {
-         if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
-           return {
-             ...column,
-             caption: "QRPay",
-           };
-         }
-         return column;
-       });
-   }, [t, filter, userSession.dbIdValue]);
  
    const { getFormattedValue } = useNumberFormat();
    const customizeSummaryRow = useMemo(() => {
@@ -318,10 +285,12 @@ const PurchaseTaxGSTDailySummary = () => {
                  summary: false,
                }}
                columns={columns}
-               // moreOption
-               filterText="of"
+               filterText="of From Date : {fromDate} To Date : {toDate}
+               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
+               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
+               {formType > 0 && , Form Type : [formType]}"
                 moreOption
-                gridHeader={t("purchase_gst_daily_summary_report")}
+                gridHeader={t("purchase_gst_report")}
                 dataUrl={Urls.purchase_gst_daily_summary}
                 hideGridAddButton={true}
                 enablefilter={true}
@@ -333,7 +302,7 @@ const PurchaseTaxGSTDailySummary = () => {
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_gst_daily_summary_report"
+                gridId="grd_purchase_gst_daily_summary_report"
               />
             </div>
           </div>

@@ -354,7 +354,6 @@
     "barcode_(to_be_replaced)":"Barcode (to be replaced)",
     "new_barcode":"New barcode",
     "update":"Update",
-
     "multi_factor":"Multi factor",
     "sale_price":"Sale price",
     "description_fl":"Description FL",
@@ -363,5 +362,7 @@
     "multi_barcode":"Multi Barcode",
     "cancel":"Cancel",
     "nutrients":"Nutrients",
-    "value_per_serving":"Value per serving"
+    "value_per_serving":"Value per serving",
+    "purchase_gst_report":"GST Purchase Tax Report",
+    "purchase_return_gst_report":"GST Purchase Return Tax Report"
 }

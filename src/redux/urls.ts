@@ -333,6 +333,20 @@ const Urls = {
   shortage_stock: "/Inventory/RptStockReport/ShortageStockReport/",
   branch_transfer_out: "/Inventory/RptStockReport/BranchTransferOut/",
   purchase_gst_daily_summary:"/api/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
+  purchase_gst_taxwise:"/api/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
+  purchase_gst_taxwise_with_hsn:"/api/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
+  purchase_gst_monthly_summary:"/api/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
+  purchase_gst_detailed:"/api/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
+  purchase_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
+  purchase_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  purchase_return_gst_daily_summary:"/api/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
+  purchase_return_gst_taxwise:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
+  purchase_return_gst_taxwise_with_hsn:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
+  purchase_return_gst_monthly_summary:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
+  purchase_return_gst_detailed:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
+  purchase_return_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
+  purchase_return_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+
   //Report End
   //Inventory Reports Starts
   //Purchase

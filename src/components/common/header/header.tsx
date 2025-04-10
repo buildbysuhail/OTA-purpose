@@ -419,7 +419,7 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i className="ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
+                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
               </div>
             </div>
 

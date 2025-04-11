@@ -32,7 +32,7 @@ export default function MobileFooter() {
       : "text-gray-500 hover:text-[#2B3E65]"; // Gray by default, blue on hover
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+    <footer className="fixed bottom-0 left-0 right-0 bg-white border-t pt-4 border-gray-200">
       <nav className="flex justify-around items-center h-16">
         {/* <a
           href="/"
@@ -69,30 +69,15 @@ export default function MobileFooter() {
           <span className="text-xs mt-1">MENU</span>
         </button> */}
 
-        <Link
-          to="/"
-          onClick={() => handleLinkClick("/")}
-          className={`flex flex-col items-center ${getLinkClass("/")}`}
-        >
-          <i
-            className={`ti ti-home w-6 h-6 text-[23px] ${getIconAndLabelClass(
-              "/"
-            )}`}
-          ></i>
+        <Link to="/" onClick={() => handleLinkClick("/")} className={`flex flex-col items-center ${getLinkClass("/")}`}>
+          <i className={`ti ti-home w-6 h-6 text-[23px] ${getIconAndLabelClass("/")}`}></i>
           <span className={`text-xs mt-1 ${getIconAndLabelClass("/")}`}>
             HOME
           </span>
         </Link>
-        <Link
-          to="/items"
-          onClick={() => handleLinkClick("/items")}
-          className={`flex flex-col items-center ${getLinkClass("/items")}`}
-        >
-          <i
-            className={`ti ti-package w-6 h-6 text-[23px] ${getIconAndLabelClass(
-              "/items"
-            )}`}
-          ></i>
+
+        <Link to="/items" onClick={() => handleLinkClick("/items")} className={`flex flex-col items-center ${getLinkClass("/items")}`}>
+          <i className={`ti ti-package w-6 h-6 text-[23px] ${getIconAndLabelClass("/items")}`} ></i>
           <span className={`text-xs mt-1 ${getIconAndLabelClass("/items")}`}>
             ITEMS
           </span>

@@ -8,12 +8,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
-import {
-  initialPartiesData,
-  initialProjectOrJobData,
-  PartiesData,
-  ProjectOrJob,
-} from "./parties-manage-type";
+import { initialPartiesData, initialProjectOrJobData, PartiesData, ProjectOrJob, } from "./parties-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
@@ -24,9 +19,6 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { convertFileToBase64 } from "../../../../utilities/file-utils";
 import ErpCropper from "../../../../components/ERPComponents/erp-cropper";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { DataGrid } from "devextreme-react";
-import { Paging, Pager, Column } from "devextreme-react/cjs/data-grid";
-import customers from "./customers";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -42,14 +34,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const rootState = useRootState();
     const dispatch = useDispatch();
     const userSession = useSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useSelector(
-      (state: RootState) => state.ApplicationSettings
-    );
+    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isIndianCompany = userSession.countryId === Countries.India;
     const [isTCSApplicable, setIsTCSApplicable] = useState(false);
-    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(
-      initialProjectOrJobData.data
-    );
+    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(initialProjectOrJobData.data);
     const [image, setImage] = useState<string>("#");
 
     const {
@@ -63,16 +51,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       formState,
     } = useFormManager<PartiesData>({
       url: Urls.parties,
-      onClose: useCallback(
-        () =>
-          dispatch(toggleParties({ isOpen: false, key: null, reload: false })),
-        [dispatch]
-      ),
-      onSuccess: useCallback(
-        () =>
-          dispatch(toggleParties({ isOpen: false, key: null, reload: true })),
-        [dispatch]
-      ),
+      onClose: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: false })), [dispatch]),
+      onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.parties.key,
       useApiClient: true,
       initialData: {
@@ -138,9 +118,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleDownload = async (fileData: number) => {
       ERPToast.show("Download started...", "success");
       try {
-        const url = `${
-          Urls.acc_attachmentInfo_download
-        }?fileKey=${encodeURIComponent(fileData)}`;
+        const url = `${Urls.acc_attachmentInfo_download
+          }?fileKey=${encodeURIComponent(fileData)}`;
         const res = await api.getNativeAsync(url, undefined, {
           responseType: "blob", // Ensure the response is treated as a binary blob
         });
@@ -223,22 +202,20 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           dataField: "actions",
           caption: t("actions"),
           isLocked: true,
-          
           allowSearch: false,
           allowFiltering: false,
           fixed: true,
           fixedPosition: "right",
           width: 50,
-          
           cellRender: (cellElement: any, cellInfo: any) => {
             debugger;
             return (
               <ERPGridActions
-                view={{visible: false, type:"link"}}
-                edit={{visible: false, type:"link"}}
+                view={{ visible: false, type: "link" }}
+                edit={{ visible: false, type: "link" }}
                 delete={
                   {
-                    onSuccess: () => { setProjectsLoad(true)},
+                    onSuccess: () => { setProjectsLoad(true) },
                     visible: true,
                     confirmationRequired: true,
                     confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
@@ -250,8 +227,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             );
           },
         },
-      ],
-      [t]
+      ], [t]
     );
     const [projectOnAction, setProjectOnAction] = useState<boolean>(false);
     const [projectsLoad, setProjectsLoad] = useState<boolean>(true);
@@ -262,7 +238,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       address2: string;
       address3: string;
     }>({
-    projectId: 0,
+      projectId: 0,
       projectName: "",
       address1: "",
       address2: "",
@@ -271,14 +247,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const loadProject = async (event: any) => {
       try {
         setProject(event.data);
-      } catch (error) {}
+      } catch (error) { }
     };
     const saveProject = async () => {
       try {
-        
         setProjectOnAction(true);
-        const response = await api.postAsync(Urls.party_projects, {...project,partyId: formState.data.partyID});
-        
+        const response = await api.postAsync(Urls.party_projects, { ...project, partyId: formState.data.partyID });
         setProjectOnAction(false);
         handleResponse(response, () => {
           setProjectsLoad(true);
@@ -289,8 +263,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         alert("Error saving project.");
       }
     };
-
-    
 
     // Clear Form
     const clearForm = () => {
@@ -349,6 +321,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("arabicName", data.arabicName)
               }
             />
+
             <ERPInput
               {...getFieldProps("ledgerName")}
               label={t("ledger_name")}
@@ -359,6 +332,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("ledger_name", data.ledgerName)
               }
             />
+
             <ERPDataCombobox
               {...getFieldProps("partyCategoryID")}
               field={{
@@ -372,8 +346,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCategoryID", data.partyCategoryID);
               }}
               label={t("party_category")}
-              // disabled={true}
+            // disabled={true}
             />
+
             <ERPDataCombobox
               {...getFieldProps("accGroupID")}
               field={{
@@ -389,6 +364,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("acc_group")}
               disabled={true}
             />
+
             <ERPInput
               {...getFieldProps("address1")}
               label={t("address")}
@@ -398,6 +374,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("address1", data.address1)
               }
             />
+
             <ERPInput
               {...getFieldProps("mobilePhone")}
               label={t("mobile_phone")}
@@ -407,6 +384,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("mobilePhone", data.mobilePhone)
               }
             />
+
             <ERPDataCombobox
               {...getFieldProps("salesRouteID")}
               field={{
@@ -421,6 +399,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }}
               label={t("sales_route")}
             />
+
             <ERPInput
               {...getFieldProps("taxNumber")}
               label={isIndianCompany ? t("gst_number") : t("tax_number")}
@@ -430,6 +409,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("taxNumber", data.taxNumber)
               }
             />
+
             <ERPInput
               {...getFieldProps("cstNumber")}
               label={t("cr_no")}
@@ -439,6 +419,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("cstNumber", data.cstNumber)
               }
             />
+
             <ERPInput
               {...getFieldProps("creditDays", "int")}
               min={0}
@@ -450,6 +431,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("creditDays", parseInt(data.creditDays))
               }
             />
+
             <ERPInput
               {...getFieldProps("creditAmount", "decimal")}
               min={0}
@@ -461,6 +443,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("creditAmount", parseFloat(data.creditAmount))
               }
             />
+
             <div className="flex gap-4">
               <ERPInput
                 {...getFieldProps("opBalance", "int")}
@@ -474,6 +457,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("opBalance", parseFloat(data.opBalance))
                 }
               />
+
               <div className="">
                 <ERPDataCombobox
                   {...getFieldProps("drCr")}
@@ -494,6 +478,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 />
               </div>
             </div>
+
             <ERPCheckbox
               {...getFieldProps("billwiseBillApplicable")}
               label={t("bill_wise_applicable")}
@@ -504,6 +489,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 )
               }
             />
+
             <ERPCheckbox
               {...getFieldProps("isActive")}
               label={t("is_active")}
@@ -511,6 +497,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("isActive", data.isActive)
               }
             />
+
             <ERPCheckbox
               {...getFieldProps("isCommon")}
               label={t("is_common")}
@@ -537,6 +524,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }}
                   label={t("referred_by")}
                 />
+
                 <ERPInput
                   {...getFieldProps("address4")}
                   label={t("ifsc")}
@@ -546,6 +534,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("address4", data.address4)
                   }
                 />
+
                 <ERPInput
                   {...getFieldProps("panNo")}
                   label={t("pan_no")}
@@ -555,6 +544,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("panNo", data.panNo)
                   }
                 />
+
                 <ERPInput
                   {...getFieldProps("aadharNo")}
                   label={t("aadhar_no")}
@@ -564,6 +554,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("aadharNo", data.aadharNo)
                   }
                 />
+
                 <ERPDataCombobox
                   {...getFieldProps("registrationType")}
                   field={{
@@ -586,42 +577,22 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Composite", label: "Composite" },
                     { value: "Unregistered", label: "Unregistered" },
                     { value: "Unregistered+RCM", label: "Unregistered+RCM" },
-                    {
-                      value: "Foreign non-Resident Taxpayer",
-                      label: "Foreign non-Resident Taxpayer",
-                    },
-                    {
-                      value: "Input Service distributor",
-                      label: "Input Service distributor",
-                    },
+                    { value: "Foreign non-Resident Taxpayer", label: "Foreign non-Resident Taxpayer", },
+                    { value: "Input Service distributor", label: "Input Service distributor", },
                     { value: "Tax Deductor", label: "Tax Deductor" },
-                    {
-                      value: "E-commerce Operator",
-                      label: "E-commerce Operator",
-                    },
-                    {
-                      value: "Government Departments",
-                      label: "Government Departments",
-                    },
-                    {
-                      value: "SEZ supplies with payment",
-                      label: "SEZ supplies with payment",
-                    },
-                    {
-                      value: "SEZ supplies without payment",
-                      label: "SEZ supplies without payment",
-                    },
+                    { value: "E-commerce Operator", label: "E-commerce Operator", },
+                    { value: "Government Departments", label: "Government Departments", },
+                    { value: "SEZ supplies with payment", label: "SEZ supplies with payment", },
+                    { value: "SEZ supplies without payment", label: "SEZ supplies without payment", },
                     { value: "Deemed Export", label: "Deemed Export" },
-                    {
-                      value: "Intra-State supplies attracting IGST",
-                      label: "Intra-State supplies attracting IGST",
-                    },
+                    { value: "Intra-State supplies attracting IGST", label: "Intra-State supplies attracting IGST", },
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
                 />
               </>
             )}
           </div>
+
           <div className="flex align-center justify-end mt-3">
             <ERPButton
               type="reset"
@@ -637,17 +608,33 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             value="address"
             className="dark:text-dark-text"
           />
-          <Tab label={t("bank")} value="bank" className="dark:text-dark-text" />
+
+          <Tab
+            label={t("bank")}
+            value="bank"
+            className="dark:text-dark-text"
+          />
+
           <Tab
             label={t("details")}
             value="details"
             className="dark:text-dark-text"
           />
-          <Tab label={t("more")} value="more" className="dark:text-dark-text" />
-          <Tab label="Project/Job" value="project_job" />
+
+          <Tab
+            label={t("more")}
+            value="more"
+            className="dark:text-dark-text"
+          />
+
+          <Tab
+            label="Project/Job"
+            value="project_job"
+          />
+
           {userSession.countryId != Countries.India &&
             applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
-              true && (
+            true && (
               <Tab
                 label={t("other")}
                 value="other_details"
@@ -676,6 +663,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("address2", data.address2)
                 }
               />
+
               {userSession.countryId != Countries.India && (
                 <ERPInput
                   {...getFieldProps("address3")}
@@ -687,6 +675,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }
                 />
               )}
+
               {userSession.countryId == Countries.India && (
                 <ERPInput
                   {...getFieldProps("address3")}
@@ -698,6 +687,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }
                 />
               )}
+
               {userSession.countryId != Countries.India && (
                 <ERPInput
                   {...getFieldProps("address4")}
@@ -709,6 +699,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }
                 />
               )}
+
               <ERPInput
                 {...getFieldProps("officePhone")}
                 label={t("office_phone")}
@@ -718,6 +709,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("officePhone", data.officePhone)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("workPhone")}
                 label={t("work_phone")}
@@ -727,6 +719,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("workPhone", data.workPhone)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("contactPhone")}
                 label={t("contact_phone")}
@@ -736,6 +729,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("contactPhone", data.contactPhone)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("email")}
                 label={t("email")}
@@ -746,6 +740,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("email", data.email)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("webURL")}
                 label={t("website")}
@@ -755,6 +750,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("webURL", data.webURL)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("postalCode")}
                 label={t("postal_code")}
@@ -766,6 +762,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               />
             </div>
           )}
+
           {activeTab === "bank" && (
             <>
               <div className="flex align-center gap-3">
@@ -783,6 +780,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcNumber1", data.bankAcNumber1)
                       }
                     />
+
                     <ERPInput
                       {...getFieldProps("bankAcName1")}
                       label={t("account_name")}
@@ -792,6 +790,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcName1", data.bankAcName1)
                       }
                     />
+
                     <ERPInput
                       {...getFieldProps("bankDetails1")}
                       label={t("remarks")}
@@ -818,6 +817,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcNumber2", data.bankAcNumber2)
                       }
                     />
+
                     <ERPInput
                       {...getFieldProps("bankAcName2")}
                       label={t("account_name")}
@@ -827,6 +827,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcName2", data.bankAcName2)
                       }
                     />
+
                     <ERPInput
                       {...getFieldProps("bankDetails2")}
                       label={t("remarks")}
@@ -841,235 +842,224 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               </div>
             </>
           )}
-          {activeTab === "details" && (
-            <div className="grid grid-cols-2 gap-6 mt-5">
-              <div className="grid grid-cols-2 gap-6 p-5 dark:!border-dark-border border rounded-lg">
-                <ERPDateInput
-                  {...getFieldProps("startDate")}
-                  label={t("start_date")}
-                  required={true}
-                  onChangeData={(data: any) =>
-                    handleFieldChange("startDate", data.startDate)
-                  }
-                />
-                <ERPDateInput
-                  {...getFieldProps("expiryDate")}
-                  label={t("exp_date")}
-                  required={true}
-                  onChangeData={(data: any) =>
-                    handleFieldChange("expiryDate", data.expiryDate)
-                  }
-                />
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="fileInput"
-                    className="text-sm  dark:text-dark-text  text-gray-700"
-                  >
-                    {t("document_1")}
-                  </label>
 
-                  <div className="flex flex-col gap-2 ">
-                    <input
-                      type="file"
-                      id="document1Key"
-                      name="document1Key"
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        if (files != undefined && files.length > 0) {
-                          convertFileToBase64(files[0]).then((base64) => {
-                            handleFileUpload("document1Key", base64);
-                          });
-                        }
-                      }}
-                      disabled={fileLoading}
-                      className="border rounded-lg p-2"
-                    />
-                    {fileLoading && (
-                      <div className="flex items-center">
-                        <CircularProgress
-                          className=""
-                          color="inherit"
-                          size={14}
+          {activeTab === "details" && (
+            <div className="w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-5">
+                <div className="p-4 md:p-5 border rounded-lg dark:border-dark-border">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                    <div className="w-full">
+                      <ERPDateInput
+                        {...getFieldProps("startDate")}
+                        label={t("start_date")}
+                        required={true}
+                        onChangeData={(data) => handleFieldChange("startDate", data.startDate)}
+                      />
+                    </div>
+
+                    <div className="w-full">
+                      <ERPDateInput
+                        {...getFieldProps("expiryDate")}
+                        label={t("exp_date")}
+                        required={true}
+                        onChangeData={(data) => handleFieldChange("expiryDate", data.expiryDate)}
+                      />
+                    </div>
+
+                    <div className="w-full flex flex-col gap-2">
+                      <label htmlFor="document1Key" className="text-sm text-gray-700 dark:text-dark-text">  {t("document_1")}</label>
+
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="file"
+                          id="document1Key"
+                          name="document1Key"
+                          onChange={(e) => {
+                            const files = e.target.files;
+                            if (files != undefined && files.length > 0) {
+                              convertFileToBase64(files[0]).then((base64) => {
+                                handleFileUpload("document1Key", base64);
+                              });
+                            }
+                          }}
+                          disabled={fileLoading}
+                          className="w-full border rounded-lg p-2 text-sm"
+                        />
+                        {fileLoading && (
+                          <div className="flex items-center">
+                            <CircularProgress className="" color="inherit" size={14} />
+                          </div>
+                        )}
+                      </div>
+
+                      {formState?.data?.document1Key && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-sm text-gray-700 dark:text-dark-text">
+                            {t("uploaded_file")}
+                          </span>
+                          <a
+                            href="#"
+                            onClick={() =>
+                              handleDownload(formState?.data?.document1Key)
+                            }
+                            download
+                            className="text-blue-600 hover:text-blue-800 underline text-sm"
+                          >
+                            {t("download")}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-full flex flex-col gap-2">
+                      <label htmlFor="document2Key" className="text-sm text-gray-700 dark:text-dark-text">  {t("document_2")}</label>
+                      <input
+                        type="file"
+                        id="document2Key"
+                        name="document2Key"
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (files != undefined && files.length > 0) {
+                            convertFileToBase64(files[0]).then((base64) => {
+                              handleFileUpload("document2Key", base64);
+                            });
+                          }
+                        }}
+                        className="w-full border rounded-lg p-2 text-sm"
+                      />
+
+                      {formState?.data?.document2Key && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-sm text-gray-700 dark:text-dark-text">
+                            {t("uploaded_file")}
+                          </span>
+                          <a href="#" onClick={() => handleDownload(formState?.data?.document2Key)} download className="text-blue-600 hover:text-blue-800 underline text-sm">
+                            {t("download")}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {isIndianCompany && (
+                  <div className="p-4 md:p-5 border rounded-lg">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                      <div className="w-full">
+                        <ERPCheckbox
+                          {...getFieldProps("isTCSApplicable")}
+                          label={t("is_tcs_applicable")}
+                          onChangeData={(data) => {
+                            handleFieldChange("isTCSApplicable", data.isTCSApplicable);
+                            setIsTCSApplicable(data.isTCSApplicable);
+                          }}
                         />
                       </div>
-                    )}
+
+                      <div className="w-full">
+                        <ERPDataCombobox
+                          {...getFieldProps("tcsCategoryID")}
+                          field={{
+                            id: "tcsCategoryID",
+                            required: false,
+                            getListUrl: Urls.account_party_category,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          onChangeData={(data) => handleFieldChange("tcsCategoryID", data.tcsCategoryID)}
+                          label={t("tcs_category")}
+                          disabled={!isTCSApplicable}
+                        />
+                      </div>
+
+                      <div className="w-full">
+                        <ERPDataCombobox
+                          {...getFieldProps("stateCode")}
+                          field={{
+                            id: "stateCode",
+                            required: false,
+                            getListUrl: Urls.data_states,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          onChange={(data) => {
+                            handleFieldChange({
+                              stateName: data !== null && data !== undefined ? data.label.toString() : "",
+                              stateCode: data !== null && data !== undefined ? data.value.toString() : "",
+                            });
+                          }}
+                          label={t("state_name")}
+                        />
+                      </div>
+
+                      {/* State Code */}
+                      <div className="w-full">
+                        <ERPInput
+                          {...getFieldProps("stateCode")}
+                          label={t("state_code")}
+                          disabled={true}
+                          placeholder={t("state_code")}
+                          required={false}
+                          onChangeData={(data) => handleFieldChange("stateCode", data.stateCode)}
+                        />
+                      </div>
+
+                      <div className="w-full">
+                        <ERPCheckbox
+                          {...getFieldProps("stopCredit")}
+                          label={t("stop_credit")}
+                          onChangeData={(data) => handleFieldChange("stopCredit", data.stopCredit)}
+                        />
+                      </div>
+                    </div>
                   </div>
-
-                  {formState?.data?.document1Key && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm dark:text-dark-text  text-gray-700">
-                        {t("uploaded_file")}
-                      </span>
-                      <a
-                        href="#"
-                        onClick={() =>
-                          handleDownload(formState?.data?.document1Key)
-                        }
-                        download
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
-                        {t("download")}
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="fileInput"
-                    className="text-sm dark:text-dark-text  text-gray-700"
-                  >
-                    {t("document_2")}
-                  </label>
-                  <input
-                    type="file"
-                    id="document2Key"
-                    name="document2Key"
-                    onChange={(e) => {
-                      const files = e.target.files;
-                      if (files != undefined && files.length > 0) {
-                        convertFileToBase64(files[0]).then((base64) => {
-                          handleFileUpload("document2Key", base64);
-                        });
-                      }
-                    }}
-                    className="border rounded-lg p-2"
-                  />
-                  {formState?.data?.document2Key && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm dark:text-dark-text  text-gray-700">
-                        {t("uploaded_file")}
-                      </span>
-                      <a
-                        href="#"
-                        onClick={() =>
-                          handleDownload(formState?.data?.document2Key)
-                        }
-                        download
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
-                        {t("download")}
-                      </a>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-              {isIndianCompany && (
-                <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
-                  <>
-                    <ERPCheckbox
-                      {...getFieldProps("isTCSApplicable")}
-                      label={t("is_tcs_applicable")}
-                      onChangeData={(data: any) => {
-                        handleFieldChange(
-                          "isTCSApplicable",
-                          data.isTCSApplicable
-                        );
-                        setIsTCSApplicable(data.isTCSApplicable);
-                      }}
-                    />
-                    <ERPDataCombobox
-                      {...getFieldProps("tcsCategoryID")}
-                      field={{
-                        id: "tcsCategoryID",
-                        required: false,
-                        getListUrl: Urls.account_party_category,
-                        valueKey: "id",
-                        labelKey: "name",
-                      }}
-                      onChangeData={(data: any) =>
-                        handleFieldChange("tcsCategoryID", data.tcsCategoryID)
-                      }
-                      label={t("tcs_category")}
-                      disabled={!isTCSApplicable}
-                    />
-                    <ERPDataCombobox
-                      {...getFieldProps("stateCode")}
-                      field={{
-                        id: "stateCode",
-                        required: false,
-                        getListUrl: Urls.data_states,
-                        valueKey: "id",
-                        labelKey: "name",
-                      }}
-                      onChange={(data: any) => {
-                        handleFieldChange({
-                          stateName:
-                            data !== null && data !== undefined
-                              ? data.label.toString()
-                              : "",
-                          stateCode:
-                            data !== null && data !== undefined
-                              ? data.value.toString()
-                              : "",
-                        });
-                      }}
-                      label={t("state_name")}
-                    />
-                    <ERPInput
-                      {...getFieldProps("stateCode")}
-                      label={t("state_code")}
-                      disabled={true}
-                      placeholder={t("state_code")}
-                      required={false}
-                      onChangeData={(data: any) =>
-                        handleFieldChange("stateCode", data.stateCode)
-                      }
-                    />
-                    <ERPCheckbox
-                      {...getFieldProps("stopCredit")}
-                      label={t("stop_credit")}
-                      onChangeData={(data: any) =>
-                        handleFieldChange("stopCredit", data.stopCredit)
-                      }
-                    />
-                  </>
-                </div>
-              )}
             </div>
           )}
+
           {activeTab === "more" && (
             <>
               {/* <div className="border p-4 rounded-lg mt-5">
-      <h6>Payment Day</h6>
-      <div className="grid grid-cols-7 gap-6 mt-3">
-        <ERPCheckbox
-          {...getFieldProps("sunday")}
-          label={t("sunday")}
-          onChangeData={(data: any) => handleFieldChange("sunday", data.sunday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("monday")}
-          label={t("monday")}
-          onChangeData={(data: any) => handleFieldChange("monday", data.monday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("tuesday")}
-          label={t("tuesday")}
-          onChangeData={(data: any) => handleFieldChange("tuesday", data.tuesday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("wednesday")}
-          label={t("wednesday")}
-          onChangeData={(data: any) => handleFieldChange("wednesday", data.wednesday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("thursday")}
-          label={t("thursday")}
-          onChangeData={(data: any) => handleFieldChange("thursday", data.thursday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("friday")}
-          label={t("friday")}
-          onChangeData={(data: any) => handleFieldChange("friday", data.friday)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("saturday")}
-          label={t("saturday")}
-          onChangeData={(data: any) => handleFieldChange("saturday", data.saturday)}
-        />
-      </div>
-    </div> */}
+                      <h6>Payment Day</h6>
+                      <div className="grid grid-cols-7 gap-6 mt-3">
+                        <ERPCheckbox
+                          {...getFieldProps("sunday")}
+                          label={t("sunday")}
+                          onChangeData={(data: any) => handleFieldChange("sunday", data.sunday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("monday")}
+                          label={t("monday")}
+                          onChangeData={(data: any) => handleFieldChange("monday", data.monday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("tuesday")}
+                          label={t("tuesday")}
+                          onChangeData={(data: any) => handleFieldChange("tuesday", data.tuesday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("wednesday")}
+                          label={t("wednesday")}
+                          onChangeData={(data: any) => handleFieldChange("wednesday", data.wednesday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("thursday")}
+                          label={t("thursday")}
+                          onChangeData={(data: any) => handleFieldChange("thursday", data.thursday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("friday")}
+                          label={t("friday")}
+                          onChangeData={(data: any) => handleFieldChange("friday", data.friday)}
+                        />
+                        <ERPCheckbox
+                          {...getFieldProps("saturday")}
+                          label={t("saturday")}
+                          onChangeData={(data: any) => handleFieldChange("saturday", data.saturday)}
+                        />
+                      </div>
+                    </div> */}
               <div className="border dark:!border-dark-border p-4 rounded-lg mt-5">
                 <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
                   <ERPDataCombobox
@@ -1086,6 +1076,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     }
                     label={t("price_category")}
                   />
+
                   <ERPDataCombobox
                     {...getFieldProps("formTypeID")}
                     field={{
@@ -1100,6 +1091,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     }
                     label={t("form_type")}
                   />
+
                   <ERPInput
                     {...getFieldProps("visitSequenceNo")}
                     min={0}
@@ -1111,6 +1103,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       handleFieldChange("visitSequenceNo", data.visitSequenceNo)
                     }
                   />
+
                   {isIndianCompany && (
                     <>
                       <ERPInput
@@ -1122,6 +1115,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           handleFieldChange("legalName", data.legalName)
                         }
                       />
+
                       <ERPInput
                         {...getFieldProps("tradeName")}
                         label={t("trade_name")}
@@ -1133,6 +1127,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       />
                     </>
                   )}
+
                   <div className="md:mt-2">
                     <ErpCropper
                       apiUrl="/Subscription/Profile/UploadUserImage"
@@ -1144,6 +1139,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               </div>
             </>
           )}
+
           {activeTab === "project_job" && (
             <div className="grid grid-cols-1 gap-6">
               <div className="flex flex-col md:flex-row w-full gap-6 p-4">
@@ -1164,6 +1160,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                     />
+
                     <ERPInput
                       id="address1"
                       value={project.address1}
@@ -1177,6 +1174,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                     />
+
                     <ERPInput
                       id="address2"
                       value={project.address2}
@@ -1190,30 +1188,32 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                     />
-                  <div className="pt-2 text-right">
-                  <ERPButton
-            type="button"
-            title={t("clear")}
-            variant="secondary"
-            className="mr-2"
-            onClick={() => {
-              clearForm();
-            }}
-            disabled={projectOnAction}
-          />
-          <ERPButton
-            type="button"
-            disabled={projectOnAction}
-            variant="primary"
-            onClick={saveProject}
-            loading={projectOnAction}
-            title={
-              project && project.projectId > 0
-                ? t("update")
-                : t("Save")
-            }
-          />
-                  </div>
+
+                    <div className="pt-2 text-right">
+                      <ERPButton
+                        type="button"
+                        title={t("clear")}
+                        variant="secondary"
+                        className="mr-2"
+                        onClick={() => {
+                          clearForm();
+                        }}
+                        disabled={projectOnAction}
+                      />
+
+                      <ERPButton
+                        type="button"
+                        disabled={projectOnAction}
+                        variant="primary"
+                        onClick={saveProject}
+                        loading={projectOnAction}
+                        title={
+                          project && project.projectId > 0
+                            ? t("update")
+                            : t("Save")
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -1221,25 +1221,25 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 <div className="w-full md:w-2/3">
                   {/* <h2 className="text-xl font-bold mb-4">Data Grid</h2> */}
                   <div className="w-full border rounded-md shadow">
-                     <ErpDevGrid
-                                    columns={projectsColumns}
-                                    height={400}
-                                    onRowClick={loadProject}
-                                    gridHeader={t("")}
-                                    dataUrl={`${Urls.party_projects}GetAll/${formState.data.partyID}`}
-                                    gridId="party_projects"
-                                    changeReload={(reload: any) => { setProjectsLoad(false) }}
-                                    reload={projectsLoad}
-                                    gridAddButtonIcon="ri-add-line"
-                                    pageSize={40}
-                                    hideGridAddButton={true}
-                                  />
-                   
+                    <ErpDevGrid
+                      columns={projectsColumns}
+                      height={400}
+                      onRowClick={loadProject}
+                      gridHeader={t("")}
+                      dataUrl={`${Urls.party_projects}GetAll/${formState.data.partyID}`}
+                      gridId="party_projects"
+                      changeReload={(reload: any) => { setProjectsLoad(false) }}
+                      reload={projectsLoad}
+                      gridAddButtonIcon="ri-add-line"
+                      pageSize={40}
+                      hideGridAddButton={true}
+                    />
                   </div>
                 </div>
               </div>
             </div>
           )}
+
           {activeTab === "other_details" && (
             <div className="grid grid-cols-4 gap-6">
               <ERPDataCombobox
@@ -1266,6 +1266,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   { value: "OTH", label: "OTH" },
                 ]}
               />
+
               <ERPInput
                 {...getFieldProps("buildingNumber")}
                 label={t("building_number")}
@@ -1275,6 +1276,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("buildingNumber", data.buildingNumber)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("plotIdentificationNumber")}
                 label={t("additional_number")}
@@ -1287,6 +1289,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   )
                 }
               />
+
               <ERPInput
                 {...getFieldProps("citySubDivision")}
                 label={t("city_sub_division")}
@@ -1296,6 +1299,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("citySubDivision", data.citySubDivision)
                 }
               />
+
               <ERPInput
                 {...getFieldProps("postalCode")}
                 label={t("postal_code")}
@@ -1305,6 +1309,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("postalCode", data.postalCode)
                 }
               />
+
               <ERPDataCombobox
                 {...getFieldProps("country")}
                 onChangeData={(data) =>
@@ -1318,6 +1323,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   labelKey: "name",
                 }}
               />
+
               <ERPInput
                 {...getFieldProps("countrySubEntity")}
                 label={t("country_sub_division")}
@@ -1330,6 +1336,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             </div>
           )}
         </div>
+
         <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-1 z-50 rounded-b-lg">
           <div className="max-w-screen-2xl mx-auto">
             <ERPFormButtons

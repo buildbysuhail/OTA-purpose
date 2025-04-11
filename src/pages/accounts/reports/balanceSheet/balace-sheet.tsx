@@ -14,11 +14,10 @@ import ExcelJS from "exceljs";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { formatDateFields, isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
-import { pdf, BlobProvider, PDFViewer } from '@react-pdf/renderer';
+import { BlobProvider } from '@react-pdf/renderer';
 import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import { useSelector } from "react-redux";
 import BalanceSheetVerticalPDFTemplate from "./balance-sheet-pdf/balance-sheet-vertical-pdf";
-import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { printPdf } from "../../../../utilities/print-report-utils";
 
 const api = new APIClient();
@@ -41,10 +40,10 @@ const BalanceSheetRow: React.FC<{
     <tr>
       <td
         className={`py-2 ${item.title == "M"
-            ? "text-[#3b82f6]"
-            : item.groupName == "TOTAL"
-              ? "text-[#FF0000]"
-              : "dark:text-dark-text text-[#03070f]"
+          ? "text-[#3b82f6]"
+          : item.groupName == "TOTAL"
+            ? "text-[#FF0000]"
+            : "dark:text-dark-text text-[#03070f]"
           }`}
         style={{
           paddingLeft:
@@ -56,22 +55,22 @@ const BalanceSheetRow: React.FC<{
         {/* <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
           {item.groupName}
         </a> */}
-          <a
-      onClick={handleClick}
-      className={item.groupID <= 0 ? "cursor-default" : "hover:text-[#e74862] cursor-pointer"}
-    >
-      {item.groupName}
-    </a>
+        <a
+          onClick={handleClick}
+          className={item.groupID <= 0 ? "cursor-default" : "hover:text-[#e74862] cursor-pointer"}
+        >
+          {item.groupName}
+        </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
           <a
 
             className={`py-2 cursor-default ${item.title == "M"
-                ? "text-[#3b82f6]"
-                : item.groupName == "TOTAL"
-                  ? "text-[#FF0000]"
-                  : "dark:text-dark-text text-[#03070f]"
+              ? "text-[#3b82f6]"
+              : item.groupName == "TOTAL"
+                ? "text-[#FF0000]"
+                : "dark:text-dark-text text-[#03070f]"
               }`}
             style={{
               paddingRight:
@@ -82,21 +81,21 @@ const BalanceSheetRow: React.FC<{
                   : "normal",
             }}
           >
-            {`${item.transType == "L" && item.groupName!="TOTAL"
-                ? item.title == "M"
-                  ? getFormattedValue(item.total)
-                  : item.total > 0
-                    ? "(-)" + getFormattedValue(item.total)
-                    : item.total === 0
-                      ? getFormattedValue(0)
-                      : getFormattedValue(-1 * item.total)
-                : item.title == "M"
-                  ? getFormattedValue(item.total)
-                  : item.total < 0
-                    ? "(-)" + getFormattedValue(-1 * item.total)
-                    : item.total === 0
-                      ? getFormattedValue(0)
-                      : getFormattedValue(item.total)
+            {`${item.transType == "L" && item.groupName != "TOTAL"
+              ? item.title == "M"
+                ? getFormattedValue(item.total)
+                : item.total > 0
+                  ? "(-)" + getFormattedValue(item.total)
+                  : item.total === 0
+                    ? getFormattedValue(0)
+                    : getFormattedValue(-1 * item.total)
+              : item.title == "M"
+                ? getFormattedValue(item.total)
+                : item.total < 0
+                  ? "(-)" + getFormattedValue(-1 * item.total)
+                  : item.total === 0
+                    ? getFormattedValue(0)
+                    : getFormattedValue(item.total)
               }`}
           </a>
         </td>
@@ -133,10 +132,10 @@ const HorizontalBalanceSheet: React.FC<{
     )?.total || 0;
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <table className="w-full text-left border-collapse">
+    <div className="relative w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left border-collapse dark:bg-dark-bg bg-white">
             <thead>
               <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("liabilities")}</th>
@@ -155,9 +154,17 @@ const HorizontalBalanceSheet: React.FC<{
               ))}
             </tbody>
           </table>
+          {/* Mobile-only: Liabilities Total placed under the Liabilities table */}
+          <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2 md:hidden">
+            <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+            <h6 className="text-sm font-bold text-[#f00] text-right">
+              {getFormattedValue(liabilityTotal)}
+            </h6>
+          </div>
         </div>
-        <div>
-          <table className="w-full text-left border-collapse">
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left border-collapse dark:bg-dark-bg bg-white">
             <thead>
               <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("assets")}</th>
@@ -176,9 +183,18 @@ const HorizontalBalanceSheet: React.FC<{
               ))}
             </tbody>
           </table>
+          {/* Mobile-only: Assets Total placed under the Assets table */}
+          <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2 md:hidden">
+            <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+            <h6 className="text-sm font-bold text-[#f00] text-right">
+              {getFormattedValue(assetTotal)}
+            </h6>
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 cursor-default">
+
+      {/* Desktop-only: Totals retained under their respective table areas */}
+      <div className="hidden md:grid grid-cols-2 gap-4 cursor-default mt-4">
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#f00]">Total</h6>
           <h6 className="text-sm font-bold text-[#f00] text-right">
@@ -215,6 +231,20 @@ const BalanceSheet = () => {
   );
   const { t } = useTranslation("accountsReport");
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -226,7 +256,7 @@ const BalanceSheet = () => {
 
   const LoadAsync = async (_filter?: any) => {
     setLoading(true);
-    
+
     const res = await api.postAsync(
       Urls.acc_reports_balance_sheet,
       formatDateFields(_filter || filter)
@@ -536,9 +566,7 @@ const BalanceSheet = () => {
 
     // Generate Excel file
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -593,14 +621,14 @@ const BalanceSheet = () => {
   //     return;
   //   }
 
-    
+
   //        // Wait for the PDF to load in the new tab
   //        printWindow.onload = () => {
   //         printWindow.print(); // Trigger print
   //       };
 
   //  try{
-  
+
   //  } catch (error) {
   //   console.error("Error printing voucher:", error);
   //   ERPAlert.show({
@@ -613,55 +641,35 @@ const BalanceSheet = () => {
 
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">
-      {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
-        <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4 justify-between">
-          {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
+        {/* Updated responsive header */}
+        <div className="flex items-center p-1 border dark:!border-dark-border border-gray-300 rounded-md mb-4">
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-            {/* <span>Customise</span> */}
-            <h6 className="text-center text-lg font-bold  mb-0">
+            <h6 className="text-center text-lg font-bold mb-0">
               {t("balance_sheet")}
             </h6>
             <i className="fas fa-cog ms-1"></i>
           </div>
 
-          <div className="flex items-center ms-auto space-x-2">
-            {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
-              <RectangleVertical />
-              <p  className="pe-2">Show Vertical</p>
-              <div className="">
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={isVerticalView}
-                    onChange={(e) => setIsVerticalView(e.target.checked)}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div> */}
-            <div
-              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
-                }`}
-            >
+          {/* Desktop Controls - hidden on mobile */}
+          <div className="hidden md:flex items-center ms-auto space-x-2">
+            <div className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"}`}>
               <div
                 className="flex justify-center items-center w-8 h-8"
                 style={{
                   minWidth: "2rem",
                   minHeight: "2rem",
-                }} /* Ensures consistent dimensions */
-              >
-                <div
-                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"
-                    }`}
-                >
+                }}>
+
+                <div className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"}`}>
                   <RectangleVertical />
                 </div>
               </div>
+
               <span className="ml-2">
                 {isVerticalView ? t("show_horizontal") : t("show_vertical")}
               </span>
+
               <div className="relative inline-block w-12 h-6 ml-2 align-middle select-none transition duration-200 ease-in">
                 <input
                   type="checkbox"
@@ -671,10 +679,7 @@ const BalanceSheet = () => {
                   checked={isVerticalView}
                   onChange={() => setIsVerticalView(!isVerticalView)}
                 />
-                <label
-                  htmlFor="toggle"
-                  className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"
-                ></label>
+                <label htmlFor="toggle" className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"></label>
               </div>
             </div>
 
@@ -705,124 +710,207 @@ const BalanceSheet = () => {
                 title={t("balance_sheet")}
               />
             </button>
-            {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-share-alt me-1"></i> */}
-            {/* <Forward className="pe-2" /> */}
-            {/* <span>{t("share")}</span> */}
-            {/* <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2"> */}
-            {/* 0 */}
-            {/* </span> */}
-            {/* </button> */}
-            {/* <button className="flex items-center bg-gray-100 p-2 rounded-md"> */}
-            {/* <i className="fas fa-clock me-1"></i> */}
-            {/* <Clock1 className="pe-2" /> */}
-            {/* <span>{t("schedule_report")}</span> */}
-            {/* </button> */}
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-             onClick={handlePrint}>
 
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md" onClick={handlePrint}>
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
 
             <div className="relative">
-              <button
-                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
-                ref={buttonRef}
-              >
-                {/* <i className="fas fa-file-export me-1"></i> */}
-                <EllipsisVertical className="!w-4 !h-4"
-                  onClick={() => setIsPopupVisible(!isPopupVisible)}
-                />
-                {/* <span>{t("export")}</span> */}
+              <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300" ref={buttonRef}>
+                <EllipsisVertical className="!w-4 !h-4" onClick={() => setIsPopupVisible(!isPopupVisible)} />
               </button>
 
               {isPopupVisible && (
                 <div
-                  ref={popupRef} // Attach ref to the popup
-                  className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                  ref={popupRef}
+                  className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
                   style={{
-                    top: "100%", // Position the popup right below the button
-                    left: "-139px", // Align it with the left edge of the button
-                    width: "221px", // Set your desired width
-                    marginTop: "8px", // Add some spacing between the button and the popup
-                  }}
-                >
-                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                    top: "100%",
+                    left: "-139px",
+                    width: "221px",
+                    marginTop: "8px",
+                  }}>
+
+                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                     <ul className="space-y-1">
                       <li>
-                       <button
-                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      onClick={handleExport}
-                    >
-                 
-                      <FileUp className="pe-2" />
-                      <span>{t("export_to_excel")}</span>
-                    </button>
+                        <button className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={handleExport}>
+                          <FileUp className="pe-2" />
+                          <span>{t("export_to_excel")}</span>
+                        </button>
                       </li>
 
-                      
                       <li>
-                          <BlobProvider
-                            document={
-                              !isVerticalView ? (
-                                <BalanceSheetPDFTemplate
-                                  userSession={userSession}
-                                  getFormattedValue={getFormattedValue}
-                                  filter={filter}
-                                  data={data}
-                                />):(
-                                  <BalanceSheetVerticalPDFTemplate
-                                  userSession={userSession}
-                                  getFormattedValue={getFormattedValue}
-                                  filter={filter}
-                                  data={data}
-                                />
-                                  
-                                )
-                          
-
-                            }
-                          >
-                            {({ blob, loading }) => (
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                disabled={loading} // Disable the button while loading
-                                onClick={async () => {
-                                  if (blob) {
-                                    // Create a download link and trigger the download
-                                    const url = URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = 'BalanceSheet.pdf';
-                                    a.click();
-                                    URL.revokeObjectURL(url); // Clean up the URL object
-                                  }
-                                }}
-                              >
-                                <FileText className="pe-2" />
-                                <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
-                              </button>
-                            )}
-                          </BlobProvider>
-                        </li>
+                        <BlobProvider
+                          document={
+                            !isVerticalView ? (
+                              <BalanceSheetPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                            ) : (
+                              <BalanceSheetVerticalPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                            )
+                          }>
+                          {({ blob, loading }) => (
+                            <button
+                              className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              disabled={loading}
+                              onClick={async () => {
+                                if (blob) {
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = 'BalanceSheet.pdf';
+                                  a.click();
+                                  URL.revokeObjectURL(url);
+                                }
+                              }}>
+                              <FileText className="pe-2" />
+                              <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
+                            </button>
+                          )}
+                        </BlobProvider>
+                      </li>
                     </ul>
                   </nav>
                 </div>
               )}
             </div>
-            <button
-              onClick={goToPreviousPage}
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-            >
-              {/* <i className="fas fa-times"></i> */}
-              {/* <Timer /> */}
+
+            <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               <X />
             </button>
           </div>
+
+          {/* Mobile Menu Toggle - visible only on mobile */}
+          <div className="md:hidden flex ml-auto">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              {isMobileMenuOpen ? <X /> : <EllipsisVertical />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu - conditionally rendered */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border dark:border-dark-border border-gray-300 border-t-0 rounded-b-md mb-4 p-2 space-y-2">
+            <button className={`w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out`}>
+              <div className="flex justify-center items-center w-8 h-8">
+                <div className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"}`}>
+                  <RectangleVertical />
+                </div>
+              </div>
+              <span className="ml-2">
+                {isVerticalView ? t("show_horizontal") : t("show_vertical")}
+              </span>
+              <div className="relative inline-block w-12 h-6 ml-auto align-middle select-none transition duration-200 ease-in">
+                <input
+                  type="checkbox"
+                  name="toggle-mobile"
+                  id="toggle-mobile"
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out transform checked:translate-x-6"
+                  checked={isVerticalView}
+                  onChange={() => setIsVerticalView(!isVerticalView)}
+                />
+                <label htmlFor="toggle-mobile" className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"></label>
+              </div>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg bg-gray-100 p-2 rounded-md">
+              <ErpGridGlobalFilter
+                width={500}
+                height={300}
+                gridId="gridBalanceSheet"
+                initialData={BalanceSheetFilterInitialState}
+                content={
+                  <BalanceSheetFilter
+                    getFieldProps={function (fieldName: string) {
+                      throw new Error("Function not implemented.");
+                    }}
+                    handleFieldChange={function (
+                      field: string | object,
+                      value?: any
+                    ): void {
+                      throw new Error("Function not implemented.");
+                    }}
+                  />
+                }
+                toogleFilter={showFilter}
+                onApplyFilters={(filters) => onApplyFilter(filters)}
+                onOpened={(status: any) => setShowFilter(status)}
+                onClose={onCloseFilter}
+                validations={filterValidations}
+                title={t("balance_sheet")}
+              />
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md" onClick={handlePrint}>
+              <Printer className="pe-2" />
+              <span>{t("print")}</span>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md" onClick={handleExport}>
+              <FileUp className="pe-2" />
+              <span>{t("export_to_excel")}</span>
+            </button>
+
+            <BlobProvider
+              document={
+                !isVerticalView ? (
+                  <BalanceSheetPDFTemplate
+                    userSession={userSession}
+                    getFormattedValue={getFormattedValue}
+                    filter={filter}
+                    data={data}
+                  />
+                ) : (
+                  <BalanceSheetVerticalPDFTemplate
+                    userSession={userSession}
+                    getFormattedValue={getFormattedValue}
+                    filter={filter}
+                    data={data}
+                  />
+                )
+              }>
+              {({ blob, loading }) => (
+                <button
+                  className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+                  disabled={loading}
+                  onClick={async () => {
+                    if (blob) {
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = !isVerticalView ? "BalanceSheet.pdf" : "BalanceSheetVertical.pdf";
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }
+                  }}>
+                  <FileText className="pe-2" />
+                  <span>
+                    {loading ? "Loading document..." : t("export_to_pdf")}
+                  </span>
+                </button>
+              )}
+            </BlobProvider>
+
+            <button onClick={goToPreviousPage} className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              <X className="pe-2" />
+              <span>{t("close")}</span>
+            </button>
+          </div>
+        )}
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
+
         <p className="text-center mb-4">
           As of{" "}
           {new Date(filter.asonDate).toLocaleDateString("en-US", {
@@ -831,7 +919,9 @@ const BalanceSheet = () => {
             day: "2-digit",
           })}
         </p>
+
         {/* <p className="text-center mb-4">As of {filter.asOnDate.toString("MMMM dd yyyy")}</p> */}
+
         {loading ? (
           <>
             <div className="bg-white">
@@ -884,8 +974,8 @@ const BalanceSheet = () => {
           isOpen={isOpenDetails.isOpen}
           minHeight={800}
           title={t("balance_sheet")}
-         width={1200}
-         height={800}
+          width={1200}
+          height={800}
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0, item: {} });
@@ -904,7 +994,7 @@ const BalanceSheet = () => {
           }}
         />
       )}
-{/* 
+      {/* 
       <ERPModal
         isOpen={isPopupVisible}
         // title={t("bank_cards")}
@@ -936,12 +1026,11 @@ const BalanceSheet = () => {
               filter={filter}
               data={data}
             />
-              
+            
             )
         }
           </PDFViewer>
         }
-
       /> */}
     </div>
   );

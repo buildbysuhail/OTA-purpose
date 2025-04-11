@@ -434,8 +434,8 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
   const { t } = useTranslation("userManage");
 
   return (
-    <div className="w-full flex justify-start ">
-      <div className="basis-[45%] dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-r  border-slate-400 ">
+    <div className="w-full flex flex-col md:flex-row">
+      <div className="w-full md:basis-1/2 dark:bg-dark-bg dark:border-dark-border bg-slate-50 md:border-r border-slate-400 overflow-x-auto">
         <TreeList
           height={treeHeight.windows}
           ref={gridRef}
@@ -454,7 +454,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         </TreeList>
       </div>
 
-      <div className="w-full flex flex-col px-24 py-10 ">
+      <div className="w-full md:basis-1/2 flex flex-col px-4 md:px-24 py-4 md:py-10">
         {/* User Type Combobox */}
         <ERPDataCombobox
           id="userType"
@@ -555,7 +555,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         />
         {
           inherit_rights_from_usertype == true && (
-            <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
+            <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-4 md:p-8">
               <ERPDataCombobox
                 id="userTypeForClone"
                 field={{

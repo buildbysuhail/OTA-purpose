@@ -19,12 +19,12 @@ import Urls from "../../../../redux/urls";
 //   getFieldProps,
 //   handleFieldChange,
 // }) => {
-  const BalanceSheetVerticalFilter = ({ getFieldProps, handleFieldChange}: any) => {
+const BalanceSheetVerticalFilter = ({ getFieldProps, handleFieldChange }: any) => {
 
-   const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation('accountsReport');
 
-   return (
-    <div className="grid grid-cols-2 gap-4">
+  return (
+    <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
       <ERPDateInput
         {...getFieldProps("asonDate")}
         label={t("as_on_date")}
@@ -53,9 +53,9 @@ import Urls from "../../../../redux/urls";
         type="number"
         defaultValue="0.00"
         onChangeData={({ closingStock }: any) => handleFieldChange("closingStock", parseInt(closingStock) || 0)}
-        // onChangeData={(data: { closingStock: number }) =>
-        //   handleFieldChange("closingStock", data.closingStock)
-        // }
+      // onChangeData={(data: { closingStock: number }) =>
+      //   handleFieldChange("closingStock", data.closingStock)
+      // }
       />
 
       {/* Commented out but kept for reference
@@ -72,7 +72,7 @@ import Urls from "../../../../redux/urls";
 };
 
 export default BalanceSheetVerticalFilter;
-export const BalanceSheetVerticalFilterInitialState= {
+export const BalanceSheetVerticalFilterInitialState = {
   asonDate: new Date(),
   valuationUsing: "SPP",
   closingStock: 0

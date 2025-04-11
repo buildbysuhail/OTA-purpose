@@ -23,11 +23,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
   const { t } = useTranslation('masters');
-
-  const toggleMenu = () => {
-    setMenuVisible((prev) => !prev);
-  };
-
+  const toggleMenu = () => { setMenuVisible((prev) => !prev); };
   const closeMenu = () => setMenuVisible(false);
   const handleOutsideClick = (e: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -127,9 +123,6 @@ const ChartOfAccounts: React.FC = React.memo(() => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [showbalance, setShowbalance] = useState<boolean>(false);
-  const [expandedRowKeys, setExpandedRowKeys] = useState<(string | number)[]>(
-    []
-  );
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
@@ -194,66 +187,61 @@ const ChartOfAccounts: React.FC = React.memo(() => {
               {loading ? (
                 <div>{t("loading")}</div>
               ) : data.length > 0 ? (
+                <div className="overflow-x-auto w-full border-r border-[#dddddd]">
+                  <TreeList
+                    id="data"
+                    dataSource={data}
+                    showRowLines={true}
+                    showBorders={true}
+                    // searchPanel={true}
+                    autoExpandAll={true}
+                    // columnAutoWidth={true}
+                    keyExpr="keyField"
+                    parentIdExpr="parentID"
+                    height={720}
+                    scrolling={{ mode: "virtual", useNative: true }}
+                    style={{ minWidth: "1200px", width: "100%" }}
+                  >
+                    <Selection mode="single" />
 
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="flex items-start justify-between relative">
-                    {" "}
-                    <TreeList
-                      id="data"
-                      dataSource={data}
-                      showRowLines={true}
-                      showBorders={true}
-                      // searchPanel={true}
-                      autoExpandAll={true}
-                      // columnAutoWidth={true}
-                      keyExpr="keyField"
-                      parentIdExpr="parentID"
-                      height={720} // Set a fixed height here
-                      scrolling={{ mode: "virtual" }} // Specify virtual scrolling mode
-                    >
-                      <Selection mode="single" />
+                    <Column
+                      dataField="accountGroup"
+                      caption={t("account_group")}
+                    />
 
+                    <Column
+                      dataField="aliasName"
+                      caption={t("alias_name")}
+                      width={200}
+                    />
+
+                    {showbalance && (
                       <Column
-                        dataField="accountGroup"
-                        caption={t("account_group")}
+                        dataField="balance"
+                        caption={t("balance")}
+                        width={150}
                       />
+                    )}
 
-                      <Column
-                        dataField="aliasName"
-                        caption={t("alias_name")}
-                        width={200}
-                      />
+                    <Column
+                      dataField="createdUser"
+                      caption={t("created_user")}
+                      width={100}
+                    />
 
-                      {showbalance &&
-                        <Column
-                          dataField="balance"
-                          caption={t("balance")}
-                          width={150} />
-                      }
+                    <Column
+                      dataField="createdDate"
+                      caption={t("created_date")}
+                      dataType="date"
+                      width={100}
+                    />
 
-                      <Column
-                        dataField="createdUser"
-                        caption={t("created_user")}
-                        width={100}
-                      />
-
-                      <Column
-                        dataField="createdDate"
-                        caption={t("created_date")}
-                        dataType="date"
-                        width={100}
-                      />
-
-                      <Column
-                        width={60}
-                        cellRender={(rowData) => (
-                          <OptionsColumn data={rowData.data} />
-                        )}
-                        caption=""
-                      />
-
-                    </TreeList>
-                  </div>
+                    <Column
+                      width={60}
+                      cellRender={(rowData) => <OptionsColumn data={rowData.data} />}
+                      caption=""
+                    />
+                  </TreeList>
                 </div>
               ) : (
                 <div>{t("no_data_available")}</div>
@@ -265,9 +253,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                 width={600}
                 isForm={true}
                 closeModal={() => {
-                  dispatch(
-                    toggleAccountGroupPopup({ isOpen: false, key: null })
-                  );
+                  dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
                 }}
                 content={<AccountGroupManage />}
               />
@@ -278,9 +264,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                 width={700}
                 isForm={true}
                 closeModal={() => {
-                  dispatch(
-                    toggleAccountLedgerPopup({ isOpen: false, key: null })
-                  );
+                  dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
                 }}
                 content={<AccountLedgerManage />}
               />

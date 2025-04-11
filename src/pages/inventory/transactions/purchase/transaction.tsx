@@ -1990,7 +1990,7 @@ const handleAddData = (newItem: any) => {
   keyField={key}
   height={gridHeight}
   gridId={`${gridCode}-grid`}
-  // onAddData={handleAddData}
+  onAddData={handleAddData}
 />
           </div>
           {formState.showSaveDialog && (

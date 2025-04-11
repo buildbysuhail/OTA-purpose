@@ -8,7 +8,7 @@ import { RootState } from "../../../../redux/store";
 import { dateTrimmer } from "../../../../utilities/Utils";
 import { type ReactNode } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
+import Input from "./test-input"; // Replace ERPInput with Input
 import { Loader2, Plus, Search } from "lucide-react";
 import GridPreferenceChooser from "../../../../components/ERPComponents/erp-gridpreference";
 import type { DevGridColumn, GridPreference, ColumnPreference } from "../../../../components/types/dev-grid-column";
@@ -35,7 +35,7 @@ interface DataGridProps<T extends DataItem> {
   className?: string;
   rowHeight?: number;
   height?: number;
-  isLoading?:boolean;
+  isLoading?: boolean;
   onAddData?: (newItem: T) => void; // Optional custom add data handler
 }
 
@@ -55,7 +55,6 @@ export default function DataGrid<T extends DataItem>({
 
   // Internal state management
   const [searchTerm, setSearchTerm] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
   const [gridPreferences, setGridPreferences] = useState<GridPreference | null>(null);
 
   // Define getVisibleColumns first to avoid TDZ
@@ -138,15 +137,8 @@ export default function DataGrid<T extends DataItem>({
   // Add data handler (relies on onAddData prop)
   const handleAddData = () => {
     if (isLoading || !onAddData) return;
-    // setIsLoading(true);
-    // Simulate adding a new item (customize based on your needs)
     const newItem = { ...data[0], [keyField]: `user-${Date.now()}-${data.length}` } as T;
     onAddData(newItem);
-    // if use this when need load to adding
-    // setTimeout(() => {
-    //   onAddData(newItem);
-    //   setIsLoading(false);
-    // }, 1000);
   };
 
   // Handle grid preference changes
@@ -161,20 +153,20 @@ export default function DataGrid<T extends DataItem>({
       let dataType: DevGridColumn["dataType"];
       switch (col.type) {
         case "text":
-          dataType = "string"; // Map "text" to "string"
+          dataType = "string";
           break;
         case "select":
-          dataType = "string"; // Map "select" to "string" (assuming string values)
+          dataType = "string";
           break;
         case "custom":
-          dataType = "string"; // Fallback for "custom" to "string"; adjust if needed
+          dataType = "string";
           break;
         case "number":
         case "date":
-          dataType = col.type; // Use directly if compatible
+          dataType = col.type;
           break;
         default:
-          dataType = "string"; // Default to "string" if undefined or unrecognized
+          dataType = "string";
       }
 
       return {
@@ -205,21 +197,18 @@ export default function DataGrid<T extends DataItem>({
 
     return (
       <td
-        className="border-r border-gray-100"
+        className=""
         style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
       >
-           <ERPInput
-            id={`${column.header} ${item[column.field]}`}
-            noLabel
-            type="text"
-            className="w-full"
-            value={displayValue}
-            noBorder
-            inputClassName="!h-full !border-none"
-           
-            // onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        {/* <div className="w-full h-full py-2">{displayValue}</div> */}
+        <Input
+          id={`${column.header} ${item[column.field]}`}
+          noLabel
+          type={column.type || "text"}
+          className="w-full h-full" // Mimic noBorder and inputClassName
+          value={displayValue}
+          disabled={!column.editable}
+          noBorder
+        />
       </td>
     );
   };
@@ -230,7 +219,7 @@ export default function DataGrid<T extends DataItem>({
     return (
       <tr
         style={style}
-        className="flex border-b border-gray-100"
+        className="flex py-1"
         key={String(item[keyField])}
       >
         {visibleColumns.map((column) => renderCell(item, column))}
@@ -239,19 +228,16 @@ export default function DataGrid<T extends DataItem>({
   };
 
   return (
-    <div className={``}
-    style={{ width: `${tableWidth}px`, minWidth: `${tableWidth}px` }}>
+    <div style={{ width: `${tableWidth}px`, minWidth: `${tableWidth}px` }}>
       {/* Toolbar */}
-      <div
-        className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-2 p-4w-full"
-      >
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-2 p-4 w-full">
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-2.5 top-0.3 h-4 w-4 text-muted-foreground" />
-          <ERPInput
+          <Input
             id="Search"
             type="text"
             placeholder="Search..."
-            className="pl-8"
+            className="pl-8 w-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -273,52 +259,49 @@ export default function DataGrid<T extends DataItem>({
           />
         </div>
       </div>
-      <div className={`border border-gray-100 rounded-md  ${className} w-full `}
-      //  style={{ minWidth: `${tableWidth}px`,width:`${tableWidth}px` }}
-       >
-      {/* Header */}
-      <table className="w-full">
-        <thead>
-          <tr className="bg-[#f9f9fa] flex" style={{ width: `${tableWidth}px` }}>
-            {visibleColumns.map((column) => (
-              <th
-                key={String(column.field)}
-                className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-100 text-sm whitespace-nowrap"
-                style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
-              >
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-      </table>
+      <div className={`border border-gray-100 rounded-md ${className} w-full`}>
+        {/* Header */}
+        <table className="w-full">
+          <thead>
+            <tr className="bg-[#f9f9fa] flex" style={{ width: `${tableWidth}px` }}>
+              {visibleColumns.map((column) => (
+                <th
+                  key={String(column.field)}
+                  className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-100 text-sm whitespace-nowrap"
+                  style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
+                >
+                  {column.header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+        </table>
 
-     {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      ) :filteredData.length === 0 ? (
-        <div
-          className="text-center p-4 border-b border-gray-100"
-          style={{ minWidth: `${tableWidth}px`, display: "flex" }}
-        >
-          No data available
-        </div>
-      ) :
-       (
-        <List
-          ref={listRef}
-          height={height}
-          itemCount={filteredData.length}
-          itemSize={rowHeight}
-          width={tableWidth}
-          className=" bg-white"
-          style={{ direction: appState?.dir  }}
-        >
-          {Row}
-        </List>
-      )}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filteredData.length === 0 ? (
+          <div
+            className="text-center p-4 border-b border-gray-100"
+            style={{ minWidth: `${tableWidth}px`, display: "flex" }}
+          >
+            No data available
+          </div>
+        ) : (
+          <List
+            ref={listRef}
+            height={height}
+            itemCount={filteredData.length}
+            itemSize={rowHeight}
+            width={tableWidth}
+            className="bg-white"
+            style={{ direction: appState?.dir }}
+          >
+            {Row}
+          </List>
+        )}
+      </div>
     </div>
   );
 }

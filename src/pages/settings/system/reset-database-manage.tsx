@@ -146,8 +146,8 @@ const ResetDbManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3 ">
-        <div className="flex flex-row  sm:justify-start items-center  gap-5 mb-4">
+      <div className="grid grid-cols-1 gap-3">
+        <div className="flex flex-col sm:flex-row sm:justify-start items-start sm:items-center gap-3 sm:gap-5 mb-4">
           <ERPDateInput
             type="date"
             id="from"
@@ -179,13 +179,13 @@ const ResetDbManage: React.FC = React.memo(() => {
           />
         </div>
 
-        <div className="flex justify-start  gap-5 mb-4">
+        <div className="flex flex-col lg:flex-row justify-start gap-5 mb-4">
           {/* deme text area */}
-          <div className="relative">
+          <div className="relative w-full lg:w-auto">
             <label className="block text-sm font-medium dark:!text-dark-text text-gray-700 p-3 sticky top-0 dark:!bg-dark-bg-header bg-white z-10">
               {t("transaction_forms")}
             </label>
-            <div className="overflow-x-auto border dark:!border-dark-border border-gray-400  rounded w-auto max-w-[550px] h-auto max-h-[260px] dark-scrollbar text-left"
+            <div className="overflow-x-auto border dark:!border-dark-border border-gray-400 rounded w-full lg:max-w-[550px] h-auto max-h-[260px] dark-scrollbar text-left"
             // style={{
             //   scrollbarWidth: 'thin', // For Firefox
             //   scrollbarColor: '#888 #f1f1f1', // For Firefox
@@ -204,10 +204,10 @@ const ResetDbManage: React.FC = React.memo(() => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full lg:flex-1">
             <div className="flex flex-col gap-6">
               {/* Account Master */}
-              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg p-2 text-left">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("acc_masters")}
                 </label>
@@ -257,7 +257,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               </div>
 
               {/* HR Master */}
-              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg p-2 text-left">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("hr_master")}
                 </label>
@@ -292,7 +292,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               </div>
             </div>
 
-            <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
+            <div className="border dark:!border-dark-border border-gray-200 rounded-lg p-2 text-left h-full">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("inventory_master")}
               </label>
@@ -391,8 +391,8 @@ const ResetDbManage: React.FC = React.memo(() => {
           </div>
         </div>
 
-        <div className="flex justify-start items-center gap-5 ">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5 text-left">
+        <div className="flex justify-start items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left w-full">
             <ERPCheckbox
               id="selectAll"
               label={t("select_all")}
@@ -431,7 +431,7 @@ const ResetDbManage: React.FC = React.memo(() => {
           </div>
         </div>
       </div>
-      <div className="flex justify-end items-center gap-3 m-2">
+      <div className="flex justify-end items-center gap-3 m-2 mt-4">
         <ERPButton
           title={t("reset")}
           variant="primary"

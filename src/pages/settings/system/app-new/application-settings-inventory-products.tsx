@@ -565,30 +565,30 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
         />
       ),
     },
-    {
-      condition: filterComponent(
-        [t("enable_supplier_wise_item_code")],
-        filterText
-      ),
-      element: (
-        <ERPCheckbox
-          id="enableSupplierWiseItemCode"
-          label={t("enable_supplier_wise_item_code")}
-          data={settings?.productsSettings}
-          checked={
-            settings?.productsSettings
-              ?.enableSupplierWiseItemCode
-          }
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "enableSupplierWiseItemCode",
-              data.enableSupplierWiseItemCode
-            )
-          }
-        />
-      ),
-    },
+    // {
+    //   condition: filterComponent(
+    //     [t("enable_supplier_wise_item_code")],
+    //     filterText
+    //   ),
+    //   element: (
+    //     <ERPCheckbox
+    //       id="enableSupplierWiseItemCode"
+    //       label={t("enable_supplier_wise_item_code")}
+    //       data={settings?.productsSettings}
+    //       checked={
+    //         settings?.productsSettings
+    //           ?.enableSupplierWiseItemCode
+    //       }
+    //       onChangeData={(data) =>
+    //         handleFieldChange(
+    //           "productsSettings",
+    //           "enableSupplierWiseItemCode",
+    //           data.enableSupplierWiseItemCode
+    //         )
+    //       }
+    //     />
+    //   ),
+    // },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

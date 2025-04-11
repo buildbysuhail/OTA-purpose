@@ -2,7 +2,7 @@ import { productDto } from "./products-type";
 
 const initialProductData: productDto = {
   product: {
-    productID: 1,
+    productID: 0,
     productCode: "",
     productName: "",
     productGroupID: 0,
@@ -113,7 +113,9 @@ const initialProductData: productDto = {
     selectedUnitID: 0,
     prevProductBatchID: 0,
     supplierWiseBatchCreation: true,
-    baseUnitRemarks: ""
+    baseUnitRemarks: "",
+    aPC: 0,
+    stock: 0
   },
   moreInfo: {
     id: 0,
@@ -155,18 +157,14 @@ const initialProductData: productDto = {
       msp: 0
     }
   ],
-  units: [
-    
-  ],
+  units: [],
   nutrients: [
     {
       nutrients: "",
       valuePerServing: 0
     }
   ],
-  supplierProducts: [
-    
-  ],
+  supplierProducts: [],
   multiUnits: [
     // {
     //   productBatchID: 0,
@@ -189,6 +187,15 @@ const initialProductData: productDto = {
     calculateMarkUpValue: true,
     showDisplayCost: true
   },
+  productImageString: "",
+  barcode: "",
+  sectionID: 0,
+  upcBarcode: false,
+  mu: false,
+  mr: false,
+  markup: 0,
+  batchCriteria: false,
+  details: false
 };
 
 export default initialProductData;

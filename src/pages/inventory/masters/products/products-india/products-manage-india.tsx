@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -8,24 +8,30 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
+import { PathValue, productDto, ProductFieldPath } from "../products-type";
 
 const api = new APIClient();
+
 export const ProductManageIndia: React.FC<{
+  appSettings: ApplicationSettingsType;
   formState: any;
-  handleFieldChange: (
-    fields:
-      | string
-      | {
-        [fieldId: string]: any;
-      },
-    value?: any
-  ) => void;
+  handleFieldChange: <Path extends ProductFieldPath>(
+      fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+      value?: PathValue<productDto, Path>
+    ) => void;
 
   getFieldProps: (fieldId: string, type?: any) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
-
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings }) => {
+  
   const { t } = useTranslation("inventory");
-
+    const productNameRef = useRef<HTMLInputElement>(null);
+useEffect(() => {
+  productNameRef?.current?.focus()
+  productNameRef?.current?.select()
+},[productNameRef])
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -50,6 +56,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder={t("enter_product_code")}
                   required={false}
                   className="w-full"
+                  disabled={!getFieldProps("product.manual").value}
                   onChangeData={(data: any) => handleFieldChange("product.productCode", data.product.productCode)}
                 />
 
@@ -74,7 +81,8 @@ export const ProductManageIndia: React.FC<{
 
             <div className="flex items-center gap-1 mb-3">
               <ERPDataCombobox
-                {...getFieldProps("product.productName")}
+              ref={productNameRef}
+                {...getFieldProps("product.productId")}
                 id="productName"
                 field={{
                   id: "productName",
@@ -82,7 +90,8 @@ export const ProductManageIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_products
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
+                onTextChange={(data: any) => handleFieldChange("product.productName", data)}
+                // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
                 label={t("product_name")}
                 className="w-full"
                 required={true}
@@ -127,7 +136,7 @@ export const ProductManageIndia: React.FC<{
                     debugger;
                     handleFieldChange("product.productGroupID", data.value);
                     const sds = await api.getAsync(`${Urls.group_category__}${data.value}`);
-                    handleFieldChange("product.groupCategory", sds);
+                    handleFieldChange("product.groupCategoryID", sds);
                   }
                   }
                   label={t("product_group")}
@@ -150,20 +159,20 @@ export const ProductManageIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_groupcategory
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.groupCategory)}
+                onChangeData={(data: any) => handleFieldChange("product.groupCategoryID", data.groupCategory)}
                 label={t("group_category")}
                 className="flex-1 min-w-[240px]"
               />
 
               <ERPDataCombobox
-                {...getFieldProps("product.section")}
+                {...getFieldProps("product.sectionID")}
                 field={{
                   id: "section",
                   valueKey: "id",
                   labelKey: "name",
                   getListUrl: Urls.data_sections
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.section", data.section)}
+                onChangeData={(data: any) => handleFieldChange("sectionID", data.sectionID)}
                 label={t("section")}
                 className="flex-1 min-w-[240px]"
               />
@@ -172,14 +181,14 @@ export const ProductManageIndia: React.FC<{
             <div className="flex flex-wrap gap-2 mb-3">
               <div className="flex flex-1 min-w-[240px] items-center gap-2">
                 <ERPDataCombobox
-                  {...getFieldProps("product.baseUnit")}
+                  {...getFieldProps("product.basicUnitID")}
                   field={{
-                    id: "baseUnit",
+                    id: "basicUnitID",
                     valueKey: "id",
                     labelKey: "name",
                     getListUrl: Urls.data_units,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.baseUnit)}
+                  onChangeData={(data: any) => handleFieldChange("product.basicUnitID", data.BasicUnitID)}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
@@ -203,24 +212,26 @@ export const ProductManageIndia: React.FC<{
 
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <ERPCheckbox
-                {...getFieldProps("product.upcBarcode")}
+                {...getFieldProps("upcBarcode")}
                 label={t("upc_barcode")}
                 // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
-                onChange={(e) => handleFieldChange('product.upcBarcode', e.target.checked)}
+                onChange={(e) => handleFieldChange('upcBarcode', e.target.checked)}
               />
 
               <ERPCheckbox
-                {...getFieldProps("product.mu")}
+                {...getFieldProps("mu")}
                 label={t("mu")}
+                disabled={!appSettings.productsSettings.allowMultiUnits}
                 // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
-                onChange={(e) => handleFieldChange('product.mu', e.target.checked)}
+                onChange={(e) => handleFieldChange('mu', e.target.checked)}
               />
 
               <ERPCheckbox
-                {...getFieldProps("product.mr")}
+                {...getFieldProps("mr")}
                 label={t("mr")}
+                disabled={!appSettings.productsSettings.allowMultirate}
                 // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
-                onChange={(e) => handleFieldChange('product.mr', e.target.checked)}
+                onChange={(e) => handleFieldChange('mr', e.target.checked)}
               />
             </div>
 
@@ -247,9 +258,9 @@ export const ProductManageIndia: React.FC<{
 
               <div className="flex flex-1 min-w-[240px] items-center">
                 <ERPCheckbox
-                  {...getFieldProps("product.isWeighingScaleItem")}
+                  {...getFieldProps("product.isWeighingScale")}
                   label={t("is_weighing_scale_item")}
-                  onChange={(e) => handleFieldChange('product.isWeighingScaleItem', e.target.checked)}
+                  onChange={(e) => handleFieldChange('product.isWeighingScale', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.product.isWeighingScaleItem)}
                 />
               </div>
@@ -259,43 +270,43 @@ export const ProductManageIndia: React.FC<{
           <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-4">
             <div className="flex flex-wrap gap-1 mb-3">
               <ERPInput
-                {...getFieldProps("product.purchasePrice")}
+                {...getFieldProps("product.stdPurchasePrice")}
                 label={t("purchase_price")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.purchasePrice", data.product.purchasePrice)}
+                onChangeData={(data: any) => handleFieldChange("product.stdPurchasePrice", data.product.stdPurchasePrice)}
               />
 
               <ERPInput
-                {...getFieldProps("product.salesPrice")}
+                {...getFieldProps("product.stdSalesPrice")}
                 label={t("sales_price")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.salesPrice", data.product.salesPrice)}
+                onChangeData={(data: any) => handleFieldChange("product.stdSalesPrice", data.product.stdSalesPrice)}
               />
 
               <ERPInput
-                {...getFieldProps("product.markup")}
+                {...getFieldProps("markup")}
                 label={t("markup") + "%"}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.markup", data.product.markup)}
+                onChangeData={(data: any) => handleFieldChange("markup", data.markup)}
               />
 
               <ERPInput
-                {...getFieldProps("product.displayCost")}
+                {...getFieldProps("batch.displayCost")}
                 label={t("display_cost")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.displayCost", data.product.displayCost)}
+                onChangeData={(data: any) => handleFieldChange("batch.displayCost", data.batch.displayCost)}
               />
 
               <ERPInput
@@ -309,44 +320,44 @@ export const ProductManageIndia: React.FC<{
               />
 
               <ERPInput
-                {...getFieldProps("product.opStock")}
+                {...getFieldProps("batch.openingStock")}
                 label={t("op_stock")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.opStock", data.product.opStock)}
+                onChangeData={(data: any) => handleFieldChange("batch.openingStock", data.batch.openingStock)}
               />
 
               <ERPInput
-                {...getFieldProps("product.msp")}
+                {...getFieldProps("batch.msp")}
                 label={t("msp")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.msp", data.product.msp)}
+                onChangeData={(data: any) => handleFieldChange("batch.msp", data.batch.msp)}
               />
 
               <ERPInput
-                {...getFieldProps("product.stock")}
+                {...getFieldProps("batch.stock")}
                 label={t("stock")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.stock", data.product.stock)}
+                onChangeData={(data: any) => handleFieldChange("batch.stock", data.batch.stock)}
               />
             </div>
 
             <div className="mb-3">
               <ERPInput
-                {...getFieldProps("product.foreignLanguage")}
+                {...getFieldProps("product.secondLanguage")}
                 label={t("foreign_language")}
                 placeholder=""
                 required={false}
                 className="w-full"
-                onChangeData={(data: any) => handleFieldChange("product.foreignLanguage", data.product.foreignLanguage)}
+                onChangeData={(data: any) => handleFieldChange("product.secondLanguage", data.product.secondLanguage)}
               />
             </div>
 
@@ -355,37 +366,37 @@ export const ProductManageIndia: React.FC<{
                 <ERPCheckbox
                   {...getFieldProps("product.batchCriteria")}
                   label={t("batch_criteria")}
-                  onChange={(e) => handleFieldChange('product.batchCriteria', e.target.checked)}
+                  onChange={(e) => handleFieldChange('batchCriteria', e.target.checked)}
                   className="flex-1 min-w-[120px]"
                 // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
                 />
               </div>
 
               <ERPDataCombobox
-                {...getFieldProps("product.batchCriteriaType")}
+                {...getFieldProps("product.batchCriteria")}
                 field={{
-                  id: "batchCriteriaType",
+                  id: "batchCriteria",
                   valueKey: "value",
                   labelKey: "label",
                   getListUrl: Urls.data_batchcriteria,
                 }}
                 className="flex-1 min-w-[120px]"
                 noLabel={true}
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.batchCriteriaType)}
+                onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.batchCriteria)}
               />
             </div>
 
             <div className="flex flex-wrap gap-2 mb-3 items-end">
               <ERPDataCombobox
-                {...getFieldProps("product.productType")}
-                id="productType"
+                {...getFieldProps("product.itemType")}
+                id="itemType"
                 field={{
-                  id: "productType",
+                  id: "itemType",
                   required: true,
                   valueKey: "value",
                   labelKey: "label",
                 }}
-                onChangeData={(data: any) => { handleFieldChange("product.productType", data.productType) }}
+                onChangeData={(data: any) => { handleFieldChange("product.itemType", data.itemType) }}
                 label={t("product_type")}
                 className="flex-1 min-w-[240px]"
                 options={[
@@ -406,7 +417,7 @@ export const ProductManageIndia: React.FC<{
                 <ERPCheckbox
                   {...getFieldProps("product.details")}
                   label={t("details")}
-                  onChange={(e) => handleFieldChange('product.details', e.target.checked)}
+                  onChange={(e) => handleFieldChange('details', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
                 />
               </div>
@@ -414,26 +425,26 @@ export const ProductManageIndia: React.FC<{
 
             <div className="flex flex-wrap gap-1">
               <ERPDataCombobox
-                {...getFieldProps("product.defaultVendor")}
+                {...getFieldProps("product.defaultVendorID")}
                 field={{
-                  id: "defaultVendor",
+                  id: "defaultVendorID",
                   valueKey: "id",
                   labelKey: "name",
                   getListUrl: Urls.data_acc_ledgers,
                 }}
                 className="flex-1 min-w-[240px]"
-                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.defaultVendor)}
+                onChangeData={(data: any) => handleFieldChange("product.defaultVendorID", data.defaultVendorID)}
                 label={t("default_vendor")}
               />
 
               <ERPInput
-                {...getFieldProps("product.avgCost")}
+                {...getFieldProps("batch.aPC")}
                 label={t("avg_cost")}
                 placeholder="0.00"
                 type="number"
                 required={false}
                 disabled={true}
-                onChangeData={(data: any) => handleFieldChange("product.avgCost", data.product.avgCost)}
+                onChangeData={(data: any) => handleFieldChange("batch.aPC", data.batch.aPC)}
                 className="flex-1 min-w-[140px]"
               />
             </div>

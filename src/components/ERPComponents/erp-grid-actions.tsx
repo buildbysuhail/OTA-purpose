@@ -110,7 +110,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
           <button
             onClick={handleClick}
             disabled={type === "delete" && isDeleting}
-            className="ti-btn-link actions-padding"
+            className="ti-btn-link"
             type="button">
             {isDeleting && type === "delete" ? (
               <CircularProgress size={20} />
@@ -142,7 +142,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   };
 
   return (
-    <div className="action-field">
+    <div className="action-field actions-padding">
       {view?.visible != false ? renderActionButton("view", view) : null}
       {edit?.visible != false ? renderActionButton("edit", edit) : null}
       {deleteAction.visible != false ? renderActionButton("delete", deleteAction) : null}

@@ -3,6 +3,8 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../../../helpers/api-client";
 import { useTranslation } from "react-i18next";
+import Urls from "../../../../../redux/urls";
+import { handleResponse } from "../../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 
@@ -27,19 +29,17 @@ const ChangeBarcode: React.FC = () => {
 
   const handleUpdate = async () => {
     const apiData = {
-      "@CurrentBarcode": formData.currentBarcode,
-      "@NewBarcode": formData.newBarcode,
+      oldBarcode: formData.currentBarcode,
+      newBarcode: formData.newBarcode,
     };
 
     console.log("Data to send to API:", apiData);
-    // try {
-    //   const response = await api.post(Urls.change_barcode, apiData);
-    //   if (response && response.data) {
-    //     console.log("Success:", response.data);
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    try {
+      const response = await api.post(Urls.change_barcode, apiData);
+      handleResponse(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
   const { t } = useTranslation('inventory')
   return (

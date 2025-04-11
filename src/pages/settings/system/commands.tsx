@@ -108,16 +108,16 @@ const CommandsManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1">
-        <div className="flex gap-5 items-start mb-4">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="flex flex-col md:flex-row gap-3 md:gap-5 mb-4">
           <textarea
-            className="w-2/3 h-24 border border-gray-300 rounded-md p-2"
+            className="w-full md:w-2/3 h-28 md:h-32 border dark:border-gray-600 border-gray-300 rounded-md p-2 resize-y"
             value={displayText}
             onChange={handleQueryChange}
             placeholder="..."
           />
-          <div className="flex flex-col justify-end gap-4 items-end w-1/3">
-            <div className="flex gap-4">
+          <div className="flex flex-col justify-between md:justify-start gap-3 w-full md:w-1/3">
+            <div className="flex justify-end gap-2 sm:gap-4">
               <ERPButton
                 type="reset"
                 title={t("clear")}
@@ -131,9 +131,10 @@ const CommandsManage = () => {
                 variant="primary"
                 onClick={handleExecute}
                 disabled={loading}
+                loading={loading}
               />
             </div>
-            <div className="flex justify-start">
+            <div className="flex justify-end mt-2">
               <ERPCheckbox
                 id="autoExecute"
                 label={t("hide")}
@@ -144,9 +145,9 @@ const CommandsManage = () => {
           </div>
         </div>
 
-        <div className="box custom-box">
-          <div className="box-body">
-            <div style={{ overflowX: 'auto', width: '100%' }}>
+        <div className="box custom-box w-full border dark:border-gray-600 border-gray-200 rounded-md">
+          <div className="box-body p-2 sm:p-4">
+            <div className="w-full overflow-x-auto">
               <DataGrid
                 dataSource={store}
                 height={gridHeight.windows}

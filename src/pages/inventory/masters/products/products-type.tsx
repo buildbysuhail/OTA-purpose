@@ -43,7 +43,16 @@ export interface productDto {
   nutrients: ProductNutrientsInputDto[];
   supplierProducts: SupplierProductsInputDto[];
   config: ProductLocalConfig;
+  productImageString: string;
   multiUnits: ProductUnitDto[]; // newly created
+  barcode: string;  
+  sectionID:number;
+  upcBarcode:boolean;
+  mu:boolean;
+  mr:boolean;
+  markup:number;
+  batchCriteria:boolean;
+  details:boolean;
 }
 
 export interface DeetailsDto {}
@@ -53,7 +62,9 @@ export interface DetailsDto {
   productCode?: string; // ProductCode: string?
   productName?: string; // ProductName: string?
   productGroupID?: number; // ProductGroupId: long?
-  productCategoryID?: number; // ProductCategoryID: long?
+  groupCategoryID?: number;
+  defaultVendorID?: number; // defaultVendorID: long?
+  productCategoryID?: number; // ProductCategoryID: l ong?
   supplyMethod?: string; // SupplyMethod: string?
   hsnCode?: string; // HSNCode: string?
   commodityCode?: string; // CommodityCode: string?
@@ -90,6 +101,7 @@ export interface DetailsDto {
   basicUnitID: number;
   hold?: boolean; // newly added
   active?:boolean; // newly added
+  manual?:boolean; // newly added
 }
 
 export interface ProductValidationDto {
@@ -181,6 +193,8 @@ export interface ProductBatchInputDto {
   prevProductBatchID?: number;
   supplierWiseBatchCreation?: boolean;
   baseUnitRemarks: string;
+  aPC:number;
+  stock:number;
 }
 
 export type ProductBatchValidationDto = {};

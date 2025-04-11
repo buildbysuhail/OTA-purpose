@@ -154,141 +154,133 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="">
-              <div className="grid grid-cols-1 gap-3">
-                <DataGrid
-                  dataSource={store}
-                  height={gridHeight.windows}
-                  key="exchRateID"
-                  showBorders={true}
-                  showRowLines={true}
-                  onRowUpdating={(e) => {
-                    // Check if 'rate' is being updated
-                    if (e.newData.rate !== undefined) {
-                      // Set 'rateDate' to current date and 'cStatus' to 'true'
-                      e.newData.rateDate = new Date();
-                      e.newData.cStatus = true;
-                    }
-                  }}
-                  onFocusedCellChanging={onFocusedCellChanging}>
-                  <KeyboardNavigation
-                    editOnKeyPress={true}
-                    enterKeyAction={"startEdit"}
-                    enterKeyDirection={"row"}
-                  />
-                  <Paging pageSize={100}></Paging>
-                  <Scrolling mode="standard" />
-                  <RemoteOperations
-                    filtering={false}
-                    sorting={false}
-                    paging={false}
-                  />
-                  <Column
-                    dataField="exchRateID"
-                    caption={t("SiNo")}
-                    dataType="number"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    allowFiltering={true}
-                    minWidth={150}
-                  />
-                  <Column
-                    dataField="toCurrency"
-                    caption={t("to_currency")}
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    minWidth={150}
-                    allowEditing={true}>
-                    <Lookup
-                      dataSource={currencies}
-                      valueExpr="name"
-                      displayExpr="name"
-                    />
-                  </Column>
-                  <Column
-                    dataField="rate"
-                    caption={t("rate")}
-                    dataType="number"
-                    allowSearch={true}
-                    allowFiltering={true}
-                    minWidth={150}
-                    allowEditing={true}
-                  />
-                  <Column
-                    dataField="rateDate"
-                    caption={t("rate_date")}
-                    dataType="date"
-                    allowEditing={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="cStatus"
-                    caption={t("active")}
-                    dataType="string"
-                    allowEditing={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    minWidth={150}
-                  />
-                  <Column
-                    allowEditing={false}
-                    caption={t("action")}
-                    width={80}
-                    cellRender={ChartCell}
-                  />
-                  <Editing
-                    allowUpdating={true}
-                    allowAdding={false}
-                    allowDeleting={false}
-                    mode="cell"
-                  />
-                  <Toolbar>
-                    <Item location="before" cssClass="mb-4">
-                      <ERPDataCombobox
-                        className="w-[300px] mb-[13px]"
-                        id="baseCurrency"
-                        field={{
-                          id: "baseCurrency",
-                          required: true,
-                          getListUrl: Urls.data_base_currency,
-                          valueKey: "currencyID",
-                          labelKey: "currencyName",
-                        }}
-                        onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, baseCurrency: data?.baseCurrency, })); load(data?.baseCurrency); }}
-                        data={postData}
-                        defaultData={postData}
-                        // value={postData?.baseCurrency}
-                        reload={rootState?.PopupData?.currencyMaster?.reload}
-                        label={t("base_currency")}
-                      />
-                    </Item>
-                    <Item location="after">
-                      <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null })) }}
-                        className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6]">
-                        {t("add_currency")}
-                      </a>
-                    </Item>
-                  </Toolbar>
-                </DataGrid>
-              </div>
-              <div className="grid grid-cols-1 gap-3 pt-4">
-                <ERPButton
-                  className="justify-self-end"
-                  type="button"
-                  disabled={postDataLoading}
-                  variant="primary"
-                  onClick={handleSubmit}
-                  loading={postDataLoading}
-                  title={t("save")}
-                />
-              </div>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="flex flex-wrap items-center justify-between">
+              <ERPDataCombobox
+                className="w-[300px] mb-[13px]"
+                id="baseCurrency"
+                field={{
+                  id: "baseCurrency",
+                  required: true,
+                  getListUrl: Urls.data_base_currency,
+                  valueKey: "currencyID",
+                  labelKey: "currencyName",
+                }}
+                onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, baseCurrency: data?.baseCurrency, })); load(data?.baseCurrency); }}
+                data={postData}
+                defaultData={postData}
+                // value={postData?.baseCurrency}
+                reload={rootState?.PopupData?.currencyMaster?.reload}
+                label={t("base_currency")}
+              />
+              <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null })) }}
+                className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6] sm:mt-2">
+                {t("add_currency")}
+              </a>
             </div>
+            <DataGrid
+              dataSource={store}
+              height={gridHeight.windows}
+              key="exchRateID"
+              showBorders={true}
+              showRowLines={true}
+              onRowUpdating={(e) => {
+                // Check if 'rate' is being updated
+                if (e.newData.rate !== undefined) {
+                  // Set 'rateDate' to current date and 'cStatus' to 'true'
+                  e.newData.rateDate = new Date();
+                  e.newData.cStatus = true;
+                }
+              }}
+              onFocusedCellChanging={onFocusedCellChanging}>
+              <KeyboardNavigation
+                editOnKeyPress={true}
+                enterKeyAction={"startEdit"}
+                enterKeyDirection={"row"}
+              />
+              <Paging pageSize={100}></Paging>
+              <Scrolling mode="standard" />
+              <RemoteOperations
+                filtering={false}
+                sorting={false}
+                paging={false}
+              />
+              <Column
+                dataField="exchRateID"
+                caption={t("SiNo")}
+                dataType="number"
+                allowSorting={true}
+                allowSearch={true}
+                allowEditing={false}
+                allowFiltering={true}
+                minWidth={150}
+              />
+              <Column
+                dataField="toCurrency"
+                caption={t("to_currency")}
+                dataType="string"
+                allowSorting={true}
+                allowSearch={true}
+                allowFiltering={true}
+                minWidth={150}
+                allowEditing={true}>
+                <Lookup
+                  dataSource={currencies}
+                  valueExpr="name"
+                  displayExpr="name"
+                />
+              </Column>
+              <Column
+                dataField="rate"
+                caption={t("rate")}
+                dataType="number"
+                allowSearch={true}
+                allowFiltering={true}
+                minWidth={150}
+                allowEditing={true}
+              />
+              <Column
+                dataField="rateDate"
+                caption={t("rate_date")}
+                dataType="date"
+                allowEditing={true}
+                allowSearch={true}
+                allowFiltering={true}
+                minWidth={100}
+              />
+              <Column
+                dataField="cStatus"
+                caption={t("active")}
+                dataType="string"
+                allowEditing={true}
+                allowSearch={true}
+                allowFiltering={true}
+                minWidth={150}
+              />
+              <Column
+                allowEditing={false}
+                caption={t("action")}
+                width={80}
+                cellRender={ChartCell}
+              />
+              <Editing
+                allowUpdating={true}
+                allowAdding={false}
+                allowDeleting={false}
+                mode="cell"
+              />
+            </DataGrid>
+          </div>
+          <div className="grid grid-cols-1 gap-3 pt-4">
+            <ERPButton
+              className="justify-self-end"
+              type="button"
+              disabled={postDataLoading}
+              variant="primary"
+              onClick={handleSubmit}
+              loading={postDataLoading}
+              title={t("save")}
+            />
           </div>
         </div>
       </div>

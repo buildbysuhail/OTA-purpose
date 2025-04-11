@@ -7,7 +7,7 @@ import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
+import { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import BalancesheetDetails from "./balancesheet-details";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
@@ -32,17 +32,14 @@ const BalancesheetVertical = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-
         return (
           cellElement.data.accGroupID > 0 ? <DrillDownCellTemplate data={cellElement} field="accGroupID"></DrillDownCellTemplate> : cellElement.value
-
         )
       },
       // cellRender: (cellElement: any, cellInfo: any) => {
       //   return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-
       // }
     },
     {
@@ -50,10 +47,9 @@ const BalancesheetVertical = () => {
       caption: t("ledger_ID"),
       dataType: "number",
       allowSearch: true,
-      showInPdf:true,
+      showInPdf: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-
         return (
           cellElement.data.ledgerID > 0 ? <DrillDownCellTemplate data={cellElement} field="ledgerID"></DrillDownCellTemplate> : cellElement.value
 
@@ -76,7 +72,7 @@ const BalancesheetVertical = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: (cellElement.data.isGroup==true&&cellElement.data.isSubGroup!==true? "   ":"") + (cellInfo.value ?? ""),
+            text: (cellElement.data.isGroup == true && cellElement.data.isSubGroup !== true ? "   " : "") + (cellInfo.value ?? ""),
             bold: cellElement.data.isGroup == true ? true : false,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
@@ -206,9 +202,8 @@ const BalancesheetVertical = () => {
                   : cellElement.data.isGroup == true
                     ? "font-bold text-[#DC143C]"
                     : ""
-              }`}
-          >
-            {`${cellElement.data?.debit == null ? '' : getFormattedValue(parseFloat(cellElement.data.debit) )}`}
+              }`}>
+            {`${cellElement.data?.debit == null ? '' : getFormattedValue(parseFloat(cellElement.data.debit))}`}
 
           </span>)
         }
@@ -277,9 +272,8 @@ const BalancesheetVertical = () => {
                   : cellElement.data.isGroup == true
                     ? "font-bold text-[#DC143C]"
                     : ""
-              }`}
-          >
-            {`${cellElement.data?.credit == null ? '' : getFormattedValue(parseFloat(cellElement.data.credit) )}`}
+              }`}>
+            {`${cellElement.data?.credit == null ? '' : getFormattedValue(parseFloat(cellElement.data.credit))}`}
           </span>)
         }
       }
@@ -298,10 +292,10 @@ const BalancesheetVertical = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue( parseFloat(balance))
+              : getFormattedValue(parseFloat(balance))
           return {
             ...exportCell,
-            text: cellInfo.value?'Y':'N',
+            text: cellInfo.value ? 'Y' : 'N',
             bold: cellElement.data.isGroup == true ? true : false,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
@@ -347,8 +341,7 @@ const BalancesheetVertical = () => {
                   : cellElement.data.isGroup == true
                     ? "font-bold text-[#DC143C]"
                     : ""
-              }`}
-          >
+              }`}>
             {cellElement.data.isGroup ? 'Y' : 'N'}
           </span>)
         }
@@ -368,7 +361,7 @@ const BalancesheetVertical = () => {
           const value =
             balance == null
               ? ""
-              :balance<0? getFormattedValue(-1*parseFloat(balance))+' Cr': getFormattedValue(parseFloat(balance))+' Dr'
+              : balance < 0 ? getFormattedValue(-1 * parseFloat(balance)) + ' Cr' : getFormattedValue(parseFloat(balance)) + ' Dr'
           return {
             ...exportCell,
             text: value,
@@ -406,31 +399,32 @@ const BalancesheetVertical = () => {
           };
         }
         else {
-          return (<span
-            className={`${cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
-                ? "font-bold text-[#34A4DC]"
-                : cellElement.data.isGroup == true &&
-                  cellElement.data.isSubGroup == true
-                  ? "font-bold text-[#2E8B57]"
-                  : cellElement.data.isGroup == true
-                    ? "pl-4 font-bold text-[#DC143C]"
-                    : ""
-              }`}
-          >
-            {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null
-              ? ""
-              : cellElement.data.amount < 0
-                ? getFormattedValue(-1 * parseFloat(cellElement.data.amount) )
-                : getFormattedValue(parseFloat(cellElement.data.amount) )
-              } ${cellElement.data?.amount == 0 || cellElement.data?.amount == null
+          return (
+            <span
+              className={`${cellElement.data.isSubTotal == true
+                ? "font-bold text-black"
+                : cellElement.data.isTotal == true
+                  ? "font-bold text-[#34A4DC]"
+                  : cellElement.data.isGroup == true &&
+                    cellElement.data.isSubGroup == true
+                    ? "font-bold text-[#2E8B57]"
+                    : cellElement.data.isGroup == true
+                      ? "pl-4 font-bold text-[#DC143C]"
+                      : ""
+                }`}>
+              {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null
                 ? ""
-                : cellElement.data?.amount >= 0
-                  ? "Dr"
-                  : "Cr"
-              }`}
-          </span>)
+                : cellElement.data.amount < 0
+                  ? getFormattedValue(-1 * parseFloat(cellElement.data.amount))
+                  : getFormattedValue(parseFloat(cellElement.data.amount))
+                } ${cellElement.data?.amount == 0 || cellElement.data?.amount == null
+                  ? ""
+                  : cellElement.data?.amount >= 0
+                    ? "Dr"
+                    : "Cr"
+                }`}
+            </span>
+          )
         }
       }
     },
@@ -461,29 +455,19 @@ const BalancesheetVertical = () => {
                   method={ActionType.POST}
                   // postData={postdata}
                   gridId="grd_balancesheet_vertical"
-
                   childPopupPropsDynamic={(dataField: string) => ({
                     title: dataField == "accGroupID" ? t(`balance_detailed`) : t(`monthwise_balance`),
                     width: 1000,
-                    height:800,
+                    height: 800,
                     isForm: false,
                     content:
-                      dataField == "accGroupID" ?
-                        <BalancesheetDetails
-                        />
-                        : dataField == "ledgerID" ? <CashBookMonthWise
-
-                        />
-                          : null
-                    ,
+                      dataField == "accGroupID" ? <BalancesheetDetails /> : dataField == "ledgerID" ? <CashBookMonthWise /> : null,
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
-
                   })}
                   postDataDynamic={(dataField: string) => dataField == "accGroupID" ? { asonDate: filter.asonDate } : { asonDate: filter.asonDate }}
                   originDynamic={(dataField: string) => dataField == "accGroupID" ? "detailed" : "trialBalance"}
-                // )}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

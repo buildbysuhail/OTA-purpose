@@ -23,7 +23,7 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
   const { t } = useTranslation("accountsReport");
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid lg:grid-cols-2 md:grid-cols-1  gap-4">
       <ERPDateInput
         {...getFieldProps("asonDate")}
         label={t("as_on_date")}
@@ -52,9 +52,9 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
         onChangeData={({ closingStock }: any) =>
           handleFieldChange("closingStock", parseInt(closingStock) || 0)
         }
-        // onChangeData={(data: { closingStock: number }) =>
-        //   handleFieldChange("closingStock", data.closingStock)
-        // }
+      // onChangeData={(data: { closingStock: number }) =>
+      //   handleFieldChange("closingStock", data.closingStock)
+      // }
       />
     </div>
   );

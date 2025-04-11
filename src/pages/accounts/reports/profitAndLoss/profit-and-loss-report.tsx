@@ -1,44 +1,25 @@
-import {
-  useState,
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import { useState, MouseEventHandler, useCallback, useEffect, useRef, } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
-import {
-  Clock1,
-  EllipsisVertical,
-  FileDown,
-  FileText,
-  FileUp,
-  Forward,
-  Printer,
-  RectangleVertical,
-  X,
-} from "lucide-react";
+import { Clock1, EllipsisVertical, FileText, FileUp, Forward, Printer, RectangleVertical, X, } from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import ProfitAndLossReportFilter, {
-  ProfitAndLossReportFilterInitialState,
-} from "./profit-and-loss-report-filter";
+import ProfitAndLossReportFilter, { ProfitAndLossReportFilterInitialState, } from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTranslation } from "react-i18next";
 import ExcelJS from "exceljs";
-import { BlobProvider, PDFViewer } from "@react-pdf/renderer";
-
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { BlobProvider } from "@react-pdf/renderer";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 import { printPdf } from "../../../../utilities/print-report-utils";
 import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-vertical-pdf";
 import ProfitAndLossPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-horizontal-pdf";
 import { formatDateFields } from "../../../../utilities/Utils";
+
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -59,12 +40,12 @@ const ProfitAndLossRow: React.FC<{
     <tr>
       <td
         className={`py-2 ${item.title == "M"
-            ? "text-[#8B4513]"
-            : item.title == "L"
-              ? ""
-              : item.groupName == "TOTAL"
-                ? "text-sm font-bold text-[#0e0d0d]"
-                : ""
+          ? "text-[#8B4513]"
+          : item.title == "L"
+            ? ""
+            : item.groupName == "TOTAL"
+              ? "text-sm font-bold text-[#0e0d0d]"
+              : ""
           }`}
         style={{
           paddingLeft:
@@ -72,12 +53,12 @@ const ProfitAndLossRow: React.FC<{
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}
       >
-         <a
-      onClick={handleClick}
-      className={item.groupID === 0 || item.groupID === -400 ? "cursor-default" : "hover:text-[#301dd8] cursor-pointer"}
-    >
-      {item.groupName}
-    </a>
+        <a
+          onClick={handleClick}
+          className={item.groupID === 0 || item.groupID === -400 ? "cursor-default" : "hover:text-[#301dd8] cursor-pointer"}
+        >
+          {item.groupName}
+        </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
@@ -104,21 +85,21 @@ const ProfitAndLossRow: React.FC<{
               fontWeight: item.title == "M" ? "bold" : "normal",
             }}
           >
-            { item.total < 0
-              ? "(-)" +getFormattedValue(-1*item.total)
-              :item.title=="M"?getFormattedValue(item.total)
-              :parseFloat(getFormattedValue(item.total))==0
-              ? ''
-              : getFormattedValue(item.total)}
+            {item.total < 0
+              ? "(-)" + getFormattedValue(-1 * item.total)
+              : item.title == "M" ? getFormattedValue(item.total)
+                : parseFloat(getFormattedValue(item.total)) == 0
+                  ? ''
+                  : getFormattedValue(item.total)}
           </a>
         </td>
       )}
     </tr>
   );
 };
-const goToPreviousPage = () => {
-  window.history.back();
-};
+
+const goToPreviousPage = () => { window.history.back(); };
+
 // Horizontal format component
 const HorizontalProfitAndLoss: React.FC<{
   data: any[];
@@ -129,11 +110,11 @@ const HorizontalProfitAndLoss: React.FC<{
   const expense = data?.filter((item: any) => item?.transType == "E");
   const income = data?.filter((item: any) => item?.transType == "I");
   return (
-    <div className="relative">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
-          <table className="w-full text-left border-collapse dark:bg-dark-bg bg-white">
+    <div className="relative w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Expense Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left border-collapse dark:bg-dark-bg bg-white">
             <thead>
               <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("expense")}</th>
@@ -152,12 +133,25 @@ const HorizontalProfitAndLoss: React.FC<{
                 ))}
             </tbody>
           </table>
+          {/* Mobile-only: Expense Total placed under the Expense table */}
+          <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2 md:hidden">
+            <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+            <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
+              {getFormattedValue(
+                data?.find(
+                  (item: any) =>
+                    item?.transType === "E" && item?.groupName === "TOTAL"
+                )?.total || ""
+              )}
+            </h6>
+          </div>
         </div>
-        <div>
-          {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
-          <table className="w-full text-left border-collapse dark:bg-dark-bg bg-white">
+
+        {/* Income Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left border-collapse dark:bg-dark-bg bg-white">
             <thead>
-              <tr className=" dark:bg-dark-bg-header bg-gray-400">
+              <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("income")}</th>
                 <th className="py-2 text-end pe-2">{t("amount")}</th>
               </tr>
@@ -174,9 +168,23 @@ const HorizontalProfitAndLoss: React.FC<{
                 ))}
             </tbody>
           </table>
+          {/* Mobile-only: Income Total placed under the Income table */}
+          <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2 md:hidden">
+            <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+            <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
+              {getFormattedValue(
+                data?.find(
+                  (item: any) =>
+                    item?.transType === "I" && item?.groupName === "TOTAL"
+                )?.total || ""
+              )}
+            </h6>
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 cursor-default">
+
+      {/* Desktop-only: Totals retained under their respective table areas */}
+      <div className="hidden md:grid grid-cols-2 gap-4 cursor-default mt-4">
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
           <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
@@ -201,15 +209,14 @@ const HorizontalProfitAndLoss: React.FC<{
         </div>
       </div>
     </div>
+
   );
 };
 
 const ProfitAndLossReport = () => {
   const [data, setData] = useState<any[]>([]);
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    ProfitAndLossReportFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [filterValidations, setFilterValidations] = useState();
@@ -222,11 +229,24 @@ const ProfitAndLossReport = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
-
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -266,13 +286,10 @@ const ProfitAndLossReport = () => {
       setFilter({});
       setFilterShowCount((prev) => prev + 1);
     }
-
     setShowFilter(false);
   }, [filterShowCount]);
 
-  const goToPreviousPage = () => {
-    window.history.back();
-  };
+  const goToPreviousPage = () => { window.history.back(); };
   const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Profit And Loss");
@@ -301,6 +318,7 @@ const ProfitAndLossReport = () => {
     //     day: "2-digit",
     //   }
     // )}`;
+
     titleCell.alignment = {
       horizontal: "center",
       vertical: "middle",
@@ -326,14 +344,9 @@ const ProfitAndLossReport = () => {
     };
 
     // Filter and prepare data
-    const expense = data.filter(
-      (item) => item?.transType === "E" && item?.groupName !== "TOTAL"
-    );
-    const income = data.filter(
-      (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
-    );
+    const expense = data.filter((item) => item?.transType === "E" && item?.groupName !== "TOTAL");
+    const income = data.filter((item) => item?.transType === "I" && item?.groupName !== "TOTAL");
     const maxLength = Math.max(expense.length, income.length);
-
     // Add data rows
     let currentRow = 4;
 
@@ -359,12 +372,12 @@ const ProfitAndLossReport = () => {
     for (let i = 0; i < maxLength; i++) {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
-        worksheet.getCell(`B${currentRow}`).value =   expense[i].total < 0
-        ? "(-)" +getFormattedValue(-1*expense[i].total) 
-        : parseFloat(getFormattedValue(expense[i].total)) === 0
-        ? ''
-        : getFormattedValue(expense[i].total);
-   
+        worksheet.getCell(`B${currentRow}`).value = expense[i].total < 0
+          ? "(-)" + getFormattedValue(-1 * expense[i].total)
+          : parseFloat(getFormattedValue(expense[i].total)) === 0
+            ? ''
+            : getFormattedValue(expense[i].total);
+
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -402,12 +415,11 @@ const ProfitAndLossReport = () => {
 
       if (income[i]) {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
-
         worksheet.getCell(`D${currentRow}`).value = income[i].total < 0
-        ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
-        : parseFloat(getFormattedValue(income[i].total)) === 0
-        ? ''
-        : getFormattedValue(income[i].total);
+          ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
+          : parseFloat(getFormattedValue(income[i].total)) === 0
+            ? ''
+            : getFormattedValue(income[i].total);
 
         // income[i].total < 0
         // ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
@@ -506,9 +518,7 @@ const ProfitAndLossReport = () => {
 
     // Generate Excel file
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -535,34 +545,25 @@ const ProfitAndLossReport = () => {
 
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">
-      {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
-        <div className="flex items-center p-1  border dark:!border-dark-border border-gray-300 rounded-md mb-4">
-          {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
+        {/* Updated responsive header */}
+        <div className="flex items-center p-1 border dark:!border-dark-border border-gray-300 rounded-md mb-4">
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-            {/* <span>Customise</span> */}
-            <h6 className="text-center text-lg font-bold  mb-0">
+            <h6 className="text-center text-lg font-bold mb-0">
               {t("profit_and_loss_account")}
             </h6>
-            <i className="fas fa-cog ms-1"></i>
           </div>
 
-          <div className="flex items-center ms-auto space-x-4">
-            <div
-              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
-                }`}
-            >
+          {/* Desktop Controls - hidden on mobile */}
+          <div className="hidden md:flex items-center ms-auto space-x-4">
+            <button className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"}`}>
               <div
                 className="flex justify-center items-center w-8 h-8"
                 style={{
                   minWidth: "2rem",
                   minHeight: "2rem",
-                }} /* Ensures consistent dimensions */
-              >
-                <div
-                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"
-                    }`}
-                >
+                }}>
+                <div className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"}`}>
                   <RectangleVertical />
                 </div>
               </div>
@@ -583,12 +584,12 @@ const ProfitAndLossReport = () => {
                   className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"
                 ></label>
               </div>
-            </div>
+            </button>
 
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
-                  width={400}
-                  height={300}
+                width={400}
+                height={300}
                 gridId="gridPandL"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
@@ -602,63 +603,48 @@ const ProfitAndLossReport = () => {
             </button>
 
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-share-alt me-1"></i> */}
               <Forward className="pe-2" />
               <span>{t("share")}</span>
               <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
-                {" "}
-                0{" "}
+                0
               </span>
             </button>
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-clock me-1"></i> */}
               <Clock1 className="pe-2" />
               <span>{t("schedule_report")}</span>
             </button>
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
               onClick={handlePrint}>
-              {/* <i className="fas fa-print me-1"></i> */}
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
 
             <div className="relative">
-              <button
-                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
-                ref={buttonRef}
-              >
-                {/* <i className="fas fa-file-export me-1"></i> */}
+              <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300" ref={buttonRef}>
                 <EllipsisVertical
                   className="!w-4 !h-4"
                   onClick={() => setIsPopupVisible(!isPopupVisible)}
                 />
-                {/* <span>{t("export")}</span> */}
               </button>
 
               {isPopupVisible && (
                 <div
-                  ref={popupRef} // Attach ref to the popup
-                  className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                  ref={popupRef}
+                  className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
                   style={{
-                    top: "100%", // Position the popup right below the button
-                    left: "-139px", // Align it with the left edge of the button
-                    width: "221px", // Set your desired width
-                    marginTop: "8px", // Add some spacing between the button and the popup
-                  }}
-                >
-                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                    top: "100%",
+                    left: "-139px",
+                    width: "221px",
+                    marginTop: "8px",
+                  }}>
+                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                     <ul className="space-y-1">
                       <li>
-                        <button
-                          className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          onClick={handleExport}
-                        >
-
+                        <button className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={handleExport}>
                           <FileUp className="pe-2" />
                           <span>{t("export_to_excel")}</span>
                         </button>
                       </li>
-
 
                       <li>
                         <BlobProvider
@@ -678,26 +664,24 @@ const ProfitAndLossReport = () => {
                               />
 
                             )
-                          }
-                        >
+                          }>
+
                           {({ blob, loading }) => (
                             <button
                               className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                              disabled={loading} // Disable the button while loading
+                              disabled={loading}
                               onClick={async () => {
                                 if (blob) {
-                                  // Create a download link and trigger the download
                                   const url = URL.createObjectURL(blob);
-                                  const a = document.createElement('a');
+                                  const a = document.createElement("a");
                                   a.href = url;
-                                  a.download =!isVerticalView? "ProfitAndLoss.pdf":"ProfitAndLossVertical.pdf";
+                                  a.download = !isVerticalView ? "ProfitAndLoss.pdf" : "ProfitAndLossVertical.pdf";
                                   a.click();
-                                  URL.revokeObjectURL(url); // Clean up the URL object
+                                  URL.revokeObjectURL(url);
                                 }
-                              }}
-                            >
+                              }}>
                               <FileText className="pe-2" />
-                              <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
+                              <span>{loading ? "Loading document..." : t("export_to_pdf")}</span>
                             </button>
                           )}
                         </BlobProvider>
@@ -708,16 +692,130 @@ const ProfitAndLossReport = () => {
               )}
             </div>
 
-            <button
-              onClick={goToPreviousPage}
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-            >
-              {/* <i className="fas fa-times"></i> */}
-              {/* <Timer /> */}
+            <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               <X />
             </button>
           </div>
+
+          {/* Mobile Menu Toggle - visible only on mobile */}
+          <div className="md:hidden flex ml-auto">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              {isMobileMenuOpen ? <X /> : <EllipsisVertical />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu - conditionally rendered */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border dark:border-dark-border border-gray-300 border-t-0 rounded-b-md mb-4 p-2 space-y-2">
+            <button className={`w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out`}>
+              <div className="flex justify-center items-center w-8 h-8">
+                <div className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"}`}>
+                  <RectangleVertical />
+                </div>
+              </div>
+              <span className="ml-2">
+                {isVerticalView ? t("show_horizontal") : t("show_vertical")}
+              </span>
+              <div className="relative inline-block w-12 h-6 ml-auto align-middle select-none transition duration-200 ease-in">
+                <input
+                  type="checkbox"
+                  name="toggle-mobile"
+                  id="toggle-mobile"
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out transform checked:translate-x-6"
+                  checked={isVerticalView}
+                  onChange={() => setIsVerticalView(!isVerticalView)}
+                />
+                <label htmlFor="toggle-mobile" className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"></label>
+              </div>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg bg-gray-100 p-2 rounded-md">
+              <ErpGridGlobalFilter
+                width={400}
+                height={300}
+                gridId="gridPandL"
+                initialData={ProfitAndLossReportFilterInitialState}
+                content={<ProfitAndLossReportFilter />}
+                toogleFilter={showFilter}
+                onApplyFilters={(filters) => onApplyFilter(filters)}
+                onClose={onCloseFilter}
+                validations={filterValidations}
+                onOpened={(status: any) => setShowFilter(status)}
+                title={t("profit_and_loss")}
+              />
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              <Forward className="pe-2" />
+              <span>{t("share")}</span>
+              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
+                0
+              </span>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              <Clock1 className="pe-2" />
+              <span>{t("schedule_report")}</span>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md" onClick={handlePrint}>
+              <Printer className="pe-2" />
+              <span>{t("print")}</span>
+            </button>
+
+            <button className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md" onClick={handleExport} >
+              <FileUp className="pe-2" />
+              <span>{t("export_to_excel")}</span>
+            </button>
+
+            <BlobProvider
+              document={
+                !isVerticalView ? (
+                  <ProfitAndLossPDFTemplate
+                    userSession={userSession}
+                    getFormattedValue={getFormattedValue}
+                    filter={filter}
+                    data={data}
+                  />
+                ) : (
+                  <ProfitAndLossVerticalPDFTemplate
+                    userSession={userSession}
+                    getFormattedValue={getFormattedValue}
+                    filter={filter}
+                    data={data}
+                  />
+                )
+              }>
+              {({ blob, loading }) => (
+                <button
+                  className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+                  disabled={loading}
+                  onClick={async () => {
+                    if (blob) {
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = !isVerticalView ? "ProfitAndLoss.pdf" : "ProfitAndLossVertical.pdf";
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }
+                  }}>
+                  <FileText className="pe-2" />
+                  <span>
+                    {loading ? "Loading document..." : t("export_to_pdf")}
+                  </span>
+                </button>
+              )}
+            </BlobProvider>
+
+            <button onClick={goToPreviousPage} className="w-full flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+              <X className="pe-2" />
+              <span>{t("close")}</span>
+            </button>
+          </div>
+        )}
+
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
@@ -734,6 +832,7 @@ const ProfitAndLossReport = () => {
             day: "2-digit",
           })}
         </p>
+
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (
           <>
@@ -778,35 +877,59 @@ const ProfitAndLossReport = () => {
         {/* <p className="text-center mt-4">
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
-      </div>
-      {isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
-        <ERPModal
-          isOpen={isOpenDetails.isOpen}
-          // title={t("bank_cards")}
-          title={t("")}
-          width={
-            isOpenDetails.key == -500
-              ? 500
-              : 1200
-          }
-          height={800}
-          isForm={true}
-          closeModal={() => {
-            setIsOpenDetails({ isOpen: false, key: 0 });
-          }}
-          content={
-            isOpenDetails.key == -500 ? (
-              <ProfitAndLossClosingStockDetails
-                postData={{
+      </div >
+      {
+        isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
+          <ERPModal
+            isOpen={isOpenDetails.isOpen}
+            // title={t("bank_cards")}
+            title={t("")}
+            width={
+              isOpenDetails.key == -500
+                ? 500
+                : 1200
+            }
+            height={800}
+            isForm={true}
+            closeModal={() => {
+              setIsOpenDetails({ isOpen: false, key: 0 });
+            }}
+            content={
+              isOpenDetails.key == -500 ? (
+                <ProfitAndLossClosingStockDetails
+                  postData={{
+                    fromDate: filter.fromDate,
+                    toDate: filter.toDate,
+                    valuationUsing: filter.valuationUsing,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                />
+              ) : (
+                <ProfitAndLossSubledgerwiseView
+                  postData={{
+                    accGroupID: isOpenDetails.key,
+                    expAccGroupID:
+                      isOpenDetails.key === 19
+                        ? 23
+                        : isOpenDetails.key === 10
+                          ? 26
+                          : 0,
+                    dateFrom: filter.fromDate,
+                    asOnDate: filter.toDate,
+                    isDateForm: true,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                />
+              )
+            }
+            postData={
+              isOpenDetails.key == -500
+                ? {
                   fromDate: filter.fromDate,
                   toDate: filter.toDate,
                   valuationUsing: filter.valuationUsing,
-                }}
-                groupName={isOpenDetails.groupName}
-              />
-            ) : (
-              <ProfitAndLossSubledgerwiseView
-                postData={{
+                }
+                : {
                   accGroupID: isOpenDetails.key,
                   expAccGroupID:
                     isOpenDetails.key === 19
@@ -817,35 +940,12 @@ const ProfitAndLossReport = () => {
                   dateFrom: filter.fromDate,
                   asOnDate: filter.toDate,
                   isDateForm: true,
-                }}
-                groupName={isOpenDetails.groupName}
-              />
-            )
-          }
-          postData={
-            isOpenDetails.key == -500
-              ? {
-                fromDate: filter.fromDate,
-                toDate: filter.toDate,
-                valuationUsing: filter.valuationUsing,
-              }
-              : {
-                accGroupID: isOpenDetails.key,
-                expAccGroupID:
-                  isOpenDetails.key === 19
-                    ? 23
-                    : isOpenDetails.key === 10
-                      ? 26
-                      : 0,
-                dateFrom: filter.fromDate,
-                asOnDate: filter.toDate,
-                isDateForm: true,
-              }
-          }
-        />
-      )}
-
-    </div>
+                }
+            }
+          />
+        )
+      }
+    </div >
   );
 };
 

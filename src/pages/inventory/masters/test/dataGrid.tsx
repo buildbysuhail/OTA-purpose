@@ -45,7 +45,7 @@ export default function DataGrid<T extends DataItem>({
   keyField,
   gridId,
   className = "",
-  rowHeight = 50,
+  rowHeight = 40,
   height = 800,
   onAddData,
   isLoading,
@@ -205,10 +205,21 @@ export default function DataGrid<T extends DataItem>({
 
     return (
       <td
-        className="p-3 px-4 border-r border-gray-300"
+        className="border-r border-gray-100"
         style={{ width: column.width || "150px", minWidth: column.width || "150px" }}
       >
-        <div className="w-full h-full py-2">{displayValue}</div>
+           <ERPInput
+            id={`${column.header} ${item[column.field]}`}
+            noLabel
+            type="text"
+            className="w-full"
+            value={displayValue}
+            noBorder
+            inputClassName="!h-full !border-none"
+           
+            // onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        {/* <div className="w-full h-full py-2">{displayValue}</div> */}
       </td>
     );
   };
@@ -219,7 +230,7 @@ export default function DataGrid<T extends DataItem>({
     return (
       <tr
         style={style}
-        className="flex hover:bg-gray-50 border-b border-gray-100"
+        className="flex border-b border-gray-100"
         key={String(item[keyField])}
       >
         {visibleColumns.map((column) => renderCell(item, column))}
@@ -262,7 +273,7 @@ export default function DataGrid<T extends DataItem>({
           />
         </div>
       </div>
-      <div className={`border border-gray-300 rounded-md  ${className} w-full`}
+      <div className={`border border-gray-100 rounded-md  ${className} w-full `}
       //  style={{ minWidth: `${tableWidth}px`,width:`${tableWidth}px` }}
        >
       {/* Header */}
@@ -282,28 +293,13 @@ export default function DataGrid<T extends DataItem>({
         </thead>
       </table>
 
-      {/* Virtualized Body 
-        {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-
-          {filteredData.length === 0 ? (
-        <div
-          className="text-center p-4 border-b border-gray-300"
-          style={{ minWidth: `${tableWidth}px`, display: "flex" }}
-        >
-          No data available
-        </div>
-      ) :
-      */}
      {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) :filteredData.length === 0 ? (
         <div
-          className="text-center p-4 border-b border-gray-300"
+          className="text-center p-4 border-b border-gray-100"
           style={{ minWidth: `${tableWidth}px`, display: "flex" }}
         >
           No data available
@@ -316,8 +312,8 @@ export default function DataGrid<T extends DataItem>({
           itemCount={filteredData.length}
           itemSize={rowHeight}
           width={tableWidth}
-          className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400"
-          style={{ direction: appState?.dir === "rtl" ? "rtl" : "ltr", overflowX: "auto" }}
+          className=" bg-white"
+          style={{ direction: appState?.dir  }}
         >
           {Row}
         </List>

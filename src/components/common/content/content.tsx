@@ -171,6 +171,7 @@ import PurchaseTaxGSTTaxwise from "../../../pages/inventory/reports/purchase-tax
 import PurchaseReturnTaxGSTTaxwise from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-report";
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-with-hsn-report";
+import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -498,7 +499,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_return_gst_detailed_report" element={<PurchaseReturnTaxGSTDetailed />} />
         <Route path="/inventory/purchase_return_gst_taxwise_report" element={<PurchaseReturnTaxGSTTaxwise />} />
         <Route path="/inventory/purchase_return_gst_taxwise_with_hsn_report" element={<PurchaseReturnTaxGSTTaxwiseWithHSN />} />
-
+        <Route path="/inventory/purchase_return_gst_sales_and_return_report" element={<PurchaseReturnTaxGSTSalesAndReturn />} />
 
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}

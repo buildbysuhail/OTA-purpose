@@ -13,15 +13,15 @@ const PurchaseSummaryFilter = ({
     handleFieldChange,
     formState,
 }: any) => {
-      const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
-      const usersession = useSelector((state: RootState) => state.UserSession);
-      const clientSession = useSelector((state: RootState) => state.ClientSession);
+    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+    const usersession = useSelector((state: RootState) => state.UserSession);
+    const clientSession = useSelector((state: RootState) => state.ClientSession);
     const { t } = useTranslation("accountsReport");
 
     return (
-        <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2">
+        <div className="grid grid-cols-1 gap-2 md:gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <ERPDateInput
                         label={t("from_date")}
                         {...getFieldProps("fromDate")}
@@ -35,13 +35,14 @@ const PurchaseSummaryFilter = ({
                         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
                     />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center border border-[#ccc] rounded-[10px] p-2 sm:border-none sm:rounded-none sm:p-0 gap-2">
+
                     <ERPCheckbox
                         {...getFieldProps("isTimeBased")}
                         label={t("consider_time")}
                         onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
                     />
-                    <div>
+                    <div className="w-full">
                         <label>{t("time_from")}</label>
                         <input
                             type="time"
@@ -49,9 +50,9 @@ const PurchaseSummaryFilter = ({
                             value={formState.data.fromTime || moment().local().format("HH:mm")}
                             onChange={(e) => handleFieldChange("fromTime", e.target.value)}
                             disabled={!formState.data.isTimeBased}
-                            />
-                    {/* </div>
-                    <div> */}
+                        />
+                    </div>
+                    <div className="w-full">
                         <label>{t("time_to")}</label>
                         <input
                             type="time"
@@ -64,58 +65,27 @@ const PurchaseSummaryFilter = ({
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-                
-                {/* <ERPDataCombobox     shown only  SI-BT
-                    label={t("transfer_voucher")}
-                    {...getFieldProps("voucherType")}
-                    field={{
-                        id: "voucherType",
-                        getListUrl: Urls.data_vouchertype,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            voucherType: data.value,
-                        });
-                    }}
-                /> */}
-                {/* <ERPDataCombobox
-                    label={t("product")}
-                    {...getFieldProps("productID")}
-                    field={{
-                        id: "productID",
-                        getListUrl: Urls.data_products,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            productID: data.value,
-                             productName: data.label,
 
-                        });
-                    }}
-                /> */}
-                 {
-        applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-                <ERPDataCombobox
-                    label={t("sales_route")}
-                    {...getFieldProps("salesRouteID")}
-                    field={{
-                        id: "salesRouteID",
-                        getListUrl: Urls.data_salesRoute,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            salesRouteID: data.value,
-                            routeName: data.label,
-                        });
-                    }}
-                />)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+                {
+                    applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+                        <ERPDataCombobox
+                            label={t("sales_route")}
+                            {...getFieldProps("salesRouteID")}
+                            field={{
+                                id: "salesRouteID",
+                                getListUrl: Urls.data_salesRoute,
+                                valueKey: "id",
+                                labelKey: "name",
+                            }}
+                            onSelectItem={(data) => {
+                                handleFieldChange({
+                                    salesRouteID: data.value,
+                                    routeName: data.label,
+                                });
+                            }}
+                        />)
+                }
                 <ERPDataCombobox
                     label={t("sales_man")}
                     {...getFieldProps("salesmanID")}
@@ -132,25 +102,26 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
-                  {
-        applicationSettings.accountsSettings?.allowSalesCounter == true && (
-                <ERPDataCombobox
-                    label={t("counter")}
-                    {...getFieldProps("counterID")}
-                    field={{
-                        id: "counterID",
-                        getListUrl: Urls.data_counters,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            counterID: data.value,
-                            counterName: data.label,
-                        });
-                    }}
-                />
-                )}
+                {
+                    applicationSettings.accountsSettings?.allowSalesCounter == true && (
+                        <ERPDataCombobox
+                            label={t("counter")}
+                            {...getFieldProps("counterID")}
+                            field={{
+                                id: "counterID",
+                                getListUrl: Urls.data_counters,
+                                valueKey: "id",
+                                labelKey: "name",
+                            }}
+                            onSelectItem={(data) => {
+                                handleFieldChange({
+                                    counterID: data.value,
+                                    counterName: data.label,
+                                });
+                            }}
+                        />
+                    )
+                }
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("partyID")}
@@ -185,13 +156,9 @@ const PurchaseSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
-                    // options={[
-                    //     { value: 'si-bt', label: 'SI-BT' },
-                    //     { value: 'se-bt', label: 'SE-BT' }
-                    // ]}
                     field={{
                         id: "voucherForm",
-                        getListUrl: clientSession.isAppGlobal? Urls.data_FormTypeByPI:Urls.data_form_type,
+                        getListUrl: clientSession.isAppGlobal ? Urls.data_FormTypeByPI : Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -201,8 +168,6 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
-                {/* PRESETWAREHOUSEID>0 is from source txt file
-                set that value and disable the combobox */}
                 <ERPDataCombobox
                     label={t("warehouse")}
                     {...getFieldProps("warehouseID")}
@@ -218,45 +183,25 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
-                   {
-        usersession.dbIdValue== "489995732270" && (
-                <ERPDataCombobox
-                    label={t("cost_center")}
-                    {...getFieldProps("costCenterID")}
-                    field={{
-                        id: "costCenterID",
-                        getListUrl: Urls.data_costcentres,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            costCenterID: data.value,
-                        });
-                    }}
-                />
-        )}
-        {/* shows on SI,SR,SI-BT  */}
-                {/* <ERPDataCombobox    
-                    label={t("report_of")}
-                    {...getFieldProps("reportOf")}
-                    options={[
-                        { value: 'all', label: 'All' },
-                        { value: 'credit', label: 'Credit' },
-                        { value: 'cash', label: 'Cash' },
-                        { value: 'card', label: 'Card' }
-                    ]}
-                    field={{
-                        id: "reportOf",
-                        valueKey: "value",
-                        labelKey: "label",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            reportOf: data.value,
-                        });
-                    }}
-                /> */}
+                {
+                    usersession.dbIdValue == "489995732270" && (
+                        <ERPDataCombobox
+                            label={t("cost_center")}
+                            {...getFieldProps("costCenterID")}
+                            field={{
+                                id: "costCenterID",
+                                getListUrl: Urls.data_costcentres,
+                                valueKey: "id",
+                                labelKey: "name",
+                            }}
+                            onSelectItem={(data) => {
+                                handleFieldChange({
+                                    costCenterID: data.value,
+                                });
+                            }}
+                        />
+                    )
+                }
             </div>
         </div>
     );
@@ -281,5 +226,5 @@ export const PurchaseSummaryFilterInitialState = {
     toTime: moment().local().format("hh:mm"),
     transactionType: "",
     reportOf: "",
-    IsInactive:false//true on in shortcut NPIR
+    IsInactive: false//true on in shortcut NPIR
 };

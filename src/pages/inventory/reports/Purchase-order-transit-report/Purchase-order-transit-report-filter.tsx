@@ -9,24 +9,24 @@ import Urls from "../../../../redux/urls"
 const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport")
 
-    // State for warehouse type radio buttons
-    const [warehouseTypeRadio, setWarehouseTypeRadio] = useState({
-      physical: true,
-      van: false,
-    })
-  
-    // Update the WarehouseType value when radio selection changes
-    useEffect(() => {
-      if (warehouseTypeRadio.physical || warehouseTypeRadio.van) {
-        const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van";
-        handleFieldChange("WarehouseType", warehouseType);
-      }
-    }, [warehouseTypeRadio, handleFieldChange]);
+  // State for warehouse type radio buttons
+  const [warehouseTypeRadio, setWarehouseTypeRadio] = useState({
+    physical: true,
+    van: false,
+  })
+
+  // Update the WarehouseType value when radio selection changes
+  useEffect(() => {
+    if (warehouseTypeRadio.physical || warehouseTypeRadio.van) {
+      const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van";
+      handleFieldChange("WarehouseType", warehouseType);
+    }
+  }, [warehouseTypeRadio, handleFieldChange]);
 
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
-      <div className="flex items-center gap-4">
+      <div className="grid lg:grid-cols-2 md:grid-cols-1 items-center gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("date_from")}
@@ -42,35 +42,35 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
         />
       </div>
 
-      {/* Warehouse Selection */}
-      <ERPDataCombobox
-        {...getFieldProps("warehosueID")}
-        label={t("warehouse")}
-        field={{
-          id: "warehouseID",
-          getListUrl: Urls.data_warehouse,
-          params: "",
-          valueKey: "id",
-          labelKey: "name",
-          nameKey: "alias",
-        }}
-        onSelectItem={(data) => handleFieldChange({ warehouseID: data.value, WarehouseName: data.label })}
-      />
+      <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
+        <ERPDataCombobox
+          {...getFieldProps("warehosueID")}
+          label={t("warehouse")}
+          field={{
+            id: "warehouseID",
+            getListUrl: Urls.data_warehouse,
+            params: "",
+            valueKey: "id",
+            labelKey: "name",
+            nameKey: "alias",
+          }}
+          onSelectItem={(data) => handleFieldChange({ warehouseID: data.value, WarehouseName: data.label })}
+        />
 
-      {/* Party Selection */}
-      <ERPDataCombobox
-        {...getFieldProps("partyID")}
-        label={t("party")}
-        field={{
-          id: "partyID",
-          getListUrl: Urls.data_parties,
-          params: "",
-          valueKey: "id",
-          labelKey: "name",
-          nameKey: "alias",
-        }}
-        onSelectItem={(data) => handleFieldChange({ partyID: data.value, PartyName: data.label })}
-      />
+        <ERPDataCombobox
+          {...getFieldProps("partyID")}
+          label={t("party")}
+          field={{
+            id: "partyID",
+            getListUrl: Urls.data_parties,
+            params: "",
+            valueKey: "id",
+            labelKey: "name",
+            nameKey: "alias",
+          }}
+          onSelectItem={(data) => handleFieldChange({ partyID: data.value, PartyName: data.label })}
+        />
+      </div>
 
       {/* Warehouse Type Radio Buttons */}
       <div className="flex items-center">

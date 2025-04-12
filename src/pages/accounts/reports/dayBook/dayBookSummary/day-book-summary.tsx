@@ -97,7 +97,7 @@ const DayBookSummary = () => {
               ? ""
               : balance < 0
                 ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) :getFormattedValue(balance,false,2) ;
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance, false, 2);
 
           return {
             ...exportCell,
@@ -118,7 +118,7 @@ const DayBookSummary = () => {
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.amount == null ? '0' : cellElement.data.amount < 0 ? (-1 * cellElement.data.amount) : cellElement.data.particulars === "TOTAL" ?
-              getFormattedValue(cellElement.data.amount) :getFormattedValue(cellElement.data.amount,false,2) }`}
+              getFormattedValue(cellElement.data.amount) : getFormattedValue(cellElement.data.amount, false, 2)}`}
           </span>)
         }
       }
@@ -227,8 +227,8 @@ const DayBookSummary = () => {
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
-                  filterWidth={333}
-                  filterHeight={230}
+                  filterWidth={350}
+                  filterHeight={300}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}

@@ -300,8 +300,8 @@ const IncomExpenseStatement = () => {
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
-                  filterHeight={230}
+                  filterWidth={360}
+                  filterHeight={235}
                   filterContent={<IncomeExpenseStatementFilter />}
                   onFilterChanged = {(filter: any) => { setFilter(filter)}}
                   filterInitialData={IncomeExpenseStatementFilterInitialState}

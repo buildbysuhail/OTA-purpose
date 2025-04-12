@@ -19,7 +19,6 @@ import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
 import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
-import MultiRatesIndia from "./products-india/product-multi-rates-india";
 import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
 import SearchCommon from "./common/product-search";
 import ImageCommon from "./common/product-image";
@@ -32,61 +31,126 @@ import { RootState } from "../../../../redux/store";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import moment from "moment";
+import MultiRates from "./products-india/product-multi-rates-india";
+import {
+  calculateMarkup,
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../../utilities/Utils";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { customJsonParse } from "../../../../utilities/jsonConverter";
 
 const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { t } = useTranslation("inventory"); debugger;
+  const { t } = useTranslation("inventory");
   const [canEdit, setCanEdit] = useState<boolean>(false);
-  const { isEdit, handleSubmit, handleClear, isLoading, handleClose, formState, handleFieldChange, getFieldProps } =
-
-    useFormManager<productDto>({
-      url: Urls.products,
-      onClose: useCallback(
-        () => dispatch(toggleProducts({ isOpen: false, key: null, reload: false })),
-        [dispatch]
-      ),
-      onSuccess: useCallback(
-        () => dispatch(toggleProducts({ isOpen: false, key: null, reload: true })),
-        [dispatch]
-      ),
-      key: rootState.PopupData.products?.key,
-      useApiClient: true,
-      keyField: 'productID',
-      initialData: {
-        data: initialProductData,
-      },
-    });
-    const _handleFieldChange: <Path extends ProductFieldPath>(
-      fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
-      value?: PathValue<productDto, Path>
-    ) => void = handleFieldChange
+  const {
+    isEdit,
+    handleSubmit,
+    handleClear,
+    isLoading,
+    handleClose,
+    formState,
+    handleFieldChange,
+    getFieldProps,
+    handleDataChange,
+  } = useFormManager<productDto>({
+    url: Urls.products,
+    onClose: useCallback(
+      () =>
+        dispatch(toggleProducts({ isOpen: false, key: null, reload: false })),
+      [dispatch]
+    ),
+    onSuccess: useCallback(
+      () =>
+        dispatch(toggleProducts({ isOpen: false, key: null, reload: true })),
+      [dispatch]
+    ),
+    key: rootState.PopupData.products?.key,
+    useApiClient: true,
+    keyField: "productID",
+    loadInitialData: false,
+    initialData: {
+      data: initialProductData,
+    },
+  });
+  const _handleFieldChange: <Path extends ProductFieldPath>(
+    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+    value?: PathValue<productDto, Path>
+  ) => void = handleFieldChange;
   const [activeTab, setActiveTab] = React.useState(0);
-  const handleTabChange = (index: number) => { setActiveTab(index); };
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+  };
   const userSession = rootState.UserSession;
   const clientSession = rootState.ClientSession;
   const isIndia = userSession.countryId === Countries.India;
   const isSaudi = userSession.countryId === Countries.Saudi;
+  const { getFormattedValue } = useNumberFormat();
+  const appSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
 
-  const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const GetHoldStatusOfSelectedItem = async (
+    batchId: any
+  ): Promise<boolean> => {
+    return await api.getAsync(`${Urls.products}HoldStatus/${batchId}`);
+  };
   useEffect(() => {
     async function fetchCode() {
-      if (!appSettings.productsSettings.enableSupplierWiseItemCode) {
-        const response = await api.getAsync(`${Urls.products}SelectNextProductCode`);
-        _handleFieldChange("product.productCode",response); 
+      const isEditMode = !isNullOrUndefinedOrZero(rootState.PopupData.products?.key);
+      let data: productDto;
+      let nextProductCode: string;
+  debugger;
+  const res = await api.getAsync(`${Urls.get_product_config}`);
+  debugger;
+  const st = atob(res);
+  const _st: any = customJsonParse(st);
+      if (isEditMode) {
+        data = await api.getAsync(`${Urls.products}${rootState.PopupData.products?.key}`) as productDto;
+        nextProductCode = data.product.productCode??"";
       } else {
-        const vendorId = getFieldProps("product.defaultVendorID").value; // Function to get vendor ID
-        const response = await api.getAsync(`${Urls.products}NextProductCodeByVendor/${vendorId??0}`);
-        handleFieldChange("product.productCode",response); 
+        data = initialProductData;
+        nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
+  
+        // Set defaults for new product
+        data.product.productGroupID = -2;
+        data.product.defaultVendorID = -2;
+        data.product.itemType = "Inventory";
+        data.product.taxCategoryID = -2;
+  
+        const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY");
+        data.batch.expiryDate = softwareDate.clone().add(50, "years").toDate();
+        data.batch.mfgDate = softwareDate.toDate();
+        data.batch.warehouseID = appSettings.inventorySettings.defaultServiceSpareWareHouse;
+        data.product.batchCriteria = !isNullOrUndefinedOrEmpty(appSettings.productsSettings.batchCriteria) ? appSettings.productsSettings.batchCriteria : "NB";
       }
+  
+      data.product.productCode = nextProductCode;
+      data.config = isNullOrUndefinedOrEmpty(res) ? data.config : _st
+  
+      if (userSession.dbIdValue === "543140180640") {
+        const holdStatus = await GetHoldStatusOfSelectedItem(data.batch.productBatchID);
+        data.onHold = holdStatus;
+      }
+  
+      if (!clientSession.isAppGlobal) {
+        const markupPercentage = calculateMarkup(
+          data.product.stdPurchasePrice ?? 0,
+          data.product.stdSalesPrice ?? 0,
+          data.taxCategoryTaxPercentage,
+          appSettings.productsSettings.showRateBeforeTax,
+          getFormattedValue
+        );
+        data.markup = markupPercentage;
+      }
+  
+      handleDataChange({...data});
     }
-
+  
     fetchCode();
-    const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
-    handleFieldChange("batch.expiryDate",softwareDate.add(50,"years").toDate()); 
-    _handleFieldChange("batch.mfgDate",softwareDate.toDate()); 
-    _handleFieldChange("product.batchCriteria",appSettings.productsSettings.batchCriteria); 
   }, []);
   // Define tab labels based on country
   const getTabs = () => {
@@ -103,7 +167,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         t("stock"),
         t("suppliers"),
         t("notes"),
-      ]
+      ];
     } else if (isIndia) {
       return [
         t("details"),
@@ -126,64 +190,201 @@ export const ProductMaster: React.FC = React.memo(() => {
   // Define tab content in the desired order for each country
   const tabContents = isIndia
     ? [
-      <div key="details">  <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
-      
-      <div key="multi_units"><ProductMultiUnitsIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="multi_rates"><MultiRatesIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="image"><ImageCommon  t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="others">  <ProductOthersIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="sales"><SalesCommon getFieldProps={getFieldProps} /></div>,
-      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps} /></div>,
-      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="promotion_details"><PromotionCommon getFieldProps={getFieldProps}></PromotionCommon></div>,
-      <div key="search"><SearchCommon /></div>,
-      <div key="nutrition_facts"><NutritionFactsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-    ]
+        <div key="details">
+          {" "}
+          <ProductDetailsIndia
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+            t={t}
+          />
+        </div>,
+
+        <div key="multi_units">
+          <ProductMultiUnitsIndia
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="multi_rates">
+          <MultiRates
+            isGlobal={true}
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="image">
+          <ImageCommon
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="others">
+          {" "}
+          <ProductOthersIndia
+          handleDataChange={handleDataChange}
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="sales">
+          <SalesCommon getFieldProps={getFieldProps} />
+        </div>,
+        <div key="purchase">
+          <PurchaseCommon getFieldProps={getFieldProps} />
+        </div>,
+        <div key="stock">
+          <StockCommon
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="suppliers">
+          <SuppliersCommon
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+        <div key="promotion_details">
+          <PromotionCommon getFieldProps={getFieldProps}></PromotionCommon>
+        </div>,
+        <div key="search">
+          <SearchCommon />
+        </div>,
+        <div key="nutrition_facts">
+          <NutritionFactsIndia
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+      ]
     : [
-      <div key="details">
-        <ProductManageGcc appSettings={appSettings} formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
-        <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
-      </div>,
-      <div key="multi_units"><ProductMultiUnitsGCC t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="multi_rates"><MultiRatesIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="search"><SearchCommon /></div>,
-      <div key="image"><ImageCommon t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="others"><ProductOthersGcc /></div>,
-      <div key="sales"><SalesCommon getFieldProps={getFieldProps} /></div>,
-      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps} /></div>,
-      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="notes"><ProductNotesGcc /></div>,
-    ];
+        <div key="details">
+          <ProductManageGcc
+            handleDataChange={handleDataChange}
+            appSettings={appSettings}
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+
+          <ProductDetailsGcc
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="multi_units">
+          <ProductMultiUnitsGCC
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="multi_rates">
+          <MultiRates
+            isGlobal={false}
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="search">
+          <SearchCommon />
+        </div>,
+        <div key="image">
+          <ImageCommon
+            t={t}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="others">
+          <ProductOthersGcc handleDataChange={handleDataChange}
+            appSettings={appSettings}
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange} />
+        </div>,
+        <div key="sales">
+          <SalesCommon getFieldProps={getFieldProps} />
+        </div>,
+        <div key="purchase">
+          <PurchaseCommon getFieldProps={getFieldProps} />
+        </div>,
+        <div key="stock">
+          <StockCommon
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="suppliers">
+          <SuppliersCommon
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        </div>,
+        <div key="notes">
+          <ProductNotesGcc />
+        </div>,
+      ];
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        {isIndia ? <ProductManageIndia appSettings={appSettings} formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /> : ""}
+        {isIndia ? (
+          <ProductManageIndia
+            handleDataChange={handleDataChange}
+            appSettings={appSettings}
+            formState={formState}
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+          />
+        ) : (
+          ""
+        )}
         <ERPTab
-          tabs={getTabs()?.filter(x => {
-            if((x == t("multi_units") && !appSettings.productsSettings.allowMultiUnits) ||
-              (x == t("multi_rates") && !appSettings.productsSettings.allowMultirate)||
-              (x == t("image") && !appSettings.productsSettings.useProductImages))  {
-                return false;
-              }
+          tabs={getTabs()?.filter((x) => {
+            if (
+              (x == t("multi_units") &&
+                !appSettings.productsSettings.allowMultiUnits) ||
+              (x == t("multi_rates") &&
+                !appSettings.productsSettings.allowMultirate) ||
+              (x == t("image") &&
+                !appSettings.productsSettings.useProductImages)
+            ) {
+              return false;
+            }
             return true;
           })}
           activeTab={activeTab}
           onClickTabAt={handleTabChange}
-          className="overflow-x-auto whitespace-nowrap scrollbar-hide">
-          {tabContents.filter(x => {
-        if((x == t("multi_units") && !appSettings.productsSettings.allowMultiUnits) ||
-        (x == t("multi_rates") && !appSettings.productsSettings.allowMultirate) ||
-        (x == t("image") && !appSettings.productsSettings.useProductImages))  {
-            return false;
-          }
-        return true;
-      })}
+          className="overflow-x-auto whitespace-nowrap scrollbar-hide"
+        >
+          {tabContents.filter((x) => {
+            if (
+              (x == t("multi_units") &&
+                !appSettings.productsSettings.allowMultiUnits) ||
+              (x == t("multi_rates") &&
+                !appSettings.productsSettings.allowMultirate) ||
+              (x == t("image") &&
+                !appSettings.productsSettings.useProductImages)
+            ) {
+              return false;
+            }
+            return true;
+          })}
         </ERPTab>
       </div>
-
 
       <ERPButton
         disabled={!appSettings.branchSettings.maintainMasterEntry && !canEdit}

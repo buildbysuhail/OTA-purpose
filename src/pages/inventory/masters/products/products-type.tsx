@@ -50,19 +50,20 @@ export interface productDto {
   upcBarcode:boolean;
   mu:boolean;
   mr:boolean;
-  markup:number;
+  markup:string;
   batchCriteria:boolean;
   details:boolean;
+  onHold:boolean;
+  taxCategoryTaxPercentage:number;
 }
-
-export interface DeetailsDto {}
 
 export interface DetailsDto {
   productID?: number; // ProductID: long?
   productCode?: string; // ProductCode: string?
   productName?: string; // ProductName: string?
   productGroupID?: number; // ProductGroupId: long?
-  groupCategoryID?: number;
+  groupCategoryID?: number; 
+  sectionID:number;
   defaultVendorID?: number; // defaultVendorID: long?
   productCategoryID?: number; // ProductCategoryID: l ong?
   supplyMethod?: string; // SupplyMethod: string?
@@ -126,6 +127,7 @@ export interface ProductLocalConfig {
   blockConvertProductNameToUpperCase: boolean;
   calculateMarkUpValue: boolean;
   showDisplayCost: boolean;
+  showOpeningStock: boolean;
 }
 
 export interface ProductBatchInputDto {
@@ -261,6 +263,7 @@ export interface ProductUnitInputDto {
   unitID?: number;
   unit?: string;
   multiFactor?: number;
+  multiFactorValue?: number;
   barCode?: string;
   description?: string;
   descriptionFL?: string;

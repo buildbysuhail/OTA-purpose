@@ -380,6 +380,8 @@ const Urls = {
 
   // Inventory
   products: "/Inventory/Product/",
+  get_product_config: "/Inventory/Product/GetProductConfig/",
+  update_product_config: "/Inventory/Product/UpdateProductConfig/",
   change_barcode: "/Inventory/Product/ChangeProductAutoBarcode/",
   fast_moving_products: "/Inventory/FastMovingProducts/",
   product_scheme_details: "/Inventory/Schemes/GetProductSchemeDetails/",

@@ -9,6 +9,7 @@ import initialProductData from "../products-data";
 import { productDto } from "../products-type";
 import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
+import Urls from "../../../../../redux/urls";
 
 export const ProductDetailsGcc: React.FC<{
   formState: any;
@@ -26,6 +27,8 @@ export const ProductDetailsGcc: React.FC<{
 
     const { t } = useTranslation("inventory");
     return (
+        <>
+        {getFieldProps("details").value == true &&
         <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
             <div className="grid grid-cols-4 gap-1 border border-gray-200 rounded-md p-2">
                 <div className="grid grid-cols-3 gap-1">
@@ -61,6 +64,7 @@ export const ProductDetailsGcc: React.FC<{
                         {...getFieldProps("product.warehouseID")}
                         id="warehouseID"
                         field={{
+                            getListUrl: Urls.data_warehouse,
                             id: "warehouseID",
                             valueKey: "id",
                             labelKey: "name",
@@ -68,7 +72,6 @@ export const ProductDetailsGcc: React.FC<{
                         onChangeData={(data) => handleFieldChange("product.warehouseID", data.warehouseID)}
                         className="w-full"
                         label={t("warehouse")}
-                        options={[]}
                     />
 
                     <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
@@ -236,6 +239,8 @@ export const ProductDetailsGcc: React.FC<{
                 </div>
             </div>
         </div>
+                }
+        </>
     );
 });
 

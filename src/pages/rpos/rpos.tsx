@@ -192,7 +192,7 @@ export default function Component() {
                           type="text"
                           value={selectedTable}
                           onChange={(e) => setSelectedTable(e.target?.value)}
-                          placeholder="1"
+                          placeholder=""
                           className="w-20 p-2 border rounded-md text-center me-[6px]"
                         />
                         <button

@@ -18,10 +18,14 @@ import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { RootState } from "../../redux/store";
 import { onCloseWithUnsavedChange } from "../../redux/slices/popup-reducer";
 import { FormField } from "../form-types";
-import { getFieldPropsAdvGlob, getFieldPropsGlobal, handleFieldChangeGlobal } from "../form-utils";
+import {
+  getFieldPropsAdvGlob,
+  getFieldPropsGlobal,
+  handleFieldChangeGlobal,
+} from "../form-utils";
 import { useTranslation } from "react-i18next";
 
-export interface UseFormManagerOptions { 
+export interface UseFormManagerOptions {
   url?: string;
   onSuccess?: () => void;
   onClose?: () => void;
@@ -30,11 +34,10 @@ export interface UseFormManagerOptions {
   keyField?: string;
   method?: ActionType;
   loadDataRequired?: boolean;
+  loadInitialData?: boolean;
   useApiClient?: boolean;
   initialData?: any;
 }
-
-
 
 export function useFormManager<T>({
   url = "",
@@ -45,14 +48,14 @@ export function useFormManager<T>({
   keyField = "id",
   method,
   loadDataRequired = true,
+  loadInitialData = true,
   useApiClient = false,
   initialData,
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const apiClient = new APIClient();
-
 
   const queryParams = new URLSearchParams(location.search);
   key =
@@ -65,34 +68,45 @@ export function useFormManager<T>({
     url,
     method ? method : isEdit ? ActionType.PUT : ActionType.POST
   );
-  
+
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
-  
-  const [localFormState, setLocalFormState] = useState<ApiResponse<any>>(initialData);
-  const [prevLocalFormState, setPrevLocalFormState] = useState<ApiResponse<any>>(initialData);
+
+  const [localFormState, setLocalFormState] =
+    useState<ApiResponse<any>>(initialData);
+  const [prevLocalFormState, setPrevLocalFormState] =
+    useState<ApiResponse<any>>(initialData);
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]
   );
 
-  const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
+  const withUnsavedChange = useAppSelector(
+    (state: RootState) => state.PopupData.onCloseWithUnsavedChange
+  );
   useEffect(() => {
-    
     if (withUnsavedChange.succeeded) {
-      appDispatch(onCloseWithUnsavedChange({warn: false, succeeded: false, canceled: false}));
+      appDispatch(
+        onCloseWithUnsavedChange({
+          warn: false,
+          succeeded: false,
+          canceled: false,
+        })
+      );
       onClose?.();
-      }
+    }
   }, [withUnsavedChange.succeeded]);
-;
   useEffect(() => {
-    
-    if (localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data == null) {
-      
+    if (
+      localFormState == undefined ||
+      localFormState == null ||
+      localFormState?.data == undefined ||
+      localFormState?.data == null
+    ) {
       const df = {
         data: initialData?.data || {},
         validations: initialData?.validations || {},
         loading: false,
         error: null,
-      }
+      };
       setLocalFormState(df);
       setPrevLocalFormState(df);
     }
@@ -100,8 +114,7 @@ export function useFormManager<T>({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    
-    if (useApiClient || isEdit) {
+    if ((useApiClient || isEdit) && loadInitialData) {
       loadFormData();
     }
   }, [useApiClient, isEdit]);
@@ -112,8 +125,14 @@ export function useFormManager<T>({
     if (useApiClient) {
       try {
         let response;
-        if (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) {
-          let par = key != undefined && key != null && key != "" ? `${url}${key}` : `${url}`
+        if (
+          isEdit ||
+          (method != undefined && method == ActionType.POST && loadDataRequired)
+        ) {
+          let par =
+            key != undefined && key != null && key != ""
+              ? `${url}${key}`
+              : `${url}`;
           response = await apiClient.getAsync(par);
         } else {
           response = initialData.data || {};
@@ -191,15 +210,20 @@ export function useFormManager<T>({
   ]);
 
   const handleSubmit = useCallback(async () => {
-    
     setIsLoading(true);
     if (useApiClient) {
       try {
         let response;
         if (isEdit) {
-          response = await apiClient.put(`${url}`, (useApiClient ? localFormState : reduxFormState)?.data);
+          response = await apiClient.put(
+            `${url}`,
+            (useApiClient ? localFormState : reduxFormState)?.data
+          );
         } else {
-          response = await apiClient.post(url, (useApiClient ? localFormState : reduxFormState)?.data);
+          response = await apiClient.post(
+            url,
+            (useApiClient ? localFormState : reduxFormState)?.data
+          );
         }
         handleResponse(
           response,
@@ -227,7 +251,9 @@ export function useFormManager<T>({
       const action = reduxManager.getTypedThunk(rName);
       try {
         const response: ResponseModelWithValidation<T, any> = await appDispatch(
-          action({ data: (useApiClient ? localFormState : reduxFormState)?.data }) as any
+          action({
+            data: (useApiClient ? localFormState : reduxFormState)?.data,
+          }) as any
         ).unwrap();
         handleResponse(
           response,
@@ -237,7 +263,9 @@ export function useFormManager<T>({
           },
           () => {
             reduxManager.setState(rName, {
-              data: { ...(useApiClient ? localFormState : reduxFormState)?.data },
+              data: {
+                ...(useApiClient ? localFormState : reduxFormState)?.data,
+              },
               validations: { ...response.validations },
               error: null,
               loading: false,
@@ -264,7 +292,7 @@ export function useFormManager<T>({
 
   // Utility function to set nested value by path
   const setNestedValue = (obj: any, path: string, value: any) => {
-    const keys = path.split('.');
+    const keys = path.split(".");
     const lastKey = keys.pop() as string;
     const deepClone = { ...obj }; // Create a shallow clone of the object
 
@@ -282,10 +310,9 @@ export function useFormManager<T>({
 
   // const handleFieldChange = useCallback(
   //   (fieldId: string, value: any) => {
-      
 
   //     // Update the nested field
-      
+
   //     const newData = setNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId, value);
 
   //     if (useApiClient) {
@@ -307,10 +334,13 @@ export function useFormManager<T>({
   // );
 
   const handleFieldChange = useCallback(
-    (fields: { [fieldId: string]: any } | string, value?: any) => {  
-      
+    (fields: { [fieldId: string]: any } | string, value?: any) => {
       // Update the nested fields for all provided fieldIds
-      const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
+      const updatedData = handleFieldChangeGlobal({
+        fields: fields,
+        value: value,
+        formState: (useApiClient ? localFormState : reduxFormState)?.data,
+      });
       if (useApiClient) {
         setLocalFormState((prevState: any) => ({
           ...prevState,
@@ -320,23 +350,60 @@ export function useFormManager<T>({
       } else {
         reduxManager.setState(rName, {
           data: updatedData,
-          validations: { ...(useApiClient ? localFormState : reduxFormState)?.validations },
+          validations: {
+            ...(useApiClient ? localFormState : reduxFormState)?.validations,
+          },
           loading: false,
           error: null,
         });
       }
     },
-    [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
+    [
+      (useApiClient ? localFormState : reduxFormState)?.data,
+      rName,
+      useApiClient,
+    ]
   );
 
+  const handleDataChange = useCallback(
+    (value?: any) => {
+      if (useApiClient) {
+        setLocalFormState((prevState: any) => ({
+          data: value,
+          validations: {
+            ...(useApiClient ? localFormState : reduxFormState)?.validations,
+          },
+          loading: false,
+          error: null,
+        }));
+      } else {
+        reduxManager.setState(rName, {
+          data: value,
+          validations: {
+            ...(useApiClient ? localFormState : reduxFormState)?.validations,
+          },
+          loading: false,
+          error: null,
+        });
+      }
+    },
+    [
+      (useApiClient ? localFormState : reduxFormState)?.data,
+      rName,
+      useApiClient,
+    ]
+  );
 
   const handleClear = useCallback(() => {
-    
     if (useApiClient) {
-      const sds = isEdit || (method != undefined && method == ActionType.POST && loadDataRequired) ? {...initialData?.data,[keyField]: key}: {...initialData.data};
+      const sds =
+        isEdit ||
+        (method != undefined && method == ActionType.POST && loadDataRequired)
+          ? { ...initialData?.data, [keyField]: key }
+          : { ...initialData.data };
       setLocalFormState((prevState: any) => ({
         ...prevState,
-        data: {...sds},
+        data: { ...sds },
         validations: {},
       }));
     } else {
@@ -347,23 +414,45 @@ export function useFormManager<T>({
         error: null,
       });
     }
-  }, [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]);
+  }, [
+    (useApiClient ? localFormState : reduxFormState)?.data,
+    rName,
+    useApiClient,
+  ]);
 
   const handleClose = useCallback(() => {
     const currentState = useApiClient ? localFormState : reduxFormState;
-    if (JSON.stringify(currentState?.data) !== JSON.stringify(prevLocalFormState?.data)) {
-      appDispatch(onCloseWithUnsavedChange({warn: true, succeeded: false, canceled: false}));
-      
+    if (
+      JSON.stringify(currentState?.data) !==
+      JSON.stringify(prevLocalFormState?.data)
+    ) {
+      appDispatch(
+        onCloseWithUnsavedChange({
+          warn: true,
+          succeeded: false,
+          canceled: false,
+        })
+      );
     } else {
       onClose?.();
     }
-  }, [onClose, useApiClient, localFormState, reduxFormState, prevLocalFormState]);
-
+  }, [
+    onClose,
+    useApiClient,
+    localFormState,
+    reduxFormState,
+    prevLocalFormState,
+  ]);
 
   const getFieldProps = useCallback(
-    (fieldId: string, type?: string): FormField => {
-      
-      return getFieldPropsGlobal(fieldId,(useApiClient ? localFormState : reduxFormState),type);
+    (fieldId: string, type?: string): FormField | any => {
+      const currentFormState = useApiClient ? localFormState : reduxFormState;
+
+      if (fieldId === "*") {
+        return currentFormState?.data;
+      } else {
+        return getFieldPropsGlobal(fieldId, currentFormState, type);
+      }
     },
     [(useApiClient ? localFormState : reduxFormState)?.data]
   );
@@ -372,9 +461,8 @@ export function useFormManager<T>({
       fieldId: string,
       options?: { onChangeData?: (data: any) => void; label?: string }
     ): FormField => {
-      
       const formState = useApiClient ? localFormState : reduxFormState;
-  
+
       return getFieldPropsAdvGlob(
         fieldId,
         formState,
@@ -386,17 +474,17 @@ export function useFormManager<T>({
     [handleFieldChange, localFormState, reduxFormState, t, useApiClient]
   );
 
-    return {
-      isEdit,
-      formState: useApiClient ? localFormState : reduxFormState,
-      handleSubmit,
-      handleFieldChange,
-      handleClear,
-      handleClose,
-      getFieldProps,
-      isLoading,
-      t,
-      getFieldPropsAdv,
-    };
-
+  return {
+    isEdit,
+    formState: useApiClient ? localFormState : reduxFormState,
+    handleSubmit,
+    handleFieldChange,
+    handleClear,
+    handleClose,
+    getFieldProps,
+    isLoading,
+    t,
+    getFieldPropsAdv,
+    handleDataChange,
+  };
 }

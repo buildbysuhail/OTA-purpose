@@ -1,17 +1,24 @@
-"use client"
+"use client";
 
-import ERPInput from "../../../../../components/ERPComponents/erp-input"
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox"
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox"
-import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions"
-import Urls from "../../../../../redux/urls"
-import initialProductData from "../products-data"
-import { useTranslation } from "react-i18next"
-import React from "react"
-import { FormField } from "../../../../../utilities/form-types"
-import { ProductFieldPath, PathValue, productDto, ProductUnitInputDto } from "../products-type"
-
-const ProductMultiUnitsGCC  : React.FC<{
+import ERPInput from "../../../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
+import Urls from "../../../../../redux/urls";
+import initialProductData from "../products-data";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
+import { FormField } from "../../../../../utilities/form-types";
+import {
+  ProductFieldPath,
+  PathValue,
+  productDto,
+  ProductUnitInputDto,
+} from "../products-type";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { APIClient } from "../../../../../helpers/api-client";
+const api = new APIClient();
+const ProductMultiUnitsGCC: React.FC<{
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -20,158 +27,323 @@ const ProductMultiUnitsGCC  : React.FC<{
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
-   
+  const generateInitialUnit = (): ProductUnitInputDto => ({
+    productUnitID: undefined,
+    productBatchID: undefined,
+    unitID: 0,
+    unit: ``,
+    multiFactor: undefined,
+    barCode: ``,
+    description: ``,
+    descriptionFL: ``,
+    unitRemarks: "",
+    gatePass: false,
+    multiBarcodes: "",
+    salesPrice: 0,
+    mrp: 0,
+    msp: 0,
+  });
+  const [multiUnits, setMultiUnits] = useState<{
+    [key: string]: ProductUnitInputDto;
+  }>({});
+  const [barcode, setBarcode] = useState<boolean>(false);
+  useEffect(() => {
+    const responseData = getFieldProps("units").value as ProductUnitInputDto[];
+    const baseUnit = getFieldProps("product.basicUnitID").value;
+    const paddedData: ProductUnitInputDto[] = [...responseData];
 
-    const renderUnitRows = () => {
-        const responseData = getFieldProps("units").value as ProductUnitInputDto[];
-       return (<></>)   
-        // const units = Array.from({ length: 10 }, (_, i) => i + 1)
-        // return units.map((num) => (
-        //     <tr key={`unit-${num}`} className="h-10">
-        //         <td className="pr-2">
-        //             <div className="flex items-center">
-        //                 <span className="text-sm font-medium w-12">
-        //                     {t("unit")} {num}
-        //                 </span>
-        //                 <ERPDataCombobox
-        //                     {...getFieldProps(`multiUnits.unit${num}`)}
-        //                     noLabel={true}
-        //                     field={{
-        //                         getListUrl: Urls.salesRoute,
-        //                         labelKey: "label",
-        //                         valueKey: "value",
-        //                     }}
-        //                     onChangeData={(data) => handleFieldChange(`multiUnits.unit${num}`, data[`unit${num}`])}
-        //                     className="w-48"
-        //                 // placeholder={`Select MultiUnits.Unit${num}`}
-        //                 />
-        //             </div>
-        //         </td>
-        //         <td className="px-2">
-        //             <ERPInput
-        //                 id={`unit${num}Qty1`}
-        //                 noLabel={true}
-        //                 value={getFieldProps(`quantities.unit${num}Qty1`).value || (num === 1 ? "1" : "0")}
-        //                 onChange={(e) => handleFieldChange(`quantities.unit${num}Qty1`, e.target.value)}
-        //                 className={`w-24 text-center ${getFieldProps(`multiUnits.unit${num}`).value ? "bg-[ #fef9c3]" : ""}`}
-        //             />
-        //         </td>
-        //         <td className="px-2">
-        //             {num === 1 ? (
-        //                 <div className="w-24"></div>
-        //             ) : (
-        //                 <ERPInput
-        //                     id={`unit${num}Qty2`}
-        //                     noLabel={true}
-        //                     value={getFieldProps(`quantities.unit${num}Qty2`).value || "0"}
-        //                     onChange={(e) => handleFieldChange(`quantities.unit${num}Qty2`, e.target.value)}
-        //                     className={`w-24 text-center ${getFieldProps(`multiUnits.unit${num}`).value ? "bg-[ #fef9c3]" : ""}`}
-        //                 />
-        //             )}
-        //         </td>
-        //         <td className="px-2">
-        //             <ERPInput
-        //                 id={`unit${num}Barcode`}
-        //                 noLabel={true}
-        //                 value={getFieldProps(`barcodes.unit${num}Barcode`).value || ""}
-        //                 onChange={(e) => handleFieldChange(`barcodes.unit${num}Barcode`, e.target.value)}
-        //                 className="w-32"
-        //                 disabled={!getFieldProps("config.enableBarcodes").value}
-        //             />
-        //         </td>
-        //         <td className="px-2">
-        //             <ERPInput
-        //                 id={`unit${num}Price`}
-        //                 noLabel={true}
-        //                 value={getFieldProps(`prices.unit${num}Price`).value || "0.00"}
-        //                 onChange={(e) => handleFieldChange(`prices.unit${num}Price`, e.target.value)}
-        //                 className="w-32 text-right"
-        //             />
-        //         </td>
-        //         <td className="pl-2">
-        //             <ERPInput
-        //                 id={`unit${num}Remark`}
-        //                 noLabel={true}
-        //                 value={getFieldProps(`remarks.unit${num}Remark`).value || ""}
-        //                 onChange={(e) => handleFieldChange(`remarks.unit${num}Remark`, e.target.value)}
-        //                 className="w-40"
-        //             />
-        //         </td>
-        //     </tr>
-        // ))
+    for (let i = paddedData.length; i < 12; i++) {
+      paddedData.push(generateInitialUnit());
     }
-return (<></>)
-    // return (
-    //     <div className="flex flex-col gap-4">
-    //         <div className="w-full">
-    //             <table className="w-full border-collapse">
-    //                 <thead>
-    //                     <tr className="h-10">
-    //                         <th className="text-left"></th>
-    //                         <th className="text-left"></th>
-    //                         <th className="text-left"></th>
-    //                         <th className="text-left">
-    //                             <div className="flex items-center">
-    //                                 <ERPCheckbox
-    //                                     {...getFieldProps("config.enableBarcodes")}
-    //                                     label={t("barcode")}
-    //                                     onChangeData={(data) => handleFieldChange("config.enableBarcodes", data.enableBarcodes)}
-    //                                 />
-    //                             </div>
-    //                         </th>
-    //                         <th className="text-left">
-    //                             <span className="text-sm font-medium">{t("price")}</span>
-    //                         </th>
-    //                         <th className="text-left">
-    //                             <span className="text-sm font-medium">{t("remarks")}</span>
-    //                         </th>
-    //                     </tr>
-    //                 </thead>
-    //                 <tbody>{renderUnitRows()}</tbody>
-    //             </table>
-    //         </div>
-    //         {/* Default Units Section */}
-    //         <div className="p-4 rounded-md shadow">
-    //             <h2 className="text-xl font-semibold mb-4">{t("default_units")}</h2>
-    //             <div className="grid grid-cols-6 gap-4">
-    //                 <ERPDataCombobox
-    //                     {...getFieldProps("batch.defSalesUnitID")}
-    //                     label={t("sales")}
-    //                     field={{
-    //                         getListUrl: Urls.salesRoute,
-    //                         labelKey: "label",
-    //                         valueKey: "value",
-    //                     }}
-    //                     onChangeData={(data) => handleFieldChange("batch.defSalesUnitID", data.defSalesUnitID)}
-    //                     className="w-full"
-    //                 />
-    //                 <ERPDataCombobox
-    //                     {...getFieldProps("batch.defPurchaseUnitID")}
-    //                     label={t("purchase")}
-    //                     field={{
-    //                         getListUrl: "vajid",
-    //                         labelKey: "label",
-    //                         valueKey: "value",
-    //                     }}
-    //                     onChangeData={(data) => handleFieldChange("batch.defPurchaseUnitID", data.defPurchaseUnitID)}
-    //                     className="w-full"
-    //                 />
-    //                 <ERPDataCombobox
-    //                     {...getFieldProps("batch.defReportUnitID")}
-    //                     label={t("report")}
-    //                     field={{
-    //                         getListUrl: "vajid",
-    //                         labelKey: "label",
-    //                         valueKey: "value",
-    //                     }}
-    //                     onChangeData={(data) => handleFieldChange("batch.defReportUnitID", data.defReportUnitID)}
-    //                     className="w-full"
-    //                 />
-    //             </div>
-    //         </div>
-    //     </div>
-    // )
-})
+    paddedData[0].unitID = baseUnit;
+    const result: { [key: string]: ProductUnitInputDto } = {};
+    paddedData.forEach((unit, index) => {
+      result[`unit${index + 1}`] = unit;
+    });
 
-export default ProductMultiUnitsGCC
+    setMultiUnits(result);
+  }, []);
 
+  const renderUnitRows = () => {
+    return Object.entries(multiUnits).map(([key, unitData], index) => {
+      const unitNum = index + 1;
+
+      return (
+        <tr key={key} className="h-10">
+          <td className="pr-2">
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-12">
+                {t("unit")} {unitNum}
+              </span>
+              <ERPDataCombobox
+                id={`unit${unitNum}`}
+                value={unitData.unitID}
+                noLabel={true}
+                disabled={unitNum === 1}
+                field={{
+                  getListUrl: Urls.data_units,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChange={(data) => {
+                  debugger;
+                  setMultiUnits((prev) => ({
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      unitID: data?.value ?? null,
+                      unit: data?.label ?? "",
+                    },
+                  }));
+                }}
+                className="w-48"
+              />
+            </div>
+          </td>
+
+          <td className="px-2">
+            <ERPInput
+              id={`unit${unitNum}multiFactor`}
+              noLabel={true}
+              readOnly={unitNum === 1}
+              value={unitData.multiFactor ?? (unitNum === 1 ? "1" : "0")}
+              onChange={(e) => {
+                const inputValue = (e.target as HTMLInputElement).value;
+                const value = parseFloat(inputValue || "0");
+                let sd = 0;
+                if (value > 0) {
+                  const d = 1 / value;
+                  sd = Math.round(d * 100) / 100;
+                }
+                setMultiUnits((prev: any) => ({
+                  ...prev,
+                  [key]: {
+                    ...prev[key],
+                    multiFactor: e.target.value,
+                    multiFactorValue: sd,
+                  },
+                }));
+              }}
+              className={`w-24 text-center ${
+                unitData.unitID ? "bg-[#fef9c3]" : ""
+              }`}
+            />
+          </td>
+
+          <td className="px-2">
+            {unitNum === 1 ? (
+              <div className="w-24"></div>
+            ) : (
+              <ERPInput
+                id={`unit${unitNum}multiFactorValue`}
+                noLabel={true}
+                type="number"
+                value={unitData.multiFactorValue ?? "0"}
+                onChange={(e) => {
+                  let sd = 0;
+                  try {
+                    const txtInvUnit2 = e.target.value;
+
+                    const invUnit2Value = parseFloat("0" + txtInvUnit2);
+                    if (invUnit2Value > 0) {
+                      let d = 0;
+                      d = 1 / invUnit2Value;
+                      sd = d;
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                  }
+                  setMultiUnits((prev: any) => ({
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      multiFactor: sd,
+                      multiFactorValue: e.target.value,
+                    },
+                  }));
+                }}
+                className={`w-24 text-center ${
+                  unitData.unitID ? "bg-[#fef9c3]" : ""
+                }`}
+              />
+            )}
+          </td>
+
+          <td className="px-2">
+            {unitNum === 1 ? (
+              <div className="w-24"></div>
+            ) : (
+              <ERPInput
+                id={`unit${unitNum}Barcode`}
+                noLabel={true}
+                value={unitData.barCode ?? ""}
+                onChange={(e) => {
+                  setMultiUnits((prev) => ({
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      barCode: e.target.value,
+                    },
+                  }));
+                }}
+                className="w-32"
+              />
+            )}
+          </td>
+
+          <td className="px-2">
+            {unitNum === 1 ? (
+              <div className="w-24"></div>
+            ) : (
+              <ERPInput
+                id={`unit${unitNum}Price`}
+                noLabel={true}
+                value={unitData.salesPrice?.toString() ?? "0.00"}
+                onChange={(e) => {
+                  setMultiUnits((prev) => ({
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      salesPrice: parseFloat(e.target.value) || 0,
+                    },
+                  }));
+                }}
+                className="w-32 text-right"
+              />
+            )}
+          </td>
+
+          <td className="pl-2">
+            <ERPInput
+              id={`unit${unitNum}Remark`}
+              noLabel={true}
+              value={unitData.unitRemarks ?? ""}
+              onChange={(e) => {
+                setMultiUnits((prev) => ({
+                  ...prev,
+                  [key]: {
+                    ...prev[key],
+                    unitRemarks: e.target.value,
+                  },
+                }));
+              }}
+              className="w-40"
+            />
+          </td>
+        </tr>
+      );
+    });
+  };
+  // return (<></>)
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="w-full">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="h-10">
+              <th className="text-left"></th>
+              <th className="text-left"></th>
+              <th className="text-left"></th>
+              <th className="text-left">
+                <div className="flex items-center">
+                  <ERPCheckbox
+                    id="barcode"
+                    label={t("barcode")}
+                    onChange={async(data) => {
+                      const updatedUnits = { ...multiUnits };
+
+                      for (let i = 2; i <= 10; i++) {
+                        const key = `unit${i}`;
+                        const unit = updatedUnits[key];
+
+                        if (
+                          unit &&
+                          (unit?.unitID??0) > 0 &&
+                          isNullOrUndefinedOrEmpty(unit.barCode)
+                        ) {
+                          try {
+                            const newBarcode =
+                              await api.getAsync(`${Urls.products}SelectNextGeneratedSystemBarcode`) // Replace with actual API call
+                            updatedUnits[key] = {
+                              ...unit,
+                              barCode: newBarcode,
+                            };
+                          } catch (error) {
+                            console.error(
+                              `Failed to generate barcode for ${key}:`,
+                              error
+                            );
+                          }
+                        }
+                      }
+
+                      setMultiUnits(updatedUnits);
+                      setBarcode((prev: boolean) => !prev);
+                    }}
+                  />
+                </div>
+              </th>
+              <th className="text-left">
+                <span className="text-sm font-medium">{t("price")}</span>
+              </th>
+              <th className="text-left">
+                <span className="text-sm font-medium">{t("remarks")}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>{renderUnitRows()}</tbody>
+        </table>
+      </div>
+      {/* Default Units Section */}
+      <div className="p-4 rounded-md shadow">
+        <h2 className="text-xl font-semibold mb-4">{t("default_units")}</h2>
+        <div className="grid grid-cols-6 gap-4">
+          <ERPDataCombobox
+            {...getFieldProps("batch.defSalesUnitID")}
+            label={t("sales")}
+            field={{
+              getListUrl: Urls.data_units,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) =>
+              handleFieldChange("batch.defSalesUnitID", data.defSalesUnitID)
+            }
+            className="w-full"
+          />
+          <ERPDataCombobox
+            {...getFieldProps("batch.defPurchaseUnitID")}
+            label={t("purchase")}
+            field={{
+              getListUrl: Urls.data_units,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "batch.defPurchaseUnitID",
+                data.defPurchaseUnitID
+              )
+            }
+            className="w-full"
+          />
+          <ERPDataCombobox
+            {...getFieldProps("batch.defReportUnitID")}
+            label={t("report")}
+            field={{
+              getListUrl: Urls.data_units,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) =>
+              handleFieldChange("batch.defReportUnitID", data.defReportUnitID)
+            }
+            className="w-full"
+          />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+export default ProductMultiUnitsGCC;

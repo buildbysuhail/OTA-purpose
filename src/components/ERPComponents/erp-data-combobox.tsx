@@ -674,7 +674,13 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
-
+    useEffect(() => {
+      if (value == -2) {
+        loadData();
+      }
+    }, [
+      value
+    ]);
     const filterLedgers = async (
       ledgers: any[],
       queryString: string
@@ -829,6 +835,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           _options != null &&
           _options.length > 0
         ) {
+          
           handleItemClick(_options[0]);
         }
 
@@ -891,6 +898,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
+        
         setInitial(null);
         if (triggerEffect == true || value === null) {
           handleItemClick({ value: "", label: "" });
@@ -902,6 +910,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         // }
         setDisplayValue("");
       } else {
+        
         setInitial(final);
         setInputValue(final?.label);
       }

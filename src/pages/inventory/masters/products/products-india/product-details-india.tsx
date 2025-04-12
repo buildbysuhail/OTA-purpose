@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
+import ProductDetailsIndiaBatches from "./product-details-india-batches";
 
 const ProductDetailsIndia: React.FC<{
   formState: any;
@@ -308,6 +309,7 @@ const ProductDetailsIndia: React.FC<{
           />
         </div>
       </div>
+      <ProductDetailsIndiaBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsIndiaBatches>
     </div>
   );
 });

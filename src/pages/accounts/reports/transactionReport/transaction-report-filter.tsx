@@ -36,28 +36,30 @@ const TransactionReportFilter = ({
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {/* <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4"> */}
-      <div className="flex items-center gap-4">
-        <ERPDateInput
-          {...getFieldProps("dateFrom")}
-          label={t("from")}
-          className="max-w-[150px]"
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
-        />
+    <div className="grid grid-cols-1 gap-4 w-full">
+      <div className="flex flex-wrap items-start gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <ERPDateInput
+            {...getFieldProps("dateFrom")}
+            label={t("from")}
+            className="max-w-[150px]"
+            onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          />
 
-        <ERPDateInput
-          {...getFieldProps("dateTo")}
-          label={t("to")}
-          className="max-w-[150px]"
-          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
-        />
+          <ERPDateInput
+            {...getFieldProps("dateTo")}
+            label={t("to")}
+            className="max-w-[150px]"
+            onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
+          />
+        </div>
+
         {
-          applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+          applicationSettings.mainSettings?.allowSalesRouteArea === true && (
             <ERPDataCombobox
               {...getFieldProps("salesRouteID")}
               label={t("sales_route")}
-              className="max-w-[325px]"
+              className="w-full sm:w-auto sm:max-w-[325px]"
               field={{
                 id: "salesRouteID",
                 getListUrl: Urls.data_salesRoute,
@@ -75,12 +77,10 @@ const TransactionReportFilter = ({
         }
       </div>
 
-      {/* </div> */}
-
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
             </label> */}
-      <div className="overflow-auto border dark:!border-dark-border border-gray-400 rounded w-auto max-w-[1000px] h-auto max-h-[260px] dark-scrollbar ">
+      <div className="overflow-auto border dark:!border-dark-border border-gray-400 rounded w-full max-w-full h-auto max-h-[260px] dark-scrollbar">
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4 text-left">
           {
             allTransactions && allTransactions.length > 0 && (
@@ -94,7 +94,6 @@ const TransactionReportFilter = ({
                 }) => {
                   let updates = frmState;
                   // if (frmState.allChecked) {
-
                   //   updates["vTypes"] = "All";
                   //   updates["isDr"] = frmState?.isDr;
                   //   updates["isCr"] = frmState?.isCr;
@@ -114,7 +113,6 @@ const TransactionReportFilter = ({
                   } else {
                     updates["drCr"] = "drCr";
                   }
-                  // Call handleFieldChange once with all updates
                   handleFieldChange(updates);
                 }}
                 getFormState={getFormState}
@@ -126,7 +124,6 @@ const TransactionReportFilter = ({
         </div>
       </div>
     </div>
-    // </div>
   );
 };
 export default TransactionReportFilter;

@@ -17,9 +17,8 @@ const LedgerReportFilter = ({
   const { t } = useTranslation("accountsReport");
   // const [reload,setReload]= useState(false);
   return (
-    <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
-      {/* Date Range Section */}
-      <div className="flex items-center gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
@@ -35,7 +34,6 @@ const LedgerReportFilter = ({
         />
       </div>
 
-      {/* Ledger Code Section */}
       <ERPDataCombobox
         {...getFieldProps("ledgerID")}
         label={t("ledger_code")}
@@ -57,7 +55,6 @@ const LedgerReportFilter = ({
         }}
       />
 
-      {/* Ledger ID Section */}
       <ERPDataCombobox
         {...getFieldProps("ledgerID")}
         label={t("ledgers")}
@@ -78,7 +75,6 @@ const LedgerReportFilter = ({
         }}
       />
 
-      {/* Related Ledger Section */}
       <ERPDataCombobox
         {...getFieldProps("relLedgerID")}
         label={t("related_ledger")}
@@ -92,7 +88,6 @@ const LedgerReportFilter = ({
         onChangeData={(data) => handleFieldChange("relLedgerID", data.relLedgerID)}
       />
 
-      {/* Cost Centre Section */}
       <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
@@ -151,76 +146,76 @@ const LedgerReportFilter = ({
         )
       }
 
-      {/* Checkboxes Grid */}
-      <div className="col-span-2 grid grid-cols-2 gap-4 text-left">
-        {/* All Checkbox */}
-        <ERPCheckbox
-          {...getFieldProps("showAll")}
-          label={t("all")}
-          onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
-        />
+      <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 text-left">
+          <ERPCheckbox
+            {...getFieldProps("showAll")}
+            label={t("all")}
+            onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
+          />
 
-        <ERPCheckbox
-          {...getFieldProps("showSummary")}
-          label={t("summary_wise")}
-          onChangeData={(data) => handleFieldChange("showSummary", data.showSummary)}
-        />
+          <ERPCheckbox
+            {...getFieldProps("showSummary")}
+            label={t("summary_wise")}
+            onChangeData={(data) => handleFieldChange("showSummary", data.showSummary)}
+          />
 
-        {/* <ERPCheckbox
-      {...getFieldProps("ignoreCashSales")}
-      label={t("Ignore Cash Sales")}
-      onChangeData={(data) => handleFieldChange('ignoreCashSales', data.ignoreCashSales)}
-    /> */}
+          {/* <ERPCheckbox
+              {...getFieldProps("ignoreCashSales")}
+              label={t("Ignore Cash Sales")}
+              onChangeData={(data) => handleFieldChange('ignoreCashSales', data.ignoreCashSales)}
+            /> */}
 
-        {/* <ERPCheckbox
-      {...getFieldProps("showWithInventoryDetails")}
-      label={t("Show With Inventory Details")}
-      onChangeData={(data) => handleFieldChange('showWithInventoryDetails', data.showWithInventoryDetails)}
-    /> */}
+          {/* <ERPCheckbox
+              {...getFieldProps("showWithInventoryDetails")}
+              label={t("Show With Inventory Details")}
+              onChangeData={(data) => handleFieldChange('showWithInventoryDetails', data.showWithInventoryDetails)}
+            /> */}
 
-        {/* <ERPCheckbox
-      {...getFieldProps("foreignCurrency")}
-      label={t("Foreign Currency")}
-      onChangeData={(data) => handleFieldChange('foreignCurrency', data.foreignCurrency)}
-    /> */}
+          {/* <ERPCheckbox
+              {...getFieldProps("foreignCurrency")}
+              label={t("Foreign Currency")}
+              onChangeData={(data) => handleFieldChange('foreignCurrency', data.foreignCurrency)}
+            /> */}
 
-        <ERPCheckbox
-          {...getFieldProps("showOpeningBal")}
-          label={t("opening_balance")}
-          onChangeData={(data) => handleFieldChange("showOpeningBal", data.showOpeningBal)}
-        />
+          <ERPCheckbox
+            {...getFieldProps("showOpeningBal")}
+            label={t("opening_balance")}
+            onChangeData={(data) => handleFieldChange("showOpeningBal", data.showOpeningBal)}
+          />
 
-        <ERPCheckbox
-          {...getFieldProps("showSeparateColorForDebitBalance")}
-          label={t("show_separate_color_for_debit_balance")}
-          onChangeData={(data) => handleFieldChange("showSeparateColorForDebitBalance", data.showSeparateColorForDebitBalance)}
-        />
+          <ERPCheckbox
+            {...getFieldProps("showSeparateColorForDebitBalance")}
+            label={t("show_separate_color_for_debit_balance")}
+            onChangeData={(data) => handleFieldChange("showSeparateColorForDebitBalance", data.showSeparateColorForDebitBalance)}
+          />
 
-        <ERPCheckbox
-          {...getFieldProps("showPendingCheques")}
-          label={t("show_pending_cheques")}
-          onChangeData={(data) => handleFieldChange("showPendingCheques", data.showPendingCheques)}
-        />
+          <ERPCheckbox
+            {...getFieldProps("showPendingCheques")}
+            label={t("show_pending_cheques")}
+            onChangeData={(data) => handleFieldChange("showPendingCheques", data.showPendingCheques)}
+          />
+        </div>
       </div>
     </div>
   );
 };
 export default LedgerReportFilter;
 export const LedgerReportFilterInitialState = {
-  // dateFrom: new Date(-45), // Default empty string
+  // dateFrom: new Date(-45),
   dateFrom: moment().local().subtract(45, "days").toDate(),
-  dateTo: new Date(), // Default empty string
-  showAll: false, // Default to false
-  ledgerCode: "", // Default empty string
-  ledgerID: 0, // Default to 0
-  relLedgerID: -1, // Default empty string
-  costCentreID: -1, // Default empty string
-  showSummary: false, // Default to false
+  dateTo: new Date(),
+  showAll: false,
+  ledgerCode: "",
+  ledgerID: 0,
+  relLedgerID: -1,
+  costCentreID: -1,
+  showSummary: false,
   counterID: 0,
-  ignoreCashSales: false, // Default to false
-  // showWithInventoryDetails: false, // Default to false
-  foreignCurrency: false, // Default to false
-  showOpeningBal: true, // Default to false
-  showPendingCheques: false, // Default to false
-  showSeparateColorForDebitBalance: false, // Default to false
+  ignoreCashSales: false,
+  // showWithInventoryDetails: false, 
+  foreignCurrency: false,
+  showOpeningBal: true,
+  showPendingCheques: false,
+  showSeparateColorForDebitBalance: false,
 };

@@ -10,16 +10,18 @@ const DayBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
-      <div className="flex items-center w-full gap-4">
+      <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
           autoFocus={true}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("to")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
@@ -33,7 +35,7 @@ const DayBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({costCenterID: data.value,CostCenterName:data.label})}
+        onSelectItem={(data) => handleFieldChange({ costCenterID: data.value, CostCenterName: data.label })}
       />
     </div>
   );

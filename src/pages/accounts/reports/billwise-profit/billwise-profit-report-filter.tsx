@@ -14,9 +14,9 @@ const BillwiseProfitReportFilter = ({
   const { t } = useTranslation("accountsReport");
   const userSession = useSelector((state: RootState) => state.UserSession);
   return (
-    <div className="grid grid-cols-2 gap-4 text-left">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 text-left">
       {/* Date Range */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <ERPDateInput
           {...getFieldProps("fromDate")}
           label={t("date_from")}
@@ -201,7 +201,7 @@ const BillwiseProfitReportFilter = ({
         }}
         onChangeData={(data) => handleFieldChange("groupCategoryID", data.groupCategoryID)}
       />
-      {/* </div>  */}
+
       <ERPDataCombobox
         {...getFieldProps("sectionID")}
         label={t("section")}
@@ -213,36 +213,38 @@ const BillwiseProfitReportFilter = ({
         }}
         onChangeData={(data) => handleFieldChange("sectionID", data.sectionID)}
       />
-      {/* Additional Options */}
-      <ERPCheckbox
-        {...getFieldProps("useAvgPrice")}
-        label={t("set_cost_as_avg_price")}
-        onChangeData={(data) => handleFieldChange("useAvgPrice", data.useAvgPrice)}
-      />
-      <ERPCheckbox
-        {...getFieldProps("showFifoRate")}
-        label={t("set_cost_as_FIFO_avg_price")}
-        onChangeData={(data) => handleFieldChange("showFifoRate", data.showFifoRate)}
-      />
-      <ERPCheckbox
-        {...getFieldProps("includeVATinProfit")}
-        label={
-          userSession.countryId == Countries.India
-            ? t("include_TAX_in_profit")
-            : t("include_VAT_in_profit")
-        }
-        onChangeData={(data) => handleFieldChange("includeVATinProfit", data.includeVATinProfit)}
-      />
-      <ERPCheckbox
-        {...getFieldProps("showFast")}
-        label={t("show_fast")}
-        onChangeData={(data) => handleFieldChange("showFast", data.showFast)}
-      />
-      <ERPCheckbox
-        {...getFieldProps("isconsiderSE")}
-        label={t("consider_SE")}
-        onChangeData={(data) => handleFieldChange("isconsiderSE", data.isconsiderSE)}
-      />
+
+      <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <ERPCheckbox
+          {...getFieldProps("useAvgPrice")}
+          label={t("set_cost_as_avg_price")}
+          onChangeData={(data) => handleFieldChange("useAvgPrice", data.useAvgPrice)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("showFifoRate")}
+          label={t("set_cost_as_FIFO_avg_price")}
+          onChangeData={(data) => handleFieldChange("showFifoRate", data.showFifoRate)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("includeVATinProfit")}
+          label={
+            userSession.countryId == Countries.India
+              ? t("include_TAX_in_profit")
+              : t("include_VAT_in_profit")
+          }
+          onChangeData={(data) => handleFieldChange("includeVATinProfit", data.includeVATinProfit)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("showFast")}
+          label={t("show_fast")}
+          onChangeData={(data) => handleFieldChange("showFast", data.showFast)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isconsiderSE")}
+          label={t("consider_SE")}
+          onChangeData={(data) => handleFieldChange("isconsiderSE", data.isconsiderSE)}
+        />
+      </div>
     </div>
   );
 };

@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { Fragment } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
@@ -23,14 +20,14 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
         exportCell: any
       ) => {
-         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+        return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
       }
     },
     {
@@ -40,7 +37,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -49,14 +46,14 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return  (
+        return (
           <DrillDownCellTemplate
             data={cellElement}
             field="vchNo"
           ></DrillDownCellTemplate>
-        ) 
+        )
       },
     },
     // {
@@ -74,7 +71,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 200,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -98,18 +95,19 @@ const DayBookDetailed = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL"?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-          return(   <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {cellElement.data.particulars}
           </span>)
-        }}
+        }
+      }
     },
     {
       dataField: "refNo",
@@ -142,7 +140,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
@@ -151,8 +149,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-              ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
-              :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
           return {
             ...exportCell,
             text: value,
@@ -162,22 +160,23 @@ const DayBookDetailed = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL"?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return(  <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.debit)
                 : cellElement.data.debit}`}
           </span>)
-            }}
+        }
+      }
     },
     {
       dataField: "credit",
@@ -186,7 +185,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
@@ -195,8 +194,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
-                :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
           return {
             ...exportCell,
             text: value,
@@ -206,22 +205,23 @@ const DayBookDetailed = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL"?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.credit)
                 : cellElement.data.credit}`}
-          </span>) 
-            }}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balance",
@@ -230,7 +230,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -239,8 +239,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)+'Cr'
-                : getFormattedValue(balance)+'Dr';
+                ? getFormattedValue(-1 * balance) + 'Cr'
+                : getFormattedValue(balance) + 'Dr';
 
           return {
             ...exportCell,
@@ -248,26 +248,26 @@ const DayBookDetailed = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000' ,
+            textColor: '#FF0000',
             font: {
               ...exportCell.font,
-              color:{ argb: 'FFFF0000' },
+              color: { argb: 'FFFF0000' },
               size: 10,
-              style:'bold',
-              bold:true,
+              style: 'bold',
+              bold: true,
             },
           };
         }
         else {
-return( <span className={`${"font-bold text-[#DC143C]"}`}>
-  {`${cellElement.data?.balance == null
-    ? '0'
-    : cellElement.data.balance < 0
-      ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-      : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-</span>)
-  }   
-  },
+          return (<span className={`${"font-bold text-[#DC143C]"}`}>
+            {`${cellElement.data?.balance == null
+              ? '0'
+              : cellElement.data.balance < 0
+                ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+                : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+          </span>)
+        }
+      },
     },
   ];
   return (
@@ -302,7 +302,7 @@ return( <span className={`${"font-bold text-[#DC143C]"}`}>
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
                   }}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

@@ -11,8 +11,8 @@ const IncomeReportFilter = ({
   const { t } = useTranslation("accountsReport");
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="flex items-center gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
@@ -47,10 +47,9 @@ const IncomeReportFilter = ({
           label={t("ledger")}
           field={{
             id: "accLedgerID",
-            getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${
-              getFormState()?.data?.accGroupID
-            }`,
-            //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
+            getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${getFormState()?.data?.accGroupID
+              }`,
+            //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',             
             valueKey: "id",
             labelKey: "name",
           }}
@@ -59,7 +58,7 @@ const IncomeReportFilter = ({
           }
         />
       )}
-        <ERPDataCombobox
+      <ERPDataCombobox
         {...getFieldProps("salesmanID")}
         label={t("salesman")}
         field={{
@@ -107,15 +106,17 @@ const IncomeReportFilter = ({
     </div>
   );
 };
+
 export default IncomeReportFilter;
+
 export const IncomeReportFilterInitialState = {
   dateFrom: new Date(),
   dateTo: new Date(),
   ledgerID: -1,
   accGroupID: 8,
-  // accLedgerID: -1,
+  // accLedgerID: -1,   
   salesRouteID: -1,
   salesmanID: -1,
   costCentreID: -1,
-  // isIncludePI_CP: false,
+  // isIncludePI_CP: false, 
 };

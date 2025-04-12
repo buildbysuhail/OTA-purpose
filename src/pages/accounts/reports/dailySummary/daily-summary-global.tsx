@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { Fragment } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../cashSummary/cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
@@ -54,23 +51,23 @@ const DailySummaryGlobal = () => {
                     ? { argb: 'FF2E8B57' } // Green
                     : '',
               size: 10,
-              style:cellElement.data.date === "TOTAL"|| cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" || cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'bold' : 'normal',
-              bold:cellElement.data.date === "TOTAL"|| cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" || cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? true : false,
+              style: cellElement.data.date === "TOTAL" || cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" || cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'bold' : 'normal',
+              bold: cellElement.data.date === "TOTAL" || cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" || cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? true : false,
             },
           };
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'font-bold text-[#2E8B57]' : ''}`}>
-          {moment(cellElement.data.date, "DD-MM-YYYY", true).isValid() 
-    ? moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY") 
-    : cellElement.data.date}
+            {moment(cellElement.data.date, "DD-MM-YYYY", true).isValid()
+              ? moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")
+              : cellElement.data.date}
 
           </span>
           )
         }
       }
-
     },
+
     {
       dataField: "party",
       caption: t("party"),
@@ -135,6 +132,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+
     {
       dataField: "billed",
       caption: t("billed"),
@@ -174,8 +172,8 @@ const DailySummaryGlobal = () => {
             font: {
               ...exportCell.font,
               color: cellElement.data.date === "TOTAL"
-                ? { argb: 'FFDC143C' } 
-                 // ARGB for '#DC143C'
+                ? { argb: 'FFDC143C' }
+                // ARGB for '#DC143C'
                 : cellElement.data.date === "Expenses" ||
                   cellElement.data.party === "OPENING BALANCE" ||
                   cellElement.data.party === "CLOSING BALANCE" ||
@@ -224,6 +222,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+
     {
       dataField: "received",
       caption: t("received"),
@@ -267,6 +266,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+
     {
       dataField: "balance",
       caption: t("balance"),
@@ -309,6 +309,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+
     {
       dataField: "runningBalance",
       caption: t("runningBalance"),
@@ -351,6 +352,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -360,6 +362,7 @@ const DailySummaryGlobal = () => {
       width: 250,
       showInPdf: true,
     },
+
     {
       dataField: "quantity",
       caption: t("quantity"),
@@ -403,6 +406,7 @@ const DailySummaryGlobal = () => {
         }
       }
     },
+    
     {
       dataField: "netAmt",
       caption: t("net_amount"),
@@ -466,12 +470,13 @@ const DailySummaryGlobal = () => {
                   gridId="grd_daily_summary_global"
                   enablefilter={true}
                   showFilterInitially={true}
-                  // filterWidth={100}
+                  filterWidth={350}
+                  filterHeight={240}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

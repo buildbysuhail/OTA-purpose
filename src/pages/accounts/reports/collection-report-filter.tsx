@@ -14,8 +14,8 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const userSession = useSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation("accountsReport");
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="flex items-center gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
@@ -121,7 +121,7 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           handleFieldChange("costCenterID", data.costCenterID)
         }
       />
-      <div className="flex items-center">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 col-span-1 md:col-span-2">
         <ERPCheckbox
           {...getFieldProps("isIncludePI_CP")}
           label={t("include_SI_cash_receipt_amount")}

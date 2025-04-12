@@ -241,7 +241,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
                   gridId={GridId.party_monthwise_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={500}
+                  filterWidth={400}
                   filterHeight={230}
                   filterContent={<PartyMonthwisePurchaseSummaryReportFilter />}
                   filterInitialData={PartyMonthwisePurchaseSummaryReportFilterInitialState}

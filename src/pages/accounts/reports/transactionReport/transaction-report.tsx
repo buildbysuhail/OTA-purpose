@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import moment from "moment";
 import AccTransactionForm from "../../transactions/acc-transaction";
 
 interface TransactionReport {
@@ -30,7 +29,7 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
-      format:"dd-MMM-yyyy" 
+      format: "dd-MMM-yyyy"
       // cellRender: (
       //   cellElement: any,
       //   cellInfo: any,
@@ -53,7 +52,7 @@ const TransactionReport = () => {
           <DrillDownCellTemplate
             data={cellElement}
             field="vchNo"
-          ></DrillDownCellTemplate>
+          />
         )
       },
     },

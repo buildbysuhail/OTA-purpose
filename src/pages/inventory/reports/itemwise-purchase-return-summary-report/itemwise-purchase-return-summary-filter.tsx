@@ -19,7 +19,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
     return (
         <div className="grid grid-cols-1 gap-4">
             <div className="grid grid-cols-1 gap-4">
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <ERPDateInput
                         label={t("from_date")}
                         {...getFieldProps("fromDate")}
@@ -35,23 +35,25 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-            {
-        clientSession.isAppGlobal== true && (
-                <ERPDataCombobox
-                    label={t("product_category")}
-                    {...getFieldProps("productCategoryID")}
-                    field={{
-                        id: "productCategoryID",
-                        getListUrl: Urls.productCategory,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("productCategoryID", data.value);
-                    }}
-                />
-                )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {
+                    clientSession.isAppGlobal == true && (
+                        <ERPDataCombobox
+                            label={t("product_category")}
+                            {...getFieldProps("productCategoryID")}
+                            field={{
+                                id: "productCategoryID",
+                                getListUrl: Urls.productCategory,
+                                valueKey: "id",
+                                labelKey: "name",
+                            }}
+                            onSelectItem={(data) => {
+                                handleFieldChange("productCategoryID", data.value);
+                            }}
+                        />
+                    )
+                }
+
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("partyID")}
@@ -86,6 +88,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         });
                     }}
                 />
+
                 <ERPDataCombobox
                     label={t("brand")}
                     {...getFieldProps("brandID")}
@@ -140,8 +143,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         });
                     }}
                 />
-  {/* PRESETWAREHOUSEID>0 is from source txt file
-                set that value and disable the combobox */}
+
                 <ERPDataCombobox
                     label={t("warehouse")}
                     {...getFieldProps("warehouseID")}
@@ -158,9 +160,9 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         });
                     }}
                 />
-            
+
                 <ERPDataCombobox
-                     disabled={true}//enable on SI-BT,BTO,BTI(From Branch),
+                    disabled={true}
                     label={t("to_branch")}
                     {...getFieldProps("toBranchID")}
                     field={{
@@ -175,7 +177,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                 />
 
                 <ERPDataCombobox
-                disabled={true}//enable on SI-BT,BTO,BTI(From Warehouse)
+                    disabled={true}
                     label={t("to_warehouse")}
                     {...getFieldProps("toWarehouseID")}
                     field={{
@@ -188,7 +190,8 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("toWarehouseID", data.value);
                     }}
                 />
-                   {/* always visible false */}
+
+                {/* always visible false */}
                 {/* <ERPDataCombobox
                     label={t("sales_route")}
                     {...getFieldProps("salesRouteID")}
@@ -262,13 +265,15 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("location", data.value);
                     }}
                 />
-                     {
-        clientSession.isAppGlobal== true && (
-                <ERPCheckbox
-                    label={t("category_wise_summary")}
-                    {...getFieldProps("isCategoryWise")}
-                    onChangeData={(data: any) => handleFieldChange("isCategoryWise", data.isCategoryWise)}
-                />)}
+                {
+                    clientSession.isAppGlobal == true && (
+                        <ERPCheckbox
+                            label={t("category_wise_summary")}
+                            {...getFieldProps("isCategoryWise")}
+                            onChangeData={(data: any) => handleFieldChange("isCategoryWise", data.isCategoryWise)}
+                        />
+                    )
+                }
             </div>
         </div>
     );

@@ -52,6 +52,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   className?: string;
   inputClassName?: string;
   noLabel?: boolean;
+  noBorder?: boolean;
   showCustomNumberChanger?: boolean;
   labelDirection?: "horizontal" | "vertical";
   labelInfo?: any;
@@ -104,6 +105,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       max,
       pattern,
       noLabel,
+      noBorder,
       showCustomNumberChanger,
       labelDirection = "vertical",
       labelInfo,
@@ -820,11 +822,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   onBlur && onBlur(e);
                 }}
                 style={{
-                  height,
+                  height:!inputClassName?height:"",
                   fontSize,
                   fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,
                   color: disabled ? "#606060 !important" : color,
-                  borderColor: borderStyles,
+                  borderColor:!inputClassName?borderStyles:"",
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
                   borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0
@@ -850,7 +852,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
                 }}
-                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
+                className={`form-control !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
                   }`}
                 onWheel={(e) => {
                   if (type === "number") {

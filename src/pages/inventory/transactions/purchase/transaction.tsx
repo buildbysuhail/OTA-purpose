@@ -125,6 +125,7 @@ import NetAmountInput from "./components/NetAmountInput";
 import BillDiscountInput from "./components/BillDiscountInput";
 import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
+import DataGridTest from "../../masters/test/dataGrid";
 
 interface BilledItem {
   id?: number;
@@ -740,6 +741,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("product"),
         width: 150,
         visible: true,
+        allowEditing:true
       },
       {
         dataField: "hsnCode",
@@ -1299,38 +1301,38 @@ const TransactionForm: React.FC<TransactionProps> = ({
         width: 100,
         visible: true,
       },
-      {
-        dataField: "action",
-        caption: t("action"),
-        visible: true,
-        cellRenderDynamicRootState: (
-          cellElement: any,
-          cellInfo: any,
-          state: RootState
-        ) =>
-          state.InventoryTransaction.formElements.pnlMasters?.disabled ==
-          true ? null : (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                handleRemoveItem(cellElement.rowIndex);
-              }}
-              // disabled={
-              //   (formState.isRowEdit &&
-              //     cellElement.data.transactionDetailID ==
-              //       formState.row.transactionDetailID) ||
-              //   formState.formElements.pnlMasters?.disabled
-              // }
-              className="ti-btn-link"
-              type="button"
-            >
-              <i
-                className="ri-delete-bin-5-line delete-icon"
-                title={t("remove")}
-              ></i>
-            </button>
-          ),
-      },
+      // {
+      //   dataField: "action",
+      //   caption: t("action"),
+      //   visible: true,
+      //   cellRenderDynamicRootState: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     state: RootState
+      //   ) =>
+      //     state.InventoryTransaction.formElements.pnlMasters?.disabled ==
+      //     true ? null : (
+      //       <button
+      //         onClick={(e) => {
+      //           e.preventDefault();
+      //           handleRemoveItem(cellElement.rowIndex);
+      //         }}
+      //         // disabled={
+      //         //   (formState.isRowEdit &&
+      //         //     cellElement.data.transactionDetailID ==
+      //         //       formState.row.transactionDetailID) ||
+      //         //   formState.formElements.pnlMasters?.disabled
+      //         // }
+      //         className="ti-btn-link"
+      //         type="button"
+      //       >
+      //         <i
+      //           className="ri-delete-bin-5-line delete-icon"
+      //           title={t("remove")}
+      //         ></i>
+      //       </button>
+      //     ),
+      // },
     ].filter((column) => {
       const { gridColumns } = formState.formElements;
       if (
@@ -1432,6 +1434,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
+  
+
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -1455,7 +1459,101 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.error("Error fetching transaction history:", error);
     }
   };
+//for demo purpouse 
+// Define the structure of an empty row based on visible columns
+const getEmptyRow = useCallback(() => {
+  const emptyRow: any = {};
+  columns.forEach((col) => {
+    if (col.dataField) {
+      switch (col.dataField) {
+        case "slNo":
+          emptyRow[col.dataField] = 1; // Start with 1 for serial number
+          break;
+        case "qty":
+        case "free":
+        case "mrp":
+        case "unitPrice":
+        case "gross":
+        case "discPercent":
+        case "discount":
+        case "netValue":
+        case "total":
+        case "stock":
+        case "margin":
+        case "salesPrice":
+        case "lpr":
+        case "lpc":
+        case "profit":
+        case "size":
+        case "vatPercent":
+        case "vat":
+        case "cst":
+        case "cstPercent":
+        case "cost":
+        case "mr":
+        case "expDays":
+        case "bd":
+        case "pb":
+        case "nos":
+        case "unitPriceFC":
+        case "grossFC":
+        case "unit2Qty":
+        case "unit2SalesRate":
+        case "unit2MRP":
+        case "unit3Qty":
+        case "unit3SalesRate":
+        case "unit3MRP":
+        case "tagQty":
+        case "additionalExpenses":
+        case "totalAddExpenses":
+        case "grossConvert":
+        case "sq2":
+        case "sq3":
+        case "rowNumber":
+        case "cgstPercent":
+        case "cgst":
+        case "sgstPercent":
+        case "sgst":
+        case "igstPercent":
+        case "igst":
+        case "cessPercent":
+        case "cessAmt":
+        case "addnlCessPercent":
+        case "addnlCessAmt":
+        case "mrpFinal":
+          emptyRow[col.dataField] = 0; // Numeric fields default to 0
+          break;
+        case "barcodePrinted":
+        case "batchCreated":
+        case "barcodeTagPrint":
+        case "barcodeUnit2Print":
+        case "barcodeUnit3Print":
+          emptyRow[col.dataField] = false; // Boolean fields default to false
+          break;
+        default:
+          emptyRow[col.dataField] = ""; // String fields default to empty string
+          break;
+      }
+    }
+  });
+  return emptyRow;
+}, [columns]);
+const [data, setData] = useState<any[]>(() => {
+  return formState.transaction.details.length > 0
+    ? formState.transaction.details
+    : [getEmptyRow()];
+});
+useEffect(() => {
+  setData(
+    formState.transaction.details.length > 0
+      ? formState.transaction.details
+      : [getEmptyRow()]
+  );
+}, [formState.transaction.details, getEmptyRow]);
 
+const handleAddData = (newItem: any) => {
+  setData((prev) => [...prev, newItem]);
+};
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1851,7 +1949,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }}
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
-            <ErpDevGrid
+            {/* <ErpDevGrid
               key={key}
               GridPreferenceChooserTrance
               heightToAdjustOnWindows={formState.userConfig?.gridHeight ?? 700}
@@ -1884,7 +1982,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ShowGridPreferenceChooser={false}
               showPrintButton={false}
               className="pb-14"
-            ></ErpDevGrid>
+            ></ErpDevGrid> */}
+
+<DataGridTest
+  data={data}
+  columns={columns}
+  keyField={key}
+  height={gridHeight}
+  gridId={`${gridCode}-grid`}
+  onAddData={handleAddData}
+/>
           </div>
           {formState.showSaveDialog && (
             <ERPAlert

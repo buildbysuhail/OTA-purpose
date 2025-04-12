@@ -110,7 +110,7 @@ const ImportExportManage: React.FC = React.memo(() => {
         </div>
       </div>
 
-      <div className="w-full p-2 flex justify-end">
+      <div className="w-full p-2 flex gap-4 justify-end">
         <ERPButton
           type="reset"
           title={t("cancel")}

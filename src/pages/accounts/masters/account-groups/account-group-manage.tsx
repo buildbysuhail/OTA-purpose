@@ -76,7 +76,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
   const { t } = useTranslation("masters");
   return (
     <div className="w-full modal-content">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("accGroupName")}
           label={t("name")}

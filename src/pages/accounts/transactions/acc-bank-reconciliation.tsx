@@ -480,15 +480,7 @@ const BankReconciliation = () => {
               />
             );
           }
-          return (
-            <div
-              title={
-                cellInfo.data.checkStatus === "P" || cellInfo.data.checkStatus === "p"
-                  ? "Pending status"
-                  : "Summary row"
-              }
-            />
-          );
+         
         },
       },
     ],

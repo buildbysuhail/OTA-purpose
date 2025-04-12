@@ -191,6 +191,7 @@ const BankReconciliation = () => {
   };
   const handleChangeToPending = async () => {
     setLoading((prev) => ({ ...prev, changeToPending: true }));
+    debugger;
     try {
       const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
       const changeToPending = gridData
@@ -456,9 +457,39 @@ const BankReconciliation = () => {
         dataField: "clicked",
         caption: "",
         dataType: "boolean",
-        allowEditing: true,
+        allowEditing: false,
         width: 100,
         visible: true,
+        cellRender: (cellInfo: any) => {
+          if (
+            cellInfo.data.checkStatus !== "P" &&
+            !cellInfo.data.isSummary
+          ) {
+            return (
+              <input
+                type="checkbox"
+                checked={cellInfo.data.clicked || false}
+                onChange={(e) => {
+                  cellInfo.component.cellValue(
+                    cellInfo.rowIndex,
+                    "clicked",
+                    e.target.checked
+                  );
+                  cellInfo.component.saveEditData();
+                }}
+              />
+            );
+          }
+          return (
+            <div
+              title={
+                cellInfo.data.checkStatus === "P" || cellInfo.data.checkStatus === "p"
+                  ? "Pending status"
+                  : "Summary row"
+              }
+            />
+          );
+        },
       },
     ],
     [t, getFormattedValue]

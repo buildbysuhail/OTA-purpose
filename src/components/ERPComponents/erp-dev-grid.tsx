@@ -1112,6 +1112,33 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
 
       // Customize the export to PDF to use rendered values
+
+      const custowmizeCell = (options: any) => {
+        if (options.gridCell.rowType != "data") return;
+        const column = gridCols.find(
+          (x) => x.dataField == options.gridCell.column.dataField
+        );
+
+        if (column && column.cellRender) {
+          const renderResult = column.cellRender(
+            { data: options.gridCell.data },
+            options.gridCell,
+            filter,
+            options.pdfCell
+          );
+
+          let isDefined = renderResult !== undefined;
+          let isObject = typeof renderResult === "object";
+          let isValidReactElement = React.isValidElement(renderResult);
+
+          if (isDefined && isObject && !isValidReactElement) {
+            options.pdfCell = renderResult;
+          } else {
+            options.pdfCell = options.pdfCell; // Retain the original value
+          }
+        }
+      };
+
       const customizeCell = (options: any) => {
         if (options.gridCell.rowType != "data") return;
 
@@ -1129,23 +1156,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           let renderResult = null;
           if (column.cellRenderDynamic) {
             renderResult = column.cellRenderDynamic(
+              { data: options.gridCell.data },
               options.gridCell,
-              options.pdfCell,
-              filter
+              filter,
+              options.pdfCell
             );
           }
           if (column.cellRenderDynamicRootState) {
             renderResult = column.cellRenderDynamicRootState(
-              options.gridCell,
-              options.pdfCell,
-              rootState
+              { data: options.gridCell.data },
+            options.gridCell,
+            filter,
             );
           }
           if (column.cellRender) {
             renderResult = column.cellRender(
-              options.gridCell,
-              options.pdfCell,
-              filter
+              { data: options.gridCell.data },
+            options.gridCell,
+            filter,
+            options.pdfCell
             );
           }
 
@@ -1170,6 +1199,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             // const docHtml = parser.parseFromString(staticMarkup, "text/html");
             // const textContent = docHtml.body.textContent || "";
             // options.pdfCell.text = textContent;
+            options.pdfCell = renderResult;
             options.pdfCell.html = staticMarkup;
           } else if (
             typeof renderResult === "string" ||
@@ -1181,8 +1211,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             typeof renderResult === "object" &&
             renderResult.text
           ) {
+            options.pdfCell = renderResult;
             options.pdfCell.text = renderResult.text;
           } else {
+            options.pdfCell = options.pdfCell;
             options.pdfCell.text = options.pdfCell.text;
           }
         }

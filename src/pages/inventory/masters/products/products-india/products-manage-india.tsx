@@ -106,11 +106,11 @@ useEffect(() => {
                   />
               </div>
             </div>
-
+{/* {getFieldProps("product.productId").value} */}
             <div className="flex items-center gap-1 mb-3">
               <ERPDataCombobox
               ref={productNameRef}
-                {...getFieldProps("product.productId")}
+                {...getFieldProps("product.productID")}
                 id="productName"
                 field={{
                   id: "productName",

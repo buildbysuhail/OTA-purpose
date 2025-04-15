@@ -147,7 +147,7 @@ import ShortageStock from "../../../pages/inventory/reports/shortage-stock-repor
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
-// import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
+
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
@@ -172,6 +172,7 @@ import PurchaseReturnTaxGSTTaxwise from "../../../pages/inventory/reports/purcha
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
+import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -535,7 +536,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
         <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
-        {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
+        <Route path="/inventory-masters/test-page" element={<TestInvMaster />} />
       </Routes>
     </Suspense>
   );

@@ -135,10 +135,6 @@ import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/rpt
 import IncomExpenseStatement from "../../../pages/accounts/reports/incomeexpense/income-expense-statement";
 import BankStatementReport from "../../../pages/accounts/reports/bank-statement-report";
 import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
-import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
-import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
-import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
-import ItemWisePurchaseQuotationSummary from "../../../pages/inventory/reports/itemwise-purchase-quotation-summary-report/itemwise-purchase-quotation-summary";
 import ProductSummaryMaster from "../../../pages/inventory/reports/product-summary/product-summary-master";
 import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
 import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
@@ -146,8 +142,6 @@ import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/ex
 import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
-import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
-
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
@@ -177,7 +171,10 @@ import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-
 import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
 import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
 import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
-import SalesSummary from "../../../pages/inventory/reports/sales-summary-report/sales-summary";
+import SummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
+import RegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
+import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
+import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
@@ -462,9 +459,9 @@ const Content: FC<ContentProps> = () => {
         <Route  path="/accounts/receivable_aging"  element={<AccountReceivableAgingReport />}/> */}
         {/* Reports - Accounts */}
         {/* Reports - Inventory */}
-        <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
-        <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
-        <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
+        <Route path="/inventory/purchase_summary_report" element={<SummaryReport dataUrl={urls.purchase_summary_report} gridHeader="purchase_summary_report" gridId="grd_purchase_summary" />} />
+        <Route path="/inventory/purchase_register_report" element={<RegisterReport dataUrl={urls.purchase_register_report} gridHeader="purchase_register_report" gridId="grd_purchase_register" />} />
+        <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_report" gridId="grd_party_wise" />} />
         <Route path="/inventory/purchase_tax_report_detailed" element={<PurchaseTaxReportDetailed />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<PurchaseTaxReportSummary />} />
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
@@ -472,14 +469,12 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
-        <Route path="/inventory/itemwise_purchase_summary" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary"/>} />
-
-        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="item_wise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary"/>} />
+        <Route path="/inventory/itemwise_purchase_summary" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary" />} />
+        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="item_wise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary" />} />
         {/* <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} /> */}
-        
-        <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary"/>} />
-        <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary"gridId="grd_item_wise_purchase_estimate_summary"/>} />
-        <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary"/>} />
+        <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />} />
+        <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />} />
+        <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />} />
         <Route path="/inventory/product_summary_master" element={<ProductSummaryMaster />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
@@ -489,7 +484,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
         <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />
         <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
-        <Route path="/inventory/sales_summary_report" element={<SalesSummary />} />
+        <Route path="/inventory/sales_summary_report" element={<SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />} />
+        <Route path="/inventory/sales_register_report" element={<RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />} />
+        <Route path="/inventory/net_sales_report" element={<NetSales />} />
+        <Route path="/inventory/partywise_sales_report" element={<PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />

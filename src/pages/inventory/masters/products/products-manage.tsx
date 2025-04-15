@@ -81,9 +81,23 @@ export const ProductMaster: React.FC = React.memo(() => {
     value?: PathValue<productDto, Path>
   ) => void = handleFieldChange;
   const [activeTab, setActiveTab] = React.useState(0);
+
   const handleTabChange = (index: number) => {
     setActiveTab(index);
   };
+  // Callback to switch to Multi Rates tab
+  const switchToMultiRatesTab = useCallback(() => {
+    const tabs = getTabs();
+    const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
+    if (multiRatesIndex !== undefined && multiRatesIndex !== -1) {
+      // setActiveTab(multiRatesIndex);
+      handleTabChange(multiRatesIndex)
+    }
+  }, [t]);
+
+
+
+
   const userSession = rootState.UserSession;
   const clientSession = rootState.ClientSession;
   const isIndia = userSession.countryId === Countries.India;
@@ -274,6 +288,7 @@ export const ProductMaster: React.FC = React.memo(() => {
             formState={formState}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}
+            switchToMultiRatesTab={switchToMultiRatesTab}
           />
 
           <ProductDetailsGcc

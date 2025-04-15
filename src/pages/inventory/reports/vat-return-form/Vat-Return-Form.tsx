@@ -8,19 +8,51 @@ import { ActionType } from "../../../../redux/types"
 import Urls from "../../../../redux/urls"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState } from "../Purchase-Tax-report/Purchase-Tax-report-filter"
+import { useSelector } from "react-redux"
+import { RootState } from "../../../../redux/store"
 
 const VatReturnForm = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
+const userSession = useSelector((state: RootState) => state.UserSession);
+const setupCurrencyCode = (countryId: number): string => {
+  let currencyCode = '';
 
-  const columns: DevGridColumn[] = [
-    {
+  switch (countryId) {
+    case 1: // Saudi Arabia
+      currencyCode = 'SAR';
+      break;
+    case 120: // UAE
+      currencyCode = 'AED';
+      break;
+    case 122: // Bahrain
+      currencyCode = 'BHD';
+      break;
+    case 124: // Qatar
+      currencyCode = 'QAR';
+      break;
+    case 118: // Kuwait
+      currencyCode = 'KWD';
+      break;
+    case 104: // Oman
+      currencyCode = 'OMR';
+      break;
+    default:
+      currencyCode = '';
+      break;
+  }
+
+  return currencyCode;
+};
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
+      {
       dataField: "title",
       caption: t("title"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-
+      showInPdf: true,
      cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -28,26 +60,37 @@ const VatReturnForm = () => {
         exportCell: any
       ) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.balance;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : balance < 0
-                ? getFormattedValue(-1 * balance) + " Cr"
-                : getFormattedValue(balance) + " Dr";
           return  {
             ...exportCell,
             text: cellInfo.value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data.title === "TOTAL" ? '#FF0000' : cellElement.data.title === "Pending Cheques" || cellElement.data.title === "Total Pending Cheque Amt" ?'#0000FF':'',
+            textColor: cellElement.data?.title=="Total sales" ||
+            cellElement.data?.title=="Total purchases"||
+            cellElement.data?.title=="Total VAT due for current period"||
+            cellElement.data?.title=="Net VAT due (or claim)"
+             ? '#FF0000':'',
             font: {
               ...exportCell.font,
-              color: cellElement.data.title === "TOTAL" ? { argb: 'FFFF0000' } :cellElement.data.title === "Pending Cheques" || cellElement.data.title === "Total Pending Cheque Amt" ?{ argb: 'FF0000FF' }: "",
+              color:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.title === "TOTAL" ||cellElement.data.title === "Pending Cheques" || cellElement.data.title === "Total Pending Cheque Amt" ?'bold':'normal',
-              bold: cellElement.data.title === "TOTAL" ||cellElement.data.title === "Pending Cheques" || cellElement.data.title === "Total Pending Cheque Amt" ?true:false,
+              style:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?'bold':'normal',
+              bold:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?true:false,
             },
           };
         }
@@ -82,14 +125,44 @@ const VatReturnForm = () => {
               ? ""
               :cellElement.data?.title=="Total sales"||
               cellElement.data?.title=="Total purchases"||
-              cellElement.data?.title=="Total VAT due for current period"?
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"?
               getFormattedValue(Number.parseFloat(cellElement.data.amount))
-              :cellElement.data.amount
+              :cellElement.data?.amount == 0?
+              0:
+              getFormattedValue(cellElement.data.amount,false,4)
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
+            textColor: cellElement.data?.title=="Total sales" ||
+            cellElement.data?.title=="Total purchases"||
+            cellElement.data?.title=="Total VAT due for current period"||
+            cellElement.data?.title=="Net VAT due (or claim)"
+             ? '#FF0000':'',
+             font: {
+              ...exportCell.font,
+              color:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?'bold':'normal',
+              bold:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?true:false,
+            },
           }
         } else {
           return (
@@ -100,10 +173,10 @@ const VatReturnForm = () => {
               ? 'font-bold text-[#DC143C]' : ''}`}>
               {cellElement.data?.amount == null
                 ? ""
-          
                 :cellElement.data?.title=="Total sales"||
                 cellElement.data?.title=="Total purchases"||
-                cellElement.data?.title=="Total VAT due for current period"?
+                cellElement.data?.title=="Total VAT due for current period"||
+                cellElement.data?.title=="Net VAT due (or claim)"?
                 getFormattedValue(Number.parseFloat(cellElement.data.amount))
                 :cellElement.data?.amount == 0?
                 0:
@@ -120,6 +193,7 @@ const VatReturnForm = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf: true,
       visible: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -132,7 +206,35 @@ const VatReturnForm = () => {
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
+            textColor: cellElement.data?.title=="Total sales" ||
+            cellElement.data?.title=="Total purchases"||
+            cellElement.data?.title=="Total VAT due for current period"||
+            cellElement.data?.title=="Net VAT due (or claim)"
+             ? '#FF0000':'',
+             font: {
+              ...exportCell.font,
+              color:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?'bold':'normal',
+              bold:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?true:false,
+            },
           }
+
         } else {
           return (
             <span className={`${cellElement.data?.title=="Total sales"||
@@ -150,8 +252,9 @@ const VatReturnForm = () => {
       },
      {
       dataField: "vatAmount",
-      caption: t("vatAmount"),
+      caption: t("vat_amount "),
       dataType: "number",
+      showInPdf: true,
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -167,6 +270,33 @@ const VatReturnForm = () => {
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
+            textColor: cellElement.data?.title=="Total sales" ||
+            cellElement.data?.title=="Total purchases"||
+            cellElement.data?.title=="Total VAT due for current period"||
+            cellElement.data?.title=="Net VAT due (or claim)"
+             ? '#FF0000':'',
+             font: {
+              ...exportCell.font,
+              color:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?'bold':'normal',
+              bold:cellElement.data?.title=="Total sales" ||
+              cellElement.data?.title=="Total purchases"||
+              cellElement.data?.title=="Total VAT due for current period"||
+              cellElement.data?.title=="Net VAT due (or claim)"||
+              cellElement.data?.title=="VAT on sales"||
+              cellElement.data?.title=="VAT On Purchases"
+              ?true:false,
+            },
           }
         } else {
           return (
@@ -183,7 +313,22 @@ const VatReturnForm = () => {
         }
       }
       },
-  ];
+    ];
+    // Filter columns based on the `visible` property
+    return baseColumns
+     
+      .map((column) => {
+        if (column.dataField !== "title") {
+          return {
+            ...column,
+            caption: `${column.caption} (${setupCurrencyCode(userSession.countryId??0)})`,
+
+          };
+        }
+        return column;
+      });
+  }, [t]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -200,8 +345,8 @@ const VatReturnForm = () => {
                   gridId="grd_vat_return_form"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
-                  filterHeight={230}
+                  filterWidth={200}
+                  filterHeight={200}
                   filterContent={<PurchaseTaxReportFilter/>}
                   filterInitialData={PurchaseTaxReportFilterInitialState}
                   hideGridAddButton={true}

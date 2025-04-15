@@ -18,7 +18,7 @@ interface ItemWisePurchaseSummaryProps {
   dataUrl: string;
   gridId: string;
 }
-const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,dataUrl,gridId}) => {
+const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
@@ -273,7 +273,7 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
               text: value,
               alignment: "right",
               alignmentExcel: { horizontal: "right" },
-            }; 
+            };
           } else {
             return cellElement.data?.totVat == null
               ? 0
@@ -379,7 +379,7 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
         allowFiltering: true,
         width: 100,
       },
-    ]; 
+    ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
       // if (column.dataField == "exchangeRate") {
@@ -389,27 +389,27 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
         return applicationSettings.branchSettings.maintainTaxes && !clientSession.isAppGlobal;
       }
       if (column.dataField == "branchName") {
-        return userSession.currentBranchId==0;
+        return userSession.currentBranchId == 0;
       }
       if (column.dataField == "siNo") {
         return filter.isCategoryWise == false;
       }
-      if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
-        return clientSession.isAppGlobal|| filter.isCategoryWise==true;
+      if (column.dataField == "totalTaxAmount" || column.dataField == "brandName" || column.dataField == "category") {
+        return clientSession.isAppGlobal || filter.isCategoryWise == true;
       }
       return true;
     })
-    // .map((column) => {
-    //   debugger;
-    //   if (column.dataField == "groupName") {
-    //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
-    //   }
-    //   if (column.dataField == "category") {
-    //     column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
-    //   }
-    //   return column;
-    // }) as DevGridColumn[]
-    ;
+      // .map((column) => {
+      //   debugger;
+      //   if (column.dataField == "groupName") {
+      //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
+      //   }
+      //   if (column.dataField == "category") {
+      //     column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
+      //   }
+      //   return column;
+      // }) as DevGridColumn[]
+      ;
   }, [t, filter, filter.isCategoryWise, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -484,8 +484,8 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
       customizeText: customizeSummaryRow,
     },
   ];
-  
-    const dataGridRef = useRef<any>(null);
+
+  const dataGridRef = useRef<any>(null);
   useEffect(() => {
     const gridInstance = dataGridRef.current?.instance();
     if (gridInstance) {
@@ -504,7 +504,7 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              ref={dataGridRef}
+                ref={dataGridRef}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -538,7 +538,7 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
                 }
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_item_wise_purchase_return_summary"
+                gridId={gridId}
               />
             </div>
           </div>

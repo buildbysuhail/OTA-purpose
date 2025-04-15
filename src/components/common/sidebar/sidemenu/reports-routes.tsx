@@ -160,6 +160,22 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_purchase_quotation_summary`, type: 'link', active: false, selected: false, title: 'itemwise_purchase_quotation_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary_master`, type: 'link', active: false, selected: false, title: 'product_summary_master', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/vat_return_form`, type: 'link', active: false, selected: false, title: 'vat_return_form', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_advance_register_format_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_daily_summary_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_detailed_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_monthly_summary_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_register_format_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_adv_register_format_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_daily_summary_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_detailed_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_monthly_summary_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_register_format_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
+
     ]
   },
 
@@ -180,11 +196,31 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_out_filter`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight },
       // { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_statement_all`, type: 'link', active: false, selected: false, title: 'daily_statement_all', icon: AiOutlineFileText },
       // { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_statement_sales`, type: 'link', active: false, selected: false, title: 'daily_statement_sales', icon: AiOutlineFileText },
     ]
   },
+
+  {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'sales',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_summary_report`, type: 'link', active: false, selected: false, title: 'sales_summary', icon: PiPackageLight },
+    ]
+  },
+
   {
     icon: (<Boxes className="side-menu__icon side-menu" />),
     type: 'sub',

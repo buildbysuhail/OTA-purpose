@@ -7,6 +7,7 @@ import { RootState } from "../redux/store";
 import { AppState } from "../redux/slices/app/types";
 import moment from "moment";
 import dayjs from "dayjs";
+import { useNumberFormat } from "./hooks/use-number-format";
 
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -833,4 +834,49 @@ export const getApLocalData = (key: string) => {
     return null;
   }
   return JSON.parse(df);
+}
+export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPercentage: number, showRateBeforeTax: boolean, getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string ) =>{
+  
+  try {
+    // Convert inputs to numbers
+    let pp = purPrice || 0;
+    let sp = salesPrice || 0;
+    let mu = 0;
+    const taxPerc = salesTaxPercentage;
+
+    if (pp > 0) {
+      if (showRateBeforeTax) {
+        // Adjust purchase price to include tax
+        pp = pp * (1 + taxPerc / 100);
+      }
+      
+      // Calculate markup percentage
+      mu = (sp - pp) / pp * 100;
+      mu = Math.round(mu * 100000) / 100000; // Round to 5 decimal places
+      return getFormattedValue(mu);
+    }
+    return getFormattedValue(0);
+  } catch (error) {
+    console.error("Error calculating markup:", error);
+    return getFormattedValue(0);
+  }
+}
+export const calculateSalesPrice = (purchasePriceInput: number,
+  markupPercentInput: number,
+  salesTaxPercentage: number,
+  showRateBeforeTax: boolean): number => {
+  const parseNumber = (val: string): number => parseFloat(val) || 0;
+
+  let pp = purchasePriceInput;
+  let mu = markupPercentInput;
+  let sp = 0;
+
+  if (showRateBeforeTax) {
+    pp = pp * (1 + salesTaxPercentage / 100);
+    sp = pp + (pp * mu) / 100;
+  } else {
+    sp = pp + (pp * mu) / 100;
+  }
+
+  return pp > 0 ? isNaN(sp) ? 0 : sp : 0;
 }

@@ -10,121 +10,139 @@ const StockTransferFilter = ({ getFieldProps, handleFieldChange, formState }: an
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4">
-      {/* Date Fields */}
-      <div className="grid grid-cols-4 gap-4">
-        <ERPDateInput
-          label={t("from_date")}
-          {...getFieldProps("fromDate")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
-        />
-        <ERPDateInput
-          label={t("to_date")}
-          {...getFieldProps("toDate")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="col-span-1 sm:col-span-1 md:col-span-1">
+          <ERPDateInput
+            label={t("from_date")}
+            {...getFieldProps("fromDate")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+          />
+        </div>
+        <div className="col-span-1 sm:col-span-1 md:col-span-1">
+          <ERPDateInput
+            label={t("to_date")}
+            {...getFieldProps("toDate")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+          />
+        </div>
       </div>
 
-      {/* Main Fields */}
-      <div className="grid grid-cols-3 gap-4">
-        <ERPDataCombobox
-          label={t("product")}
-          {...getFieldProps("productID")}
-          field={{
-            id: "productID",
-            getListUrl: Urls.data_products,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("productID", data.value);
-          }}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("product")}
+            {...getFieldProps("productID")}
+            field={{
+              id: "productID",
+              getListUrl: Urls.data_products,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("productID", data.value);
+            }}
+          />
+        </div>
 
-        <ERPDataCombobox
-          label={t("product_group")}
-          {...getFieldProps("productGpID")}
-          field={{
-            id: "productGpID",
-            getListUrl: Urls.productGroup,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("productGpID", data.value);
-          }}
-        />
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("product_group")}
+            {...getFieldProps("productGpID")}
+            field={{
+              id: "productGpID",
+              getListUrl: Urls.productGroup,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("productGpID", data.value);
+            }}
+          />
+        </div>
 
-        <ERPDataCombobox
-          label={t("brand")}
-          {...getFieldProps("brandID")}
-          field={{
-            id: "brandID",
-            getListUrl: Urls.data_brands,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("brandID", data.value);
-          }}
-        />
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("brand")}
+            {...getFieldProps("brandID")}
+            field={{
+              id: "brandID",
+              getListUrl: Urls.data_brands,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("brandID", data.value);
+            }}
+          />
+        </div>
 
-        <ERPDataCombobox
-          label={t("from_warehouse")}
-          {...getFieldProps("fromWarehouse")}
-          field={{
-            id: "fromWarehouse",
-            getListUrl: Urls.data_warehouse,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("fromWarehouse", data.value);
-          }}
-        />
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("from_warehouse")}
+            {...getFieldProps("fromWarehouse")}
+            field={{
+              id: "fromWarehouse",
+              getListUrl: Urls.data_warehouse,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("fromWarehouse", data.value);
+            }}
+          />
+        </div>
 
-        <ERPDataCombobox
-          label={t("to_warehouse")}
-          {...getFieldProps("toWarehouse")}
-          field={{
-            id: "toWarehouse",
-            getListUrl: Urls.data_warehouse,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("toWarehouse", data.value);
-          }}
-        />
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("to_warehouse")}
+            {...getFieldProps("toWarehouse")}
+            field={{
+              id: "toWarehouse",
+              getListUrl: Urls.data_warehouse,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("toWarehouse", data.value);
+            }}
+          />
+        </div>
 
-        <ERPInput
-          label={t("voucher_number")}
-          {...getFieldProps("voucherNumber")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("voucherNumber", data.voucherNumber)}
-        />
+        <div className="col-span-1">
+          <ERPInput
+            label={t("voucher_number")}
+            {...getFieldProps("voucherNumber")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("voucherNumber", data.voucherNumber)}
+          />
+        </div>
 
-        <ERPInput
-          label={t("vehicle")}
-          {...getFieldProps("vehicleID")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("vehicleID", data.vehicleID)}
-        />
+        <div className="col-span-1">
+          <ERPInput
+            label={t("vehicle")}
+            {...getFieldProps("vehicleID")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("vehicleID", data.vehicleID)}
+          />
+        </div>
 
-        <ERPDataCombobox
-          label={t("employee")}
-          {...getFieldProps("employeeID")}
-          field={{
-            id: "employeeID",
-            getListUrl: Urls.data_employees,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("employeeID", data.value);
-          }}
-        />
+        <div className="col-span-1">
+          <ERPDataCombobox
+            label={t("employee")}
+            {...getFieldProps("employeeID")}
+            field={{
+              id: "employeeID",
+              getListUrl: Urls.data_employees,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("employeeID", data.value);
+            }}
+          />
+        </div>
         <div className="flex items-center space-x-4">
           <ERPRadio
             id="summary"

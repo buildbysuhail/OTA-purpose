@@ -6,9 +6,9 @@ import { useTranslation } from "react-i18next";
 const IncomeExpenseStatementFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-2 md:gap-4">
       {/* Date Range Section */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-4">
         <ERPDateInput
           {...getFieldProps("fromDate")}
           label={t("date_from")}
@@ -32,6 +32,7 @@ const IncomeExpenseStatementFilter = ({ getFieldProps, handleFieldChange }: any)
           valueKey: "id",
           labelKey: "name",
         }}
+        className="w-full"
         onChangeData={(data) => handleFieldChange('valuationUsing', data.valuationUsing)}
       />
       {/* <ERPCheckbox

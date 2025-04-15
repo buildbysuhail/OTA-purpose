@@ -15,7 +15,6 @@ import ProductSummaryReportStockLedger from "./product-summary-report-stock-ledg
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import React from "react";
-import { updateProductSummaryData } from "../../../../redux/slices/popup-reducer";
 
 export interface ProductSummaryFilter {
   filter: {
@@ -95,16 +94,16 @@ const onKeyChange = (id: any) => {
 };
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+      <div className="grid grid-cols-1 gap-x-6">
+        <div className="col-span-1">
           <div className="">
-            <div className="p-4">
-              <div className="flex items-center gap-4 flex-wrap">
+            <div className="p-2 md:p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-2 md:gap-4">
                 <ERPDateInput
                   id="dateFrom"
                   value={filter.filter.dateFrom}
                   customSize="sm"
-                  className="max-w-[150px]"
+                  className="w-full sm:max-w-[150px]"
                   data={filter.filter}
                   label={t("date_from")}
                   onChangeData={(data: any) =>
@@ -121,7 +120,7 @@ const onKeyChange = (id: any) => {
                   id="dateTo"
                   value={filter.filter.dateTo}
                   customSize="sm"
-                  className="max-w-[150px]"
+                  className="w-full sm:max-w-[150px]"
                   data={filter.filter}
                   label={t("date_to")}
                   onChangeData={(data: any) =>
@@ -139,7 +138,7 @@ const onKeyChange = (id: any) => {
                   value={filter.filter.productCode}
                   customSize="sm"
                   data={filter.filter}
-                  className="max-w-[200px]"
+                  className="w-full sm:max-w-[200px]"
                   label={t("product_code")}
                   onChangeData={(val: any) =>
                     setFilter((prev: any) => ({
@@ -155,7 +154,7 @@ const onKeyChange = (id: any) => {
                   id="productID"
                   value={filter.filter.productID}
                   customSize="sm"
-                  className="min-w-[325px]"
+                  className="min-w-[300px]"
                   data={filter.filter}
                   label={t("product")}
                   field={{
@@ -180,7 +179,7 @@ const onKeyChange = (id: any) => {
                   id="warehouseID"
                   value={filter.filter.warehouseID}
                   customSize="sm"
-                  className="min-w-[325px]"
+                  className="min-w-[300px]"
                   data={filter.filter}
                   label={t("warehouse")}
                   field={{
@@ -200,14 +199,13 @@ const onKeyChange = (id: any) => {
                   }
                 />
               )}
+                <div className="flex items-center">
                 <ERPCheckbox
                   id="showBatchWise"
                   label={t("show_batch_wise")}
                   checked={filter.filter.showBatchWise}
                   data={filter.filter}
-                  onChangeData={(data: any) =>
-                  {
-                    debugger;
+                  onChangeData={(data: any) => {
                     return setFilter((prev: any) => ({
                       ...prev,
                       filter: {
@@ -218,11 +216,12 @@ const onKeyChange = (id: any) => {
                   }
                   }
                 />
-                <div className="mt-[24px]">
+                </div>
+                <div className="mt-[24px] sm:mt-0 sm:self-end">
                   <ERPButton
                     type="button"
                     variant="primary"
-                    className="h-[32px]"
+                    className="h-[32px] w-full sm:w-auto"
                     onClick={() =>{ 
                       setReload(true)
                       setReload2(true)
@@ -234,29 +233,30 @@ const onKeyChange = (id: any) => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-3">
-                <Tabs
-                  value={activeTab}
-                  onChange={handleTabChange}
-                  variant="scrollable"
-                  scrollButtons="auto">
-                  <Tab className="dark:text-dark-text" label={t("basic_info")} value="basicInfo" />
-                  <Tab className="dark:text-dark-text" label={t("stock_ledger")} value="stockLedger" />
-                  <Tab className="dark:text-dark-text" label={t("purchase")} value="purchase" />
-                  <Tab className="dark:text-dark-text" label={t("sales")} value="sales" />
-                  <Tab className="dark:text-dark-text" label={t("purchase_return")} value="purchase_return" />
-                  <Tab className="dark:text-dark-text" label={t("purchase_order")} value="purchase_order" />
-                  <Tab className="dark:text-dark-text" label={t("sales_return")} value="sales_return" />
-                  <Tab className="dark:text-dark-text" label={t("sales_order")} value="sales_order" />
-                  <Tab className="dark:text-dark-text" label={t("damage")} value="damage" />
-                  <Tab className="dark:text-dark-text" label={t("excess")} value="excess" />
-                  <Tab className="dark:text-dark-text" label={t("shortage")} value="shortage" />
-                  <Tab className="dark:text-dark-text" label={t("op_stock")} value="op_stock" />
-                  <Tab className="dark:text-dark-text" label={t("purchase_estimate")} value="purchase_estimate" />
-                  <Tab className="dark:text-dark-text" label={t("others")} value="others" />
-                </Tabs>
-
-
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                <div className="overflow-x-auto">
+                  <Tabs
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    className="min-w-full">
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("basic_info")} value="basicInfo" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("stock_ledger")} value="stockLedger" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("purchase")} value="purchase" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("sales")} value="sales" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("purchase_return")} value="purchase_return" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("purchase_order")} value="purchase_order" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("sales_return")} value="sales_return" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("sales_order")} value="sales_order" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("damage")} value="damage" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("excess")} value="excess" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("shortage")} value="shortage" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("op_stock")} value="op_stock" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("purchase_estimate")} value="purchase_estimate" />
+                    <Tab className="dark:text-dark-text text-xs md:text-sm" label={t("others")} value="others" />
+                  </Tabs>
+                </div>
 
                 <div className="pt-2">
                   {

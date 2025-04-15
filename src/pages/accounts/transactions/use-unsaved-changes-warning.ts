@@ -138,7 +138,7 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     
     const blockNavigation = async (e: MouseEvent) => {
-      debugger
+      
       const target = e.target as any;
       const isNavigationLink =
       target?.tagName === "a" ||

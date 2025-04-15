@@ -771,7 +771,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [store, setStore] = useState<CustomStore | null>(null);
     useEffect(() => {
       const fetchStore = async () => {
-        debugger;
         if (data) {
           setStore(data);
           changeReload && changeReload(false);
@@ -810,7 +809,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           );
           setCurrentStore(newStore);
           setStore(newStore);
-          debugger;
           if (_reload === true) {
             changeReload && changeReload(false);
           }

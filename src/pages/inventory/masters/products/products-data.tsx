@@ -5,7 +5,7 @@ const initialProductData: productDto = {
     productID: 0,
     productCode: "",
     productName: "",
-    productGroupID: 0,
+    productGroupID: -2,
     productCategoryID: 0,
     supplyMethod: "",
     hsnCode: "",
@@ -32,10 +32,12 @@ const initialProductData: productDto = {
     isRawMaterial: false,
     isFinishedGood: true,
     isWeighingScale: false,
-    unitQty: 0,
+    unitQty: 1,
     packingSlip: true,
     financialYearID: 0,
-    basicUnitID: 0
+    basicUnitID: 0,
+    sectionID: 0,
+    defaultVendorID: -2
   },
   productValidation: {
     productName: "",
@@ -193,9 +195,11 @@ const initialProductData: productDto = {
   upcBarcode: false,
   mu: false,
   mr: false,
-  markup: 0,
+  markup: "",
   batchCriteria: false,
-  details: false
+  details: false,
+  onHold: false,
+  taxCategoryTaxPercentage: 0
 };
 
 export default initialProductData;

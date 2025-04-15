@@ -9,7 +9,7 @@ const BranchTransferOutFilter = ({ getFieldProps, handleFieldChange, formState }
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Fields */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
         <ERPDateInput
           label={t("from_date")}
           {...getFieldProps("fromDate")}

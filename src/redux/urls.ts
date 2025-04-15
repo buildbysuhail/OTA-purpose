@@ -311,7 +311,7 @@ const Urls = {
   purchase_return_register: "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
   purchase_estimate_summary: "/Inventory/RptPurchaseReport/PurchaseEstimateSummary/",
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
-  Purchase_tax: "/Inventory/RptPurchaseReport/MonthlyVATPurchaseStatement",
+  Purchase_tax: "/Inventory/RptTAXReport/MonthlyVATPurchaseStatement",
   inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
@@ -346,6 +346,7 @@ const Urls = {
   purchase_return_gst_detailed:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
   purchase_return_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  vat_return_form:"/Inventory/RptTAXReport/VatReturnForm",
 
   //Report End
   //Inventory Reports Starts
@@ -380,6 +381,8 @@ const Urls = {
 
   // Inventory
   products: "/Inventory/Product/",
+  get_product_config: "/Inventory/Product/GetProductConfig/",
+  update_product_config: "/Inventory/Product/UpdateProductConfig/",
   change_barcode: "/Inventory/Product/ChangeProductAutoBarcode/",
   fast_moving_products: "/Inventory/FastMovingProducts/",
   product_scheme_details: "/Inventory/Schemes/GetProductSchemeDetails/",

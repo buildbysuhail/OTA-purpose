@@ -124,7 +124,7 @@ const BranchTransferOut = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      visible:false,
+      visible: false,
       width: 100,
     },
     {
@@ -185,8 +185,8 @@ const BranchTransferOut = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<BranchTransferOutFilter />}
-                filterWidth={340}
-                filterHeight={230}
+                filterWidth={360}
+                filterHeight={260}
                 filterInitialData={BranchTransferOutFilterInitialState}
                 reload={true}
                 gridId="grd_branch_transfer_out"

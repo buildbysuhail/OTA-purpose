@@ -206,51 +206,51 @@ const DailyStatementPurchaseReport = () => {
   ]
 
   const customizeSummaryRow = useMemo(() => {
-      return (itemInfo: { value: any }) => {
-        const value = itemInfo.value;
-        if (
-          value === null ||
-          value === undefined ||
-          value === "" ||
-          isNaN(value)
-        ) {
-          return "0"; // Ensure "0" is displayed when value is missing
-        }
-        return value>=0? getFormattedValue(value): getFormattedValue(-1*value)|| "0"; // Ensure formatted output or fallback to "0"
-      };
-    }, []);
-    const customizeDate = (itemInfo: any) => `TOTAL`;
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return value >= 0 ? getFormattedValue(value) : getFormattedValue(-1 * value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-      {
-        column: "party",
-        summaryType: "max",
-        customizeText: customizeDate,
-      },
-      {
-        column: "cash",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "credit",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "bank",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "total",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-    ];
+    {
+      column: "party",
+      summaryType: "max",
+      customizeText: customizeDate,
+    },
+    {
+      column: "cash",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "bank",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Fragment>
@@ -265,15 +265,15 @@ const DailyStatementPurchaseReport = () => {
                   gridHeader={t("daily_statement_purchase")}
                   dataUrl={Urls.daily_statement_purchase}
                   summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false ,summary:false,grouping:false,groupPaging:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_purchase}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
-                  filterHeight={350}
+                  filterWidth={360}
+                  filterHeight={250}
                   filterContent={<DailyStatementPurchaseReportFilter />}
                   filterInitialData={DailyStatementPurchaseReportFilterInitialState}
                   hideGridAddButton={true}

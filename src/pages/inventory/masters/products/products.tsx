@@ -23,7 +23,7 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true,
+        allowFiltering: false,
         showInPdf:true,
         width: 50,
       },

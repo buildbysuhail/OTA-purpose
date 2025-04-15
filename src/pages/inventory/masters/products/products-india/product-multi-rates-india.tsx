@@ -16,7 +16,7 @@ interface ColumnDefinition {
     visible?: boolean;
 }
 
-const MultiRatesIndia: React.FC<{
+const MultiRates: React.FC<{
     t: any;
     handleFieldChange: <Path extends ProductFieldPath>(
         fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -24,11 +24,12 @@ const MultiRatesIndia: React.FC<{
     ) => void;
 
     getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+    isGlobal: boolean;
+}> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal }) => {
     // Add a ref to access DataGrid instance
     const dataGridRef = React.useRef<any>(null);
     const [data, setData] = useState<ProductPriceInputDto[]>([]);
-    const columns = useMemo<ColumnDefinition[]>(() => [
+    const allColumns = useMemo<ColumnDefinition[]>(() => [
         {
             dataField: "siNo",
             caption: t("SiNo"),
@@ -118,8 +119,18 @@ const MultiRatesIndia: React.FC<{
             allowEditing: true,
             // width: 80,
         },
-    ], [t]
-    );
+    ], [t]);
+    
+    // Filter columns based on isGlobal
+    const columns = useMemo(() => {
+        if (!isGlobal) {
+            // When isGlobal is true, only show siNo, categoryName, unitID, and mrp columns
+            return allColumns.filter(column => 
+                !["mrp"].includes(column.dataField)
+            );
+        }
+        return allColumns; // Show all columns when isGlobal is false
+    }, [allColumns, isGlobal]);
 
     const fetchData = async () => {
         debugger;
@@ -333,4 +344,4 @@ const MultiRatesIndia: React.FC<{
     );
 });
 
-export default MultiRatesIndia;
+export default MultiRates;

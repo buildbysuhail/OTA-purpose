@@ -178,6 +178,7 @@ import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-i
 import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
 import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
 import SalesSummary from "../../../pages/inventory/reports/sales-summary-report/sales-summary";
+import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -513,6 +514,7 @@ const Content: FC<ContentProps> = () => {
 
 
         <Route path="/inventory/vat_return_form" element={<VatReturnForm />} />
+        <Route path="/inventory/vat_return_form_arabic" element={<VatReturnFormArabic />} />
 
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}

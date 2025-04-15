@@ -352,6 +352,7 @@ const Urls = {
   purchase_return_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
   vat_return_form:"/Inventory/RptTAXReport/VatReturnForm",
+  vat_return_form_arabic:"/Inventory/RptTAXReport/VatReturnFormArabic",
 
   //Report End
   //Inventory Reports Starts

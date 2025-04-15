@@ -10,6 +10,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState } from "../Purchase-Tax-report/Purchase-Tax-report-filter"
 import { useSelector } from "react-redux"
 import { RootState } from "../../../../redux/store"
+import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../../../accounts/reports/cashSummary/cash-summary-report-filter"
 
 const VatReturnForm = () => {
   const { t } = useTranslation("accountsReport")
@@ -345,10 +346,10 @@ const setupCurrencyCode = (countryId: number): string => {
                   gridId="grd_vat_return_form"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={200}
+                  filterWidth={350}
                   filterHeight={200}
-                  filterContent={<PurchaseTaxReportFilter/>}
-                  filterInitialData={PurchaseTaxReportFilterInitialState}
+                  filterContent={<CashSummaryReportFilter/>}
+                  filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />

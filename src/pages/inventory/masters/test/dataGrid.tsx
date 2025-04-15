@@ -256,7 +256,7 @@ export default function DataGridTest<T extends DataItem>({
         {/* Header Container */}
         <div
           ref={headerRef}
-          className="overflow-x-hidden"
+          className="w-full overflow-x-auto shadow-md rounded-lg"
           style={{
             width: "100%",
             position: "sticky",
@@ -265,7 +265,7 @@ export default function DataGridTest<T extends DataItem>({
             boxSizing: "border-box",
           }}
         >
-          <table className="w-full">
+          <table className="min-w-full table-auto">
             <thead>
               <tr
                 className="flex bg-[#f9f9fa]"
@@ -287,11 +287,25 @@ export default function DataGridTest<T extends DataItem>({
                 ))}
               </tr>
             </thead>
+            <tbody>
+            <List
+              ref={listRef}
+              height={height}
+              itemCount={filteredData.length}
+              itemSize={rowHeight}
+              width={tableWidth + 1} // Add a small buffer to ensure full visibility
+              outerRef={outerRef}
+              className="bg-white"
+              style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
+            >
+              {Row}
+            </List>
+            </tbody>
           </table>
         </div>
 
         {/* Body Container */}
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
@@ -319,7 +333,7 @@ export default function DataGridTest<T extends DataItem>({
               {Row}
             </List>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

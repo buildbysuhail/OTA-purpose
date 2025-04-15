@@ -174,6 +174,10 @@ import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
 import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form";
+import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
+import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
+import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
+import SalesSummary from "../../../pages/inventory/reports/sales-summary-report/sales-summary";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -480,7 +484,11 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
         <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} />
-        <Route path="/inventory/branch_transfer_out_filter" element={<BranchTransferOut />} />
+        <Route path="/inventory/branch_transfer_out_report" element={<BranchTransferOut />} />
+        <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
+        <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />
+        <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
+        <Route path="/inventory/sales_summary_report" element={<SalesSummary />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />

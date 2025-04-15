@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
@@ -22,7 +21,7 @@ const PurchaseRegisterFilter = ({
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div className="grid grid-cols-1 gap-4">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <ERPDateInput
           label={t("from_date")}
           {...getFieldProps("fromDate")}
@@ -39,23 +38,24 @@ const PurchaseRegisterFilter = ({
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* <ERPDataCombobox
-                    label={t("transfer_voucher")}
-                    {...getFieldProps("transferVoucher")}
-                    options={[
-                        { value: 'si-bt', label: 'SI-BT' },
-                        { value: 'se-bt', label: 'SE-BT' }
-                    ]}
-                    field={{
-                        id: "transferVoucher",
-                        valueKey: "value",
-                        labelKey: "label",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("transferVoucher", data.value);
-                    }}
-                /> */}
+          label={t("transfer_voucher")}
+          {...getFieldProps("transferVoucher")}
+          options={[
+              { value: 'si-bt', label: 'SI-BT' },
+              { value: 'se-bt', label: 'SE-BT' }
+          ]}
+          field={{
+              id: "transferVoucher",
+              valueKey: "value",
+              labelKey: "label",
+          }}
+          onSelectItem={(data) => {
+              handleFieldChange("transferVoucher", data.value);
+          }}
+      /> */}
+
         {clientSession.isAppGlobal && (
           <ERPDataCombobox
             label={t("product_category")}
@@ -71,6 +71,7 @@ const PurchaseRegisterFilter = ({
             }}
           />
         )}
+
         <ERPDataCombobox
           label={t("product_group")}
           {...getFieldProps("productGroupID")}
@@ -84,7 +85,7 @@ const PurchaseRegisterFilter = ({
             handleFieldChange({
               productGroupID: data.value,
               groupName: data.label,
-          });
+            });
           }}
         />
 
@@ -101,7 +102,7 @@ const PurchaseRegisterFilter = ({
             handleFieldChange({
               brandID: data.value,
               brand: data.label,
-          });
+            });
           }}
         />
 
@@ -117,8 +118,8 @@ const PurchaseRegisterFilter = ({
           onSelectItem={(data) => {
             handleFieldChange({
               productID: data.value,
-               productName: data.label,
-          });
+              productName: data.label,
+            });
           }}
         />
 
@@ -142,9 +143,10 @@ const PurchaseRegisterFilter = ({
             handleFieldChange({
               salesmanID: data.value,
               salesMan: data.label,
-          });
+            });
           }}
         />
+
         {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
           <ERPDataCombobox
             label={t("sales_route")}
@@ -159,10 +161,11 @@ const PurchaseRegisterFilter = ({
               handleFieldChange({
                 salesRouteID: data.value,
                 routeName: data.label,
-            });
+              });
             }}
           />
         )}
+
         {applicationSettings.inventorySettings?.maintainWarehouse == true && (
           <ERPDataCombobox
             label={t("warehouse")}
@@ -177,12 +180,14 @@ const PurchaseRegisterFilter = ({
               handleFieldChange({
                 warehouseID: data.value,
                 warehouse: data.label,
-            });
+              });
             }}
           />
         )}
+
         {/* SelectFromTypebyVoucherType -- global*/}
         {/* SelectFromTypebyVoucherType */}
+
         <ERPDataCombobox
           label={t("voucher_form")}
           {...getFieldProps("voucherForm")}
@@ -226,6 +231,7 @@ const PurchaseRegisterFilter = ({
             handleFieldChange("sectionID", data.value);
           }}
         />
+
         {clientSession.isAppGlobal == true && (
           <ERPDataCombobox
             label={t("price_category")}
@@ -272,9 +278,10 @@ const PurchaseRegisterFilter = ({
             handleFieldChange({
               supplierID: data.value,
               supplier: data.label,
-          });
+            });
           }}
         />
+
         {applicationSettings.accountsSettings?.maintainCostCenter == true && (
           <ERPDataCombobox
             label={t("cost_center")}
@@ -290,6 +297,7 @@ const PurchaseRegisterFilter = ({
             }}
           />
         )}
+
         {/* not used any where always visible false */}
         {/* <ERPDataCombobox
           label={t("manufacture")}
@@ -327,35 +335,36 @@ const PurchaseRegisterFilter = ({
         /> */}
 
         {/* <ERPDataCombobox
-                    label={t("report_of")}
-                    {...getFieldProps("reportOf")}
-                    field={{
-                        id: "reportOf",
-                        // getListUrl: Urls.data_reports,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("reportOf", data.value);
-                    }}
-                /> */}
+          label={t("report_of")}
+          {...getFieldProps("reportOf")}
+          field={{
+              id: "reportOf",
+              // getListUrl: Urls.data_reports,
+              valueKey: "id",
+              labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+              handleFieldChange("reportOf", data.value);
+          }}
+      /> */}
 
         <ERPDataCombobox
-                    label={t("report_of")}
-                    {...getFieldProps("reportOf")}
-                    options={[
-                        { value: 'All', label: 'All' },
-                        { value: 'Below Cost', label: 'Below Cost' },
-                    ]}
-                    field={{
-                        id: "reportOf",
-                        valueKey: "value",
-                        labelKey: "label",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("reportOf", data.value);
-                    }}
-                />
+          label={t("report_of")}
+          {...getFieldProps("reportOf")}
+          options={[
+            { value: 'All', label: 'All' },
+            { value: 'Below Cost', label: 'Below Cost' },
+          ]}
+          field={{
+            id: "reportOf",
+            valueKey: "value",
+            labelKey: "label",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange("reportOf", data.value);
+          }}
+        />
+
         {/* {clientSession.isAppGlobal == true && (
           <ERPCheckbox
             label={t("export_data_to_excel")}

@@ -217,11 +217,11 @@ const DailySalesStatementReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value>=0? getFormattedValue(value): getFormattedValue(-1*value)|| "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value) : getFormattedValue(-1 * value) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
-const summaryItems: SummaryConfig[] = [
+  const summaryItems: SummaryConfig[] = [
     {
       column: "party",
       summaryType: "max",
@@ -266,15 +266,15 @@ const summaryItems: SummaryConfig[] = [
                   gridHeader={t("daily_statement_sales")}
                   dataUrl={Urls.daily_statement_sales}
                   summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false ,summary:false,grouping:false,groupPaging:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_sales}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
-                  filterHeight={350}
+                  filterWidth={360}
+                  filterHeight={250}
                   filterContent={<DailySalesStatementReportFilter />}
                   filterInitialData={DailySalesStatementReportFilterInitialState}
                   hideGridAddButton={true}

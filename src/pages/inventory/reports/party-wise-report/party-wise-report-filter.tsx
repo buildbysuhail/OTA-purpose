@@ -1,4 +1,3 @@
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
@@ -15,7 +14,7 @@ const PartyWiseReportFilter = ({
 
     return (
         <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
                 <ERPDateInput
                     label={t("from_date")}
                     {...getFieldProps("fromDate")}
@@ -32,7 +31,7 @@ const PartyWiseReportFilter = ({
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("ledgerID")}
@@ -48,30 +47,30 @@ const PartyWiseReportFilter = ({
                     }}
                 />
 
-                <div className="flex items-center gap-2">
-                    <div className="flex flex-col">
-                        {/* <ERPCheckbox
+                {/* <div className="flex items-center gap-2">
+                    <div className="flex flex-col"> */}
+                {/* <ERPCheckbox
                             {...getFieldProps("isProductChecked")}
                             label={t("products")}
                             onChangeData={(data) =>
                                 handleFieldChange("isProductChecked", data.isProductChecked)
                             }
                         /> */}
-                        <ERPDataCombobox
-                            noLabel={true}
-                            {...getFieldProps("productID")}
-                            field={{
-                                id: "productID",
-                                getListUrl: Urls.data_products,
-                                valueKey: "id",
-                                labelKey: "name",
-                            }}
-                            onSelectItem={(data) => {
-                                handleFieldChange("productID", data.value);
-                            }}
-                        />
-                    </div>
-                </div>
+                <ERPDataCombobox
+                    noLabel={true}
+                    {...getFieldProps("productID")}
+                    field={{
+                        id: "productID",
+                        getListUrl: Urls.data_products,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onSelectItem={(data) => {
+                        handleFieldChange("productID", data.value);
+                    }}
+                />
+                {/* </div>
+                </div> */}
 
             </div>
         </div>

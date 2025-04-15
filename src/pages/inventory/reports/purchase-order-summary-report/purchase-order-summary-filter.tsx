@@ -14,8 +14,9 @@ const PurchaseOrderSummaryFilter = ({
 
     return (
         <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2">
+            {/* Date and Time Inputs - Stack on small, side by side on medium+ */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <ERPDateInput
                         label={t("from_date")}
                         {...getFieldProps("fromDate")}
@@ -29,13 +30,13 @@ const PurchaseOrderSummaryFilter = ({
                         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
                     />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center border border-[#ccc] rounded-[10px] p-2 sm:border-none sm:rounded-none sm:p-0 gap-2">
                     <ERPCheckbox
                         label={t("consider_time")}
                         {...getFieldProps("isTimeBased")}
                         onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
                     />
-                    <div>
+                    <div className="w-full">
                         <label>{t("time_from")}</label>
                         <input
                             type="time"
@@ -45,7 +46,7 @@ const PurchaseOrderSummaryFilter = ({
                             disabled={!getFieldProps("isTimeBased").value}
                         />
                     </div>
-                    <div>
+                    <div className="w-full">
                         <label>{t("time_to")}</label>
                         <input
                             type="time"
@@ -58,7 +59,8 @@ const PurchaseOrderSummaryFilter = ({
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            {/* Filter Fields - Single column on mobile, 2 columns on tablet, 3 columns on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("transferVoucher")}

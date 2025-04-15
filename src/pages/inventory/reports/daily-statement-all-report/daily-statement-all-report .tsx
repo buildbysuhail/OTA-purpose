@@ -87,7 +87,7 @@ const DailyStatementAllReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cash == null  ? "" : cellElement.data?.cash >= 0?  getFormattedValue(Number.parseFloat(cellElement.data.cash)): getFormattedValue(-1*cellElement.data.cash)
+            cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)
           return {
             ...exportCell,
             text: value,
@@ -97,7 +97,7 @@ const DailyStatementAllReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.cash == null ? "" :  cellElement.data?.cash >= 0?  getFormattedValue(Number.parseFloat(cellElement.data.cash)): getFormattedValue(-1* cellElement.data.cash)}
+              {cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)}
             </span>
           )
         }
@@ -117,7 +117,7 @@ const DailyStatementAllReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1* cellElement.data.bank) 
+            cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)
           return {
             ...exportCell,
             text: value,
@@ -127,7 +127,7 @@ const DailyStatementAllReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1* cellElement.data.bank)}
+              {cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)}
             </span>
           )
         }
@@ -147,7 +147,7 @@ const DailyStatementAllReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1* cellElement.data.credit)
+            cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)
           return {
             ...exportCell,
             text: value,
@@ -157,7 +157,7 @@ const DailyStatementAllReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1* cellElement.data.credit)}
+              {cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)}
             </span>
           )
         }
@@ -177,7 +177,7 @@ const DailyStatementAllReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : cellElement.data?.total >= 0? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1* cellElement.data.total)
+            cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)
           return {
             ...exportCell,
             text: value,
@@ -187,7 +187,7 @@ const DailyStatementAllReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.total == null ? "" : cellElement.data?.total >= 0? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1* cellElement.data.total)}
+              {cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)}
             </span>
           )
         }
@@ -197,7 +197,7 @@ const DailyStatementAllReport = () => {
       dataField: "voucherType",
       caption: t("voucher_type"),
       dataType: "string",
-      groupIndex:0,
+      groupIndex: 0,
       allowSearch: true,
       allowFiltering: true,
       width: 80,
@@ -206,52 +206,52 @@ const DailyStatementAllReport = () => {
     },
   ]
 
-   const customizeSummaryRow = useMemo(() => {
-      return (itemInfo: { value: any }) => {
-        const value = itemInfo.value;
-        if (
-          value === null ||
-          value === undefined ||
-          value === "" ||
-          isNaN(value)
-        ) {
-          return "0"; // Ensure "0" is displayed when value is missing
-        }
-        return value>=0? getFormattedValue(value): getFormattedValue(-1*value)|| "0"; // Ensure formatted output or fallback to "0"
-      };
-    }, []);
-    const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return value >= 0 ? getFormattedValue(value) : getFormattedValue(-1 * value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-      {
-        column: "party",
-        summaryType: "max",
-        customizeText: customizeDate,
-      },
-      {
-        column: "cash",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "credit",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "bank",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-      {
-        column: "total",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
-    ];
+    {
+      column: "party",
+      summaryType: "max",
+      customizeText: customizeDate,
+    },
+    {
+      column: "cash",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "bank",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Fragment>
@@ -262,19 +262,19 @@ const DailyStatementAllReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="daily_statement_all"
+                  filterText="Daily Sales Statement All"
                   gridHeader={t("daily_statement_all")}
                   dataUrl={Urls.daily_statement_all}
                   summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false ,summary:false,grouping:false,groupPaging:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_all}
                   enablefilter={true}
-                  showFilterInitially={false}
-                  filterWidth={335}
-                  filterHeight={350}
+                  showFilterInitially={true}
+                  filterWidth={360}
+                  filterHeight={250}
                   filterContent={<DailyStatementAllReportFilter />}
                   filterInitialData={DailyStatementAllReportInitialState}
                   hideGridAddButton={true}

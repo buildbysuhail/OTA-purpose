@@ -63,66 +63,72 @@ const PartySummaryMaster = ({
           <div className="">
             <div className="p-4">
               <div>
-                <div className="flex items-center gap-4">
-                  <ERPDateInput
-                    id="dateFrom"
-                    value={filter.filter.dateFrom}
-                    customSize="sm"
-                    className="max-w-[150px]"
-                    data={filter.filter}
-                    label={t("date_from")}
-                    onChangeData={(data: any) =>
-                      setFilter((prev: any) => ({
-                        ...prev,
-                        filter: {
-                          ...prev.filter,
-                          dateFrom: data.dateFrom,
-                        },
-                      }))
-                    }
-                  />
-                  <ERPDateInput
-                    id="dateTo"
-                    value={filter.filter.dateTo}
-                    customSize="sm"
-                    className="max-w-[150px]"
-                    data={filter.filter}
-                    label={t("date_to")}
-                    onChangeData={(data: any) =>
-                      setFilter((prev: any) => ({
-                        ...prev,
-                        filter: {
-                          ...prev.filter,
-                          dateTo: data.dateTo,
-                        },
-                      }))
-                    }
-                  />
-                  <ERPDataCombobox
-                    id="ledgerID"
-                    value={filter.filter.ledgerID}
-                    customSize="sm"
-                    className="min-w-[325px]"
-                    data={filter.filter}
-                    label={t("ledgers")}
-                    field={{
-                      id: "ledgerID",
-                      getListUrl: Urls.data_acc_ledgers,
-                      params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
-                    onChangeData={(data: any) =>
-                      setFilter((prev: any) => ({
-                        ...prev,
-                        filter: {
-                          ...prev.filter,
-                          ledgerID: data.ledgerID,
-                        },
-                      }))
-                    }
-                  />
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="w-full md:w-auto">
+                    <ERPDateInput
+                      id="dateFrom"
+                      value={filter.filter.dateFrom}
+                      customSize="sm"
+                      className="w-full md:w-[150px]"
+                      data={filter.filter}
+                      label={t("date_from")}
+                      onChangeData={(data: any) =>
+                        setFilter((prev: any) => ({
+                          ...prev,
+                          filter: {
+                            ...prev.filter,
+                            dateFrom: data.dateFrom,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full md:w-auto">
+                    <ERPDateInput
+                      id="dateTo"
+                      value={filter.filter.dateTo}
+                      customSize="sm"
+                      className="w-full md:w-[150px]"
+                      data={filter.filter}
+                      label={t("date_to")}
+                      onChangeData={(data: any) =>
+                        setFilter((prev: any) => ({
+                          ...prev,
+                          filter: {
+                            ...prev.filter,
+                            dateTo: data.dateTo,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full md:w-auto">
+                    <ERPDataCombobox
+                      id="ledgerID"
+                      value={filter.filter.ledgerID}
+                      customSize="sm"
+                      className="max-w-[325px]"
+                      data={filter.filter}
+                      label={t("ledgers")}
+                      field={{
+                        id: "ledgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
+                      onChangeData={(data: any) =>
+                        setFilter((prev: any) => ({
+                          ...prev,
+                          filter: {
+                            ...prev.filter,
+                            ledgerID: data.ledgerID,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
                   <div className="mt-[24px]">
                     <ERPButton
                       type="button"
@@ -159,22 +165,24 @@ const PartySummaryMaster = ({
         onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
       /> */}
               <div className="grid grid-cols-1 gap-3">
-                <Tabs
-                  value={activeTab}
-                  onChange={handleTabChange}
-                  variant="scrollable"
-                  scrollButtons="auto">
-                  <Tab className="dark:text-dark-text" label={t("basic_info")} value="basicInfo" />
-                  <Tab className="dark:text-dark-text" label={t("account_ledger")} value="accountLedger" />
-                  <Tab className="dark:text-dark-text" label={t("payments")} value="payments" />
-                  <Tab className="dark:text-dark-text" label={t("collections")} value="collections" />
-                  <Tab className="dark:text-dark-text" label={t("purchase")} value="purchase" />
-                  <Tab className="dark:text-dark-text" label={t("sales")} value="sales" />
-                  <Tab className="dark:text-dark-text" label={t("purchase_return")} value="purchaseReturn" />
-                  <Tab className="dark:text-dark-text" label={t("purchase_order")} value="purchaseOrder" />
-                  <Tab className="dark:text-dark-text" label={t("sales_return")} value="salesReturn" />
-                  <Tab className="dark:text-dark-text" label={t("sales_order")} value="salesOrder" />
-                </Tabs>
+                <div className="overflow-x-auto">
+                  <Tabs
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons="auto">
+                    <Tab className="dark:text-dark-text" label={t("basic_info")} value="basicInfo" />
+                    <Tab className="dark:text-dark-text" label={t("account_ledger")} value="accountLedger" />
+                    <Tab className="dark:text-dark-text" label={t("payments")} value="payments" />
+                    <Tab className="dark:text-dark-text" label={t("collections")} value="collections" />
+                    <Tab className="dark:text-dark-text" label={t("purchase")} value="purchase" />
+                    <Tab className="dark:text-dark-text" label={t("sales")} value="sales" />
+                    <Tab className="dark:text-dark-text" label={t("purchase_return")} value="purchaseReturn" />
+                    <Tab className="dark:text-dark-text" label={t("purchase_order")} value="purchaseOrder" />
+                    <Tab className="dark:text-dark-text" label={t("sales_return")} value="salesReturn" />
+                    <Tab className="dark:text-dark-text" label={t("sales_order")} value="salesOrder" />
+                  </Tabs>
+                </div>
                 <div className="pt-2">
                   {
                     activeTab === "basicInfo" && (

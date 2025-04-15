@@ -1,18 +1,17 @@
-// Input.tsx
 import React, { forwardRef, useState, useEffect } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   noLabel?: boolean;
-  value?: any; // Updated to any to match your usage
+  value?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   disabled?: boolean;
   error?: string;
   placeholder?: string;
-  noBorder?:boolean;
+  noBorder?: boolean;
   type?: string;
-  isEditing?: boolean; // Indicate if the cell is in edit mode
+  isEditing?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -34,7 +33,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [isHovered, setIsHovered] = useState(false);
-    const [isFocused, setIsFocused] = useState(false); // Manual focus state
+    const [isFocused, setIsFocused] = useState(false);
     const [localValue, setLocalValue] = useState(value);
 
     useEffect(() => {
@@ -46,39 +45,45 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       onChange?.(e);
     };
 
-    const [borderStyle, setBorderStyle] = useState<string>(noBorder?"border-none":""); // No border by default
+    const [borderStyle, setBorderStyle] = useState<string>(noBorder ? "border-none" : "");
     const [bgColor, setBgColor] = useState<string>("bg-white");
 
     useEffect(() => {
+      if (isFocused) {
+        setBorderStyle("border-1 border-blue-500"); // Always show border on focus
+      } else if (noBorder) {
+        setBorderStyle("border-none"); // Apply noBorder when not focused
+      } else if (disabled) {
+        setBorderStyle("border-none");
+      } else if (isHovered) {
+        setBorderStyle("border-none");
+      } else {
+        setBorderStyle("border-none");
+      }
+
       if (disabled) {
         setBgColor("bg-gray-100");
-      } else if (isFocused) {
-        setBorderStyle("border-1 border-blue-500"); // Border only on focus
-        setBgColor("bg-white");
-      } else if (isHovered) {
+      } else if (isHovered && !isFocused) {
         setBgColor("bg-gray-50");
       } else {
         setBgColor("bg-white");
-        setBorderStyle("border-none")
       }
-    }, [isFocused, isHovered, disabled]);
+    }, [isFocused, isHovered, disabled, noBorder]);
 
     return (
-      <div className={`relative w-full `}>
-      
+      <div className="relative w-full">
         <input
-        // style={{
-        //     borderColor:borderStyle
-        // }}
           ref={ref}
           type={type}
           value={localValue}
           onChange={handleChange}
-          disabled={disabled} // Only use disabled prop, remove isEditing check for focus
+          disabled={disabled}
           placeholder={placeholder}
-          onFocus={() => setIsFocused(true)} // Manual focus handling
-          onBlur={() => setIsFocused(false)} // Manual blur handling
-          className={`w-full h-full px-3 py-2   ${className} !${borderStyle} !${bgColor} disabled:opacity-50 disabled:cursor-not-allowed text-sm ${error ? "border-2 border-red-500" : ""}`}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className={`w-full h-full px-3 py-2 ${className} ${borderStyle} ${bgColor} disabled:opacity-50 disabled:cursor-not-allowed text-sm ${
+            error && !noBorder ? "border-2 border-red-500" : ""
+          }`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           {...props}

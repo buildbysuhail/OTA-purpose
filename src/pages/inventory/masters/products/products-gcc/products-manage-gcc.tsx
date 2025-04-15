@@ -28,8 +28,8 @@ export const ProductManageGcc: React.FC<{
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
   ) => void;
-
   getFieldProps: (fieldId: string, type?: string) => FormField | any;
+  switchToMultiRatesTab?: () => void; // Add new prop
 }> = React.memo(
   ({
     formState,
@@ -37,6 +37,7 @@ export const ProductManageGcc: React.FC<{
     getFieldProps,
     appSettings,
     handleDataChange,
+    switchToMultiRatesTab
   }) => {
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
@@ -142,12 +143,14 @@ export const ProductManageGcc: React.FC<{
                         handleDataChange(data);
                       }
                     }}
+                    disabled={getFieldProps("product.productID")?.value === 0 || getFieldProps("product.productID") === 0}
                   />
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-3">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
+                {getFieldProps("product.productID")?.value}
                   <ERPDataCombobox
                     ref={productNameRef}
                     {...getFieldProps("product.productName")}
@@ -458,23 +461,32 @@ export const ProductManageGcc: React.FC<{
                 </div>
 
                 <div className="flex-1 min-w-[120px]">
-                  <ERPInput
-                    {...getFieldProps("batch.openingStock")}
-                    disabled={
-                      getFieldProps("product.itemType").value === "Dummy"
-                    }
-                    label={t("op_stock")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange(
-                        "batch.openingStock",
-                        data.batch.openingStock
-                      )
-                    }
-                  />
-                </div>
+            <ERPInput
+              {...getFieldProps("batch.openingStock")}
+              disabled={getFieldProps("product.itemType").value === "Dummy"}
+              label={t("op_stock")}
+              placeholder="0.00"
+              type="number"
+              required={false}
+              onChangeData={(data: any) =>
+                handleFieldChange("batch.openingStock", data.batch.openingStock)
+              }
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                console.log("Key pressed:", e.key, "mr:", getFieldProps("mr")?.value);
+                console.log("switchToMultiRatesTab in onKeyDown:", !!switchToMultiRatesTab);
+                if (
+                  e.key === "Enter" &&
+                  getFieldProps("mr")?.value === true &&
+                  switchToMultiRatesTab
+                ) {
+                  console.log("Enter pressed, calling switchToMultiRatesTab");
+                  e.preventDefault();
+                  switchToMultiRatesTab();
+                }
+              }}
+              disableEnterNavigation={getFieldProps("mr")?.value === true}
+            />
+          </div>
 
                 {userSession.dbIdValue == "SEMAKA" && (
                   <>

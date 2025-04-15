@@ -92,10 +92,18 @@ useEffect(() => {
                   onChange={(e) => handleFieldChange('product.manual', e.target.checked)}
                 />
                 <ERPButton
-                  title={t("create_new")}
-                  variant="secondary"
-                  className="mt-[15px]"
-                />
+                    title={t("create_new")}
+                    variant="secondary"
+                    className="mt-[15px]"
+                    onClick={() => {
+                      const data = { ...getFieldProps("*") };
+                      if (data.product.productID > 0) {
+                        data.product.productID = 0;
+                        handleDataChange(data);
+                      }
+                    }}
+                    disabled={getFieldProps("product.productID")?.value === 0 || getFieldProps("product.productID") === 0}
+                  />
               </div>
             </div>
 

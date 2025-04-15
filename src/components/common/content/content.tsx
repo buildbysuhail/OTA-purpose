@@ -147,7 +147,7 @@ import ShortageStock from "../../../pages/inventory/reports/shortage-stock-repor
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
-// import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
+
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
@@ -172,7 +172,12 @@ import PurchaseReturnTaxGSTTaxwise from "../../../pages/inventory/reports/purcha
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
+import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form";
+import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
+import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
+import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
+import SalesSummary from "../../../pages/inventory/reports/sales-summary-report/sales-summary";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -479,7 +484,11 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
         <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} />
-        <Route path="/inventory/branch_transfer_out_filter" element={<BranchTransferOut />} />
+        <Route path="/inventory/branch_transfer_out_report" element={<BranchTransferOut />} />
+        <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
+        <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />
+        <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
+        <Route path="/inventory/sales_summary_report" element={<SalesSummary />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
@@ -539,7 +548,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
         <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
-        {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
+        <Route path="/inventory-masters/test-page" element={<TestInvMaster />} />
       </Routes>
     </Suspense>
   );

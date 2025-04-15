@@ -36,6 +36,8 @@ export default function DataGridTest<T extends DataItem>({
   isLoading,
 }: DataGridProps<T>) {
   const listRef = useRef<List>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null);
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,7 +85,7 @@ export default function DataGridTest<T extends DataItem>({
   const calculateTotalWidth = () => {
     const visibleColumns = getVisibleColumns();
     return visibleColumns.reduce((total, column) => {
-      const width = column.width || 150;
+      const width = column.width || 150; // Default width of 150px if not specified
       return total + width;
     }, 0);
   };
@@ -93,7 +95,7 @@ export default function DataGridTest<T extends DataItem>({
   useEffect(() => {
     const totalWidth = calculateTotalWidth();
     const maxWidth = window.innerWidth;
-    setTableWidth(Math.min(totalWidth, maxWidth));
+    setTableWidth(totalWidth); // Use the exact total width, no capping to maxWidth for now
   }, [columns, gridPreferences]);
 
   useEffect(() => {
@@ -136,26 +138,31 @@ export default function DataGridTest<T extends DataItem>({
     localStorage.setItem(`gridPreferences_${gridId}`, JSON.stringify(preferences));
   };
 
+  // Synchronize header scroll with body scroll
+  const handleContainerScroll = () => {
+    if (outerRef.current && headerRef.current) {
+      headerRef.current.scrollLeft = outerRef.current.scrollLeft;
+    }
+  };
+
   const renderCell = (item: T, column: DevGridColumn) => {
     const value = item[column.dataField!];
     let displayValue: ReactNode;
 
-
-      switch (column.dataType) {
-        case "date":
-        case "datetime":
-          displayValue = dateTrimmer(`${value}`);
-          break;
-        case "number":
-          displayValue = value;
-          break;
-        case "boolean":
-          displayValue = value ? "Yes" : "No";
-          break;
-        default:
-          displayValue = value;
-      }
-    
+    switch (column.dataType) {
+      case "date":
+      case "datetime":
+        displayValue = dateTrimmer(`${value}`);
+        break;
+      case "number":
+        displayValue = value;
+        break;
+      case "boolean":
+        displayValue = value ? "Yes" : "No";
+        break;
+      default:
+        displayValue = value;
+    }
 
     return (
       <td
@@ -164,6 +171,7 @@ export default function DataGridTest<T extends DataItem>({
           width: column.width ? `${column.width}px` : "150px",
           minWidth: column.width ? `${column.width}px` : "150px",
           textAlign: column.alignment || "left",
+          boxSizing: "border-box", // Ensure padding and borders are included in width
         }}
       >
         {typeof displayValue === "string" || typeof displayValue === "number" ? (
@@ -187,8 +195,13 @@ export default function DataGridTest<T extends DataItem>({
     const item = filteredData[index];
     return (
       <tr
-        style={style}
-        className="flex py-1"
+        style={{
+          ...style,
+          display: "flex",
+          width: `${tableWidth}px`,
+          boxSizing: "border-box", // Ensure total width includes padding/borders
+        }}
+        className="py-1"
         key={String(item[keyField])}
       >
         {visibleColumns.map((column) => (
@@ -203,8 +216,10 @@ export default function DataGridTest<T extends DataItem>({
   return (
     <div
       style={{
-        maxWidth: `${window.innerWidth}px`, // Cap at window width
-        overflowX: "auto", // Enable horizontal scrolling for entire grid
+        width: `${tableWidth}px`, 
+        maxWidth:"100%",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-2 p-4 w-full">
@@ -236,22 +251,25 @@ export default function DataGridTest<T extends DataItem>({
           />
         </div>
       </div>
-      <div className={`border border-gray-100 rounded-md ${className} w-full`}>
+
+      <div className={`border border-gray-100 rounded-md ${className} w-full overflow-hidden`}>
+        {/* Header Container */}
         <div
+          ref={headerRef}
+          className="overflow-x-hidden"
           style={{
-            width: `${tableWidth}px`, // Set full table width
-            overflowX: "hidden", // Prevent extra horizontal scroll in wrapper
+            width: "100%",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            boxSizing: "border-box",
           }}
         >
           <table className="w-full">
             <thead>
               <tr
                 className="flex bg-[#f9f9fa]"
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 10, // Keep above body content
-                }}
+                style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}
               >
                 {visibleColumns.map((column) => (
                   <th
@@ -261,6 +279,7 @@ export default function DataGridTest<T extends DataItem>({
                       width: column.width ? `${column.width}px` : "150px",
                       minWidth: column.width ? `${column.width}px` : "150px",
                       textAlign: column.alignment || "left",
+                      boxSizing: "border-box", // Include padding/borders in width
                     }}
                   >
                     {column.caption}
@@ -269,28 +288,38 @@ export default function DataGridTest<T extends DataItem>({
               </tr>
             </thead>
           </table>
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : filteredData.length === 0 ? (
-            <div className="flex justify-center items-center h-64 text-gray-500">
-              No data available
-            </div>
-          ) : (
+        </div>
+
+        {/* Body Container */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filteredData.length === 0 ? (
+          <div className="flex justify-center items-center h-64 text-gray-500">
+            No data available
+          </div>
+        ) : (
+          <div
+            ref={outerRef}
+            className="overflow-x-auto"
+            onScroll={handleContainerScroll}
+            style={{ width: "100%", boxSizing: "border-box" }}
+          >
             <List
               ref={listRef}
               height={height}
               itemCount={filteredData.length}
               itemSize={rowHeight}
-              width={tableWidth}
-              className="bg-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400"
-              style={{ direction: appState?.dir }}
+              width={tableWidth + 1} // Add a small buffer to ensure full visibility
+              outerRef={outerRef}
+              className="bg-white"
+              style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
             >
               {Row}
             </List>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

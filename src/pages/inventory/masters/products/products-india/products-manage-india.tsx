@@ -513,6 +513,7 @@ useEffect(() => {
                                       if (data.itemType == "Dummy") {
                                         _data.product.stdPurchasePrice = 0;
                                         _data.product.stdSalesPrice = 0;
+                                        _data.product.manual = true;
                                       }
                                       handleDataChange(_data);
                                     }}
@@ -558,7 +559,7 @@ useEffect(() => {
                 label={t("default_vendor")}
               /> */}
 
-              <ERPInput
+              {/* <ERPInput
                 {...getFieldProps("batch.aPC")}
                 label={t("avg_cost")}
                 placeholder="0.00"
@@ -567,7 +568,7 @@ useEffect(() => {
                 disabled={true}
                 onChangeData={(data: any) => handleFieldChange("batch.aPC", data.batch.aPC)}
                 className="flex-1 min-w-[140px]"
-              />
+              /> */}
             </div>
           </div>
         </div>

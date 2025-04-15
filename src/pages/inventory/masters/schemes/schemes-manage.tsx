@@ -23,10 +23,10 @@ export const SchemesManage: React.FC = React.memo(() => {
     isLoading,
     handleClose
   } = useFormManager<SchemesData>({
-    url: Urls.vehicles,
+    url: Urls.schemes,
     onSuccess: useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null, reload: true })), [dispatch]),
     onClose: useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null, reload: false })), [dispatch]),
-    key: rootState.PopupData.vehicles.key,
+    key: rootState.PopupData.schemes.key,
     useApiClient: true,
     initialData: initialSchemesData
   });
@@ -74,7 +74,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           field={{
             id: "schemeType",
             required: true,
-            getListUrl: Urls.data_warehouse,
+            getListUrl: Urls.data_scheme_master,
             valueKey: "id",
             labelKey: "name",
           }}

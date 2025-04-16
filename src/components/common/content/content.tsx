@@ -483,6 +483,9 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />} />
+        {/* global */}
+        <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary"/>} />
+        {/* global end */}
         <Route path="/inventory/product_summary_master" element={<ProductSummaryMaster />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />

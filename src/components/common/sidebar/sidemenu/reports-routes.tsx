@@ -160,6 +160,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_purchase_quotation_summary`, type: 'link', active: false, selected: false, title: 'itemwise_purchase_quotation_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary_master`, type: 'link', active: false, selected: false, title: 'product_summary_master', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/vat_return_form`, type: 'link', active: false, selected: false, title: 'vat_return_form', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/vat_return_form_arabic`, type: 'link', active: false, selected: false, title: 'vat_return_form_arabic', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_advance_register_format_report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_daily_summary_report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_detailed_report', icon: AiOutlineFileText },
@@ -218,6 +219,9 @@ export const ReportsMenuItems = [
     columns: 2,
     children: [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_summary_report`, type: 'link', active: false, selected: false, title: 'sales_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_register_report`, type: 'link', active: false, selected: false, title: 'sales_register', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/partywise_sales_report`, type: 'link', active: false, selected: false, title: 'partywise_sales', icon: PiPackageLight },
     ]
   },
 

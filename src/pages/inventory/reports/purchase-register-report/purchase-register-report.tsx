@@ -1,29 +1,28 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseRegisterFilter, {
-  PurchaseRegisterFilterInitialState,
-} from "./purchase-register-report-filter";
+import PurchaseRegisterFilter, { PurchaseRegisterFilterInitialState, } from "./purchase-register-report-filter";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const PurchaseRegisterReport = () => {
+interface RegisterProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+
+const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(PurchaseRegisterFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -138,10 +137,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.unitPrice),
-                  false,
-                  3
-                );
+                parseFloat(cellElement.data.unitPrice),
+                false,
+                3
+              );
           }
         },
       },
@@ -221,10 +220,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.quantity),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.quantity),
+                false,
+                4
+              );
           }
         },
       },
@@ -295,10 +294,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.unitPrice1 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.unitPrice1),
-                  false,
-                  3
-                );
+                parseFloat(cellElement.data.unitPrice1),
+                false,
+                3
+              );
           }
         },
       },
@@ -392,10 +391,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.freeValue == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.freeValue),
-                  false,
-                  7
-                );
+                parseFloat(cellElement.data.freeValue),
+                false,
+                7
+              );
           }
         },
       },
@@ -458,10 +457,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.freeCost == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.freeCost),
-                  false,
-                  8
-                );
+                parseFloat(cellElement.data.freeCost),
+                false,
+                8
+              );
           }
         },
       },
@@ -597,8 +596,8 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.additionalExpenses == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalExpenses)
-                );
+                parseFloat(cellElement.data.additionalExpenses)
+              );
           }
         },
       },
@@ -740,8 +739,8 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.stdPurchasePrice == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.stdPurchasePrice)
-                );
+                parseFloat(cellElement.data.stdPurchasePrice)
+              );
           }
         },
       },
@@ -1042,10 +1041,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.cgstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.cgstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1108,10 +1107,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.sgstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.sgstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1174,10 +1173,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.igstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.igstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1240,10 +1239,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.gstPercent == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.gstPercent),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.gstPercent),
+                false,
+                4
+              );
           }
         },
       },
@@ -1275,10 +1274,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.gstAmt == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.gstAmt),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.gstAmt),
+                false,
+                4
+              );
           }
         },
       },
@@ -1365,10 +1364,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.cessPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cessPerc),
-                  false,
-                  2
-                );
+                parseFloat(cellElement.data.cessPerc),
+                false,
+                2
+              );
           }
         },
       },
@@ -1400,10 +1399,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.cessAmt == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cessAmt),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.cessAmt),
+                false,
+                4
+              );
           }
         },
       },
@@ -1425,10 +1424,10 @@ const PurchaseRegisterReport = () => {
               cellElement.data?.additionalCessPerc == null
                 ? ""
                 : getFormattedValue(
-                    cellElement.data.additionalCessPerc,
-                    false,
-                    4
-                  );
+                  cellElement.data.additionalCessPerc,
+                  false,
+                  4
+                );
             return {
               ...exportCell,
               text: value,
@@ -1439,10 +1438,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.additionalCessPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalCessPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.additionalCessPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1474,10 +1473,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.additionalCess == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalCess),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.additionalCess),
+                false,
+                4
+              );
           }
         },
       },
@@ -1539,10 +1538,10 @@ const PurchaseRegisterReport = () => {
               cellElement.data?.totalProfitPercent == null
                 ? ""
                 : getFormattedValue(
-                    cellElement.data.totalProfitPercent,
-                    false,
-                    2
-                  );
+                  cellElement.data.totalProfitPercent,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -1553,10 +1552,10 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.totalProfitPercent == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.totalProfitPercent),
-                  false,
-                  2
-                );
+                parseFloat(cellElement.data.totalProfitPercent),
+                false,
+                2
+              );
           }
         },
       },
@@ -1627,14 +1626,14 @@ const PurchaseRegisterReport = () => {
             return cellElement.data?.baseUnitQuantity == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.baseUnitQuantity)
-                );
+                parseFloat(cellElement.data.baseUnitQuantity)
+              );
           }
         },
       },
     ];
-      // Filter columns based on the `visible` property
-      return baseColumns
+    // Filter columns based on the `visible` property
+    return baseColumns
       .filter((column) => {
         if (column.dataField == "xRate") {
           return filter.voucherForm == "Import";
@@ -1645,11 +1644,11 @@ const PurchaseRegisterReport = () => {
         if (column.dataField == "vat") {
           return !clientSession.isAppGlobal;
         }
-        if (["cgstPerc", "cgst", "sgstPerc", "sgst", "igstPerc", "igst", "gstPercent", "gstAmt", 
-          "hsnCode", "gstin", "vNUM", "remarks", "cessPerc", "cessAmt", "additionalCessPerc", 
-          "additionalCess", "gstNo", "priceCategoryID", "referenceNumber"].includes(column.dataField??"")) {
-         return clientSession.isAppGlobal;
-     }
+        if (["cgstPerc", "cgst", "sgstPerc", "sgst", "igstPerc", "igst", "gstPercent", "gstAmt",
+          "hsnCode", "gstin", "vNUM", "remarks", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "gstNo", "priceCategoryID", "referenceNumber"].includes(column.dataField ?? "")) {
+          return clientSession.isAppGlobal;
+        }
         return true;
       })
       .map((column) => {
@@ -1662,7 +1661,7 @@ const PurchaseRegisterReport = () => {
         return column;
       });
   }, [t, filter, userSession.dbIdValue]);
-    // Filter columns based on the `visible` property
+  // Filter columns based on the `visible` property
   //   return baseColumns.filter((column) => {
   //     if (column.dataField == "xRate") {
   //       return filter.voucherForm == "Import";
@@ -1880,8 +1879,8 @@ const PurchaseRegisterReport = () => {
                 }}
                 columns={columns}
                 moreOption
-                gridHeader={t("purchase_register_report")}
-                dataUrl={Urls.purchase_register_report}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -1892,7 +1891,7 @@ const PurchaseRegisterReport = () => {
                 filterInitialData={PurchaseRegisterFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_register_report"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -1902,4 +1901,4 @@ const PurchaseRegisterReport = () => {
   );
 };
 
-export default PurchaseRegisterReport;
+export default RegisterReport;

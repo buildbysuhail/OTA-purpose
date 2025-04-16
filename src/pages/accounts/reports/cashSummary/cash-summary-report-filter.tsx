@@ -33,5 +33,4 @@ export default CashSummaryReportFilter;
 export const CashSummaryReportFilterInitialState = {
   fromDate: new Date(),
   toDate: new Date(),
-  showLedgerwiseSummary: true
 };

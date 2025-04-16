@@ -87,6 +87,7 @@ export const ProductMaster: React.FC = React.memo(() => {
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
+    debugger;
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (multiRatesIndex !== undefined && multiRatesIndex !== -1) {

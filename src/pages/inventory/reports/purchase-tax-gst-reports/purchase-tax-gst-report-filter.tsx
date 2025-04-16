@@ -7,7 +7,7 @@ import Urls from "../../../../redux/urls"
 import ERPInput from "../../../../components/ERPComponents/erp-input"
 
 const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation("accountsReport")
+  const { t } = useTranslation("inventory")
   return (
     <div className="grid grid-cols-1 gap-4">
           {/* Report Type Options - First Row
@@ -64,14 +64,10 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
       {/* Date Options */}
       <div className="flex items-center gap-2">
         <ERPCheckbox
-          {...getFieldProps("transDate")}
+          {...getFieldProps("isTransactionDate")}
           label={t("Transaction Date")}
-          onChangeData={(data) => handleFieldChange("transDate", data.transDate)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("RefDate")}
-          label={t("Reference Date")}
-          onChangeData={(data) => handleFieldChange("RefDate", data.RefDate)}
+          datatype="number"
+          onChangeData={(data) => handleFieldChange("isTransactionDate", data.isTransactionDate)}
         />
       </div>
 
@@ -81,12 +77,14 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           label={t("from_date")}
           {...getFieldProps("fromDate")}
           className="w-full"
+          datatype="date"
           onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
         />
         <ERPDateInput
           label={t("to_date")}
           {...getFieldProps("toDate")}
           className="w-full"
+          datatype="date"
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>
@@ -94,26 +92,27 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
       {/* GST Percentage */}
       <div className="flex items-center gap-2">
         <ERPCheckbox
-          {...getFieldProps("gstPerc")}
+          {...getFieldProps("isGstPerc")}
           label={t("GST Perc")}
-          onChangeData={(data) => handleFieldChange("gstPerc", data.gstPerc)}
+          onChangeData={(data) => handleFieldChange("isGstPerc", data.isGstPerc)}
         />
         <ERPInput
-          {...getFieldProps("gstPercValue")}
+          {...getFieldProps("gSTPerc")}
           className="w-32"
-          onChangeData={(val: string) => handleFieldChange("gstPercValue", val)}
+          datatype="number"
+          onChangeData={(val: string) => handleFieldChange("gSTPerc", val)}
         />
       </div>
 
       {/* GST Category */}
       <div className="flex items-center gap-2">
         <ERPCheckbox
-          {...getFieldProps("gstCategory")}
+          {...getFieldProps("isGstCategory")}
           label={t("GST Category")}
-          onChangeData={(data) => handleFieldChange("gstCategory", data.gstCategory)}
+          onChangeData={(data) => handleFieldChange("isGstCategory", data.isGstCategory)}
         />
         <ERPDataCombobox
-          {...getFieldProps("taxCategoryID")}
+          {...getFieldProps("taxCategory")}
           field={{
             id: "taxCategoryID",
             getListUrl: Urls.data_taxCategory,
@@ -123,7 +122,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           className="w-full"
           onSelectItem={(data) => {
             handleFieldChange({
-              taxCategoryID: data.value,
+              taxCategory: data.value,
               taxCategoryName: data.label
           });
         }}
@@ -133,12 +132,12 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
       {/* Form Type */}
       <div className="flex items-center gap-2">
         <ERPCheckbox
-          {...getFieldProps("voucherForm")}
+          {...getFieldProps("isFormType")}
           label={t("Voucher Form")}
-          onChangeData={(data) => handleFieldChange("voucherForm", data.voucherForm)}
+          onChangeData={(data) => handleFieldChange("isFormType", data.isFormType)}
         />
         <ERPDataCombobox
-          {...getFieldProps("formType")}
+          {...getFieldProps("voucherForm")}
           field={{
             id: "formType",
             getListUrl: Urls.data_form_type,
@@ -148,8 +147,8 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           className="w-full"
           onSelectItem={(data) => {
             handleFieldChange({
-              formTypeId: data.value,
-              formType: data.label
+              voucherFormId: data.value,
+              voucherForm: data.label
           });
         }}
         />
@@ -164,7 +163,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
         />
       </div>
 
-      {/* Report Format Selection */}
+      {/* Report Format Selection
       <div className="flex items-center gap-4 mt-2">
         <ERPCheckbox
           {...getFieldProps("classicReport")}
@@ -176,7 +175,8 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           label={t("Standard Report")}
           onChangeData={(data) => handleFieldChange("standardReport", data.standardReport)}
         />
-      </div>
+      </div> */}
+
     </div>
   )
 }
@@ -184,25 +184,27 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
 export default PurchaseGstReportFilter
 
 export const PurchaseGstReportFilterInitialState = {
-  dailySummary: 0,
-  salesAndReturn: 0,
-  taxWise: 0,
-  taxWiseHSN: 0,
-  monthlySummary: 0,
-  detailed: 0,
-  registerFormat: 0,
-  advRegisterFormat: 0,
-  transDate: 0,
-  RefDate: 0,
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
-  gstPercValue: "0.00",
-  gstPerc: 0,
-  gstCategory: 0,
-  taxCategoryID: 0,
-  voucherForm: 0,
-  formType: 0,
+  gSTPerc: "0.00",
+  voucherType:"",
+  voucherForm:"",
+  isTransactionDate: 0,
+  taxCategory: 0,
   excludeNA: 0,
-  classicReport: 1,
-  standardReport: 0,
+  rdbCash:0,
+  rdbBank:0,
+  refDate: 0,
+  gstCategory: 0,
+  formType: 0,
+  taxWiseHSN: 0,
+
+  // dailySummary: 0,
+  // salesAndReturn: 0,
+  // taxWise: 0,
+  // monthlySummary: 0,
+  // detailed: 0,
+  // registerFormat: 0,
+  // advRegisterFormat: 0,
+
 }

@@ -468,6 +468,7 @@ export const ProductManageGcc: React.FC<{
               placeholder="0.00"
               type="number"
               required={false}
+
               onChangeData={(data: any) =>
                 handleFieldChange("batch.openingStock", data.batch.openingStock)
               }

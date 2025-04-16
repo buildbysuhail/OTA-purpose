@@ -340,20 +340,20 @@ const Urls = {
   sales_register:"/Inventory/RptSalesReport/SalesRegister/",
   net_sales:"/Inventory/RptSalesReport/NetSalesReport/",
   partywise_sales:"/Inventory/RptSalesReport/PartywiseSales/",
-  purchase_gst_daily_summary:"/api/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
-  purchase_gst_taxwise:"/api/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
-  purchase_gst_taxwise_with_hsn:"/api/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
-  purchase_gst_monthly_summary:"/api/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
-  purchase_gst_detailed:"/api/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
-  purchase_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
-  purchase_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
-  purchase_return_gst_daily_summary:"/api/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
-  purchase_return_gst_taxwise:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
-  purchase_return_gst_taxwise_with_hsn:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
-  purchase_return_gst_monthly_summary:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
-  purchase_return_gst_detailed:"/api/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
-  purchase_return_gst_register_format:"/api/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
-  purchase_return_gst_adv_register_format:"/api/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  purchase_gst_daily_summary:"/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
+  purchase_gst_taxwise:"/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
+  purchase_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
+  purchase_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
+  purchase_gst_detailed:"/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
+  purchase_gst_register_format:"/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
+  purchase_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  purchase_return_gst_daily_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
+  purchase_return_gst_taxwise:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
+  purchase_return_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
+  purchase_return_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
+  purchase_return_gst_detailed:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
+  purchase_return_gst_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
+  purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
   vat_return_form:"/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic:"/Inventory/RptTAXReport/VatReturnFormArabic",
 
@@ -412,6 +412,19 @@ const Urls = {
   group_category__: "/Inventory/Product/SelectProductGroupDetails/",
   group_category: "/Inventory/GroupCategory/",
   payment_receipt_billwise_advice_for_print: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
+
+
+  // URLs for SpecialPriceController (Inventory Module)
+  insert_special_price_scheme: "/Inventory/SpecialPrice",                             // POST
+  insert_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/{groupId}",       // POST
+  select_special_price_scheme_by_scheme_id: "/Inventory/SpecialPrice/BySchemeID",     // GET
+  select_product_by_barcode: "/Inventory/SpecialPrice/ByBarcode/{barcode}",           // GET
+  select_item_for_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/ByGroupId{productGroupId}", // GET
+  select_price_schemes_for_combo: "/Inventory/SpecialPrice/SpecialPriceCombo",        // GET
+  delete_special_price_scheme: "/Inventory/SpecialPrice/{specialPriceId}",            // DELETE
+  load_product_details: "/Inventory/SpecialPrice/LoadProductDetails",                 // GET (with body + query)
+  select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/{productId}", // GET
+  
 
   //Transaction
   // common

@@ -146,59 +146,7 @@ const MultiRates: React.FC<{
         fetchData();
     }, []);
 
-    // Load data from API
-    //   const handleRowUpdating = (e: any) => {
-    //     const newData = e.newData;
-    //     const rowData = data.find(item => item.unitID === e.key.unitID); 
-    //     if (!rowData) {
-    //         e.cancel = true;
-    //         return;
-    //     }
-    //     const proposedData: ProductPriceInputDto = {
-    //         ...rowData,
-    //         ...newData
-    //     };
-    //     if ('salesPrice' in newData || 'mrp' in newData) {
-    //         const newSalesPrice = newData.salesPrice ?? rowData.salesPrice;
-    //         const newMrp = newData.mrp ?? rowData.mrp;
-    //         if (typeof newSalesPrice === 'number' && 
-    //             typeof newMrp === 'number' && 
-    //             newSalesPrice > newMrp) {
-    //                // Store the original sales price before showing the alert
-    //              const originalSalesPrice = rowData.salesPrice
-    //               ERPAlert.show({
-    //                 title: t("warning"),
-    //                 text: `${t("sales_price")} (${newSalesPrice}) > ${t("mrp")} (${newMrp})`,
-    //                 icon: "warning",
-    //                 onConfirm: () => {
-    //                   e.cancel = true;
-    //                   // Get the index of the row that was being edited
-    //                   const index = data.findIndex(item => item.unitID === e.key.unitID);
-    //                   if (index !== -1) {
-    //                       // Create a copy of the data array
-    //                       const updatedData = [...data];
-    //                       // Ensure the sales price is reverted to the original value
-    //                       updatedData[index] = {
-    //                           ...updatedData[index],
-    //                           salesPrice: originalSalesPrice
-    //                       };
-    //                       // Update the state and form data
-    //                       setData(updatedData);
-    //                       handleFieldChange("prices", updatedData);
-    //                   }
-    //                   return;
-    //               },
-    //             });
-    //         }
-    //     }
-    //     const index = data.findIndex(item => item.unitID === e.key.unitID);
-    //     if (index !== -1) {
-    //         const updatedData = [...data];
-    //         updatedData[index] = proposedData;
-    //         setData(updatedData);
-    //         handleFieldChange("prices", updatedData);
-    //     }
-    // };
+
 
     const handleRowUpdating = (e: any) => {
         const newData = e.newData
@@ -289,6 +237,11 @@ const MultiRates: React.FC<{
         }
     }
 
+    const handleContentReady = (e:any) => {
+        setTimeout(() => {
+            e.component.editCell(0, "salesPrice");   
+        }, 100);
+    };
     return (
         <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
             <DataGrid dataSource={data}
@@ -308,7 +261,9 @@ const MultiRates: React.FC<{
                 //       }
                 //     }
                 //   }}
-
+     
+                onContentReady={handleContentReady}
+                
                 onRowUpdating={handleRowUpdating}
                 columnAutoWidth={true} height={800} showBorders={true}
             >
@@ -340,6 +295,19 @@ const MultiRates: React.FC<{
                     mode="cell"
                 />
             </DataGrid>
+
+{/* <DataGrid
+  ref={dataGridRef}
+  dataSource={[{ id: 1, salesPrice: 100 }]}
+  onContentReady={(e) => {
+    setTimeout(() => {
+      e.component.editCell(0, "salesPrice");
+    }, 100);
+  }}
+>
+  <Column dataField="salesPrice" allowEditing={true} />
+  <Editing allowUpdating={true} mode="cell" />
+</DataGrid> */}
         </div>
     );
 });

@@ -91,8 +91,8 @@ export const ProductMaster: React.FC = React.memo(() => {
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (multiRatesIndex !== undefined && multiRatesIndex !== -1) {
-      // setActiveTab(multiRatesIndex);
-      handleTabChange(multiRatesIndex)
+      setActiveTab(multiRatesIndex);
+      // handleTabChange(multiRatesIndex)
     }
   }, [t]);
 
@@ -228,6 +228,7 @@ export const ProductMaster: React.FC = React.memo(() => {
             t={t}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}
+  
           />
         </div>,
         <div key="image">
@@ -311,6 +312,7 @@ export const ProductMaster: React.FC = React.memo(() => {
             t={t}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}
+        
           />
         </div>,
         <div key="search">

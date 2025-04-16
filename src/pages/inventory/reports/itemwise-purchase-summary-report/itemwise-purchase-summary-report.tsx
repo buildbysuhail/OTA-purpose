@@ -7,8 +7,8 @@ import { ActionType } from "../../../../redux/types"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import moment from "moment"
 import GridId from "../../../../redux/gridId"
-import ItemwisePurchaseSummaryReportFilter, { ItemwisePurchaseSummaryReportFilterInitialState } from "./itemwise-purchase-summary-report-filter"
-import ItemWisePurchaseReturnSummaryFilter, { ItemWisePurchaseReturnSummaryFilterInitialState } from "../itemwise-purchase-return-summary-report/itemwise-purchase-return-summary-filter"
+import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "../itemwise-summary-report/itemwise-summary-filter"
+
 
 const  ItemwisePurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport")
@@ -429,8 +429,8 @@ const  ItemwisePurchaseSummaryReport = () => {
                   showFilterInitially={true}
                   filterWidth={750}
                   filterHeight={650}
-                  filterContent={<ItemWisePurchaseReturnSummaryFilter />}
-                  filterInitialData={ItemWisePurchaseReturnSummaryFilterInitialState}
+                  filterContent={<ItemWiseSummaryFilter />}
+                  filterInitialData={ItemWiseSummaryFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />

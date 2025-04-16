@@ -144,15 +144,23 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 />
 
                 <Column
+                  dataField="productCode"
+                  caption={t("product_code")}
+                  allowEditing={false}
+                  dataType="string"
+                  width={100}
+                />
+                <Column
                   dataField="productID"
                   caption={t("productID")}
                   allowEditing={false}
                   dataType="string"
                   width={150}
+                  visible={false}
                 />
 
                 <Column
-                  dataField="ProductName"
+                  dataField="productName"
                   caption={t("ProductName")}
                   dataType="string"
                   allowEditing={true}

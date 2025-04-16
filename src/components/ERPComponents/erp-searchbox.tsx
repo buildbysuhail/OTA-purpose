@@ -7,71 +7,97 @@ import { useTranslation } from 'react-i18next';
 import CustomStore from 'devextreme/data/custom_store';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  apiUrl?: string;
+  productDataUrl?: string;
+  batchDataUrl?: string;
   keyId?:string;
 }
 
 const api = new APIClient();
 // Demo data to be used until API is available.
-const demoData = [
-    { productID: 'P001', ProductName: 'Demo Product 1' },
-    { productID: 'P002', ProductName: 'Demo Product 2' },
-    { productID: 'P003', ProductName: 'Demo Product 3' },
-    { productID: 'P004', ProductName: 'Demo Product 4' },
-  ];
-const CustomInput: React.FC<InputProps> = ({ label, apiUrl,keyId, onChange, ...rest }) => {
-    const [results, setResults] = useState<any[]>(demoData);
+
+const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,keyId, onChange, ...rest }) => {
+    const [store, setStore] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const { t } = useTranslation("inventory");
+  function isNotEmpty(value: string | undefined | null) {
+    return value !== undefined && value !== null && value !== "";
+  }
+  const createStore = async (value: string) => {
+  return new CustomStore({
+    key: "productID",
+    async load(loadOptions: any) {
+      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const queryString = paramNames
+        .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+        .join("&");
 
-  const fetchData = useCallback(
-    async (query: string) => {
-      if (!apiUrl) return;
-      setLoading(true);
       try {
-        const result: any = await api.get(apiUrl,query); // Send query as param
-        setResults(result);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
+        debugger;
+        const payload = {
+                // Or however you access it
+                productName: value,
+              };
+        const url =`${productDataUrl}`
+        const response = await api.postAsync(queryString && queryString != "" ? `${url}?${queryString}` : `${url}?${'skip=0'}`,payload);
+        const result = response;
+        return result !== undefined && result != null
+          ? {
+            data: result.data,
+            totalCount: result.totalCount,
+          }
+          : {
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
+      } catch (err) {
+        throw new Error("Data Loading Error");
       }
     },
-    [apiUrl]
-  );
+  });
+}
+const debouncedFetch = async(value: string) => 
+{
+  const result = await createStore(value); // or pass input if needed
+    setStore(result)
+};
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  setInputValue(value);
 
-  // Debounced version of fetchData
-  const debouncedFetch = useMemo(() => debounce(fetchData, 500), [apiUrl]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (value.length >= 3) {
-      debouncedFetch(value);
-    } else {
-      setResults([]);
-    }
-    if (onChange) onChange(e);
-  };
-
-  // Cleanup debounce on unmount
-  useEffect(() => {
-    return () => {
-      debouncedFetch.cancel();  
-    };
-  }, [debouncedFetch]);
-
-  const customDataSource = useMemo(() => {
-    return new CustomStore({
-        key: keyId || 'productID', 
-      load: () => {
-        // Return results as a Promise.
-        // return Promise.resolve(results);
-        return Promise.resolve(results.length ? results : demoData);
-      },
+  if (value.length >= 3) {
+    debouncedFetch(value);
+  } else {
+    setStore({
+      data: [],
+      totalCount: 0,
+      summary: {},
+      groupCount: 0,
     });
-  }, [results]);
+  }
+
+  if (onChange) onChange(e);
+};
+  // Cleanup debounce on unmount
+  // useEffect(() => {
+  //   return () => {
+  //     debouncedFetch.cancel();  
+  //   };
+  // }, [debouncedFetch]);
+
+  // const customDataSource = useMemo(() => {
+  //   return new CustomStore({
+  //       key: keyId || 'productID', 
+  //     load: () => {
+  //       // Return results as a Promise.
+  //       // return Promise.resolve(results);
+  //       return Promise.resolve(results.length ? results : demoData);
+  //     },
+  //   });
+  // }, [results]);
   
   return (
     <div className=''>
@@ -91,12 +117,13 @@ const CustomInput: React.FC<InputProps> = ({ label, apiUrl,keyId, onChange, ...r
      <div className="w-full">
               <DataGrid
                 // dataSource={openMB.data}
-                dataSource={customDataSource}
+                
+                dataSource={store}
                 height={300}
-                key={keyId}
+                keyExpr={"productID"}
                 showBorders={true}
                 showRowLines={true}
-                
+                remoteOperations={{ filtering: true, paging: true, sorting: true }}
                 >
 
                 <KeyboardNavigation
@@ -105,13 +132,7 @@ const CustomInput: React.FC<InputProps> = ({ label, apiUrl,keyId, onChange, ...r
                   enterKeyDirection={"column"}
                 />
             {/* Summary Section */}
-            <Summary>
-                <TotalItem
-                column="productID"
-                summaryType="count"
-                displayFormat="Total: {0}"
-                />
-             </Summary>
+            
                 <Paging pageSize={10} />
 
                 <Scrolling mode="standard" />
@@ -152,4 +173,12 @@ const CustomInput: React.FC<InputProps> = ({ label, apiUrl,keyId, onChange, ...r
   );
 };
 
-export default CustomInput;
+export default ERPProductSearch;
+
+// delete
+// key = specialPriceID
+// api = delete_special_price_scheme
+// disabl loader
+// virtualscrollin
+// debounce
+// rowwie selection

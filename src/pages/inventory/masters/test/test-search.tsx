@@ -7,13 +7,13 @@ const TestSearch: React.FC = () => {
  
   return (
     <div className="p-4">
-      <CustomInput
+      {/* <CustomInput
         type="text"
         id='test'
         keyId='testserch'
         placeholder="Search Here"
-        apiUrl={Urls.load_product_details}
-      />
+        apiUrl={Urls.load_product_details} */}
+      {/* /> */}
     </div>
   );
 };

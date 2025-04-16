@@ -1,38 +1,24 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { APIClient } from "../../../../helpers/api-client";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseTaxReportDetailedFilter, {
-  PurchaseTaxReportDetailedFilterInitialState,
-} from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
+import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
 import moment from "moment";
 
-interface PurchaseTaxReportSummary {
-  date?: string;
-  taxCategory?: number;
-  vatPercentage?: number;
-  taxableValue?: number;
-  totalVAT?: number;
-  total?: number;
+interface TaxReportSummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
 
-const api = new APIClient();
-const PurchaseTaxReportSummary = () => {
+const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    PurchaseTaxReportDetailedFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(PurchaseTaxReportDetailedFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -55,9 +41,7 @@ const PurchaseTaxReportSummary = () => {
         filter: any,
         exportCell: any
       ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+        return cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
       },
     },
     {
@@ -234,13 +218,13 @@ const PurchaseTaxReportSummary = () => {
                   filtering: true,
                   paging: true,
                   sorting: false,
-                  summary:true
+                  summary: true
                 }}
                 columns={columns}
                 moreOption
                 filterText=" {fromDate} - {toDate} "
-                gridHeader={t("purchase_tax_report_summary")}
-                dataUrl={Urls.purchase_tax_report_summary}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -249,11 +233,9 @@ const PurchaseTaxReportSummary = () => {
                 filterHeight={210}
                 filterWidth={330}
                 filterInitialData={PurchaseTaxReportDetailedFilterInitialState}
-                onFilterChanged={(f: any) => {
-                  setFilter(f);
-                }}
+                onFilterChanged={(f: any) => { setFilter(f); }}
                 reload={true}
-                gridId="grd_purchase_tax_report_summary"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -262,4 +244,4 @@ const PurchaseTaxReportSummary = () => {
     </Fragment>
   );
 };
-export default PurchaseTaxReportSummary;
+export default TaxReportSummary;

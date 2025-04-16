@@ -337,6 +337,8 @@ const Urls = {
   branch_transfer_summary_out:"/Inventory/RptStockReport/BranchTransferSummaryOut/",
   branch_transfer_summary_in:"/Inventory/RptStockReport/BranchTransferSummaryIn/",
   sales_summary:"/Inventory/RptSalesReport/SalesSummary/",
+  sales_tax_report_summary:"/Inventory/RptSalesReport/TaxReportSalesSummary/",
+  
   sales_register:"/Inventory/RptSalesReport/SalesRegister/",
   net_sales:"/Inventory/RptSalesReport/NetSalesReport/",
   partywise_sales:"/Inventory/RptSalesReport/PartywiseSales/",

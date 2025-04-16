@@ -3,12 +3,20 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import GroupwiseSalesSummaryDevexpressFilter, { GroupwiseSalesSummaryDevexpressFilterInitialState } from "./groupwise-sales-summary-devexpress-filter";
 
-const GroupwiseSalesSummaryDevexpress = () => {
+interface SummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+  filterInitialData: any
+}
+
+const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, filterInitialData }) => {
+
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
         {
@@ -416,7 +424,7 @@ const GroupwiseSalesSummaryDevexpress = () => {
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}
-                                gridHeader={t("groupwise_sales_summary_devexpress")}
+                                gridHeader={gridHeader}
                                 dataUrl={Urls.groupwise_sales_summary_devexpress}
                                 hideGridAddButton={true}
                                 enablefilter={true}
@@ -425,9 +433,9 @@ const GroupwiseSalesSummaryDevexpress = () => {
                                 filterContent={<GroupwiseSalesSummaryDevexpressFilter />}
                                 filterWidth={790}
                                 filterHeight={370}
-                                filterInitialData={GroupwiseSalesSummaryDevexpressFilterInitialState}
+                                filterInitialData={filterInitialData}
                                 reload={true}
-                                gridId="grd_groupwise_sales_summary_devexpress_report"
+                                gridId={gridId}
                             />
                         </div>
                     </div>

@@ -472,8 +472,6 @@ export const ProductManageGcc: React.FC<{
                 handleFieldChange("batch.openingStock", data.batch.openingStock)
               }
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                console.log("Key pressed:", e.key, "mr:", getFieldProps("mr")?.value);
-                console.log("switchToMultiRatesTab in onKeyDown:", !!switchToMultiRatesTab);
                 if (
                   e.key === "Enter" &&
                   getFieldProps("mr")?.value === true &&
@@ -484,7 +482,7 @@ export const ProductManageGcc: React.FC<{
                   switchToMultiRatesTab();
                 }
               }}
-              disableEnterNavigation={getFieldProps("mr")?.value === true}
+              disableEnterNavigation
             />
           </div>
 

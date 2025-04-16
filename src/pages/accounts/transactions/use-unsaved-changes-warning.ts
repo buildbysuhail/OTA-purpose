@@ -146,14 +146,14 @@ export const useUnsavedChangesWarning = () => {
         target?.closest("a") ||
         target?.hasAttribute("href") ||
         target?.role === "link" ;
-        console.log("🔹 Clicked Element:", target);
-        console.log("🔹 Tag Name:", target?.tagName);
-        console.log("🔹 Attributes:", target?.attributes);
-        console.log("🔹 Role:", target?.getAttribute("role"));
-        console.log("🔹 Closest <a>:", target?.closest("a"));
-        console.log("🔹 Closest [role='link']:", target?.closest("[role='link']"));
-        console.log("🔹 Closest [role='button']:", target?.closest("[role='button']"));
-        console.log("🔹 Closest [href]:", target?.closest("[href]"));
+        // console.log("🔹 Clicked Element:", target);
+        // console.log("🔹 Tag Name:", target?.tagName);
+        // console.log("🔹 Attributes:", target?.attributes);
+        // console.log("🔹 Role:", target?.getAttribute("role"));
+        // console.log("🔹 Closest <a>:", target?.closest("a"));
+        // console.log("🔹 Closest [role='link']:", target?.closest("[role='link']"));
+        // console.log("🔹 Closest [role='button']:", target?.closest("[role='button']"));
+        // console.log("🔹 Closest [href]:", target?.closest("[href]"));
       if (isNavigationLink) {
         // const unsavedChanges = await hasUnsavedChanges();
         hasUnsavedChanges().then((unsavedChanges) => {

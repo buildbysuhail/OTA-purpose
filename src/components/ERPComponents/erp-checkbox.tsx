@@ -57,7 +57,6 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
-
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     const inputBoxState = localInputBox || appState?.inputBox;
 
@@ -135,13 +134,15 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
             id={id}
             name={id}
             onChange={(e) => {
+              console.log("Edge: Checkbox raw change", e.target.checked);
               onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
               onChange && onChange(e);
             }}
+            checked={props.checked}
             onFocus={onFocus}
             onBlur={onBlur}
             onKeyDown={handleNavigation}
-            defaultChecked={false}
+            // defaultChecked={false}
             disabled={disabled}
             required={required}
             data-skip={skip}
@@ -175,5 +176,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     );
   }
 );
+
+
 
 export default ERPCheckbox;

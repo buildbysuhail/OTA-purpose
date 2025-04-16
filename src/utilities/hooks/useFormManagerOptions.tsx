@@ -447,7 +447,6 @@ export function useFormManager<T>({
   const getFieldProps = useCallback(
     (fieldId: string, type?: string): FormField | any => {
       const currentFormState = useApiClient ? localFormState : reduxFormState;
-
       if (fieldId === "*") {
         return currentFormState?.data;
       } else {

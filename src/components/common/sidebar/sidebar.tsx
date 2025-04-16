@@ -205,7 +205,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 				// closeMenu();
 			}
 		}
-		mainContent!.addEventListener('click', menuClose);
+		// mainContent!.addEventListener('click', menuClose);
 		return () => {
 			window.removeEventListener("resize", menuResizeFn);
 			// window.removeEventListener('resize', checkHoriMenu);

@@ -422,7 +422,7 @@ const Urls = {
   select_item_for_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/ByGroupId{productGroupId}", // GET
   select_price_schemes_for_combo: "/Inventory/SpecialPrice/SpecialPriceCombo",        // GET
   delete_special_price_scheme: "/Inventory/SpecialPrice/{specialPriceId}",            // DELETE
-  load_product_details: "/Inventory/SpecialPrice/LoadProductDetails",                 // GET (with body + query)
+  load_product_details: "/Inventory/SpecialPrice/LoadProductDetails/",                 // GET (with body + query)
   select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/{productId}", // GET
   
 

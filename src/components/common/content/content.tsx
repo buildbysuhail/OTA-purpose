@@ -176,6 +176,8 @@ import RegisterReport from "../../../pages/inventory/reports/purchase-register-r
 import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
+import TestSearch from "../../../pages/inventory/masters/test/test-search";
+
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -548,7 +550,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
         <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
-        <Route path="/inventory-masters/test-page" element={<TestInvMaster />} />
+        {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
+        <Route path="/inventory-masters/test-page" element={<TestSearch />} />
       </Routes>
     </Suspense>
   );

@@ -360,6 +360,7 @@ const Urls = {
   purchase_return_gst_detailed:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
   purchase_return_gst_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  purchase_return_gst_sales_and_return:"/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
   vat_return_form:"/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic:"/Inventory/RptTAXReport/VatReturnFormArabic",
 

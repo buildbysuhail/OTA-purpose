@@ -12,414 +12,389 @@ import PurchaseReturnGstReportFilter, { PurchaseReturnGstReportFilterInitialStat
 const PurchaseReturnTaxGSTDetailed = () => {
   const { t } = useTranslation("inventory");
  const [filter, setFilter] = useState<any>(PurchaseReturnGstReportFilterInitialState);
-     const columns: DevGridColumn[] = [
-      {
-        dataField: "iD",
-        caption: t("Form"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "vchNo",
-        caption: t("VoucherNumber"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 75,
-      },
-       {
-         dataField: "date",
-         caption: t("date"),
-         dataType: "date",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           return cellElement.data.date == null || cellElement.data.date == ""
+ const columns: DevGridColumn[] = [
+  {
+    dataField: "id",
+    caption: t("Id"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 50,
+    visible:false
+  },
+  {
+    dataField: "vchNo",
+    caption: t("voucher_number"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 75,
+    showInPdf:true
+  },
+   {
+     dataField: "date",
+     caption: t("date"),
+     dataType: "string",
+     allowSearch: true,
+     allowFiltering: true,
+     width: 100,
+     showInPdf:true
+   },
+   {
+    dataField: "gstin",
+    caption: t("gst_in"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+   {
+     dataField: "party",
+     caption: t("Party"),
+     dataType: "string",
+     allowSearch: true,
+     allowFiltering: true,
+     showInPdf:true
+    },
+   {
+     dataField: "address1",
+     caption: t("Address1"),
+     dataType: "string",
+     allowSearch: true,
+     allowFiltering: true,
+     width: 100,
+     showInPdf:true
+   },
+   {
+    dataField: "address2",
+    caption: t("Address2"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    visible:false
+  },
+  {
+    dataField: "refNumber",
+    caption: t("ref_no"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+  {
+    dataField: "form",
+    caption: t("From"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+  {
+    dataField: "cgstPerc",
+    caption: t("cgstperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+  {
+    dataField: "sgstPerc",
+    caption: t("sgstperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+  {
+    dataField: "igstPerc",
+    caption: t("igstperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true
+  },
+  {
+    dataField: "taxableValue",
+    caption: t("taxable_value"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+    cellRender: (
+    cellElement: any,
+    cellInfo: any,
+    filter: any,
+    exportCell: any
+  ) => {
+    if (exportCell != undefined) {
+      const value =
+        cellElement.data?.taxableValue == null
+          ? ""
+          : getFormattedValue(cellElement.data.taxableValue);
+      return {
+        ...exportCell,
+        text: value,
+        alignment: "right",
+        alignmentExcel: { horizontal: "right" },
+      };
+    } else {
+      return cellElement.data?.taxableValue == null
+        ? ""
+        : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+    }}
+  },
+  {
+    dataField: "cgst",
+    caption: t("cgst"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+    cellRender: (
+    cellElement: any,
+    cellInfo: any,
+    filter: any,
+    exportCell: any
+  ) => {
+    if (exportCell != undefined) {
+      const value =
+        cellElement.data?.cgst == null
+          ? ""
+          : getFormattedValue(cellElement.data.cgst);
+      return {
+        ...exportCell,
+        text: value,
+        alignment: "right",
+        alignmentExcel: { horizontal: "right" },
+      };
+    } else {
+      return cellElement.data?.cgst == null
+        ? ""
+        : getFormattedValue(parseFloat(cellElement.data.cgst));
+    }}
+  },
+  {
+    dataField: "sgst",
+    caption: t("sgst"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+    cellRender: (
+    cellElement: any,
+    cellInfo: any,
+    filter: any,
+    exportCell: any
+  ) => {
+    if (exportCell != undefined) {
+      const value =
+        cellElement.data?.sgst == null
+          ? ""
+          : getFormattedValue(cellElement.data.sgst);
+      return {
+        ...exportCell,
+        text: value,
+        alignment: "right",
+        alignmentExcel: { horizontal: "right" },
+      };
+    } else {
+      return cellElement.data?.sgst == null
+        ? ""
+        : getFormattedValue(parseFloat(cellElement.data.sgst));
+    }}
+  },
+  {
+    dataField: "igst",
+    caption: t("igst"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+    cellRender: (
+    cellElement: any,
+    cellInfo: any,
+    filter: any,
+    exportCell: any
+  ) => {
+    if (exportCell != undefined) {
+      const value =
+        cellElement.data?.igst == null
+          ? ""
+          : getFormattedValue(cellElement.data.igst);
+      return {
+        ...exportCell,
+        text: value,
+        alignment: "right",
+        alignmentExcel: { horizontal: "right" },
+      };
+    } else {
+      return cellElement.data?.igst == null
+        ? ""
+        : getFormattedValue(parseFloat(cellElement.data.igst));
+    }}
+  },
+   {
+     dataField: "total",
+     caption: t("total"),
+     dataType: "number",
+     allowSearch: true,
+     allowFiltering: true,
+     width: 80,
+     showInPdf:true,
+     cellRender: (
+       cellElement: any,
+       cellInfo: any,
+       filter: any,
+       exportCell: any
+     ) => {
+       if (exportCell != undefined) {
+         const value =
+           cellElement.data?.total == null
              ? ""
-             : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-         },
-       },
-       {
-        dataField: "gSTIN",
-        caption: t("GSTIN"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 75,
-      },
-       {
-         dataField: "party",
-         caption: t("Party"),
-         dataType: "string",
-         allowSearch: true,
-         allowFiltering: true,
-        },
-       {
-         dataField: "address1",
-         caption: t("Address1"),
-         dataType: "string",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-       },
-       {
-        dataField: "address2",
-        caption: t("Address2"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "refNumber",
-        caption: t("RefNumber"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "form",
-        caption: t("From"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "cGSTPerc",
-        caption: t("CGSTPerc"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "sGSTPerc",
-        caption: t("SGSTPerc"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "iGSTPerc",
-        caption: t("IGSTPerc"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "taxableValue",
-        caption: t("Taxable Value"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.taxableValue == null
-              ? ""
-              : getFormattedValue(cellElement.data.taxableValue);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.taxableValue == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
-        }}
-      },
-      {
-        dataField: "cGST",
-        caption: t("CGST"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cGST == null
-              ? ""
-              : getFormattedValue(cellElement.data.cGST);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cGST == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cGST));
-        }}
-      },
-      {
-        dataField: "sGST",
-        caption: t("SGST"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sGST == null
-              ? ""
-              : getFormattedValue(cellElement.data.sGST);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sGST == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sGST));
-        }}
-      },
-      {
-        dataField: "iGST",
-        caption: t("IGST"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.iGST == null
-              ? ""
-              : getFormattedValue(cellElement.data.iGST);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.iGST == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.iGST));
-        }}
-      },
-       {
-         dataField: "total",
-         caption: t("Total"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.total == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.total);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.total == null
-               ? ""
-               : getFormattedValue(parseFloat(cellElement.data.total));
-           }
-         },
-       },
-       {
-        dataField: "refDate",
-        caption: t("Ref.Date"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "remarks",
-        caption: t("Remarks"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "financialYearID",
-        caption: t("FinancialYearID"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "productName",
-        caption: t("Product Name"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "gstPercentage",
-        caption: t("Gst Percentage"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "cessPerc",
-        caption: t("Cess Percentage"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-       {
-         dataField: "cessAmt",
-         caption: t("Cess Amount"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.cessAmt == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.cessAmt);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.cessAmt == null
-               ? ""
-               : getFormattedValue(parseFloat(cellElement.data.cessAmt));
-           }
-         },
-       },
-       {
-        dataField: "addCessPerc",
-        caption: t("Add.Cess Percentage"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-       {
-         dataField: "addCess",
-         caption: t("Add Cess"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.addCess == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.addCess);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.addCess == null
-               ? ""
-               : getFormattedValue(parseFloat(cellElement.data.addCess));
-           }
-         },
-       },
-       {
-        dataField: "hSNCode",
-        caption: t("HSN Code"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "qty",
-        caption: t("Quantity"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "unit",
-        caption: t("Unit"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "groupName",
-        caption: t("Group Name"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-     ];
+             : getFormattedValue(cellElement.data.total);
+         return {
+           ...exportCell,
+           text: value,
+           alignment: "right",
+           alignmentExcel: { horizontal: "right" },
+         };
+       } else {
+         return cellElement.data?.total == null
+           ? ""
+           : getFormattedValue(parseFloat(cellElement.data.total));
+       }
+     },
+   },
+   {
+    dataField: "refDate",
+    caption: t("ref_date"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+  },
+  {
+    dataField: "remarks",
+    caption: t("remarks"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+  },
+  {
+    dataField: "financialYearID",
+    caption: t("financial_year_id"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    visible:false
+  },
+  {
+    dataField: "gstPercentage",
+    caption: t("gstperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    showInPdf:true,
+  },
+  {
+    dataField: "cessPerc",
+    caption: t("cessperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    visible:false
+  },
+   {
+     dataField: "cessAmt",
+     caption: t("cess_amount"),
+     dataType: "number",
+     allowSearch: true,
+     allowFiltering: true,
+     width: 80,
+     visible:false,
+     cellRender: (
+       cellElement: any,
+       cellInfo: any,
+       filter: any,
+       exportCell: any
+     ) => {
+       if (exportCell != undefined) {
+         const value =
+           cellElement.data?.cessAmt == null
+             ? ""
+             : getFormattedValue(cellElement.data.cessAmt);
+         return {
+           ...exportCell,
+           text: value,
+           alignment: "right",
+           alignmentExcel: { horizontal: "right" },
+         };
+       } else {
+         return cellElement.data?.cessAmt == null
+           ? ""
+           : getFormattedValue(parseFloat(cellElement.data.cessAmt));
+       }
+     },
+   },
+   {
+    dataField: "addCessPerc",
+    caption: t("addcessperc"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 100,
+    visible:false
+  },
+   {
+     dataField: "addCess",
+     caption: t("addcess_amount"),
+     dataType: "number",
+     allowSearch: true,
+     allowFiltering: true,
+     width: 80,
+     visible:false,
+     cellRender: (
+       cellElement: any,
+       cellInfo: any,
+       filter: any,
+       exportCell: any
+     ) => {
+       if (exportCell != undefined) {
+         const value =
+           cellElement.data?.addCess == null
+             ? ""
+             : getFormattedValue(cellElement.data.addCess);
+         return {
+           ...exportCell,
+           text: value,
+           alignment: "right",
+           alignmentExcel: { horizontal: "right" },
+         };
+       } else {
+         return cellElement.data?.addCess == null
+           ? ""
+           : getFormattedValue(parseFloat(cellElement.data.addCess));
+       }
+     },
+   }
+ ];
    const { getFormattedValue } = useNumberFormat();
    const customizeSummaryRow = useMemo(() => {
      return (itemInfo: any) => {

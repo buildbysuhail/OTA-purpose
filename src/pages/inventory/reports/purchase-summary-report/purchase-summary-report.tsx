@@ -1,22 +1,20 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { APIClient } from "../../../../helpers/api-client";
-import PurchaseSummaryFilter, {
-  PurchaseSummaryFilterInitialState,
-} from "./purchase-summary-report-filter";
+import PurchaseSummaryFilter, { PurchaseSummaryFilterInitialState, } from "./purchase-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
+interface SummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
 
-const PurchaseSummaryReport = () => {
+const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -39,9 +37,7 @@ const PurchaseSummaryReport = () => {
           filter: any,
           exportCell: any
         ) => {
-          return cellElement.data.date == null || cellElement.data.date == ""
-            ? ""
-            : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+          return cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
         },
       },
       {
@@ -194,7 +190,7 @@ const PurchaseSummaryReport = () => {
             const value =
               cellElement.data?.vat == null
                 ? ""
-                : getFormattedValue(cellElement.data.vat,false,4);
+                : getFormattedValue(cellElement.data.vat, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -204,7 +200,7 @@ const PurchaseSummaryReport = () => {
           } else {
             return cellElement.data?.vat == null
               ? ""
-              : getFormattedValue(cellElement.data.vat,false,4);
+              : getFormattedValue(cellElement.data.vat, false, 4);
           }
         },
       },
@@ -426,7 +422,7 @@ const PurchaseSummaryReport = () => {
             const value =
               cellElement.data?.exchangeRate == null
                 ? ""
-                : getFormattedValue(cellElement.data.exchangeRate,false,6);
+                : getFormattedValue(cellElement.data.exchangeRate, false, 6);
             return {
               ...exportCell,
               text: value,
@@ -436,7 +432,7 @@ const PurchaseSummaryReport = () => {
           } else {
             return cellElement.data?.exchangeRate == null
               ? ""
-              : getFormattedValue(cellElement.data.exchangeRate,false,6);
+              : getFormattedValue(cellElement.data.exchangeRate, false, 6);
           }
         },
       },
@@ -955,9 +951,9 @@ const PurchaseSummaryReport = () => {
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log('itemInfo');
-      
+
       console.log(itemInfo);
-      
+
       const value = itemInfo.value;
       if (
         value === null ||
@@ -974,8 +970,8 @@ const PurchaseSummaryReport = () => {
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
       {
-        column:"address2",
-        summaryType:"max",  
+        column: "address2",
+        summaryType: "max",
         customizeText: customizeDate,
       },
       {
@@ -1159,8 +1155,8 @@ const PurchaseSummaryReport = () => {
                 From Date : {fromDate} To Date : {toDate} 
                 {isTimeBased == true &&  , Time between  :
                  [fromTime] And [toTime]}"
-                gridHeader={t("purchase_summary_report")}
-                dataUrl={Urls.purchase_summary_report}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -1175,7 +1171,7 @@ const PurchaseSummaryReport = () => {
                   setFilter(f);
                 }}
                 reload={true}
-                gridId="grd_purchase_summary_report"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -1185,4 +1181,4 @@ const PurchaseSummaryReport = () => {
   );
 };
 
-export default PurchaseSummaryReport;
+export default SummaryReport;

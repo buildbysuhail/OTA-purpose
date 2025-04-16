@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -9,24 +9,13 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PartyWiseReportFilter, { PartyWiseReportFilterInitialState, } from "./party-wise-report-filter";
 import moment from "moment";
 
-interface PartyWiseReport {
-  date?: string;
-  vchNo?: string;
-  form?: string;
-  party?: string;
-  address1?: string;
-  address2?: string;
-  product?: string;
-  netAmount?: number;
-  quantity?: number;
-  refNo?: string;
-  refDate?: string;
-  employeeName?: string;
+interface PartyWiseReportProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
 
-const api = new APIClient();
-
-const PartyWiseReport = () => {
+const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(true);
   const [filter, setFilter] = useState<any>(PartyWiseReportFilterInitialState);
@@ -52,15 +41,15 @@ const PartyWiseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-     cellRender: (
-                  cellElement: any,
-                  cellInfo: any,
-                  filter: any,
-                  exportCell: any
-                ) => {
-                  return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                }
-        },
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+      }
+    },
     {
       dataField: "vchNo",
       caption: t("voucher_no"),
@@ -126,7 +115,7 @@ const PartyWiseReport = () => {
           const value =
             cellElement.data?.netAmount == null
               ? ""
-              : getFormattedValue(cellElement.data.netAmount,false,4);
+              : getFormattedValue(cellElement.data.netAmount, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -136,7 +125,7 @@ const PartyWiseReport = () => {
         } else {
           return cellElement.data?.netAmount == null
             ? ""
-            : getFormattedValue(cellElement.data.netAmount,false,4);
+            : getFormattedValue(cellElement.data.netAmount, false, 4);
         }
       },
     },
@@ -157,7 +146,7 @@ const PartyWiseReport = () => {
           const value =
             cellElement.data?.quantity == null
               ? ""
-              : getFormattedValue(cellElement.data.quantity,false,4);
+              : getFormattedValue(cellElement.data.quantity, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -167,7 +156,7 @@ const PartyWiseReport = () => {
         } else {
           return cellElement.data?.quantity == null
             ? ""
-            : getFormattedValue(cellElement.data.quantity,false,4);
+            : getFormattedValue(cellElement.data.quantity, false, 4);
         }
       },
     },
@@ -210,8 +199,8 @@ const PartyWiseReport = () => {
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
-      column:"address2",
-      summaryType:"max",  
+      column: "address2",
+      summaryType: "max",
       customizeText: customizeDate,
     },
     {
@@ -238,8 +227,8 @@ const PartyWiseReport = () => {
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
                 moreOption
-                gridHeader={t("party_wise_report")}
-                dataUrl={Urls.party_wise_report}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -250,7 +239,7 @@ const PartyWiseReport = () => {
                 filterInitialData={PartyWiseReportFilterInitialState}
                 onFilterChanged={(f: any) => { setFilter(f); }}
                 reload={true}
-                gridId="grd_party_wise_report"
+                gridId={gridId}
               />
             </div>
           </div>

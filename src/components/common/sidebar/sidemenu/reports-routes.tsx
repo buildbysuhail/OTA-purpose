@@ -226,6 +226,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/partywise_sales_report`, type: 'link', active: false, selected: false, title: 'partywise_sales', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_tax_report_summary`, type: 'link', active: false, selected: false, title: 'sales_tax_report_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_tax_report_detailed`, type: 'link', active: false, selected: false, title: 'sales_tax_report_detailed', icon: PiPackageLight },
     ]
   },
 

@@ -177,6 +177,7 @@ import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/ne
 import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
 import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
+import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -463,14 +464,14 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<SummaryReport dataUrl={urls.purchase_summary_report} gridHeader="purchase_summary_report" gridId="grd_purchase_summary" />} />
         <Route path="/inventory/purchase_register_report" element={<RegisterReport dataUrl={urls.purchase_register_report} gridHeader="purchase_register_report" gridId="grd_purchase_register" />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_report" gridId="grd_party_wise" />} />
-        <Route path="/inventory/purchase_tax_report_detailed" element={<PurchaseTaxReportDetailed />} />
+        <Route path="/inventory/purchase_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.purchase_tax_report_detailed} gridHeader="purchase_tax_report_detailed" gridId="grd_purchase_tax_report_detailed" />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<TaxReportSummary dataUrl={urls.purchase_tax_report_summary} gridHeader="purchase_tax_report_summary" gridId="grd_purchase_tax_summary" />} />
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
         <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<SummaryReport dataUrl={urls.purchase_order_summary} gridHeader="purchase_order_summary" gridId="grd_purchase_order_summary" />} />
         {/* global */}
-      
+
         <Route path="/inventory/purchase_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_estimate_register} gridHeader="purchase_estimate_register_report" gridId="grd_purchase_estimate_register" />} />
         <Route path="/inventory/purchase_return_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_return_estimate_register} gridHeader="purchase_return_estimate_register_report" gridId="grd_purchase_return_estimate_register" />} />
         <Route path="/inventory/purchase_return_estimate_summary_report" element={<SummaryReport dataUrl={urls.purchase_return_estimate_summary} gridHeader="purchase_return_estimate_summary_report" gridId="grd_purchase_return_estimate_summary" />} />
@@ -496,6 +497,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/net_sales_report" element={<NetSales />} />
         <Route path="/inventory/partywise_sales_report" element={<PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />} />
         <Route path="/inventory/sales_tax_report_summary" element={<TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />} />
+        <Route path="/inventory/sales_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />

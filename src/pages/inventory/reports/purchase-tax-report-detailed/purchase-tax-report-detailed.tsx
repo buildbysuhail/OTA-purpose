@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
@@ -13,29 +13,13 @@ import PurchaseTaxReportDetailedFilter, {
 } from "./purchase-tax-report-detailed-filter";
 import moment from "moment";
 
-interface PurchaseTaxReportDetailed {
-  id?: number;
-  date?: string;
-  party?: string;
-  address1?: string;
-  address2?: string;
-  vchNo?: string;
-  taxCategory?: number;
-  form?: string;
-  vatPercentage?: number;
-  taxableValue?: number;
-  totalVAT?: number;
-  total?: number;
-  refNumber?: string;
-  refDate?: string;
-  remarks?: string;
-  taxNumber?: string;
-  refNo2?: string;
+interface TaxReportDetailedProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
 
-const api = new APIClient();
-
-const PurchaseTaxReportDetailed = () => {
+const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
@@ -300,8 +284,8 @@ const PurchaseTaxReportDetailed = () => {
           cellElement.data.refDate == ""
           ? ""
           : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
-              "DD-MMM-YYYY"
-            ); // Ensures proper formatting
+            "DD-MMM-YYYY"
+          ); // Ensures proper formatting
       },
     },
     {
@@ -399,13 +383,13 @@ const PurchaseTaxReportDetailed = () => {
                   filtering: true,
                   paging: true,
                   sorting: false,
-                  summary:true
+                  summary: true
                 }}
                 columns={columns}
                 moreOption
                 filterText=" {fromDate} - {toDate} "
-                gridHeader={t("purchase_tax_report_detailed")}
-                dataUrl={Urls.purchase_tax_report_detailed}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -418,7 +402,7 @@ const PurchaseTaxReportDetailed = () => {
                   setFilter(f);
                 }}
                 reload={true}
-                gridId="grd_purchase_tax_report_detailed"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -428,4 +412,4 @@ const PurchaseTaxReportDetailed = () => {
   );
 };
 
-export default PurchaseTaxReportDetailed;
+export default TaxReportDetailed;

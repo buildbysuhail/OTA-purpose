@@ -143,7 +143,7 @@ import ShortageStock from "../../../pages/inventory/reports/shortage-stock-repor
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import urls from "../../../redux/urls";
-import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
+import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary";
 import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
 import DailyStatementAllReport from "../../../pages/inventory/reports/daily-statement-all-report/daily-statement-all-report ";
 import DailyStatementPurchaseReport from "../../../pages/inventory/reports/daily-statement-purchase-report/daily-statement-purchase-report";
@@ -467,7 +467,13 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
         <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
-        <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
+        <Route path="/inventory/purchase_order_summary" element={<SummaryReport dataUrl={urls.purchase_order_summary} gridHeader="purchase_order_summary" gridId="grd_purchase_order_summary" />} />
+        {/* global */}
+      
+        <Route path="/inventory/purchase_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_estimate_register} gridHeader="purchase_estimate_register_report" gridId="grd_purchase_estimate_register" />} />
+        <Route path="/inventory/purchase_return_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_return_estimate_register} gridHeader="purchase_return_estimate_register_report" gridId="grd_purchase_return_estimate_register" />} />
+        <Route path="/inventory/purchase_return_estimate_summary_report" element={<SummaryReport dataUrl={urls.purchase_return_estimate_summary} gridHeader="purchase_return_estimate_summary_report" gridId="grd_purchase_return_estimate_summary" />} />
+        {/* global end */}
         <Route path="/inventory/price_list_report" element={<PriceList />} />
         <Route path="/inventory/itemwise_purchase_summary" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary" />} />
         <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="item_wise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary" />} />

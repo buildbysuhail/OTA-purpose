@@ -9,7 +9,7 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const ItemWisePurchaseReturnSummaryFilter = ({
+const ItemWiseSummaryFilter = ({
     getFieldProps,
     handleFieldChange,
     formState,
@@ -279,9 +279,9 @@ const ItemWisePurchaseReturnSummaryFilter = ({
     );
 };
 
-export default ItemWisePurchaseReturnSummaryFilter;
+export default ItemWiseSummaryFilter;
 
-export const ItemWisePurchaseReturnSummaryFilterInitialState = {
+export const ItemWiseSummaryFilterInitialState = {
     fromDate: moment().local().startOf("day").toDate(),
     toDate: moment().local().endOf("day").toDate(),
     productGroupID: 0,

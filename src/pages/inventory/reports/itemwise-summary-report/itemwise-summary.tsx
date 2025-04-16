@@ -7,22 +7,20 @@ import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import ItemWisePurchaseReturnSummaryFilter, {
-  ItemWisePurchaseReturnSummaryFilterInitialState,
-} from "./itemwise-purchase-return-summary-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "./itemwise-summary-filter";
 
-interface ItemWisePurchaseSummaryProps {
+interface ItemWiseSummaryReportProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
+const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
-    ItemWisePurchaseReturnSummaryFilterInitialState
+    ItemWiseSummaryFilterInitialState
   );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -530,11 +528,11 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps> = ({ gridHeader, d
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<ItemWisePurchaseReturnSummaryFilter />}
+                filterContent={<ItemWiseSummaryFilter />}
                 filterHeight={550}
                 filterWidth={700}
                 filterInitialData={
-                  ItemWisePurchaseReturnSummaryFilterInitialState
+                  ItemWiseSummaryFilterInitialState
                 }
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ItemWisePurchaseOrderSummaryFilter, { ItemWisePurchaseOrderSummaryFilterInitialState } from "./itemwise-purchase-order-summary-filter";
+import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "../itemwise-summary-report/itemwise-summary-filter";
 
 interface ItemWisePurchaseOrderSummary {
   siNo: number;
@@ -236,10 +237,10 @@ const ItemWisePurchaseOrderSummary = () => {
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<ItemWisePurchaseOrderSummaryFilter />}
+                filterContent={<ItemWiseSummaryFilter />}
                 filterHeight={550}
                 filterWidth={700}
-                filterInitialData={ItemWisePurchaseOrderSummaryFilterInitialState}
+                filterInitialData={ItemWiseSummaryFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId="grd_item_wise_purchase_order_summary"

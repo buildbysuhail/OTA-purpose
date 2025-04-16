@@ -12,88 +12,62 @@ import PurchaseReturnGstReportFilter, { PurchaseReturnGstReportFilterInitialStat
 const PurchaseReturnTaxGSTDailySummary = () => {
   const { t } = useTranslation("inventory");
  const [filter, setFilter] = useState<any>(PurchaseReturnGstReportFilterInitialState);
-     const columns: DevGridColumn[] = [
-       {
-         dataField: "date",
-         caption: t("date"),
-         dataType: "date",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           return cellElement.data.date == null || cellElement.data.date == ""
-             ? ""
-             : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-         },
-       },
-       {
-         dataField: "vchNos",
-         caption: t("VoucherNumber"),
-         dataType: "string",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 75,
-       },
-       {
-         dataField: "form",
-         caption: t("Form"),
-         dataType: "string",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 150,
-       },
-       {
-         dataField: "gstPercentage",
-         caption: t("GST%"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-       },
-       {
-         dataField: "taxableValue",
-         caption: t("Taxable Value"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-         cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.taxableValue == null
-                ? ""
-                : getFormattedValue(cellElement.data.taxableValue);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.taxableValue == null
+    const columns: DevGridColumn[] = [
+        {
+          dataField: "date",
+          caption: t("date"),
+          dataType: "date",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,        
+          showInPdf:true,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            return cellElement.data.date == null || cellElement.data.date == ""
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.taxableValue));
-          }
+              : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+          },
         },
-       },
-       {
-         dataField: "totalGst",
-         caption: t("Total GST"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
+        {
+          dataField: "vchNos",
+          caption: t("voucher_number"),
+          dataType: "string",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 75,        
+          showInPdf:true,
+        },
+        {
+          dataField: "form",
+          caption: t("form"),
+          dataType: "string",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,        
+          showInPdf:true,
+        },
+        {
+          dataField: "gstPercentage",
+          caption: t("gstperc"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,        
+          showInPdf:true,
+        },
+        {
+          dataField: "taxableValue",
+          caption: t("taxable_value"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,        
+          showInPdf:true,
+          cellRender: (
            cellElement: any,
            cellInfo: any,
            filter: any,
@@ -101,9 +75,9 @@ const PurchaseReturnTaxGSTDailySummary = () => {
          ) => {
            if (exportCell != undefined) {
              const value =
-               cellElement.data?.totalGst == null
+               cellElement.data?.taxableValue == null
                  ? ""
-                 : getFormattedValue(cellElement.data.totalGst);
+                 : getFormattedValue(cellElement.data.taxableValue);
              return {
                ...exportCell,
                text: value,
@@ -111,106 +85,141 @@ const PurchaseReturnTaxGSTDailySummary = () => {
                alignmentExcel: { horizontal: "right" },
              };
            } else {
-             return cellElement.data?.totalGst == null
+             return cellElement.data?.taxableValue == null
                ? ""
-               : getFormattedValue(parseFloat(cellElement.data.totalGst));
+               : getFormattedValue(parseFloat(cellElement.data.taxableValue));
            }
          },
-       },
-       {
-         dataField: "cess",
-         caption: t("Cess"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.cess == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.cess);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.cess == null
-               ? ""
-               : getFormattedValue(parseFloat(cellElement.data.cess));
-           }
-         },
-       },
-       {
-         dataField: "addCess",
-         caption: t("Add Cess"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 80,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.addCess == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.addCess);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.addCess == null
-               ? ""
-               : getFormattedValue(parseFloat(cellElement.data.addCess));
-           }
-         },
-       },
-       {
-         dataField: "total",
-         caption: t("Total"),
-         dataType: "number",
-         allowSearch: true,
-         allowFiltering: true,
-         width: 100,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           if (exportCell != undefined) {
-             const value =
-               cellElement.data?.total == null
-                 ? ""
-                 : getFormattedValue(cellElement.data.total,false,4);
-             return {
-               ...exportCell,
-               text: value,
-               alignment: "right",
-               alignmentExcel: { horizontal: "right" },
-             };
-           } else {
-             return cellElement.data?.total == null
-               ? ""
-               : getFormattedValue(cellElement.data.total,false,4);
-           }
-         },
-       }
-     ];
+        },
+        {
+          dataField: "totalGst",
+          caption: t("total_gst"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 80,        
+          showInPdf:true,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            if (exportCell != undefined) {
+              const value =
+                cellElement.data?.totalGst == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.totalGst);
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              return cellElement.data?.totalGst == null
+                ? ""
+                : getFormattedValue(parseFloat(cellElement.data.totalGst));
+            }
+          },
+        },
+        {
+          dataField: "cess",
+          caption: t("cess_amount"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 80,        
+          showInPdf:true,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            if (exportCell != undefined) {
+              const value =
+                cellElement.data?.cess == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.cess);
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              return cellElement.data?.cess == null
+                ? ""
+                : getFormattedValue(parseFloat(cellElement.data.cess));
+            }
+          },
+        },
+        {
+          dataField: "addCess",
+          caption: t("addcess_amount"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 80,        
+          showInPdf:true,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            if (exportCell != undefined) {
+              const value =
+                cellElement.data?.addCess == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.addCess);
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              return cellElement.data?.addCess == null
+                ? ""
+                : getFormattedValue(parseFloat(cellElement.data.addCess));
+            }
+          },
+        },
+        {
+          dataField: "total",
+          caption: t("total"),
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,        
+          showInPdf:true,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            if (exportCell != undefined) {
+              const value =
+                cellElement.data?.total == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.total,false,4);
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              return cellElement.data?.total == null
+                ? ""
+                : getFormattedValue(cellElement.data.total,false,4);
+            }
+          },
+        }
+      ];
  
    const { getFormattedValue } = useNumberFormat();
    const customizeSummaryRow = useMemo(() => {

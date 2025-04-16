@@ -13,8 +13,8 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
  const [filter, setFilter] = useState<any>(PurchaseReturnGstReportFilterInitialState);
      const columns: DevGridColumn[] = [
        {
-         dataField: "hSN",
-         caption: t("HSN"),
+         dataField: "hsn",
+         caption: t("hsn_code"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
@@ -22,7 +22,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
        },
        {
          dataField: "qty",
-         caption: t("Quantity"),
+         caption: t("quantity"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
@@ -30,7 +30,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
        },
        {
          dataField: "taxableValue",
-         caption: t("Taxable Value"),
+         caption: t("taxable_value"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
@@ -60,8 +60,8 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         },
        },
        {
-         dataField: "cGST",
-         caption: t("CGST"),
+         dataField: "cgst",
+         caption: t("cgst"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
@@ -74,9 +74,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
          ) => {
            if (exportCell != undefined) {
              const value =
-               cellElement.data?.totalGst == null
+               cellElement.data?.cgst == null
                  ? ""
-                 : getFormattedValue(cellElement.data.totalGst);
+                 : getFormattedValue(cellElement.data.cgst);
              return {
                ...exportCell,
                text: value,
@@ -84,15 +84,15 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
                alignmentExcel: { horizontal: "right" },
              };
            } else {
-             return cellElement.data?.totalGst == null
+             return cellElement.data?.cgst == null
                ? ""
-               : getFormattedValue(parseFloat(cellElement.data.totalGst));
+               : getFormattedValue(parseFloat(cellElement.data.cgst));
            }
          },
        },
        {
-        dataField: "sGST",
-        caption: t("SGST"),
+        dataField: "sgst",
+        caption: t("sgst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -105,9 +105,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         ) => {
           if (exportCell != undefined) {
             const value =
-              cellElement.data?.cess == null
+              cellElement.data?.sgst == null
                 ? ""
-                : getFormattedValue(cellElement.data.cess);
+                : getFormattedValue(cellElement.data.sgst);
             return {
               ...exportCell,
               text: value,
@@ -115,15 +115,15 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
               alignmentExcel: { horizontal: "right" },
             };
           } else {
-            return cellElement.data?.cess == null
+            return cellElement.data?.sgst == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cess));
+              : getFormattedValue(parseFloat(cellElement.data.sgst));
           }
         },
       },
       {
-        dataField: "iGST",
-        caption: t("IGST"),
+        dataField: "igst",
+        caption: t("igst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -136,9 +136,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         ) => {
           if (exportCell != undefined) {
             const value =
-              cellElement.data?.cess == null
+              cellElement.data?.igst == null
                 ? ""
-                : getFormattedValue(cellElement.data.cess);
+                : getFormattedValue(cellElement.data.igst);
             return {
               ...exportCell,
               text: value,
@@ -146,15 +146,15 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
               alignmentExcel: { horizontal: "right" },
             };
           } else {
-            return cellElement.data?.cess == null
+            return cellElement.data?.igst == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cess));
+              : getFormattedValue(parseFloat(cellElement.data.igst));
           }
         },
       },
        {
          dataField: "cess",
-         caption: t("Cess"),
+         caption: t("cess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
@@ -185,7 +185,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
        },
        {
          dataField: "addCess",
-         caption: t("Add Cess"),
+         caption: t("addcess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
@@ -216,7 +216,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
        },
        {
          dataField: "total",
-         caption: t("Total"),
+         caption: t("total"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
@@ -247,7 +247,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
        },
        {
         dataField: "financialYearID",
-        caption: t("FinancialYearID"),
+        caption: t("financial_year_id"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -277,7 +277,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
    const customizeDate = (itemInfo: any) => `TOTAL`;
     const _summaryItems: SummaryConfig[] = [
       {
-        column:"hSN",
+        column:"hsn",
         summaryType:"custom",  
         customizeText: customizeDate,
       },
@@ -288,19 +288,19 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         customizeText: customizeSummaryRow,
       },
       {
-        column: "cGST",
+        column: "cgst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
       {
-        column: "sGST",
+        column: "sgst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
       {
-        column: "iGST",
+        column: "igst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
@@ -346,7 +346,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
                {formType > 0 && , Form Type : [formType]}"
                 moreOption
                 gridHeader={t("purchase_return_gst_report")}
-                dataUrl={Urls.purchase_return_gst_daily_summary}
+                dataUrl={Urls.purchase_return_gst_sales_and_return}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}

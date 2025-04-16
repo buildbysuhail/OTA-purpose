@@ -175,10 +175,15 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 export default ERPProductSearch;
 
-// delete
-// key = specialPriceID
-// api = delete_special_price_scheme
+
 // disabl loader
 // virtualscrollin
 // debounce
 // rowwie selection
+// keydown to grid
+
+
+// delete
+// key = specialPriceID
+// api = delete_special_price_scheme
+

@@ -187,7 +187,8 @@ const initialProductData: productDto = {
     showProductDetailesAfterSave: true,
     blockConvertProductNameToUpperCase: false,
     calculateMarkUpValue: true,
-    showDisplayCost: true
+    showDisplayCost: true,
+    showOpeningStock: false
   },
   productImageString: "",
   barcode: "",

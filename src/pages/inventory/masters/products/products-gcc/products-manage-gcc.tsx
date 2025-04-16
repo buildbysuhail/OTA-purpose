@@ -468,10 +468,12 @@ export const ProductManageGcc: React.FC<{
               placeholder="0.00"
               type="number"
               required={false}
+
               onChangeData={(data: any) =>
                 handleFieldChange("batch.openingStock", data.batch.openingStock)
               }
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                debugger;
                 console.log("Key pressed:", e.key, "mr:", getFieldProps("mr")?.value);
                 console.log("switchToMultiRatesTab in onKeyDown:", !!switchToMultiRatesTab);
                 if (
@@ -484,7 +486,7 @@ export const ProductManageGcc: React.FC<{
                   switchToMultiRatesTab();
                 }
               }}
-              disableEnterNavigation={getFieldProps("mr")?.value === true}
+              disableEnterNavigation
             />
           </div>
 

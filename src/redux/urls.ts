@@ -81,7 +81,7 @@ const Urls = {
   data_services: "/Inventory/Data/Services",
   data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
   data_units: "/Inventory/Data/UnitOfMeasures",
-  data_taxCategory:"/Inventory/Data/TaxCategory/",
+  data_taxCategory: "/Inventory/Data/TaxCategory/",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
@@ -336,32 +336,41 @@ const Urls = {
   excess_stock: "/Inventory/RptStockReport/ExcessStockReport/",
   shortage_stock: "/Inventory/RptStockReport/ShortageStockReport/",
   branch_transfer_out: "/Inventory/RptStockReport/BranchTransferOut/",
-  branch_transfer_in:"/Inventory/RptStockReport/BranchTransferIn/",
-  branch_transfer_summary_out:"/Inventory/RptStockReport/BranchTransferSummaryOut/",
-  branch_transfer_summary_in:"/Inventory/RptStockReport/BranchTransferSummaryIn/",
-  sales_summary:"/Inventory/RptSalesReport/SalesSummary/",
-  sales_tax_report_summary:"/Inventory/RptSalesReport/TaxReportSalesSummary/",
-  sales_tax_report_detailed:"/Inventory/RptSalesReport/TaxReportSalesDetailed/",
+  branch_transfer_in: "/Inventory/RptStockReport/BranchTransferIn/",
+  branch_transfer_summary_out: "/Inventory/RptStockReport/BranchTransferSummaryOut/",
+  branch_transfer_summary_in: "/Inventory/RptStockReport/BranchTransferSummaryIn/",
+  sales_summary: "/Inventory/RptSalesReport/SalesSummary/",
+  sales_tax_report_summary: "/Inventory/RptSalesReport/TaxReportSalesSummary/",
+  sales_tax_report_detailed: "/Inventory/RptSalesReport/TaxReportSalesDetailed/",
+  sales_return_summary: "/Inventory/RptSalesReport/SalesReturnSummary/",
+  sales_return_register: "/Inventory/RptSalesReport/SalesReturnRegister/",
+  sales_and_sales_return: "/Inventory/RptSalesReport/SalesAndSalesReturnReport/",
+  sales_order_summary: "/Inventory/RptSalesReport/SalesOrderSummary/",
+  sales_estimate_summary: "/Inventory/RptSalesReport/SalesEstimateSummary/",
+  sales_quotation_summary: "/Inventory/RptSalesReport/SalesQuotationSummary/",
+  substitute_report: "/Inventory/RptSalesReport/SubstituteSummary/",
+  daywise_summary_with_profit: "/Inventory/RptSalesReport/DaywiseSalesSummaryWithProfit/",
+  groupwise_sales_summary_devexpress: "/Inventory/RptSalesReport/GroupWiseSalesDevexpress/",
 
-  sales_register:"/Inventory/RptSalesReport/SalesRegister/",
-  net_sales:"/Inventory/RptSalesReport/NetSalesReport/",
-  partywise_sales:"/Inventory/RptSalesReport/PartywiseSales/",
-  purchase_gst_daily_summary:"/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
-  purchase_gst_taxwise:"/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
-  purchase_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
-  purchase_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
-  purchase_gst_detailed:"/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
-  purchase_gst_register_format:"/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
-  purchase_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
-  purchase_return_gst_daily_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
-  purchase_return_gst_taxwise:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
-  purchase_return_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
-  purchase_return_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
-  purchase_return_gst_detailed:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
-  purchase_return_gst_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
-  purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
-  vat_return_form:"/Inventory/RptTAXReport/VatReturnForm",
-  vat_return_form_arabic:"/Inventory/RptTAXReport/VatReturnFormArabic",
+  sales_register: "/Inventory/RptSalesReport/SalesRegister/",
+  net_sales: "/Inventory/RptSalesReport/NetSalesReport/",
+  partywise_sales: "/Inventory/RptSalesReport/PartywiseSales/",
+  purchase_gst_daily_summary: "/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
+  purchase_gst_taxwise: "/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
+  purchase_gst_taxwise_with_hsn: "/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
+  purchase_gst_monthly_summary: "/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
+  purchase_gst_detailed: "/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
+  purchase_gst_register_format: "/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
+  purchase_gst_adv_register_format: "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  purchase_return_gst_daily_summary: "/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
+  purchase_return_gst_taxwise: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
+  purchase_return_gst_taxwise_with_hsn: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
+  purchase_return_gst_monthly_summary: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
+  purchase_return_gst_detailed: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
+  purchase_return_gst_register_format: "/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
+  purchase_return_gst_adv_register_format: "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
+  vat_return_form_arabic: "/Inventory/RptTAXReport/VatReturnFormArabic",
 
   //Report End
   //Inventory Reports Starts
@@ -431,7 +440,7 @@ const Urls = {
   delete_special_price_scheme: "/Inventory/SpecialPrice/",            // DELETE
   load_product_details: "/Inventory/SpecialPrice/LoadProductDetails/",                 // GET (with body + query)
   select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/", // GET
-  
+
 
   //Transaction
   // common

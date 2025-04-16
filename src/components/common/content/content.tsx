@@ -180,6 +180,9 @@ import TestSearch from "../../../pages/inventory/masters/test/test-search";
 
 import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
+import SalesAndSalesReturn from "../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return";
+import DaywiseSummaryWithProfit from "../../../pages/inventory/reports/daywise-summary-with-profit-report/daywise-summary-with-profit";
+import GroupwiseSalesSummaryDevexpress from "../../../pages/inventory/reports/groupwise-sales-summary-devexpress-filter/groupwise-sales-summary-devexpress";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -500,6 +503,17 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/partywise_sales_report" element={<PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />} />
         <Route path="/inventory/sales_tax_report_summary" element={<TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />} />
         <Route path="/inventory/sales_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />} />
+        <Route path="/inventory/sales_return_summary" element={<SummaryReport dataUrl={urls.sales_return_summary} gridHeader="sales_return_summary" gridId="grd_sales_return_summary" />} />
+        <Route path="/inventory/sales_return_register" element={<RegisterReport dataUrl={urls.sales_return_register} gridHeader="sales_return_register" gridId="grd_sales_return_register" />} />
+        <Route path="/inventory/sales_and_sales_return_report" element={<SalesAndSalesReturn />} />
+        <Route path="/inventory/sales_order_summary_report" element={<SummaryReport dataUrl={urls.sales_order_summary} gridHeader="sales_order_summary" gridId="grd_sales_order_summary" />} />
+        {/* global */}
+        <Route path="/inventory/sales_estimate_summary_report" element={<SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />} />
+        {/* --- */}
+        <Route path="/inventory/sales_quotation_summary_report" element={<SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />} />
+        <Route path="/inventory/substitute_report" element={<SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />} />
+        <Route path="/inventory/daywise_summary_with_profit_report" element={<DaywiseSummaryWithProfit />} />
+        <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />

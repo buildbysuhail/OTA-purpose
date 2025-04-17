@@ -100,15 +100,10 @@ const ListedProductPrices = lazy(() => import("../../../pages/inventory/masters/
 //transaction
 const PostDatedCheques = lazy(() => import("../../../pages/accounts/transactions/acc-post-dated-cheques"));
 // Inventory Reports
-import PurchaseSummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
-import PurchaseRegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
 import PartyWiseReport from "../../../pages/inventory/reports/party-wise-report/party-wise-report";
-import PurchaseTaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
-import PurchaseTaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
 import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
 import PurchaseEstimateSummary from "../../../pages/inventory/reports/purchase-estimate-summary-report/purchase-estimate-summary";
-import PurchaseOrderSummary from "../../../pages/inventory/reports/purchase-order-summary-report/purchase-order-summary";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -148,7 +143,6 @@ import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit
 import DailyStatementAllReport from "../../../pages/inventory/reports/daily-statement-all-report/daily-statement-all-report ";
 import DailyStatementPurchaseReport from "../../../pages/inventory/reports/daily-statement-purchase-report/daily-statement-purchase-report";
 import DailySalesStatementReport from "../../../pages/inventory/reports/daily-statement-sales-report/daily-statement-sales-report";
-import PartyMonthwisePurchaseSummaryReport from "../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report";
 import PurchaseOrderTransitReport from "../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/inventory/reports/Purchase-Tax-report/Purchase-Tax-report";
 import PurchaseTaxGSTDailySummary from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report";
@@ -166,18 +160,15 @@ import PurchaseReturnTaxGSTTaxwise from "../../../pages/inventory/reports/purcha
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
-import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form";
 import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
 import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
 import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
 import SummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
 import RegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
-import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
 import TestSearch from "../../../pages/inventory/masters/test/test-search";
-
 import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 import SalesAndSalesReturn from "../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return";
@@ -186,6 +177,17 @@ import GroupwiseSalesSummaryDevexpress from "../../../pages/inventory/reports/gr
 import { GroupwiseSalesSummaryDevexpressFilterInitialState } from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-devexpress-filter";
 import GroupwiseSalesSummary from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
+import SalesmanwiseSalesAndCollection from "../../../pages/inventory/reports/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection";
+import NonInvoicedGoodsDelivery from "../../../pages/inventory/reports/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery";
+import PendingOrderReport from "../../../pages/inventory/reports/pending-order-report/pending-order";
+import PromotionalSalesReport from "../../../pages/inventory/reports/promotional-sales-report/promotional-sales";
+import GroupedBrandwiseSales from "../../../pages/inventory/reports/grouped-brandwise-sales-report/grouped-brandwise-sales";
+import PartyMonthwiseSummaryReport from "../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report";
+import CouponReports from "../../../pages/inventory/reports/coupon-report/coupon-report";
+import SchemeWiseSales from "../../../pages/inventory/reports/scheme-wise-sales-report/scheme-wise-sales";
+import SalesTax from "../../../pages/inventory/reports/sales-tax-report/sales-tax";
+import KsaEInvoiceReportSummary from "../../../pages/inventory/reports/ksa-e-invoice-report/ksa-e-invoice-summary.tsx";
+import KsaEInvoiceReportDetailed from "../../../pages/inventory/reports/ksa-e-invoice-report/ksa-e-invoice-detailed";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -492,7 +494,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />} />
         {/* global */}
-        <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary"/>} />
+        <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />} />
         {/* global end */}
         <Route path="/inventory/product_summary_master" element={<ProductSummaryMaster />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
@@ -519,14 +521,26 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/sales_quotation_summary_report" element={<SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />} />
         <Route path="/inventory/substitute_report" element={<SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />} />
         <Route path="/inventory/daywise_summary_with_profit_report" element={<DaywiseSummaryWithProfit />} />
-        <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress/>} />
-        <Route path="/inventory/groupwise_sales_summary_report_groupwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{...GroupwiseSalesSummaryFilterInitialState}} />}/>
-        <Route path="/inventory/groupwise_sales_summary_report_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isCategorywise: true}} />}/>
-        <Route path="/inventory/groupwise_sales_summary_report_sectionwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isSectionwise: true}} />}/>
-        <Route path="/inventory/groupwise_sales_summary_report_brandwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isBrandwise: true}} />}/>
-        <Route path="/inventory/groupwise_sales_summary_report_product_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isProductCatwise: true}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} />
+        <Route path="/inventory/groupwise_sales_summary_report_groupwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState }} />} />
+        <Route path="/inventory/groupwise_sales_summary_report_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryDevexpressFilterInitialState, isCategorywise: true }} />} />
+        <Route path="/inventory/groupwise_sales_summary_report_sectionwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{ ...GroupwiseSalesSummaryDevexpressFilterInitialState, isSectionwise: true }} />} />
+        <Route path="/inventory/groupwise_sales_summary_report_brandwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{ ...GroupwiseSalesSummaryDevexpressFilterInitialState, isBrandwise: true }} />} />
+        <Route path="/inventory/groupwise_sales_summary_report_product_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryDevexpressFilterInitialState, isProductCatwise: true }} />} />
+        <Route path="/inventory/salesman_wise_sales_and_collection_report" element={<SalesmanwiseSalesAndCollection />} />
+        <Route path="/inventory/non_invoiced_goods_delivery_report" element={<NonInvoicedGoodsDelivery />} />
         {/* <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} />
         <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} /> */}
+        <Route path="/inventory/booking_summary_report" element={<SummaryReport dataUrl={urls.booking_summary} gridHeader="booking_summary" gridId="grd_booking_summary" />} />
+        <Route path="/inventory/pending_order_report" element={<PendingOrderReport />} />
+        <Route path="/inventory/promotional_sales_report" element={<PromotionalSalesReport />} />
+        <Route path="/inventory/grouped_brandwise_sales_report" element={<GroupedBrandwiseSales />} />
+        <Route path="/inventory/party_monthwise_sales_summary_report" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />} />
+        <Route path="/inventory/coupon_reports" element={<CouponReports />} />
+        <Route path="/inventory/scheme_wise_sales_report" element={<SchemeWiseSales />} />
+        <Route path="/inventory/sales_tax_report" element={<SalesTax />} />
+        <Route path="/inventory/ksa_e_invoice_summary_report" element={<KsaEInvoiceReportSummary />} />
+        <Route path="/inventory/ksa_e_invoice_detailed_report" element={<KsaEInvoiceReportDetailed />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
@@ -565,7 +579,7 @@ const Content: FC<ContentProps> = () => {
         {/* Inventory Masters */}
         <Route path="/inventory/purchase_tax_vat" element={<PurchaseTaxReport />} />
         <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
-        <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwisePurchaseSummaryReport />} />
+        <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />} />
         <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />

@@ -6,14 +6,33 @@ import { ActionType } from "../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import PendingOrderReportFilter, { PendingOrderReportFilterInitialState } from "./pending-order-filter";
+import PromotionalSalesReportFilter, { PromotionalSalesReportFilterInitialState } from "./promotional-sales-filter";
 
-const PendingOrderReport = () => {
+const PromotionalSalesReport = () => {
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
         {
-            dataField: "si",
-            caption: t("sl_no"),
+            dataField: "masterID",
+            caption: t("master_id"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            visible: false,
+            width: 100,
+        },
+        {
+            dataField: "date",
+            caption: t("date"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 80,
+        },
+        {
+            dataField: "vchNo",
+            caption: t("vch_no"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
@@ -21,67 +40,13 @@ const PendingOrderReport = () => {
             width: 50,
         },
         {
-            dataField: "financialYearID",
-            caption: t("financial_year_id"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-        {
-            dataField: "invTransactionMasterID",
-            caption: t("transaction_master_id"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "branchID",
-            caption: t("branch_id"),
-            dataType: "number",
+            dataField: "form",
+            caption: t("form"),
+            dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-        },
-        {
-            dataField: "transactionDate",
-            caption: t("transaction_date"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-        {
-            dataField: "voucherType",
-            caption: t("voucher_type"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-        {
-            dataField: "voucherNumber",
-            caption: t("voucher_number"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-        {
-            dataField: "remarks",
-            caption: t("remarks"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
         },
         {
             dataField: "party",
@@ -90,88 +55,34 @@ const PendingOrderReport = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 180,
+            width: 150,
         },
         {
-            dataField: "productCode",
-            caption: t("product_code"),
-            dataType: "number",
+            dataField: "address1",
+            caption: t("address_1"),
+            dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
         },
         {
-            dataField: "productName",
-            caption: t("product_name"),
+            dataField: "address2",
+            caption: t("address_2"),
             dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "autoBarcode",
-            caption: t("auto_barcode"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "mannualBarcode",
-            caption: t("mannual_barcode"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "productNameDuplicate",
-            caption: t("product_name_duplicate"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "pendingQty",
-            caption: t("pending_qty"),
-            dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
         },
         {
-            dataField: "unitName",
-            caption: t("unit_name"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 80,
-        },
-        {
-            dataField: "quantity",
-            caption: t("quantity"),
+            dataField: "detailID",
+            caption: t("detail_id"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 80,
-        },
-        {
-            dataField: "free",
-            caption: t("free"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 80,
+            width: 100,
         },
         {
             dataField: "unitPrice",
@@ -183,22 +94,67 @@ const PendingOrderReport = () => {
             width: 100,
         },
         {
-            dataField: "totalGross",
-            caption: t("total_gross"),
+            dataField: "productCode",
+            caption: t("product_code"),
             dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 70,
+        },
+        {
+            dataField: "product",
+            caption: t("product"),
+            dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
         },
         {
-            dataField: "totalVatAmount",
-            caption: t("total_vat_amount"),
+            dataField: "productGroup",
+            caption: t("product_group"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "brand",
+            caption: t("brand"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "quantity",
+            caption: t("quantity"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 80,
+        },
+        {
+            dataField: "unitCode",
+            caption: t("unit_code"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "unitPrice1",
+            caption: t("unit_price"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
         },
         {
             dataField: "netAmount",
@@ -207,61 +163,124 @@ const PendingOrderReport = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
+            width: 80,
+        },
+        {
+            dataField: "grossValue",
+            caption: t("gross_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 80,
+        },
+        {
+            dataField: "counterName",
+            caption: t("counter_name"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
             width: 100,
         },
         {
-            dataField: "supplierRefCode",
-            caption: t("supplier_ref_code"),
+            dataField: "routeName",
+            caption: t("route_name"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
         },
         {
-            dataField: "brandName",
-            caption: t("brand_name"),
-            dataType: "string",
+            dataField: "financialYearID",
+            caption: t("financial_year_id"),
+            dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
         },
         {
-            dataField: "groupName",
-            caption: t("group_name"),
-            dataType: "string",
+            dataField: "autoBarcode",
+            caption: t("auto_barcode"),
+            dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 90,
         },
         {
-            dataField: "productCategory",
-            caption: t("product_category"),
+            dataField: "branchName",
+            caption: t("branch_name"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
         },
         {
-            dataField: "groupCategory",
-            caption: t("group_category"),
+            dataField: "productDescription",
+            caption: t("product_description"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
         },
         {
-            dataField: "section",
-            caption: t("section"),
+            dataField: "colour",
+            caption: t("colour"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
+        },
+        {
+            dataField: "warranty",
+            caption: t("warranty"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "stdPurchasePrice",
+            caption: t("std_purchase_price"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "stdSalesPrice",
+            caption: t("std_sales_price"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "stdGross",
+            caption: t("std_gross"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 80,
+        },
+        {
+            dataField: "priceDiff",
+            caption: t("price_diff"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 80,
         },
     ];
 
@@ -278,37 +297,31 @@ const PendingOrderReport = () => {
 
     const summaryItems: SummaryConfig[] = [
         {
-            column: "pendingQty",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
             column: "quantity",
             summaryType: "sum",
             valueFormat: "fixedPoint",
             customizeText: customizeSummaryRow,
         },
         {
-            column: "free",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "totalGross",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "totalVatAmount",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
             column: "netAmount",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "grossValue",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "stdGross",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "priceDiff",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
@@ -326,18 +339,18 @@ const PendingOrderReport = () => {
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}
-                                gridHeader={t("pending_order_report")}
-                                dataUrl={Urls.pending_order}
+                                gridHeader={t("promotional_sales_report")}
+                                dataUrl={Urls.promotional_sales}
                                 hideGridAddButton={true}
                                 enablefilter={true}
                                 showFilterInitially={true}
                                 method={ActionType.POST}
-                                filterContent={<PendingOrderReportFilter />}
-                                filterWidth={350}
-                                filterHeight={270}
-                                filterInitialData={PendingOrderReportFilterInitialState}
+                                filterContent={<PromotionalSalesReportFilter />}
+                                filterWidth={790}
+                                filterHeight={450}
+                                filterInitialData={PromotionalSalesReportFilterInitialState}
                                 reload={true}
-                                gridId="grd_pending_order_report"
+                                gridId="grd_promotional_sales_report"
                             />
                         </div>
                     </div>
@@ -347,4 +360,4 @@ const PendingOrderReport = () => {
     );
 };
 
-export default PendingOrderReport;
+export default PromotionalSalesReport;

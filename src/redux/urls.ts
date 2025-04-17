@@ -3,7 +3,6 @@ import config from "../config";
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;
 export const companyName = import.meta.env.VITE_COMPANY_NAME;
-
 export const cdnUrl = import.meta.env.VITE_CDN_URL;
 export const projectName = import.meta.env.VITE_PROJECT_NAME;
 
@@ -325,8 +324,8 @@ const Urls = {
   item_wise_purchase_return_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseReturnSummary/",
   item_wise_purchase_order_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
   item_wise_purchase_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
-  item_wise_purchase_quotation_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",   
-  item_wise_purchase_return_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseReturnEstimate/",   
+  item_wise_purchase_quotation_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
+  item_wise_purchase_return_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseReturnEstimate/",
   product_summary_transaction: "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/",
   product_summary_basic_info: "/Inventory/RptInventoryReport/ProductSummaryReportBasicInfo/",
   product_summary_basic_info_batch_details: "/Inventory/RptInventoryReport/ProductSummaryReportBasicInfoBatchDetails/",
@@ -353,10 +352,18 @@ const Urls = {
   daywise_summary_with_profit: "/Inventory/RptSalesReport/DaywiseSalesSummaryWithProfit/",
   groupwise_sales_summary_devexpress: "/Inventory/RptSalesReport/GroupWiseSalesDevexpress/",
   groupwise_sales_summary: "/Inventory/RptSalesReport/GroupWiseSales/",
-  salesmanwise_sales_and_collection:"/Inventory/RptSalesReport/SalesmanwiseSalesAndCollection/",
-  non_invoiced_goods_delivery:"/Inventory/RptSalesReport/NonInvoicedGoodsDelivery/",
-  booking_summary:"/Inventory/RptSalesReport/SalesBookingSummary/",
-  pending_order:"/Inventory/RptSalesReport/PendingOrderReport/",
+  salesmanwise_sales_and_collection: "/Inventory/RptSalesReport/SalesmanwiseSalesAndCollection/",
+  non_invoiced_goods_delivery: "/Inventory/RptSalesReport/NonInvoicedGoodsDelivery/",
+  booking_summary: "/Inventory/RptSalesReport/SalesBookingSummary/",
+  pending_order: "/Inventory/RptSalesReport/PendingOrderReport/",
+  promotional_sales: "/Inventory/RptSalesReport/PromotionalSalesReport/",
+  grouped_brandwise_sales: "/Inventory/RptSalesReport/GroupedBrandwiseSalesReport/",
+  party_monthwise_sales_summary: "/Inventory/RptSalesReport/GroupedBrandwiseSalesReport/",
+  coupon_reports: "/Inventory/RptSalesReport/CouponReports/",
+  scheme_wise_sales: "/Inventory/RptSalesReport/SchemewiseSalesReport/",
+  sales_tax: "/Inventory/RptSalesReport/SalesTaxReport/",
+  ksa_e_invoice_summary: "/Inventory/RptSalesReport/KSAEinvoiceStatusReportSummary/",
+  ksa_e_invoice_detailed: "/Inventory/RptSalesReport/KSAEinvoiceStatusReportDetailed/",
 
   sales_register: "/Inventory/RptSalesReport/SalesRegister/",
   net_sales: "/Inventory/RptSalesReport/NetSalesReport/",
@@ -375,7 +382,7 @@ const Urls = {
   purchase_return_gst_detailed: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
   purchase_return_gst_register_format: "/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format: "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
-  purchase_return_gst_sales_and_return:"/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
+  purchase_return_gst_sales_and_return: "/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
   vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic: "/Inventory/RptTAXReport/VatReturnFormArabic",
 
@@ -444,7 +451,7 @@ const Urls = {
   select_product_by_barcode: "/Inventory/SpecialPrice/ByBarcode/",           // GET
   select_item_for_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/ByGroupId/", // GET
   select_price_schemes_for_combo: "/Inventory/SpecialPrice/SpecialPriceCombo/",        // GET
-  delete_special_price_scheme: "/Inventory/SpecialPrice/",            // DELETE
+  delete_special_price_scheme: "/Inventory/SpecialPrice/",                             // DELETE
   load_product_details: "/Inventory/SpecialPrice/LoadProductDetails/",                 // GET (with body + query)
   select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/", // GET
 
@@ -456,7 +463,7 @@ const Urls = {
   delete_quantity_discount_scheme: "/Inventory/FOC/",                                // DELETE (append {qtyDiscountId})
   select_scheme_qty_details_by_id: "/Inventory/FOC/SelectSchemeQtyDetailsByID",      // GET (use ?schemeId=)
   load_product_details_foc: "/Inventory/FOC/LoadProductDetails",                         // POST (with query params for DataSourceLoadOptions)
-  select_foc_product_batch_grid_foc: "/Inventory/FOC/LoadBatchDetails/",   
+  select_foc_product_batch_grid_foc: "/Inventory/FOC/LoadBatchDetails/",
 
 
   //Transaction

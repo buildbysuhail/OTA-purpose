@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { FC, Fragment } from "react"
 import PartyMonthwisePurchaseSummaryReportFilter, { PartyMonthwisePurchaseSummaryReportFilterInitialState } from "./Party-monthwise-purchase-summary-report-filter"
 import { DevGridColumn } from "../../../../components/types/dev-grid-column"
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid"
@@ -8,7 +8,13 @@ import { ActionType } from "../../../../redux/types"
 import Urls from "../../../../redux/urls"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 
-const PartyMonthwisePurchaseSummaryReport = () => {
+interface PartyMonthwiseSummaryReportProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+
+const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
 
@@ -181,7 +187,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
+          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
         }
       },
     },
@@ -219,7 +225,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.grandTotal == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
+          return (cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
         }
       },
     },
@@ -235,10 +241,10 @@ const PartyMonthwisePurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("party_monthwise_purchase_summary")}
-                  dataUrl={Urls.party_monthwise_purchase_summary}
+                  gridHeader={t(gridHeader)}
+                  dataUrl={dataUrl}
                   method={ActionType.POST}
-                  gridId={GridId.party_monthwise_purchase_summary}
+                  gridId={gridId}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={400}
@@ -257,5 +263,5 @@ const PartyMonthwisePurchaseSummaryReport = () => {
   )
 }
 
-export default PartyMonthwisePurchaseSummaryReport
+export default PartyMonthwiseSummaryReport
 

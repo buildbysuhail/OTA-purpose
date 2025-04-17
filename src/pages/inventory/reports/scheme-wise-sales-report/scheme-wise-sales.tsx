@@ -6,37 +6,20 @@ import { ActionType } from "../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import PendingOrderReportFilter, { PendingOrderReportFilterInitialState } from "./pending-order-filter";
+import SchemeWiseSalesFilter, { SchemeWiseSalesFilterInitialState } from "./scheme-wise-sales-filter";
 
-const PendingOrderReport = () => {
+const SchemeWiseSales = () => {
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
         {
-            dataField: "si",
-            caption: t("sl_no"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 50,
-        },
-        {
-            dataField: "financialYearID",
-            caption: t("financial_year_id"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-        {
             dataField: "invTransactionMasterID",
-            caption: t("transaction_master_id"),
+            caption: t("inv_transaction_master_id"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            visible: false,
+            width: 100,
         },
         {
             dataField: "branchID",
@@ -68,15 +51,15 @@ const PendingOrderReport = () => {
         {
             dataField: "voucherNumber",
             caption: t("voucher_number"),
-            dataType: "number",
+            dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
         },
         {
-            dataField: "remarks",
-            caption: t("remarks"),
+            dataField: "partyName",
+            caption: t("party_name"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
@@ -84,18 +67,9 @@ const PendingOrderReport = () => {
             width: 150,
         },
         {
-            dataField: "party",
-            caption: t("party"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
             dataField: "productCode",
             caption: t("product_code"),
-            dataType: "number",
+            dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
@@ -108,7 +82,7 @@ const PendingOrderReport = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 180,
+            width: 150,
         },
         {
             dataField: "autoBarcode",
@@ -117,7 +91,7 @@ const PendingOrderReport = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
         },
         {
             dataField: "mannualBarcode",
@@ -129,22 +103,13 @@ const PendingOrderReport = () => {
             width: 120,
         },
         {
-            dataField: "productNameDuplicate",
-            caption: t("product_name_duplicate"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "pendingQty",
-            caption: t("pending_qty"),
+            dataField: "quantity",
+            caption: t("quantity"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 100,
+            width: 80,
         },
         {
             dataField: "unitName",
@@ -156,13 +121,13 @@ const PendingOrderReport = () => {
             width: 80,
         },
         {
-            dataField: "quantity",
-            caption: t("quantity"),
+            dataField: "actualPrice",
+            caption: t("actual_price"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 80,
+            width: 100,
         },
         {
             dataField: "free",
@@ -183,8 +148,8 @@ const PendingOrderReport = () => {
             width: 100,
         },
         {
-            dataField: "totalGross",
-            caption: t("total_gross"),
+            dataField: "rateWithTax",
+            caption: t("rate_with_tax"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
@@ -192,13 +157,40 @@ const PendingOrderReport = () => {
             width: 100,
         },
         {
-            dataField: "totalVatAmount",
-            caption: t("total_vat_amount"),
+            dataField: "grossValue",
+            caption: t("gross_value"),
             dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 120,
+            width: 100,
+        },
+        {
+            dataField: "discount",
+            caption: t("discount"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "netValue",
+            caption: t("net_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "vat",
+            caption: t("vat"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 80,
         },
         {
             dataField: "netAmount",
@@ -208,60 +200,6 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
-        {
-            dataField: "supplierRefCode",
-            caption: t("supplier_ref_code"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "brandName",
-            caption: t("brand_name"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "groupName",
-            caption: t("group_name"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "productCategory",
-            caption: t("product_category"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "groupCategory",
-            caption: t("group_category"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "section",
-            caption: t("section"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
         },
     ];
 
@@ -278,12 +216,6 @@ const PendingOrderReport = () => {
 
     const summaryItems: SummaryConfig[] = [
         {
-            column: "pendingQty",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
             column: "quantity",
             summaryType: "sum",
             valueFormat: "fixedPoint",
@@ -296,13 +228,25 @@ const PendingOrderReport = () => {
             customizeText: customizeSummaryRow,
         },
         {
-            column: "totalGross",
+            column: "grossValue",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
         },
         {
-            column: "totalVatAmount",
+            column: "discount",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "netValue",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "vat",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
@@ -326,18 +270,18 @@ const PendingOrderReport = () => {
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}
-                                gridHeader={t("pending_order_report")}
-                                dataUrl={Urls.pending_order}
+                                gridHeader={t("scheme_wise_sales")}
+                                dataUrl={Urls.scheme_wise_sales}
                                 hideGridAddButton={true}
                                 enablefilter={true}
                                 showFilterInitially={true}
                                 method={ActionType.POST}
-                                filterContent={<PendingOrderReportFilter />}
-                                filterWidth={350}
-                                filterHeight={270}
-                                filterInitialData={PendingOrderReportFilterInitialState}
+                                filterContent={<SchemeWiseSalesFilter />}
+                                filterWidth={340}
+                                filterHeight={170}
+                                filterInitialData={SchemeWiseSalesFilterInitialState}
                                 reload={true}
-                                gridId="grd_pending_order_report"
+                                gridId="grd_scheme_wise_sales"
                             />
                         </div>
                     </div>
@@ -347,4 +291,4 @@ const PendingOrderReport = () => {
     );
 };
 
-export default PendingOrderReport;
+export default SchemeWiseSales;

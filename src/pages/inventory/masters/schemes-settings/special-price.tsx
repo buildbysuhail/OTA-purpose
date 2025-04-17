@@ -29,21 +29,22 @@ export const initialSpecialPrice: {
     groupID: "",
     schemeID: 0,
     barcode: "",
-    unitID: "",
-    price: 0,
+    unitID: 0,
+    salesPrice: 0,
     groupPrice: 0,
     nameCode: "",
-    code: false,
+    searchByCode: false,
     product: "",
     batchID: 0,
     stdSalesPrice: 0,
     stdPurchasePrice: 0,
+    unitName: ""
   },
   validations: {
     group: "",
     scheme: "",
     barcode: "",
-    price: "",
+    salesPrice: "",
   },
 };
 
@@ -52,11 +53,12 @@ export interface SpecialPriceData {
   isGroup: boolean;
   groupID: string;
   barcode: string;
-  unitID: string;
-  price: number;
+  unitID: number;
+  unitName: string;
+  salesPrice: number;
   groupPrice: number;
   nameCode: string;
-  code: boolean;
+  searchByCode: boolean;
   product: string;
   batchID: number;
   stdSalesPrice: number;
@@ -72,6 +74,7 @@ export const SpecialPrice: React.FC = () => {
     isEdit,
     handleSubmit,
     handleFieldChange,
+    handleDataChange,
     handleClear: clearForm,
     getFieldProps,
     isLoading,
@@ -144,7 +147,7 @@ export const SpecialPrice: React.FC = () => {
         // Or however you access it
         schemeID: obj.schemeID,
         productBatchID: obj.batchID,
-        salesPrice: obj.stdSalesPrice,
+        salesPrice: obj.salesPrice,
         groupID: isNullOrUndefinedOrEmpty(obj.groupID) ? 0 : obj.groupID,
         unitID: isNullOrUndefinedOrEmpty(obj.unitID) ? 0 : obj.unitID,
       };
@@ -219,11 +222,7 @@ export const SpecialPrice: React.FC = () => {
               handleFieldChange("groupPrice", parseFloat(data.groupPrice))
             }
           />
-          <ERPCheckbox
-            {...getFieldProps("code")}
-            label={t("code")}
-            onChangeData={(data: any) => handleFieldChange("code", data.code)}
-          />
+          
         </div>
 
         <ERPDataCombobox
@@ -240,13 +239,31 @@ export const SpecialPrice: React.FC = () => {
             handleFieldChange("schemeID", data.schemeID);
           }}
         />
-
+<ERPCheckbox
+            {...getFieldProps("searchByCode")}
+            label={t("searchByCode")}
+            onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
+          />
 <ERPProductSearch
         type="text"
         id='test'
         keyId='testserch'
         placeholder="Search Here"
         productDataUrl={Urls.load_product_details}
+        // searchByCode={getFieldProps("searchByCode").value}
+        // onRowSelected={(data:any) => {
+        //   const obj = getFieldProps("*");
+        //   handleDataChange({...obj,
+        //     unitID: data.unitID,
+        //     unitName: data.unit,
+        //     barcode: data.autoBarcode,
+        //     salesPrice: data.sPrice,
+        //     stdSalesPrice: data.sPrice,
+        //     stdPurchasePrice: data.PPrice,
+
+        //   } as SpecialPriceData)
+        // }}
+        batchDataUrl={Urls.select_foc_product_batch_grid}
       />
       </div>
 
@@ -260,11 +277,11 @@ export const SpecialPrice: React.FC = () => {
         />
 
         <ERPInput
-          {...getFieldProps("price")}
-          label={t("price")}
+          {...getFieldProps("salesPrice")}
+          label={t("salesPrice")}
           type="number"
           onChangeData={(data: any) =>
-            handleFieldChange("price", parseFloat(data.price))
+            handleFieldChange("salesPrice", parseFloat(data.salesPrice))
           }
         />
 
@@ -272,6 +289,7 @@ export const SpecialPrice: React.FC = () => {
           {...getFieldProps("unit")}
           label={t("unit")}
           type="number"
+          disabled
           onChangeData={(data: any) =>
             handleFieldChange("unit", parseFloat(data.unit))
           }
@@ -279,6 +297,7 @@ export const SpecialPrice: React.FC = () => {
 
         <ERPInput
           {...getFieldProps("stdSalesPrice")}
+          readOnly
           label={t("std_sales_price")}
           type="number"
           onChangeData={(data: any) =>
@@ -288,6 +307,7 @@ export const SpecialPrice: React.FC = () => {
 
         <ERPInput
           {...getFieldProps("stdPurchasePrice")}
+          readOnly
           label={t("std_purchase_price")}
           type="number"
           onChangeData={(data: any) =>
@@ -352,7 +372,7 @@ export const SpecialPrice: React.FC = () => {
           <Column
             dataField="stdSalesPrice"
             width={100}
-            caption={t("price")}
+            caption={t("salesPrice")}
           />
           <Column dataField="salesPrice" width={100} caption={t("scheme_price")} />
           <Column caption="X" cellRender={renderDeleteCell} width={30} />

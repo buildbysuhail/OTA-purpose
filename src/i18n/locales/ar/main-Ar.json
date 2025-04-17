@@ -507,5 +507,22 @@
   "shortage_stock_report": "تقرير نقص المخزون",
   "branch_transfer_out_report": "تقرير نقل الفروع الخارجية",
   "schemes_settings_special": "إعدادات العروض - خاص",
-  "schemes_settings_discount": "إعدادات المخططات - الخصم"
+  "schemes_settings_discount": "إعدادات المخططات - الخصم",
+
+  "purchase_gst_advance_register_format_report": "تقرير تنسيق سجل ضريبة الشراء المتقدم",
+  "purchase_gst_daily_summary_report": "تقرير ملخص ضريبة الشراء اليومي",
+  "purchase_gst_detailed_report": "تقرير ضريبة الشراء التفصيلي",
+  "purchase_gst_monthly_summary_report": "تقرير ملخص ضريبة الشراء الشهري",
+  "purchase_gst_register_format_report": "تقرير تنسيق سجل ضريبة الشراء",
+  "purchase_gst_taxwise_report": "تقرير ضريبة الشراء حسب الضريبة",
+  "purchase_gst_taxwise_with_hsn_report": "تقرير ضريبة الشراء حسب الضريبة مع رمز HSN",
+
+  "purchase_return_gst_adv_register_format_report": "تقرير تنسيق سجل ضريبة مرتجع الشراء المتقدم",
+  "purchase_return_gst_daily_summary_report": "تقرير ملخص ضريبة مرتجع الشراء اليومي",
+  "purchase_return_gst_detailed_report": "تقرير ضريبة مرتجع الشراء التفصيلي",
+  "purchase_return_gst_monthly_summary_report": "تقرير ملخص ضريبة مرتجع الشراء الشهري",
+  "purchase_return_gst_register_format_report": "تقرير تنسيق سجل ضريبة مرتجع الشراء",
+  "purchase_return_gst_taxwise_report": "تقرير ضريبة مرتجع الشراء حسب الضريبة",
+  "purchase_return_gst_taxwise_with_hsn_report": "تقرير ضريبة مرتجع الشراء حسب الضريبة مع رمز HSN",
+  "purchase_return_gst_sales_and_return_report": "تقرير ضريبة مبيعات ومرتجعات الشراء"
 }

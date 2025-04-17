@@ -14,117 +14,120 @@ const PurchaseTaxGSTTaxwise = () => {
  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
      const columns: DevGridColumn[] = [
       {
-        dataField: "iD",
-        caption: t("Form"),
+        dataField: "id",
+        caption: t("id"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        visible:false,
       },
       {
         dataField: "vchNo",
-        caption: t("VoucherNumber"),
+        caption: t("voucher_number"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+        showInPdf:true,
       },
        {
          dataField: "date",
          caption: t("date"),
-         dataType: "date",
+         dataType: "string",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           return cellElement.data.date == null || cellElement.data.date == ""
-             ? ""
-             : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-         },
+         showInPdf:true,
        },
        {
-        dataField: "gSTIN",
-        caption: t("GSTIN"),
+        dataField: "gstin",
+        caption: t("gst_in"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+        showInPdf:true,
       },
        {
          dataField: "party",
-         caption: t("Party"),
+         caption: t("party"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
+         showInPdf:true,
         },
        {
          dataField: "address1",
-         caption: t("Address1"),
+         caption: t("address1"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
+         showInPdf:true,
        },
        {
         dataField: "address2",
-        caption: t("Address2"),
+        caption: t("address2"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "refNumber",
-        caption: t("RefNumber"),
+        caption: t("ref_no"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "form",
-        caption: t("From"),
+        caption: t("form"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
-        dataField: "cGSTPerc",
-        caption: t("CGSTPerc"),
+        dataField: "cgstPerc",
+        caption: t("cgstperc"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
-        dataField: "sGSTPerc",
-        caption: t("SGSTPerc"),
+        dataField: "sgstPerc",
+        caption: t("sgstperc"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
-        dataField: "iGSTPerc",
-        caption: t("IGSTPerc"),
+        dataField: "igstPerc",
+        caption: t("igstperc"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "taxableValue",
-        caption: t("Taxable Value"),
+        caption: t("taxable_value"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -149,12 +152,13 @@ const PurchaseTaxGSTTaxwise = () => {
         }}
       },
       {
-        dataField: "cGST",
-        caption: t("CGST"),
+        dataField: "cgst",
+        caption: t("cgst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -163,9 +167,9 @@ const PurchaseTaxGSTTaxwise = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cGST == null
+            cellElement.data?.cgst == null
               ? ""
-              : getFormattedValue(cellElement.data.cGST);
+              : getFormattedValue(cellElement.data.cgst);
           return {
             ...exportCell,
             text: value,
@@ -173,18 +177,19 @@ const PurchaseTaxGSTTaxwise = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cGST == null
+          return cellElement.data?.cgst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cGST));
+            : getFormattedValue(parseFloat(cellElement.data.cgst));
         }}
       },
       {
-        dataField: "sGST",
-        caption: t("SGST"),
+        dataField: "sgst",
+        caption: t("sgst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -193,9 +198,9 @@ const PurchaseTaxGSTTaxwise = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.sGST == null
+            cellElement.data?.sgst == null
               ? ""
-              : getFormattedValue(cellElement.data.sGST);
+              : getFormattedValue(cellElement.data.sgst);
           return {
             ...exportCell,
             text: value,
@@ -203,18 +208,19 @@ const PurchaseTaxGSTTaxwise = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.sGST == null
+          return cellElement.data?.sgst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sGST));
+            : getFormattedValue(parseFloat(cellElement.data.sgst));
         }}
       },
       {
-        dataField: "iGST",
-        caption: t("IGST"),
+        dataField: "igst",
+        caption: t("igst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -223,9 +229,9 @@ const PurchaseTaxGSTTaxwise = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.iGST == null
+            cellElement.data?.igst == null
               ? ""
-              : getFormattedValue(cellElement.data.iGST);
+              : getFormattedValue(cellElement.data.igst);
           return {
             ...exportCell,
             text: value,
@@ -233,18 +239,19 @@ const PurchaseTaxGSTTaxwise = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.iGST == null
+          return cellElement.data?.igst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.iGST));
+            : getFormattedValue(parseFloat(cellElement.data.igst));
         }}
       },
        {
          dataField: "total",
-         caption: t("Total"),
+         caption: t("total"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -271,59 +278,68 @@ const PurchaseTaxGSTTaxwise = () => {
        },
        {
         dataField: "refDate",
-        caption: t("Ref.Date"),
+        caption: t("ref_date"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "remarks",
-        caption: t("Remarks"),
+        caption: t("remarks"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "financialYearID",
-        caption: t("FinancialYearID"),
+        caption: t("financial_year_id"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
+        showInPdf:true,
       },
       {
         dataField: "productName",
-        caption: t("Product Name"),
+        caption: t("product_name"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "gstPercentage",
-        caption: t("Gst Percentage"),
+        caption: t("gstpercentage"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
+        groupIndex:0
       },
       {
         dataField: "cessPerc",
-        caption: t("Cess Percentage"),
+        caption: t("cessperc"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
        {
          dataField: "cessAmt",
-         caption: t("Cess Amount"),
+         caption: t("cess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -350,19 +366,21 @@ const PurchaseTaxGSTTaxwise = () => {
        },
        {
         dataField: "addCessPerc",
-        caption: t("Add.Cess Percentage"),
+        caption: t("addcessperc"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
        {
          dataField: "addCess",
-         caption: t("Add Cess"),
+         caption: t("addcess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -388,36 +406,40 @@ const PurchaseTaxGSTTaxwise = () => {
          },
        },
        {
-        dataField: "hSNCode",
-        caption: t("HSN Code"),
+        dataField: "hsnCode",
+        caption: t("hsn_code"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "qty",
-        caption: t("Quantity"),
+        caption: t("quantity"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "unit",
-        caption: t("Unit"),
+        caption: t("unit"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "groupName",
-        caption: t("Group Name"),
+        caption: t("group_name"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
      ];
    const { getFormattedValue } = useNumberFormat();
@@ -440,6 +462,7 @@ const PurchaseTaxGSTTaxwise = () => {
      };
    }, []);
    const customizeDate = (itemInfo: any) => `TOTAL`;
+   const customizeDateGroup = (itemInfo: any) => `Group Total`;
     const _summaryItems: SummaryConfig[] = [
       {
         column:"form",
@@ -453,19 +476,19 @@ const PurchaseTaxGSTTaxwise = () => {
         customizeText: customizeSummaryRow,
       },
       {
-        column: "cGST",
+        column: "cgst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
       {
-        column: "sGST",
+        column: "sgst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
       {
-        column: "iGST",
+        column: "igst",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
@@ -488,7 +511,71 @@ const PurchaseTaxGSTTaxwise = () => {
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
+      {
+        column:"party",
+        summaryType:"custom",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        customizeText: customizeDateGroup,
+      },
+      {
+        column: "taxableValue",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "cgst",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "sgst",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "igst",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "total",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "cess",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "addCess",
+        summaryType: "sum",
+        isGroupItem:true,
+        showInGroupFooter:true,
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
     ];
+    
 
   return (
     <Fragment>

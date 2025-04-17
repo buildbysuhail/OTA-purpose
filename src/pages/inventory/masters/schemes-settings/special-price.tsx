@@ -263,6 +263,7 @@ export const SpecialPrice: React.FC = () => {
 
         //   } as SpecialPriceData)
         // }}
+        batchDataUrl={Urls.select_foc_product_batch_grid}
       />
       </div>
 

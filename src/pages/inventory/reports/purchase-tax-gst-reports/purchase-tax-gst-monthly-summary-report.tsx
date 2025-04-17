@@ -5,7 +5,6 @@ import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import moment from "moment";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 
 
@@ -16,52 +15,47 @@ const PurchaseTaxGSTMonthlySummary = () => {
        {
          dataField: "date",
          caption: t("date"),
-         dataType: "date",
+         dataType: "string",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
-         cellRender: (
-           cellElement: any,
-           cellInfo: any,
-           filter: any,
-           exportCell: any
-         ) => {
-           return cellElement.data.date == null || cellElement.data.date == ""
-             ? ""
-             : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-         },
+         showInPdf:true,
        },
        {
          dataField: "vchNos",
-         caption: t("VoucherNumber"),
+         caption: t("voucher_number"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
          width: 75,
+         showInPdf:true,
        },
        {
          dataField: "form",
-         caption: t("Form"),
+         caption: t("form"),
          dataType: "string",
          allowSearch: true,
          allowFiltering: true,
          width: 150,
+         showInPdf:true,
        },
        {
          dataField: "gstPercentage",
-         caption: t("GST%"),
+         caption: t("gstpercentage"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
+         showInPdf:true,
        },
        {
          dataField: "taxableValue",
-         caption: t("Taxable Value"),
+         caption: t("taxable_value"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
+         showInPdf:true,
          cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -87,12 +81,13 @@ const PurchaseTaxGSTMonthlySummary = () => {
         },
        },
        {
-         dataField: "totalGst",
-         caption: t("Total GST"),
+         dataField: "totalGST",
+         caption: t("total_gst"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -101,9 +96,9 @@ const PurchaseTaxGSTMonthlySummary = () => {
          ) => {
            if (exportCell != undefined) {
              const value =
-               cellElement.data?.totalGst == null
+               cellElement.data?.totalGST == null
                  ? ""
-                 : getFormattedValue(cellElement.data.totalGst);
+                 : getFormattedValue(cellElement.data.totalGST);
              return {
                ...exportCell,
                text: value,
@@ -111,19 +106,20 @@ const PurchaseTaxGSTMonthlySummary = () => {
                alignmentExcel: { horizontal: "right" },
              };
            } else {
-             return cellElement.data?.totalGst == null
+             return cellElement.data?.totalGST == null
                ? ""
-               : getFormattedValue(parseFloat(cellElement.data.totalGst));
+               : getFormattedValue(parseFloat(cellElement.data.totalGST));
            }
          },
        },
        {
          dataField: "cess",
-         caption: t("Cess"),
+         caption: t("cess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -150,11 +146,12 @@ const PurchaseTaxGSTMonthlySummary = () => {
        },
        {
          dataField: "addCess",
-         caption: t("Add Cess"),
+         caption: t("addcess_amount"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 80,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,
@@ -181,11 +178,12 @@ const PurchaseTaxGSTMonthlySummary = () => {
        },
        {
          dataField: "total",
-         caption: t("Total"),
+         caption: t("total"),
          dataType: "number",
          allowSearch: true,
          allowFiltering: true,
          width: 100,
+         showInPdf:true,
          cellRender: (
            cellElement: any,
            cellInfo: any,

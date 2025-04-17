@@ -1,16 +1,10 @@
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { APIClient } from "../../../../helpers/api-client";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseTaxReportDetailedFilter, {
-  PurchaseTaxReportDetailedFilterInitialState,
-} from "./purchase-tax-report-detailed-filter";
+import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "./purchase-tax-report-detailed-filter";
 import moment from "moment";
 
 interface TaxReportDetailedProps {
@@ -22,13 +16,9 @@ interface TaxReportDetailedProps {
 const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    PurchaseTaxReportDetailedFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(PurchaseTaxReportDetailedFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -398,9 +388,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
                 filterHeight={210}
                 filterWidth={330}
                 filterInitialData={PurchaseTaxReportDetailedFilterInitialState}
-                onFilterChanged={(f: any) => {
-                  setFilter(f);
-                }}
+                onFilterChanged={(f: any) => { setFilter(f); }}
                 reload={true}
                 gridId={gridId}
               />

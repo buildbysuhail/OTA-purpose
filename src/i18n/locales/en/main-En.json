@@ -484,5 +484,23 @@
     "listed_product_prices": "Listed Product Prices",
     "daily_statement": "Daily Statement",
     "schemes_settings_special": "Schemes Settings - Special",
-    "schemes_settings_discount":"Schemes Settings - Discount"
+    "schemes_settings_discount":"Schemes Settings - Discount",
+
+    "purchase_gst_advance_register_format_report":"Purchase Tax Advance Register Format Report",
+    "purchase_gst_daily_summary_report":"Purchase Tax Daily Summary Report",
+    "purchase_gst_detailed_report":"Purchase Tax Detailed Report",
+    "purchase_gst_monthly_summary_report":"Purchase Tax Monthly Summary Report",
+    "purchase_gst_register_format_report":"Purchase Tax Register Format Report",
+    "purchase_gst_taxwise_report":"Purchase Tax wise Report",
+    "purchase_gst_taxwise_with_hsn_report":"Purchase Tax wise With HSN Report",
+
+    "purchase_return_gst_adv_register_format_report":"Purchase Return Tax Advance Register Format Report",
+    "purchase_return_gst_daily_summary_report":"Purchase Return Tax Daily Summary Report",
+    "purchase_return_gst_detailed_report":"Purchase Return Tax Detailed Report",
+    "purchase_return_gst_monthly_summary_report":"Purchase Return Tax Monthly Summary Report",
+    "purchase_return_gst_register_format_report":"Purchase Return Tax Register Format Report",
+    "purchase_return_gst_taxwise_report":"Purchase Return Tax wise Report",
+    "purchase_return_gst_taxwise_with_hsn_report":"Purchase Return Tax wise With HSN Report",
+    "purchase_return_gst_sales_and_return_report":"Purchase Return Tax Sales and Return Report"
+
 }

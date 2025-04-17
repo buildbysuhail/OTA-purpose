@@ -448,6 +448,16 @@ const Urls = {
   load_product_details: "/Inventory/SpecialPrice/LoadProductDetails/",                 // GET (with body + query)
   select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/", // GET
 
+  // URLs for FOCController (Inventory Module)
+  insert_quantity_discount_scheme: "/Inventory/FOC/",                                // POST
+  select_quantity_discount_scheme_by_scheme_id: "/Inventory/FOC/BySchemeId/",        // GET
+  select_product_by_barcode_foc: "/Inventory/FOC/ByBarcode/",                            // GET
+  select_quantity_schemes_for_combo: "/Inventory/FOC/FOCCombo",                      // GET
+  delete_quantity_discount_scheme: "/Inventory/FOC/",                                // DELETE (append {qtyDiscountId})
+  select_scheme_qty_details_by_id: "/Inventory/FOC/SelectSchemeQtyDetailsByID",      // GET (use ?schemeId=)
+  load_product_details_foc: "/Inventory/FOC/LoadProductDetails",                         // POST (with query params for DataSourceLoadOptions)
+  select_foc_product_batch_grid_foc: "/Inventory/FOC/LoadBatchDetails/",   
+
 
   //Transaction
   // common

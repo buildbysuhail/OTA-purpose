@@ -169,7 +169,7 @@ export const SpecialPrice: React.FC = () => {
     // setGridData((prevData) =>
     //   prevData.filter((item) => item.specialPriceID !== rowId)
     // );
-  }, []);
+  }, [getFieldProps]);
 
   const renderDeleteCell = (cellData: any) => {
     return (

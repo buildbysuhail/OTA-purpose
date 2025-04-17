@@ -182,8 +182,10 @@ import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-repo
 import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 import SalesAndSalesReturn from "../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return";
 import DaywiseSummaryWithProfit from "../../../pages/inventory/reports/daywise-summary-with-profit-report/daywise-summary-with-profit";
-import GroupwiseSalesSummaryDevexpress from "../../../pages/inventory/reports/groupwise-sales-summary-devexpress-filter/groupwise-sales-summary-devexpress";
-import { GroupwiseSalesSummaryDevexpressFilterInitialState } from "../../../pages/inventory/reports/groupwise-sales-summary-devexpress-filter/groupwise-sales-summary-devexpress-filter";
+import GroupwiseSalesSummaryDevexpress from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-devexpress";
+import { GroupwiseSalesSummaryDevexpressFilterInitialState } from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-devexpress-filter";
+import GroupwiseSalesSummary from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary";
+import { GroupwiseSalesSummaryFilterInitialState } from "../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -517,8 +519,12 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/sales_quotation_summary_report" element={<SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />} />
         <Route path="/inventory/substitute_report" element={<SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />} />
         <Route path="/inventory/daywise_summary_with_profit_report" element={<DaywiseSummaryWithProfit />} />
-        <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress dataUrl={urls.groupwise_sales_summary_devexpress} gridHeader="groupwise_sales_summary_devexpress_report" gridId="grd_groupwise_sales_summary_devexpress_report" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isProductCatwise: true}} />} />
-        <Route path="/inventory/groupwise_sales_summary_devexpress_report_section" element={<GroupwiseSalesSummaryDevexpress dataUrl={urls.groupwise_sales_summary_devexpress} gridHeader="groupwise_sales_summary_devexpress_report_section" gridId="grd_groupwise_sales_summary_devexpress_report_section" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isSectionwise: true}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress/>} />
+        <Route path="/inventory/groupwise_sales_summary_report_groupwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{...GroupwiseSalesSummaryFilterInitialState}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_report_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isCategorywise: true}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_report_sectionwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isSectionwise: true}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_report_brandwise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isBrandwise: true}} />}/>
+        <Route path="/inventory/groupwise_sales_summary_report_product_categorywise" element={<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{...GroupwiseSalesSummaryDevexpressFilterInitialState, isProductCatwise: true}} />}/>
         {/* <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} />
         <Route path="/inventory/groupwise_sales_summary_devexpress_report" element={<GroupwiseSalesSummaryDevexpress />} /> */}
 

@@ -1156,7 +1156,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 {isTimeBased == true &&  , Time between  :
                  [fromTime] And [toTime]}"
                 gridHeader={t(gridHeader)}
-                dataUrl={filter. dataUrl}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}

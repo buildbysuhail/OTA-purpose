@@ -237,7 +237,11 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/substitute_report`, type: 'link', active: false, selected: false, title: 'substitute_report', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_devexpress_report`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress', icon: PiPackageLight },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_devexpress_report_section`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress_report_section', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_report_groupwise`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_report_categorywise`, type: 'link', active: false, selected: false, title: 'categorywise_sales_summary_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_report_sectionwise`, type: 'link', active: false, selected: false, title: 'sectionwise_sales_summary_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_report_brandwise`, type: 'link', active: false, selected: false, title: 'brandwise_sales_summary_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_report_product_categorywise`, type: 'link', active: false, selected: false, title: 'product_categorywise_sales_summary_report', icon: PiPackageLight },
     ]
   },
 

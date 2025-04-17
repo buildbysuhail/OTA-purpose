@@ -70,11 +70,11 @@ const createStore = async (value: string, productDataUrl?: string) => {
           .join("&");
   
         try {
-          const payload = {
-            productID, // Pass selected productID to API
-          };
-          const url = batchDataUrl || "";
-          const response = await api.postAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`, payload);
+          // const payload = {
+          //   productID, // Pass selected productID to API
+          // };
+          const url = `${batchDataUrl}${productID}` || "";
+          const response = await api.getAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`);
           const result = response;
           return result !== undefined && result !== null
             ? {

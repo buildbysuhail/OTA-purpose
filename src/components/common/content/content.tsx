@@ -527,6 +527,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
         <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
+        {/* global */}
         <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary />} />
         <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary />} />
         <Route path="/inventory/purchase_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat />} />
@@ -542,7 +543,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_return_gst_taxwise_report" element={<PurchaseReturnTaxGSTTaxwise />} />
         <Route path="/inventory/purchase_return_gst_taxwise_with_hsn_report" element={<PurchaseReturnTaxGSTTaxwiseWithHSN />} />
         <Route path="/inventory/purchase_return_gst_sales_and_return_report" element={<PurchaseReturnTaxGSTSalesAndReturn />} />
-
+        {/* global end */}
 
         <Route path="/inventory/vat_return_form" element={<VatReturnForm />} />
         <Route path="/inventory/vat_return_form_arabic" element={<VatReturnFormArabic />} />

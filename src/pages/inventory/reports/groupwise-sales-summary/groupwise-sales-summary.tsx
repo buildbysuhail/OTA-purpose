@@ -3,10 +3,11 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import GroupwiseSalesSummaryDevexpressFilter, { GroupwiseSalesSummaryDevexpressFilterInitialState } from "./groupwise-sales-summary-devexpress-filter";
+import { useLocation } from "react-router-dom";
+import GroupwiseSalesSummaryFilter from "./groupwise-sales-summary-filter";
 
 interface SummaryProps {
   gridHeader: string;
@@ -15,8 +16,9 @@ interface SummaryProps {
   filterInitialData: any
 }
 
-const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, filterInitialData }) => {
+const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, filterInitialData }) => {
 
+    const location = useLocation();
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
         {
@@ -412,6 +414,10 @@ const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl
             customizeText: customizeSummaryRow,
         },
     ];
+    const [key, setKey] = useState(1);
+    useEffect(() => {
+        setKey((prev: any) => prev+1)
+    },[location]);
 
     return (
         <Fragment>
@@ -420,6 +426,7 @@ const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl
                     <div className="px-4 pt-4 pb-2 ">
                         <div className="grid grid-cols-1 gap-3">
                             <ErpDevGrid
+                            key={key}
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
@@ -430,7 +437,7 @@ const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl
                                 enablefilter={true}
                                 showFilterInitially={true}
                                 method={ActionType.POST}
-                                filterContent={<GroupwiseSalesSummaryDevexpressFilter />}
+                                filterContent={<GroupwiseSalesSummaryFilter/>}
                                 filterWidth={790}
                                 filterHeight={370}
                                 filterInitialData={filterInitialData}
@@ -445,4 +452,4 @@ const GroupwiseSalesSummaryDevexpress: FC<SummaryProps> = ({ gridHeader, dataUrl
     );
 };
 
-export default GroupwiseSalesSummaryDevexpress;
+export default GroupwiseSalesSummary;

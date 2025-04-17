@@ -17,7 +17,6 @@ const PurchaseRegisterFilter = ({
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const usersession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div className="grid grid-cols-1 gap-4">

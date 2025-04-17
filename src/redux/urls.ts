@@ -352,6 +352,7 @@ const Urls = {
   substitute_report: "/Inventory/RptSalesReport/SubstituteSummary/",
   daywise_summary_with_profit: "/Inventory/RptSalesReport/DaywiseSalesSummaryWithProfit/",
   groupwise_sales_summary_devexpress: "/Inventory/RptSalesReport/GroupWiseSalesDevexpress/",
+  groupwise_sales_summary: "/Inventory/RptSalesReport/GroupWiseSales/",
   salesmanwise_sales_and_collection:"/Inventory/RptSalesReport/SalesmanwiseSalesAndCollection/",
   non_invoiced_goods_delivery:"/Inventory/RptSalesReport/NonInvoicedGoodsDelivery/",
   booking_summary:"/Inventory/RptSalesReport/SalesBookingSummary/",

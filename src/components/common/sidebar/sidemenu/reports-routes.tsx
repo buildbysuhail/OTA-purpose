@@ -238,6 +238,10 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_devexpress_report`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/groupwise_sales_summary_devexpress_report_section`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress_report_section', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/salesman_wise_sales_and_collection_report`, type: 'link', active: false, selected: false, title: 'salesman_wise_sales_and_collection', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/non_invoiced_goods_delivery_report`, type: 'link', active: false, selected: false, title: 'non_invoiced_goods_delivery', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/booking_summary_report`, type: 'link', active: false, selected: false, title: 'booking_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/pending_order_report`, type: 'link', active: false, selected: false, title: 'pending_order', icon: PiPackageLight },
     ]
   },
 

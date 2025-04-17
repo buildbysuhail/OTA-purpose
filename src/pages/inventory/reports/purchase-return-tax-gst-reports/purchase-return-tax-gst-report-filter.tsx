@@ -11,6 +11,20 @@ const PurchaseReturnGstReportFilter = ({ getFieldProps, handleFieldChange, formS
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="flex items-center gap-2">
+        <ERPDateInput
+          label={t("from_date")}
+          {...getFieldProps("fromDate")}
+          className="max-w-[150px]"
+          datatype="date"
+          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+        />
+        <ERPDateInput
+          label={t("to_date")}
+          {...getFieldProps("toDate")}
+          className="max-w-[150px]"
+          datatype="date"
+          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+        />
         <ERPCheckbox
           {...getFieldProps("isTransactionDate")}
           label={t("Transaction Date")}
@@ -19,36 +33,15 @@ const PurchaseReturnGstReportFilter = ({ getFieldProps, handleFieldChange, formS
         />
       </div>
 
-      {/* Date Range */}
-      <div className="flex items-center gap-4">
-        <ERPDateInput
-          label={t("from_date")}
-          {...getFieldProps("fromDate")}
-          className="w-full"
-          datatype="date"
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
-        />
-        <ERPDateInput
-          label={t("to_date")}
-          {...getFieldProps("toDate")}
-          className="w-full"
-          datatype="date"
-          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
-        />
-      </div>
-
-      {/* GST Percentage */}
-      <div className="flex items-center gap-2">
+      <div className="grid grid-cols-4 items-end gap-4">
         <ERPInput
           {...getFieldProps("gSTPerc")}
           className="w-32"
+          placeholder="0.00"
           datatype="number"
           onChangeData={(val: string) => handleFieldChange("gSTPerc", val)}
         />
-      </div>
 
-      {/* GST Category */}
-      <div className="flex items-center gap-2">
         <ERPDataCombobox
           {...getFieldProps("taxCategory")}
           field={{
@@ -62,13 +55,10 @@ const PurchaseReturnGstReportFilter = ({ getFieldProps, handleFieldChange, formS
             handleFieldChange({
               taxCategory: data.label,
               taxCategoryName: data.label
-          });
-        }}
+            });
+          }}
         />
-      </div>
 
-      {/* Form Type */}
-      <div className="flex items-center gap-2">
         <ERPDataCombobox
           {...getFieldProps("voucherForm")}
           field={{
@@ -82,13 +72,10 @@ const PurchaseReturnGstReportFilter = ({ getFieldProps, handleFieldChange, formS
             handleFieldChange({
               voucherFormId: data.value,
               voucherForm: data.label
-          });
-        }}
+            });
+          }}
         />
-      </div>
 
-      {/* Exclude NA */}
-      <div className="flex items-center gap-2">
         <ERPCheckbox
           {...getFieldProps("excludeNA")}
           label={t("Exclude NA")}
@@ -105,13 +92,13 @@ export const PurchaseReturnGstReportFilterInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
   gSTPerc: null,
-  voucherType:"",
-  voucherForm:"",
+  voucherType: "",
+  voucherForm: "",
   isTransactionDate: 0,
   taxCategory: "",
   excludeNA: 0,
-  rdbCash:0,
-  rdbBank:0,
+  rdbCash: 0,
+  rdbBank: 0,
   refDate: 0,
   gstCategory: 0,
   formType: 0,

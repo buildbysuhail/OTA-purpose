@@ -7,6 +7,7 @@ import {useMemo} from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import GroupwiseSalesSummaryDevexpressFilter, { GroupwiseSalesSummaryDevexpressFilterInitialState } from "./groupwise-sales-summary-devexpress-filter";
+import moment from "moment";
 
 
 
@@ -16,12 +17,21 @@ const GroupwiseSalesSummaryDevexpress= () => {
         {
             dataField: "transactionDate",
             caption: t("transaction_date"),
-            dataType: "string",
+            dataType: "date",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
+            format:"dd-MMM-yyyy"
+        //   cellRender: (
+        //             cellElement: any,
+        //             cellInfo: any,
+        //             filter: any,
+        //             exportCell: any
+        //           ) => {
+        //             return  (cellElement.data.transactionDate==null||cellElement.data.transactionDate==""?"":moment(cellElement.data.transactionDate, "DD-MMM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+        //           }
+          },
         {
             dataField: "month",
             caption: t("month"),

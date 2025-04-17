@@ -241,12 +241,13 @@ export const SpecialPrice: React.FC = () => {
           }}
         />
 
-<ERPProductSearch
+     <ERPProductSearch
         type="text"
         id='test'
         keyId='testserch'
         placeholder="Search Here"
         productDataUrl={Urls.load_product_details}
+        batchDataUrl={Urls.select_foc_product_batch_grid}
       />
       </div>
 

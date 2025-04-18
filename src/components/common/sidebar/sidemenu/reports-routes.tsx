@@ -205,6 +205,8 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight },
       // { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_statement_all`, type: 'link', active: false, selected: false, title: 'daily_statement_all', icon: AiOutlineFileText },
       // { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_statement_sales`, type: 'link', active: false, selected: false, title: 'daily_statement_sales', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight },
     ]
   },
 
@@ -249,6 +251,12 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/coupon_reports`, type: 'link', active: false, selected: false, title: 'coupon_reports', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/scheme_wise_sales_report`, type: 'link', active: false, selected: false, title: 'scheme_wise_sales', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_return_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_order_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_order_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_quotation_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_quotation_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_estimate_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_and_sales_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_and_sales_return_summary', icon: PiPackageLight },
     ]
   },
 

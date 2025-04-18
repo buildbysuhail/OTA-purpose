@@ -541,6 +541,14 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/sales_tax_report" element={<SalesTax />} />
         <Route path="/inventory/ksa_e_invoice_summary_report" element={<KsaEInvoiceReportSummary />} />
         <Route path="/inventory/ksa_e_invoice_detailed_report" element={<KsaEInvoiceReportDetailed />} />
+        <Route path="/inventory/itemwise_sales_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_summary} gridHeader="itemwise_sales_summary" gridId="grd_itemwise_sales_summary" />} />
+        <Route path="/inventory/itemwise_sales_return_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_return_summary} gridHeader="itemwise_sales_return_summary" gridId="grd_itemwise_sales_return_summary" />} />
+        <Route path="/inventory/itemwise_sales_order_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_order_summary} gridHeader="itemwise_sales_order_summary" gridId="grd_itemwise_sales_order_summary" />} />
+        <Route path="/inventory/itemwise_sales_quotation_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_quotation_summary} gridHeader="itemwise_sales_quotation_summary" gridId="grd_itemwise_sales_quotation_summary" />} />
+        <Route path="/inventory/itemwise_sales_estimate_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_estimate_summary} gridHeader="itemwise_sales_estimate_summary" gridId="grd_itemwise_sales_estimate_summary" />} />
+        <Route path="/inventory/itemwise_sales_and_sales_return_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_and_sales_return_summary} gridHeader="itemwise_sales_and_sales_return_summary" gridId="grd_itemwise_sales_and_sales_return_summary" />} />
+        <Route path="/inventory/itemwise_opening_stock_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />} />
+        <Route path="/inventory/itemwise_substitute_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />} />
 
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />

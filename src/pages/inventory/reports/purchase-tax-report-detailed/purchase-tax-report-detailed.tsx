@@ -63,6 +63,14 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       width: 100,
     },
     {
+      dataField: "form",
+      caption: t("form"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
       dataField: "address1",
       caption: t("address1"),
       dataType: "string",
@@ -117,14 +125,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
         }
       },
     },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
+   
     {
       dataField: "vatPercentage",
       caption: t("vat_%"),

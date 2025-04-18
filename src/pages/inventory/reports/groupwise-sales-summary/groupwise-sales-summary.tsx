@@ -39,7 +39,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
                 allowFiltering: true,
                 allowSorting: true,
                 width: 100,
-            },
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.quantity == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.quantity);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.quantity == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.quantity));
+                    }
+                  },
+                },
             {
                 dataField: "grossValue",
                 caption: t("gross_value"),
@@ -48,7 +71,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
                 allowFiltering: true,
                 allowSorting: true,
                 width: 100,
-            },
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.grossValue == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.grossValue);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.grossValue == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.grossValue));
+                    }
+                  },
+                },
             {
                 dataField: "totalDiscount",
                 caption: t("total_discount"),
@@ -57,7 +103,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
                 allowFiltering: true,
                 allowSorting: true,
                 width: 100,
-            },
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.totalDiscount == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.totalDiscount);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.totalDiscount == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.totalDiscount));
+                    }
+                  },
+                },
             {
                 dataField: "netAmount",
                 caption: t("net_amount"),
@@ -66,7 +135,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
                 allowFiltering: true,
                 allowSorting: true,
                 width: 100,
-            },
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.netAmount == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.netAmount);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.netAmount == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.netAmount));
+                    }
+                  },
+                },
             {
                 dataField: "cost",
                 caption: t("cost"),
@@ -75,7 +167,159 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
                 allowFiltering: true,
                 allowSorting: true,
                 width: 100,
-            },
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.cost == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.cost);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.cost == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.cost));
+                    }
+                  },
+                },
+            {
+                dataField: "marginPerc",
+                caption: t("margin_percentage"),
+                dataType: "number",
+                allowSearch: true,
+                allowFiltering: true,
+                allowSorting: true,
+                width: 100,
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.marginPerc == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.marginPerc);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.marginPerc == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.marginPerc));
+                    }
+                  },
+                },
+            {
+                dataField: "margin",
+                caption: t("margin"),
+                dataType: "number",
+                allowSearch: true,
+                allowFiltering: true,
+                allowSorting: true,
+                width: 100,
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.margin == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.margin);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.margin == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.margin));
+                    }
+                  },
+                },
+            {
+                dataField: "salesPerc",
+                caption: t("sales_Percentage"),
+                dataType: "number",
+                allowSearch: true,
+                allowFiltering: true,
+                allowSorting: true,
+                width: 100,
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.salesPerc == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.salesPerc);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.salesPerc == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.salesPerc));
+                    }
+                  },
+                },
+            {
+                dataField: "marginSharePerc",
+                caption: t("margin_share_percentage"),
+                dataType: "number",
+                allowSearch: true,
+                allowFiltering: true,
+                allowSorting: true,
+                width: 100,
+                cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                    if (exportCell != undefined) {
+                      const value =
+                        cellElement.data?.marginSharePerc == null
+                          ? ""
+                          : getFormattedValue(cellElement.data.marginSharePerc);
+                      return {
+                        ...exportCell,
+                        text: value,
+                        alignment: "right",
+                        alignmentExcel: { horizontal: "right" },
+                      };
+                    } else {
+                      return cellElement.data?.marginSharePerc == null
+                        ? ""
+                        : getFormattedValue(parseFloat(cellElement.data.marginSharePerc));
+                    }
+                  },
+                },
+          
 //margin %
 // margin
 //sales %
@@ -98,8 +342,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
-       
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.netValue == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.netValue);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.netValue == null
+                    ? ""
+                    : getFormattedValue(parseFloat(cellElement.data.netValue));
+                }
+              },
+            },
         {
             dataField: "free",
             caption: t("free"),
@@ -108,11 +374,30 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
-
-
-
-
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.free == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.free);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.free == null
+                    ? ""
+                    : getFormattedValue(parseFloat(cellElement.data.free));
+                }
+              },
+            },
         // {
         //     dataField: "unitPrice",
         //     caption: t("unit_price"),
@@ -176,13 +461,19 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
     ];
     return baseColumns
       .filter((column) => {
-        if (column.dataField == "exchangeRate") {
-          return !filterInitialData.isGroupItem;
+        if (column.dataField == "productGroup") {
+          return filterInitialData.isGroupItem;
         }
-        if (column.dataField == "uPI" || column.dataField == "cardAmt") {
+        if (column.dataField == "category" ) {
           return !filterInitialData.isCategorywise;
         }
-        if (column.dataField == "printCount") {
+        if (column.dataField == "product_category" ) {
+            return !filterInitialData.isProductCatwise;
+          }
+          if (column.dataField == "sectionName" ) {
+            return !filterInitialData.IsSectionwise;
+          }
+        if (column.dataField == "brandName") {
           return !filterInitialData.isBrandwise;
         }
         return true;
@@ -302,24 +593,12 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
             return getFormattedValue(value) || "0";
         };
     }, [getFormattedValue]);
-
+    const customizeSummaryRow100 = (itemInfo: any) => `100.00`;
     const summaryItems: SummaryConfig[] = [
         {
             column: "quantity",
             summaryType: "sum",
             valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "free",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "unitPrice",
-            summaryType: "sum",
-            valueFormat: "currency",
             customizeText: customizeSummaryRow,
         },
         {
@@ -335,25 +614,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
             customizeText: customizeSummaryRow,
         },
         {
-            column: "netValue",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
             column: "netAmount",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "stdSalesPrice",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "stdPurchasePrice",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
@@ -364,20 +625,39 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId, 
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
         },
+                //total margin/ netvalue *100 as margin%
         {
-            column: "profit",
+            column: "marginPerc",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
         },
         {
-            column: "costAsPerStdRate",
+            column: "margin",
+            summaryType: "sum",
+            valueFormat: "fixedPoint",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "salesPerc",
+            summaryType: "max",
+            customizeText: customizeSummaryRow100,
+        },
+        {
+            column: "marginSharePerc",
+            summaryType: "max",
+            customizeText: customizeSummaryRow100,
+        },
+        {
+            column: "netValue",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,
         },
+      
+       
         {
-            column: "profitAsPerStdRate",
+            column: "free",
             summaryType: "sum",
             valueFormat: "currency",
             customizeText: customizeSummaryRow,

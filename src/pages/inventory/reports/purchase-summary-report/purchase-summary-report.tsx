@@ -392,6 +392,70 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
+        dataField: "cardAmt",
+        caption: t("CardAmt"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cardAmt == null
+                ? 0
+                : getFormattedValue(cellElement.data.cardAmt);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cardAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.cardAmt);
+          }
+        },
+      },
+        //if AccountsSettings.AllowMultiPayments start
+        {
+          dataField: "uPI",
+          caption: t("UPI"), //appglobal UPI else QRpay
+          dataType: "number",
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,
+          cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            if (exportCell != undefined) {
+              const value =
+                cellElement.data?.uPI == null
+                  ? 0
+                  : getFormattedValue(cellElement.data.uPI);
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              return cellElement.data?.uPI == null
+                ? 0
+                : getFormattedValue(cellElement.data.uPI);
+            }
+          },
+        },
+        
+      {
         dataField: "financialYearID",
         caption: t("financial_year_id"),
         dataType: "number",
@@ -668,13 +732,44 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
       },
       {
-        dataField: "mobileNumber",
-        caption: t("mobile_number"),
-        dataType: "string",
+        dataField: "srAmount",
+        caption: t("sr_amount"),
+        dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.srAmount == null
+                ? 0
+                : getFormattedValue(cellElement.data.srAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.srAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.srAmount);
+          }
+        },
       },
+      // {
+      //   dataField: "mobileNumber",
+      //   caption: t("mobile_number"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
       {
         dataField: "totalExciseTax",
         caption: t("total_excise_tax"),
@@ -706,45 +801,15 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      {
-        dataField: "srAmount",
-        caption: t("sr_amount"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.srAmount == null
-                ? 0
-                : getFormattedValue(cellElement.data.srAmount);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.srAmount == null
-              ? 0
-              : getFormattedValue(cellElement.data.srAmount);
-          }
-        },
-      },
-      {
-        dataField: "toWarehouseName",
-        caption: t("to_warehouse_name"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+    
+      // {
+      //   dataField: "toWarehouseName",
+      //   caption: t("to_warehouse_name"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
       {
         dataField: "salesAmount",
         caption: t("sales_amount"),
@@ -807,110 +872,48 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      {
-        dataField: "totalProfitPercentage",
-        caption: t("total_profit_percentage"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "costCentreName",
-        caption: t("cost_centre_name"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "deliveryStatus",
-        caption: t("delivery_status"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "paidStatus",
-        caption: t("paid_status"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "orderNumber",
-        caption: t("order_number"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+      // {
+      //   dataField: "totalProfitPercentage",
+      //   caption: t("total_profit_percentage"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "costCentreName",
+      //   caption: t("cost_centre_name"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "deliveryStatus",
+      //   caption: t("delivery_status"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "paidStatus",
+      //   caption: t("paid_status"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "orderNumber",
+      //   caption: t("order_number"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
 
-      //if AccountsSettings.AllowMultiPayments start
-      {
-        dataField: "uPI",
-        caption: t("UPI"), //appglobal UPI else QRpay
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.uPI == null
-                ? 0
-                : getFormattedValue(cellElement.data.uPI);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.uPI == null
-              ? 0
-              : getFormattedValue(cellElement.data.uPI);
-          }
-        },
-      },
-      {
-        dataField: "cardAmt",
-        caption: t("CardAmt"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.cardAmt == null
-                ? 0
-                : getFormattedValue(cellElement.data.cardAmt);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.cardAmt == null
-              ? 0
-              : getFormattedValue(cellElement.data.cardAmt);
-          }
-        },
-      },
+    
       //////// end
       // show when dbidvalue=543140180640
       {

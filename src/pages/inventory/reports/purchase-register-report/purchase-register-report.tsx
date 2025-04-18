@@ -145,6 +145,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
+        dataField: "batchNo",
+        caption: t("batch_no"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
         dataField: "productCode",
         caption: t("product_code"),
         dataType: "string",
@@ -791,14 +799,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-      {
-        dataField: "batchNo",
-        caption: t("batch_no"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+    
       {
         dataField: "warrantyPeriod",
         caption: t("warranty_period"),

@@ -1,17 +1,15 @@
-import { Fragment } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { Fragment } from "react/jsx-runtime";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
+import { useMemo } from "react";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import StockFlowReportFilter, { StockFlowReportFilterInitialState } from "./stock-flow-report-filter";
 import Urls from "../../../../redux/urls";
-import StockFlowFilter, { StockFlowFilterInitialState } from "./stock-flow-report-filter";
 
-const StockFlow = () => {
-  const dispatch = useAppDispatch();
+const StockFlowReport = () => {
   const { t } = useTranslation('accountsReport');
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "groupName",
@@ -20,144 +18,143 @@ const StockFlow = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-      visible: false
+      width: 130,
     },
     {
-      dataField: "code",
+      dataField: "productCode",
       caption: t("code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 75,
     },
     {
-      dataField: "product",
+      dataField: "productName",
       caption: t("product"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 130,
     },
     {
       dataField: "opStk",
-      caption: t("openingStock"),
+      caption: t("op_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 60,
     },
     {
       dataField: "opVal",
-      caption: t("openingValue"),
+      caption: t("op_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "pIStk",
-      caption: t("physicalInventoryStock"),
+      dataField: "piStk",
+      caption: t("pi_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 60,
     },
     {
-      dataField: "pIVal",
-      caption: t("physicalInventoryValue"),
+      dataField: "piVal",
+      caption: t("pi_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 70,
     },
     {
-      dataField: "sRStk",
-      caption: t("stockReceived"),
+      dataField: "srStk",
+      caption: t("sr_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 60,
     },
     {
-      dataField: "sRVal",
-      caption: t("stockReceivedValue"),
+      dataField: "srVal",
+      caption: t("sr_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 70,
     },
     {
-      dataField: "sIStk",
-      caption: t("stockIssue"),
+      dataField: "siStk",
+      caption: t("si_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 60,
     },
     {
-      dataField: "sIVal",
-      caption: t("stockIssueValue"),
+      dataField: "siVal",
+      caption: t("si_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "pRStk",
-      caption: t("productionStock"),
+      dataField: "prStk",
+      caption: t("pr_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 60,
     },
     {
-      dataField: "pRVal",
-      caption: t("productionValue"),
+      dataField: "prVal",
+      caption: t("pr_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "cLStk",
-      caption: t("closingStock"),
+      dataField: "clStk",
+      caption: t("cl_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 60,
     },
     {
-      dataField: "cLVal",
-      caption: t("closingValue"),
+      dataField: "clVal",
+      caption: t("cl_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "productId",
-      caption: t("productId"),
-      dataType: "string",
+      dataField: "productID",
+      caption: t("product_id"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-      visible: false
+      visible: false,
+      width: 100,
     },
     {
       dataField: "warehouse",
@@ -166,8 +163,7 @@ const StockFlow = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-      visible: false
+      width: 100,
     },
     {
       dataField: "brand",
@@ -176,43 +172,43 @@ const StockFlow = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 100,
     },
     {
-      dataField: "sTInStk",
-      caption: t("stockTransferIn"),
+      dataField: "stInStk",
+      caption: t("st_in_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "sTInVal",
-      caption: t("stockTransferInValue"),
+      dataField: "stInVal",
+      caption: t("st_in_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 70,
     },
     {
-      dataField: "sTOutStk",
-      caption: t("stockTransferOut"),
+      dataField: "stOutStk",
+      caption: t("st_out_stk"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
-      dataField: "sTOutVal",
-      caption: t("stockTransferOutValue"),
+      dataField: "stOutVal",
+      caption: t("st_out_val"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 200,
+      width: 70,
     },
     {
       dataField: "unit",
@@ -224,56 +220,150 @@ const StockFlow = () => {
       width: 100,
     },
     {
-      dataField: "section",
+      dataField: "sectionName",
       caption: t("section"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-    },
-    {
-      dataField: "adjStk",
-      caption: t("adjustment_stock"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 150,
-    },
-    {
-      dataField: "adjVal",
-      caption: t("adjustment_value"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 150,
+      width: 100,
     },
   ];
+
+  const { getFormattedValue } = useNumberFormat();
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
+        return "0";
+      }
+      return getFormattedValue(value) || "0";
+    };
+  }, [getFormattedValue]);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "opStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "opVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "piStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "piVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "srStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "srVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "siStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "siVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "prStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "prVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "clStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "clVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stInStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stInVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stOutStk",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stOutVal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
+
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("stock_flow_report")}
-                  dataUrl={Urls.inv_reports_stock_flow}
-                  hideGridAddButton={true}
-                  enablefilter={true}
-                  showFilterInitially={true}
-                  method={ActionType.POST}
-                  filterContent={<StockFlowFilter />}
-                  filterInitialData={StockFlowFilterInitialState}
-                  reload={true}
-                  filterWidth={600}
-                  filterHeight={400}
-                  gridId="grd_stock_flow"
-                ></ErpDevGrid>
-              </div>
+          <div className="px-4 pt-4 pb-2 ">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                summaryItems={summaryItems}
+                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                columns={columns}
+                moreOption={true}
+                gridHeader={t("stock_flow_report")}
+                dataUrl={Urls.stock_flow_report}
+                hideGridAddButton={true}
+                enablefilter={true}
+                showFilterInitially={true}
+                method={ActionType.POST}
+                filterContent={<StockFlowReportFilter />}
+                filterWidth={790}
+                filterHeight={340}
+                filterInitialData={StockFlowReportFilterInitialState}
+                reload={true}
+                gridId="grd_stock_flow_report"
+              />
             </div>
           </div>
         </div>
@@ -282,4 +372,4 @@ const StockFlow = () => {
   );
 };
 
-export default StockFlow;
+export default StockFlowReport;

@@ -147,10 +147,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_estimate_register_report`, type: 'link', active: false, selected: false, title: 'purchase_return_estimate_register_report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_estimate_summary_report', icon: HiOutlineDocumentReport },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger_report', icon: HiOutlineClipboardList },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report', icon: MdOutlineAnalytics },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_tax_vat`, type: 'link', active: false, selected: false, title: 'purchase_tax', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_order_transit_report`, type: 'link', active: false, selected: false, title: 'purchase_order_transit_report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
@@ -217,7 +214,11 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight },
-      
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
     ]
   },
 
@@ -270,6 +271,10 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_sales_and_sales_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_sales_and_sales_return_summary', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_summary_report`, type: 'link', active: false, selected: false, title: 'transaction_summary', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/inventory_transaction_register_report`, type: 'link', active: false, selected: false, title: 'inventory_transaction_register', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/inventory_summary_report`, type: 'link', active: false, selected: false, title: 'inventory_summary_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/service_report`, type: 'link', active: false, selected: false, title: 'service_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/salesman_incentive_report`, type: 'link', active: false, selected: false, title: 'salesman_incentive_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/privilege_card_report`, type: 'link', active: false, selected: false, title: 'privilege_card', icon: PiPackageLight },
     ]
   },
 

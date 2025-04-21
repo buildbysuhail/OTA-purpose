@@ -199,6 +199,7 @@ export const setTransactionForHistory = (
      },
     row: { ..._formState.row,
       ledgerID: _formState.row.ledgerID == null || _formState.row.ledgerID == ""  || _formState.row.ledgerID == 0 ? "" : _formState.row.ledgerID,
+      ledgerName: _formState.row.ledgerName == null || _formState.row.ledgerName == ""   ? "" : _formState.row.ledgerName,
       //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
       //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
        projectID:  _formState.row.projectID == undefined || _formState.row.projectID == null || _formState.row.projectID == "" || _formState.row.projectID == 0 ? 0 : _formState.row.projectID },

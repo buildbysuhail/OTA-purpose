@@ -10,6 +10,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   productDataUrl?: string;
   batchDataUrl?: string;
   keyId?:string;
+  onRowSelected?: (data: any) => void;
+  searchByCode?:boolean;
 }
 interface LoadResult {
     data: any[];
@@ -61,7 +63,7 @@ const createStore = async (value: string, productDataUrl?: string) => {
 
   const createBatchStore = async (productID: string, batchDataUrl?: string) => {
     return new CustomStore({
-      key: "productID", // Adjust to "specialPriceID" if needed
+      key: "productBatchID", 
       async load(loadOptions: any) {
         const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
         const queryString = paramNames
@@ -70,9 +72,6 @@ const createStore = async (value: string, productDataUrl?: string) => {
           .join("&");
   
         try {
-          // const payload = {
-          //   productID, // Pass selected productID to API
-          // };
           const url = `${batchDataUrl}${productID}` || "";
           const response = await api.getAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`);
           const result = response;
@@ -93,14 +92,16 @@ const createStore = async (value: string, productDataUrl?: string) => {
       },
     });
   };
-  
-const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDataUrl,keyId, onChange, ...rest }) => {
+
+const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDataUrl,keyId,onRowSelected,searchByCode,onChange, ...rest }) => {
     const [store, setStore] = useState<any>();
     const [productDetailStore, setProductDetailStore] = useState<any>();
     const [showProductGrid, setShowProductGrid] = useState(false);
     const [showBatchGrid, setShowBatchGrid] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const dataGridRef = useRef<any>(null);
+    const batchGridRef = useRef<any>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const { t } = useTranslation("inventory");
 
     const debouncedFetch = useMemo(
@@ -110,14 +111,14 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
             setStore(result);
             const loadResult = await result.load() as LoadResult;
             setShowProductGrid(loadResult.totalCount > 0); 
-          }, 500),
+          }, 1000),
         [productDataUrl]
       );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-
+    setShowBatchGrid(false)
     if (value.length >= 3) {
       debouncedFetch(value);
     } else {
@@ -132,19 +133,14 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
     if (onChange) onChange(e);
   };
 
-
-
-//   const handleKeyDown = useCallback((e: any) => {
-//     if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
-//       setShowProductGrid(false);
-//       setShowBatchGrid(true);
-//       // Optional: Populate productDetailStore based on selected row
-//       // const selectedRow = e.component.getSelectedRowsData()[0];
-//       // Fetch product details using selectedRow.productID
-//     }
-//   }, []);
-
-  const handleKeyDown = useCallback(
+  // Cancel any pending debounced calls on component unmount.
+  useEffect(() => {
+    return () => {
+      debouncedFetch.cancel();
+    };
+  }, [debouncedFetch]);
+  
+  const handleGridKeyDown = useCallback(
     async (e: any) => {
       if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
         const selectedRow = e.component.getSelectedRowsData()[0];
@@ -160,13 +156,38 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
     },
     [batchDataUrl]
   );
-  // Cancel any pending debounced calls on component unmount.
-  useEffect(() => {
-    return () => {
-      debouncedFetch.cancel();
-    };
-  }, [debouncedFetch]);
-  
+
+  const handleBatchGridKeyDown = useCallback(
+    (e: any) => {
+      if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
+        const selectedRow = e.component.getSelectedRowsData()[0];
+        if (onRowSelected) {
+          onRowSelected(selectedRow); // Call the onRowSelected callback with selected row data
+        }
+        setShowBatchGrid(false); // Optionally hide the batch grid
+        setInputValue(''); // Optionally clear the input
+      }
+    },
+    [onRowSelected]
+  );
+
+  const handleBatchContentReady = useCallback(() => {
+    if (batchGridRef.current) {
+      const gridInstance = batchGridRef.current.instance;
+      const visibleRows = gridInstance.getVisibleRows();
+      if (visibleRows.length > 0) {
+        gridInstance.selectRowsByIndexes([0]);
+        gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+        setTimeout(() => {
+          const cellElement = gridInstance.getCellElement(0, 0);
+          if (cellElement) {
+            cellElement.focus();
+          }
+        }, 100);
+      }
+    }
+  }, []);
+
   return (
     <div className=''>
      <div className="mb-4 relative">
@@ -177,14 +198,17 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
       )}
       <input
         {...rest}
+        ref={inputRef}
         value={inputValue}
         onChange={handleChange}
+        // onKeyDown={handleInputKeyDown}
         className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
      </div>
      {showProductGrid && (
         <div className="w-full">
           <DataGrid
+            ref={dataGridRef}
             loadPanel={{ enabled: false }}
             dataSource={store}
             height={300}
@@ -192,99 +216,63 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
             showBorders={true}
             showRowLines={true}
             remoteOperations={{ filtering: true, paging: true, sorting: true }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={handleGridKeyDown}
           >
              <Selection mode="single" />
     
             <Paging pageSize={10} />
             <Scrolling mode="virtual" />
-            <RemoteOperations
-              filtering={false}
-              sorting={false}
-              paging={false}
-            />
-            <Column
-              dataField="productCode"
-              caption={t("product_code")}
-              allowEditing={false}
-              dataType="string"
-              width={100}
-            />
-            <Column
-              dataField="productID"
-              caption={t("productID")}
-              allowEditing={false}
-              dataType="string"
-              width={150}
-              visible={false}
-            />
-            <Column
-              dataField="productName"
-              caption={t("ProductName")}
-              dataType="string"
-              allowEditing={true}
-              minWidth={150}
-            />
-        
+            <KeyboardNavigation enabled={true} editOnKeyPress={false} enterKeyAction="moveFocus" enterKeyDirection="row" />
+            <Column dataField="productCode" caption={t("product_code")} dataType="string" width={100} />
+            <Column dataField="productID" caption={t("productID")} dataType="number" visible={false} />
+            <Column dataField="productName" caption={t("ProductName")} dataType="string" minWidth={150} />
           </DataGrid>
         </div>
       )}
 
-     
-        {showBatchGrid && (
-        <div className="w-full">
-          <DataGrid
-            loadPanel={{ enabled: false }}
-            dataSource={productDetailStore}
-            height={300}
-            keyExpr={"productID"}
-            showBorders={true}
-            showRowLines={true}
-            remoteOperations={{ filtering: true, paging: true, sorting: true }}
-          >
-            <KeyboardNavigation
-              editOnKeyPress={false}
-              enterKeyAction={"moveFocus"}
-              enterKeyDirection={"row"}
-            />
-            <Paging pageSize={10} />
-            <Scrolling mode="virtual" />
-            <RemoteOperations
-              filtering={false}
-              sorting={false}
-              paging={false}
-            />
-            <Column
-              dataField="mrp"
-              caption={t("mrp")}
-              allowEditing={false}
-              dataType="string"
-              width={100}
-            />
-            <Column
-              dataField="stock"
-              caption={t("stock")}
-              allowEditing={false}
-              dataType="string"
-              width={150}
-              visible={false}
-            />
-            <Column
-              dataField="unit"
-              caption={t("unit")}
-              dataType="string"
-              allowEditing={true}
-              minWidth={150}
-            />
-            {/* <Editing
-              allowUpdating={false}
-              allowAdding={false}
-              allowDeleting={false}
-              mode="row"
-            /> */}
-          </DataGrid>
-        </div>
-        )}
+    {showBatchGrid && (
+    <div className="w-full">
+        <DataGrid
+        ref={batchGridRef}
+        loadPanel={{ enabled: false }}
+        dataSource={productDetailStore}
+        height={300}
+        keyExpr={"productBatchID"}
+        showBorders={true}
+        showRowLines={true}
+        remoteOperations={{ filtering: true, paging: true, sorting: true }}
+        onKeyDown={handleBatchGridKeyDown}
+        onContentReady={handleBatchContentReady}
+        >
+        <KeyboardNavigation
+            editOnKeyPress={false}
+            enterKeyAction={"moveFocus"}
+            enterKeyDirection={"row"}
+        />
+        <Paging pageSize={10} />
+        <Selection mode="single" />
+
+        <Column dataField="productBatchID" caption={t("productBatchID")} dataType="number" width={150} />
+        <Column dataField="productCode" caption={t("productCode")} dataType="string" width={150} />
+        <Column dataField="autoBarcode" caption={t("autoBarcode")} dataType="string" width={150} />
+        <Column dataField="sPrice" caption={t("sprice")} dataType="number" width={100} />
+        <Column dataField="pPrice" caption={t("pPrice")} dataType="number" width={100} />
+        <Column dataField="mrp" caption={t("mrp")} dataType="number" width={100} />
+        <Column dataField="stock" caption={t("stock")} dataType="number" width={100} />
+        <Column dataField="unitID" caption={t("unitID")} dataType="number" minWidth={100} />
+        <Column dataField="unit" caption={t("unit")} dataType="string" minWidth={100} />
+        <Column dataField="brandID" caption={t("brandID")} dataType="number" minWidth={100} />
+        <Column dataField="brandName" caption={t("brandName")} dataType="string" minWidth={100} />
+        {/* <Editing
+            allowUpdating={false}
+            allowAdding={false}
+            allowDeleting={false}
+            mode="row"
+        
+        /> */}
+        </DataGrid>
+    </div>
+    )}
 
     </div>
 
@@ -293,15 +281,6 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl,batchDat
 
 export default ERPProductSearch;
 
-
-// disabl loader
-// virtualscrollin
-// debounce
-// rowwie selection
-// keydown to grid
-
-
 // delete
 // key = specialPriceID
 // api = delete_special_price_scheme
-

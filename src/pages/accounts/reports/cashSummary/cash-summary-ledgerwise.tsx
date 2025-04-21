@@ -24,6 +24,15 @@ const CashSummaryLedgerwise = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
+      dataField: "relatedLedgerID",
+      caption: t("related_ledgerID"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      visible:false,
+      width: 100,
+    },
+    {
       dataField: "particulars",
       caption: t("particulars"),
       dataType: "string",
@@ -192,6 +201,24 @@ const CashSummaryLedgerwise = () => {
           </span>)
         }
       }
+    },
+    {
+      dataField: "financialYearID",
+      caption: t("financial_yearID"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      visible:false,
+      width: 100,
+    },
+    {
+      dataField: "branch",
+      caption: t("branch"),
+      dataType: "string",
+      allowSearch: true,
+      visible:false,
+      allowFiltering: true,
+      width: 100,
     },
   ];
   return (

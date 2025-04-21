@@ -244,27 +244,29 @@ export const SpecialPrice: React.FC = () => {
             label={t("searchByCode")}
             onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
           />
-<ERPProductSearch
-        type="text"
-        id='test'
-        keyId='testserch'
-        placeholder="Search Here"
-        productDataUrl={Urls.load_product_details}
-        // searchByCode={getFieldProps("searchByCode").value}
-        // onRowSelected={(data:any) => {
-        //   const obj = getFieldProps("*");
-        //   handleDataChange({...obj,
-        //     unitID: data.unitID,
-        //     unitName: data.unit,
-        //     barcode: data.autoBarcode,
-        //     salesPrice: data.sPrice,
-        //     stdSalesPrice: data.sPrice,
-        //     stdPurchasePrice: data.PPrice,
 
-        //   } as SpecialPriceData)
-        // }}
-        batchDataUrl={Urls.select_foc_product_batch_grid}
-      />
+        <ERPProductSearch
+          type="text"
+          id="test"
+          keyId="testserch"
+          placeholder="Search Here"
+          productDataUrl={Urls.load_product_details}
+          searchByCode={getFieldProps("searchByCode").value}
+          onRowSelected={(data: any) => {
+            const obj = getFieldProps("*");
+            handleDataChange({
+              ...obj,
+              unitID: data.unitID,
+              unitName: data.unit,
+              barcode: data.autoBarcode,
+              salesPrice: data.sPrice,
+              stdSalesPrice: data.sPrice,
+              stdPurchasePrice: data.pPrice,
+              batchID: data.productBatchID, 
+            } as SpecialPriceData);
+          }}
+          batchDataUrl={Urls.select_foc_product_batch_grid}
+        />
       </div>
 
       <div className="grid lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">

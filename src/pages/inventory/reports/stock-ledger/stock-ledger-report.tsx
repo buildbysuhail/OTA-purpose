@@ -1,35 +1,33 @@
-import { Fragment } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { Fragment } from "react/jsx-runtime";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
+import { FC, useMemo } from "react";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import StockLedgerFilter, { StockLedgerFilterInitialState } from "./stock-ledger-report-filter";
 
 const StockLedger = () => {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
-      caption: t("SiNo"),
+      caption: t("si_no"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 100,
+      width: 40,
     },
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "date",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 80,
     },
     {
       dataField: "particulars",
@@ -38,17 +36,16 @@ const StockLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 70,
     },
     {
       dataField: "voucherType",
-      caption: t("voucherType"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 90,
     },
     {
       dataField: "form",
@@ -57,38 +54,34 @@ const StockLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 60,
     },
     {
       dataField: "voucherNo",
-      caption: t("voucherNo"),
-      dataType: "number",
+      caption: t("voucher_no"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 80,
     },
     {
       dataField: "inwardQty",
-      caption: t("inwardQty"),
+      caption: t("inward_qty"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 80,
     },
     {
       dataField: "outwardQty",
-      caption: t("outwardQty"),
+      caption: t("outward_qty"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 80,
     },
     {
       dataField: "balance",
@@ -97,79 +90,122 @@ const StockLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-
+      width: 80,
     },
     {
-      dataField: "qty",
+      dataField: "quantity",
       caption: t("qty"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 80,
     },
     {
       dataField: "unit",
       caption: t("unit"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
+      width: 80,
     },
     {
       dataField: "prefix",
       caption: t("prefix"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 80,
+    },
+    {
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      minWidth: 150,
+      visible: false,
+      width: 100,
     },
     {
-      dataField: "price",
+      dataField: "unitPrice",
       caption: t("price"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      minWidth: 150,
+      width: 65,
     },
     {
-      dataField: "financialYearID",
-      caption: t("financialYearID"),
-      dataType: "string",
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      width: 150,
-      visible: false
+      width: 80,
+      visible: false,
     },
   ];
+
+  const { getFormattedValue } = useNumberFormat();
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
+        return "0";
+      }
+      return getFormattedValue(value) || "0";
+    };
+  }, [getFormattedValue]);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "inwardQty",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "outwardQty",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "balance",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+  ];
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("stock_ledger_report")}
-                  dataUrl={Urls.inv_reports_stock_ledger}
-                  hideGridAddButton={true}
-                  enablefilter={true}
-                  showFilterInitially={true}
-                  method={ActionType.POST}
-                  filterContent={<StockLedgerFilter />}
-                  filterInitialData={StockLedgerFilterInitialState}
-                  reload={true}
-                  filterWidth={600}
-                  filterHeight={360}
-                  gridId="grd_stock_ledger"
-                />
-              </div>
+          <div className="px-4 pt-4 pb-2 ">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                summaryItems={summaryItems}
+                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                columns={columns}
+                moreOption={true}
+                gridHeader={t("stock_ledger_report")}
+                dataUrl={Urls.stock_ledger}
+                hideGridAddButton={true}
+                enablefilter={true}
+                showFilterInitially={true}
+                method={ActionType.POST}
+                filterContent={<StockLedgerFilter />}
+                filterWidth={790}
+                filterHeight={270}
+                filterInitialData={StockLedgerFilterInitialState}
+                reload={true}
+                gridId="grd_stock_ledger"
+              />
             </div>
           </div>
         </div>
@@ -177,4 +213,5 @@ const StockLedger = () => {
     </Fragment>
   );
 };
+
 export default StockLedger;

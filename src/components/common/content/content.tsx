@@ -188,6 +188,12 @@ import SchemeWiseSales from "../../../pages/inventory/reports/scheme-wise-sales-
 import SalesTax from "../../../pages/inventory/reports/sales-tax-report/sales-tax";
 import KsaEInvoiceReportSummary from "../../../pages/inventory/reports/ksa-e-invoice-report/ksa-e-invoice-summary.tsx";
 import KsaEInvoiceReportDetailed from "../../../pages/inventory/reports/ksa-e-invoice-report/ksa-e-invoice-detailed";
+import StockSummary from "../../../pages/inventory/reports/stock-summary-report/stock-summary";
+import ExpiryReport from "../../../pages/inventory/reports/expiry-report/expiry-report";
+import InventorySummaryReport from "../../../pages/inventory/reports/inventory-summary-report/inventory-summary-report";
+import ServiceReport from "../../../pages/inventory/reports/service-report/service-report";
+import SalesmanIncentiveReport from "../../../pages/inventory/reports/salesman-incentive-report/salesman-incentive-report";
+import PrivilegeCardReport from "../../../pages/inventory/reports/privilege-card-report/privilege-card";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -561,12 +567,18 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_goods_request_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />} />
         <Route path="/inventory/transaction_summary_report" element={<SummaryReport dataUrl={urls.transaction_summary} gridHeader="transaction_summary" gridId="grd_transaction_summary" />} />
         <Route path="/inventory/inventory_transaction_register_report" element={<SummaryReport dataUrl={urls.inventory_transaction_register} gridHeader="inventory_transaction_register" gridId="grd_inventory_transaction_register" />} />
-
+        <Route path="/inventory/stock_summary_report" element={<StockSummary />} />
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
+        <Route path="/inventory/expiry_report" element={<ExpiryReport />} />
+        <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
+        <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
+        <Route path="/inventory/inventory_summary_report" element={<InventorySummaryReport />} />
+        <Route path="/inventory/service_report" element={<ServiceReport />} />
+        <Route path="/inventory/salesman_incentive_report" element={<SalesmanIncentiveReport />} />
+        <Route path="/inventory/privilege_card_report" element={<PrivilegeCardReport />} />
+
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
-        <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
-        <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
         {/* global */}
         <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary />} />
         <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary />} />

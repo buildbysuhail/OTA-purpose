@@ -49,9 +49,7 @@ const styles = StyleSheet.create({
 export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string;currency?: string;}) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
-  const paddingLeft = template?.propertiesState?.padding?.left;
-  const paddingRight = template?.propertiesState?.padding?.right;
-  const paddingTop = template?.propertiesState?.padding?.top ;
+
 
   const fontFamily = template?.propertiesState?.font_family || "Roboto";
   const fontSize = template?.propertiesState?.font_size || 12;
@@ -135,13 +133,13 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
           {headerState?.hasPhoneField && (
             <View style={styles.otherInfo}>
               <Text style={labelStyles}>{headerState?.phoneLabel || "Phone No"}:</Text>
-              <Text style={fontStyles}>{currentBranch?.phone || "1234567891"}</Text>
+              <Text style={fontStyles}>{currentBranch?.phone}</Text>
             </View>
           )}
           {headerState?.hasfaxField && (
             <View style={styles.otherInfo}>
               <Text style={labelStyles}>{headerState?.faxLabel || "Fax No"}:</Text>
-              <Text style={fontStyles}>{currentBranch?.fax || "##12344543"}</Text>
+              <Text style={fontStyles}>{currentBranch?.fax}</Text>
             </View>
           )}
         </View>

@@ -4,13 +4,18 @@ import { accFormStateHandleFieldChange, updateFormElement, } from "../reducer";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
-interface AccMasterAccountrProps extends AccVoucherElementProps { getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string; }
+interface AccMasterAccountrProps extends AccVoucherElementProps { 
+  getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string; 
+
+  setIsPartyDetailsOpen: ()=> void;
+}
 
 const AccMasterAccount = React.forwardRef<HTMLInputElement, AccMasterAccountrProps>(({
   formState,
   dispatch,
   getFormattedValue,
-  t
+  t,
+  setIsPartyDetailsOpen
 }, ref) => {
   return (
     <>
@@ -52,9 +57,9 @@ const AccMasterAccount = React.forwardRef<HTMLInputElement, AccMasterAccountrPro
             labelInfo={
               <div className="">
                 <span className="text-xx text-primary">
-                  <button className="pe-3">
-                    {/* <CustomerDetailsSidebar displayType="link" /> */}
-                  </button>
+                {["DN","CN"].includes(formState.transaction.master.voucherType) &&
+                    <a onClick={setIsPartyDetailsOpen} type="popup" className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
+                   }
                   {t("bal")}:{" "}
                   {`${getFormattedValue(
                     formState.masterBalance < 0

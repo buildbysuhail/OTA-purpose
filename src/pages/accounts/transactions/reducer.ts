@@ -62,6 +62,7 @@ const accTransactionSlice = createSlice({
       } = action.payload;
       (state.row.ledgerCode = "");
       state.row.ledgerID = null;
+      state.row.ledgerName = "";
       state.row.accTransactionDetailID = 0;
       state.row.chequeStatus = "P";
       state.row.currencyID = 0;

@@ -908,7 +908,7 @@ const Header: FC<HeaderProps> = () => {
                 </div>
               </div> */}
               <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
-                <Link to="#" aria-label="anchor" onClick={toggleFullScreen} className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10">
+                <a type="popup" href="#" aria-label="anchor" onClick={toggleFullScreen} className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10">
                   {
                     fullScreen ? (
                       <i className="bx bx-exit-fullscreen full-screen-close header-link-icon"></i>
@@ -916,7 +916,7 @@ const Header: FC<HeaderProps> = () => {
                       <i className="bx bx-fullscreen full-screen-open header-link-icon"></i>
                     )
                   }
-                </Link>
+                </a>
               </div>
 
               {

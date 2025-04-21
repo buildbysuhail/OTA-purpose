@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
  
   });
   
-  export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
+  export const Content = ({ data, template, currentBranch, docIDKey, currency,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string;indexNO?:number }) => {
     const headerState = template?.headerState;
     const fontFamily = template?.propertiesState?.font_family || "Roboto";
     const fontSize = template?.propertiesState?.font_size || 12;
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
               }}>
                 <Text style={labelStyles}>{headerState?.numberField?`${headerState?.numberField} :`:"No :"}</Text>
                 <Text style={[fontStyles, styles.dottedBorder,{width:50}]}>
-                  {data.master?.voucherNumber || 1}
+                  {data.master?.voucherNumber }
                 </Text>
               </View>
            
@@ -121,8 +121,7 @@ const styles = StyleSheet.create({
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode?`${headerState?.accountTransactionInfo?.paymentMode}`:"PAYMENT GIVEN TO"}:</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
-                {(data?.master?.voucherType == VoucherType.CashPayment || data?.master?.voucherType == VoucherType.CashReceipt || data?.master?.voucherType == VoucherType.CashPaymentEstimate|| data?.master?.voucherType == VoucherType.CashReceiptEstimate)?"Cash":
-                (data?.master?.voucherType == VoucherType.BankPayment || data?.master?.voucherType == VoucherType.BankReceipt || data?.master?.voucherType == VoucherType.BankReconciliation)?"Bank":"Cash" }
+              {data.details[indexNO]?.ledgerName}
               </Text>
               </View>
             </View>
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
               <Text style={labelStyles}>the sum of rupees :</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
-                {getAmountInWords(Number(data.master?.totalDebit), currency)}
+                {getAmountInWords(Number(data.details[indexNO]?.amount), currency)}
               </Text>
               </View>
             </View>
@@ -143,8 +142,9 @@ const styles = StyleSheet.create({
            <View style={{ display: "flex", flexDirection: "row",gap:5, width:"100%",justifyContent:"flex-start" }}>
               <Text style={labelStyles}>by Cash/*Cheque/*DD No :</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
-                <Text style={fontStyles}>
-                
+              <Text style={fontStyles}>
+                {(data?.master?.voucherType == VoucherType.CashPayment || data?.master?.voucherType == VoucherType.CashReceipt || data?.master?.voucherType == VoucherType.CashPaymentEstimate|| data?.master?.voucherType == VoucherType.CashReceiptEstimate)?"Cash":
+                (data?.master?.voucherType == VoucherType.BankPayment || data?.master?.voucherType == VoucherType.BankReceipt || data?.master?.voucherType == VoucherType.BankReconciliation)?"Bank":"Cash" }
               </Text>
               </View>
             </View>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
               </View>
               <View style={{flex:1,backgroundColor:"rgb(246, 245, 245)"}}>
               <Text style={{color:"rgb(61, 60, 60)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>
-                {data.master?.totalDebit}
+               {data.details[indexNO]?.amount}
               </Text>
               </View>
             </View>

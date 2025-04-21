@@ -141,7 +141,6 @@ export const useAccPrint = () => {
    
     voucherType = isNullOrUndefinedOrEmpty(voucherType) ? formState.transaction.master.voucherType : voucherType
     let template = formState.template
-
     if (formState.template == undefined || formState.template == null || formState.template.id == 0) {
       template = await getOrFetchTemplate(voucherType)
       dispatch(accFormStateHandleFieldChange({ fields: { template: template } }))

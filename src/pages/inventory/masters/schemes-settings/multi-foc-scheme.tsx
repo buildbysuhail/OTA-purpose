@@ -23,6 +23,7 @@ export const initialFOCScheme: {
   data: {
     schemeID: 0,
     productBatchID: 0,
+    loadAllMultiFos:false,
     qtyLimit: 0,
     freeQty: 0,
     freeProductBatchID: 0,
@@ -46,6 +47,7 @@ export const initialFOCScheme: {
 
 export interface FOCSchemeData {
   schemeID: number;
+  loadAllMultiFos:boolean;
   productBatchID: number;
   freeProductBatchID: number;
   qtyLimit: number;
@@ -234,6 +236,8 @@ const MultiFOCScheme: React.FC = () => {
   return (
     <>
       <div className="grid grid-cols-1 gap-4">
+        <h6>{t("product_details")}</h6>
+        <div className="flex gap-4">
         <ERPDataCombobox
           {...getFieldProps("schemeID")}
           field={{
@@ -257,155 +261,158 @@ const MultiFOCScheme: React.FC = () => {
             )
           }}
         />
-        <div className="grid grid-cols-8 gap-4">
-          
-
-          <ERPInput
-            {...getFieldProps("qtyLimit")}
-            label={t("qty")}
-            type="number"
-            readOnly
-            onChangeData={(data: any) =>
-              handleFieldChange("qtyLimit", parseFloat(data.qtyLimit))
-            }
+        <ERPCheckbox
+            {...getFieldProps("loadAllMultiFos")}
+            label={t("loadAll_MultiFos")}
+            onChangeData={(data: any) => handleFieldChange("loadAllMultiFos", data.loadAllMultiFos)}
           />
-
-          <ERPInput
-            {...getFieldProps("freeQty")}
-            readOnly
-            label={t("free_quantity")}
-            type="number"
-            onChangeData={(data: any) =>
-              handleFieldChange("freeQty", parseFloat(data.freeQty))
-            }
-          />
-
-          <ERPInput
-            {...getFieldProps("stdSalesPrice")}
-            label={t("std_sales_price")}
-            type="number"
-            onChangeData={(data: any) =>
-              handleFieldChange("stdSalesPrice", parseFloat(data.stdSalesPrice))
-            }
-          />
-
+        </div>
+       
+        <div className="grid grid-cols-4 gap-4">
           <ERPInput
             {...getFieldProps("barCode")}
-            label={t("item_barcode")}
-            onKeyDown={(e: any) =>{
-               if (e.key === "Enter") {
-                fetchByBarcode();
-                     } 
-            }}
-            disableEnterNavigation
+            label={t("product_barcode")}
+          
             onChangeData={(data: any) =>
               handleFieldChange("barCode", data.barCode)
             }
           />
 
+          <ERPDataCombobox
+          {...getFieldProps("productName")}
+          field={{
+            id: "productName",
+            getListUrl: Urls.select_quantity_schemes_for_combo,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("product_name")}
+          // onChangeData={async(data: any) => {
+          //   const obj = getFieldProps("*")
+          //   const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`) ;
+          //   handleDataChange(
+          //       {
+          //           ...obj,
+          //           qtyLimit: res.qtyLimit,
+          //           freeQty: res.freeQty,
+          //           schemeID:data.schemeID
+
+          //       } as FOCSchemeData
+          //   )
+          // }}
+        />
+     
+          <ERPInput
+            {...getFieldProps("qtyLimit")}
+            label={t("qty")}
+            type="number"
+        
+            onChangeData={(data: any) =>
+              handleFieldChange("qtyLimit", parseFloat(data.qtyLimit))
+            }
+          />
+
+       <ERPDataCombobox
+          {...getFieldProps("unitID")}
+          field={{
+            id: "unitID",
+            getListUrl: Urls.select_quantity_schemes_for_combo,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("unit_id")}
+          // onChangeData={async(data: any) => {
+          //   const obj = getFieldProps("*")
+          //   const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`) ;
+          //   handleDataChange(
+          //       {
+          //           ...obj,
+          //           qtyLimit: res.qtyLimit,
+          //           freeQty: res.freeQty,
+          //           schemeID:data.schemeID
+
+          //       } as FOCSchemeData
+          //   )
+          // }}
+        />
+
+          
+        </div>
+        <h6>{t("free_product_details")}</h6>
+        <div className="grid grid-cols-4 gap-4">
+
           <ERPInput
             {...getFieldProps("freeItemBarcode")}
-            label={t("free_item_barcode")}
-            onKeyDown={(e: any) =>{
-                if (e.key === "Enter") {
-                  fetchByFreeItemBarcode();
-                      } 
-             }}
-             disableEnterNavigation
+            label={t("freeItemBarcode")}
             onChangeData={(data: any) =>
               handleFieldChange("freeItemBarcode", data.freeItemBarcode)
             }
           />
 
-          <ERPInput
-          readOnly
-            {...getFieldProps("unitName")}
-            label={t("item_unit")}
-            onChangeData={(data: any) =>
-              handleFieldChange("unitName", data.unitName)
-            }
-          />
+            
+        <ERPDataCombobox
+          {...getFieldProps("freeProductName")}
+          field={{
+            id: "freeProductName",
+            getListUrl: Urls.select_quantity_schemes_for_combo,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("free_product_name")}
+          // onChangeData={async(data: any) => {
+          //   const obj = getFieldProps("*")
+          //   const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`) ;
+          //   handleDataChange(
+          //       {
+          //           ...obj,
+          //           qtyLimit: res.qtyLimit,
+          //           freeQty: res.freeQty,
+          //           schemeID:data.schemeID
 
-          <ERPInput
-            {...getFieldProps("stdPurchasePrice")}
-            label={t("std_purchase_price")}
+          //       } as FOCSchemeData
+          //   )
+          // }}
+        />
+         <ERPInput
+             {...getFieldProps("freeQty")}
+            label={t("qty")}
             type="number"
+          
             onChangeData={(data: any) =>
-              handleFieldChange(
-                "stdPurchasePrice",
-                parseFloat(data.stdPurchasePrice)
-              )
+              handleFieldChange("freeQty", parseFloat(data.freeQty))
             }
-          />
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          <div className="flex items-end gap-2">
-          <ERPProductSearch
-        type="text"
-        id='test'
-        keyId='testserch'
-        placeholder="Search Here"
-        productDataUrl={Urls.load_product_details_foc}
-        // searchByCode={getFieldProps("searchByCode").value}
-        // onRowSelected={(data:any) => {
-        //   const obj = getFieldProps("*");
-        //   handleDataChange({...obj,
-        //     unitID: data.unitID,
-        //     unitName: data.unit,
-        //     barcode: data.autoBarcode,
-        //     stdSalesPrice: data.sPrice,
-        //     stdPurchasePrice: data.PPrice,
+           />
+  
+            <ERPDataCombobox
+          {...getFieldProps("freeUnitID")}
+          field={{
+            id: "freeUnitID",
+            getListUrl: Urls.select_quantity_schemes_for_combo,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("unit_id")}
+          // onChangeData={async(data: any) => {
+          //   const obj = getFieldProps("*")
+          //   const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`) ;
+          //   handleDataChange(
+          //       {
+          //           ...obj,
+          //           qtyLimit: res.qtyLimit,
+          //           freeQty: res.freeQty,
+          //           schemeID:data.schemeID
 
-        //   } as FOCSchemeData)
-        // }}
-        batchDataUrl={Urls.select_foc_product_batch_grid_foc}
-      />
-            <ERPCheckbox
-              {...getFieldProps("searchByCode")}
-              label={t("code")}
-              onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
-            />
-          </div>
-          <ERPInput
-            {...getFieldProps("remarks")}
-            label={t("remarks")}
-            onChangeData={(data: any) =>
-              handleFieldChange("remarks", data.remarks)
-            }
-          />
-
-          <ERPInput
-            {...getFieldProps("productName")}
-            label={t("item_name")}
-            onChangeData={(data: any) =>
-              handleFieldChange("productName", data.productName)
-            }
-          />
-          <ERPInput
-            {...getFieldProps("freeProductName")}
-            label={t("free_item_name")}
-            onChangeData={(data: any) =>
-              handleFieldChange("freeProductName", data.freeProductName)
-            }
-          />
+          //       } as FOCSchemeData
+          //   )
+          // }}
+        />
         </div>
       </div>
       <div className="w-full modal-content flex flex-col gap-4">
        
 
         <div className="flex justify-end gap-4 mt-4">
-          <ERPButton
-            title={t("load")}
-            variant="secondary"
-            onClick={handleLoad}
-            disabled={isDataLoading}
-          />
           <ERPButton title={t("add")} variant="secondary" onClick={handleAdd} />
-          <ERPButton
-            title={t("clear")}
-            variant="secondary"
-            onClick={handleClear}
-          />
         </div>
 
         <div>
@@ -422,16 +429,19 @@ const MultiFOCScheme: React.FC = () => {
               allowDeleting={false}
               allowAdding={false}
             />
-            <Column dataField="autoBarcode" width={100} caption={t("barcode")} />
+
+
+            <Column dataField="barCode" width={100} caption={t("barcode")} />
            <Column dataField="ProductName" width={300} caption={t("name")} />
-            <Column dataField="stdSalesPrice" width={80} caption={t("sales_price")} />
             <Column dataField="unitName" width={80} caption={t("unit")} />
             <Column dataField="qtyLimit" width={70} caption={t("qty")} />
 
-            <Column dataField="unitName" width={80} caption={t("unit")} />
-            <Column dataField="freeItem" width={100} caption={t("free_item")} />
+            <Column dataField="freeItemBarcode" width={100} caption={t("free_barcode")} />
+            <Column dataField="freeProductName" width={300} caption={t("free_item")} />        
+            <Column dataField="unitName" width={80} caption={t("free_unit")} />
             <Column dataField="freeQty" width={70} caption={t("free_qty")} />
-            <Column dataField="qtyDiscountID" width={100} caption={t("qty_discount_id")} visible={false} />
+            
+
             
             <Column caption="X" cellRender={renderDeleteCell} width={30} />
           </DataGrid>

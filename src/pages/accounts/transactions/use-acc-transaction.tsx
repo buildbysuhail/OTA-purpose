@@ -1527,8 +1527,11 @@ export const useAccTransaction = (
       ERPAlert.show({
         icon: "info",
         title: t("select_cost_center"),
+        onConfirm: (result: any) => {
+          focusCostCenterRef();
+      return false;
+        },
       });
-      focusCostCenterRef();
       return false;
     }
     const updatedFields: Record<string, any> = {

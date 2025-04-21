@@ -2857,6 +2857,7 @@ debugger;
                 variant="secondary"
                 className="flex-1 rounded-none !m-0"
                 disabled={
+                  formState.saving ||
                   formState.formElements.pnlMasters?.disabled ||
                   formState.transaction.details == null ||
                   formState.transaction.details.length == 0
@@ -2872,6 +2873,7 @@ debugger;
                 variant="primary"
                 className="flex-1 rounded-none !m-0"
                 disabled={
+                  formState.saving ||
                   formState.formElements.pnlMasters?.disabled ||
                   formState.transaction.details == null ||
                   formState.transaction.details.length == 0
@@ -3230,7 +3232,9 @@ debugger;
             variant="primary"
             onClick={save}
             className="w-24"
+            loading={formState.saving}
             disabled={
+              formState.saving ||
               formState.formElements.pnlMasters?.disabled ||
               formState.transaction.details == null ||
               formState.transaction.details.length == 0

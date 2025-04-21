@@ -29,8 +29,13 @@ export const clearEntryControl = (
   state: AccTransactionFormState,
   defaultCostCenterID: number
 ): AccTransactionFormState => {
+const costCentreID = ((state.userConfig?.presetCostenterId ?? 0) > 0
+? state.userConfig?.presetCostenterId ?? 0
+: defaultCostCenterID);
+
   state.row.ledgerCode = "";
   state.row.ledgerID = null;
+  state.row.costCentreName = "";
   state.row.accGroupName = "";
   state.row.amount = 0;
   state.row.discount = 0;
@@ -52,10 +57,8 @@ export const clearEntryControl = (
   state.isRowEdit = false;
   state.formElements.costCentreID.disabled =
     (state.userConfig?.presetCostenterId ?? 0) > 0;
-  state.row.costCentreID =
-    (state.userConfig?.presetCostenterId ?? 0) > 0
-      ? state.userConfig?.presetCostenterId ?? 0
-      : defaultCostCenterID;
+  state.row.costCentreID = costCentreID == 0 ? null : costCentreID;
+    
 
   state.transaction.master.totalAmount = calculateTotal(state);
   state.formElements.btnAdd.label = "Add";
@@ -200,6 +203,7 @@ export const setTransactionForHistory = (
     row: { ..._formState.row,
       ledgerID: _formState.row.ledgerID == null || _formState.row.ledgerID == ""  || _formState.row.ledgerID == 0 ? "" : _formState.row.ledgerID,
       ledgerName: _formState.row.ledgerName == null || _formState.row.ledgerName == ""   ? "" : _formState.row.ledgerName,
+      costCentreName: _formState.row.costCentreName == null || _formState.row.costCentreName == ""   ? "" : _formState.row.costCentreName,
       //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
       //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
        projectID:  _formState.row.projectID == undefined || _formState.row.projectID == null || _formState.row.projectID == "" || _formState.row.projectID == 0 ? 0 : _formState.row.projectID },

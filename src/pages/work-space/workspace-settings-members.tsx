@@ -15,6 +15,7 @@ import { postAction } from "../../redux/slices/app-thunks";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import InviteModal from "./invite-modal";
 import { useTranslation } from "react-i18next";
+import { Check } from "lucide-react";
 
 interface WorkspaceSettingsMembersProps { }
 const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
@@ -33,7 +34,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
   }
 
   const store = new CustomStore({
-    key: "Id",
+    key: "id",
     async load(loadOptions: any) {
       const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
       const queryString = paramNames
@@ -46,8 +47,8 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
         const result = response;
         return result !== undefined && result != null
           ? {
-            data: result,
-            totalCount: result.length,
+            data: result.data,
+            totalCount: result.totalCount,
           }
           : {
             data: [],
@@ -127,6 +128,8 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                     ref={dataGridRef}
                     height={gridHeight}
                     dataSource={store}
+                    
+            remoteOperations={{ filtering: true, paging: true, sorting: true }}
                     // "https://localhost:7213/api/Subscription/WorkSpace/GetMembers"
                     showBorders={true}
                     // remoteOperations={true}
@@ -165,7 +168,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       allowSearch={true}
                       minWidth={250}
                       allowFiltering={true}
-                      dataField="DisplayName"
+                      dataField="displayName"
                       caption={t("name")}
                       dataType="string"
                       cellRender={({ data }) => (
@@ -173,10 +176,10 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                           <div>
                             <span className="avatar avatar-md avatar-rounded ">
                               <ErpAvatar
-                                alt={data.DisplayName}
+                                alt={data.displayName}
                                 src={
                                   typeof data.UserImage === "string"
-                                    ? data.UserImage
+                                    ? data.userImage
                                     : "#"
                                 }
                                 sx={{ width: 40, height: 40 }}
@@ -186,7 +189,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                           <div className="flex-grow p-2">
                             <div className="flex items-center !justify-between">
                               <h6 className="mb-1  text-[1rem]">
-                                {data.DisplayName}
+                                {data.displayName}
                               </h6>
                             </div>
                             {/* <p className="mb-1 opacity-[0.7]">
@@ -196,25 +199,60 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                         </div>
                       )}
                     />
-                    <Column
-                      width={250}
-                      allowSearch={true}
-                      allowFiltering={true}
-                      dataField="Email"
-                      caption={t("email")}
-                      dataType="string"
-                    />
-                    <Column
+                  <Column
+              dataField="email"
+              caption="Email"
+              dataType="string"
+              allowSearch={true}
+              allowFiltering={true}
+              cellRender={({ data }) => (
+                <div className="flex items-center gap-2">
+                  {data.isEmailVerified ? (
+                    <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#3057d8] ring-2">
+                    <Check className="w-2 h-2 text-[#ffffff]" />
+                  </div>
+                  ) : (
+                    <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gray-100 ring-2 ring-gray-300 hover:scale-110 transition-transform">
+                      {/* <Check className="w-2 h-2 text-gray-300" /> */}
+                    </div>
+                  )}
+                  <span className="font-medium">{data.email}</span>
+                </div>
+              )}
+            />
+
+            <Column
+              dataField="phoneNumber"
+              caption="Phone"
+              dataType="string"
+              allowSearch={true}
+              allowFiltering={true}
+              cellRender={({ data }) => (
+                <div className="flex items-center gap-2">
+                  {data.isPhoneVerified ? (
+                    <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#3057d8] ring-2">
+                      <Check className="w-2 h-2 text-[#ffffff]" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gray-100 ring-2 ring-gray-300 hover:scale-110 transition-transform">
+                      {/* <Check className="w-2 h-2 text-gray-300  "/> */}
+                    </div>
+                  )}
+                  <span className="font-medium">{data.phoneNumber}</span>
+                </div>
+              )}
+            />
+                    {/* <Column
                       width={150}
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="LastActive"
                       caption={t("last_active")}
                       dataType="datetime"
-                    />
+                    /> */}
                     <Column
                       width={100}
-                      dataField="Active"
+                      dataField="active"
                       caption={t("status")}
                       cellRender={({ data }) =>
                         data.Active === true ? (
@@ -233,7 +271,6 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       allowFiltering={false}
                       allowHeaderFiltering={false}
                       width={100}
-                      dataField="Active"
                       caption={t("action")}
                       cellRender={({ data }) => (
                         <div className="hs-dropdown ti-dropdown ms-2">

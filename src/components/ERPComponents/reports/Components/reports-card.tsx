@@ -106,7 +106,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
                     e.stopPropagation();
                     toggleFavorite(route.id);
                   }}>
-                  {favorites.includes(route.id) ? (
+                  {Array.isArray(favorites) && favorites?.includes(route.id) ? (
                     <svg
                       className="w-[15px] h-[15px] transition-colors duration-300 fill-[#FFC107]"
                       xmlns="http://www.w3.org/2000/svg"

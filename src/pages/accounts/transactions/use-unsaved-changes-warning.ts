@@ -141,11 +141,11 @@ export const useUnsavedChangesWarning = () => {
       
       const target = e.target as any;
       const isNavigationLink =
-      target?.tagName === "a" ||
+     ( target?.tagName === "a" ||
       target?.tagName === "A" ||
         target?.closest("a") ||
         target?.hasAttribute("href") ||
-        target?.role === "link" ;
+        target?.role === "link") && target.type != "popup" ;
         // console.log("🔹 Clicked Element:", target);
         // console.log("🔹 Tag Name:", target?.tagName);
         // console.log("🔹 Attributes:", target?.attributes);

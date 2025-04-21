@@ -6,10 +6,17 @@ import { useTranslation } from "react-i18next";
 import ReportsCard from "./Components/reports-card";
 import { ReportsMenuItems } from "../../common/sidebar/sidemenu/reports-routes";
 import { useNavigate } from "react-router-dom";
-import { Cog6ToothIcon, XMarkIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  Cog6ToothIcon,
+  XMarkIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/20/solid";
 import { SettingsMenuItems } from "../../common/sidebar/sidemenu/settings";
 import ERPToast from "../erp-toast";
 import { ChartLine } from "lucide-react";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import { customJsonParse } from "../../../utilities/jsonConverter";
 
 interface MenuItem {
   title: string;
@@ -23,7 +30,7 @@ interface SearchResultBarProps {
   selectedIndex: number;
   onItemClick: (item: MenuItem) => void;
 }
-
+const api = new APIClient();
 const ReportList = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -45,8 +52,8 @@ const ReportList = () => {
     let favoriteItems: { id: number; title: string; children?: any[] }[] = [];
 
     routes.forEach((route: any) => {
-      if (favorites.includes(route.id)) {
-        favoriteItems.push(route);
+      if (Array.isArray(favorites) && favorites?.includes(route.id)) {
+        favoriteItems?.push(route);
       }
 
       if (route.children) {
@@ -54,7 +61,7 @@ const ReportList = () => {
           route.children,
           favorites
         );
-        favoriteItems = favoriteItems.concat(childFavorites);
+        favoriteItems = favoriteItems?.concat(childFavorites);
       }
     });
 
@@ -62,53 +69,37 @@ const ReportList = () => {
   };
   const toggleFavorite = async (routeId: number) => {
     setFavorites((prevFavorites) => {
-      const newFavorites = prevFavorites.includes(routeId)
-        ? prevFavorites.filter((id) => id !== routeId)
+      const newFavorites = prevFavorites?.includes(routeId)
+        ? prevFavorites?.filter((id) => id !== routeId)
         : [...prevFavorites, routeId];
-
-      updateFavoriteStatus(routeId, newFavorites.includes(routeId));
+  
+      // Call updateFavoriteStatus *after* state is updated
+      updateFavoriteStatus(newFavorites);
       return newFavorites;
     });
   };
-  const updateFavoriteStatus = async (routeId: number, isFavorite: boolean) => {
-    // try {
-    //   const response = await fetch('https://api.example.com/updateFavorite', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': 'Bearer YOUR_API_KEY'
-    //     },
-    //     body: JSON.stringify({ id: routeId, isFavorite })
-    //   });
-    //   if (!response.ok) {
-    //     // ERPToast.showWith("Failed to update favorite status. Please try again.", "error");
-    //   }
-    // } catch (error) {
-    //   // console.error('Error updating favorite status:', error);
-    //   // ERPToast.showWith("Error updating favorite status. Please try again.", "error");
-    // }
+  
+  const updateFavoriteStatus = async (data: any) => {
+    try {
+      await api.postAsync(Urls.get_product_config, data);
+    } catch (error) {
+      console.error("Failed to update favorite status", error);
+    }
   };
+  
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await fetch('https://api.example.com/getData', {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': 'Bearer YOUR_API_KEY'
-    //       }
-    //     });
-    //     if (response.ok) {
-    //       const result = await response.json();
-    //       setFavorites(result.favoriteIds || []);
-    //     } else {
-    //       console.error('Failed to fetch data');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error);
-    //   }
-    // };
-    // fetchData();
+    const fetchData = async () => {
+      try {
+        const base64 = await api.getAsync(Urls.get_product_config);
+        const _userConfig = atob(base64);
+        const userConfig: any = customJsonParse(_userConfig);
+        setFavorites(userConfig);
+      } catch (error) {
+        console.error("Failed to fetch product config", error);
+      }
+    };
+  
+    fetchData();
   }, []);
   useEffect(() => {
     const favoriteItems = findFavoritesInChildren(settingsRoutes, favorites);
@@ -120,7 +111,9 @@ const ReportList = () => {
   const [open, setIsOpen] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<MenuItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const handleNavigation = () => { navigate("/"); };
+  const handleNavigation = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     if (search) {
@@ -200,8 +193,10 @@ const ReportList = () => {
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
           <div className="flex items-center gap-1">
-            <ChartLine  className="w-5 aspect-square" />
-            <h3 className="text-base dark:!text-dark-text font-medium">{t("Reports")}</h3>
+            <ChartLine className="w-5 aspect-square" />
+            <h3 className="text-base dark:!text-dark-text font-medium">
+              {t("Reports")}
+            </h3>
           </div>
 
           <div
@@ -217,7 +212,9 @@ const ReportList = () => {
         <div className="px-6 py-4 flex justify-center">
           <div className="w-full max-w-lg relative">
             <div className="flex h-10">
-              <div className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border bg-slate-50 border border-r-0 rounded-md rounded-r-none`}>
+              <div
+                className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border bg-slate-50 border border-r-0 rounded-md rounded-r-none`}
+              >
                 <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
               </div>
               <input
@@ -252,7 +249,7 @@ const ReportList = () => {
                 <XMarkIcon
                   className="w-4 aspect-square stroke-red-700 absolute right-2 top-3 cursor-pointer"
                   onClick={() => {
-                    setSearch('');
+                    setSearch("");
                   }}
                 />
               )}
@@ -288,8 +285,8 @@ const ReportList = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3">
-            {favoriteItems.length > 0 &&
-              favoriteItems.map((favoriteItem) => (
+            {favoriteItems?.length > 0 &&
+              favoriteItems?.map((favoriteItem) => (
                 <div
                   key={`${favoriteItem.id}-${favoriteItem.id}`}
                   className="flex items-center min-w-0"
@@ -312,7 +309,10 @@ const ReportList = () => {
                     </g>
                   </svg>
 
-                  <span className="text-sm text-[#4B8BF4] truncate" title={t(favoriteItem.title)}>
+                  <span
+                    className="text-sm text-[#4B8BF4] truncate"
+                    title={t(favoriteItem.title)}
+                  >
                     {t(favoriteItem.title)}
                   </span>
                 </div>
@@ -324,7 +324,7 @@ const ReportList = () => {
             {settingsRoutes?.map((item: any, idx: number) => {
               return (
                 <ReportsCard
-                  favorites={favorites}
+                  favorites={favorites||[]}
                   toggleFavorite={toggleFavorite}
                   data={item}
                   key={`QKLJM34${idx}`}
@@ -340,28 +340,41 @@ const ReportList = () => {
 
 export default ReportList;
 
-export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
-  const { t } = useTranslation('main');
+export const SearchResultBar: React.FC<SearchResultBarProps> = ({
+  isOpen,
+  searchResults,
+  selectedIndex,
+  onItemClick,
+}) => {
+  const { t } = useTranslation("main");
 
   return (
-    <div className={`${isOpen ? "max-h-[300px]" : "h-0"} absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}>
+    <div
+      className={`${
+        isOpen ? "max-h-[300px]" : "h-0"
+      } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
+    >
       <div className={`flex flex-col dark:bg-dark-bg-card `}>
         {searchResults.length > 0 ? (
           searchResults.map((item, idx) => (
             <div className={`w-full p-1 `} key={`SR_${idx}`}>
               <p
-                className={`text-[13px] rounded-lg p-2 cursor-pointer ${idx === selectedIndex
-                  ? "bg-primary text-white"
-                  : "hover:bg-primary hover:text-white"
-                  }`}
-                onClick={() => onItemClick(item)}>
+                className={`text-[13px] rounded-lg p-2 cursor-pointer ${
+                  idx === selectedIndex
+                    ? "bg-primary text-white"
+                    : "hover:bg-primary hover:text-white"
+                }`}
+                onClick={() => onItemClick(item)}
+              >
                 {t(item.title as any)}
               </p>
             </div>
           ))
         ) : (
           <div className="w-full p-1">
-            <p className="text-xs italic text-center p-2">{t("no_data_found")}</p>
+            <p className="text-xs italic text-center p-2">
+              {t("no_data_found")}
+            </p>
           </div>
         )}
       </div>

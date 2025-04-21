@@ -6,6 +6,7 @@ import FOCScheme from "./foc-scheme";
 import GiftOnBilling from "./gift-on-billing";
 import QuantityLimit from "./quantity-limit";
 import QuantitySlabOffer from "./qty-slab-offer";
+import MultiFOCScheme from "./multi-foc-scheme";
 
 const SchemeSettingsSpecial = () => {
   const { t } = useTranslation('inventory');
@@ -39,6 +40,11 @@ const SchemeSettingsSpecial = () => {
                   />
                   <Tab
                     className="dark:text-dark-text"
+                    label={t("multi_foc_scheme")}
+                    value="multiFOCScheme"
+                  />
+                  <Tab
+                    className="dark:text-dark-text"
                     label={t("gift_on_billing")}
                     value="giftOnBilling"
                   />
@@ -60,6 +66,9 @@ const SchemeSettingsSpecial = () => {
 
                   {activeTab === "focScheme" && (
                     <FOCScheme />
+                  )}
+                  {activeTab === "multiFOCScheme" && (
+                    <MultiFOCScheme />
                   )}
 
                   {activeTab === "giftOnBilling" && (

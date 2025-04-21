@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import initialProductData from "../products-data";
@@ -49,6 +49,26 @@ const ProductOthersGcc: React.FC<{
 
           handleDataChange(_data);
       };
+      
+          useEffect(() => {
+            const fetchData = async () => {
+              try {
+                const prev = getFieldProps("*");
+                const base64 = await api.getAsync(Urls.get_product_config);
+                const _userConfig = atob(base64);
+                const userConfig: any = customJsonParse(_userConfig);
+                const _data = {
+                  ...prev,
+                };
+                _data.config = userConfig;
+                handleDataChange(_data); 
+              } catch (error) {
+                console.error("Failed to fetch product config", error);
+              }
+            };
+          
+            fetchData();
+          }, []);
     return (
         <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
             <div className="flex items-center gap-4">

@@ -71,7 +71,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
                 true ? null : (
                 <div>
                   <span className="text-primary">
-                    <a onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
+                    <a onClick={setIsPartyDetailsOpen} type="popup" className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
                     {t("bal")}:{" "}
                     {`${getFormattedValue(
                       formState.ledgerBalance < 0

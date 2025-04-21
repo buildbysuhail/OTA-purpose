@@ -21,23 +21,25 @@ export const initialFOCScheme: {
   [key: string]: any;
 } = {
   data: {
-      schemeID: 0,
-      productBatchID: 0,
-      qtyLimit: 0,
-      freeQty: 0,
-      freeProductBatchID: 0,
-      remarks: "",
-      unitID: 0,
-      barCode: "",
-      freeItemBarcode: "",
-      unitName: "",
-      productName: "",
-      stdSalesPrice: 0,
-      freeStdSalesPrice: 0,
-      stdPurchasePrice: 0,
-      freeStdPurchasePrice: 0,
-      freeProductName: "",
-      searchByCode: false
+    schemeID: 0,
+    productBatchID: 0,
+    qtyLimit: 0,
+    freeQty: 0,
+    freeProductBatchID: 0,
+    remarks: "",
+    unitID: 0,
+    barCode: "",
+    freeItemBarcode: "",
+    unitName: "",
+    productName: "",
+    stdSalesPrice: 0,
+    freeStdSalesPrice: 0,
+    stdPurchasePrice: 0,
+    freeStdPurchasePrice: 0,
+    freeProductName: "",
+    searchByCode: false,
+    freeUnitID: 0,
+    freeUnitName: ""
   },
   validations: {},
 };
@@ -45,24 +47,29 @@ export const initialFOCScheme: {
 export interface FOCSchemeData {
   schemeID: number;
   productBatchID: number;
+  freeProductBatchID: number;
   qtyLimit: number;
   freeQty: number;
-  freeProductBatchID: number;
   remarks: string;
   unitID: number;
+  unitName: string;
+  freeUnitID: number;
+  freeUnitName: string;
+  
+  productName: string;
+  freeProductName: string;
+  
+  barCode: string;
+  freeItemBarcode: string;
+  
   stdSalesPrice: number;
   freeStdSalesPrice: number;
   stdPurchasePrice: number;
   freeStdPurchasePrice: number;
-  barCode: string;
-  unitName: string;
-  productName: string;
-  freeProductName: string;
-  freeItemBarcode: string;
   searchByCode: boolean;
 }
 
-const FOCScheme: React.FC = () => {
+const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
@@ -301,7 +308,7 @@ const FOCScheme: React.FC = () => {
             label={t("free_item_barcode")}
             onKeyDown={(e: any) =>{
                 if (e.key === "Enter") {
-                    fetchByFreeItemBarcode();
+                  fetchByFreeItemBarcode();
                       } 
              }}
              disableEnterNavigation
@@ -415,11 +422,13 @@ const FOCScheme: React.FC = () => {
               allowDeleting={false}
               allowAdding={false}
             />
-           <Column dataField="buyItem" width={300} caption={t("name")} />
             <Column dataField="autoBarcode" width={100} caption={t("barcode")} />
+           <Column dataField="ProductName" width={300} caption={t("name")} />
             <Column dataField="stdSalesPrice" width={80} caption={t("sales_price")} />
             <Column dataField="unitName" width={80} caption={t("unit")} />
             <Column dataField="qtyLimit" width={70} caption={t("qty")} />
+
+            <Column dataField="unitName" width={80} caption={t("unit")} />
             <Column dataField="freeItem" width={100} caption={t("free_item")} />
             <Column dataField="freeQty" width={70} caption={t("free_qty")} />
             <Column dataField="qtyDiscountID" width={100} caption={t("qty_discount_id")} visible={false} />
@@ -433,4 +442,4 @@ const FOCScheme: React.FC = () => {
   );
 };
 
-export default FOCScheme;
+export default MultiFOCScheme;

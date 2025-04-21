@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
@@ -8,6 +8,7 @@ import POSFastMovingItems from "../common/fast-mooving";
 import ChangeBarcode from "../common/change-barcode";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
+import { customJsonParse } from "../../../../../utilities/jsonConverter";
 
 const api = new APIClient();
 const ProductOthersIndia: React.FC<{
@@ -36,6 +37,25 @@ const ProductOthersIndia: React.FC<{
 
       handleDataChange(_data);
     };
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const prev = getFieldProps("*");
+          const base64 = await api.getAsync(Urls.get_product_config);
+          const _userConfig = atob(base64);
+          const userConfig: any = customJsonParse(_userConfig);
+          const _data = {
+            ...prev,
+          };
+          _data.config = userConfig;
+          handleDataChange(_data); 
+        } catch (error) {
+          console.error("Failed to fetch product config", error);
+        }
+      };
+    
+      fetchData();
+    }, []);
     const [activePopup, setActivePopup] = useState<string | null>(null);
     const openPopup = (popupType: string) => setActivePopup(popupType);
     const closePopup = () => setActivePopup(null);

@@ -1920,6 +1920,12 @@ debugger;
                       dispatch={dispatch}
                       getFormattedValue={getFormattedValue}
                       t={t}
+                      setIsPartyDetailsOpen={() => {
+                        setIsPartyDetailsOpen((prev: any) => {
+                          debugger;
+                          return !prev;
+                        });
+                      }}
                     />
                     <AccReferenceNumber
                       formState={formState}
@@ -2190,6 +2196,12 @@ debugger;
                           dispatch={dispatch}
                           getFormattedValue={getFormattedValue}
                           t={t}
+                          setIsPartyDetailsOpen={() => {
+                            setIsPartyDetailsOpen((prev: any) => {
+                              debugger;
+                              return !prev;
+                            });
+                          }}
                         />
                         <div className="flex flex-wrap gap-4">
                           <AccDrCrJv
@@ -2639,6 +2651,12 @@ debugger;
                   dispatch={dispatch}
                   getFormattedValue={getFormattedValue}
                   t={t}
+                  setIsPartyDetailsOpen={() => {
+                    setIsPartyDetailsOpen((prev: any) => {
+                      debugger;
+                      return !prev;
+                    });
+                  }}
                 />
                 <AccRemarks
                   ref={remarksRef}

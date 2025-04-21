@@ -66,6 +66,7 @@ const accTransactionSlice = createSlice({
       state.row.accTransactionDetailID = 0;
       state.row.chequeStatus = "P";
       state.row.currencyID = 0;
+      state.row.costCentreName = "";
       state.row.chqDate = moment().local().toISOString();
       state.row.bankDate = moment().local().toISOString();
       state.row.narration = "";

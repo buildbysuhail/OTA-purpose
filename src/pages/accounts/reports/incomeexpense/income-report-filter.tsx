@@ -43,10 +43,10 @@ const IncomeReportFilter = ({
       />
       {getFormState()?.data?.accGroupID != undefined && (
         <ERPDataCombobox
-          {...getFieldProps("accLedgerID")}
+          {...getFieldProps("ledgerID")}
           label={t("ledger")}
           field={{
-            id: "accLedgerID",
+            id: "ledgerID",
             getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${getFormState()?.data?.accGroupID
               }`,
             //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',             
@@ -54,7 +54,7 @@ const IncomeReportFilter = ({
             labelKey: "name",
           }}
           onChangeData={(data) =>
-            handleFieldChange("accLedgerID", data.accLedgerID)
+            handleFieldChange("ledgerID", data.ledgerID)
           }
         />
       )}
@@ -87,7 +87,7 @@ const IncomeReportFilter = ({
           })
         }
       />
-      <ERPDataCombobox
+      {/* <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
         label={t("sales_route")}
         field={{
@@ -102,7 +102,7 @@ const IncomeReportFilter = ({
             salesRouteName: data.name,
           })
         }
-      />
+      /> */}
     </div>
   );
 };

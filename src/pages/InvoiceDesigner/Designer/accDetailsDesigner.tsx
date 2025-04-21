@@ -416,7 +416,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
         </div>
 
         
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showOverPayment"
                 label="Over Payment"
@@ -432,10 +432,10 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                   onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, overPayment: e.target?.value } })}
                 />
               )}
-         </div>
+         </div> */}
 
             {/* */}
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
                 <ERPInput
                   label="Payment Refund"
                   id="paymentRefund"
@@ -443,7 +443,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                   onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, paymentRefund: e.target?.value } })}
                 />
            
-            </div>
+            </div> */}
           {/* */}
 
           {/* */}
@@ -464,7 +464,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedLabel: e.target?.value } })}
           />
 
-          <div className="flex justify-start gap-4 ">
+          {/* <div className="flex justify-start gap-4 ">
              <label htmlFor="currencySymbolPosition" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70  font-semibold">
               Currency Symbol Position
               </label>
@@ -484,7 +484,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                 label="After"
               />
              </div>
-          </div>
+          </div> */}
           <label htmlFor="amtReceived" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70  font-semibold">
           Amount Received
           </label>

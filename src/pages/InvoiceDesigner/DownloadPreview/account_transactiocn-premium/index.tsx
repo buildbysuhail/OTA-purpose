@@ -66,7 +66,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
         </View>
 
         {/* Footer */}
-        <Footer data={data} template={template} />
+        {/* <Footer data={data} template={template} /> */}
       </Page>
     </Document>
   )

@@ -216,15 +216,7 @@ export const Content = ({
             </View>
           )}
 
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
-            <Text style={labelStyles}>Sample Tax1(4.70%)</Text>
-            <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>$11.75</Text>
-          </View>
-
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
-            <Text style={labelStyles}>Sample Tax2(7.00%)</Text>
-            <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>$21.75</Text>
-          </View>
+        
 
           {headerState?.accountTransactionInfo?.showAmountInWords && (
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
@@ -258,7 +250,7 @@ export const Content = ({
       </View>
 
       {/* Bill To and Signature */}
-      <View style={[styles.companyInfo, { marginVertical: 10 }]}>
+      {/* <View style={[styles.companyInfo, { marginVertical: 10 }]}>
         <View style={{ display: "flex", flexDirection: "column", gap: 1 }}>
           {headerState?.showReceivedFrom && (
             <View>
@@ -307,7 +299,7 @@ export const Content = ({
             </View>
           </View>
         )}
-      </View>
+      </View> */}
 
       {/* Notes */}
       {template?.footerState?.showNotesLabel && (
@@ -321,7 +313,7 @@ export const Content = ({
 
       {/* Refund */}
       <View style={{ width: "100%", borderTop: "0.5px solid #DFDFDF", marginVertical: 5 }} />
-      <View style={styles.payment}>
+      {/* <View style={styles.payment}>
         <View style={[styles.paymentCol]}>
           <Text style={labelStyles}>
             {template?.headerState?.accountTransactionInfo?.paymentRefund || "Total Discount"}
@@ -337,8 +329,8 @@ export const Content = ({
             <Text style={fontStyles}>{data?.master?.totDiscount ?? "5.00$"}</Text>
           </View>
         )}
-      </View>
-      <View style={{ width: "100%", borderTop: "0.5px solid #DFDFDF", marginVertical: 5 }} />
+      </View> */}
+      {/* <View style={{ width: "100%", borderTop: "0.5px solid #DFDFDF", marginVertical: 5 }} /> */}
     </View>
   )
 }

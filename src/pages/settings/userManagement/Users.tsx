@@ -28,6 +28,14 @@ const Users = () => {
       showInPdf: true,
     },
     {
+      dataField: "isWebUser",
+      caption: t("is_webuser"),
+      dataType: "boolean",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 60,
+    },
+    {
       dataField: "id",
       caption: t("id"),
       dataType: "number",

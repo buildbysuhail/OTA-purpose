@@ -15,26 +15,13 @@ const TrialBalanceReportFilter = ({
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4">
-      {/* Date Range Section */}
-      <ERPDataCombobox
-        {...getFieldProps("accGroupID")}
-        label={t("a/c_group_balance")}
-        field={{
-          id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) =>
-          handleFieldChange("accGroupID", data.accGroupID)
-        }
-      />
       <ERPDateInput
         {...getFieldProps("asonDate")}
         label={t("as_on_date")}
         onChangeData={(data: any) =>
           handleFieldChange("asonDate", data.asonDate)
         }
+        className="max-w-[150px]"
         autoFocus={true}
       />
       {/* <ERPDateInput
@@ -42,20 +29,36 @@ const TrialBalanceReportFilter = ({
         label={t("To")}
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
       /> */}
-      <ERPDataCombobox
-        {...getFieldProps("costCentreID")}
-        label={t("cost_centre")}
-        field={{
-          id: "costCentreID",
-          getListUrl: Urls.data_costcentres,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) =>
-          handleFieldChange("costCentreID", data.costCentreID)
-        }
-      />
-      <div className="text-left">
+
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4">
+        <ERPDataCombobox
+          {...getFieldProps("accGroupID")}
+          label={t("a/c_group_balance")}
+          field={{
+            id: "accGroupID",
+            getListUrl: Urls.data_acc_groups,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange("accGroupID", data.accGroupID)
+          }
+        />
+
+        <ERPDataCombobox
+          {...getFieldProps("costCentreID")}
+          label={t("cost_centre")}
+          field={{
+            id: "costCentreID",
+            getListUrl: Urls.data_costcentres,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange("costCentreID", data.costCentreID)
+          }
+        />
+
         <ERPCheckbox
           {...getFieldProps("showGroupSummaryOnly")}
           label={t("show_group_summary")}

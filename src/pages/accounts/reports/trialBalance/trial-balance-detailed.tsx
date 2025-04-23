@@ -29,7 +29,7 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -40,7 +40,7 @@ const TrialBalancePeriodwise = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text:cellInfo.value,
+            text: cellInfo.value,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
@@ -54,10 +54,11 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : ''}`}>
-          {cellElement.data.accGroupID}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : ''}`}>
+            {cellElement.data.accGroupID}
+          </span>)
+        }
+      }
     },
     {
       dataField: "ledgerID",
@@ -65,7 +66,7 @@ const TrialBalancePeriodwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       width: 100,
     },
     {
@@ -73,8 +74,8 @@ const TrialBalancePeriodwise = () => {
       caption: t("acc_group_name"),
       dataType: "string",
       allowSearch: true,
-      width:220,
-      visible:false,
+      width: 220,
+      visible: false,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -179,10 +180,11 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${(cellElement.data?.openingCredit == 0 &&cellElement.data.isGroup ==false) || cellElement.data?.openingDebit == null ? '' : cellElement.data.openingDebit < 0 ? getFormattedValue(-1 * cellElement.data.openingDebit) : getFormattedValue(cellElement.data.openingDebit)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${(cellElement.data?.openingCredit == 0 && cellElement.data.isGroup == false) || cellElement.data?.openingDebit == null ? '' : cellElement.data.openingDebit < 0 ? getFormattedValue(-1 * cellElement.data.openingDebit) : getFormattedValue(cellElement.data.openingDebit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "openingCredit",
@@ -217,10 +219,11 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return (  <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${(cellElement.data?.openingCredit == 0 &&cellElement.data.isGroup ==false) || cellElement.data?.openingCredit == null ? '' : cellElement.data.openingCredit < 0 ? getFormattedValue(-1 * cellElement.data.openingCredit) : getFormattedValue(cellElement.data.openingCredit)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${(cellElement.data?.openingCredit == 0 && cellElement.data.isGroup == false) || cellElement.data?.openingCredit == null ? '' : cellElement.data.openingCredit < 0 ? getFormattedValue(-1 * cellElement.data.openingCredit) : getFormattedValue(cellElement.data.openingCredit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "openingBalance",
@@ -256,10 +259,11 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return (  <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.openingBalance == null ? '' : cellElement.data.openingBalance < 0 ? getFormattedValue(-1 * cellElement.data.openingBalance) : getFormattedValue(cellElement.data.openingBalance)} ${cellElement.data?.openingBalance == null ? '' : cellElement.data?.openingBalance >= 0 ? 'Dr' : 'Cr'}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.openingBalance == null ? '' : cellElement.data.openingBalance < 0 ? getFormattedValue(-1 * cellElement.data.openingBalance) : getFormattedValue(cellElement.data.openingBalance)} ${cellElement.data?.openingBalance == null ? '' : cellElement.data?.openingBalance >= 0 ? 'Dr' : 'Cr'}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "debit",
@@ -374,7 +378,7 @@ const TrialBalancePeriodwise = () => {
         }
         else {
           return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${ cellElement.data?.periodBalance == null ? '' : cellElement.data.periodBalance < 0 ? getFormattedValue(-1 * cellElement.data.periodBalance) : getFormattedValue(cellElement.data.periodBalance)} ${ cellElement.data?.periodBalance == null ? '' : cellElement.data?.periodBalance >= 0 ? 'Dr' : 'Cr'}`}
+            {`${cellElement.data?.periodBalance == null ? '' : cellElement.data.periodBalance < 0 ? getFormattedValue(-1 * cellElement.data.periodBalance) : getFormattedValue(cellElement.data.periodBalance)} ${cellElement.data?.periodBalance == null ? '' : cellElement.data?.periodBalance >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
         }
       }
@@ -412,11 +416,12 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return (   <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.closingDebit == 0 || cellElement.data?.closingDebit == null ? '' : cellElement.data.closingDebit < 0 ? getFormattedValue(-1 * cellElement.data.closingDebit) : getFormattedValue(cellElement.data.closingDebit)}`}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.closingDebit == 0 || cellElement.data?.closingDebit == null ? '' : cellElement.data.closingDebit < 0 ? getFormattedValue(-1 * cellElement.data.closingDebit) : getFormattedValue(cellElement.data.closingDebit)}`}
 
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "closingCredit",
@@ -451,10 +456,11 @@ const TrialBalancePeriodwise = () => {
           };
         }
         else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.closingCredit == 0 || cellElement.data?.closingCredit == null ? '' : cellElement.data.closingCredit < 0 ? getFormattedValue(-1 * cellElement.data.closingCredit) : getFormattedValue(cellElement.data.closingCredit)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.closingCredit == 0 || cellElement.data?.closingCredit == null ? '' : cellElement.data.closingCredit < 0 ? getFormattedValue(-1 * cellElement.data.closingCredit) : getFormattedValue(cellElement.data.closingCredit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "closingBalance",
@@ -491,7 +497,7 @@ const TrialBalancePeriodwise = () => {
         }
         else {
           return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${ cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${ cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
+            {`${cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
         }
       }
@@ -503,7 +509,7 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -543,8 +549,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width:100,
-      visible:false,
+      width: 100,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -582,8 +588,8 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width:100,
-      visible:false,
+      width: 100,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -621,8 +627,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width:100,
-      visible:false
+      width: 100,
+      visible: false
     },
   ];
   return (
@@ -643,8 +649,8 @@ const TrialBalancePeriodwise = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterHeight={420}
-                  filterWidth={430}
+                  filterHeight={280}
+                  filterWidth={500}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TrialBalancePeriodwiseReportFilter />}

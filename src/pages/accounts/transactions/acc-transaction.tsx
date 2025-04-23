@@ -3160,9 +3160,9 @@ debugger;
                     printCheque(formState.transaction.master?.voucherType)
                   }
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
-                  loading={formState.saving}
+                  loading={formState.printCheque}
                   disabled={
-                    formState.saving
+                    formState.printCheque
                   }
                 />
               </div>

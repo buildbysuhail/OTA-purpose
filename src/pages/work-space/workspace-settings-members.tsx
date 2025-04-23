@@ -254,7 +254,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       dataField="active"
                       caption={t("status")}
                       cellRender={({ data }) =>
-                        data.Active === true ? (
+                        data.active === true ? (
                           <span className="badge bg-success" id="status">
                             {t("active")}
                           </span>

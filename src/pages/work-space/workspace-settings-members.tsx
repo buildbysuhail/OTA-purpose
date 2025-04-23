@@ -34,7 +34,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
   }
 
   const store = new CustomStore({
-    key: "id",
+    key: "userName",
     async load(loadOptions: any) {
       const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
       const queryString = paramNames

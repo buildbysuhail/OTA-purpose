@@ -42,7 +42,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 }) => {
     const [mode, setMode] = useState<'new' | 'existing'>('new');
     const [isLoading, setIsLoading] = useState(false);
-    const [existingUser, setExistingUser] = useState<string>('');
+    const [existingUser, setExistingUser] = useState<number>(0);
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const [newUserForm, setNewUserForm] = useState<NewUserForm>({
         userName: '',
@@ -90,7 +90,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 
     const handlleUserSelect = async (userData: any) => {
         try {
-            console.log("handlleUserSelect");
+            console.log(userData);
             const hygu = userData.value
             setExistingUser(hygu);
         } catch (error) {
@@ -165,7 +165,9 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     apiUrl: Urls.invite_link,
                     data: {
                         ...formData,
-                        mode
+                        mode,
+                        userId: existingUser
+
                     }
                 }) as any
             ).unwrap();
@@ -217,9 +219,9 @@ const InviteModal: React.FC<InviteModalProps> = ({
                 {
                     mode === 'existing' && (
                         <ERPDataCombobox
-                            id="existingUser"
+                            id="userId"
                             field={{
-                                id: 'existingUser',
+                                id: 'userId',
                                 required: true,
                                 getListUrl: Urls.data_users,
                                 valueKey: 'name',

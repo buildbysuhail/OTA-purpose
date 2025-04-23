@@ -12,7 +12,6 @@ const AcceptInvitation: React.FC = () => {
     const userId = searchParams.get('userId');
     const email = searchParams.get('email');
     const token = searchParams.get('token');
-    localStorage.setItem("_token", token??"") ;
     if (!userId || !email || !token) {
       setMessage('Invalid invitation link.');
       setIsLoading(false);

@@ -29,12 +29,15 @@ interface UserForm {
 
 interface NewUserForm extends UserForm { }
 
+    const initialValidation = {
+        userName: '',
+    }
 interface InviteModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess?: () => void;
 }
-
+const api = new APIClient();
 const InviteModal: React.FC<InviteModalProps> = ({
     isOpen,
     onClose,
@@ -44,6 +47,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [existingUser, setExistingUser] = useState<number>(0);
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+    const [validation, setValidation] = useState<any>(initialValidation);
     const [newUserForm, setNewUserForm] = useState<NewUserForm>({
         userName: '',
         Passwd: 'hjoi',
@@ -133,7 +137,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await apiClient.getAsync(`${Urls.Users}${existingUser}`)
+                const response = await apiClient.getAsync(`${Urls.Users}GetById/${existingUser}`)
                 const userData = {
                     userName: response?.userName || '',
                     email: response?.email || '',
@@ -160,20 +164,19 @@ const InviteModal: React.FC<InviteModalProps> = ({
     const handleInvite = async () => {
         setIsLoading(true);
         try {
-            const response: ResponseModelWithValidation<any, any> = await dispatch(
-                postAction({
-                    apiUrl: Urls.invite_link,
-                    data: {
+            const response= await  api.postAsync(Urls.invite_link,{
                         ...formData,
                         mode,
                         userId: existingUser
 
-                    }
-                }) as any
-            ).unwrap();
+                    });
             handleResponse(response, () => {
                 onSuccess?.();
                 handleClose();
+                setValidation({initialValidation});
+            }, () =>{
+                debugger;
+                setValidation(response.validations);
             });
         } catch (error) {
             console.error('Failed to send invitation:', error);
@@ -224,7 +227,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                                 id: 'userId',
                                 required: true,
                                 getListUrl: Urls.data_users,
-                                valueKey: 'name',
+                                valueKey: 'id',
                                 labelKey: 'name',
                             }}
                             value={existingUser}
@@ -237,6 +240,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                 }
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {validation?.username}
                     <ERPInput
                         value={formData.userName}
                         label={t('username')}
@@ -245,9 +249,11 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         required={true}
                         onChange={(e: any) => handleFieldChange('userName', e.target.value)}
                         id={'userName'}
+                        
+                        validation={validation?.username}
                     />
 
-                    {
+                    {/* {
                         mode === 'new' && (
                             <>
                                 <ERPInput
@@ -271,7 +277,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                                 />
                             </>
                         )
-                    }
+                    } */}
 
                     <ERPInput
                         value={formData.email}

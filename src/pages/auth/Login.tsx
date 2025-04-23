@@ -3,32 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { EyeSlashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import usFlag from "../../assets/images/flags/us_flag.png";
 import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
 import type { StateBase } from "../../base/state-base";
 import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
-import type { UserModel } from "../../redux/slices/user-session/reducer";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { type AppState, languagesData } from "../../redux/slices/app/types";
 import type { RootState } from "../../redux/store";
-import { customJsonParse, modelToBase64 } from "../../utilities/jsonConverter";
-import { syncAppStates } from "./syncSettings";
+import { modelToBase64 } from "../../utilities/jsonConverter";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
-import type { UserTypeRights } from "../../redux/slices/user-rights/reducer";
 import { Button } from "../../dark/Button";
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { Sun, Moon } from "lucide-react";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import CounterSettings from "../settings/system/counter-settings";
 import ForgotPassword from "./ForgetPassword";
-import { ApplicationSettingsType } from "../settings/system/application-settings-types/application-settings-types";
 import { setApplicationSettings } from "../../redux/slices/app/application-settings-reducer";
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import polo from "../../assets/images/brand-logos/polo_logo.png";
 import loginBg from "../../assets/images/login.jpg";
 import ConfettiEffect from "./confetti-effect";
-import { ClientSessionModel } from "../../redux/slices/client-session/reducer";
+import { handleLoginSuccess } from "../../utilities/handles-login-success-utils";
 
 const api = new APIClient()
 const Login = () => {
@@ -71,57 +65,13 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
       setError("");
       if (login.isOk == true) {
-        let ass = localStorage.getItem("as");
-        let appSettings: ApplicationSettingsType;
-        try {
-          localStorage.removeItem("_token");
-        localStorage.setItem("token", login.item.token);
-        localStorage.setItem("up", login.item.userProfileDetails);
-        localStorage.setItem("cs", login.item.clientSessions);
-        localStorage.setItem("ut", login.item.userThemes);
-        localStorage.setItem("ur", login.item.useRights);
-        const _userProfileDetails = atob(login.item.userProfileDetails);
-        const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
-        const clientSession: ClientSessionModel = customJsonParse(login.item.clientSessions);
-        const _userRights = atob(login.item.userRights);
-        const userRights: UserTypeRights[] = customJsonParse(_userRights);
-        const _userThemes = atob(login.item.userThemes);
-        const userThemes: AppState = customJsonParse(_userThemes);
-        const locale = languagesData.find(
-          (l) => l.code == userProfileDetails.language
-        ) ?? {
-          code: "en",
-          name: "English",
-          flag: usFlag,
-          rtl: false,
-        };
-        syncAppStates(
+        await handleLoginSuccess(
+          login,
           dispatch,
-          userThemes,
-          clientSession,
-          userProfileDetails,
-          userRights,
-          locale
+          load,
+          setIsLoggedToBranch,
+          setHasToChooseBranch
         );
-
-          if (ass != undefined && ass != null && ass != "") {
-            appSettings = customJsonParse(atob(ass));
-            dispatch(setApplicationSettings(
-              {
-                ...appSettings,
-                apiLoaded: false
-              }));
-          } else {
-            await load();
-          }
-        } catch (error) { }
-        if (login.item.hasToChooseBranch) {
-          setHasToChooseBranch(true);
-          setIsLoggedToBranch(false);
-        } else {
-          setIsLoggedToBranch(true);
-          setHasToChooseBranch(false);
-        }
         
       } else {
         if (login.item.hasToSetCounter) {

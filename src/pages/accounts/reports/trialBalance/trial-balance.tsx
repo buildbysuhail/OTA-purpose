@@ -37,8 +37,8 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width:220,
-      visible:false,
+      width: 220,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -49,7 +49,7 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text:cellInfo.value,
+            text: cellInfo.value,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
@@ -86,17 +86,17 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: (cellElement.data.isGroup==false ? "   " : "") + (cellInfo.value ?? ""),
+            text: (cellElement.data.isGroup == false ? "   " : "") + (cellInfo.value ?? ""),
             bold: cellElement.data.isGroup == true ? true : false,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.isGroup == true ? '#2E8B57' :cellElement.data.ledgerName == "TOTAL" ?'#FF0000' : '',
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName == "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } :cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }: '',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style: cellElement.data.isGroup == true ||cellElement.data.ledgerName === "TOTAL"? 'bold' : 'normal',
-              bold: cellElement.data.isGroup == true||cellElement.data.ledgerName === "TOTAL" ? true : false,
+              style: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
@@ -122,7 +122,7 @@ const TrialBalance = () => {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==""
+            balance == null || balance == ""
               ? ""
               : getFormattedValue(balance)
           return {
@@ -161,7 +161,7 @@ const TrialBalance = () => {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==""
+            balance == null || balance == ""
               ? ""
               : getFormattedValue(balance)
           return {
@@ -193,7 +193,7 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -231,7 +231,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      visible:false,
+      visible: false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -242,7 +242,7 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: (cellElement.data.isGroup==false ? "   " : "") + (cellInfo.value ?? ""),
+            text: (cellElement.data.isGroup == false ? "   " : "") + (cellInfo.value ?? ""),
             bold: cellElement.data.isGroup == true ? true : false,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
@@ -281,24 +281,24 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: cellInfo.value ==true?'Y':'N',
+            text: cellInfo.value == true ? 'Y' : 'N',
             bold: cellElement.data.isGroup == true ? true : false,
             // alignment: "right",
             // alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.isGroup == true ? '#2E8B57' :cellElement.data.ledgerName == "TOTAL" ?'#FF0000' : '',
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName == "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } :cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }: '',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style: cellElement.data.isGroup == true ||cellElement.data.ledgerName === "TOTAL"? 'bold' : 'normal',
-              bold: cellElement.data.isGroup == true||cellElement.data.ledgerName === "TOTAL" ? true : false,
+              style: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
-          };   
+          };
         }
         else {
           return (<span style={{ color: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {
-              cellElement.data.isGroup?'Y':'N'
+              cellElement.data.isGroup ? 'Y' : 'N'
             }
           </span>)
         }
@@ -323,8 +323,8 @@ const TrialBalance = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterHeight={350}
-                  filterWidth={380}
+                  filterHeight={250}
+                  filterWidth={500}
                   // rowVisibleFn = {(filter: any,data: any) => filter?.showSummaryOnly != true || (filter?.showSummaryOnly == true && data?.isGroup == true)}
                   customFilterItems={[{
                     keyField: "showSummaryOnly",
@@ -338,18 +338,16 @@ const TrialBalance = () => {
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   childPopupProps={{
-                    content: <CashBookMonthWise
-                    />,
+                    content: <CashBookMonthWise />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                 
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     origin: "trialBalance",
                     enableFn: (data: any) => data.isGroup == true || data.ledgerName == "TOTAL" ? false : true
                   }}
                   postData={filter}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

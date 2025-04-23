@@ -6,23 +6,26 @@ import { useTranslation } from "react-i18next";
 const ProfitAndLossReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       {/* Date Range Section */}
-      <div className="flex items-center gap-4">
-        <ERPDateInput
-          {...getFieldProps("fromDate")}
-          label={t("date_from")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
-          autoFocus={true}
-        />
-        <ERPDateInput
-          {...getFieldProps("toDate")}
-          label={t("date_to")}
-          className="w-full"
-          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <ERPDateInput
+            {...getFieldProps("fromDate")}
+            label={t("date_from")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+            autoFocus={true}
+          />
+          <ERPDateInput
+            {...getFieldProps("toDate")}
+            label={t("date_to")}
+            className="w-full"
+            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+          />
+        </div>
       </div>
+
       <ERPDataCombobox
         {...getFieldProps("valuationUsing")}
         label={t("stock_value")}

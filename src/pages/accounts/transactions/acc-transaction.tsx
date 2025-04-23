@@ -2141,8 +2141,10 @@ debugger;
                                   formState.formElements.btnBillWise.label
                                 )}
                                 variant="secondary"
+                                loading={formState.saving}
                                 onClick={showBillwise}
                                 disabled={
+                                  formState.saving ||
                                   formState.ledgerBillWiseLoading ||
                                   formState.formElements.btnBillWise
                                     .disabled === true ||
@@ -2386,8 +2388,10 @@ debugger;
                             localInputBox={formState?.userConfig?.inputBoxStyle}
                             title={t(formState.formElements.btnBillWise.label)}
                             variant="secondary"
+                            loading={formState.saving}
                             onClick={showBillwise}
                             disabled={
+                              formState.saving ||
                               formState.ledgerBillWiseLoading ||
                               formState.formElements.btnBillWise.disabled ===
                                 true ||
@@ -2855,6 +2859,7 @@ debugger;
                 title={t("save_&_new")}
                 onClick={() => save()}
                 variant="secondary"
+                loading={formState.saving}
                 className="flex-1 rounded-none !m-0"
                 disabled={
                   formState.saving ||
@@ -2871,6 +2876,7 @@ debugger;
                   goToPreviousPage();
                 }}
                 variant="primary"
+                loading={formState.saving}
                 className="flex-1 rounded-none !m-0"
                 disabled={
                   formState.saving ||
@@ -3074,7 +3080,11 @@ debugger;
                       handleClearControls();
                     }}
                     variant="secondary"
+                    loading={formState.saving}
                     className="flex-1 !m-0 !rounded-none"
+                    disabled={
+                      formState.saving
+                    }
                   />
                   <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3085,6 +3095,10 @@ debugger;
                     }}
                     // variant="bg-[#e76262]"
                     className="flex-1 !m-0 !rounded-none !bg-[#e76262]"
+                    loading={formState.saving}
+                    disabled={
+                      formState.saving
+                    }
                   />
                 </div>
               </div>
@@ -3146,6 +3160,10 @@ debugger;
                     printCheque(formState.transaction.master?.voucherType)
                   }
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
+                  loading={formState.saving}
+                  disabled={
+                    formState.saving
+                  }
                 />
               </div>
             )}
@@ -3222,6 +3240,10 @@ debugger;
             title={t("close")}
             onClick={() => goToPreviousPage()}
             localInputBox={formState?.userConfig?.inputBoxStyle}
+            // loading={formState.saving}
+            // disabled={
+            //   formState.saving
+            // }
           />
 
           <ERPButton

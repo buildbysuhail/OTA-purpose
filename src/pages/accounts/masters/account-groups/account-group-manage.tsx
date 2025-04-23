@@ -167,7 +167,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       {/* Link that triggers the modal */}
       <ERPFormButtons
         onClear={handleClear}
-        submitDisabled={!formState?.data?.isEditable}
+        submitDisabled={!formState?.data?.isEditable || isLoading}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}

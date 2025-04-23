@@ -91,12 +91,12 @@ const SMSIntegration: React.FC = () => {
     if (item.provider == NotificationsProvider.SmsGateway) {
       setProvider({
         isOpen: true,
-        provider: item.provider,
+        provider: item?.provider,
         information:
         {
           configJson: parsedConfig
         },
-        id: item.id,
+        id: item?.id,
         providerName: item?.name ?? "",
       });
     } else {
@@ -104,10 +104,10 @@ const SMSIntegration: React.FC = () => {
         isOpen: true,
         provider: item.provider,
         information: {
-          accountSid: parsedConfig.accountSid ?? "",
-          authToken: parsedConfig.authToken ?? "",
-          verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-          fromPhone: parsedConfig.fromPhone ?? "",
+          accountSid: parsedConfig?.accountSid ?? "",
+          authToken: parsedConfig?.authToken ?? "",
+          verifyServiceSid: parsedConfig?.verifyServiceSid ?? "",
+          fromPhone: parsedConfig?.fromPhone ?? "",
         },
         id: item.id,
         providerName: item?.name ?? "",

@@ -96,11 +96,11 @@ const EmailIntegration: React.FC = () => {
     setProvider({
       isOpen: true,
       information: {
-        from: parsedConfig.from ?? "",
-        smtpServer: parsedConfig.SmtpServer ?? "",
-        port: parsedConfig.Port ?? "",
-        userName: parsedConfig.UserName ?? "",
-        password: parsedConfig.Password ?? "",
+        from: parsedConfig?.from ?? "",
+        smtpServer: parsedConfig?.SmtpServer ?? "",
+        port: parsedConfig?.Port ?? "",
+        userName: parsedConfig?.UserName ?? "",
+        password: parsedConfig?.Password ?? "",
       },
       id: item.id,
       providerName: item?.name ?? "",

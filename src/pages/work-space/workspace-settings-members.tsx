@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Urls from "../../redux/urls";
 import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
@@ -79,10 +79,9 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
     });
   };
 
-  const handleInviteClick = () => {
+  const handleInviteClick = useCallback(() => {
     setIsInviteModalOpen(true);
-  };
-
+  }, []);
   const handleModalClose = () => {
     setIsInviteModalOpen(false);
   };

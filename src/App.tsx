@@ -41,6 +41,7 @@ import moment from "moment";
 import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
 import { useAppState } from "./utilities/hooks/useAppState";
+import AcceptInvitation from "./pages/auth/accept-invitation";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -235,6 +236,7 @@ function App() {
           
             <Routes>
               <Route path="login" element={<Login />} />
+              <Route path="accept-user-invitation" element={<AcceptInvitation />} />
               <Route path="logout" element={<Logout />} />
               <Route path="select-organization" element={<OrgSelect />} />
               <Route path="switch-organization" element={<OrgSelect />} />

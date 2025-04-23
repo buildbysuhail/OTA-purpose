@@ -27,6 +27,7 @@ const Urls = {
   data_employees: "/Data/Employees",
   data_user_types: "/Data/UserTypes/",
   data_users: "/Data/users/",
+  data_pending_users_to_CRM: "/Data/PendingUsersToCRM/",
   data_duties_taxes: "/Data/Duties&Taxes/",
   data_batchcriteria: "/Data/BatchCriterias/",
   data_pricectegory: "/Data/PriceCategories/",

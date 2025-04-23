@@ -236,9 +236,9 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     field={{
                         id: 'existingUser',
                         required: true,
-                        getListUrl: Urls.data_users,
-                        valueKey: 'name',
-                        labelKey: 'name',
+                        getListUrl: Urls.data_pending_users_to_CRM,
+                                valueKey: 'id',
+                                labelKey: 'name',
                     }}
                     value={existingUser}
                     label={t('select_user')}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -15,6 +15,7 @@ import {
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import CustomStore from "devextreme/data/custom_store";
+import MultiFocSchemeBatchGrid from "./multi-foc-scheme-batch-grid";
 
 const api = new APIClient();
 
@@ -37,6 +38,7 @@ export const initialFOCScheme: {
     unitName: "",
     productName: "",
     productID: 0,
+    freeProductID: 0,
     stdSalesPrice: 0,
     freeStdSalesPrice: 0,
     stdPurchasePrice: 0,
@@ -62,8 +64,9 @@ export interface FOCSchemeData {
   freeUnitID: number;
   freeUnitName: string;
   productName: string;
-  productID: string;
   freeProductName: string;
+  productID: number;
+  freeProductID: number;
   barCode: string;
   freeItemBarcode: string;
   stdSalesPrice: number;
@@ -77,6 +80,11 @@ const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
+  // State for selected product
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [showBatchGrid, setShowBatchGrid] = useState(false);
+  const [productDetailStore, setProductDetailStore] = useState<any[]>([]);
+  const batchGridRef = useRef<any>(null);
 
   const {
     isEdit,
@@ -137,7 +145,7 @@ const MultiFOCScheme: React.FC = () => {
           handleDataChange({
             ...obj,
             freeProductBatchID: response.productBatchID,
-          
+
           } as FOCSchemeData);
         },
         () => { },
@@ -148,45 +156,45 @@ const MultiFOCScheme: React.FC = () => {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps,handleDataChange]);
+  }, [getFieldProps, handleDataChange]);
 
   const fetchByField = useCallback(
-    async (fieldType: "productName" | "freeProductName") => {
+    async (fieldType: "productID" | "freeProductID") => {
       try {
         const obj = getFieldProps("*");
-        const fieldValue = fieldType === "productName" ? obj.productName : obj.freeProductName;
-  
+        const fieldValue = fieldType === "productID" ? obj.productID : obj.freeProductID;
+
         if (isNullOrUndefinedOrEmpty(fieldValue)) {
           return;
         }
-  
+
         setIsDataLoading(true);
-        const url = `${Urls.load_product_details_foc}${fieldValue}`;//change url it for demo
+        const url = `${Urls.select_product_by_product_id_multi_foc}${fieldValue}`;//change url it for demo
         const response = await api.get(url);
-  
-        handleResponse(
-          response,
-          () => {
-            const updatedData: Partial<FOCSchemeData> =
-              fieldType === "productName"
-                ? {
-                    unitID: response.unitID,
-                    barCode: response.barCode,
-                    qtyLimit: response.qtyLimit,
-                  }
-                : {
-                    freeUnitID: response.unitID,
-                    freeItemBarcode: response.barCode,
-                    freeQty: response.qtyLimit,
-                  };
-            handleDataChange({
-              ...obj,
-              ...updatedData,
-            } as FOCSchemeData);
-          },
-          () => {},
-          false
-        );
+
+        if (response?.length === 1) {
+          const updatedData: Partial<FOCSchemeData> =
+            fieldType === "productID"
+              ? {
+                unitID: response.unitID,
+                barCode: response.barCode,
+                qtyLimit: response.qtyLimit,
+              }
+              : {
+                freeUnitID: response.unitID,
+                freeItemBarcode: response.barCode,
+                freeQty: response.qtyLimit,
+              };
+          handleDataChange({
+            ...obj,
+            ...updatedData,
+          } as FOCSchemeData);
+        } else if (response?.length > 1) {
+          setProductDetailStore(response)
+          setShowBatchGrid(true)
+        } else {
+
+        }
         setIsDataLoading(false);
       } catch (error) {
         console.error(`Error fetching ${fieldType} data:`, error);
@@ -195,10 +203,10 @@ const MultiFOCScheme: React.FC = () => {
     },
     [getFieldProps, handleDataChange]
   );
-  
+
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
-    
+
     setIsDataLoading(true);
     try {
       const url = `${Urls.get_all__multi_foc}`;
@@ -243,6 +251,8 @@ const MultiFOCScheme: React.FC = () => {
       freeUnitName: obj.freeUnitName,
       productName: obj.productName,
       freeProductName: obj.freeProductName,
+      productID: obj.productID,
+      freeProductID: obj.freeProductID,
       barCode: obj.barCode,
       freeItemBarcode: obj.freeItemBarcode,
       stdSalesPrice: obj.stdSalesPrice,
@@ -270,19 +280,19 @@ const MultiFOCScheme: React.FC = () => {
     }
   }, [formState.data.loadAllMultiFos]);
 
-// Trigger fetchByField for productName changes
-useEffect(() => {
-  if (formState.data.productName) {
-    fetchByField("productName");
-  }
-}, [formState.data.productName, fetchByField]);
+  // Trigger fetchByField for productName changes
+  useEffect(() => {
+    if (formState.data.productID) {
+      fetchByField("productID");
+    }
+  }, [formState.data.productID, fetchByField]);
 
-// Trigger fetchByField for freeProductName changes
-useEffect(() => {
-  if (formState.data.freeProductName) {
-    fetchByField("freeProductName");
-  }
-}, [formState.data.freeProductName, fetchByField]);
+  // Trigger fetchByField for freeProductName changes
+  useEffect(() => {
+    if (formState.data.freeProductID) {
+      fetchByField("freeProductID");
+    }
+  }, [formState.data.freeProductID, fetchByField]);
 
   const handleRemoveRow = useCallback((schemeID: number) => {
     setGridData((prevGridData) => {
@@ -312,29 +322,6 @@ useEffect(() => {
         <h6>{t("product_details")}</h6>
 
         <div className="flex gap-4">
-          {/* <ERPDataCombobox
-            {...getFieldProps("schemeID")}
-            field={{
-              id: "schemeID",
-              getListUrl: Urls.select_quantity_schemes_for_combo,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("scheme")}
-            // disabled={isFormDisabled}
-            onChangeData={async (data: any) => {
-              const obj = getFieldProps("*");
-              const res = await api.getAsync(
-                `${Urls.select_scheme_qty_details_by_id}${data.schemeID}`
-              );
-              handleDataChange({
-                ...obj,
-                qtyLimit: res.qtyLimit,
-                freeQty: res.freeQty,
-                schemeID: data.schemeID,
-              } as FOCSchemeData);     
-            }}
-          /> */}
           <ERPDataCombobox
             {...getFieldProps("schemeID")}
             field={{
@@ -357,7 +344,7 @@ useEffect(() => {
               handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
             }}
           />
-       
+
         </div>
         <div className="grid grid-cols-4 gap-4">
           <ERPInput
@@ -367,20 +354,35 @@ useEffect(() => {
             disabled={isFormDisabled}
             onBlur={() => fetchByBarcode()}
           />
-          <ERPDataCombobox
-            {...getFieldProps("productID")}
-            field={{
-              id: "productID",
-              getListUrl: Urls.data_products, // Update with correct URL
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("product")}
-            disabled={isFormDisabled}
-            onChangeData={(data: any) =>
-              handleFieldChange({fields:{productName:data.name, productID:data.id}})
-            }
-          />
+          <div className="relative">
+            <ERPDataCombobox
+              {...getFieldProps("productID")}
+              field={{
+                id: "productID",
+                getListUrl: Urls.data_products,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              label={t("product")}
+              disabled={isFormDisabled}
+              onChange={(data: any) => {
+                handleFieldChange({
+                  productID: data.value,
+                  productName: data.name,
+                });
+              }}
+            />
+
+            <div className="absolute left-0 top-full z-50 w-full mt-2">
+              <MultiFocSchemeBatchGrid
+                show={showBatchGrid}
+                dataSource={productDetailStore}
+                // onKeyDown={handleBatchGridKeyDown}
+                // onContentReady={handleBatchContentReady}
+                gridRef={batchGridRef}
+              />
+            </div>
+          </div>
           <ERPInput
             {...getFieldProps("qtyLimit")}
             label={t("qty")}
@@ -415,19 +417,21 @@ useEffect(() => {
             onBlur={() => fetchByFreeItemBarcode()}
           />
           <ERPDataCombobox
-            {...getFieldProps("freeProductName")}
+            {...getFieldProps("freeProductID")}
             field={{
-              id: "freeProductName",
+              id: "freeProductID",
               getListUrl: Urls.data_products, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}
-            label={t("free_product_name")}
+            label={t("free_product")}
             disabled={isFormDisabled}
-            onChangeData={(data: any) =>
-              handleFieldChange("freeProductName", data.name)
-            }
+
+            onChange={(data: any) => {
+              handleFieldChange({ "freeProductID": data.value, "freeProductName": data.name })
+            }}
           />
+
           <ERPInput
             {...getFieldProps("freeQty")}
             label={t("qty")}
@@ -468,7 +472,7 @@ useEffect(() => {
             showBorders={true}
             rowAlternationEnabled={true}
             className="w-full"
-  
+
           >
             <Paging defaultPageSize={10} />
             <Editing
@@ -477,7 +481,7 @@ useEffect(() => {
               allowDeleting={false}
               allowAdding={false}
             />
-           
+
             <Column
               dataField="barCode"
               dataType="string"

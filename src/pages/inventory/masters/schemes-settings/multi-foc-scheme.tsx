@@ -213,14 +213,14 @@ const MultiFOCScheme: React.FC = () => {
 
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
-    // if (isNullOrUndefinedOrZero(schemeID)) {
-    //   ERPAlert.show({
-    //     title: "",
-    //     icon: "warning",
-    //     text: "Please Select Any Scheme..!",
-    //   });
-    //   return;
-    // }
+    if (isNullOrUndefinedOrZero(schemeID)) {
+      ERPAlert.show({
+        title: "",
+        icon: "warning",
+        text: "Please Select Any Scheme..!",
+      });
+      return;
+    }
     setIsDataLoading(true);
     try {
       const url = `${Urls.select_quantity_discount_scheme_by_scheme_id}${schemeID}`;
@@ -241,6 +241,14 @@ const MultiFOCScheme: React.FC = () => {
   const handleAdd = useCallback(async () => {
     const obj: FOCSchemeData = getFieldProps("*");
     console.log("Form state before adding:", obj);
+    if (isNullOrUndefinedOrZero(obj.schemeID)) {
+      ERPAlert.show({
+        title: "",
+        icon: "warning",
+        text: "Please Select Any Scheme..!",
+      });
+      return;
+    }
 
     const newSchemeData: FOCSchemeData = {
       schemeID: obj.schemeID,
@@ -279,6 +287,13 @@ const MultiFOCScheme: React.FC = () => {
   //   clearForm();
   // }, [clearForm]);
 
+  useEffect(() => {
+    if (formState.data.loadAllMultiFos && !isNullOrUndefinedOrZero(formState.data.schemeID)) {
+      fetchAllMultiFosData(formState.data.schemeID);
+    } else if (!formState.data.loadAllMultiFos) {
+      setGridData([]);
+    }
+  }, [formState.data.loadAllMultiFos, formState.data.schemeID, fetchAllMultiFosData]);
 
 
   const handleRemoveRow = useCallback((schemeID: number) => {
@@ -332,7 +347,6 @@ const MultiFOCScheme: React.FC = () => {
               } as FOCSchemeData);     
             }}
           /> */}
-
           <ERPDataCombobox
             {...getFieldProps("schemeID")}
             field={{
@@ -344,6 +358,30 @@ const MultiFOCScheme: React.FC = () => {
             label={t("scheme")}
             onChangeData={(data: any) => {
               handleFieldChange("schemeID", data.schemeID);
+            }}
+          />
+
+          <ERPCheckbox
+            {...getFieldProps("loadAllMultiFos")}
+            label={t("loadAll_MultiFos")}
+            onChangeData={(data: any) => {
+              handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
+            }}
+          />
+          {/* <ERPDataCombobox
+            {...getFieldProps("schemeID")}
+            field={{
+              id: "schemeID",
+              getListUrl: Urls.select_quantity_schemes_for_combo,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label={t("scheme")}
+            onChangeData={(data: any) => {
+              handleFieldChange("schemeID", data.schemeID);
+              if (formState.data.loadAllMultiFos) {
+                fetchAllMultiFosData(data.schemeID);
+              }
             }}
           />
           <ERPCheckbox
@@ -360,7 +398,7 @@ const MultiFOCScheme: React.FC = () => {
                 setGridData([]);// Clear API-loaded data for manual entry
               }
             }}
-          />
+          /> */}
         </div>
         <div className="grid grid-cols-4 gap-4">
           <ERPInput
@@ -471,6 +509,7 @@ const MultiFOCScheme: React.FC = () => {
             showBorders={true}
             rowAlternationEnabled={true}
             className="w-full"
+            keyExpr="qtyDiscountID"
           >
             <Paging defaultPageSize={10} />
             <Editing

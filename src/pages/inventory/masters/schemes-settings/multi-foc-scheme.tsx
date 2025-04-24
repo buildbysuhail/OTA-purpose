@@ -73,7 +73,7 @@ export interface FOCSchemeData {
 
 const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
-  const [gridData, setGridData] = useState<FOCSchemeData[] | CustomStore>([]);
+  const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
 
   const {
@@ -93,30 +93,6 @@ const MultiFOCScheme: React.FC = () => {
   // Determine if form and button should be disabled based on loadAllMultiFos
   const isFormDisabled = formState.data.loadAllMultiFos;
 
-  const handleLoad = useCallback(async () => {
-    try {
-      const obj = getFieldProps("*");
-      if (isNullOrUndefinedOrZero(obj.schemeID)) {
-        ERPAlert.show({
-          title: "",
-          icon: "warning",
-          text: "Please Select Any Scheme..!",
-        });
-        return;
-      }
-      setIsDataLoading(true);
-      const url = `${Urls.select_quantity_discount_scheme_by_scheme_id}${obj.schemeID}`;
-      const response = await api.get(url);
-      if (response) {
-        setGridData(response);
-      }
-      setIsDataLoading(false);
-    } catch (error) {
-      console.error("Error loading data:", error);
-      setIsDataLoading(false);
-    }
-  }, [getFieldProps]);
-
   const fetchByBarcode = useCallback(async () => {
     try {
       const obj = getFieldProps("*");
@@ -124,19 +100,15 @@ const MultiFOCScheme: React.FC = () => {
         return;
       }
       setIsDataLoading(true);
-      const url = `${Urls.select_product_by_barcode_foc}${obj.barCode}`;
+      const url = `${Urls.select_product_by_barcode_multi_foc}${obj.barCode}`;
       const response = await api.get(url);
       handleResponse(
         response,
         () => {
           handleDataChange({
             ...obj,
-            productBatchID: response.productBatchID,
-            unitID: response.unitId,
-            unitName: response.unit,
-            productName: response.productName,
-            stdSalesPrice: response.StdSalesPrice,
-            stdPurchasePrice: response.StdPurchasePrice,
+            // productBatchID: response.productBatchID,
+            productID: response.productID,
           } as FOCSchemeData);
         },
         () => { },
@@ -156,7 +128,7 @@ const MultiFOCScheme: React.FC = () => {
         return;
       }
       setIsDataLoading(true);
-      const url = `${Urls.select_product_by_barcode_foc}${obj.freeItemBarcode}`;
+      const url = `${Urls.select_product_by_barcode_multi_foc}${obj.freeItemBarcode}`;
       const response = await api.get(url);
       handleResponse(
         response,
@@ -179,52 +151,13 @@ const MultiFOCScheme: React.FC = () => {
     }
   }, [getFieldProps, handleDataChange]);
 
-  const createStore = async (apiUrl?: string) => {
-    return new CustomStore({
-      key: "schemeID",
-      async load(loadOptions: any) {
-        const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
-        const queryString = paramNames
-          .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
-          .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
-          .join("&");
-
-        try {
-          const url = apiUrl || "";
-          const response = await api.getAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`);
-          const result = response;
-          return result !== undefined && result !== null
-            ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
-            : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
-        } catch (err) {
-          throw new Error("Batch Data Loading Error");
-        }
-      },
-    });
-  };
-
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
-    if (isNullOrUndefinedOrZero(schemeID)) {
-      ERPAlert.show({
-        title: "",
-        icon: "warning",
-        text: "Please Select Any Scheme..!",
-      });
-      return;
-    }
+    
     setIsDataLoading(true);
     try {
-      const url = `${Urls.select_quantity_discount_scheme_by_scheme_id}${schemeID}`;
-      const response = await createStore(url);
+      const url = `${Urls.get_all__multi_foc}`;
+      const response = await api.getAsync(url);
       setGridData(response);
     } catch (error) {
       console.error("Error fetching MultiFOS data:", error);
@@ -283,17 +216,14 @@ const MultiFOCScheme: React.FC = () => {
     handleClear();
   }, [getFieldProps, handleClear]);
 
-  // const handleClear = useCallback(() => {
-  //   clearForm();
-  // }, [clearForm]);
 
   useEffect(() => {
-    if (formState.data.loadAllMultiFos && !isNullOrUndefinedOrZero(formState.data.schemeID)) {
+    if (formState.data.loadAllMultiFos) {
       fetchAllMultiFosData(formState.data.schemeID);
-    } else if (!formState.data.loadAllMultiFos) {
+    } else {
       setGridData([]);
     }
-  }, [formState.data.loadAllMultiFos, formState.data.schemeID, fetchAllMultiFosData]);
+  }, [formState.data.loadAllMultiFos]);
 
 
   const handleRemoveRow = useCallback((schemeID: number) => {
@@ -412,7 +342,7 @@ const MultiFOCScheme: React.FC = () => {
             {...getFieldProps("productName")}
             field={{
               id: "productName",
-              // getListUrl: Urls.select_products_for_combo, // Update with correct URL
+              getListUrl: Urls.data_products, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}
@@ -435,7 +365,7 @@ const MultiFOCScheme: React.FC = () => {
             {...getFieldProps("unitID")}
             field={{
               id: "unitID",
-              // getListUrl: Urls.select_units_for_combo, // Update with correct URL
+              getListUrl: Urls.data_units, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}
@@ -459,7 +389,7 @@ const MultiFOCScheme: React.FC = () => {
             {...getFieldProps("freeProductName")}
             field={{
               id: "freeProductName",
-              // getListUrl: Urls.select_products_for_combo, // Update with correct URL
+              getListUrl: Urls.data_products, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}
@@ -482,7 +412,7 @@ const MultiFOCScheme: React.FC = () => {
             {...getFieldProps("freeUnitID")}
             field={{
               id: "freeUnitID",
-              // getListUrl: Urls.select_units_for_combo, // Update with correct URL
+              getListUrl: Urls.data_units, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}

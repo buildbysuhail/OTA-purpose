@@ -46,7 +46,7 @@ export const handleLoginSuccess = async (
   } else {
     await load();
   }
-
+debugger;
   if (login.item.hasToChooseBranch) {
     setHasToChooseBranch(true);
     setIsLoggedToBranch(false);

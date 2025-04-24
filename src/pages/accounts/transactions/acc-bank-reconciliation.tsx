@@ -61,10 +61,11 @@ const BankReconciliation = () => {
   useEffect(() => {
     handleShow();
   }, [key]);
-
+ 
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
+
     try {
       const gridInstance = dataGridRef.current?.instance();
       if (!gridInstance) return;
@@ -190,7 +191,6 @@ const BankReconciliation = () => {
   };
   const handleChangeToPending = async () => {
     setLoading((prev) => ({ ...prev, changeToPending: true }));
-    debugger;
     try {
       const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
       const changeToPending = gridData
@@ -217,7 +217,7 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, changeToPending: false }));
     }
   };
-
+ 
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -248,7 +248,9 @@ const BankReconciliation = () => {
         allowFiltering: true,
         width: 30,
         visible: true,
-        cellRender: (cellInfo: any) => (<span>{cellInfo.data.isSummary == true ? "" : cellInfo.data.id}</span>),
+        cellRender: (cellInfo: any) => (
+          <span>{cellInfo.data.isSummary == true ? "" : cellInfo.data.id}</span>
+        ),
       },
       {
         dataField: "transactionDate",
@@ -287,7 +289,10 @@ const BankReconciliation = () => {
         allowFiltering: true,
         width: 100,
         cellRender: (cellInfo: any) => (
-          <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""}`}>
+          <span
+            className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+              }`}
+          >
             {cellInfo.data.particulars}
           </span>
         ),
@@ -313,7 +318,11 @@ const BankReconciliation = () => {
         width: 100,
         cellRender: (cellInfo: any) => (
           <span
-            className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"}`}>
+            className={`${cellInfo.data.isSummary == true
+              ? "text-red font-bold text-right"
+              : "text-right"
+              }`}
+          >
             {cellInfo.data.isSummary == true
               ? getFormattedValue(cellInfo.data.debit)
               : getFormattedValue(cellInfo.data.debit, false, 4)}
@@ -330,7 +339,11 @@ const BankReconciliation = () => {
         width: 100,
         cellRender: (cellInfo: any) => (
           <span
-            className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"}`}>
+            className={`${cellInfo.data.isSummary == true
+              ? "text-red font-bold text-right"
+              : "text-right"
+              }`}
+          >
             {cellInfo.data.isSummary == true
               ? getFormattedValue(cellInfo.data.credit)
               : getFormattedValue(cellInfo.data.credit, false, 4)}
@@ -439,35 +452,54 @@ const BankReconciliation = () => {
       //   allowFiltering: false,
       //   visible:true
       // }
+      // {
+      //   dataField: "clicked",
+      //   caption: "",
+      //   dataType: "boolean",
+      //   allowEditing: true,
+      //   width: 100,
+      //   visible: true,
+      // },
+
       {
         dataField: "clicked",
         caption: "",
-        dataType: "boolean",
+        dataType: "string",
         allowEditing: false,
         width: 100,
         visible: true,
-        cellRender: (cellInfo: any) => {
-          if (
-            cellInfo.data.checkStatus !== "P" &&
-            !cellInfo.data.isSummary
-          ) {
-            return (
-              <input
-                type="checkbox"
-                checked={cellInfo.data.clicked || false}
-                onChange={(e) => {
-                  cellInfo.component.cellValue(
-                    cellInfo.rowIndex,
-                    "clicked",
-                    e.target.checked
+        cellRender: (cellInfo) => {
+          debugger;
+          // Only show checkbox if the row is not a summary and checkStatus is not 'p' or 'P'
+          if (!cellInfo.data.isSummary && 
+              ((cellInfo.data.checkStatus !== 'p' && 
+                cellInfo.data.checkStatus !== 'P') || cellInfo.data.clicked == true)) {
+                  return (
+                    <input 
+                      type="checkbox" 
+                      checked={cellInfo.data.clicked} 
+                      onChange={() => {
+                        const gridInstance = dataGridRef.current?.instance();
+                        if (gridInstance) {
+                          // Use the row's key (id) to find and update the data
+                          const dataSource = gridInstance.getDataSource();
+                          const store = dataSource.store();
+                          
+                          // Update the store directly using the row's key
+                          store.update(cellInfo.data.id, { clicked: !cellInfo.data.clicked })
+                            .then(() => {
+                              // Refresh the grid to reflect the changes
+                              dataSource.reload();
+                            });
+                        }
+                      }}
+                    />
                   );
-                  cellInfo.component.saveEditData();
-                }}
-              />
-            );
           }
+          // Return empty cell for rows that shouldn't have checkboxes
+          return null;
         },
-      },
+      }
     ],
     [t, getFormattedValue]
   );
@@ -475,19 +507,20 @@ const BankReconciliation = () => {
     debugger;
     const keys = Object.keys(e.newData);
     const key = keys && keys.length > 0 ? keys[0] : "";
-    if (key === "clicked") {
-      try {
-        try {
-          debugger;
-          e.newData.checkStatus = "p";
-        } catch (error) {
-          console.error("Error updating transaction:", error);
-        }
-      } catch (error) {
-        console.error("Error updating transaction:", error);
-      } finally {
-      }
-    }
+    // if (key === "clicked") {
+    //   try {
+    //     try {
+    //       debugger;
+    //       e.newData.checkStatus = "p";
+          
+    //     } catch (error) {
+    //       console.error("Error updating transaction:", error);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error updating transaction:", error);
+    //   } finally {
+    //   }
+    // }
     if (key === "selected") {
       e.newData.bankDate = e.newData.selected === true ?
         dateChangeState === "today"
@@ -501,13 +534,13 @@ const BankReconciliation = () => {
         <div className="fixed w-full left-0 z-10 top-[60px]">
           <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
             <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-              <h6 className="text-base sm:text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-Width:1000px)]:ml-[231px]">
+              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-Width:1000px)]:ml-[231px]">
                 {t("bank_reconciliation")}
               </h6>
               <i className="fas fa-cog ms-1"></i>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 sm:space-x-4 p-1 w-full">
+            <div className="flex items-center justify-end space-x-4 p-1 w-full">
               {/* <div className="group relative inline-flex flex-col items-center" title={t("print")}>
                 <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handlePrint}>
                   <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -516,9 +549,9 @@ const BankReconciliation = () => {
 
               <div className="group relative inline-flex flex-col items-center" title={t("close")}>
                 <button
-                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-2 sm:p-3 rounded-md hover:bg-gray-200 transition-colors"
+                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                   onClick={goToPreviousPage}>
-                  <X className="w-3 h-3 sm:w-4 sm:h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                  <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                 </button>
               </div>
             </div>
@@ -526,11 +559,11 @@ const BankReconciliation = () => {
         </div>
 
         <div className="mt-8">
-          <div className="dark:!bg-dark-bg bg-[#fafafa] p-2 sm:p-4">
-            <div className="py-2 sm:py-3">
-              <div className="flex flex-col w-full max-w-full sm:max-w-[600px]">
-                <div className="grid grid-cols-12 items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                  <div className="col-span-12 sm:col-span-6">
+          <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
+            <div className="py-3">
+              <div className="flex flex-col w-full max-w-[600px]">
+                <div className="grid grid-cols-12 items-center gap-4">
+                  <div className="col-span-6">
                     <ERPRadio
                       id="todayDate"
                       name="bankDateType"
@@ -539,7 +572,7 @@ const BankReconciliation = () => {
                       label={t("today's_date")}
                     />
                   </div>
-                  <div className="col-span-6 sm:col-span-3">
+                  <div className="col-span-3">
                     <ERPRadio
                       id="chequeDate"
                       name="bankDateType"
@@ -548,20 +581,19 @@ const BankReconciliation = () => {
                       label={t("cheque_date")}
                     />
                   </div>
-                  <div className="col-span-6 sm:col-span-3">
+                  <div className="col-span-3">
                     <ERPButton
                       title={t("set_all_date")}
                       onClick={handleSetAllDate}
                       type="reset"
                       loading={loading.setAllDate}
-                      className="w-full sm:w-auto"
                     />
                   </div>
                 </div>
 
                 {/* Second Row */}
-                <div className="grid grid-cols-12 items-center gap-2 sm:gap-4">
-                  <div className="col-span-12 sm:col-span-6">
+                <div className="grid grid-cols-12 items-center gap-4">
+                  <div className="col-span-6">
                     <ERPDataCombobox
                       id="selectedBankId"
                       label={t("bank_a/c")}
@@ -575,10 +607,10 @@ const BankReconciliation = () => {
                       }}
                       value={formState.selectedBankId}
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
-                      className="w-full sm:w-56"
+                      className="w-64"
                     />
                   </div>
-                  <div className="col-span-6 sm:col-span-3">
+                  <div className="col-span-3">
                     <ERPCheckbox
                       id="showReconciled"
                       name="showReconciled"
@@ -587,7 +619,7 @@ const BankReconciliation = () => {
                       label={t("show_reconciled")}
                     />
                   </div>
-                  <div className="col-span-6 sm:col-span-3">
+                  <div className="col-span-3">
                     <ERPButton
                       title={t("show")}
                       onClick={() => {
@@ -598,79 +630,73 @@ const BankReconciliation = () => {
                       }}
                       loading={loading.show}
                       variant="secondary"
-                      className="mt-[15px] !mb-0 w-full sm:w-[100px]"
+                      className="mt-[15px] !mb-0 w-[100px]"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Responsive grid */}
-            <div className="mt-4">
-              <ErpDevGrid
-                showTotalCount={false}
-                onRowUpdating={onRowUpdating}
-                ref={dataGridRef}
-                gridHeader=" "
-                scrollingMode="virtual"
-                columns={columns}
-                gridId="grid_bank_reconciliation"
-                hideGridAddButton={true}
-                hideDefaultExportButton={false}
-                showPrintButton={true}
-                // onSelectionChanged={handleSelectionChange}
-                heightToAdjustOnWindows={300}
-                data={data}
-                keyExpr="id"
-                // stateStoring={{enabled: true, type:"localStorage",storageKey:"grd_bank_reconciliation_str"}}
-                keyboardNavigation={{
-                  editOnKeyPress: true,
-                  enterKeyAction: "startEdit",
-                  enterKeyDirection: "column",
-                }}
-                // selectedRowKeys={selectedKeys}
-                allowEditing={{
-                  allow: true,
-                  config: {
-                    add: false,
-                    edit: true,
-                    delete: false,
-                  },
-                }}
-                remoteOperations={{
-                  filtering: false,
-                  paging: false,
-                  sorting: false,
-                }}
-                editMode="cell"
-                pageSize={40}
-                loadPanelEnabled={false}
-              // allowSelection={true}
-              // selectionMode={"multiple"}
-              />
-            </div>
+            <ErpDevGrid
+              showTotalCount={false}
+              onRowUpdating={onRowUpdating}
+              ref={dataGridRef}
+              gridHeader=" "
+              scrollingMode="virtual"
+              columns={columns}
+              gridId="grid_bank_reconciliation"
+              hideGridAddButton={true}
+              hideDefaultExportButton={false}
+              showPrintButton={true}
+              // onSelectionChanged={handleSelectionChange}
+              heightToAdjustOnWindows={300}
+              data={data}
+              keyExpr="id"
+              // stateStoring={{enabled: true, type:"localStorage",storageKey:"grd_bank_reconciliation_str"}}
+              keyboardNavigation={{
+                editOnKeyPress: true, // overrides default
+                enterKeyAction: "startEdit", // overrides default
+                enterKeyDirection: "column",
+              }}
+              // selectedRowKeys={selectedKeys}
+              allowEditing={{
+                allow: true,
+                config: {
+                  add: false,
+                  edit: true,
+                  delete: false,
+                },
+              }}
+              remoteOperations={{
+                filtering: false,
+                paging: false,
+                sorting: false,
+              }}
+              editMode="cell"
+              pageSize={40}
+              loadPanelEnabled={false}
+            // allowSelection={true}
+            // selectionMode={"multiple"}
+            />
 
             <div
-              className="flex flex-wrap items-center justify-end h-auto sm:h-[65px] z-10 fixed bottom-0 left-0 right-0 px-2 py-2 sm:px-4 md:px-8 bg-white dark:bg-dark-bg shadow-lg full-available-width"
-              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full justify-end">
+              className="flex items-center justify-end h-[65px] z-10 fixed bottom-0  left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
+              <div className="flex items-center gap-4">
                 <ERPButton
                   ref={btnSaveRef}
                   title={t("close")}
                   onClick={goToPreviousPage}
-                  className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-4"
                 />
                 <ERPButton
                   title={t("save")}
                   onClick={handleSave}
                   variant="primary"
-                  className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-4"
                 />
                 <ERPButton
                   title={t("change_to_pending")}
                   onClick={handleChangeToPending}
                   variant="primary"
-                  className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-4"
                 />
               </div>
             </div>

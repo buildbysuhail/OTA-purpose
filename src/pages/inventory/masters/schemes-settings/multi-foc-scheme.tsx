@@ -36,6 +36,7 @@ export const initialFOCScheme: {
     freeItemBarcode: "",
     unitName: "",
     productName: "",
+    productID: 0,
     stdSalesPrice: 0,
     freeStdSalesPrice: 0,
     stdPurchasePrice: 0,
@@ -61,6 +62,7 @@ export interface FOCSchemeData {
   freeUnitID: number;
   freeUnitName: string;
   productName: string;
+  productID: string;
   freeProductName: string;
   barCode: string;
   freeItemBarcode: string;
@@ -366,17 +368,17 @@ useEffect(() => {
             onBlur={() => fetchByBarcode()}
           />
           <ERPDataCombobox
-            {...getFieldProps("productName")}
+            {...getFieldProps("productID")}
             field={{
-              id: "productName",
+              id: "productID",
               getListUrl: Urls.data_products, // Update with correct URL
               valueKey: "id",
               labelKey: "name",
             }}
-            label={t("product_name")}
+            label={t("product")}
             disabled={isFormDisabled}
             onChangeData={(data: any) =>
-              handleFieldChange("productName", data.name)
+              handleFieldChange({fields:{productName:data.name, productID:data.id}})
             }
           />
           <ERPInput

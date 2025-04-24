@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -14,6 +14,7 @@ import {
 } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import CustomStore from "devextreme/data/custom_store";
 
 const api = new APIClient();
 
@@ -72,7 +73,7 @@ export interface FOCSchemeData {
 
 const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
-  const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
+  const [gridData, setGridData] = useState<FOCSchemeData[] | CustomStore>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
 
   const {
@@ -80,7 +81,7 @@ const MultiFOCScheme: React.FC = () => {
     handleSubmit,
     handleFieldChange,
     handleDataChange,
-    handleClear: clearForm,
+    handleClear,
     getFieldProps,
     isLoading,
     formState,
@@ -138,7 +139,7 @@ const MultiFOCScheme: React.FC = () => {
             stdPurchasePrice: response.StdPurchasePrice,
           } as FOCSchemeData);
         },
-        () => {},
+        () => { },
         false
       );
       setIsDataLoading(false);
@@ -168,7 +169,7 @@ const MultiFOCScheme: React.FC = () => {
             freeStdPurchasePrice: response.StdPurchasePrice,
           } as FOCSchemeData);
         },
-        () => {},
+        () => { },
         false
       );
       setIsDataLoading(false);
@@ -178,32 +179,62 @@ const MultiFOCScheme: React.FC = () => {
     }
   }, [getFieldProps, handleDataChange]);
 
+  const createStore = async (apiUrl?: string) => {
+    return new CustomStore({
+      key: "schemeID",
+      async load(loadOptions: any) {
+        const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+        const queryString = paramNames
+          .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
+          .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+          .join("&");
+
+        try {
+          const url = apiUrl || "";
+          const response = await api.getAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`);
+          const result = response;
+          return result !== undefined && result !== null
+            ? {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+            : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+        } catch (err) {
+          throw new Error("Batch Data Loading Error");
+        }
+      },
+    });
+  };
+
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
+    // if (isNullOrUndefinedOrZero(schemeID)) {
+    //   ERPAlert.show({
+    //     title: "",
+    //     icon: "warning",
+    //     text: "Please Select Any Scheme..!",
+    //   });
+    //   return;
+    // }
+    setIsDataLoading(true);
     try {
-      if (isNullOrUndefinedOrZero(schemeID)) {
-        ERPAlert.show({
-          title: "",
-          icon: "warning",
-          text: "Please Select Any Scheme..!",
-        });
-        return;
-      }
-      setIsDataLoading(true);
-      const url = `${Urls.select_quantity_discount_scheme_by_scheme_id}${schemeID}`; // Adjust URL as needed
-      const response = await api.get(url);
-      if (response) {
-        setGridData(response);
-      }
-      setIsDataLoading(false);
+      const url = `${Urls.select_quantity_discount_scheme_by_scheme_id}${schemeID}`;
+      const response = await createStore(url);
+      setGridData(response);
     } catch (error) {
       console.error("Error fetching MultiFOS data:", error);
-      setIsDataLoading(false);
       ERPAlert.show({
         title: "",
         icon: "error",
         text: "Failed to load MultiFOS data.",
       });
+    } finally {
+      setIsDataLoading(false);
     }
   }, []);
 
@@ -217,8 +248,8 @@ const MultiFOCScheme: React.FC = () => {
       productBatchID: obj.productBatchID,
       freeProductBatchID:
         obj.freeProductBatchID !== 0 ? obj.freeProductBatchID : obj.productBatchID,
-      qtyLimit: Number(obj.qtyLimit) || 0,
-      freeQty: Number(obj.freeQty) || 0,
+      qtyLimit: obj.qtyLimit,
+      freeQty: obj.freeQty,
       remarks: obj.remarks,
       unitID: obj.unitID,
       unitName: obj.unitName,
@@ -235,18 +266,28 @@ const MultiFOCScheme: React.FC = () => {
       searchByCode: obj.searchByCode,
     };
 
-    setGridData((prevGridData) => [...prevGridData, newSchemeData]);
-    clearForm();
-  }, [getFieldProps, clearForm]);
+    setGridData((prevGridData) => {
+      if (prevGridData instanceof CustomStore) {
+        return [newSchemeData]; // Reset to array with new data
+      }
+      return [...prevGridData, newSchemeData];
+    });
+    handleClear();
+  }, [getFieldProps, handleClear]);
 
-  const handleClear = useCallback(() => {
-    clearForm();
-  }, [clearForm]);
+  // const handleClear = useCallback(() => {
+  //   clearForm();
+  // }, [clearForm]);
+
+
 
   const handleRemoveRow = useCallback((schemeID: number) => {
-    setGridData((prevGridData) =>
-      prevGridData.filter((item) => item.schemeID !== schemeID)
-    );
+    setGridData((prevGridData) => {
+      if (prevGridData instanceof CustomStore) {
+        return []; // Reset to empty array if CustomStore this not complete the implement need to work on it
+      }
+      return prevGridData.filter((item: FOCSchemeData) => item.schemeID !== schemeID);
+    });
   }, []);
 
   const renderDeleteCell = (cellData: any) => {
@@ -266,8 +307,9 @@ const MultiFOCScheme: React.FC = () => {
     <>
       <div className="grid grid-cols-1 gap-4">
         <h6>{t("product_details")}</h6>
+
         <div className="flex gap-4">
-          <ERPDataCombobox
+          {/* <ERPDataCombobox
             {...getFieldProps("schemeID")}
             field={{
               id: "schemeID",
@@ -276,7 +318,7 @@ const MultiFOCScheme: React.FC = () => {
               labelKey: "name",
             }}
             label={t("scheme")}
-            disabled={isFormDisabled}
+            // disabled={isFormDisabled}
             onChangeData={async (data: any) => {
               const obj = getFieldProps("*");
               const res = await api.getAsync(
@@ -287,11 +329,21 @@ const MultiFOCScheme: React.FC = () => {
                 qtyLimit: res.qtyLimit,
                 freeQty: res.freeQty,
                 schemeID: data.schemeID,
-              } as FOCSchemeData);
-              // If loadAllMultiFos is checked, fetch data for DataGrid
-              if (obj.loadAllMultiFos) {
-                fetchAllMultiFosData(data.schemeID);
-              }
+              } as FOCSchemeData);     
+            }}
+          /> */}
+
+          <ERPDataCombobox
+            {...getFieldProps("schemeID")}
+            field={{
+              id: "schemeID",
+              getListUrl: Urls.select_quantity_schemes_for_combo,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label={t("scheme")}
+            onChangeData={(data: any) => {
+              handleFieldChange("schemeID", data.schemeID);
             }}
           />
           <ERPCheckbox
@@ -301,10 +353,11 @@ const MultiFOCScheme: React.FC = () => {
               handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
               // If checked, fetch data; if unchecked, clear DataGrid for manual entry
               if (data.loadAllMultiFos) {
+                setGridData([]);// Clear all previous data
                 const obj = getFieldProps("*");
                 fetchAllMultiFosData(obj.schemeID);
               } else {
-                setGridData([]);
+                setGridData([]);// Clear API-loaded data for manual entry
               }
             }}
           />
@@ -336,7 +389,7 @@ const MultiFOCScheme: React.FC = () => {
             label={t("qty")}
             type="number"
             onChange={(e) =>
-              handleFieldChange("qtyLimit", parseFloat(e.target.value) || 0)
+              handleFieldChange("qtyLimit", parseFloat(e.target.value))
             }
             disabled={isFormDisabled}
           />
@@ -383,7 +436,7 @@ const MultiFOCScheme: React.FC = () => {
             label={t("qty")}
             type="number"
             onChange={(e) =>
-              handleFieldChange("freeQty", parseFloat(e.target.value) || 0)
+              handleFieldChange("freeQty", parseFloat(e.target.value))
             }
             disabled={isFormDisabled}
           />
@@ -425,6 +478,12 @@ const MultiFOCScheme: React.FC = () => {
               allowUpdating={true}
               allowDeleting={false}
               allowAdding={false}
+            />
+            <Column
+              dataField="schemeID"
+              dataType="string"
+              width={100}
+              caption={t("schemeID")}
             />
             <Column
               dataField="barCode"

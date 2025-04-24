@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Urls from "../../../redux/urls";
 import { toggleUserTypePrivilegePopup } from "../../../redux/slices/popup-reducer";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -12,6 +12,8 @@ import { initialUserTypePrivilegeManageData, UserRightData, UserTypePrivilegeMan
 import { TreeList, Selection, Column, TreeListTypes } from "devextreme-react/tree-list";
 import { UserRight, userRights } from "./data";
 import dxTreeList from "devextreme/ui/tree_list";
+import { UserAction } from "../../../helpers/user-right-helper";
+import { RootState } from "../../../redux/store";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -432,7 +434,14 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     );
   }, []);
   const { t } = useTranslation("userManage");
-
+  const [userRightsData, setUserRightsData] = useState<UserRight[]>();
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
+  useEffect(() => {
+    const planRights = clientSession.planFormCodes?.split(",")
+    const allowedActions = Object.values(UserAction) as string[];
+    const updated =  userRights.filter(item => planRights?.includes(item.formCode) ||  allowedActions.includes(item.formCode));
+    setUserRightsData(updated);
+  }, [userRights]);
   return (
     <div className="w-full flex flex-col md:flex-row">
       <div className="w-full md:basis-1/2 dark:bg-dark-bg dark:border-dark-border bg-slate-50 md:border-r border-slate-400 overflow-x-auto">
@@ -440,7 +449,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
           height={treeHeight.windows}
           ref={gridRef}
           id="userRights"
-          dataSource={userRights}
+          dataSource={userRightsData}
           showRowLines={true}
           showBorders={true}
           columnAutoWidth={true}

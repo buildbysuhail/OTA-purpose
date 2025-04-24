@@ -6,6 +6,7 @@ export interface ClientSessionModel {
   demoExpiryDate: string;
   softwareDate: string;
   counterShiftId?: number;
+  planFormCodes?: string;
   isAppGlobal: boolean;
 }
 // export const initialState : login  =  {loading: false, token: ""};
@@ -13,6 +14,7 @@ export const initialState: ClientSessionModel = {
   isDemoVersion: true,
   demoExpiryDate: "",
   softwareDate: "",
+  planFormCodes: "",
   isAppGlobal: false
 };
 const clientSessionSlice = createSlice({

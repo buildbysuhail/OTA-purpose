@@ -144,8 +144,8 @@ function App() {
     }
     syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
     const language = userProfileDetails?.language;
-
-    if (!token && pathname !== "/shared-view") {
+debugger;
+    if (!token && ["/login","/shared-view","accept-user-invitation"].includes(pathname)) {
       navigate("/login");
     } else {
     }

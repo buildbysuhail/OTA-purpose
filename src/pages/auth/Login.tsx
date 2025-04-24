@@ -253,6 +253,7 @@ const Login = () => {
         </div>
       </div>
 
+      {counterSettings.show &&
       <ERPModal
         isForm={true}
         isOpen={counterSettings.show}
@@ -272,7 +273,7 @@ const Login = () => {
           />
         }
       />
-
+      }
       {
         showForgotPassword && (
           <ForgotPassword onClose={() => setShowForgotPassword(false)} />

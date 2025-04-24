@@ -374,7 +374,7 @@ export const MENUITEMS = [
     title: "accounts",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "ACCT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Accounts).map((route) => ({

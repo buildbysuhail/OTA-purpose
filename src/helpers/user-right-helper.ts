@@ -15,15 +15,17 @@ export enum UserAction {
 export const useUserRights = () => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const userRights = useAppSelector((state: RootState) => state.UserRights);
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const hasRight = (formCode: string, action: UserAction): boolean => {
     let result = false;
 
+    const planRights = clientSession.planFormCodes?.split(",")
     const userTypeCode = userSession.userTypeCode;
     const branchId = userSession.currentBranchId;
     const userId = userSession.userId;
 
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return true;
+      return planRights?.includes(formCode)?? false
     }
 
     try {
@@ -37,7 +39,7 @@ export const useUserRights = () => {
 
         if (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.includes("S")
+          filteredRows[0]?.userRights?.split('').includes("S")
         ) {
           result = true;
         }
@@ -55,9 +57,11 @@ export const useUserRights = () => {
     const branchId = userSession.currentBranchId;
     const userId = userSession.userId;
   
+       const planRights = clientSession.planFormCodes?.split(",")
+
     // Return false for "BA" or "CA" user types
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return false;
+      return !planRights?.includes(formCode)
     }
   
     try {
@@ -72,7 +76,7 @@ export const useUserRights = () => {
   
         if (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.includes("B")
+          filteredRows[0]?.userRights?.split('').includes('B')
         ) {
           result = true;
         } else {
@@ -95,9 +99,13 @@ export const useUserRights = () => {
   ): string[] => {
     const userTypeCode = userSession.userTypeCode;
 
+    const planRights = clientSession.planFormCodes?.split(",")
+
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return formCodes;
+      return formCodes.filter((formCode) => {
+        return planRights?.includes(formCode);
+      });
     }
 
     try {
@@ -110,7 +118,7 @@ export const useUserRights = () => {
       
         return (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.includes(action)
+          filteredRows[0]?.userRights?.split('').includes(action)
         );
       });
     } catch (error) {

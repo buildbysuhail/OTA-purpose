@@ -261,7 +261,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     validation={validationErrors.userName}
                 />
 
-                {showNewUserFields && (
+                {/* {showNewUserFields && (
                     <>
                         <ERPInput
                             value={formData.Passwd ?? ''}
@@ -272,19 +272,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
                             required={true}
                             id={'Passwd'}
                         />
-                    {/* {
-                        mode === 'new' && (
-                            <>
-                                <ERPInput
-                                    value={formData.Passwd ?? ''}
-                                    onChange={(e: any) => handleFieldChange('Passwd', e.target.value)}
-                                    label={t('password')}
-                                    type="password"
-                                    placeholder={t('password')}
-                                    required={true}
-                                    id={'Passwd'}
-                                />
-
                         <ERPInput
                             value={formData.confrimPassword ?? ''}
                             onChange={(e: any) => handleFieldChange('confrimPassword', e.target.value)}
@@ -295,19 +282,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                             id={'confrimPassword'}
                         />
                     </>
-                )}
-                                <ERPInput
-                                    value={formData.confrimPassword ?? ''}
-                                    onChange={(e: any) => handleFieldChange('confrimPassword', e.target.value)}
-                                    label={t('confirm_password')}
-                                    type="password"
-                                    placeholder={t('confirm_password')}
-                                    required={true}
-                                    id={'confrimPassword'}
-                                />
-                            </>
-                        )
-                    } */}
+                )} */}
 
                 <ERPInput
                     value={formData.email}

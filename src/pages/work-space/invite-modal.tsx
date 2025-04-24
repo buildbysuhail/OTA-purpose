@@ -245,7 +245,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         id={'userName'}
                     />
 
-                    {
+                    {/* {
                         mode === 'new' && (
                             <>
                                 <ERPInput
@@ -269,7 +269,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                                 />
                             </>
                         )
-                    }
+                    } */}
 
                     <ERPInput
                         value={formData.email}

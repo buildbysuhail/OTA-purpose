@@ -40,7 +40,7 @@ const BankReconciliation = () => {
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({ showReconciled: false, selectedBankId: -2, });
-  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
+  const dateChangeStateRef = useRef<"today" | "cheque">("today");
   const [reload, setReload] = useState<boolean>(false);
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
@@ -56,7 +56,14 @@ const BankReconciliation = () => {
   const goToPreviousPage = () => { window.history.back(); };
   const handleReconciledChange = (checked: boolean) => { setFormState((prev) => ({ ...prev, showReconciled: checked })); };
   const handleBankSelection = (value: number | null) => { setFormState((prev) => ({ ...prev, selectedBankId: value })); };
-  const handleBankDateTypeChange = (type: "today" | "cheque") => { setDateChangeState(type); };
+  const handleBankDateTypeChange = (type: "today" | "cheque") => {
+    // Update the ref value without triggering re-render
+    dateChangeStateRef.current = type;
+    
+    // Force just the radio buttons to update without re-rendering the whole component
+    // by using a minimal state update
+    setReload(prev => !prev); // This is just to update the radio button UI
+  };
 
   useEffect(() => {
     handleShow();
@@ -87,10 +94,9 @@ const BankReconciliation = () => {
         return;
       }
 
-      const newDate =
-        dateChangeState === "today"
-          ? moment().local().format("DD/MM/YYYY")
-          : null;
+      const newDate = dateChangeStateRef.current === "today"
+  ? moment().local().format("DD/MM/YYYY")
+  : null;
 
       combinedSelectedKeys.forEach((selectedId: any) => {
         const rowIndex = dataSourceItems.findIndex((item: any) => item.id === selectedId);
@@ -192,7 +198,11 @@ const BankReconciliation = () => {
   const handleChangeToPending = async () => {
     setLoading((prev) => ({ ...prev, changeToPending: true }));
     try {
-      const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
+      const dataSource = dataGridRef.current?.instance().getDataSource();
+    // Get all data from the store instead of using dataSource.load()
+    const store = dataSource.store();
+    const gridData = await store.load();
+      debugger;
       const changeToPending = gridData
         .filter((item: any) => item.clicked === true)
         .map((item: any) => ({
@@ -469,7 +479,6 @@ const BankReconciliation = () => {
         width: 100,
         visible: true,
         cellRender: (cellInfo) => {
-          debugger;
           // Only show checkbox if the row is not a summary and checkStatus is not 'p' or 'P'
           if (!cellInfo.data.isSummary && 
               ((cellInfo.data.checkStatus !== 'p' && 
@@ -484,9 +493,14 @@ const BankReconciliation = () => {
                           // Use the row's key (id) to find and update the data
                           const dataSource = gridInstance.getDataSource();
                           const store = dataSource.store();
-                          
+                          let bankDate = cellInfo.data.bankDate;
+                          if(!cellInfo.data.clicked && cellInfo.data.bankDate === null)  {
+                            bankDate = dateChangeStateRef.current === "today" 
+                            ? moment().local().format("DD/MM/YYYY") 
+                            : cellInfo.data.chequeDate
+                          }
                           // Update the store directly using the row's key
-                          store.update(cellInfo.data.id, { clicked: !cellInfo.data.clicked })
+                          store.update(cellInfo.data.id, { clicked: !cellInfo.data.clicked,bankDate:bankDate  })
                             .then(() => {
                               // Refresh the grid to reflect the changes
                               dataSource.reload();
@@ -523,7 +537,7 @@ const BankReconciliation = () => {
     // }
     if (key === "selected") {
       e.newData.bankDate = e.newData.selected === true ?
-        dateChangeState === "today"
+        dateChangeStateRef.current === "today"
           ? moment().local().format("DD/MM/YYYY")
           : e.oldData.chequeDate : null;
     }
@@ -564,22 +578,23 @@ const BankReconciliation = () => {
               <div className="flex flex-col w-full max-w-[600px]">
                 <div className="grid grid-cols-12 items-center gap-4">
                   <div className="col-span-6">
-                    <ERPRadio
-                      id="todayDate"
-                      name="bankDateType"
-                      checked={dateChangeState === "today"}
-                      onChange={() => handleBankDateTypeChange("today")}
-                      label={t("today's_date")}
-                    />
+                  <ERPRadio
+  id="todayDate"
+  name="bankDateType"
+  checked={dateChangeStateRef.current === "today"}
+  onChange={() => handleBankDateTypeChange("today")}
+  label={t("today's_date")}
+/>
+
                   </div>
                   <div className="col-span-3">
-                    <ERPRadio
-                      id="chequeDate"
-                      name="bankDateType"
-                      checked={dateChangeState === "cheque"}
-                      onChange={() => handleBankDateTypeChange("cheque")}
-                      label={t("cheque_date")}
-                    />
+                  <ERPRadio
+  id="chequeDate"
+  name="bankDateType"
+  checked={dateChangeStateRef.current === "cheque"}
+  onChange={() => handleBankDateTypeChange("cheque")}
+  label={t("cheque_date")}
+/>
                   </div>
                   <div className="col-span-3">
                     <ERPButton

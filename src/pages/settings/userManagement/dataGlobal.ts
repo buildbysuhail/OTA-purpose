@@ -753,6 +753,7 @@ export const userRights: UserRight[] = [
 
 
 
+  
 { id: 20230, headId: 202, name: "InvTransact_SV", fullName: "Sales View", formCode: "SVW", treeNode: 3, description: "Manage Sales View" },
 { id: 2023001, headId: 20230, name: "InvTransact_SV_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Sales View" },
 { id: 2023002, headId: 20230, name: "InvTransact_SV_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Sales View" },

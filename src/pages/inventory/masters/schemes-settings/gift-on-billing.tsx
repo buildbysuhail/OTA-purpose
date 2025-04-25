@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -8,47 +8,55 @@ import { useFormManager } from "../../../../utilities/hooks/useFormManagerOption
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 
 export const initialGiftOnBilling = {
     data: {
+        giftProductId:0,
         giftOnBillingID: 0,
+        giftProductBatchId:0,
         totalBillRangeFrom: 0,
         totalBillRangeTo: 0,
         giftBarcode: "",
         itemName: "",
-        qty: 0,
+        quantity: 0,
         price: 0,
         loadAllGiftOnBilling: false,
         rangeFrom: 0,
         rangeTo: 0,
         giftItem: "",
-        cashCouponValue: 0
+        cashCouponValue: 0.00,
+        specialPrice:0
     },
     validations: {
         totalBillRangeFrom: "",
         totalBillRangeTo: "",
         giftBarcode: "",
         itemName: "",
-        qty: "",
+        quantity: "",
         price: ""
     }
 };
 
 export interface GiftOnBillingData {
+    giftProductId:number;
     giftOnBillingID: number;
+    giftProductBatchId:number;
     totalBillRangeFrom: number;
     totalBillRangeTo: number;
     giftBarcode: string;
     itemName: string;
-    qty: number;
+    quantity: number;
     price: number;
     loadAllGiftOnBilling: boolean;
     rangeFrom: number;
     rangeTo: number;
     giftItem: string;
     cashCouponValue: number;
+    specialPrice: number;
 }
 
 export const GiftOnBilling: React.FC = () => {
@@ -61,6 +69,7 @@ export const GiftOnBilling: React.FC = () => {
         isEdit,
         handleSubmit,
         handleFieldChange,
+        handleDataChange,
         handleClear: clearForm,
         getFieldProps,
         isLoading,
@@ -69,30 +78,58 @@ export const GiftOnBilling: React.FC = () => {
         initialData: initialGiftOnBilling,
         useApiClient: true,
     });
-
+    const isFormDisabled = formState.data.loadAllGiftOnBilling;
     const handleLoad = useCallback(async () => {
+        setIsDataLoading(true);
+        setGridData([])
         try {
-            setIsDataLoading(true);
-            // const response = await api.get(Urls.gift_on_billing);
-            // if (response && response.data) {
-            //     setGridData(response.data);
-            // }
-            setIsDataLoading(false);
+            const response = await api.get(Urls.select_all_gift_on_billing);
+            if (response) {
+                setGridData(response);
+            }
+         
         } catch (error) {
-            console.error("Error loading data:", error);
+             console.error("Error fetching MultiFOS data:", error);
+                 ERPAlert.show({
+                   title: "",
+                   icon: "error",
+                   text: "Failed to load MultiFOS data.",
+                 }); 
+            
+        }finally {
             setIsDataLoading(false);
-        }
+          }
     }, []);
 
     const handleAdd = useCallback(() => {
+        const obj = getFieldProps("*");
+        if(isNullOrUndefinedOrZero(obj.totalBillRangeFrom) || isNullOrUndefinedOrZero(obj.totalBillRangeTo)||
+        obj.totalBillRangeFrom > obj.totalBillRangeTo){
+            ERPAlert.show({
+                title: "",
+                icon: "warning",
+                text: "Invalid Range: 'From' should be less than or equal to 'To' and both must be valid numbers...!",
+            });
+            return;
+        }
+
+        if(isNullOrUndefinedOrEmpty(obj.giftBarcode) ){ //|| isNullOrUndefinedOrZero(obj.giftProductBatchId  thsi need 
+            ERPAlert.show({
+                title: "",
+                icon: "warning",
+                text: "Invalid Gift Item: Barcode must be present and Gift Product Batch ID must be greater than 0",
+            });
+            return;
+        }
         const newItem: GiftOnBillingData = {
             ...formState.data,
             giftOnBillingID: gridData.length > 0 ? Math.max(...gridData.map(item => item.giftOnBillingID)) + 1 : 1,
-            rangeFrom: formState.data.totalBillRangeFrom,
-            rangeTo: formState.data.totalBillRangeTo,
-            giftItem: formState.data.itemName,
+            rangeFrom: obj.totalBillRangeFrom,
+            rangeTo: obj.totalBillRangeTo,
+            giftItem: obj.itemName,
         };
         setGridData(prevData => [...prevData, newItem]);
+        handleClear();
     }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => {
@@ -123,6 +160,76 @@ export const GiftOnBilling: React.FC = () => {
         );
     };
 
+    const fetchByBarcode = useCallback(async () => {
+        try {
+          const obj = getFieldProps("*");
+          if (isNullOrUndefinedOrEmpty(obj.giftBarcode)) {
+            return;
+          }
+          setIsDataLoading(true);
+          const url = `${Urls.select_product_by_barcode_multi_foc}${obj.giftBarcode}`;
+          const response = await api.get(url);
+          if(response){
+           handleDataChange({
+            ...obj,
+            giftProductId: response.productBatchID,
+            giftProductBatchId: response.productBatchID,
+           })
+          }
+          setIsDataLoading(false);
+        } catch (error) {
+          console.error("Error loading data:", error);
+          setIsDataLoading(false);
+        }
+      }, [getFieldProps, handleDataChange]);
+
+      const fetchByProduct = useCallback( async () => {
+          const obj = getFieldProps("*");
+          try {
+           
+            if (isNullOrUndefinedOrZero(obj.giftProductId) ) {
+              return;
+            }
+    
+            setIsDataLoading(true);
+            const url = `${Urls.select_product_by_product_id_multi_foc}${obj.giftProductId}`;//change url it for demo
+            const response = await api.get(url);
+              const updatedData: Partial<GiftOnBillingData> =
+               {
+                giftProductBatchId : response.GiftProductBatchID ,
+                giftBarcode: response.AutoBarcode,
+                   
+               }
+            
+              handleDataChange({
+                ...obj,
+                ...updatedData,
+              } as GiftOnBillingData);
+         
+            setIsDataLoading(false);
+          }
+         catch (error) {
+            console.error(`Error fetching ${obj.giftProductId} data:`, error);
+            setIsDataLoading(false);
+          }
+        },
+        [getFieldProps, handleDataChange]
+      );
+
+        useEffect(() => {
+          if (formState.data.loadAllGiftOnBilling) {
+            handleLoad();
+          } else {
+            setGridData([]);
+          }
+        }, [formState.data.loadAllGiftOnBilling]);
+
+         useEffect(() => {
+            if (formState.data.giftProductId) {
+                fetchByProduct();
+            }
+          }, [formState.data.giftProductId]);
+
     return (
         <div className="w-full modal-content flex flex-col gap-4">
             <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
@@ -130,12 +237,14 @@ export const GiftOnBilling: React.FC = () => {
                     {...getFieldProps("totalBillRangeFrom")}
                     label={t("total_bill_range_from")}
                     type="number"
+                    disabled={isFormDisabled}
                     onChangeData={(data: any) => handleFieldChange("totalBillRangeFrom", parseFloat(data.totalBillRangeFrom))}
                 />
                 <ERPInput
                     {...getFieldProps("totalBillRangeTo")}
                     label={t("total_bill_range_to")}
                     type="number"
+                    disabled={isFormDisabled}
                     onChangeData={(data: any) => handleFieldChange("totalBillRangeTo", parseFloat(data.totalBillRangeTo))}
                 />
                 <ERPCheckbox
@@ -147,28 +256,37 @@ export const GiftOnBilling: React.FC = () => {
                     {...getFieldProps("giftBarcode")}
                     label={t("gift_barcode")}
                     onChangeData={(data: any) => handleFieldChange("giftBarcode", data.giftBarcode)}
+                    onBlur={() => fetchByBarcode()}
+                    disabled={isFormDisabled}
                 />
                 <ERPDataCombobox
-                    {...getFieldProps("itemName")}
+                    {...getFieldProps("giftProductId")}
                     label={t("item_name")}
                     field={{
-                        id: "itemName",
-                        // getListUrl: Urls.data_inventory_items,
+                        id: "giftProductId",
+                        getListUrl: Urls.data_products,
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("itemName", data.itemName)}
+                    onChange={(data: any) => handleFieldChange({
+                        giftProductId:data.value,
+                        itemName:data.name,
+                    })}
+                    disabled={isFormDisabled}
+                //   onBlur={fetchByProduct}
                 />
                 <ERPInput
-                    {...getFieldProps("qty")}
-                    label={t("qty")}
+                    {...getFieldProps("quantity")}
+                    label={t("quantity")}
                     type="number"
-                    onChangeData={(data: any) => handleFieldChange("qty", parseFloat(data.qty))}
+                    disabled={isFormDisabled}
+                    onChangeData={(data: any) => handleFieldChange("quantity", parseFloat(data.quantity))}
                 />
                 <ERPInput
                     {...getFieldProps("price")}
                     label={t("price")}
                     type="number"
+                    disabled={isFormDisabled}
                     onChangeData={(data: any) => handleFieldChange("price", parseFloat(data.price))}
                 />
             </div>
@@ -177,10 +295,12 @@ export const GiftOnBilling: React.FC = () => {
                 <ERPButton
                     title={t("add")}
                     variant="secondary"
+                    disabled={isFormDisabled}
                     onClick={handleAdd}
                 />
                 <ERPButton
                     title={t("delete")}
+                    disabled={!formState.data.loadAllGiftOnBilling}
                     variant="secondary"
                     onClick={handleClear}
                 />

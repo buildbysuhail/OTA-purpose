@@ -150,7 +150,7 @@ const WhatsappIntegration: React.FC = () => {
                     {/* <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#22c55e] rounded-full animate-pulse"></span> */}
                   </div>
                 </div>
-              ) : (
+              ) : item.id > 0 ? (
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                   <ERPButton
                     title={t("Set as default")}
@@ -159,7 +159,8 @@ const WhatsappIntegration: React.FC = () => {
                     loading={submittingSetAsDefault && item.id === selectedForDefaultId}
                   />
                 </div>
-              )}
+              ) : <></>
+              }
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item)}
@@ -219,10 +220,10 @@ const WhatsappIntegration: React.FC = () => {
         <ERPModal
           isOpen={provider.isOpen}
           title={
-            provider.provider === NotificationsProvider.TwillioWhatsapp ? t(provider.providerName?.toLowerCase() || "twilio"):""
+            provider.provider === NotificationsProvider.TwillioWhatsapp ? t(provider.providerName?.toLowerCase() || "twilio") : ""
           }
           width={600}
-          height={ 620}
+          height={620}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={

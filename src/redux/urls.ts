@@ -622,7 +622,17 @@ const Urls = {
   insert_gift_on_billing: "/Inventory/GiftOnBilling/", // POST
   select_gift_product_by_product_id: "/Inventory/GiftOnBilling/", // GET (append {productId})
   delete_gift_on_billing: "/Inventory/GiftOnBilling/", // DELETE (pass body as List<GiftSchemeDto>)
-  select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // Get (pass loadOption)
+  select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // 
+
+  // URLs for QuantityLimitController (Inventory Module)
+    insert_item_qty_limit: "/Inventory/QuantityLimit/", // POST
+    select_quantity_limit: "/Inventory/QuantityLimit/", // GET
+    select_products_for_product_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
+    delete_quantity_limit: "/Inventory/QuantityLimit/", // DELETE (pass body as List<ItemQtyLimitSchemeDto>)
+  // URLs for QuantitySlabController (Inventory Module)
+  insert_qty_slab_offer: "/Inventory/QuantitySlab/", // POST
+  select_all_qty_slab_offer: "/Inventory/QuantitySlab/", // GET
+  delete_qty_slab_offer: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
 
   //Transaction
   // common

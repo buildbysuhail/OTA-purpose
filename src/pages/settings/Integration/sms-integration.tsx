@@ -76,7 +76,7 @@ const SMSIntegration: React.FC = () => {
   };
 
   const handleOpen = (item: any) => {
-    
+
     let parsedConfig: any;
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
@@ -87,7 +87,7 @@ const SMSIntegration: React.FC = () => {
     } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
       parsedConfig = item?.configJson;
     }
-    
+
     if (item.provider == NotificationsProvider.SmsGateway) {
       setProvider({
         isOpen: true,
@@ -145,7 +145,7 @@ const SMSIntegration: React.FC = () => {
                     {/* <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#22c55e] rounded-full animate-pulse"></span> */}
                   </div>
                 </div>
-              ) : (
+              ) : item.id > 0 ? (
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                   <ERPButton
                     title={t("Set as default")}
@@ -154,7 +154,8 @@ const SMSIntegration: React.FC = () => {
                     loading={submittingSetAsDefault && item.id === selectedForDefaultId}
                   />
                 </div>
-              )}
+              ) : <></>
+              }
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item)}

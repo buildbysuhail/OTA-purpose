@@ -46,7 +46,7 @@ const ReportList = () => {
 
   const [favorites, setFavorites] = useState<number[]>([]);
   const [favoriteItems, setFavoriteItems] = useState<
-    { id: number; title: string; children?: any[] }[]
+    any
   >([]);
   const findFavoritesInChildren = (routes: any, favorites: any) => {
     let favoriteItems: { id: number; title: string; children?: any[] }[] = [];
@@ -69,6 +69,7 @@ const ReportList = () => {
   };
   const toggleFavorite = async (routeId: number) => {
     setFavorites((prevFavorites) => {
+      debugger
       const newFavorites = prevFavorites?.includes(routeId)
         ? prevFavorites?.filter((id) => id !== routeId)
         : [...prevFavorites, routeId];
@@ -81,7 +82,7 @@ const ReportList = () => {
   
   const updateFavoriteStatus = async (data: any) => {
     try {
-      await api.postAsync(Urls.get_product_config, data);
+      await api.postAsync(Urls.update_favorite_reports,  {favIds: Array.isArray(data) ? data.join(',') : ''});
     } catch (error) {
       console.error("Failed to update favorite status", error);
     }
@@ -90,9 +91,13 @@ const ReportList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const base64 = await api.getAsync(Urls.get_product_config);
-        const _userConfig = atob(base64);
-        const userConfig: any = customJsonParse(_userConfig);
+        debugger
+        const jsonString = await api.getAsync(Urls.get_favorite_reports);
+        debugger
+        const userConfig: number[] = (jsonString ?? "")
+  .split(",")
+  .map((s: any) => Number(s.trim()))
+  .filter((n: any) => !isNaN(n));
         setFavorites(userConfig);
       } catch (error) {
         console.error("Failed to fetch product config", error);
@@ -286,7 +291,7 @@ const ReportList = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3">
             {favoriteItems?.length > 0 &&
-              favoriteItems?.map((favoriteItem) => (
+              favoriteItems?.map((favoriteItem: any) => (
                 <div
                   key={`${favoriteItem.id}-${favoriteItem.id}`}
                   className="flex items-center min-w-0"
@@ -310,7 +315,19 @@ const ReportList = () => {
                   </svg>
 
                   <span
-                    className="text-sm text-[#4B8BF4] truncate"
+                   onClick={() => {
+                    if (favoriteItem?.path && favoriteItem?.type === "link") {
+                      navigate(favoriteItem?.path);
+                    } else if (favoriteItem?.action && favoriteItem?.type === "popup") {
+                      dispatch(favoriteItem?.action({ isOpen: true }));
+                    } else {
+                      ERPToast.showWith(
+                        t("feature_under_development_message"),
+                        t("warning")
+                      );
+                    }
+                  }}
+                    className="text-sm text-[#4B8BF4] truncate cursor-pointer"
                     title={t(favoriteItem.title)}
                   >
                     {t(favoriteItem.title)}

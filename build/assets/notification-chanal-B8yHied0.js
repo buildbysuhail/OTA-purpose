@@ -1,0 +1,1 @@
+var m=(p=>(p[p.Sms=1]="Sms",p[p.Whatsapp=2]="Whatsapp",p[p.Email=3]="Email",p[p.InAppNotification=4]="InAppNotification",p))(m||{}),S=(p=>(p[p.TwillioSms=1]="TwillioSms",p[p.TwillioWhatsapp=2]="TwillioWhatsapp",p[p.Smtp=3]="Smtp",p[p.SmsGateway=4]="SmsGateway",p[p.LinkWhatsapp=5]="LinkWhatsapp",p))(S||{});export{m as N,S as a};

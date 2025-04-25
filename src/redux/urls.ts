@@ -176,6 +176,9 @@ const Urls = {
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
+  get_favorite_reports: "/Core/Preferences/GetFavoriteReports/",
+  update_favorite_reports: "/Core/Preferences/UpdateFavoriteReports/",
+
   //setting/system
   get_userLedger_by_user_id: "/Accounts/AccLedger/GetUserLedgerByUserID/",
 

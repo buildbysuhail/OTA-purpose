@@ -489,7 +489,7 @@ export const userRights: UserRight[] = [
 { id: 2011304, headId: 20113, name: "SalesmanRoute_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Salesman Route" },
 
 { id: 20114, headId: 201, name: "Schemes", fullName: "Schemes", formCode: "INVSCHM", treeNode: 3, description: "Manage Schemes" },
-{ id: 2011401, headId: 20114, name: "Schemes_Show", fullName: "Show", formCode: "V", treeNode: 4, description: "Show Schemes" },
+{ id: 2011401, headId: 20114, name: "Schemes_Show", fullName: "Show", formCode: "S", treeNode: 4, description: "Show Schemes" },
 { id: 2011402, headId: 20114, name: "Schemes_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Schemes" },
 { id: 2011403, headId: 20114, name: "Schemes_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Schemes" },
 { id: 2011404, headId: 20114, name: "Schemes_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Schemes" },
@@ -1265,12 +1265,12 @@ export const userRights: UserRight[] = [
   
   // Inventory Status Report
   { id: 2032704, headId: 20327, name: "InventoryStatusReport", fullName: "Inventory Status Report", formCode: "INVSTATUSRPT", treeNode: 4, description: "Manage Inventory Status Report" },
-  { id: 203270401, headId: 2032704, name: "InventoryStatusReport_Show", fullName: "Show", formCode: "SH", treeNode: 5, description: "Inventory Status Report Show" },
+  { id: 203270401, headId: 2032704, name: "InventoryStatusReport_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Inventory Status Report Show" },
   { id: 203270402, headId: 2032704, name: "InventoryStatusReport_Edit", fullName: "Edit", formCode: "E", treeNode: 5, description: "Inventory Status Report Edit" },
   
   // Routewise Sales and Collection
   { id: 2032705, headId: 20327, name: "RoutewiseSalesCollection", fullName: "Routewise Sales and Collection", formCode: "ROUTWISE_SL_CR_1", treeNode: 4, description: "Manage Routewise Sales and Collection" },
-  { id: 203270501, headId: 2032705, name: "RoutewiseSalesCollection_Show", fullName: "Show", formCode: "SH", treeNode: 5, description: "Routewise Sales and Collection Show" },
+  { id: 203270501, headId: 2032705, name: "RoutewiseSalesCollection_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Routewise Sales and Collection Show" },
   
   // Service Report
   { id: 20328, headId: 203, name: "ServiceReport", fullName: "Service Report", formCode: "SERVCRPT", treeNode: 3, description: "Manage Service Report" },

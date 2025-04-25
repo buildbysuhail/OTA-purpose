@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import React from "react";
-import { modelToBase64Unicode, modelToBase64UnicodeWithoutCircular } from "../../../utilities/jsonConverter";
+import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
 
 type BankReconciliationGridProps = {
   data: any[];
@@ -290,3 +290,7 @@ function areEqual(prevProps: any, nextProps: any) {
   }
 }
 export default React.memo(BankReconciliationGrid);
+function modelToBase64UnicodeWithoutCircular(data: any) {
+  throw new Error("Function not implemented.");
+}
+

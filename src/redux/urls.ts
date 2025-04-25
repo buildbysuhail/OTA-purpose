@@ -618,6 +618,12 @@ const Urls = {
   select_product_by_barcode_multi_foc: "/Inventory/MultiFOC/ByBarcode/", // GET (append {barCode})
   delete_multi_foc: "/Inventory/MultiFOC/",
 
+  // URLs for GiftOnBillingController (Inventory Module)
+  insert_gift_on_billing: "/Inventory/GiftOnBilling/", // POST
+  select_gift_product_by_product_id: "/Inventory/GiftOnBilling/", // GET (append {productId})
+  delete_gift_on_billing: "/Inventory/GiftOnBilling/", // DELETE (pass body as List<GiftSchemeDto>)
+  select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // Get (pass loadOption)
+
   //Transaction
   // common
 

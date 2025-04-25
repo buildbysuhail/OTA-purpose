@@ -623,7 +623,7 @@ const Urls = {
   select_gift_product_by_product_id: "/Inventory/GiftOnBilling/", // GET (append {productId})
   delete_gift_on_billing: "/Inventory/GiftOnBilling/", // DELETE (pass body as List<GiftSchemeDto>)
   select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // 
-
+  gift_on_billing:"/Inventory/GiftOnBilling/",
   // URLs for QuantityLimitController (Inventory Module)
     insert_item_qty_limit: "/Inventory/QuantityLimit/", // POST
     select_quantity_limit: "/Inventory/QuantityLimit/", // GET

@@ -10,6 +10,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 
@@ -58,6 +59,29 @@ export interface GiftOnBillingData {
     cashCouponValue: number;
     specialPrice: number;
 }
+// export interface GiftOnBillingData {
+//     autoBarcode: string;
+//     billingId: number | null;
+//     billingId_Validation: string | null;
+//     cashCouponValue: number;
+//     giftOnBillingID: number;
+//     giftProductBatchID: number;
+//     giftProductBatchID_Validation: string | null;
+//     isValid: boolean;
+//     productName: string;
+//     quantity: number;
+//     rangeFrom: number;
+//     rangeTo: number;
+//     specialPrice: number;
+// }
+export interface GiftEntryParams {
+    rangeFrom: number;
+    rangeTo: number;
+    giftProductBatchId: number;
+    quantity: number;
+    createdUserId: number;
+    cashCouponValue: number;
+  }
 
 export const GiftOnBilling: React.FC = () => {
     const { t } = useTranslation('inventory');
@@ -83,7 +107,7 @@ export const GiftOnBilling: React.FC = () => {
         setIsDataLoading(true);
         setGridData([])
         try {
-            const response = await api.get(Urls.select_all_gift_on_billing);
+            const response = await api.get(Urls.gift_on_billing);
             if (response) {
                 setGridData(response);
             }
@@ -140,16 +164,67 @@ export const GiftOnBilling: React.FC = () => {
         setGridData(prevData => prevData.filter(item => item.giftOnBillingID !== rowId));
     }, []);
 
-    const handleSave = useCallback(() => {
-        console.log("Saving data:", gridData);
-    }, [gridData]);
+
+
+    const handleSave = useCallback(async () => {
+        try {
+          // Check if gridData is empty
+          if (gridData.length === 0) {
+            ERPAlert.show({
+              title: "",
+              icon: "warning",
+              text: "No data to save. Please add items to the grid.",
+            });
+            return;
+          }
+      
+        //   // Transform gridData into GiftEntryParams array
+        //   const payload: GiftEntryParams[] = gridData.map((item) => {
+        //     // Validate required fields
+        //     if (
+        //       isNullOrUndefinedOrZero(item.rangeFrom) ||
+        //       isNullOrUndefinedOrZero(item.rangeTo) ||
+        //       isNullOrUndefinedOrZero(item.giftProductBatchId) ||
+        //       isNullOrUndefinedOrZero(item.quantity)
+        //     ) {
+        //       throw new Error("Invalid data: All required fields must be valid.");
+        //     }
+      
+        //     return {
+        //       rangeFrom: item.rangeFrom,
+        //       rangeTo: item.rangeTo,
+        //       giftProductBatchId: item.giftProductBatchId,
+        //       quantity: item.quantity,
+        //       createdUserId: 1, // Replace with actual logic to get user ID
+        //       cashCouponValue: item.cashCouponValue || 0, // Use 0 if undefined
+        //     };
+        //   });
+      
+          // Make POST request
+          const response = await api.post(Urls.gift_on_billing, gridData);
+          handleResponse(response, () => {
+            setGridData([]);
+            handleClear();
+          });
+        } catch (error) {
+          console.error("Error saving settings:", error);
+          ERPAlert.show({
+            title: "",
+            icon: "error",
+            text: "Failed to save gift entries. Please try again.",
+          });
+        }
+      }, [gridData]);
 
     const handleSelectAllToDelete = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectAll(e.target.checked);
     }, []);
 
     const handleClearAll = useCallback(() => {
+        
         setGridData([]);
+        handleClear();
+
     }, []);
 
     const renderDeleteCell = (cellData: any) => {
@@ -377,14 +452,7 @@ export const GiftOnBilling: React.FC = () => {
                 </DataGrid>
             </div>
 
-            <div className="flex justify-between items-center mt-2">
-                <div className="flex items-center">
-                    <ERPCheckbox
-                        label={t("select_all_to_delete")}
-                        checked={selectAll}
-                        onChange={handleSelectAllToDelete} id={""} />
-                </div>
-                <div className="flex gap-2">
+            <div className="flex justify-end gap-4 items-center mt-2">
                     <ERPButton
                         title={t("clear")}
                         variant="secondary"
@@ -395,8 +463,8 @@ export const GiftOnBilling: React.FC = () => {
                         variant="primary"
                         onClick={handleSave}
                     />
-                </div>
             </div>
+      
         </div>
     );
 };

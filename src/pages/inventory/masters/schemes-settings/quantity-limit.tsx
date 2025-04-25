@@ -129,7 +129,7 @@ export const QuantityLimit: React.FC = () => {
         }
         try {
           setIsDataLoading(true);
-          const response = await api.post(Urls.select_products_for_product_qty_limit,payload);
+          const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
     
           if (response) {
             const transformedData: QuantityLimitItemData[] = response.map(

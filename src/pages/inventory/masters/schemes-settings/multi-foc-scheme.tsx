@@ -269,7 +269,7 @@ const MultiFOCScheme: React.FC = () => {
       return [...prevGridData, newSchemeData];
     });
     handleClear();
-  }, [getFieldProps, handleClear]);
+  }, [getFieldProps]);
 
 
   useEffect(() => {

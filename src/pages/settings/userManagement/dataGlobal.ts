@@ -78,9 +78,27 @@ export const userRights: UserRight[] = [
     { id: 1011102, headId: 10111, name: "AccMaster_ProjectSite_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Project Site" },
     { id: 1011103, headId: 10111, name: "AccMaster_ProjectSite_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Project Site" },
     { id: 1011104, headId: 10111, name: "AccMaster_ProjectSite_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Project Site" },
-  
-    { id: 10112, headId: 101, name: "AccMaster_AccountPrivilages", fullName: "Account Privileges", formCode: "ACCPRIVLG", treeNode: 3, description: "Manage Account Privileges" },
-    { id: 1011201, headId: 10112, name: "AccMaster_AccountPrivilages_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Account Privilege" },
+
+   // UPI
+{ id: 10112, headId: 101, name: "AccMaster_UPI", fullName: "UPI", formCode: "UPI", treeNode: 3, description: "Manage UPI" },
+{ id: 1011201, headId: 10112, name: "AccMaster_UPI_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add UPI" },
+{ id: 1011202, headId: 10112, name: "AccMaster_UPI_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit UPI" },
+{ id: 1011203, headId: 10112, name: "AccMaster_UPI_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete UPI" },
+{ id: 1011204, headId: 10112, name: "AccMaster_UPI_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print UPI" },
+
+// Bank Card
+{ id: 10113, headId: 101, name: "AccMaster_BankCard", fullName: "Bank Card", formCode: "BNKCARD", treeNode: 3, description: "Manage Bank Card" },
+{ id: 1011301, headId: 10113, name: "AccMaster_BankCard_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Bank Card" },
+{ id: 1011302, headId: 10113, name: "AccMaster_BankCard_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Bank Card" },
+{ id: 1011303, headId: 10113, name: "AccMaster_BankCard_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Bank Card" },
+{ id: 1011304, headId: 10113, name: "AccMaster_BankCard_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Bank Card" },
+
+// Customer and Supplier Master
+{ id: 10114, headId: 101, name: "AccMaster_CustSupp", fullName: "Customer and Supplier Master", formCode: "CustAndSuppMR", treeNode: 3, description: "Manage Customer and Supplier Master" },
+{ id: 1011401, headId: 10114, name: "AccMaster_CustSupp_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Customer and Supplier" },
+{ id: 1011402, headId: 10114, name: "AccMaster_CustSupp_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Customer and Supplier" },
+{ id: 1011403, headId: 10114, name: "AccMaster_CustSupp_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Customer and Supplier" },
+{ id: 1011404, headId: 10114, name: "AccMaster_CustSupp_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Customer and Supplier" },
     //#endregion End Accounts Master
 
 
@@ -188,11 +206,42 @@ export const userRights: UserRight[] = [
 
   { id: 10216, headId: 102, name: "AccTransact_TaxOnExpenses", fullName: "Tax On Expenses", formCode: "TXEXP", treeNode: 3, description: "Manage Tax On Expenses" },
 
-  { id: 1021601, headId: 10216, name: "NdPayments", fullName: "Payments", formCode: "TXP", treeNode: 3, description: "Manage Payments" },
+  { id: 1021601, headId: 10216, name: "NdPayments", fullName: "Payments", formCode: "TXP", treeNode: 3, description: "Manage Payments" },   
   { id: 102160101, headId: 1021601, name: "TXT_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Payments" },
   { id: 102160102, headId: 1021601, name: "TXT_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Payments" },
   { id: 102160103, headId: 1021601, name: "TXT_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Payments" },
   { id: 102160104, headId: 1021601, name: "TXT_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Payments" },
+
+  { id: 10217, headId: 102, name: "Cash_Payment_Estimate", fullName: "Cash Payment Estimate", formCode: "CPE", treeNode: 3, description: "Manage Cash Payment Estimate" },
+  { id: 1021701, headId: 10217, name: "Cash_Payment_Estimate_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Cash Payment Estimate" },
+  { id: 1021702, headId: 10217, name: "Cash_Payment_Estimate_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Cash Payment Estimate" },
+  { id: 1021703, headId: 10217, name: "Cash_Payment_Estimate_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Cash Payment Estimate" },
+  { id: 1021704, headId: 10217, name: "Cash_Payment_Estimate_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cash Payment Estimate" },
+
+  { id: 10218, headId: 102, name: "Cash_Receipt_Estimate", fullName: "Cash Receipt Estimate", formCode: "CRE", treeNode: 3, description: "Manage Cash Receipt Estimate" },
+  { id: 1021801, headId: 10218, name: "Cash_Receipt_Estimate_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Cash Receipt Estimate" },
+  { id: 1021802, headId: 10218, name: "Cash_Receipt_Estimate_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Cash Receipt Estimate" },
+  { id: 1021803, headId: 10218, name: "Cash_Receipt_Estimate_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Cash Receipt Estimate" },
+  { id: 1021804, headId: 10218, name: "Cash_Receipt_Estimate_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cash Receipt Estimate" },
+  
+  { id: 10219, headId: 102, name: "Cheque_Payment_Contra", fullName: "Cheque Payment/Contra", formCode: "CQP", treeNode: 3, description: "Manage Cheque Payment/Contra" },
+  { id: 1021901, headId: 10219, name: "Cheque_Payment_Contra_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Cheque Payment/Contra" },
+  { id: 1021902, headId: 10219, name: "Cheque_Payment_Contra_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Cheque Payment/Contra" },
+  { id: 1021903, headId: 10219, name: "Cheque_Payment_Contra_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Cheque Payment/Contra" },
+  { id: 1021904, headId: 10219, name: "Cheque_Payment_Contra_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cheque Payment/Contra" },
+  
+  { id: 10220, headId: 102, name: "Cheque_Receipt_Contra", fullName: "Cheque Receipt/Contra", formCode: "CQR", treeNode: 3, description: "Manage Cheque Receipt/Contra" },
+  { id: 1022001, headId: 10220, name: "Cheque_Receipt_Contra_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Cheque Receipt/Contra" },
+  { id: 1022002, headId: 10220, name: "Cheque_Receipt_Contra_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Cheque Receipt/Contra" },
+  { id: 1022003, headId: 10220, name: "Cheque_Receipt_Contra_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Cheque Receipt/Contra" },
+  { id: 1022004, headId: 10220, name: "Cheque_Receipt_Contra_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cheque Receipt/Contra" },
+  
+  { id: 10221, headId: 102, name: "Journal_Entry_SP", fullName: "Journal Entry (SP)", formCode: "JVSP", treeNode: 3, description: "Manage Journal Entry (SP)" },
+  { id: 1022101, headId: 10221, name: "Journal_Entry_SP_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Journal Entry (SP)" },
+  { id: 1022102, headId: 10221, name: "Journal_Entry_SP_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Journal Entry (SP)" },
+  { id: 1022103, headId: 10221, name: "Journal_Entry_SP_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Journal Entry (SP)" },
+  { id: 1022104, headId: 10221, name: "Journal_Entry_SP_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Journal Entry (SP)" },
+
 
     //#endregion End Accounts Transaction
     //#region  Accounts Reports Starts
@@ -388,6 +437,26 @@ export const userRights: UserRight[] = [
 { id: 10331, headId: 103, name: "TrReports_Post", fullName: "POST", formCode: "POST", treeNode: 3, description: "POST Actions" },
 { id: 1034101, headId: 10331, name: "TrReports_Post_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print POST Report" },
 
+{ id: 10332, headId: 103, name: "TrReports_CounterShift", fullName: "Counter Shift Report", formCode: "CNTSFRPT", treeNode: 3, description: "Counter Shift Report" },
+{ id: 1033201, headId: 10332, name: "TrReports_CounterShift_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Counter Shift Report" },
+{ id: 1033202, headId: 10332, name: "TrReports_CounterShift_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Counter Shift Report" },
+{ id: 1033203, headId: 10332, name: "TrReports_CounterShift_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Counter Shift Report" },
+
+{ id: 10333, headId: 103, name: "TrReports_MultiPayment", fullName: "Multi Payment Report", formCode: "MULTIPARPT", treeNode: 3, description: "Multi Payment Report" },
+{ id: 1033301, headId: 10333, name: "TrReports_MultiPayment_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Multi Payment Report" },
+{ id: 1033302, headId: 10333, name: "TrReports_MultiPayment_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Multi Payment Report" },
+{ id: 1033303, headId: 10333, name: "TrReports_MultiPayment_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Multi Payment Report" },
+
+{ id: 10334, headId: 103, name: "TrReports_Advance", fullName: "Advance Report", formCode: "ADVREPT", treeNode: 3, description: "Advance Report" },
+
+{ id: 1033401, headId: 10334, name: "TrReports_ExcessShortage", fullName: "Excess Or Shortage", formCode: "EXORSH", treeNode: 3, description: "Excess Or Shortage Report" },
+{ id: 103340101, headId: 1033401, name: "TrReports_ExcessShortage_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Excess Or Shortage Report" },
+{ id: 103340102, headId: 1033401, name: "TrReports_ExcessShortage_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Excess Or Shortage Report" },
+{ id: 103340103, headId: 1033401, name: "TrReports_ExcessShortage_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Excess Or Shortage Report" },
+
+
+
+
 
     //#endregion Accounts Reports Ends
 //#region other Utilities
@@ -489,10 +558,11 @@ export const userRights: UserRight[] = [
 { id: 2011304, headId: 20113, name: "SalesmanRoute_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Salesman Route" },
 
 { id: 20114, headId: 201, name: "Schemes", fullName: "Schemes", formCode: "INVSCHM", treeNode: 3, description: "Manage Schemes" },
-{ id: 2011401, headId: 20114, name: "Schemes_Show", fullName: "Show", formCode: "V", treeNode: 4, description: "Show Schemes" },
+{ id: 2011401, headId: 20114, name: "Schemes_Show", fullName: "Show", formCode: "S", treeNode: 4, description: "Show Schemes" },
 { id: 2011402, headId: 20114, name: "Schemes_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Schemes" },
 { id: 2011403, headId: 20114, name: "Schemes_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Schemes" },
 { id: 2011404, headId: 20114, name: "Schemes_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Schemes" },
+
 
   //#endregion Inventory Master End
   //#region Inventory Transaction

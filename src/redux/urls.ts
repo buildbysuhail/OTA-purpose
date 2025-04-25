@@ -632,7 +632,7 @@ const Urls = {
   // URLs for QuantitySlabController (Inventory Module)
   insert_qty_slab_offer: "/Inventory/QuantitySlab/", // POST
   select_all_qty_slab_offer: "/Inventory/QuantitySlab/", // GET
-  delete_qty_slab_offer: "/Inventory/QuantitySlab/", // DELETE (pass body as List<QtySlabSchemeDto>)
+  delete_qty_slab_offer: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
 
   //Transaction
   // common

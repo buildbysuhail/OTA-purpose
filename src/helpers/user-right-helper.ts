@@ -25,8 +25,7 @@ export const useUserRights = () => {
     const userId = userSession.userId;
 
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      // return planRights?.includes(formCode)?? false
-      return true;
+      return planRights?.includes(formCode)?? false
     }
 
     try {
@@ -62,8 +61,7 @@ export const useUserRights = () => {
 
     // Return false for "BA" or "CA" user types
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      // return !planRights?.includes(formCode)
-      return false
+      return !planRights?.includes(formCode)
     }
   
     try {
@@ -105,10 +103,9 @@ export const useUserRights = () => {
 
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      // return formCodes.filter((formCode) => {
-      //   return planRights?.includes(formCode);
-      // });
-      return formCodes
+      return formCodes.filter((formCode) => {
+        return planRights?.includes(formCode);
+      });
     }
 
     try {

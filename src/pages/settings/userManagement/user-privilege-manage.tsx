@@ -10,7 +10,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import { initialUserTypePrivilegeManageData, UserRightData, UserTypePrivilegeManageData } from "./rights-interface";
 import { TreeList, Selection, Column, TreeListTypes } from "devextreme-react/tree-list";
-import { UserRight, userRights } from "./dataGlobal";
+import { UserRight, userRights } from "./data";
 import dxTreeList from "devextreme/ui/tree_list";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { RootState } from "../../../redux/store";

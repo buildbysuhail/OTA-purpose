@@ -1,0 +1,1 @@
+import{j as r,r as t}from"./index-C_3_w14a.js";import{P as s}from"./parties-BbBdMHBS.js";import"./erp-grid-actions-BiLe2IlX.js";import"./erp-cropper-CyJLzpCN.js";const i=()=>r.jsx(t.Fragment,{children:r.jsx(s,{type:"Cust",gridId:"grd_cust"})});export{i as default};

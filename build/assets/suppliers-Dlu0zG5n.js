@@ -1,0 +1,1 @@
+import{j as r,r as t}from"./index-C_3_w14a.js";import{P as p}from"./parties-BbBdMHBS.js";import"./erp-grid-actions-BiLe2IlX.js";import"./erp-cropper-CyJLzpCN.js";const a=()=>r.jsx(t.Fragment,{children:r.jsx(p,{type:"Supp",gridId:"grd_supp"})});export{a as default};

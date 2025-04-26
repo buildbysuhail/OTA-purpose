@@ -1229,6 +1229,41 @@ export const userRights: UserRight[] = [
 { id: 2030523, headId: 20305, name: "NdGoodsRequestItem", fullName: "Goods Request", formCode: "GR_RPTIWS", treeNode: 3, description: "Manage Goods Request Itemwsie" },
 { id: 203052301, headId: 2030523, name: "NdGoodsRequestItem_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Goods Request Itemwsie Print" },
 
+// Excess Stock(SP) nodes
+{ id: 2030524, headId: 20305, name: "NdExcessStockSP", fullName: "Excess Stock(SP)", formCode: "EX-SPRPTIWS", treeNode: 3, description: "Manage Excess Stock Special" },
+{ id: 203052401, headId: 2030524, name: "NdExcessStockSP_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Excess Stock(SP) Print" },
+{ id: 203052402, headId: 2030524, name: "NdExcessStockSP_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Excess Stock(SP) Settings" },
+{ id: 203052403, headId: 2030524, name: "NdExcessStockSP_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Excess Stock(SP) Export" },
+
+// Shortage Stock(SP) nodes
+{ id: 2030525, headId: 20305, name: "NdShortageStockSP", fullName: "Shortage Stock(SP)", formCode: "SH-SPRPTIWS", treeNode: 3, description: "Manage Shortage Stock Special" },
+{ id: 203052501, headId: 2030525, name: "NdShortageStockSP_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Shortage Stock(SP) Print" },
+{ id: 203052502, headId: 2030525, name: "NdShortageStockSP_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Shortage Stock(SP) Settings" },
+{ id: 203052503, headId: 2030525, name: "NdShortageStockSP_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Shortage Stock(SP) Export" },
+
+// Sales Transfer nodes
+{ id: 2030526, headId: 20305, name: "NdSalesTransfer", fullName: "Sales Transfer", formCode: "SELTRANS", treeNode: 3, description: "Manage Sales Transfer" },
+{ id: 203052601, headId: 2030526, name: "NdSalesTransfer_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Sales Transfer Print" },
+{ id: 203052602, headId: 2030526, name: "NdSalesTransfer_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Sales Transfer Settings" },
+{ id: 203052603, headId: 2030526, name: "NdSalesTransfer_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Sales Transfer Export" },
+
+// Purchase Return Estimate nodes
+{ id: 2030527, headId: 20305, name: "NdPurchaseReturnEstimate", fullName: "Purchase Return Estimate", formCode: "PREITEM", treeNode: 3, description: "Manage Purchase Return Estimate" },
+{ id: 203052701, headId: 2030527, name: "NdPurchaseReturnEstimate_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Purchase Return Estimate Print" },
+{ id: 203052702, headId: 2030527, name: "NdPurchaseReturnEstimate_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Purchase Return Estimate Settings" },
+{ id: 203052703, headId: 2030527, name: "NdPurchaseReturnEstimate_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Purchase Return Estimate Export" },
+
+// Sales Return Estimate nodes
+{ id: 2030528, headId: 20305, name: "NdSalesReturnEstimate", fullName: "Sales Return Estimate", formCode: "SREITEM", treeNode: 3, description: "Manage Sales Return Estimate" },
+{ id: 203052801, headId: 2030528, name: "NdSalesReturnEstimate_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Sales Return Estimate Print" },
+{ id: 203052802, headId: 2030528, name: "NdSalesReturnEstimate_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Sales Return Estimate Settings" },
+{ id: 203052803, headId: 2030528, name: "NdSalesReturnEstimate_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Sales Return Estimate Export" },
+
+// Brand Wise Sales Report nodes
+{ id: 2030529, headId: 20305, name: "NdBrandWiseSalesReport", fullName: "Brand Wise Sales Report", formCode: "STMRYBRD", treeNode: 3, description: "Manage Brand Wise Sales Report" },
+{ id: 203052901, headId: 2030529, name: "NdBrandWiseSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Brand Wise Sales Report Print" },
+{ id: 203052902, headId: 2030529, name: "NdBrandWiseSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Brand Wise Sales Report Settings" },
+{ id: 203052903, headId: 2030529, name: "NdBrandWiseSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Brand Wise Sales Report Export" },
 
   // Transaction Summary - Already provided in your example
   { id: 20306, headId: 203, name: "TransactionSummary", fullName: "Transaction Summary", formCode: "INVTRSUM", treeNode: 3, description: "Manage Transaction Summary" },
@@ -1310,6 +1345,20 @@ export const userRights: UserRight[] = [
   { id: 203120701, headId: 2031207, name: "BranchTransferIn_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer In Print" },
   { id: 203120702, headId: 2031207, name: "BranchTransferIn_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer In Settings" },
   { id: 203120703, headId: 2031207, name: "BranchTransferIn_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer In Export" },
+
+  // Excess Stock(SP) nodes
+{ id: 2031208, headId: 20312, name: "ExcessStockSP", fullName: "Excess Stock(SP)", formCode: "EX-SPRPT", treeNode: 4, description: "Manage Excess Stock(SP)" },
+{ id: 203120801, headId: 2031208, name: "ExcessStockSP_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Excess Stock(SP) Print" },
+{ id: 203120802, headId: 2031208, name: "ExcessStockSP_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Excess Stock(SP) Settings" },
+{ id: 203120803, headId: 2031208, name: "ExcessStockSP_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Excess Stock(SP) Export" },
+
+// Shortage Stock(SP) nodes
+{ id: 2031209, headId: 20312, name: "ShortageStockSP", fullName: "Shortage Stock(SP)", formCode: "SH-SPRPT", treeNode: 4, description: "Manage Shortage Stock(SP)" },
+{ id: 203120901, headId: 2031209, name: "ShortageStockSP_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Shortage Stock(SP) Print" },
+{ id: 203120902, headId: 2031209, name: "ShortageStockSP_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Shortage Stock(SP) Settings" },
+{ id: 203120903, headId: 2031209, name: "ShortageStockSP_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Shortage Stock(SP) Export" },
+
+  
   
   // Transaction Analysis
   { id: 20313, headId: 203, name: "TransactionAnalysis", fullName: "Transaction Analysis", formCode: "TARPT", treeNode: 3, description: "Manage Transaction Analysis" },
@@ -1325,10 +1374,25 @@ export const userRights: UserRight[] = [
   
   // Daily Statements
   { id: 20315, headId: 203, name: "DailyStatements", fullName: "Daily Statements", formCode: "DSTRPT", treeNode: 3, description: "Manage Daily Statements" },
-  { id: 2031501, headId: 20315, name: "DailyStatements_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Daily Statements Print" },
-  { id: 2031502, headId: 20315, name: "DailyStatements_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Daily Statements Settings" },
-  { id: 2031503, headId: 20315, name: "DailyStatements_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Daily Statements Export" },
+
+
+  { id: 2031501, headId: 20315, name: "DailyStatements_sales", fullName: "Sales", formCode: "DSSL", treeNode: 3, description: "Manage Daily Statements Sales" },
+  { id: 203150101, headId: 2031501, name: "DailyStatements_sales_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Daily Statements Sales Print" },
+  { id: 203150102, headId: 2031501, name: "DailyStatements_sales_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Daily Statements Sales Settings" },
+  { id: 203150103, headId: 2031501, name: "DailyStatements_sales_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Daily Statements Sales Export" },
   
+  // Daily Statements Purchase nodes
+{ id: 2031502, headId: 20315, name: "DailyStatements_purchase", fullName: "Purchase", formCode: "DSPUR", treeNode: 3, description: "Manage Daily Statements Purchase" },
+{ id: 203150201, headId: 2031502, name: "DailyStatements_purchase_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Daily Statements Purchase Print" },
+{ id: 203150202, headId: 2031502, name: "DailyStatements_purchase_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Daily Statements Purchase Settings" },
+{ id: 203150203, headId: 2031502, name: "DailyStatements_purchase_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Daily Statements Purchase Export" },
+
+// Daily Statements ALL nodes
+{ id: 2031503, headId: 20315, name: "DailyStatements_all", fullName: "ALL", formCode: "DSALL", treeNode: 3, description: "Manage Daily Statements ALL" },
+{ id: 203150301, headId: 2031503, name: "DailyStatements_all_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Daily Statements ALL Print" },
+{ id: 203150302, headId: 2031503, name: "DailyStatements_all_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Daily Statements ALL Settings" },
+{ id: 203150303, headId: 2031503, name: "DailyStatements_all_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Daily Statements ALL Export" },
+
   // Stock Flow Report
   { id: 20316, headId: 203, name: "StockFlowReport", fullName: "Stock Flow Report", formCode: "RPTSTKFL", treeNode: 3, description: "Manage Stock Flow Report" },
   { id: 2031601, headId: 20316, name: "StockFlowReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Stock Flow Report Print" },
@@ -1451,6 +1515,26 @@ export const userRights: UserRight[] = [
   // Routewise Sales and Collection
   { id: 2032705, headId: 20327, name: "RoutewiseSalesCollection", fullName: "Routewise Sales and Collection", formCode: "ROUTWISE_SL_CR_1", treeNode: 4, description: "Manage Routewise Sales and Collection" },
   { id: 203270501, headId: 2032705, name: "RoutewiseSalesCollection_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Routewise Sales and Collection Show" },
+
+  // Diagnosis Report nodes
+{ id: 2032706, headId: 20327, name: "DiagnosisReport", fullName: "Diagnosis Report", formCode: "ADVDIGREPT", treeNode: 4, description: "Manage Diagnosis Report" },
+{ id: 203270601, headId: 2032706, name: "DiagnosisReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Diagnosis Report Print" },
+{ id: 203270602, headId: 2032706, name: "DiagnosisReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Diagnosis Report Settings" },
+{ id: 203270603, headId: 2032706, name: "DiagnosisReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Diagnosis Report Export" },
+
+// Branch Inventory Request Pending Report nodes
+{ id: 2032707, headId: 20327, name: "BranchInventoryRequestPendingReport", fullName: "Branch Inventory Request Pending Report", formCode: "ADVBRNCHPEN", treeNode: 4, description: "Manage Branch Inventory Request Pending Report" },
+{ id: 203270701, headId: 2032707, name: "BranchInventoryRequestPendingReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Inventory Request Pending Report Print" },
+{ id: 203270702, headId: 2032707, name: "BranchInventoryRequestPendingReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Inventory Request Pending Report Settings" },
+{ id: 203270703, headId: 2032707, name: "BranchInventoryRequestPendingReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Inventory Request Pending Report Export" },
+
+// Print Details nodes
+{ id: 2032708, headId: 20327, name: "PrintDetails", fullName: "Print Details", formCode: "ADVPRINT", treeNode: 4, description: "Manage Print Details" },
+{ id: 203270801, headId: 2032708, name: "PrintDetails_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Print Details Print" },
+{ id: 203270802, headId: 2032708, name: "PrintDetails_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Print Details Settings" },
+{ id: 203270803, headId: 2032708, name: "PrintDetails_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Print Details Export" },
+
+
   
   // Service Report
   { id: 20328, headId: 203, name: "ServiceReport", fullName: "Service Report", formCode: "SERVCRPT", treeNode: 3, description: "Manage Service Report" },
@@ -1464,7 +1548,33 @@ export const userRights: UserRight[] = [
   
   // Job Track Report
   { id: 20330, headId: 203, name: "JobTrackReport", fullName: "Job Track Report", formCode: "JTRPRT", treeNode: 3, description: "Manage Job Track Report" },
-  { id: 2033001, headId: 20330, name: "JobTrackReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Job Track Report Print" }
+  { id: 2033001, headId: 20330, name: "JobTrackReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Job Track Report Print" },
+//#region  global
+  // Inventory Price Report nodes
+{ id: 20331, headId: 203, name: "InventoryPriceReport", fullName: "Inventory Price Report", formCode: "INVPR", treeNode: 3, description: "Manage Inventory Price Report" },
+{ id: 2033101, headId: 20331, name: "InventoryPriceReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Inventory Price Report Print" },
+{ id: 2033102, headId: 20331, name: "InventoryPriceReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Inventory Price Report Settings" },
+{ id: 2033103, headId: 20331, name: "InventoryPriceReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Inventory Price Report Export" },
+
+// Price Report nodes
+{ id: 20332, headId: 203, name: "PriceReport", fullName: "Price Report", formCode: "PRICERPT", treeNode: 3, description: "Manage Price Report" },
+{ id: 2033201, headId: 20332, name: "PriceReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Price Report Print" },
+{ id: 2033202, headId: 20332, name: "PriceReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Price Report Settings" },
+{ id: 2033203, headId: 20332, name: "PriceReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Price Report Export" },
+
+// Brand Wise Sales Report nodes
+{ id: 20333, headId: 203, name: "BrandWiseSalesReport", fullName: "Brand Wise Sales Report", formCode: "STMRYBRDY", treeNode: 3, description: "Manage Brand Wise Sales Report" },
+{ id: 2033301, headId: 20333, name: "BrandWiseSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Brand Wise Sales Report Print" },
+{ id: 2033302, headId: 20333, name: "BrandWiseSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Brand Wise Sales Report Settings" },
+{ id: 2033303, headId: 20333, name: "BrandWiseSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Brand Wise Sales Report Export" },
+
+// Employee Incentive nodes
+{ id: 20334, headId: 203, name: "EmployeeIncentive", fullName: "Employee Incentive", formCode: "EMPRPTT", treeNode: 3, description: "Manage Employee Incentive" },
+{ id: 2033401, headId: 20334, name: "EmployeeIncentive_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Employee Incentive Print" },
+{ id: 2033402, headId: 20334, name: "EmployeeIncentive_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Employee Incentive Settings" },
+{ id: 2033403, headId: 20334, name: "EmployeeIncentive_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Employee Incentive Export" },
+
+//#endregion global
 
 
 

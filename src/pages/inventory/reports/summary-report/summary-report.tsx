@@ -4,10 +4,11 @@ import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import PurchaseSummaryFilter, { PurchaseSummaryFilterInitialState, } from "./purchase-summary-report-filter";
+import  { SummaryFilterInitialState, } from "./summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import SummaryFilter from "./summary-report-filter";
 interface SummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -16,7 +17,7 @@ interface SummaryProps {
 
 const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
+  const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const applicationSettings = useSelector(
@@ -1165,11 +1166,11 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 showFilterInitially={true}
                 on
                 method={ActionType.POST}
-                filterContent={<PurchaseSummaryFilter />}
+                filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
                 filterHeight={450}
                 filterWidth={790}
-                filterInitialData={PurchaseSummaryFilterInitialState}
+                filterInitialData={SummaryFilterInitialState}
                 onFilterChanged={(f: any) => {
                   setFilter(f);
                 }}

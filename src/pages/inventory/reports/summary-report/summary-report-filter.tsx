@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import { LedgerType } from "../../../../enums/ledger-types";
 
-const PurchaseSummaryFilter = ({
+const SummaryFilter = ({
     getFieldProps,
     handleFieldChange,
     formState,
@@ -207,9 +207,9 @@ const PurchaseSummaryFilter = ({
     );
 };
 
-export default PurchaseSummaryFilter;
+export default SummaryFilter;
 
-export const PurchaseSummaryFilterInitialState = {
+export const SummaryFilterInitialState = {
     fromDate: moment().local().startOf("day").toDate(),//software date as initial
     toDate: moment().local().endOf("day").toDate(),
     voucherType: "PI",

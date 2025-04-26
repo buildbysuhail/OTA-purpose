@@ -101,9 +101,6 @@ const ListedProductPrices = lazy(() => import("../../../pages/inventory/masters/
 const PostDatedCheques = lazy(() => import("../../../pages/accounts/transactions/acc-post-dated-cheques"));
 // Inventory Reports
 import PartyWiseReport from "../../../pages/inventory/reports/party-wise-report/party-wise-report";
-import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
-import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
-import PurchaseEstimateSummary from "../../../pages/inventory/reports/purchase-estimate-summary-report/purchase-estimate-summary";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -164,7 +161,7 @@ import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-
 import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
 import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
 import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
-import SummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
+import SummaryReport from "../../../pages/inventory/reports/summary-report/summary-report";
 import RegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
 import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
@@ -482,12 +479,17 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_report" gridId="grd_party_wise" />} />
         <Route path="/inventory/purchase_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.purchase_tax_report_detailed} gridHeader="purchase_tax_report_detailed" gridId="grd_purchase_tax_report_detailed" />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<TaxReportSummary dataUrl={urls.purchase_tax_report_summary} gridHeader="purchase_tax_report_summary" gridId="grd_purchase_tax_summary" />} />
-        <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
-        <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
-        <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
+        <Route path="/inventory/purchase_return_summary" element={<SummaryReport dataUrl={urls.purchase_return_summary} gridHeader="purchase_return_summary_report" gridId="grd_purchase_return_summary"/>} />
+        <Route path="/inventory/purchase_return_register" element={<RegisterReport dataUrl={urls.purchase_return_register} gridHeader="purchase_return_register_report" gridId="grd_purchase_return_register" />} />
+        <Route path="/inventory/purchase_estimate_summary" element={<SummaryReport dataUrl={urls.purchase_estimate_summary} gridHeader="purchase_estimate_summary_report" gridId="grd_purchase_estimate_summary"/>} />
         <Route path="/inventory/purchase_order_summary" element={<SummaryReport dataUrl={urls.purchase_order_summary} gridHeader="purchase_order_summary" gridId="grd_purchase_order_summary" />} />
-        {/* global */}
+        <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
+        <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />} />
+        <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
+       
 
+
+        {/* global */}
         <Route path="/inventory/purchase_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_estimate_register} gridHeader="purchase_estimate_register_report" gridId="grd_purchase_estimate_register" />} />
         <Route path="/inventory/purchase_return_estimate_register_report" element={<RegisterReport dataUrl={urls.purchase_return_estimate_register} gridHeader="purchase_return_estimate_register_report" gridId="grd_purchase_return_estimate_register" />} />
         <Route path="/inventory/purchase_return_estimate_summary_report" element={<SummaryReport dataUrl={urls.purchase_return_estimate_summary} gridHeader="purchase_return_estimate_summary_report" gridId="grd_purchase_return_estimate_summary" />} />
@@ -610,9 +612,7 @@ const Content: FC<ContentProps> = () => {
 
         {/* Inventory Masters */}
         <Route path="/inventory/purchase_tax_vat" element={<PurchaseTaxReport />} />
-        <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
-        <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />} />
-        <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
+      
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />

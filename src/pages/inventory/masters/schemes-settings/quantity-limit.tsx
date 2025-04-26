@@ -9,6 +9,8 @@ import { useFormManager } from "../../../../utilities/hooks/useFormManagerOption
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 
@@ -19,6 +21,7 @@ export const initialQuantityLimit = {
         department: "",
         category: "",
         productGroup: "",
+        productGroupID: 0,
         barcode: "",
         quantityLimit: 0,
         itemData: []
@@ -38,6 +41,7 @@ export interface QuantityLimitData {
     department: string;
     category: string;
     productGroup: string;
+    productGroupID:number;
     barcode: string;
     quantityLimit: number;
     itemData: any[];
@@ -75,48 +79,119 @@ export const QuantityLimit: React.FC = () => {
     };
 
     const handleLoad = useCallback(async () => {
+        // const { selectedOption, department, category, productGroup, barcode } = formState.data;
+        // let fieldValue: string;
+        // let endpoint: string;
+    
+        // switch (selectedOption) {
+        //   case "department":
+        //     fieldValue = department;
+        //     endpoint = `${Urls.select_products_for_product_qty_limit}?SectionID=${department}`;
+        //     break;
+        //   case "category":
+        //     fieldValue = category;
+        //     endpoint = `${Urls.select_products_for_product_qty_limit}?ProductCategoryID=${category}`
+        //     break;
+        //   case "productGroup":
+        //     fieldValue = productGroup;
+        //     endpoint = `${Urls.select_products_for_product_qty_limit}?ProductGroupID=${productGroup}`
+        //     break;
+        //   case "barcode":
+        //     fieldValue = barcode;
+        //     endpoint = `${Urls.select_products_for_product_qty_limit}?Barcode=${barcode}&IsBarcode=true`
+        //     break;
+        //   default:
+        //     ERPAlert.show({
+        //       title: "",
+        //       icon: "warning",
+        //       text: "Please select a valid option.",
+        //     });
+        //     return;
+        // }
+    
+        // Validate the field value
+        // if (isNullOrUndefinedOrEmpty(fieldValue)) {
+        //   ERPAlert.show({
+        //     title: "",
+        //     icon: "warning",
+        //     text: `Please enter a valid ${selectedOption} value.`,
+        //   });
+        //   return;
+        // }
+        const obj = getFieldProps("*");
+
+       let payload ={
+             sectionId:isNullOrUndefinedOrZero(obj.id)?-1: obj.id, 
+             productCategoryId:isNullOrUndefinedOrZero(obj.category)?-1: obj.category,
+             productGroupId:isNullOrUndefinedOrZero(obj.productGroup)?-1:obj.productGroup ,
+             barcode: isNullOrUndefinedOrEmpty(obj.barcode)?"": obj.barcode,
+             isBarcode: isNullOrUndefinedOrEmpty(obj.barcode)? false : true ,
+        }
         try {
-            setIsDataLoading(true);
-            // const response = await api.get(Urls.quantity_limit);
-            // if (response && response.data) {
-            //     setGridData(response.data);
-            // }
-            setIsDataLoading(false);
+          setIsDataLoading(true);
+          const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
+    
+          if (response) {
+            const transformedData: QuantityLimitItemData[] = response.map(
+              (item: any, index: number) => ({
+                id: item.id || index + 1,
+                sl: index + 1,
+                barcode: item.barcode ,
+                product: item.product ,
+                qtyLimit: item.qtyLimit,
+              })
+            );
+            setGridData(transformedData);
+          } else {
+            ERPAlert.show({
+              title: "",
+              icon: "info",
+              text: "No data found for the provided input.",
+            });
+            setGridData([]);
+          }
         } catch (error) {
-            console.error("Error loading data:", error);
-            setIsDataLoading(false);
+          console.error(`Error fetching data for`, error);
+        //   ERPAlert.show({
+        //     title: "",
+        //     icon: "error",
+        //     text: `Failed to load data for ${selectedOption}.`,
+        //   });
+          setGridData([]);
+        } finally {
+          setIsDataLoading(false);
         }
-    }, []);
+      }, [formState.data]);
 
-    const handleAdd = useCallback(() => {
-        const { selectedOption, department, category, productGroup, barcode, quantityLimit } = formState.data;
+    // const handleAdd = useCallback(() => {
+    //     const { selectedOption, department, category, productGroup, barcode, quantityLimit } = formState.data;
 
-        let product = "";
-        switch (selectedOption) {
-            case "department":
-                product = department;
-                break;
-            case "category":
-                product = category;
-                break;
-            case "productGroup":
-                product = productGroup;
-                break;
-            case "barcode":
-                product = barcode;
-                break;
-        }
+    //     let product = "";
+    //     switch (selectedOption) {
+    //         case "department":
+    //             product = department;
+    //             break;
+    //         case "category":
+    //             product = category;
+    //             break;
+    //         case "productGroup":
+    //             product = productGroup;
+    //             break;
+    //         case "barcode":
+    //             product = barcode;
+    //             break;
+    //     }
 
-        const newItem: QuantityLimitItemData = {
-            id: gridData.length > 0 ? Math.max(...gridData.map(item => item.id)) + 1 : 1,
-            sl: gridData.length + 1,
-            barcode: barcode || "-",
-            product: product || "-",
-            qtyLimit: quantityLimit || 0
-        };
+    //     const newItem: QuantityLimitItemData = {
+    //         id: gridData.length > 0 ? Math.max(...gridData.map(item => item.id)) + 1 : 1,
+    //         sl: gridData.length + 1,
+    //         barcode: barcode || "-",
+    //         product: product || "-",
+    //         qtyLimit: quantityLimit || 0
+    //     };
 
-        setGridData(prevData => [...prevData, newItem]);
-    }, [formState.data, gridData]);
+    //     setGridData(prevData => [...prevData, newItem]);
+    // }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => {
         clearForm();
@@ -151,6 +226,8 @@ export const QuantityLimit: React.FC = () => {
             </div>
         );
     };
+
+
 
     return (
         <div className="w-full modal-content flex flex-col gap-4">
@@ -267,7 +344,7 @@ export const QuantityLimit: React.FC = () => {
                     variant="primary"
                     onClick={handleDelete}
                 />
-                <ERPButton
+                  <ERPButton
                     title={t("load")}
                     variant="primary"
                     onClick={handleLoad}
@@ -275,7 +352,7 @@ export const QuantityLimit: React.FC = () => {
                 <ERPButton
                     title={t("save")}
                     variant="primary"
-                    onClick={handleAdd}
+                    // onClick={handleAdd}
                 />
                 <ERPButton
                     title={t("clear")}
@@ -325,14 +402,14 @@ export const QuantityLimit: React.FC = () => {
                 </DataGrid>
             </div>
 
-            <div className="flex items-center mt-2">
+            {/* <div className="flex items-center mt-2">
                 <ERPCheckbox
                     id="selectAll"
                     label={t("select_all_to_delete")}
                     checked={selectAll}
                     onChange={handleSelectAllToDelete}
                 />
-            </div>
+            </div> */}
         </div>
     );
 };

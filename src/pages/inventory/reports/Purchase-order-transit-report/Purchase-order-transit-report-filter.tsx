@@ -68,7 +68,9 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
             labelKey: "name",
             nameKey: "alias",
           }}
-          onSelectItem={(data) => handleFieldChange({ partyID: data.value, PartyName: data.label })}
+          onSelectItem={(data) => handleFieldChange(
+            { partyID: data.value, PartyName: data.label }
+          )}
         />
       </div>
 

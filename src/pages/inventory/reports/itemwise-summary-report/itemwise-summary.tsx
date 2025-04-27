@@ -10,6 +10,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "./itemwise-summary-filter";
+import { useLocation } from "react-router-dom";
 
 interface ItemWiseSummaryReportProps {
   gridHeader: string;
@@ -18,26 +19,15 @@ interface ItemWiseSummaryReportProps {
 }
 const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
     ItemWiseSummaryFilterInitialState
   );
-  const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
-  const onCloseFilter = useCallback(() => {
-    if (filterShowCount === 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-    }
-    setShowFilter(false);
-  }, [filterShowCount]);
+
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -48,15 +38,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "siNo",
-        caption: t("si_no"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        visible: false,
         width: 100,
       },
       {
@@ -380,9 +361,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
-      // if (column.dataField == "exchangeRate") {
-      //   return filter.voucher_form !== "Import";
-      // }
       if (column.dataField == "totVat") {
         return applicationSettings.branchSettings.maintainTaxes && !clientSession.isAppGlobal;
       }
@@ -485,6 +463,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
 
   const dataGridRef = useRef<any>(null);
   useEffect(() => {
+    debugger;
     const gridInstance = dataGridRef.current?.instance();
     if (gridInstance) {
       gridInstance.clearGrouping(); // Explicitly clear existing grouping
@@ -494,14 +473,22 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         0
       );
     }
-  }, [filter.isCategoryWise]);
+  }, [filter.isCategoryWise, dataGridRef.current?.instance()]);
+  
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
+            key{key}
               <ErpDevGrid
+                key={key}
                 ref={dataGridRef}
                 summaryItems={summaryItems}
                 remoteOperations={{

@@ -63,8 +63,8 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("unitType", data.unitType)}
           label={t('unit_type')}
           options={[
-            { value: 'Active', label: t('active') },
-            { value: 'Inactive', label: t('inactive') },
+            { value: 'Simple', label: t('simple') },
+            { value: 'Compound', label: t('compound') },
           ]}
         />
 

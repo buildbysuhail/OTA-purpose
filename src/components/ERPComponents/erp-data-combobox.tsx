@@ -674,13 +674,13 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
-    useEffect(() => {
-      if (value == -2) {
-        loadData();
-      }
-    }, [
-      value
-    ]);
+    // useEffect(() => {
+    //   if (value == -2) {
+    //     loadData();
+    //   }
+    // }, [
+    //   value
+    // ]);
     const filterLedgers = async (
       ledgers: any[],
       queryString: string
@@ -835,6 +835,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           _options != null &&
           _options.length > 0
         ) {
+          console.log(value == -2);
           
           handleItemClick(_options[0]);
         }

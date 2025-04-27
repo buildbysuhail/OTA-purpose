@@ -17,15 +17,15 @@ const Brands = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
-    {
-      dataField: "siNo",
-      caption: t("SiNo"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
+    // {
+    //   dataField: "siNo",
+    //   caption: t("SiNo"),
+    //   dataType: "number",
+    //   allowSorting: true,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    // },
     {
       dataField: "brandID",
       caption: t("id"),
@@ -34,6 +34,7 @@ const Brands = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "brandName",
@@ -42,7 +43,8 @@ const Brands = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf : true
     },
     {
       dataField: "brandShortName",
@@ -52,7 +54,7 @@ const Brands = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -62,9 +64,10 @@ const Brands = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
-      dataField: "createdUserID",
+      dataField: "createdUser",
       caption: t("created_user"),
       dataType: "string",
       allowSorting: true,
@@ -83,7 +86,7 @@ const Brands = () => {
       width: 200
     },
     {
-      dataField: "modifiedUserID",
+      dataField: "modifiedUser",
       caption: t("modified_user"),
       dataType: "string",
       allowSorting: true,
@@ -109,6 +112,7 @@ const Brands = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible :false
     },
     {
       dataField: "actions",

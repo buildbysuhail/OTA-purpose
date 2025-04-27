@@ -12,25 +12,24 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { lowerFirst } from "lodash";
+import { handleResponse } from "../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 
 export const initialQuantitySlab = {
     data: {
-        slabId: 0,
-        itemName: "",
-        itemID:0,
-        amtPerc: "",
+        qtySlabID: 0,
+        productName: "",
+        productID:null,
+        type: "Perc",
         value: 0,
         qtyFrom: 0,
         qtyTo: 0,
-        isActive: true,
-        isEditable: true,
-        isDeletable: true
+        branchID:null
     },
     validations: {
-        itemName: "",
-        amtPerc: "",
+        ProductName: "",
+        type: "",
         value: "",
         qtyFrom: "",
         qtyTo: ""
@@ -38,16 +37,14 @@ export const initialQuantitySlab = {
 };
 
 export interface QuantitySlabData {
-    slabId: number;
-    itemName: string;
-    itemID:number;
-    amtPerc: string;
+    branchID:number|null;
+    qtySlabID: number;
+    productName: string;
+    productID:number | null;
+    type: string;
     value: number;
-    qtyFrom: number;
+    qtyFrom: number
     qtyTo: number;
-    isActive: boolean;
-    isEditable: boolean;
-    isDeletable: boolean;
 }
 
 export const QuantitySlabOffer: React.FC = () => {
@@ -55,7 +52,6 @@ export const QuantitySlabOffer: React.FC = () => {
     const [gridData, setGridData] = useState<QuantitySlabData[]>([]);
     const [isDataLoading, setIsDataLoading] = useState(false);
     const [loadAllSlabs, setLoadAllSlabs] = useState(false);
-    const [selectAllToDelete, setSelectAllToDelete] = useState(false);
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
     const {
@@ -71,28 +67,12 @@ export const QuantitySlabOffer: React.FC = () => {
         useApiClient: true,
     });
     
-    const handleLoad = useCallback(async () => {
-        setIsDataLoading(true);
-        try {
-           
-    // const response = await api.get();
-            // if (response && response.data) {
-            //     setGridData(response.data);
-            // }
-     
-        } catch (error) {
-            console.error("Error loading data:", error);
-
-        }finally{
-            setIsDataLoading(false)
-        }
-    }, []);
 
       // New function to fetch all LoadAllSlabs when LoadAllSlabs is checked
   const fetchLoadAllSlabs = useCallback(async () => {
     setIsDataLoading(true);
     try {
-        const url = `${Urls.get_all__multi_foc}`;
+        const url = `${Urls.qty_slab_offer}`;
            const response = await api.getAsync(url); //url need to update Urls.quantity_slab_offer
       setGridData(response);
     } catch (error) {
@@ -111,7 +91,7 @@ export const QuantitySlabOffer: React.FC = () => {
    const formData = formState?.data ;
    console.log("slabform",formData);
    
-        if(isNullOrUndefinedOrEmpty(formData.amtPerc)){
+        if(isNullOrUndefinedOrEmpty(formData.type)){
             ERPAlert.show({
                     title: "",
                     icon: "warning",
@@ -122,11 +102,11 @@ export const QuantitySlabOffer: React.FC = () => {
         if(!isNullOrUndefinedOrZero(formData.qtyFrom)&& !isNullOrUndefinedOrZero(formData.qtyTo)
         && formData.qtyFrom <= formData.qtyTo
         ){
-            if(!isNullOrUndefinedOrZero(formData.itemID)){
+            if(!isNullOrUndefinedOrZero(formData.productID)){
                 const newItem: QuantitySlabData = {
 
                     ...formData,
-                    slabId: gridData.length > 0 ? Math.max(...gridData.map(item => item.slabId)) + 1 : 1
+                    qtySlabID: gridData.length > 0 ? Math.max(...gridData.map(item => item.qtySlabID)) + 1 : 1
                 };
                 setGridData(prevData => [...prevData, newItem]);
                 clearForm();
@@ -153,32 +133,103 @@ export const QuantitySlabOffer: React.FC = () => {
 
     const handleClear = useCallback(() => {
         setGridData([]);
+        setLoadAllSlabs(false)
         clearForm();
     }, [clearForm,gridData]);
 
-    const handleSave = useCallback(() => {
+    const handleSave = useCallback(async () => {
         console.log("Saving data:", gridData);
+         // Check if gridData is empty
+                  if (gridData.length === 0) {
+                    ERPAlert.show({
+                      title: "",
+                      icon: "warning",
+                      text: "No data to save. Please add items to the grid.",
+                    });
+                    return;
+                  }
+        try{
+            const payload: Partial<QuantitySlabData> [] = gridData.map(item => ({
+                branchID: item.branchID ?? 0, // Default to 0 for manual data
+                productID: item.productID,
+                type: item.type,
+                value: item.value,
+                qtyFrom: item.qtyFrom,
+                qtyTo: item.qtyTo,
+            }));
+            const response = await api.post(Urls.qty_slab_offer, payload);
+            handleResponse(response, () =>   handleClear());
+        }catch(error){
+            console.error("Error saving data:", error);
+        }
     }, [gridData]);
 
-    const handleDelete = useCallback(() => {
-        if (selectedRows.length > 0) {
-            setGridData(prevData => prevData.filter(item => !selectedRows.includes(item.slabId)));
-            setSelectedRows([]);
-        }
-    }, [selectedRows]);
+;
 
-    const handleRemoveRow = useCallback((rowId: number) => {
-        setGridData(prevData => prevData.filter(item => item.slabId !== rowId));
+    const handleDelete = useCallback(async () => {
+        if (selectedRows.length === 0){
+            ERPAlert.show({
+                title: "",
+                icon: "warning",
+                text: "Please Select a row to remove",
+              });
+              return;
+        }
+    
+        try {
+          
+            const selectedItems = gridData.filter(item => selectedRows.includes(item.qtySlabID));
+
+            const payload = selectedItems.map(item => ({
+                productID: item.productID ,
+                qtySlabID: item.qtySlabID,
+                branchID: item.branchID ?? 0, 
+            }));
+    
+
+            const response = await api.delete(Urls.qty_slab_offer, {data:payload});
+            handleResponse(response, () => {
+                fetchLoadAllSlabs()
+                setSelectedRows([]);
+            });
+        } catch (error) {
+            console.error("Error deleting items:", error);
+        }
+    }, [selectedRows, gridData]);
+
+    const handleRemoveRow = useCallback((rowData: any) => {
+        ERPAlert.show({
+            title: "",
+            icon: "warning",
+            text: "Are you sure you want to delete this row?",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+            onConfirm: async () => {
+                try {
+                    const isManualData = rowData.branchID === null || rowData.branchID === 0;
+                    if (isManualData) {
+                        setGridData(prevData => prevData.filter(item => item.qtySlabID !== rowData.qtySlabID));
+                    } else {
+                        const payload = [{
+                            productID: rowData.productID,
+                            qtySlabID: rowData.qtySlabID,
+                            branchID: rowData.branchID ?? 0,
+                        }];
+
+                        const response = await api.delete(Urls.qty_slab_offer, { data: payload });
+                        handleResponse(response, () => {
+                            fetchLoadAllSlabs();
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error deleting row:", error);
+                }
+            },
+            onCancel: () => {
+                console.log("Deletion cancelled for row:", rowData.qtySlabID);
+            },
+        });
     }, []);
-
-    const handleSelectAllChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectAllToDelete(e.target.checked);
-        if (e.target.checked) {
-            setSelectedRows(gridData.map(item => item.slabId));
-        } else {
-            setSelectedRows([]);
-        }
-    }, [gridData]);
 
     const handleRowSelection = useCallback((rowId: number, isSelected: boolean) => {
         if (isSelected) {
@@ -190,20 +241,31 @@ export const QuantitySlabOffer: React.FC = () => {
 
     const renderDeleteCell = (cellData: any) => {
         return (
-            <div className="flex justify-center">
-                <button className="text-[#ef4444] font-bold px-2" onClick={() => handleRemoveRow(cellData.data.slabId)}>X</button>
+            <div className="text-center">
+                <button className="text-[#ef4444] font-bold px-2" onClick={() => handleRemoveRow(cellData.data)}>X</button>
             </div>
         );
     };
 
     const renderSelectionCell = (cellData: any) => {
-        const isSelected = selectedRows.includes(cellData.data.slabId);
+        const { qtySlabID, branchID } = cellData.data;
+        const isManualData = branchID === null || branchID === 0;
+    
+        if (isManualData) {
+            return (
+                <div className="flex justify-center items-center h-full">
+                    <span>{qtySlabID}</span>
+                </div>
+            );
+        }
+    
+        const isSelected = selectedRows.includes(qtySlabID);
         return (
-            <div className="flex justify-center">
+            <div className="flex justify-center items-center h-full">
                 <input
                     type="checkbox"
                     checked={isSelected}
-                    onChange={(e) => handleRowSelection(cellData.data.slabId, e.target.checked)}
+                    onChange={(e) => handleRowSelection(qtySlabID, e.target.checked)}
                 />
             </div>
         );
@@ -229,34 +291,35 @@ export const QuantitySlabOffer: React.FC = () => {
 
             <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
                 <ERPDataCombobox
-                    {...getFieldProps("itemID")}
+                    {...getFieldProps("productID")}
                     label={t("item_name")}
                     field={{
-                        id: "itemID",
+                        id: "productID",
                         getListUrl: Urls.data_productgroup,
                         valueKey: "id",
                         labelKey: "name",
                         required: true
                     }}
                     onChange={(data: any) => handleFieldChange({ 
-                        itemID:data.value,
-                        itemName:data.name,
+                        productID:data.value,
+                        productName:data.name,
                        })}
                     disabled={loadAllSlabs}
                 />
 
                 <ERPDataCombobox
-                    {...getFieldProps("amtPerc")}
+                    {...getFieldProps("type")}
                     field={{
-                        id: "amtPerc",
+                        id: "type",
                         valueKey: "value",
                         labelKey: "label",
                     }}
                     onChangeData={(data: any) =>
-                        handleFieldChange("amtPerc", data.amtPerc)
+                        handleFieldChange("type", data.type)
                     }
-                    label={t("amt_perc")}
+                    label={t("type")}
                     enableClearOption={false}
+                    initialValue={formState.data.type}
                     options={[
                         { value: "Amt", label: t("amt") },
                         { value: "Perc", label: t("perc") },
@@ -321,12 +384,12 @@ export const QuantitySlabOffer: React.FC = () => {
                         width={60}
                     />
                     <Column
-                        dataField="itemName"
-                        width={150}
+                        dataField="productName"
+                        width={350}
                         caption={t("product")}
                     />
                     <Column
-                        dataField="amtPerc"
+                        dataField="type"
                         width={100}
                         caption={t("amt_perc")}
                     />
@@ -356,17 +419,12 @@ export const QuantitySlabOffer: React.FC = () => {
             <div className="flex flex-row max-md:flex-col items-center mt-2">
                 <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
                 <div className="flex items-center">
-                    {/* <ERPCheckbox
-                        checked={selectAllToDelete}
-                        onChange={handleSelectAllChange}
-                        label={t("select_all_to_delete")}
-                        id={""}
-                    /> */}
+               
                     <div className="flex gap-2 ml-4">
                         <ERPButton
                             title={t("delete")}
                             onClick={handleDelete}
-                            disabled={selectedRows.length === 0}
+                            disabled={!loadAllSlabs && selectedRows.length === 0}
                         />
                         <ERPButton
                             title={t("clear")}

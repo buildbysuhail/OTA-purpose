@@ -380,6 +380,7 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated = formatDateFields(filterData);
+      debugger;
       const postDataModified = formatDateFields(postData);
       try {
         setFilterValidations(undefined);

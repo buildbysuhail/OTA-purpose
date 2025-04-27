@@ -388,13 +388,13 @@ export const ProductMaster: React.FC = React.memo(() => {
           onClickTabAt={handleTabChange}
           className="overflow-x-auto whitespace-nowrap scrollbar-hide"
         >
-          {tabContents.filter((x) => {
+          {tabContents.filter((tab) => {
             if (
-              (x == t("multi_units") &&
+              (tab.key == "multi_units" &&
                 !appSettings.productsSettings.allowMultiUnits) ||
-              (x == t("multi_rates") &&
+              (tab.key == "multi_rates" &&
                 !appSettings.productsSettings.allowMultirate) ||
-              (x == t("image") &&
+              (tab.key == "image" &&
                 !appSettings.productsSettings.useProductImages)
             ) {
               return false;
@@ -404,11 +404,11 @@ export const ProductMaster: React.FC = React.memo(() => {
         </ERPTab>
       </div>
 
-      <ERPButton
+      {/* <ERPButton
         disabled={!appSettings.branchSettings.maintainMasterEntry && !canEdit}
         onSubmit={() => setCanEdit(true)}
         title="Edit"
-      />
+      /> */}
       <ERPFormButtons
         onClear={handleClear}
         isEdit={isEdit}

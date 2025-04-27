@@ -129,7 +129,7 @@ export const QuantitySlabOffer: React.FC = () => {
                     slabId: gridData.length > 0 ? Math.max(...gridData.map(item => item.slabId)) + 1 : 1
                 };
                 setGridData(prevData => [...prevData, newItem]);
-                handleClear();
+                clearForm();
             }
             else{
                 ERPAlert.show({
@@ -152,8 +152,9 @@ export const QuantitySlabOffer: React.FC = () => {
     }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => {
+        setGridData([]);
         clearForm();
-    }, [clearForm]);
+    }, [clearForm,gridData]);
 
     const handleSave = useCallback(() => {
         console.log("Saving data:", gridData);

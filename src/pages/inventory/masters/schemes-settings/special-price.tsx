@@ -348,6 +348,14 @@ export const SpecialPrice: React.FC = () => {
                         batchID: data.productBatchID,
                       } as SpecialPriceData);
                     }}
+                    onProductSelected={(data:any)=>{
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        product:data.productName,
+
+                      } as SpecialPriceData);
+                    }}
                     batchDataUrl={Urls.select_foc_product_batch_grid}
                   />
                 </div>

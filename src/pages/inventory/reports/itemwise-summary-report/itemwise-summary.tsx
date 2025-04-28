@@ -18,26 +18,15 @@ interface ItemWiseSummaryReportProps {
 }
 const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
     ItemWiseSummaryFilterInitialState
   );
-  const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
-  const onCloseFilter = useCallback(() => {
-    if (filterShowCount === 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-    }
-    setShowFilter(false);
-  }, [filterShowCount]);
+
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -48,15 +37,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "siNo",
-        caption: t("si_no"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        visible: false,
         width: 100,
       },
       {
@@ -380,9 +360,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
-      // if (column.dataField == "exchangeRate") {
-      //   return filter.voucher_form !== "Import";
-      // }
       if (column.dataField == "totVat") {
         return applicationSettings.branchSettings.maintainTaxes && !clientSession.isAppGlobal;
       }
@@ -495,6 +472,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
       );
     }
   }, [filter.isCategoryWise]);
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

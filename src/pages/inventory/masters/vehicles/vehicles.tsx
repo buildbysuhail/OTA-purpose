@@ -25,6 +25,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 60,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -34,6 +35,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 60,
+      visible:false
     },
     {
       dataField: "vehicleName",
@@ -42,7 +44,8 @@ const Vehicles = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minwidth: 150
+      minwidth: 150,
+      showInPdf:true
     },
     {
       dataField: "vehicleNumber",
@@ -52,6 +55,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      showInPdf:true
     },
     {
       dataField: "noOfWheels",
@@ -61,6 +65,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      showInPdf:true
     },
     {
       dataField: "model",
@@ -70,6 +75,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "capacity",
@@ -79,6 +85,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "manufacturer",
@@ -87,7 +94,8 @@ const Vehicles = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
+      visible:false
     },
     {
       dataField: "owner",
@@ -96,7 +104,8 @@ const Vehicles = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 130
+      width: 130,
+      showInPdf:true
     },
     {
       dataField: "color",
@@ -106,6 +115,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "isRental",
@@ -115,6 +125,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "isCommon",
@@ -124,6 +135,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdUser",
@@ -164,11 +176,12 @@ const Vehicles = () => {
     {
       dataField: "odometer",
       caption: t("odo_meter"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "remarks",
@@ -178,6 +191,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "actions",

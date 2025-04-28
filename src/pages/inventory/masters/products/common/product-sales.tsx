@@ -90,7 +90,7 @@ const SalesCommon: React.FC<{
             <ErpDevGrid
                 columns={columns}
                 gridHeader={t("sales")}
-                dataUrl={`${Urls.products}SelectProductPurchaseSummary`}
+                dataUrl={`${Urls.products}SelectProductSalesSummary`}
                 method={ActionType.POST}
                 postData={{ productID: getFieldProps("batch.productID").value }}
                 gridId="grd_salesGcc"

@@ -55,10 +55,19 @@ const POSFastMovingItems: React.FC = () => {
         const buttonData: FastMovingProductsDto[] = [];
 debugger;
         for (let i = 1; i <= 12; i++) {
-          const match = responseData.find((item) => item.displayOrder === i);
-          if (match) {
-            buttonData.push(match);
+          if (Array.isArray(responseData)) {
+            const match = responseData.find((item) => item.displayOrder === i);
+            if (match) {
+              buttonData.push(match);
+            } else {
+              buttonData.push({
+                ...defaultItem,
+                displayOrder: i,
+              });
+            }
           } else {
+            console.error('Expected array, got:', responseData);
+            // You can also decide what to do here. Maybe fallback to default?
             buttonData.push({
               ...defaultItem,
               displayOrder: i,

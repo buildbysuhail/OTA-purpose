@@ -267,9 +267,8 @@ const PurchaseRegisterFilter = ({
           {...getFieldProps("supplierID")}
           field={{
             id: "supplierID",
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerType=${LedgerType.Supplier}`,
-            // params: `ledgerID = 0 & ledgerType=${LedgerType.Supplier}`,
+            getListUrl: Urls.data_Suppliers,
+
             valueKey: "id",
             labelKey: "name",
           }}

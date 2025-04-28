@@ -272,7 +272,7 @@ const DailyStatementAllReport = () => {
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_all}
                   enablefilter={true}
-                  showFilterInitially={true}
+                  showFilterInitially={false}
                   filterWidth={360}
                   filterHeight={250}
                   filterContent={<DailyStatementAllReportFilter />}

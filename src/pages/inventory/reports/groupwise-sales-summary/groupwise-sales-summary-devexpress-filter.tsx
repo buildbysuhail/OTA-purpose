@@ -34,8 +34,7 @@ const GroupwiseSalesSummaryDevexpressFilter = ({ getFieldProps, handleFieldChang
                     {...getFieldProps("supplierLedgerID")}
                     field={{
                         id: "supplierLedgerID",
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerType=${LedgerType.Supplier}`,
+                        getListUrl: Urls.data_Suppliers,
                         valueKey: "id",
                         labelKey: "name",
                     }}

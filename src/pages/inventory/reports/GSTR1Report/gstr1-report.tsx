@@ -10,14 +10,14 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
-import GstrReportFilter, { GstrReportFilterInitialState } from "./gstr-report-filter";
-interface GstrReport {
+import Gstr1ReportFilter, { Gstr1ReportFilterInitialState } from "./gstr1-report-filter";
+interface Gstr1Report {
   from: Date
 }
-const GstrReport = () => {
+const Gstr1Report = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<GstrReport>({from: new Date()});
+  const [filter, setFilter] =useState<Gstr1Report>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -117,8 +117,8 @@ const GstrReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<GstrReportFilter/>}
-                  filterInitialData={GstrReportFilterInitialState}
+                  filterContent={<Gstr1ReportFilter/>}
+                  filterInitialData={Gstr1ReportFilterInitialState}
                   reload={true} 
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -133,4 +133,4 @@ const GstrReport = () => {
   );
 };
 
-export default GstrReport;
+export default Gstr1Report;

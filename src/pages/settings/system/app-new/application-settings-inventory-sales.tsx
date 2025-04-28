@@ -162,8 +162,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
             data={settings?.inventorySettings}
             field={{
               id: "serviceNONWarrantyInvLedgerID",
-              getListUrl: Urls.data_acc_ledgers,
-              params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+              getListUrl: Urls.data_Customers,
               valueKey: "id",
               labelKey: "name",
             }}
@@ -338,8 +337,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
           field={{
             id: "defaultSalesReturnPayableAcc",
             required: false,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+            getListUrl: Urls.data_Customers,
             valueKey: "id",
             labelKey: "name",
           }}

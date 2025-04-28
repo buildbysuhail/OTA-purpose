@@ -6,7 +6,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 
-const GstrReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: any) => {
+const Gstr3bReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: any) => {
 
     // const [reload,setReload]= useState(false);
     return (
@@ -164,8 +164,8 @@ const GstrReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: an
 
 );
 }
-export default GstrReportFilter;
-export const GstrReportFilterInitialState = {
+export default Gstr3bReportFilter;
+export const Gstr3bReportFilterInitialState = {
   dateFrom: new Date(), // Default empty string
   dateTo: new Date(), // Default empty string 
   all: false, // Default to false

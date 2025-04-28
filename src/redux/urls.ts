@@ -57,6 +57,8 @@ const Urls = {
   data_CashLedgers: "/Accounts/Data/CashLedgers",
   data_SuspenseAccount: "/Accounts/Data/SuspenseAccount",
   data_BankAccounts: "/Accounts/Data/BankAccounts",
+  data_Customers: "/Accounts/Data/Customers",
+  data_Suppliers: "/Accounts/Data/Suppliers",
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",

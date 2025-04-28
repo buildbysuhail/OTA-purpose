@@ -3,7 +3,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
 } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -486,7 +485,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
-            key{key}
               <ErpDevGrid
                 key={key}
                 ref={dataGridRef}

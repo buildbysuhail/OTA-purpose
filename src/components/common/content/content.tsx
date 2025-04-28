@@ -191,6 +191,8 @@ import InventorySummaryReport from "../../../pages/inventory/reports/inventory-s
 import ServiceReport from "../../../pages/inventory/reports/service-report/service-report";
 import SalesmanIncentiveReport from "../../../pages/inventory/reports/salesman-incentive-report/salesman-incentive-report";
 import PrivilegeCardReport from "../../../pages/inventory/reports/privilege-card-report/privilege-card";
+import Gstr1Report from "../../../pages/inventory/reports/GSTR1Report/gstr1-report";
+import Gstr3bReport from "../../../pages/inventory/reports/GSTR3B-report/gstr3b-report";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -601,7 +603,10 @@ const Content: FC<ContentProps> = () => {
 
         <Route path="/inventory/vat_return_form" element={<VatReturnForm />} />
         <Route path="/inventory/vat_return_form_arabic" element={<VatReturnFormArabic />} />
-
+{/* global Start */}
+<Route path="/taxReport/gstr1_report" element={<Gstr1Report />} />
+<Route path="/taxReport/gstr3b_report" element={<Gstr3bReport />} />
+{/* global end */}
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}

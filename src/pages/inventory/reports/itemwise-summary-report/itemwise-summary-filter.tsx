@@ -4,7 +4,6 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { LedgerType } from "../../../../enums/ledger-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -59,8 +58,8 @@ const ItemWiseSummaryFilter = ({
                     {...getFieldProps("partyID")}
                     field={{
                         id: "partyID",
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerType=${LedgerType.All}`,
+                        getListUrl: Urls.data_Customers,
+                        // params: `ledgerType=${LedgerType.Customer}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -211,8 +210,7 @@ const ItemWiseSummaryFilter = ({
                     {...getFieldProps("supplierID")}
                     field={{
                         id: "supplierID",
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerType=${LedgerType.Supplier}`,
+                        getListUrl: Urls.data_Suppliers,
                         valueKey: "id",
                         labelKey: "name",
                     }}

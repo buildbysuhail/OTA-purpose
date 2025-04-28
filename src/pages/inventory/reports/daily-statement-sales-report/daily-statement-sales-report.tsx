@@ -272,7 +272,7 @@ const DailySalesStatementReport = () => {
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_sales}
                   enablefilter={true}
-                  showFilterInitially={true}
+                  showFilterInitially={false}
                   filterWidth={360}
                   filterHeight={250}
                   filterContent={<DailySalesStatementReportFilter />}

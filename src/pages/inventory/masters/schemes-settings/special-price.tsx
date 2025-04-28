@@ -6,13 +6,9 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
-import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import {
-  isNullOrUndefinedOrEmpty,
-  isNullOrUndefinedOrZero,
-} from "../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero, } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPProductSearch from "../../../../components/ERPComponents/erp-searchbox";
@@ -86,7 +82,6 @@ export const SpecialPrice: React.FC = () => {
 
   const handleLoad = useCallback(async () => {
     try {
-      debugger;
       const obj = getFieldProps("*");
       if (isNullOrUndefinedOrZero(obj.schemeID)) {
         ERPAlert.show({
@@ -113,7 +108,7 @@ export const SpecialPrice: React.FC = () => {
   }, [getFieldProps]);
 
   const handleAdd = useCallback(async () => {
-    const obj: SpecialPriceData = getFieldProps("*"); // Assuming this gives you the required form data
+    const obj: SpecialPriceData = getFieldProps("*");
 
     if (isNullOrUndefinedOrZero(obj.schemeID)) {
       ERPAlert.show({
@@ -144,7 +139,6 @@ export const SpecialPrice: React.FC = () => {
       });
     } else {
       const payload = {
-        // Or however you access it
         schemeID: obj.schemeID,
         productBatchID: obj.batchID,
         salesPrice: obj.salesPrice,
@@ -157,19 +151,15 @@ export const SpecialPrice: React.FC = () => {
         handleLoad();
       });
     }
-
-    // setGridData((prevData) => [...prevData, newItem]);
-  }, [gridData, getFieldProps]);
+  }, [getFieldProps, handleLoad]);
 
   const handleClear = useCallback(() => {
     clearForm();
   }, [clearForm]);
 
   const handleRemoveRow = useCallback((rowId: number) => {
-    // setGridData((prevData) =>
-    //   prevData.filter((item) => item.specialPriceID !== rowId)
-    // );
-  }, [getFieldProps]);
+    // Implementation for removing rows
+  }, []);
 
   const renderDeleteCell = (cellData: any) => {
     return (
@@ -185,166 +175,236 @@ export const SpecialPrice: React.FC = () => {
   };
 
   return (
-    <div className="w-full modal-content flex flex-col gap-4">
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">
-        <div>
-          <ERPCheckbox
-            {...getFieldProps("isGroup")}
-            label={t("group")}
-            onChangeData={(data: any) =>
-              handleFieldChange("isGroup", data.isGroup)
-            }
-          />
-          <ERPDataCombobox
-            {...getFieldProps("groupID")}
-            noLabel={true}
-            disabled={!formState.data.isGroup}
-            field={{
-              id: "groupID",
-              getListUrl: Urls.data_productgroup,
-              valueKey: "id",
-              labelKey: "name",
-              required: true,
-            }}
-            onChangeData={(data: any) =>
-              handleFieldChange("groupID", data.groupID)
-            }
-          />
+    <div className="w-full p-2 bg-gray-100">
+      <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-3">
+          {/* Left column */}
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <ERPCheckbox
+                  {...getFieldProps("isGroup")}
+                  label={t("group")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("isGroup", data.isGroup)
+                  }
+                />
+              </div>
+              <div className="flex-1">
+                <ERPDataCombobox
+                  {...getFieldProps("groupID")}
+                  noLabel={true}
+                  disabled={!formState.data.isGroup}
+                  field={{
+                    id: "groupID",
+                    getListUrl: Urls.data_productgroup,
+                    valueKey: "id",
+                    labelKey: "name",
+                    required: true,
+                  }}
+                  className="w-full"
+                  onChangeData={(data: any) =>
+                    handleFieldChange("groupID", data.groupID)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <label>{t("scheme")}:</label>
+              </div>
+              <div className="flex-1">
+                <ERPDataCombobox
+                  {...getFieldProps("schemeID")}
+                  field={{
+                    id: "schemeID",
+                    getListUrl: Urls.select_price_schemes_for_combo,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  noLabel={true}
+                  className="w-full"
+                  onChangeData={(data: any) => {
+                    handleFieldChange("schemeID", data.schemeID);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("barcode")}:</label>
+                </div>
+                <div className="flex-1">
+                  <ERPInput
+                    {...getFieldProps("barcode")}
+                    noLabel={true}
+                    className="w-full"
+                    onChangeData={(data: any) =>
+                      handleFieldChange("barcode", data.barcode)
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("price")}:</label>
+                </div>
+                <div className="flex-1">
+                  <ERPInput
+                    {...getFieldProps("salesPrice")}
+                    noLabel={true}
+                    type="number"
+                    className="w-full"
+                    onChangeData={(data: any) =>
+                      handleFieldChange("salesPrice", parseFloat(data.salesPrice))
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("unit")}:</label>
+                </div>
+                <div className="flex-1">
+                  <ERPInput
+                    {...getFieldProps("unitName")}
+                    noLabel={true}
+                    disabled
+                    className="w-full"
+                    onChangeData={(data: any) =>
+                      handleFieldChange("unitName", data.unitName)
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("product")}:</label>
+                </div>
+                <div className="flex-1">
+                  <span className="text-[#dc2626]">0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right column */}
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <label>{t("group_price")}:</label>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-full sm:w-32 mb-2 sm:mb-0">
+                  <ERPInput
+                    {...getFieldProps("groupPrice")}
+                    noLabel={true}
+                    type="number"
+                    className="w-full"
+                    onChangeData={(data: any) =>
+                      handleFieldChange("groupPrice", parseFloat(data.groupPrice))
+                    }
+                  />
+                </div>
+                <div className="sm:ml-4">
+                  <ERPCheckbox
+                    {...getFieldProps("searchByCode")}
+                    label={t("Code")}
+                    onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <label>{t("name_code")}:</label>
+              </div>
+              <div className="flex-1">
+                <ERPInput
+                  {...getFieldProps("nameCode")}
+                  noLabel={true}
+                  className="w-full"
+                  onChangeData={(data: any) =>
+                    handleFieldChange("nameCode", data.nameCode)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <label>{t("std_sales_price")}:</label>
+              </div>
+              <div className="flex-1">
+                <span className="text-[#dc2626]">0.00</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                <label>{t("std_purchase_price")}:</label>
+              </div>
+              <div className="flex-1">
+                <span className="text-[#dc2626]">0.00</span>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="flex items-end gap-4">
-          <ERPInput
-            {...getFieldProps("groupPrice")}
-            label={t("group_price")}
-            type="number"
-            className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("groupPrice", parseFloat(data.groupPrice))
-            }
-          />
-          
+        <div className="flex flex-wrap items-center justify-between">
+          <div className="mt-4">
+            <ERPProductSearch
+              type="text"
+              id="test"
+              keyId="testserch"
+              placeholder="Search Here"
+              productDataUrl={Urls.load_product_details}
+              searchByCode={getFieldProps("searchByCode").value}
+              onRowSelected={(data: any) => {
+                const obj = getFieldProps("*");
+                handleDataChange({
+                  ...obj,
+                  unitID: data.unitID,
+                  unitName: data.unit,
+                  barcode: data.autoBarcode,
+                  salesPrice: data.sPrice,
+                  stdSalesPrice: data.sPrice,
+                  stdPurchasePrice: data.pPrice,
+                  batchID: data.productBatchID,
+                } as SpecialPriceData);
+              }}
+              batchDataUrl={Urls.select_foc_product_batch_grid}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <ERPButton
+              title={t("load")}
+              variant="secondary"
+              onClick={handleLoad}
+              disabled={isDataLoading}
+            />
+            <ERPButton
+              title={t("add")}
+              variant="secondary"
+              onClick={handleAdd}
+            />
+            <ERPButton
+              title={t("clear")}
+              variant="secondary"
+              onClick={handleClear}
+            />
+          </div>
         </div>
-
-        <ERPDataCombobox
-          {...getFieldProps("schemeID")}
-          field={{
-            id: "schemeID",
-            getListUrl: Urls.select_price_schemes_for_combo,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          label={t("scheme")}
-          onChangeData={(data: any) => {
-            debugger;
-            handleFieldChange("schemeID", data.schemeID);
-          }}
-        />
-<ERPCheckbox
-            {...getFieldProps("searchByCode")}
-            label={t("searchByCode")}
-            onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
-          />
-
-        <ERPProductSearch
-          type="text"
-          id="test"
-          keyId="testserch"
-          placeholder="Search Here"
-          productDataUrl={Urls.load_product_details}
-          searchByCode={getFieldProps("searchByCode").value}
-          onRowSelected={(data: any) => {
-            const obj = getFieldProps("*");
-            handleDataChange({
-              ...obj,
-              unitID: data.unitID,
-              unitName: data.unit,
-              barcode: data.autoBarcode,
-              salesPrice: data.sPrice,
-              stdSalesPrice: data.sPrice,
-              stdPurchasePrice: data.pPrice,
-              batchID: data.productBatchID, 
-            } as SpecialPriceData);
-          }}
-          batchDataUrl={Urls.select_foc_product_batch_grid}
-        />
       </div>
 
-      <div className="grid lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">
-        <ERPInput
-          {...getFieldProps("barcode")}
-          label={t("barcode")}
-          onChangeData={(data: any) =>
-            handleFieldChange("barcode", data.barcode)
-          }
-        />
-
-        <ERPInput
-          {...getFieldProps("salesPrice")}
-          label={t("salesPrice")}
-          type="number"
-          onChangeData={(data: any) =>
-            handleFieldChange("salesPrice", parseFloat(data.salesPrice))
-          }
-        />
-
-        <ERPInput
-          {...getFieldProps("unit")}
-          label={t("unit")}
-          type="number"
-          disabled
-          onChangeData={(data: any) =>
-            handleFieldChange("unit", parseFloat(data.unit))
-          }
-        />
-
-        <ERPInput
-          {...getFieldProps("stdSalesPrice")}
-          readOnly
-          label={t("std_sales_price")}
-          type="number"
-          onChangeData={(data: any) =>
-            handleFieldChange("stdSalesPrice", parseFloat(data.stdSalesPrice))
-          }
-        />
-
-        <ERPInput
-          {...getFieldProps("stdPurchasePrice")}
-          readOnly
-          label={t("std_purchase_price")}
-          type="number"
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "stdPurchasePrice",
-              parseFloat(data.stdPurchasePrice)
-            )
-          }
-        />
-
-        <ERPInput
-          {...getFieldProps("product")}
-          label={t("product")}
-          onChangeData={(data: any) =>
-            handleFieldChange("product", data.product)
-          }
-        />
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <ERPButton
-          title={t("load")}
-          variant="secondary"
-          onClick={handleLoad}
-          disabled={isDataLoading}
-        />
-        <ERPButton title={t("add")} variant="secondary" onClick={handleAdd} />
-        <ERPButton
-          title={t("clear")}
-          variant="secondary"
-          onClick={handleClear}
-        />
-      </div>
-
-      <div>
+      {/* Grid section */}
+      <div className="overflow-x-auto">
         <DataGrid
           dataSource={gridData}
           showBorders={true}
@@ -358,9 +418,21 @@ export const SpecialPrice: React.FC = () => {
             allowDeleting={false}
             allowAdding={false}
           />
-          <Column dataField="productName" width={375} caption={t("name")} />
-          <Column dataField="autoBarcode" width={125} caption={t("barcode")} />
-          <Column dataField="unitName" width={60} caption={t("unit")} />
+          <Column
+            dataField="productName"
+            width={375}
+            caption={t("name")}
+          />
+          <Column
+            dataField="autoBarcode"
+            width={125}
+            caption={t("barcode")}
+          />
+          <Column
+            dataField="unitName"
+            width={60}
+            caption={t("unit")}
+          />
           <Column
             dataField="productBatchID"
             width={60}
@@ -376,12 +448,18 @@ export const SpecialPrice: React.FC = () => {
             width={100}
             caption={t("salesPrice")}
           />
-          <Column dataField="salesPrice" width={100} caption={t("scheme_price")} />
-          <Column caption="X" cellRender={renderDeleteCell} width={30} />
+          <Column
+            dataField="salesPrice"
+            width={100}
+            caption={t("scheme_price")}
+          />
+          <Column
+            caption="X"
+            cellRender={renderDeleteCell}
+            width={30}
+          />
         </DataGrid>
       </div>
-
-    
     </div>
   );
 };

@@ -26,6 +26,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -35,6 +36,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "groupName",
@@ -43,7 +45,8 @@ const ProductGroup = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -52,7 +55,8 @@ const ProductGroup = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
+      showInPdf:true
     },
     {
       dataField: "parentGroup",
@@ -62,6 +66,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "parentGroupID",
@@ -81,6 +86,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "isEditable",
@@ -90,6 +96,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 90,
+      showInPdf:true
     },
     {
       dataField: "isDeletable",
@@ -99,6 +106,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 90,
+      showInPdf:true
     },
     {
       dataField: "gStatus",
@@ -108,6 +116,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -117,6 +126,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "groupCategoryID",
@@ -136,6 +146,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "sectionID",
@@ -155,6 +166,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "kitchenID",
@@ -174,6 +186,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false
     },
     {
       dataField: "arabicName",
@@ -183,6 +196,7 @@ const ProductGroup = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false
     },
     {
       dataField: "actions",
@@ -196,8 +210,8 @@ const ProductGroup = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID, reload: false }) }}
+            view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             delete={{
               onSuccess: () => { dispatch(toggleProductGroup({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,

@@ -33,7 +33,7 @@ const Urls = {
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
-  data_cashLedger: "/Data/CashLedgers/",
+  data_cashLedger: "/Accounts/Data/CashLedgers",
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
@@ -635,10 +635,8 @@ const Urls = {
     select_products_for_product_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
     delete_quantity_limit: "/Inventory/QuantityLimit/", // DELETE (pass body as List<ItemQtyLimitSchemeDto>)
   // URLs for QuantitySlabController (Inventory Module)
-  insert_qty_slab_offer: "/Inventory/QuantitySlab/", // POST
-  select_all_qty_slab_offer: "/Inventory/QuantitySlab/", // GET
-  delete_qty_slab_offer: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
-  QuantitySlab: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
+  qty_slab_offer: "/Inventory/QuantitySlab/", // POST
+
 
   //Transaction
   // common

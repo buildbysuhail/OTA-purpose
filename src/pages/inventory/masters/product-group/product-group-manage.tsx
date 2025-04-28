@@ -64,7 +64,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           id="parentGroupID"
           field={{
             id: "parentGroupID",
-            getListUrl: Urls.data_warehouse,
+            getListUrl: Urls.data_productgroup,
             valueKey: "id",
             labelKey: "name",
           }}

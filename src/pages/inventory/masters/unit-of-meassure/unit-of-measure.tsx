@@ -24,6 +24,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -33,6 +34,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "unitCode",
@@ -51,7 +53,8 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "unitType",
@@ -61,6 +64,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "multipleFactor",
@@ -70,7 +74,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-
+      visible:false
     },
     {
       dataField: "secondUnitID",
@@ -89,7 +93,8 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
+      visible: false
     },
     {
       dataField: "decimalPoint",
@@ -99,6 +104,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "totalUnitInBaseUnit",
@@ -108,6 +114,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      visible: false
     },
     {
       dataField: "remarks",
@@ -117,6 +124,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "createdUser",

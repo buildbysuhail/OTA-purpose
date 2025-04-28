@@ -26,6 +26,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -35,6 +36,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "warehouseName",
@@ -43,7 +45,8 @@ const WareHouse = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -53,6 +56,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "type",
@@ -62,6 +66,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -71,6 +76,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "isStockWarehouse",
@@ -80,6 +86,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "isCommon",
@@ -89,6 +96,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdUser",

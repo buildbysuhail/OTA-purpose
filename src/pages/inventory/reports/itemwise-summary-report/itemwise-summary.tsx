@@ -462,6 +462,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
 
   const dataGridRef = useRef<any>(null);
   useEffect(() => {
+    debugger;
     const gridInstance = dataGridRef.current?.instance();
     if (gridInstance) {
       gridInstance.clearGrouping(); // Explicitly clear existing grouping
@@ -471,8 +472,11 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         0
       );
     }
-  }, [filter.isCategoryWise]);
-  
+  }, [filter.isCategoryWise, dataGridRef.current?.instance()]);
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -480,6 +484,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
                 ref={dataGridRef}
                 summaryItems={summaryItems}
                 remoteOperations={{

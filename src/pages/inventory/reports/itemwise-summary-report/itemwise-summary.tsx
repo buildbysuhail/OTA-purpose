@@ -10,6 +10,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "./itemwise-summary-filter";
+import { useLocation } from "react-router-dom";
 
 interface ItemWiseSummaryReportProps {
   gridHeader: string;
@@ -496,6 +497,8 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
       );
     }
   }, [filter.isCategoryWise, dataGridRef.current?.instance()]);
+  
+  const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
       setKey((prev: any) => prev+1)
@@ -506,6 +509,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
+            key{key}
               <ErpDevGrid
                 key={key}
                 ref={dataGridRef}

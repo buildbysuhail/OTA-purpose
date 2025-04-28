@@ -33,7 +33,7 @@ const Urls = {
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
-  data_cashLedger: "/Data/CashLedgers/",
+  data_cashLedger: "/Accounts/Data/CashLedgers",
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",

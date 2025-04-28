@@ -15,7 +15,7 @@ export const initialMeasureData = {
     unitID: 0,
     unitCode: "",
     unitName: "",
-    unitType: "",
+    unitType: -2,
     multipleFactor: 0,
     secondUnitID: 0,
     decimalPoints: 0,

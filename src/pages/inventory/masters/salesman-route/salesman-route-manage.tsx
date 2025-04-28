@@ -74,17 +74,17 @@ export const SalesmanRoute: React.FC = React.memo(() => {
 
   const onCheckboxChange = (day: Day) => {
     setFormState((prevState) => {
-      const currentSalesDay = prevState.salesDay || [];
+      const currentSalesDay = prevState.salesDayArray || [];
       const dayValue = dayMappings[day];
       if (currentSalesDay.includes(dayValue)) {
         return {
           ...prevState,
-          salesDay: currentSalesDay.filter((d) => d !== dayValue),
+          salesDayArray: currentSalesDay.filter((d) => d !== dayValue),
         };
       } else {
         return {
           ...prevState,
-          salesDay: [...currentSalesDay, dayValue],
+          salesDayArray: [...currentSalesDay, dayValue],
         };
       }
     });
@@ -184,7 +184,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
               id={day}
               key={day}
               label={translatedDays[day]}
-              checked={formState.salesDay?.includes(dayMappings[day]) || false}
+              checked={formState.salesDayArray?.includes(dayMappings[day]) || false}
               onChange={() => onCheckboxChange(day)}
             />
           ))}

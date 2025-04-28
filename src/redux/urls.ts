@@ -23,7 +23,6 @@ const Urls = {
   data_salesRoute: "/Data/SalesRoutes/",
   data_form_type: "/Data/FormTypes/",
   data_warehouse: "/Data/Warehouses/",
-  data_scheme_master: "/Data/SchemeMaster/",
   data_employees: "/Data/Employees",
   data_user_types: "/Data/UserTypes/",
   data_users: "/Data/users/",
@@ -72,6 +71,7 @@ const Urls = {
   data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
+  data_scheme_master: "/Inventory/Data/SchemeType/",
   data_products: "/Inventory/Data/Products",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",

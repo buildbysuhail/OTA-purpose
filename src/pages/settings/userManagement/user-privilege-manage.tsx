@@ -439,6 +439,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
   useEffect(() => {
     const planRights = clientSession.planFormCodes?.split(",")
     const allowedActions = Object.values(UserAction) as string[];
+    debugger;
     const updated =  userRights.filter(item => planRights?.includes(item.formCode) ||  allowedActions.includes(item.formCode));
     setUserRightsData(updated);
   }, [userRights]);

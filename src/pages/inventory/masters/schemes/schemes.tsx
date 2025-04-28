@@ -205,7 +205,7 @@ const Schemes = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("schemes")}
-                  dataUrl={Urls.vehicles}
+                  dataUrl={Urls.schemes}
                   gridId="grd_schemes"
                   popupAction={toggleSchemes}
                   gridAddButtonType="popup"

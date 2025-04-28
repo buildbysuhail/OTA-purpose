@@ -24,6 +24,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf : true
     },
     {
       dataField: "id",
@@ -33,6 +34,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "priceCategoryName",
@@ -41,7 +43,8 @@ const PriceCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf :true
     },
     {
       dataField: "shortName",
@@ -51,6 +54,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "discountPerc",
@@ -60,6 +64,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "marginPerc",
@@ -69,6 +74,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -78,6 +84,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "createdUser",
@@ -87,6 +94,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -95,7 +103,8 @@ const PriceCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
+      width: 200,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -105,6 +114,7 @@ const PriceCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -113,8 +123,8 @@ const PriceCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
-
+      width: 200,
+      visible:false
     },
     {
       dataField: "actions",

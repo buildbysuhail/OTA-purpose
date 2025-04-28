@@ -43,7 +43,7 @@ const ItemWiseSummaryFilter = ({
                             {...getFieldProps("productCategoryID")}
                             field={{
                                 id: "productCategoryID",
-                                getListUrl: Urls.productCategory,
+                                getListUrl: Urls.data_productcategory,
                                 valueKey: "id",
                                 labelKey: "name",
                             }}

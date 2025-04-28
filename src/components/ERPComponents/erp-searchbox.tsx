@@ -177,16 +177,17 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
 
   const handleBatchContentReady = useCallback(() => {
     if (batchGridRef.current) {
-      const gridInstance = batchGridRef.current.instance;
+      const gridInstance = batchGridRef.current.instance();
       const visibleRows = gridInstance.getVisibleRows();
       if (visibleRows.length > 0) {
         gridInstance.selectRowsByIndexes([0]);
         gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
         setTimeout(() => {
-          const cellElement = gridInstance.getCellElement(0, 0);
-          if (cellElement) {
-            cellElement.focus();
-          }
+          // const cellElement = gridInstance.getCellElement(0, 0);
+          // if (cellElement) {
+          //   cellElement.focus();
+          // }
+          gridInstance.focus();
         }, 100);
       }
     }
@@ -194,26 +195,28 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
 
    const handleInputKeyDown = useCallback(
        async (e: React.KeyboardEvent<HTMLInputElement>) => {
-         if (e.key === 'Enter' && showProductGrid && dataGridRef.current) {
-           const grid: any = dataGridRef.current.instance;
+        debugger;
+         if (e.key === 'ArrowDown' && showProductGrid && dataGridRef.current) {
+           const grid: any = dataGridRef.current.instance();
            const rows = grid.getVisibleRows();
            if (rows.length > 0) {
-             // 2) select the first row
              grid.selectRowsByIndexes([0]);
-             // 3) scroll/focus to it
-             const key = grid.getKeyByRowIndex(0);
-             grid.navigateToRow(key);
+             grid.navigateToRow(grid.getKeyByRowIndex(0));
+       
              setTimeout(() => {
-               const cell = grid.getCellElement(0, 0);
-               cell?.focus();
-             }, 0);
-             // 4) trigger your existing logic to load batches
-             handleGridKeyDown({ event: e, component: grid });
+              grid.focus();
+              // const cell = grid.getCellElement(0, 0);
+              // -            cell?.focus();
+             }, 100);
+  
            }
          }
+         
        },
-       [showProductGrid, handleGridKeyDown]
+       [showProductGrid]
      );
+
+
 
   return (
     <div className=''>

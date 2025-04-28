@@ -73,7 +73,7 @@ export const QuantityLimit: React.FC = () => {
         initialData: initialQuantityLimit,
         useApiClient: true,
     });
-
+   
     const handleOptionChange = (option: string) => {
         handleFieldChange("selectedOption", option);
     };
@@ -129,8 +129,9 @@ export const QuantityLimit: React.FC = () => {
         }
         try {
           setIsDataLoading(true);
-          const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
-    
+
+        //   const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
+           const response = await api.post(Urls.select_products_for_product_qty_limit,payload)
           if (response) {
             const transformedData: QuantityLimitItemData[] = response.map(
               (item: any, index: number) => ({
@@ -213,6 +214,7 @@ export const QuantityLimit: React.FC = () => {
 
     const handleSave = useCallback(() => {
         console.log("Saving data:", gridData);
+        // select_products_for_product_qty_limit
     }, [gridData]);
 
     const handleSelectAllToDelete = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

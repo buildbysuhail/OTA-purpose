@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -9,6 +9,9 @@ import Urls from "../../../../redux/urls";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { lowerFirst } from "lodash";
 
 const api = new APIClient();
 
@@ -16,11 +19,11 @@ export const initialQuantitySlab = {
     data: {
         slabId: 0,
         itemName: "",
+        itemID:0,
         amtPerc: "",
         value: 0,
         qtyFrom: 0,
         qtyTo: 0,
-        product: "",
         isActive: true,
         isEditable: true,
         isDeletable: true
@@ -37,11 +40,11 @@ export const initialQuantitySlab = {
 export interface QuantitySlabData {
     slabId: number;
     itemName: string;
+    itemID:number;
     amtPerc: string;
     value: number;
     qtyFrom: number;
     qtyTo: number;
-    product: string;
     isActive: boolean;
     isEditable: boolean;
     isDeletable: boolean;
@@ -67,27 +70,85 @@ export const QuantitySlabOffer: React.FC = () => {
         initialData: initialQuantitySlab,
         useApiClient: true,
     });
-
+    
     const handleLoad = useCallback(async () => {
+        setIsDataLoading(true);
         try {
-            setIsDataLoading(true);
-            // const response = await api.get(Urls.quantity_slab_offer);
+           
+    // const response = await api.get();
             // if (response && response.data) {
             //     setGridData(response.data);
             // }
-            setIsDataLoading(false);
+     
         } catch (error) {
             console.error("Error loading data:", error);
-            setIsDataLoading(false);
+
+        }finally{
+            setIsDataLoading(false)
         }
     }, []);
 
+      // New function to fetch all LoadAllSlabs when LoadAllSlabs is checked
+  const fetchLoadAllSlabs = useCallback(async () => {
+    setIsDataLoading(true);
+    try {
+        const url = `${Urls.get_all__multi_foc}`;
+           const response = await api.getAsync(url); //url need to update Urls.quantity_slab_offer
+      setGridData(response);
+    } catch (error) {
+      console.error("Error fetching LoadAllSlabs:", error);
+      ERPAlert.show({
+        title: "",
+        icon: "error",
+        text: "Failed to load LoadAllSlabs.",
+      });
+    } finally {
+      setIsDataLoading(false);
+    }
+  }, []);
+
     const handleAdd = useCallback(() => {
-        const newItem: QuantitySlabData = {
-            ...formState.data,
-            slabId: gridData.length > 0 ? Math.max(...gridData.map(item => item.slabId)) + 1 : 1
-        };
-        setGridData(prevData => [...prevData, newItem]);
+   const formData = formState?.data ;
+   console.log("slabform",formData);
+   
+        if(isNullOrUndefinedOrEmpty(formData.amtPerc)){
+            ERPAlert.show({
+                    title: "",
+                    icon: "warning",
+                    text: "Invalid Value Type. Please select Any of Amt or Percent",
+                });
+            return;
+        }
+        if(!isNullOrUndefinedOrZero(formData.qtyFrom)&& !isNullOrUndefinedOrZero(formData.qtyTo)
+        && formData.qtyFrom <= formData.qtyTo
+        ){
+            if(!isNullOrUndefinedOrZero(formData.itemID)){
+                const newItem: QuantitySlabData = {
+
+                    ...formData,
+                    slabId: gridData.length > 0 ? Math.max(...gridData.map(item => item.slabId)) + 1 : 1
+                };
+                setGridData(prevData => [...prevData, newItem]);
+                handleClear();
+            }
+            else{
+                ERPAlert.show({
+                    title: "",
+                    icon: "warning",
+                    text: "Invalid Item",
+                });
+            return;  
+            }
+       
+        }else{
+            ERPAlert.show({
+                title: "",
+                icon: "warning",
+                text: "Invalid Qty Range",
+            });
+        return; 
+        }
+     
     }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => {
@@ -146,7 +207,14 @@ export const QuantitySlabOffer: React.FC = () => {
             </div>
         );
     };
-
+    
+  useEffect(() => {
+    if (loadAllSlabs) {
+      fetchLoadAllSlabs();
+    } else {
+      setGridData([]);
+    }
+  }, [loadAllSlabs]);
     return (
         <div className="w-full modal-content flex flex-col gap-4">
             <div className="flex justify-end mb-2">
@@ -160,16 +228,20 @@ export const QuantitySlabOffer: React.FC = () => {
 
             <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
                 <ERPDataCombobox
-                    {...getFieldProps("itemName")}
+                    {...getFieldProps("itemID")}
                     label={t("item_name")}
                     field={{
-                        id: "itemName",
-                        // getListUrl: Urls.data_items,
+                        id: "itemID",
+                        getListUrl: Urls.data_productgroup,
                         valueKey: "id",
                         labelKey: "name",
                         required: true
                     }}
-                    onChangeData={(data: any) => handleFieldChange("itemName", data.itemName)}
+                    onChange={(data: any) => handleFieldChange({ 
+                        itemID:data.value,
+                        itemName:data.name,
+                       })}
+                    disabled={loadAllSlabs}
                 />
 
                 <ERPDataCombobox
@@ -188,12 +260,14 @@ export const QuantitySlabOffer: React.FC = () => {
                         { value: "Amt", label: t("amt") },
                         { value: "Perc", label: t("perc") },
                     ]}
+                    disabled={loadAllSlabs}
                 />
 
                 <ERPInput
                     {...getFieldProps("value")}
                     label={t("value")}
                     type="number"
+                    disabled={loadAllSlabs}
                     onChangeData={(data: any) => handleFieldChange("value", parseFloat(data.value))}
                 />
 
@@ -201,6 +275,7 @@ export const QuantitySlabOffer: React.FC = () => {
                     {...getFieldProps("qtyFrom")}
                     label={t("qty_from")}
                     type="number"
+                    disabled={loadAllSlabs}
                     onChangeData={(data: any) => handleFieldChange("qtyFrom", parseFloat(data.qtyFrom))}
                 />
 
@@ -208,12 +283,14 @@ export const QuantitySlabOffer: React.FC = () => {
                     {...getFieldProps("qtyTo")}
                     label={t("qty_to")}
                     type="number"
+                    disabled={loadAllSlabs}
                     onChangeData={(data: any) => handleFieldChange("qtyTo", parseFloat(data.qtyTo))}
                 />
             </div>
 
             <div className="flex justify-end">
                 <ERPButton
+                    disabled={loadAllSlabs}
                     title={t("add")}
                     variant="primary"
                     onClick={handleAdd}
@@ -243,7 +320,7 @@ export const QuantitySlabOffer: React.FC = () => {
                         width={60}
                     />
                     <Column
-                        dataField="product"
+                        dataField="itemName"
                         width={150}
                         caption={t("product")}
                     />
@@ -278,12 +355,12 @@ export const QuantitySlabOffer: React.FC = () => {
             <div className="flex flex-row max-md:flex-col items-center mt-2">
                 <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
                 <div className="flex items-center">
-                    <ERPCheckbox
+                    {/* <ERPCheckbox
                         checked={selectAllToDelete}
                         onChange={handleSelectAllChange}
                         label={t("select_all_to_delete")}
                         id={""}
-                    />
+                    /> */}
                     <div className="flex gap-2 ml-4">
                         <ERPButton
                             title={t("delete")}

@@ -829,18 +829,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         _options = includeOptions ? [...includeOptions, ..._options] : _options;
         setItems(_options);
         setFilteredItems(_options);
-        if (
-          value == -2 &&
-          _options != undefined &&
-          _options != null &&
-          _options.length > 0
-        ) {
-          console.log(value == -2);
-          
-          handleItemClick(_options[0]);
-        }
-
-        // Automatically select the first option after data is loaded
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -878,61 +866,65 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       () => filteredItems,
       [JSON.stringify(filteredItems)]
     );
-    useEffect(() => {
-      // if (triggerEffect) {
-      const fieldKey = field?.id?.replaceAll("_id", "");
-      const defaultValueKey = getNestedValue(
-        defaultData?.[fieldKey ?? ""],
-        field?.valueKey ?? ""
-      );
-      const _default = items?.find(
-        (option) => option.value === defaultValueKey
-      );
-      const _selected = items?.find(
-        (option) => option.value === (value ? value : data?.[field?.id ?? ""])
-      );
-      const _exceptional =
-        (defaultData && fieldKey === "payment_terms" && items[0]) ||
-        fieldKey === "currency";
-      const final =
-        _selected || _default || _exceptional || initialValue || null;
 
-      // Reset internal state when external value changes to null/undefined
-      if (!value && !data?.[field?.id ?? ""]) {
-        
-        setInitial(null);
-        if (triggerEffect == true || value === null) {
-          handleItemClick({ value: "", label: "" });
-          setInputValue("");
+      useEffect(() => {
+        const fieldKey = field?.id?.replaceAll("_id", "");
+        const defaultValueKey = getNestedValue(
+          defaultData?.[fieldKey ?? ""],
+          field?.valueKey ?? ""
+        );
+        let final: Option | null = null;
+
+        // Handle value == -2 by selecting the first item if items are loaded
+        if (value === -2 && items.length > 0) {
+          final = items[0]; // Select first item
+        } else {
+          const _default = items?.find(
+            (option) => option.value === defaultValueKey
+          );
+          const _selected = items?.find(
+            (option) => option.value === (value ? value : data?.[field?.id ?? ""])
+          );
+          const _exceptional =
+            (defaultData && fieldKey === "payment_terms" && items[0]) ||
+            fieldKey === "currency";
+          final = _selected || _default || _exceptional || initialValue || null;
         }
-        // if (filteredItems.length > 0 && inputValue === "") {
-        //   // Update inputValue if filteredItems has items and inputValue is empty
-        //   setInputValue(final?.label || "");
-        // }
-        setDisplayValue("");
-      } else {
+        if (!value && !data?.[field?.id ?? ""]) {
         
-        setInitial(final);
-        setInputValue(final?.label);
-      }
-      // if (value == -2 && items != undefined && items != null && items.length > 0) {
+              setInitial(null);
+              if (triggerEffect == true || value === null) {
+                handleItemClick({ value: "", label: "" });
+                setInputValue("");
+              }
+              // if (filteredItems.length > 0 && inputValue === "") {
+              //   // Update inputValue if filteredItems has items and inputValue is empty
+              //   setInputValue(final?.label || "");
+              // }
+              setDisplayValue("");
+            }
+        // Update state only if final differs from current initial to avoid unnecessary renders
+        if (final !== initial) {
+          setInitial(final);
+          setInputValue(final?.label || "");
+          setDisplayValue(final?.label ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) : "");
+        }
 
-      //   handleItemClick(items[0]);
-      // }
-      setActiveIndex(
-        final != null
-          ? filteredItems?.findIndex((item) => item.value === final.value)
-          : -1
-      );
-      // }
-    }, [
-      memoizedItems,
-      memoizedData,
-      memoizedField,
-      memoizedFilteredItems,
-      value,
-    ]);
-
+        // Set activeIndex for keyboard navigation
+        setActiveIndex(
+          final != null
+            ? filteredItems?.findIndex((item) => item.value === final.value)
+            : -1
+        );
+      }, [
+        memoizedItems,
+        memoizedData,
+        memoizedField,
+        memoizedFilteredItems,
+        value,
+        initial, // Added to check for changes
+        ref,
+      ]);
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({
         label: "",

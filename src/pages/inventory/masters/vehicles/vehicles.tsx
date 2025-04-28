@@ -145,6 +145,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -154,6 +155,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -163,6 +165,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -172,6 +175,7 @@ const Vehicles = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      visible:false
     },
     {
       dataField: "odometer",

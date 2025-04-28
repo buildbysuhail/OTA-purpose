@@ -134,6 +134,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -142,7 +143,8 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      width: 150,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -152,6 +154,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -160,7 +163,8 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      width: 150,
+      visible:false
     },
     {
       dataField: "actions",

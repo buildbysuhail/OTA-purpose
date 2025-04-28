@@ -78,7 +78,8 @@ const ProductCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150
+      width: 150,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -88,6 +89,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -96,7 +98,8 @@ const ProductCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150
+      width: 150,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -106,6 +109,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "isCommon",

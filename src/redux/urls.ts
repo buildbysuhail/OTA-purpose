@@ -636,6 +636,7 @@ const Urls = {
   insert_qty_slab_offer: "/Inventory/QuantitySlab/", // POST
   select_all_qty_slab_offer: "/Inventory/QuantitySlab/", // GET
   delete_qty_slab_offer: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
+  QuantitySlab: "/Inventory/QuantitySlab/", // DELETE (pass body as List<{qtySlabID:10}>)
 
   //Transaction
   // common

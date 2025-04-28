@@ -19,22 +19,18 @@ import MultiFocSchemeBatchGrid from "./multi-foc-scheme-batch-grid";
 
 const api = new APIClient();
 
-export const initialFOCScheme: {
-  data: FOCSchemeData;
-  validations: any;
-  [key: string]: any;
-} = {
+export const initialFOCScheme = {
   data: {
     schemeID: 0,
     productBatchID: 0,
     loadAllMultiFos: false,
-    qtyLimit: 0,
-    freeQty: 0,
+    qtyLimit: 1,
+    freeQty: 1,
     freeProductBatchID: 0,
     remarks: "",
     unitID: 0,
-    barCode: "",
-    freeItemBarcode: "",
+    barCode: "0",
+    freeItemBarcode: "0",
     unitName: "",
     productName: "",
     productID: 0,
@@ -169,7 +165,7 @@ const MultiFOCScheme: React.FC = () => {
         }
 
         setIsDataLoading(true);
-        const url = `${Urls.select_product_by_product_id_multi_foc}${fieldValue}`;//change url it for demo
+        const url = `${Urls.select_product_by_product_id_multi_foc}${fieldValue}`; //change url it for demo
         const response = await api.get(url);
 
         if (response?.length === 1) {
@@ -193,7 +189,7 @@ const MultiFOCScheme: React.FC = () => {
           setProductDetailStore(response)
           setShowBatchGrid(true)
         } else {
-
+          // Handle empty response
         }
         setIsDataLoading(false);
       } catch (error) {
@@ -206,7 +202,6 @@ const MultiFOCScheme: React.FC = () => {
 
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
-
     setIsDataLoading(true);
     try {
       const url = `${Urls.get_all__multi_foc}`;
@@ -269,8 +264,7 @@ const MultiFOCScheme: React.FC = () => {
       return [...prevGridData, newSchemeData];
     });
     handleClear();
-  }, [getFieldProps]);
-
+  }, [getFieldProps, handleClear]);
 
   useEffect(() => {
     if (formState.data.loadAllMultiFos) {
@@ -278,7 +272,7 @@ const MultiFOCScheme: React.FC = () => {
     } else {
       setGridData([]);
     }
-  }, [formState.data.loadAllMultiFos]);
+  }, [formState.data.loadAllMultiFos, fetchAllMultiFosData]);
 
   // Trigger fetchByField for productName changes
   useEffect(() => {
@@ -317,224 +311,304 @@ const MultiFOCScheme: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 gap-4">
-        <h6>{t("product_details")}</h6>
+    <div className="w-full p-2 bg-gray-100">
+      <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
+        {/* Main container with border and gray background */}
+        <div className="border border-gray-300 rounded">
+          {/* Header with dotted border */}
+          <div className="border-b border-dotted border-gray-400 bg-gray-300 px-2 py-1">
+            <h6 className="text-[#991B1B] font-medium m-0">{t("product_details")}</h6>
+          </div>
 
-        <div className="flex gap-4">
-          <ERPDataCombobox
-            {...getFieldProps("schemeID")}
-            field={{
-              id: "schemeID",
-              getListUrl: Urls.select_quantity_schemes_for_combo,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("scheme")}
-            onChangeData={(data: any) => {
-              handleFieldChange("schemeID", data.schemeID);
-            }}
-            disabled={isFormDisabled}
-          />
+          {/* Main form content */}
+          <div className="p-2">
+            {/* Scheme and LoadAll row */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2 items-center">
+              <div className="md:col-span-2">
+                <label className="text-left font-medium">{t("scheme")}</label>
+              </div>
+              <div className="md:col-span-6">
+                <ERPDataCombobox
+                  {...getFieldProps("schemeID")}
+                  field={{
+                    id: "schemeID",
+                    getListUrl: Urls.select_quantity_schemes_for_combo,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  noLabel={true}
+                  className="w-full max-w-[350px]"
+                  onChangeData={(data: any) => {
+                    handleFieldChange("schemeID", data.schemeID);
+                  }}
+                  disabled={isFormDisabled}
+                />
+              </div>
+              <div className="md:col-span-4 flex justify-end">
+                <ERPCheckbox
+                  {...getFieldProps("loadAllMultiFos")}
+                  label={t("Load All Multi FOC")}
+                  onChangeData={(data: any) => {
+                    handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
+                  }}
+                />
+              </div>
+            </div>
 
-          <ERPCheckbox
-            {...getFieldProps("loadAllMultiFos")}
-            label={t("loadAll_MultiFos")}
-            onChangeData={(data: any) => {
-              handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
-            }}
-          />
+            {/* Product Barcode and Name row */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+              <div className="md:col-span-2">
+                <label className="text-left font-medium">{t("product_barcode")}</label>
+              </div>
+              <div className="md:col-span-4">
+                <ERPInput
+                  {...getFieldProps("barCode")}
+                  noLabel={true}
+                  className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
+                  onChangeData={(data: any) => handleFieldChange("barCode", data.barCode)}
+                  disabled={isFormDisabled}
+                  onBlur={() => fetchByBarcode()}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-left font-medium">{t("product_name")}</label>
+              </div>
+              <div className="md:col-span-4">
+                <ERPDataCombobox
+                  {...getFieldProps("productID")}
+                  field={{
+                    id: "productID",
+                    getListUrl: Urls.data_products,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  noLabel={true}
+                  className="w-full max-w-[350px]"
+                  onChange={(data: any) => {
+                    handleFieldChange({
+                      productID: data.value,
+                      productName: data.name,
+                    });
+                  }}
+                  disabled={isFormDisabled}
+                />
+              </div>
+            </div>
 
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          <ERPInput
-            {...getFieldProps("barCode")}
-            label={t("product_barcode")}
-            onChange={(e: any) => handleFieldChange("barCode", e.target.value)}
-            disabled={isFormDisabled}
-            onBlur={() => fetchByBarcode()}
-          />
-          <div className="relative">
-            <ERPDataCombobox
-              {...getFieldProps("productID")}
-              field={{
-                id: "productID",
-                getListUrl: Urls.data_products,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              label={t("product")}
-              disabled={isFormDisabled}
-              onChange={(data: any) => {
-                handleFieldChange({
-                  productID: data.value,
-                  productName: data.name,
-                });
-              }}
-            />
-
-            <div className="absolute left-0 top-full z-50 w-full mt-2">
-              <MultiFocSchemeBatchGrid
-                show={showBatchGrid}
-                dataSource={productDetailStore}
-                // onKeyDown={handleBatchGridKeyDown}
-                // onContentReady={handleBatchContentReady}
-                gridRef={batchGridRef}
-              />
+            {/* Qty Limit and Unit row */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+              <div className="md:col-span-2">
+                <label className="text-left font-medium">{t("qty_limit")}</label>
+              </div>
+              <div className="md:col-span-4">
+                <div className="w-24">
+                  <ERPInput
+                    {...getFieldProps("qtyLimit")}
+                    noLabel={true}
+                    type="number"
+                    className="w-full"
+                    onChangeData={(data: any) => handleFieldChange("qtyLimit", parseFloat(data.qtyLimit))}
+                    disabled={isFormDisabled}
+                  />
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-left font-medium">{t("item_unit")}</label>
+              </div>
+              <div className="md:col-span-4">
+                <ERPDataCombobox
+                  {...getFieldProps("unitID")}
+                  field={{
+                    id: "unitID",
+                    getListUrl: Urls.data_units,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  noLabel={true}
+                  className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
+                  onChangeData={(data: any) => handleFieldChange("unitID", data.id)}
+                  disabled={isFormDisabled}
+                />
+              </div>
             </div>
           </div>
-          <ERPInput
-            {...getFieldProps("qtyLimit")}
-            label={t("qty")}
-            type="number"
-            onChange={(e) =>
-              handleFieldChange("qtyLimit", parseFloat(e.target.value))
-            }
-            disabled={isFormDisabled}
-          />
-          <ERPDataCombobox
-            {...getFieldProps("unitID")}
-            field={{
-              id: "unitID",
-              getListUrl: Urls.data_units, // Update with correct URL
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("unit_id")}
-            disabled={isFormDisabled}
-            onChangeData={(data: any) => handleFieldChange("unitID", data.id)}
-          />
-        </div>
-        <h6>{t("free_product_details")}</h6>
-        <div className="grid grid-cols-4 gap-4">
-          <ERPInput
-            {...getFieldProps("freeItemBarcode")}
-            label={t("freeItemBarcode")}
-            onChange={(e: any) =>
-              handleFieldChange("freeItemBarcode", e.target.value)
-            }
-            disabled={isFormDisabled}
-            onBlur={() => fetchByFreeItemBarcode()}
-          />
-          <ERPDataCombobox
-            {...getFieldProps("freeProductID")}
-            field={{
-              id: "freeProductID",
-              getListUrl: Urls.data_products, // Update with correct URL
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("free_product")}
-            disabled={isFormDisabled}
 
-            onChange={(data: any) => {
-              handleFieldChange({ "freeProductID": data.value, "freeProductName": data.name })
-            }}
-          />
+          {/* Free Product Details section */}
+          <div className="border-t border-gray-400 border-dotted mt-1">
+            <div className="border-b border-dotted border-gray-400 bg-gray-300 px-2 py-1">
+              <h6 className="text-[#991B1B] font-medium m-0">{t("free_product_details")}</h6>
+            </div>
 
-          <ERPInput
-            {...getFieldProps("freeQty")}
-            label={t("qty")}
-            type="number"
-            onChange={(e) =>
-              handleFieldChange("freeQty", parseFloat(e.target.value))
-            }
-            disabled={isFormDisabled}
-          />
-          <ERPDataCombobox
-            {...getFieldProps("freeUnitID")}
-            field={{
-              id: "freeUnitID",
-              getListUrl: Urls.data_units, // Update with correct URL
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label={t("unit_id")}
-            disabled={isFormDisabled}
-            onChangeData={(data: any) =>
-              handleFieldChange("freeUnitID", data.id)
-            }
-          />
-        </div>
-      </div>
-      <div className="w-full modal-content flex flex-col gap-4">
-        <div className="flex justify-end gap-4 mt-4">
-          <ERPButton
-            title={t("add")}
-            variant="secondary"
-            onClick={handleAdd}
-            disabled={isFormDisabled || isDataLoading}
-          />
-        </div>
-        <div>
-          <DataGrid
-            dataSource={gridData}
-            showBorders={true}
-            rowAlternationEnabled={true}
-            className="w-full"
+            <div className="p-2">
+              {/* Free Product Barcode and Name row */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+                <div className="md:col-span-2">
+                  <label className="text-left font-medium">{t("product_barcode")}</label>
+                </div>
+                <div className="md:col-span-4">
+                  <ERPInput
+                    {...getFieldProps("freeItemBarcode")}
+                    noLabel={true}
+                    className="w-full max-w-[350px]"
+                    onChangeData={(data: any) => handleFieldChange("freeItemBarcode", data.freeItemBarcode)}
+                    disabled={isFormDisabled}
+                    onBlur={() => fetchByFreeItemBarcode()}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-left font-medium">{t("product_name")}</label>
+                </div>
+                <div className="md:col-span-4">
+                  <ERPDataCombobox
+                    {...getFieldProps("freeProductID")}
+                    field={{
+                      id: "freeProductID",
+                      getListUrl: Urls.data_products,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    noLabel={true}
+                    className="w-full max-w-[350px]"
+                    onChange={(data: any) => {
+                      handleFieldChange({
+                        freeProductID: data.value,
+                        freeProductName: data.name
+                      });
+                    }}
+                    disabled={isFormDisabled}
+                  />
+                </div>
+              </div>
 
-          >
-            <Paging defaultPageSize={10} />
-            <Editing
-              mode="cell"
-              allowUpdating={true}
-              allowDeleting={false}
-              allowAdding={false}
-            />
-
-            <Column
-              dataField="barCode"
-              dataType="string"
-              width={100}
-              caption={t("barcode")}
-            />
-            <Column
-              dataField="productName"
-              dataType="string"
-              width={300}
-              caption={t("name")}
-            />
-            <Column
-              dataField="unitName"
-              dataType="string"
-              width={80}
-              caption={t("unit")}
-            />
-            <Column
-              dataField="qtyLimit"
-              dataType="number"
-              width={70}
-              caption={t("qty")}
-            />
-            <Column
-              dataField="freeItemBarcode"
-              dataType="string"
-              width={100}
-              caption={t("free_barcode")}
-            />
-            <Column
-              dataField="freeProductName"
-              dataType="string"
-              width={300}
-              caption={t("free_item")}
-            />
-            <Column
-              dataField="freeUnitName"
-              dataType="string"
-              width={80}
-              caption={t("free_unit")}
-            />
-            <Column
-              dataField="freeQty"
-              dataType="number"
-              width={70}
-              caption={t("free_qty")}
-            />
-            <Column caption="X" cellRender={renderDeleteCell} width={30} />
-          </DataGrid>
+              {/* Free Qty and Unit row */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
+                <div className="md:col-span-2">
+                  <label className="text-left font-medium">{t("free_qty")}</label>
+                </div>
+                <div className="md:col-span-4">
+                  <div className="w-24">
+                    <ERPInput
+                      {...getFieldProps("freeQty")}
+                      noLabel={true}
+                      type="number"
+                      className="w-full"
+                      onChangeData={(data: any) => handleFieldChange("freeQty", parseFloat(data.freeQty))}
+                      disabled={isFormDisabled}
+                    />
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-left font-medium">{t("item_unit")}</label>
+                </div>
+                <div className="md:col-span-4 flex items-center justify-between">
+                  <div className="flex-grow">
+                    <ERPDataCombobox
+                      {...getFieldProps("freeUnitID")}
+                      field={{
+                        id: "freeUnitID",
+                        getListUrl: Urls.data_units,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      noLabel={true}
+                      className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
+                      onChangeData={(data: any) => handleFieldChange("freeUnitID", data.id)}
+                      disabled={isFormDisabled}
+                    />
+                  </div>
+                  <div className="ml-2">
+                    <ERPButton
+                      title={t("add")}
+                      variant="primary"
+                      className="bg-blue-600 text-white h-9 px-8"
+                      onClick={handleAdd}
+                      disabled={isFormDisabled || isDataLoading}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+
+      {/* Grid section */}
+      <div className="overflow-x-auto">
+        <DataGrid
+          dataSource={gridData}
+          showBorders={true}
+          rowAlternationEnabled={true}
+          className="w-full"
+        >
+          <Paging defaultPageSize={10} />
+          <Editing
+            mode="cell"
+            allowUpdating={true}
+            allowDeleting={false}
+            allowAdding={false}
+          />
+
+          <Column
+            dataField="barCode"
+            dataType="string"
+            width={100}
+            caption={t("barcode")}
+          />
+          <Column
+            dataField="productName"
+            dataType="string"
+            width={300}
+            caption={t("name")}
+          />
+          <Column
+            dataField="unitName"
+            dataType="string"
+            width={80}
+            caption={t("unit")}
+          />
+          <Column
+            dataField="qtyLimit"
+            dataType="number"
+            width={70}
+            caption={t("qty")}
+          />
+          <Column
+            dataField="freeItemBarcode"
+            dataType="string"
+            width={100}
+            caption={t("free_barcode")}
+          />
+          <Column
+            dataField="freeProductName"
+            dataType="string"
+            width={300}
+            caption={t("free_item")}
+          />
+          <Column
+            dataField="freeUnitName"
+            dataType="string"
+            width={80}
+            caption={t("free_unit")}
+          />
+          <Column
+            dataField="freeQty"
+            dataType="number"
+            width={70}
+            caption={t("free_qty")}
+          />
+          <Column caption="X" cellRender={renderDeleteCell} width={30} />
+        </DataGrid>
+      </div>
+
+      {/* Batch Grid Modal */}
+      <div className="relative">
+        <MultiFocSchemeBatchGrid
+          show={showBatchGrid}
+          dataSource={productDetailStore}
+          gridRef={batchGridRef}
+        />
+      </div>
+    </div>
   );
 };
 

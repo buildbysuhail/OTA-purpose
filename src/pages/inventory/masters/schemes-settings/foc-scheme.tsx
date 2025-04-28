@@ -235,7 +235,7 @@ const FOCScheme: React.FC = () => {
                     labelKey: "name",
                   }}
                   noLabel={true}
-                  className="w-full"
+                  className="max-w-[350px]"
                   onChangeData={async (data: any) => {
                     const obj = getFieldProps("*");
                     const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`);
@@ -373,123 +373,99 @@ const FOCScheme: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center">
-              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("name_code")}:</label>
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("name_code")}:</label>
+                </div>
+                <div>
+                  <ERPProductSearch
+                    type="text"
+                    id="test"
+                    keyId="testserch"
+                    placeholder="Search Here"
+                    productDataUrl={Urls.load_product_details_foc}
+                    searchByCode={getFieldProps("searchByCode").value}
+                    onRowSelected={(data: any) => {
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        productBatchID: data.productBatchID,
+                        unitID: data.unitID,
+                        unitName: data.unit,
+                        barCode: data.autoBarcode,
+                        stdSalesPrice: data.sPrice,
+                        stdPurchasePrice: data.pPrice,
+                        productName: data.productName,
+                      } as FOCSchemeData);
+                    }}
+                    batchDataUrl={Urls.select_foc_product_batch_grid_foc}
+                  />
+                </div>
+                <div className="sm:ml-4">
+                  <ERPCheckbox
+                    {...getFieldProps("searchByCode")}
+                    label={t("code")}
+                    onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
+                  />
+                </div>
               </div>
-              <div className="flex-1">
-                <ERPInput
-                  {...getFieldProps("remarks")}
-                  noLabel={true}
-                  className="w-full"
-                  onChangeData={(data: any) =>
-                    handleFieldChange("remarks", data.remarks)
-                  }
-                />
-              </div>
-              <div className="sm:ml-4">
-                <ERPCheckbox
-                  {...getFieldProps("searchByCode")}
-                  label={t("code")}
-                  onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
-                />
+
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("remarks")}:</label>
+                </div>
+                <div className="flex-1">
+                  <ERPInput
+                    {...getFieldProps("remarks")}
+                    noLabel={true}
+                    className="w-full"
+                    onChangeData={(data: any) =>
+                      handleFieldChange("remarks", data.remarks)
+                    }
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center">
-              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("remarks")}:</label>
+            <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("item_name")}:</label>
+                </div>
+                <div className="flex-1">
+                  <span className="text-[#dc2626]">----</span>
+                </div>
               </div>
-              <div className="flex-1">
-                <ERPInput
-                  {...getFieldProps("remarks")}
-                  noLabel={true}
-                  className="w-full"
-                  onChangeData={(data: any) =>
-                    handleFieldChange("remarks", data.remarks)
-                  }
-                />
-              </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center">
-              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("item_name")}:</label>
-              </div>
-              <div className="flex-1">
-                <ERPInput
-                  {...getFieldProps("productName")}
-                  noLabel={true}
-                  readOnly
-                  className="w-full"
-                  onChangeData={(data: any) =>
-                    handleFieldChange("productName", data.productName)
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center">
-              <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("free_item_name")}:</label>
-              </div>
-              <div className="flex-1">
-                <ERPInput
-                  {...getFieldProps("freeProductName")}
-                  noLabel={true}
-                  readOnly
-                  className="w-full"
-                  onChangeData={(data: any) =>
-                    handleFieldChange("freeProductName", data.freeProductName)
-                  }
-                />
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("free_item_name")}:</label>
+                </div>
+                <div className="flex-1">
+                  <span className="text-[#dc2626]">----</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="mt-4">
-            <ERPProductSearch
-              type="text"
-              id="test"
-              keyId="testserch"
-              placeholder="Search Here"
-              productDataUrl={Urls.load_product_details_foc}
-              searchByCode={getFieldProps("searchByCode").value}
-              onRowSelected={(data: any) => {
-                const obj = getFieldProps("*");
-                handleDataChange({
-                  ...obj,
-                  productBatchID: data.productBatchID,
-                  unitID: data.unitID,
-                  unitName: data.unit,
-                  barCode: data.autoBarcode,
-                  stdSalesPrice: data.sPrice,
-                  stdPurchasePrice: data.pPrice,
-                  productName: data.productName,
-                } as FOCSchemeData);
-              }}
-              batchDataUrl={Urls.select_foc_product_batch_grid_foc}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <ERPButton
-              title={t("load")}
-              variant="secondary"
-              onClick={handleLoad}
-              disabled={isDataLoading}
-            />
-            <ERPButton
-              title={t("add")}
-              variant="secondary"
-              onClick={handleAdd}
-            />
-            <ERPButton
-              title={t("clear")}
-              variant="secondary"
-              onClick={handleClear}
-            />
-          </div>
+        <div className="flex flex-wrap justify-end gap-2 mt-2">
+          <ERPButton
+            title={t("load")}
+            variant="secondary"
+            onClick={handleLoad}
+            disabled={isDataLoading}
+          />
+          <ERPButton
+            title={t("add")}
+            variant="secondary"
+            onClick={handleAdd}
+          />
+          <ERPButton
+            title={t("clear")}
+            variant="secondary"
+            onClick={handleClear}
+          />
         </div>
       </div>
 

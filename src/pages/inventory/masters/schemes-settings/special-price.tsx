@@ -232,7 +232,7 @@ export const SpecialPrice: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
                   <label>{t("barcode")}:</label>
@@ -322,19 +322,35 @@ export const SpecialPrice: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center">
-              <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("name_code")}:</label>
-              </div>
-              <div className="flex-1">
-                <ERPInput
-                  {...getFieldProps("nameCode")}
-                  noLabel={true}
-                  className="w-full"
-                  onChangeData={(data: any) =>
-                    handleFieldChange("nameCode", data.nameCode)
-                  }
-                />
+            <div className="mt-4">
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                  <label>{t("name_code")}:</label>
+                </div>
+                <div className="flex-1">
+                  <ERPProductSearch
+                    type="text"
+                    id="test"
+                    keyId="testserch"
+                    placeholder="Search Here"
+                    productDataUrl={Urls.load_product_details}
+                    searchByCode={getFieldProps("searchByCode").value}
+                    onRowSelected={(data: any) => {
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        unitID: data.unitID,
+                        unitName: data.unit,
+                        barcode: data.autoBarcode,
+                        salesPrice: data.sPrice,
+                        stdSalesPrice: data.sPrice,
+                        stdPurchasePrice: data.pPrice,
+                        batchID: data.productBatchID,
+                      } as SpecialPriceData);
+                    }}
+                    batchDataUrl={Urls.select_foc_product_batch_grid}
+                  />
+                </div>
               </div>
             </div>
 
@@ -355,50 +371,24 @@ export const SpecialPrice: React.FC = () => {
                 <span className="text-[#dc2626]">0.00</span>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="mt-4">
-            <ERPProductSearch
-              type="text"
-              id="test"
-              keyId="testserch"
-              placeholder="Search Here"
-              productDataUrl={Urls.load_product_details}
-              searchByCode={getFieldProps("searchByCode").value}
-              onRowSelected={(data: any) => {
-                const obj = getFieldProps("*");
-                handleDataChange({
-                  ...obj,
-                  unitID: data.unitID,
-                  unitName: data.unit,
-                  barcode: data.autoBarcode,
-                  salesPrice: data.sPrice,
-                  stdSalesPrice: data.sPrice,
-                  stdPurchasePrice: data.pPrice,
-                  batchID: data.productBatchID,
-                } as SpecialPriceData);
-              }}
-              batchDataUrl={Urls.select_foc_product_batch_grid}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <ERPButton
-              title={t("load")}
-              variant="secondary"
-              onClick={handleLoad}
-              disabled={isDataLoading}
-            />
-            <ERPButton
-              title={t("add")}
-              variant="secondary"
-              onClick={handleAdd}
-            />
-            <ERPButton
-              title={t("clear")}
-              variant="secondary"
-              onClick={handleClear}
-            />
+            <div className="flex justify-end flex-wrap gap-2">
+              <ERPButton
+                title={t("load")}
+                variant="secondary"
+                onClick={handleLoad}
+                disabled={isDataLoading}
+              />
+              <ERPButton
+                title={t("add")}
+                variant="secondary"
+                onClick={handleAdd}
+              />
+              <ERPButton
+                title={t("clear")}
+                variant="secondary"
+                onClick={handleClear}
+              />
+            </div>
           </div>
         </div>
       </div>

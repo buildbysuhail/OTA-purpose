@@ -30,7 +30,7 @@ export const initialSchemesData = {
   schemeRate: 0,
   freeQty: 0,
   freeItemProductId: 0,
-  schemeStatus: '',
+  schemeStatus: -2,
   itemBatchNo: 0,
   discPerc: 0,
   },

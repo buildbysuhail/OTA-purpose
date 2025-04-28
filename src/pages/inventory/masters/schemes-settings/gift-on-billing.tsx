@@ -16,9 +16,9 @@ const api = new APIClient();
 
 export const initialGiftOnBilling = {
     data: {
-        giftProductId:0,
+        giftProductId: 0,
         giftOnBillingID: 0,
-        giftProductBatchId:0,
+        giftProductBatchId: 0,
         totalBillRangeFrom: 0,
         totalBillRangeTo: 0,
         giftBarcode: "",
@@ -30,7 +30,7 @@ export const initialGiftOnBilling = {
         rangeTo: 0,
         giftItem: "",
         cashCouponValue: 0.00,
-        specialPrice:0
+        specialPrice: 0
     },
     validations: {
         totalBillRangeFrom: "",
@@ -43,9 +43,9 @@ export const initialGiftOnBilling = {
 };
 
 export interface GiftOnBillingData {
-    giftProductId:number;
+    giftProductId: number;
     giftOnBillingID: number;
-    giftProductBatchId:number;
+    giftProductBatchId: number;
     totalBillRangeFrom: number;
     totalBillRangeTo: number;
     giftBarcode: string;
@@ -81,7 +81,7 @@ export interface GiftEntryParams {
     quantity: number;
     createdUserId: number;
     cashCouponValue: number;
-  }
+}
 
 export const GiftOnBilling: React.FC = () => {
     const { t } = useTranslation('inventory');
@@ -102,6 +102,7 @@ export const GiftOnBilling: React.FC = () => {
         initialData: initialGiftOnBilling,
         useApiClient: true,
     });
+
     const isFormDisabled = formState.data.loadAllGiftOnBilling;
     const handleLoad = useCallback(async () => {
         setIsDataLoading(true);
@@ -111,24 +112,22 @@ export const GiftOnBilling: React.FC = () => {
             if (response) {
                 setGridData(response);
             }
-         
         } catch (error) {
-             console.error("Error fetching MultiFOS data:", error);
-                 ERPAlert.show({
-                   title: "",
-                   icon: "error",
-                   text: "Failed to load MultiFOS data.",
-                 }); 
-            
-        }finally {
+            console.error("Error fetching MultiFOS data:", error);
+            ERPAlert.show({
+                title: "",
+                icon: "error",
+                text: "Failed to load MultiFOS data.",
+            });
+        } finally {
             setIsDataLoading(false);
-          }
+        }
     }, []);
 
     const handleAdd = useCallback(() => {
         const obj = getFieldProps("*");
-        if(isNullOrUndefinedOrZero(obj.totalBillRangeFrom) || isNullOrUndefinedOrZero(obj.totalBillRangeTo)||
-        obj.totalBillRangeFrom > obj.totalBillRangeTo){
+        if (isNullOrUndefinedOrZero(obj.totalBillRangeFrom) || isNullOrUndefinedOrZero(obj.totalBillRangeTo) ||
+            obj.totalBillRangeFrom > obj.totalBillRangeTo) {
             ERPAlert.show({
                 title: "",
                 icon: "warning",
@@ -137,7 +136,7 @@ export const GiftOnBilling: React.FC = () => {
             return;
         }
 
-        if(isNullOrUndefinedOrEmpty(obj.giftBarcode) ){ //|| isNullOrUndefinedOrZero(obj.giftProductBatchId  thsi need 
+        if (isNullOrUndefinedOrEmpty(obj.giftBarcode)) { //|| isNullOrUndefinedOrZero(obj.giftProductBatchId  thsi need 
             ERPAlert.show({
                 title: "",
                 icon: "warning",
@@ -156,75 +155,66 @@ export const GiftOnBilling: React.FC = () => {
         handleClear();
     }, [formState.data, gridData]);
 
-    const handleClear = useCallback(() => {
-        clearForm();
-    }, [clearForm]);
-
-    const handleRemoveRow = useCallback((rowId: number) => {
-        setGridData(prevData => prevData.filter(item => item.giftOnBillingID !== rowId));
-    }, []);
-
-
+    const handleClear = useCallback(() => { clearForm(); }, [clearForm]);
+    const handleRemoveRow = useCallback((rowId: number) => { setGridData(prevData => prevData.filter(item => item.giftOnBillingID !== rowId)); }, []);
 
     const handleSave = useCallback(async () => {
         try {
-          // Check if gridData is empty
-          if (gridData.length === 0) {
-            ERPAlert.show({
-              title: "",
-              icon: "warning",
-              text: "No data to save. Please add items to the grid.",
+            // Check if gridData is empty
+            if (gridData.length === 0) {
+                ERPAlert.show({
+                    title: "",
+                    icon: "warning",
+                    text: "No data to save. Please add items to the grid.",
+                });
+                return;
+            }
+
+            //   // Transform gridData into GiftEntryParams array
+            //   const payload: GiftEntryParams[] = gridData.map((item) => {
+            //     // Validate required fields
+            //     if (
+            //       isNullOrUndefinedOrZero(item.rangeFrom) ||
+            //       isNullOrUndefinedOrZero(item.rangeTo) ||
+            //       isNullOrUndefinedOrZero(item.giftProductBatchId) ||
+            //       isNullOrUndefinedOrZero(item.quantity)
+            //     ) {
+            //       throw new Error("Invalid data: All required fields must be valid.");
+            //     }
+
+            //     return {
+            //       rangeFrom: item.rangeFrom,
+            //       rangeTo: item.rangeTo,
+            //       giftProductBatchId: item.giftProductBatchId,
+            //       quantity: item.quantity,
+            //       createdUserId: 1, // Replace with actual logic to get user ID
+            //       cashCouponValue: item.cashCouponValue || 0, // Use 0 if undefined
+            //     };
+            //   });
+
+            // Make POST request
+            const response = await api.post(Urls.gift_on_billing, gridData);
+            handleResponse(response, () => {
+                setGridData([]);
+                handleClear();
             });
-            return;
-          }
-      
-        //   // Transform gridData into GiftEntryParams array
-        //   const payload: GiftEntryParams[] = gridData.map((item) => {
-        //     // Validate required fields
-        //     if (
-        //       isNullOrUndefinedOrZero(item.rangeFrom) ||
-        //       isNullOrUndefinedOrZero(item.rangeTo) ||
-        //       isNullOrUndefinedOrZero(item.giftProductBatchId) ||
-        //       isNullOrUndefinedOrZero(item.quantity)
-        //     ) {
-        //       throw new Error("Invalid data: All required fields must be valid.");
-        //     }
-      
-        //     return {
-        //       rangeFrom: item.rangeFrom,
-        //       rangeTo: item.rangeTo,
-        //       giftProductBatchId: item.giftProductBatchId,
-        //       quantity: item.quantity,
-        //       createdUserId: 1, // Replace with actual logic to get user ID
-        //       cashCouponValue: item.cashCouponValue || 0, // Use 0 if undefined
-        //     };
-        //   });
-      
-          // Make POST request
-          const response = await api.post(Urls.gift_on_billing, gridData);
-          handleResponse(response, () => {
-            setGridData([]);
-            handleClear();
-          });
         } catch (error) {
-          console.error("Error saving settings:", error);
-          ERPAlert.show({
-            title: "",
-            icon: "error",
-            text: "Failed to save gift entries. Please try again.",
-          });
+            console.error("Error saving settings:", error);
+            ERPAlert.show({
+                title: "",
+                icon: "error",
+                text: "Failed to save gift entries. Please try again.",
+            });
         }
-      }, [gridData]);
+    }, [gridData]);
 
     const handleSelectAllToDelete = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectAll(e.target.checked);
     }, []);
 
     const handleClearAll = useCallback(() => {
-        
         setGridData([]);
         handleClear();
-
     }, []);
 
     const renderDeleteCell = (cellData: any) => {
@@ -237,148 +227,164 @@ export const GiftOnBilling: React.FC = () => {
 
     const fetchByBarcode = useCallback(async () => {
         try {
-          const obj = getFieldProps("*");
-          if (isNullOrUndefinedOrEmpty(obj.giftBarcode)) {
-            return;
-          }
-          setIsDataLoading(true);
-          const url = `${Urls.select_product_by_barcode_multi_foc}${obj.giftBarcode}`;
-          const response = await api.get(url);
-          if(response){
-           handleDataChange({
-            ...obj,
-            giftProductId: response.productBatchID,
-            giftProductBatchId: response.productBatchID,
-           })
-          }
-          setIsDataLoading(false);
-        } catch (error) {
-          console.error("Error loading data:", error);
-          setIsDataLoading(false);
-        }
-      }, [getFieldProps, handleDataChange]);
-
-      const fetchByProduct = useCallback( async () => {
-          const obj = getFieldProps("*");
-          try {
-           
-            if (isNullOrUndefinedOrZero(obj.giftProductId) ) {
-              return;
+            const obj = getFieldProps("*");
+            if (isNullOrUndefinedOrEmpty(obj.giftBarcode)) {
+                return;
             }
-    
+            setIsDataLoading(true);
+            const url = `${Urls.select_product_by_barcode_multi_foc}${obj.giftBarcode}`;
+            const response = await api.get(url);
+            if (response) {
+                handleDataChange({
+                    ...obj,
+                    giftProductId: response.productBatchID,
+                    giftProductBatchId: response.productBatchID,
+                })
+            }
+            setIsDataLoading(false);
+        } catch (error) {
+            console.error("Error loading data:", error);
+            setIsDataLoading(false);
+        }
+    }, [getFieldProps, handleDataChange]);
+
+    const fetchByProduct = useCallback(async () => {
+        const obj = getFieldProps("*");
+        try {
+            if (isNullOrUndefinedOrZero(obj.giftProductId)) {
+                return;
+            }
             setIsDataLoading(true);
             const url = `${Urls.select_product_by_product_id_multi_foc}${obj.giftProductId}`;//change url it for demo
             const response = await api.get(url);
-              const updatedData: Partial<GiftOnBillingData> =
-               {
-                giftProductBatchId : response.GiftProductBatchID ,
+            const updatedData: Partial<GiftOnBillingData> =
+            {
+                giftProductBatchId: response.GiftProductBatchID,
                 giftBarcode: response.AutoBarcode,
-                   
-               }
-            
-              handleDataChange({
+            }
+            handleDataChange({
                 ...obj,
                 ...updatedData,
-              } as GiftOnBillingData);
-         
+            } as GiftOnBillingData);
             setIsDataLoading(false);
-          }
-         catch (error) {
+        }
+        catch (error) {
             console.error(`Error fetching ${obj.giftProductId} data:`, error);
             setIsDataLoading(false);
-          }
-        },
-        [getFieldProps, handleDataChange]
-      );
+        }
+    }, [getFieldProps, handleDataChange]);
 
-        useEffect(() => {
-          if (formState.data.loadAllGiftOnBilling) {
+    useEffect(() => {
+        if (formState.data.loadAllGiftOnBilling) {
             handleLoad();
-          } else {
+        } else {
             setGridData([]);
-          }
-        }, [formState.data.loadAllGiftOnBilling]);
+        }
+    }, [formState.data.loadAllGiftOnBilling]);
 
-         useEffect(() => {
-            if (formState.data.giftProductId) {
-                fetchByProduct();
-            }
-          }, [formState.data.giftProductId]);
+    useEffect(() => {
+        if (formState.data.giftProductId) {
+            fetchByProduct();
+        }
+    }, [formState.data.giftProductId]);
 
     return (
-        <div className="w-full modal-content flex flex-col gap-4">
-            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
-                <ERPInput
-                    {...getFieldProps("totalBillRangeFrom")}
-                    label={t("total_bill_range_from")}
-                    type="number"
-                    disabled={isFormDisabled}
-                    onChangeData={(data: any) => handleFieldChange("totalBillRangeFrom", parseFloat(data.totalBillRangeFrom))}
-                />
-                <ERPInput
-                    {...getFieldProps("totalBillRangeTo")}
-                    label={t("total_bill_range_to")}
-                    type="number"
-                    disabled={isFormDisabled}
-                    onChangeData={(data: any) => handleFieldChange("totalBillRangeTo", parseFloat(data.totalBillRangeTo))}
-                />
-                <ERPCheckbox
-                    {...getFieldProps("loadAllGiftOnBilling")}
-                    label={t("load_all_gift_on_billing")}
-                    onChangeData={(data: any) => handleFieldChange("loadAllGiftOnBilling", data.loadAllGiftOnBilling)}
-                />
-                <ERPInput
-                    {...getFieldProps("giftBarcode")}
-                    label={t("gift_barcode")}
-                    onChangeData={(data: any) => handleFieldChange("giftBarcode", data.giftBarcode)}
-                    onBlur={() => fetchByBarcode()}
-                    disabled={isFormDisabled}
-                />
-                <ERPDataCombobox
-                    {...getFieldProps("giftProductId")}
-                    label={t("item_name")}
-                    field={{
-                        id: "giftProductId",
-                        getListUrl: Urls.data_products,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onChange={(data: any) => handleFieldChange({
-                        giftProductId:data.value,
-                        itemName:data.name,
-                    })}
-                    disabled={isFormDisabled}
-                //   onBlur={fetchByProduct}
-                />
-                <ERPInput
-                    {...getFieldProps("quantity")}
-                    label={t("quantity")}
-                    type="number"
-                    disabled={isFormDisabled}
-                    onChangeData={(data: any) => handleFieldChange("quantity", parseFloat(data.quantity))}
-                />
-                <ERPInput
-                    {...getFieldProps("price")}
-                    label={t("price")}
-                    type="number"
-                    disabled={isFormDisabled}
-                    onChangeData={(data: any) => handleFieldChange("price", parseFloat(data.price))}
-                />
-            </div>
+        <div className="w-full p-2 bg-gray-100">
+            <div className="bg-white p-2 rounded-md shadow-sm mb-4">
+                <div className="flex flex-wrap gap-4 items-end">
+                    <div className="w-full sm:w-36 mb-2 sm:mb-0">
+                        <ERPInput
+                            {...getFieldProps("totalBillRangeFrom")}
+                            label={t("total_bill_range_from")}
+                            type="number"
+                            className="w-full"
+                            disabled={isFormDisabled}
+                            onChangeData={(data: any) => handleFieldChange("totalBillRangeFrom", parseFloat(data.totalBillRangeFrom))}
+                        />
+                    </div>
 
-            <div className="flex justify-end gap-2">
-                <ERPButton
-                    title={t("add")}
-                    variant="secondary"
-                    disabled={isFormDisabled}
-                    onClick={handleAdd}
-                />
-                <ERPButton
-                    title={t("delete")}
-                    disabled={!formState.data.loadAllGiftOnBilling}
-                    variant="secondary"
-                    onClick={handleClear}
-                />
+                    <div className="w-full sm:w-36 mb-2 sm:mb-0">
+                        <ERPInput
+                            {...getFieldProps("totalBillRangeTo")}
+                            label={t("total_bill_range_to")}
+                            type="number"
+                            disabled={isFormDisabled}
+                            onChangeData={(data: any) => handleFieldChange("totalBillRangeTo", parseFloat(data.totalBillRangeTo))}
+                        />
+                    </div>
+
+                    <ERPCheckbox
+                        {...getFieldProps("loadAllGiftOnBilling")}
+                        label={t("load_all_gift_on_billing")}
+                        onChangeData={(data: any) => handleFieldChange("loadAllGiftOnBilling", data.loadAllGiftOnBilling)}
+                    />
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                    <div className="w-full sm:w-36 mb-2 sm:mb-0">
+                        <ERPInput
+                            {...getFieldProps("giftBarcode")}
+                            label={t("gift_barcode")}
+                            onChangeData={(data: any) => handleFieldChange("giftBarcode", data.giftBarcode)}
+                            onBlur={() => fetchByBarcode()}
+                            disabled={isFormDisabled}
+                        />
+                    </div>
+
+                    <ERPDataCombobox
+                        {...getFieldProps("giftProductId")}
+                        label={t("item_name")}
+                        field={{
+                            id: "giftProductId",
+                            getListUrl: Urls.data_products,
+                            valueKey: "id",
+                            labelKey: "name",
+                        }}
+                        className="w-[350px]"
+                        onChange={(data: any) => handleFieldChange({
+                            giftProductId: data.value,
+                            itemName: data.name,
+                        })}
+                        disabled={isFormDisabled}
+                    //   onBlur={fetchByProduct}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <ERPInput
+                            {...getFieldProps("quantity")}
+                            label={t("quantity")}
+                            type="number"
+                            className="max-w-[150px]"
+                            disabled={isFormDisabled}
+                            onChangeData={(data: any) => handleFieldChange("quantity", parseFloat(data.quantity))}
+                        />
+
+                        <ERPInput
+                            {...getFieldProps("price")}
+                            label={t("price")}
+                            type="number"
+                            className="max-w-[150px]"
+                            disabled={isFormDisabled}
+                            onChangeData={(data: any) => handleFieldChange("price", parseFloat(data.price))}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-2 mt-4">
+                    <ERPButton
+                        title={t("add")}
+                        variant="secondary"
+                        disabled={isFormDisabled}
+                        onClick={handleAdd}
+                    />
+                    
+                    <ERPButton
+                        title={t("delete")}
+                        disabled={!formState.data.loadAllGiftOnBilling}
+                        variant="secondary"
+                        onClick={handleClear}
+                    />
+                </div>
             </div>
 
             <div className="bg-white border border-gray-300">
@@ -453,18 +459,18 @@ export const GiftOnBilling: React.FC = () => {
             </div>
 
             <div className="flex justify-end gap-4 items-center mt-2">
-                    <ERPButton
-                        title={t("clear")}
-                        variant="secondary"
-                        onClick={handleClearAll}
-                    />
-                    <ERPButton
-                        title={t("save")}
-                        variant="primary"
-                        onClick={handleSave}
-                    />
+                <ERPButton
+                    title={t("clear")}
+                    variant="secondary"
+                    onClick={handleClearAll}
+                />
+                <ERPButton
+                    title={t("save")}
+                    variant="primary"
+                    onClick={handleSave}
+                />
             </div>
-      
+
         </div>
     );
 };

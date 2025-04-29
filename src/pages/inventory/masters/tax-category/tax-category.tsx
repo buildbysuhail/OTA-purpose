@@ -25,6 +25,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -34,6 +35,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "taxCategoryName",
@@ -42,7 +44,8 @@ const TaxCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "sVatPerc",
@@ -52,6 +55,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "pVatPerc",
@@ -61,6 +65,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "sCstPerc",
@@ -70,6 +75,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "pCstPerc",
@@ -79,6 +85,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "createdUser",
@@ -88,6 +95,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -97,6 +105,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -106,6 +115,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -115,6 +125,7 @@ const TaxCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "actions",

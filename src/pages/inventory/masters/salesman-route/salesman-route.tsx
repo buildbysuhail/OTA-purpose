@@ -34,6 +34,7 @@ const SalesManRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "employeeName",
@@ -109,6 +110,7 @@ const SalesManRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -118,6 +120,7 @@ const SalesManRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "actions",

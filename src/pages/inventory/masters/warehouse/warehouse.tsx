@@ -106,6 +106,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -115,6 +116,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -124,6 +126,7 @@ const WareHouse = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -141,7 +144,7 @@ const WareHouse = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 150
     },
     {
       dataField: "actions",

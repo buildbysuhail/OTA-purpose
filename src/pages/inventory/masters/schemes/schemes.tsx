@@ -17,22 +17,14 @@ const Schemes = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {
-      dataField: "siNo",
-      caption: t("SiNo"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "id",
+      dataField: "schemeID",
       caption: t("id"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "schemeCode",
@@ -42,14 +34,16 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf : true
     },
     {
-      dataField: "SchemeName",
+      dataField: "schemeName",
       caption: t("scheme_name"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf : true
     },
     {
       dataField: "dateFrom",
@@ -59,6 +53,7 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf : true
     },
     {
       dataField: "dateTo",
@@ -68,6 +63,7 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf : true
     },
     {
       dataField: "schemeType",
@@ -77,6 +73,7 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf : true
     },
     {
       dataField: "qtyLimit",
@@ -86,6 +83,7 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "schemeRate",
@@ -94,6 +92,7 @@ const Schemes = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible:false
     },
     {
       dataField: "freeQty",
@@ -102,15 +101,17 @@ const Schemes = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible:false
     },
     {
-      dataField: "schemeState",
-      caption: t("scheme_state"),
+      dataField: "schemeStatus",
+      caption: t("scheme_status"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "itemBatchNo",
@@ -120,33 +121,37 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
-      dataField: "discPerc",
+      dataField: "discPercentage",
       caption: t("disc_percentage"),
       dataType: "boolean",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
-      dataField: "itemProduct",
-      caption: t("item_product"),
+      dataField: "itemProductID",
+      caption: t("item_productID"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
-      dataField: "freeItemProduct",
+      dataField: "freeItemProductID",
       caption: t("free_item_product"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "productName",
@@ -156,15 +161,17 @@ const Schemes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
-      dataField: "freeProduct",
+      dataField: "freeProductName",
       caption: t("free_product"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "actions",
@@ -177,13 +184,13 @@ const Schemes = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            view={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false }) }}
             delete={{
+              visible:false,
               onSuccess: () => { dispatch(toggleSchemes({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
               confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-              url: Urls?.vehicles, key: cellElement?.data?.id
             }}
           />
         )

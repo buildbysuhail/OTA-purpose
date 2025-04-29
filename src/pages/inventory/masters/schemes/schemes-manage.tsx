@@ -55,17 +55,17 @@ export const SchemesManage: React.FC = React.memo(() => {
         />
 
         <ERPDateInput
-          {...getFieldProps("fromDate")}
+          {...getFieldProps("dateFrom")}
           label={t("from_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
 
         <ERPDateInput
-          {...getFieldProps("toDate")}
+          {...getFieldProps("dateTo")}
           label={t("to_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
 
         <ERPDataCombobox

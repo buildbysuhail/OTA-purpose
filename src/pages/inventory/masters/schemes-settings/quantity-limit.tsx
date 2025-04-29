@@ -251,7 +251,7 @@ export const QuantityLimit: React.FC = () => {
                             id: "department",
                             valueKey: "id",
                             labelKey: "name",
-                            // getListUrl:Urls.
+                            // getListUrl:Urls.departmem
                         }}
                         disabled={formState.data.selectedOption !== "department"}
                         className="w-full"
@@ -276,7 +276,7 @@ export const QuantityLimit: React.FC = () => {
                             id: "category",
                             valueKey: "id",
                             labelKey: "name",
-                            // getListUrl:Urls.category
+                            getListUrl:Urls.data_productcategory
                         }}
                         disabled={formState.data.selectedOption !== "category"}
                         className="w-full"

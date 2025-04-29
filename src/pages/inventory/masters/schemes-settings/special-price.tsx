@@ -130,9 +130,9 @@ export const SpecialPrice: React.FC = () => {
       const payload = {
         groupPrice: obj.groupPrice,
         schemeID: obj.schemeID,
+        GroupID: obj.groupID,
       };
-      const queryString = `groupId=${encodeURIComponent(obj.groupID)}`;
-      const url = `${Urls.insert_special_price_scheme_by_group_id}?${queryString}`;
+      const url = `${Urls.insert_special_price_scheme_by_group_id}ByGroup`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
         handleLoad();

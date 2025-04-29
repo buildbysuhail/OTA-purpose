@@ -13,15 +13,15 @@ import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../u
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
-
 export const initialQuantityLimit = {
     data: {
-        id: 0,
-        selectedOption: "department",
-        department: "",
-        category: "",
+        sectionID: -2,
+        section: "",
+        productCategoryId: 0,
+        productCategory: "",
+        productGroupId: 0,
         productGroup: "",
-        productGroupID: 0,
+        selectedOption: "department",
         barcode: "",
         quantityLimit: 0,
         itemData: []
@@ -119,19 +119,22 @@ export const QuantityLimit: React.FC = () => {
         //   return;
         // }
         const obj = getFieldProps("*");
-
+debugger;
        let payload ={
-             sectionId:isNullOrUndefinedOrZero(obj.id)?-1: obj.id, 
-             productCategoryId:isNullOrUndefinedOrZero(obj.category)?-1: obj.category,
-             productGroupId:isNullOrUndefinedOrZero(obj.productGroup)?-1:obj.productGroup ,
+             sectionID:isNullOrUndefinedOrZero(obj.sectionID)?-1: obj.sectionID, 
+             productCategoryId:isNullOrUndefinedOrZero(obj.productCategoryId)?-1: obj.productCategoryId,
+             productGroupId:isNullOrUndefinedOrZero(obj.productGroupId)?-1:obj.productGroupId ,
              barcode: isNullOrUndefinedOrEmpty(obj.barcode)?"": obj.barcode,
              isBarcode: isNullOrUndefinedOrEmpty(obj.barcode)? false : true ,
         }
+        let queryString = Object.entries(payload)
+  .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+  .join("&");
         try {
           setIsDataLoading(true);
 
         //   const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
-           const response = await api.post(Urls.select_products_for_product_qty_limit,payload)
+           const response = await api.getAsync(`${Urls.select_products_for_product_qty_limit}?${queryString}`)
           if (response) {
             const transformedData: QuantityLimitItemData[] = response.map(
               (item: any, index: number) => ({
@@ -153,46 +156,11 @@ export const QuantityLimit: React.FC = () => {
           }
         } catch (error) {
           console.error(`Error fetching data for`, error);
-        //   ERPAlert.show({
-        //     title: "",
-        //     icon: "error",
-        //     text: `Failed to load data for ${selectedOption}.`,
-        //   });
           setGridData([]);
         } finally {
           setIsDataLoading(false);
         }
       }, [formState.data]);
-
-    // const handleAdd = useCallback(() => {
-    //     const { selectedOption, department, category, productGroup, barcode, quantityLimit } = formState.data;
-
-    //     let product = "";
-    //     switch (selectedOption) {
-    //         case "department":
-    //             product = department;
-    //             break;
-    //         case "category":
-    //             product = category;
-    //             break;
-    //         case "productGroup":
-    //             product = productGroup;
-    //             break;
-    //         case "barcode":
-    //             product = barcode;
-    //             break;
-    //     }
-
-    //     const newItem: QuantityLimitItemData = {
-    //         id: gridData.length > 0 ? Math.max(...gridData.map(item => item.id)) + 1 : 1,
-    //         sl: gridData.length + 1,
-    //         barcode: barcode || "-",
-    //         product: product || "-",
-    //         qtyLimit: quantityLimit || 0
-    //     };
-
-    //     setGridData(prevData => [...prevData, newItem]);
-    // }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => {
         clearForm();
@@ -244,18 +212,18 @@ export const QuantityLimit: React.FC = () => {
                         onChange={() => handleOptionChange("department")}
                     />
                     <ERPDataCombobox
-                        {...getFieldProps("department")}
+                        {...getFieldProps("sectionID")}
                         value={formState.data.department}
                         noLabel={true}
                         field={{
-                            id: "department",
+                            id: "sectionID",
                             valueKey: "id",
                             labelKey: "name",
                             getListUrl:Urls.data_sections
                         }}
                         disabled={formState.data.selectedOption !== "department"}
                         className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("department", data.department)}
+                        onChangeData={(data: any) => handleFieldChange("sectionID", data.sectionID)}
                     />
                 </div>
 
@@ -269,18 +237,18 @@ export const QuantityLimit: React.FC = () => {
                         onChange={() => handleOptionChange("category")}
                     />
                     <ERPDataCombobox
-                        {...getFieldProps("category")}
+                        {...getFieldProps("productCategoryId")}
                         value={formState.data.category}
                         noLabel={true}
                         field={{
-                            id: "category",
+                            id: "productCategoryId",
                             valueKey: "id",
                             labelKey: "name",
                             getListUrl:Urls.data_productcategory
                         }}
                         disabled={formState.data.selectedOption !== "category"}
                         className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("category", data.category)}
+                        onChangeData={(data: any) => handleFieldChange("productCategoryId", data.productCategoryId)}
                     />
                 </div>
 
@@ -294,18 +262,18 @@ export const QuantityLimit: React.FC = () => {
                         onChange={() => handleOptionChange("productGroup")}
                     />
                     <ERPDataCombobox
-                        {...getFieldProps("productGroup")}
+                        {...getFieldProps("productGroupId")}
                         value={formState.data.productGroup}
                         noLabel={true}
                         field={{
-                            id: "productGroup",
+                            id: "productGroupId",
                             valueKey: "id",
                             labelKey: "name",
                             getListUrl: Urls.data_productgroup
                         }}
                         disabled={formState.data.selectedOption !== "productGroup"}
                         className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("productGroup", data.productGroup)}
+                        onChangeData={(data: any) => handleFieldChange("productGroupId", data.productGroupId)}
                     />
                 </div>
 

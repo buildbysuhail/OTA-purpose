@@ -878,6 +878,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         // Handle value == -2 by selecting the first item if items are loaded
         if (value === -2 && items.length > 0) {
           final = items[0]; // Select first item
+          handleItemClick(final);
         } else {
           const _default = items?.find(
             (option) => option.value === defaultValueKey

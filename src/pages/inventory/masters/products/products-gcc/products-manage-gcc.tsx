@@ -151,23 +151,22 @@ export const ProductManageGcc: React.FC<{
               <div className="flex flex-wrap gap-2 mb-3">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 {getFieldProps("product.productID")?.value}
-                  <ERPDataCombobox
-                    ref={productNameRef}
-                    {...getFieldProps("product.productName")}
-                    id="productName"
-                    field={{
-                      id: "productName",
-                      valueKey: "id",
-                      labelKey: "name",
-                      getListUrl: Urls.data_products,
-                    }}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("product.productName", data.productName)
-                    }
-                    label={t("product_name")}
-                    className="w-full"
-                    required={true}
-                  />
+                 <ERPDataCombobox
+                              ref={productNameRef}
+                                {...getFieldProps("product.productID")}
+                                id="productName"
+                                field={{
+                                  id: "productName",
+                                  valueKey: "id",
+                                  labelKey: "name",
+                                  getListUrl: Urls.data_products
+                                }}
+                                onTextChange={(data: any) => handleFieldChange("product.productName", data)}
+                                // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
+                                label={t("product_name")}
+                                className="w-full"
+                                required={true}
+                              />
 
                   <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <Ellipsis className="w-4 h-4" />

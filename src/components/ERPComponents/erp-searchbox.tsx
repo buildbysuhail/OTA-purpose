@@ -115,7 +115,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
         setStore(result);
         const loadResult = await result.load() as LoadResult;
         setShowProductGrid(loadResult.totalCount > 0);
-      }, 1000),
+      }, 200),
     [productDataUrl]
   );
 

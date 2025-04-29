@@ -42,9 +42,9 @@ const SchemeSettingsSpecial = () => {
                     label={t("foc_scheme")}
                     value="focScheme"
                   />
-                {
+                {/* {
                   clientSession.isAppGlobal && 
-                  <>
+                  <> */}
                     <Tab
                     className="dark:text-dark-text"
                     label={t("multi_foc_scheme")}
@@ -65,8 +65,8 @@ const SchemeSettingsSpecial = () => {
                     label={t("qty_slab_offer")}
                     value="qtySlabOffer"
                   />
-                  </>
-                }
+                  {/* </>
+                } */}
                 </Tabs>
                 <div className="pt-2">
                   {activeTab === "specialPrice" && (

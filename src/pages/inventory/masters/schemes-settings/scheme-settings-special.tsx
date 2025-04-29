@@ -7,10 +7,14 @@ import GiftOnBilling from "./gift-on-billing";
 import QuantityLimit from "./quantity-limit";
 import QuantitySlabOffer from "./qty-slab-offer";
 import MultiFOCScheme from "./multi-foc-scheme";
+import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 const SchemeSettingsSpecial = () => {
   const { t } = useTranslation('inventory');
   const [activeTab, setActiveTab] = useState("specialPrice");
+  
+    const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -38,7 +42,10 @@ const SchemeSettingsSpecial = () => {
                     label={t("foc_scheme")}
                     value="focScheme"
                   />
-                  <Tab
+                {
+                  clientSession.isAppGlobal && 
+                  <>
+                    <Tab
                     className="dark:text-dark-text"
                     label={t("multi_foc_scheme")}
                     value="multiFOCScheme"
@@ -58,6 +65,8 @@ const SchemeSettingsSpecial = () => {
                     label={t("qty_slab_offer")}
                     value="qtySlabOffer"
                   />
+                  </>
+                }
                 </Tabs>
                 <div className="pt-2">
                   {activeTab === "specialPrice" && (

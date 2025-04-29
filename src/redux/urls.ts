@@ -611,17 +611,19 @@ const Urls = {
   select_product_by_barcode_foc: "/Inventory/FOC/ByBarcode/", // GET
   select_quantity_schemes_for_combo: "/Inventory/FOC/FOCCombo", // GET
   delete_quantity_discount_scheme: "/Inventory/FOC/", // DELETE (append {qtyDiscountId})
-  select_scheme_qty_details_by_id: "/Inventory/FOC/SelectSchemeQtyDetailsByID", // GET (use ?schemeId=)
+  select_scheme_qty_details_by_id: "/Inventory/FOC/SelectSchemeQtyDetailsByID/", // GET (use ?schemeId=)
   load_product_details_foc: "/Inventory/FOC/LoadProductDetails", // POST (with query params for DataSourceLoadOptions)
   select_foc_product_batch_grid_foc: "/Inventory/FOC/LoadBatchDetails/",
 
   
   // URLs for MultiFOCController (Inventory Module)
   insert_multi_foc_details: "/Inventory/MultiFOC/", // POST
+  select_quantity_discount_scheme_for_MultiFOC_by_scheme_id: "/Inventory/MultiFOC/BySchemeId/", // GET
   get_all__multi_foc: "/Inventory/MultiFOC/", // GET remote op false
   select_product_by_product_id_multi_foc: "/Inventory/MultiFOC/ByProductId/", // GET (append {productId})
   select_product_by_barcode_multi_foc: "/Inventory/MultiFOC/ByBarcode/", // GET (append {barCode})
   delete_multi_foc: "/Inventory/MultiFOC/",
+  select_quantity_schemes_for_combo_MultiFOC: "/Inventory/MultiFOC/MultiFOCCombo", // GET
 
   // URLs for GiftOnBillingController (Inventory Module)
   insert_gift_on_billing: "/Inventory/GiftOnBilling/", // POST

@@ -332,7 +332,7 @@ const MultiFOCScheme: React.FC = () => {
                   {...getFieldProps("schemeID")}
                   field={{
                     id: "schemeID",
-                    getListUrl: Urls.select_quantity_schemes_for_combo,
+                    getListUrl: Urls.select_quantity_schemes_for_combo_MultiFOC,
                     valueKey: "id",
                     labelKey: "name",
                   }}

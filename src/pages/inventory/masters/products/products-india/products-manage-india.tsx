@@ -77,7 +77,7 @@ useEffect(() => {
                   required={false}
                   className="w-full"
                   disabled={!getFieldProps("product.manual").value}
-                  onChangeData={(data: any) => handleFieldChange("product.productCode", data.product.productCode)}
+                  onChangeData={(data: any) => handleFieldChange("product.productCode", data.product.productCode.toString())}
                 />
 
                 <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">

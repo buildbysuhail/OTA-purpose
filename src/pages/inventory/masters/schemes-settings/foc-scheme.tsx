@@ -12,6 +12,8 @@ import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../u
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPProductSearch from "../../../../components/ERPComponents/erp-searchbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const api = new APIClient();
 
@@ -66,6 +68,7 @@ const FOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
+  const clientSession = useSelector((state: RootState) => state.ClientSession)
 
   const {
     isEdit,
@@ -115,19 +118,17 @@ const FOCScheme: React.FC = () => {
 
       const url = `${Urls.select_product_by_barcode_foc}${obj.barCode}`;
       const response = await api.get(url);
-      handleResponse(response, () => {
-        handleDataChange(
-          {
-            ...obj,
-            productBatchID: response.productBatchID,
-            unitID: response.unitId,
-            unitName: response.unit,
-            productName: response.productName,
-            stdSalesPrice: response.StdSalesPrice,
-            stdPurchasePrice: response.StdPurchasePrice,
+      handleDataChange(
+        {
+          ...obj,
+          productBatchID: response.productBatchID,
+          unitID: response.unitId,
+          unitName: response.unit,
+          productName: response.productName,
+          stdSalesPrice: response.stdSalesPrice,
+          stdPurchasePrice: response.stdPurchasePrice,
 
-          } as FOCSchemeData);
-      }, () => { }, false);
+        } as FOCSchemeData);
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -145,15 +146,13 @@ const FOCScheme: React.FC = () => {
 
       const url = `${Urls.select_product_by_barcode_foc}${obj.freeItemBarcode}`;
       const response = await api.get(url);
-      handleResponse(response, () => {
-        handleDataChange({
-          ...obj,
-          freeProductBatchID: response.productBatchID,
-          freeProductName: response.productName,
-          freeStdSalesPrice: response.StdSalesPrice,
-          freeStdPurchasePrice: response.StdPurchasePrice,
-        } as FOCSchemeData);
-      }, () => { }, false);
+      handleDataChange({
+        ...obj,
+        freeProductBatchID: response.productBatchID,
+        freeProductName: response.productName,
+        freeStdSalesPrice: response.stdSalesPrice,
+        freeStdPurchasePrice: response.stdPurchasePrice,
+      } as FOCSchemeData);
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -239,11 +238,12 @@ const FOCScheme: React.FC = () => {
                   onChangeData={async (data: any) => {
                     const obj = getFieldProps("*");
                     const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`);
+                    debugger
                     handleDataChange({
                       ...obj,
-                      qtyLimit: res.qtyLimit,
-                      freeQty: res.freeQty,
-                      schemeID: data.schemeID
+                      qtyLimit: res.QtyLimit,
+                      freeQty: res.FreeQty,
+                      schemeID: data.schemeID,
                     } as FOCSchemeData);
                   }}
                 />
@@ -258,12 +258,11 @@ const FOCScheme: React.FC = () => {
                 <div className="flex-1">
                   <ERPInput
                     {...getFieldProps("qtyLimit")}
-                    type="number"
                     readOnly
                     noLabel={true}
                     className="w-full"
                     onChangeData={(data: any) =>
-                      handleFieldChange("qtyLimit", parseFloat(data.qtyLimit))
+                      handleFieldChange("qtyLimit", data.qtyLimit)
                     }
                   />
                 </div>
@@ -294,7 +293,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("std_sales_price")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data.stdSalesPrice.toFixed(2)}</span>
+                  <span className="text-[#dc2626]">{formState.data.stdSalesPrice}</span>
                 </div>
               </div>
             </div>
@@ -344,11 +343,11 @@ const FOCScheme: React.FC = () => {
                   <label>{t("std_purchase_price")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data.stdPurchasePrice.toFixed(2)}</span>
+                  <span className="text-[#dc2626]">{formState.data.stdPurchasePrice}</span>
                 </div>
               </div>
             </div>
-
+{clientSession.isAppGlobal &&
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
@@ -372,7 +371,7 @@ const FOCScheme: React.FC = () => {
                 </div>
               </div>
             </div>
-
+}
             <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
@@ -434,7 +433,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("item_name")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">----</span>
+                  <span className="text-[#dc2626]">{formState.data?.productName}</span>
                 </div>
               </div>
 
@@ -443,7 +442,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("free_item_name")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">----</span>
+                  <span className="text-[#dc2626]">{formState.data?.freeProductName}</span>
                 </div>
               </div>
             </div>

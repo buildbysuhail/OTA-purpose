@@ -107,7 +107,11 @@ export const SpecialPrice: React.FC = () => {
     }
   }, [getFieldProps]);
 
-  const onBarcodeKeyDown = useCallback(async () => {
+  const onBarcodeKeyDown = useCallback(async (e: any) => {
+    debugger;
+    if(e.code != "Enter") {
+      return
+    }
     try {
       const obj = getFieldProps("*");
       if (isNullOrUndefinedOrZero(obj.barcode)) {
@@ -117,6 +121,7 @@ export const SpecialPrice: React.FC = () => {
       setIsDataLoading(true);
       const url = `${Urls.select_product_by_barcode}${obj.barcode}`;
       const response = await api.get(url);
+      debugger;
       handleDataChange({
         ...obj,
         productBatchId: response.ProductBatchId,

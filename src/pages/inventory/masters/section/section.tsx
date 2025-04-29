@@ -34,6 +34,7 @@ const Section = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "sectionCode",
@@ -48,11 +49,10 @@ const Section = () => {
     {
       dataField: "sectionName",
       caption: t("section_name"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
     },
     {
       dataField: "shortName",
@@ -66,7 +66,7 @@ const Section = () => {
     {
       dataField: "remarks",
       caption: t("remarks"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -80,6 +80,7 @@ const Section = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -88,7 +89,8 @@ const Section = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
+      width: 200,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -98,6 +100,7 @@ const Section = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -106,7 +109,8 @@ const Section = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
+      width: 200,
+      visible:false
     },
     {
       dataField: "isCommon",

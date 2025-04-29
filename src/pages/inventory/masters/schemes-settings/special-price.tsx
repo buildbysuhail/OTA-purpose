@@ -107,6 +107,36 @@ export const SpecialPrice: React.FC = () => {
     }
   }, [getFieldProps]);
 
+  const onBarcodeKeyDown = useCallback(async (e: any) => {
+    debugger;
+    if(e.code != "Enter") {
+      return
+    }
+    try {
+      const obj = getFieldProps("*");
+      if (isNullOrUndefinedOrZero(obj.barcode)) {
+       
+        return;
+      }
+      setIsDataLoading(true);
+      const url = `${Urls.select_product_by_barcode}${obj.barcode}`;
+      const response = await api.get(url);
+      debugger;
+      handleDataChange({
+        ...obj,
+        productBatchId: response.productBatchId,
+        productName: response.productName,
+        unitId: response.unitId,
+        unitName: response.unit,
+        stdSalesPrice: response.stdSalesPrice,
+        stdPurchasePrice: response.stdPurchasePrice,
+        salesPrice: response.specialPrice ?? 0,
+      });
+    } catch (error) {
+      console.error("Error loading data:", error);
+      setIsDataLoading(false);
+    }
+  }, [getFieldProps]);
   const handleAdd = useCallback(async () => {
     const obj: SpecialPriceData = getFieldProps("*");
 
@@ -130,12 +160,14 @@ export const SpecialPrice: React.FC = () => {
       const payload = {
         groupPrice: obj.groupPrice,
         schemeID: obj.schemeID,
+        GroupID: obj.groupID,
       };
-      const queryString = `groupId=${encodeURIComponent(obj.groupID)}`;
-      const url = `${Urls.insert_special_price_scheme_by_group_id}?${queryString}`;
+      const url = `${Urls.insert_special_price_scheme_by_group_id}ByGroup`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
-        handleLoad();
+        debugger;
+        setGridData((prev: any) => [...prev, ...response.items]);
+        // handleLoad();
       });
     } else {
       const payload = {
@@ -245,6 +277,8 @@ export const SpecialPrice: React.FC = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("barcode", data.barcode)
                     }
+                    disableEnterNavigation
+                    onKeyDown={onBarcodeKeyDown}
                   />
                 </div>
               </div>
@@ -288,7 +322,7 @@ export const SpecialPrice: React.FC = () => {
                   <label>{t("product")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">0.00</span>
+                  <span className="text-[#dc2626]">{getFieldProps("productName").value??"Item"}</span>
                 </div>
               </div>
             </div>
@@ -348,6 +382,14 @@ export const SpecialPrice: React.FC = () => {
                         batchID: data.productBatchID,
                       } as SpecialPriceData);
                     }}
+                    onProductSelected={(data: any) => {
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        productName: data.productName,
+                        productID: data.productID,
+                      } as SpecialPriceData);
+                    }}
                     batchDataUrl={Urls.select_foc_product_batch_grid}
                   />
                 </div>
@@ -359,7 +401,7 @@ export const SpecialPrice: React.FC = () => {
                 <label>{t("std_sales_price")}:</label>
               </div>
               <div className="flex-1">
-                <span className="text-[#dc2626]">0.00</span>
+                <span className="text-[#dc2626]">{getFieldProps("stdSalesPrice").value}</span>
               </div>
             </div>
 
@@ -368,7 +410,7 @@ export const SpecialPrice: React.FC = () => {
                 <label>{t("std_purchase_price")}:</label>
               </div>
               <div className="flex-1">
-                <span className="text-[#dc2626]">0.00</span>
+                <span className="text-[#dc2626]">{getFieldProps("stdPurchasePrice").value}</span>
               </div>
             </div>
             <div className="flex justify-end flex-wrap gap-2">

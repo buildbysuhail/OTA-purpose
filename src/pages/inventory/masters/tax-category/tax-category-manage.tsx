@@ -62,7 +62,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
         />
 
         <ERPInput
-          {...getFieldProps("pcstPerc")}
+          {...getFieldProps("pCstPerc")}
           type='number'
           label={t("purchase_excise_tax_%")}
           placeholder={t("purchase_excise_tax_%")}
@@ -70,7 +70,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
         />
 
         <ERPInput
-          {...getFieldProps("scstPerc")}
+          {...getFieldProps("sCstPerc")}
           type='number'
           label={t("sales_excise_tax_%")}
           placeholder={t("sales_excise_tax_%")}

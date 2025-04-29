@@ -55,17 +55,17 @@ export const SchemesManage: React.FC = React.memo(() => {
         />
 
         <ERPDateInput
-          {...getFieldProps("fromDate")}
+          {...getFieldProps("dateFrom")}
           label={t("from_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
 
         <ERPDateInput
-          {...getFieldProps("toDate")}
+          {...getFieldProps("dateTo")}
           label={t("to_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
 
         <ERPDataCombobox
@@ -84,10 +84,10 @@ export const SchemesManage: React.FC = React.memo(() => {
         />
 
         <ERPInput
-          {...getFieldProps("discPec")}
+          {...getFieldProps("discPercentage")}
           label={t("disc_%")}
           placeholder={t("disc_%")}
-          onChangeData={(data: any) => handleFieldChange("discPec", data.discPec)}
+          onChangeData={(data: any) => handleFieldChange("discPercentage", data.discPercentage)}
         />
 
         <ERPInput
@@ -105,13 +105,13 @@ export const SchemesManage: React.FC = React.memo(() => {
         />
 
         <ERPDataCombobox
-          {...getFieldProps("status")}
+          {...getFieldProps("schemeStatus")}
           field={{
-            id: "status",
+            id: "schemeStatus",
             valueKey: "value",
             labelKey: "label",
           }}
-          onChangeData={(data: any) => handleFieldChange("status", data.status)}
+          onChangeData={(data: any) => handleFieldChange("schemeStatus", data.schemeStatus)}
           label={t('status')}
           options={[
             { value: 'Active', label: t('active') },

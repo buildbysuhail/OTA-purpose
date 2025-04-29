@@ -83,7 +83,8 @@ const Brands = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
+      width: 200,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -102,7 +103,8 @@ const Brands = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200
+      width: 200,
+      visible:false
     },
     {
       dataField: "isCommon",

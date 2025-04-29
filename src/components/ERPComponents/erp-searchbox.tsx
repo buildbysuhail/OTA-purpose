@@ -10,6 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   productDataUrl?: string;
   batchDataUrl?: string;
   keyId?: string;
+  onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any) => void;
   searchByCode?: boolean;
 }
@@ -93,7 +94,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected, searchByCode, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
@@ -144,6 +145,9 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
     async (e: any) => {
       if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
         const selectedRow = e.component.getSelectedRowsData()[0];
+        if(onProductSelected){
+          onProductSelected(selectedRow)
+        }
         try {
           const batchStore = await createBatchStore(selectedRow.productID, batchDataUrl);
           setProductDetailStore(batchStore);
@@ -173,20 +177,46 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
 
   const handleBatchContentReady = useCallback(() => {
     if (batchGridRef.current) {
-      const gridInstance = batchGridRef.current.instance;
+      const gridInstance = batchGridRef.current.instance();
       const visibleRows = gridInstance.getVisibleRows();
       if (visibleRows.length > 0) {
         gridInstance.selectRowsByIndexes([0]);
         gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
         setTimeout(() => {
-          const cellElement = gridInstance.getCellElement(0, 0);
-          if (cellElement) {
-            cellElement.focus();
-          }
+          // const cellElement = gridInstance.getCellElement(0, 0);
+          // if (cellElement) {
+          //   cellElement.focus();
+          // }
+          gridInstance.focus();
         }, 100);
       }
     }
   }, []);
+
+   const handleInputKeyDown = useCallback(
+       async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        debugger;
+         if (e.key === 'ArrowDown' && showProductGrid && dataGridRef.current) {
+           const grid: any = dataGridRef.current.instance();
+           const rows = grid.getVisibleRows();
+           if (rows.length > 0) {
+             grid.selectRowsByIndexes([0]);
+             grid.navigateToRow(grid.getKeyByRowIndex(0));
+       
+             setTimeout(() => {
+              grid.focus();
+              // const cell = grid.getCellElement(0, 0);
+              // -            cell?.focus();
+             }, 100);
+  
+           }
+         }
+         
+       },
+       [showProductGrid]
+     );
+
+
 
   return (
     <div className=''>
@@ -201,7 +231,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
           ref={inputRef}
           value={inputValue}
           onChange={handleChange}
-          // onKeyDown={handleInputKeyDown}
+          onKeyDown={handleInputKeyDown}
           className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -217,6 +247,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
             showRowLines={true}
             remoteOperations={{ filtering: true, paging: true, sorting: true }}
             onKeyDown={handleGridKeyDown}
+            
           >
             <Selection mode="single" />
             <Paging pageSize={10} />

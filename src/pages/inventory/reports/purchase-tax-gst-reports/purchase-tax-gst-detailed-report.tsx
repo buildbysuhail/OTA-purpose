@@ -12,13 +12,13 @@ const PurchaseTaxGSTDetailed = () => {
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
     {
-      dataField: "id",
-      caption: t("Id"),
-      dataType: "number",
+      dataField: "date",
+      caption: t("date"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
-      visible: false
+      width: 80,
+      showInPdf: true
     },
     {
       dataField: "vchNo",
@@ -26,16 +26,7 @@ const PurchaseTaxGSTDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 75,
-      showInPdf: true
-    },
-    {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
+      width: 60,
       showInPdf: true
     },
     {
@@ -53,6 +44,7 @@ const PurchaseTaxGSTDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
       showInPdf: true
     },
     {
@@ -74,48 +66,12 @@ const PurchaseTaxGSTDetailed = () => {
       visible: false
     },
     {
-      dataField: "refNumber",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true
-    },
-    {
       dataField: "form",
       caption: t("From"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
-      showInPdf: true
-    },
-    {
-      dataField: "cgstPerc",
-      caption: t("cgstperc"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true
-    },
-    {
-      dataField: "sgstPerc",
-      caption: t("sgstperc"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true
-    },
-    {
-      dataField: "igstPerc",
-      caption: t("igstperc"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
+      width: 70,
       showInPdf: true
     },
     {
@@ -151,12 +107,21 @@ const PurchaseTaxGSTDetailed = () => {
       }
     },
     {
+      dataField: "cgstPerc",
+      caption: t("cgstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 55,
+      showInPdf: true
+    },
+    {
       dataField: "cgst",
       caption: t("cgst"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 60,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -183,12 +148,21 @@ const PurchaseTaxGSTDetailed = () => {
       }
     },
     {
+      dataField: "sgstPerc",
+      caption: t("sgstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 55,
+      showInPdf: true
+    },
+    {
       dataField: "sgst",
       caption: t("sgst"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 60,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -215,12 +189,21 @@ const PurchaseTaxGSTDetailed = () => {
       }
     },
     {
+      dataField: "igstPerc",
+      caption: t("igstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 55,
+      showInPdf: true
+    },
+    {
       dataField: "igst",
       caption: t("igst"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 60,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -247,80 +230,12 @@ const PurchaseTaxGSTDetailed = () => {
       }
     },
     {
-      dataField: "total",
-      caption: t("total"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.total == null
-              ? ""
-              : getFormattedValue(cellElement.data.total);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.total == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total));
-        }
-      },
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "remarks",
-      caption: t("remarks"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "financialYearID",
-      caption: t("financial_year_id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: false
-    },
-    {
-      dataField: "gstPercentage",
-      caption: t("gstperc"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
       dataField: "cessPerc",
       caption: t("cessperc"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 55,
       visible: false
     },
     {
@@ -329,7 +244,7 @@ const PurchaseTaxGSTDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 60,
       visible: false,
       cellRender: (
         cellElement: any,
@@ -353,7 +268,7 @@ const PurchaseTaxGSTDetailed = () => {
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cessAmt));
         }
-      },
+      }
     },
     {
       dataField: "addCessPerc",
@@ -361,7 +276,7 @@ const PurchaseTaxGSTDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 70,
       visible: false
     },
     {
@@ -370,7 +285,7 @@ const PurchaseTaxGSTDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 65,
       visible: false,
       cellRender: (
         cellElement: any,
@@ -394,9 +309,96 @@ const PurchaseTaxGSTDetailed = () => {
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.addCess));
         }
-      },
+      }
+    },
+    {
+      dataField: "total",
+      caption: t("total"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(cellElement.data.total);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.total == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.total));
+        }
+      }
+    },
+    {
+      dataField: "refNumber",
+      caption: t("ref_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 60,
+      showInPdf: true
+    },
+    {
+      dataField: "refDate",
+      caption: t("ref_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+      showInPdf: true
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+      showInPdf: true
+    },
+    {
+      dataField: "id",
+      caption: t("Master_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+      visible: false
+    },
+    {
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      visible: false
+    },
+    {
+      dataField: "gstPercentage",
+      caption: t("gstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true
     }
   ];
+  
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {

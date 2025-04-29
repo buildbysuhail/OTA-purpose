@@ -53,7 +53,7 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
       voucherType:"PI",
       productCode:"",
       warehouseID: 0,
-      showBatchWise: false,
+      showBatchWise: true,
     },
   });
   const [_filter, _setFilter] = useState<ProductSummaryFilter>({
@@ -287,7 +287,10 @@ const onKeyChange = (id: any) => {
 {
                     activeTab === "purchase" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
                       voucherType={"PI"}
                       />
                     )
@@ -295,88 +298,110 @@ const onKeyChange = (id: any) => {
                     {
                     activeTab === "sales" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"SI"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"SI"}
                       />
                     )
                   }
                     {
                     activeTab === "purchase_return" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"PR"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"PR"}
                       />
                     )
                   }
                     {
                     activeTab === "purchase_order" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"PO"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"PO"}
                       />
                     )
                   }
                     {
                     activeTab === "sales_return" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"SR"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}    voucherType={"SR"}
                       />
                     )
                   }
                     {
                     activeTab === "sales_order" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"SO"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}   voucherType={"SO"}
                       />
                     )
                   }
                     {
                     activeTab === "damage" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"DMG"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}    voucherType={"DMG"}
                       />
                     )
                   }
                     {
                     activeTab === "excess" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"EX"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"EX"}
                       />
                     )
                   }
                     {
                     activeTab === "shortage" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"SH"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"SH"}
                       />
                     )
                   }
                     {
                     activeTab === "op_stock" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"OS"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}     voucherType={"OS"}
                       />
                     )
                   }
                     {
                     activeTab === "purchase_estimate" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"PE"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}   voucherType={"PE"}
                       />
                     )
                   }
                     {
                     activeTab === "others" && (
                       <ProductSummaryReportByTransaction
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"OT"}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}     voucherType={"OT"}
                       />
                     )
                   }

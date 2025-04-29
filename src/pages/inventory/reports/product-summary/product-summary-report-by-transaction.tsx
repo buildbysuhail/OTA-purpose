@@ -74,7 +74,7 @@ const ProductSummaryReportByTransaction: React.FC<{filter:ProductSummaryFilter; 
     },
     {
       dataField: "address1",
-      caption: t("address"),
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -191,7 +191,7 @@ const ProductSummaryReportByTransaction: React.FC<{filter:ProductSummaryFilter; 
     },
     {
       dataField: "rateWithTax",
-      caption: t("cost"),
+      caption: t("rateWithTax"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

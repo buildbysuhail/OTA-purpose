@@ -265,7 +265,9 @@ const setupCurrencyCode = (countryId: number): string => {
           const value =
             cellElement.data?.vatAmount == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))
+              : cellElement.data?.title=="Standard rate domestic purchases"?
+              getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,6):
+              getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))
           return {
             ...exportCell,
             text: value,
@@ -308,7 +310,9 @@ const setupCurrencyCode = (countryId: number): string => {
               ? 'font-bold text-[#DC143C]' : cellElement.data?.title=="VAT on sales"?'font-bold bg-[#DC143C]':''}`}>
               {cellElement.data?.vatAmount == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))}
+                : cellElement.data?.title=="Standard rate domestic purchases"?
+                getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,6):
+                getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))}
             </span>
           )
         }

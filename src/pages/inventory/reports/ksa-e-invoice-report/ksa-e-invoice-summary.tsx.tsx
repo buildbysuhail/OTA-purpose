@@ -14,11 +14,12 @@ const KsaEInvoiceReportSummary = () => {
         {
             dataField: "transactionDate",
             caption: t("transaction_date"),
-            dataType: "string",
+            dataType: "date",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            format: "dd-MMM-yyyy"
         },
         {
             dataField: "voucherType",
@@ -57,27 +58,6 @@ const KsaEInvoiceReportSummary = () => {
             width: 100,
         },
     ];
-
-    const { getFormattedValue } = useNumberFormat();
-    const customizeSummaryRow = useMemo(() => {
-        return (itemInfo: { value: any }) => {
-            const value = itemInfo.value;
-            if (value === null || value === undefined || value === "" || isNaN(value)) {
-                return "0";
-            }
-            return getFormattedValue(value) || "0";
-        };
-    }, [getFormattedValue]);
-
-    const summaryItems: SummaryConfig[] = [
-        {
-            column: "totalCount",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-    ];
-
     return (
         <Fragment>
             <div className="grid grid-cols-12 gap-x-6">
@@ -85,7 +65,6 @@ const KsaEInvoiceReportSummary = () => {
                     <div className="px-4 pt-4 pb-2 ">
                         <div className="grid grid-cols-1 gap-3">
                             <ErpDevGrid
-                                summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}

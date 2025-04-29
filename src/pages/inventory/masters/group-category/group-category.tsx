@@ -25,6 +25,7 @@ const GroupCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -34,6 +35,7 @@ const GroupCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "categoryCode",
@@ -43,6 +45,7 @@ const GroupCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "categoryName",
@@ -51,7 +54,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -60,7 +64,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 100,
+      visible:false
     },
     {
       dataField: "remarks",
@@ -70,6 +75,7 @@ const GroupCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "createdUser",
@@ -78,7 +84,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -87,7 +94,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150
+      width: 100,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -96,7 +104,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 100,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -105,7 +114,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150
+      width: 100,
+      visible:false
     },
     {
       dataField: "isCommon",
@@ -114,8 +124,8 @@ const GroupCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
-
+      width: 100,
+      showInPdf:true
     },
     {
       dataField: "actions",
@@ -136,7 +146,7 @@ const GroupCategory = () => {
               },
               confirmationRequired: true,
               confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-              url: Urls?.section, key: cellElement?.data?.id
+              url: Urls?.group_category, key: cellElement?.data?.id
             }}
           />
         )

@@ -922,7 +922,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         memoizedField,
         memoizedFilteredItems,
         value,
-        initial, // Added to check for changes
+        // initial, // Added to check for changes
         ref,
       ]);
     const clearSelection = (e?: React.MouseEvent) => {

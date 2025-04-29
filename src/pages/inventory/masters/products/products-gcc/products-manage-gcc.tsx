@@ -104,7 +104,7 @@ export const ProductManageGcc: React.FC<{
                     onChangeData={(data: any) =>
                       handleFieldChange(
                         "product.productCode",
-                        data.product.productCode.toString()
+                        data.product.productCode??""
                       )
                     }
                   />

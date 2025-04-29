@@ -5,7 +5,9 @@ import { DataGrid } from 'devextreme-react';
 import { Column, KeyboardNavigation, Paging, Scrolling, Selection } from 'devextreme-react/cjs/data-grid';
 import { useTranslation } from 'react-i18next';
 import CustomStore from 'devextreme/data/custom_store';
+import ERPInput from "../../components/ERPComponents/erp-input";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputId?:string;
   label?: string;
   productDataUrl?: string;
   batchDataUrl?: string;
@@ -14,6 +16,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onRowSelected?: (data: any) => void;
   searchByCode?: boolean;
 }
+
 interface LoadResult {
   data: any[];
   totalCount: number;
@@ -94,7 +97,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
@@ -131,6 +134,10 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
       });
       setShowProductGrid(false);
     }
+      // Clear product data
+      if (onProductSelected) {
+        onProductSelected({ productName: "", productID: "" });
+      }
     if (onChange) onChange(e);
   };
 
@@ -226,17 +233,19 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
             {label}
           </label>
         )}
-        <input
-          {...rest}
-          ref={inputRef}
+        <ERPInput
+          noLabel
+          type="text"
+          id="test"
+          placeholder="Search Here"
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleInputKeyDown}
-          className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disableEnterNavigation
         />
       </div>
       {showProductGrid && (
-        <div className="w-full">
+           <div className="absolute  z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={dataGridRef}
             loadPanel={{ enabled: false }}
@@ -261,7 +270,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
       )}
 
       {showBatchGrid && (
-        <div className="w-full">
+            <div className="absolute z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={batchGridRef}
             loadPanel={{ enabled: false }}

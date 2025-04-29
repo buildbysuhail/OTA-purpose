@@ -20,7 +20,10 @@ import {
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
+import { APIClient } from "../../../../../helpers/api-client";
+import { getAccordionSummaryUtilityClass } from "@mui/material";
 
+const api = new APIClient();
 const ProductMultiUnitsIndia: React.FC<{
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
@@ -53,9 +56,19 @@ const ProductMultiUnitsIndia: React.FC<{
     data: { unit: string; barcode: String }[];
   }>({ index: 0, open: false, unit: "", data: [] });
 
-  const handleAddUnit = () => {
+  const handleAddUnit = async() => {
     setUnit(unitDAta);
     handleFieldChange("units", [...getFieldProps("units").value, unit]);
+    const obj = getFieldProps("*");
+    
+     // Get price categories from API
+     const priceCategories = await api.getAsync(Urls.data_pricectegory);
+     if (priceCategories && priceCategories.length > 0) {
+      priceCategories.forEach((category: any) => {
+        // if(obj.mu)
+      })
+     }
+  
   };
 
   const handleRemoveUnit = (rowId: number) => {

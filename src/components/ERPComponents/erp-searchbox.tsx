@@ -355,10 +355,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           id='searchByCode'
           checked={inputValue.searchByCode}
           label={ checkboxLabel || t('Code')}
-          onChange={(e)=> setInputValue((prev) => ({
-            ...prev,
-            searchByCode: e.target.checked,
-          }))}
+          onChange={e => setInputValue(prev => ({ ...prev, searchByCode: e.target.checked }))}
         />
     </div>
   );

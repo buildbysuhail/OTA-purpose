@@ -86,14 +86,14 @@ const KsaEInvoiceReportFilter = ({ getFieldProps, handleFieldChange, formState }
 
 export default KsaEInvoiceReportFilter;
 export const KsaEInvoiceReportFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
+    fromDate: moment().local().subtract(2,"day").toDate(),
     toDate: moment().local().endOf("day").toDate(),
-    includeSI: "",
-    includeSR: "",
-    includeDN: "",
-    b2b: "",
-    b2c: "",
+    includeSI: true,
+    includeSR: true,
+    includeDN:true,
+    b2b: true,
+    b2c: true,
     passed: false,
-    failed: false,
-    other: false
+    failed: true,
+    other: true
 };

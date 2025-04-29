@@ -129,7 +129,7 @@ const setupCurrencyCode = (countryId: number): string => {
               cellElement.data?.title=="صافي الضريبة المستحقة"?
               getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.amount)))  
               :cellElement.data?.amount == 0?
-              0:
+              getArabicNumber('0'):
               getArabicNumber(getFormattedValue(cellElement.data.amount,false,4)) 
           return {
             ...exportCell,
@@ -179,7 +179,7 @@ const setupCurrencyCode = (countryId: number): string => {
                 cellElement.data?.title=="صافي الضريبة المستحقة"?
                 getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.amount)))  
                 :cellElement.data?.amount == 0?
-                0:
+                getArabicNumber('0'):
                 getArabicNumber(getFormattedValue(cellElement.data.amount,false,4))  }
             </span>
           )
@@ -234,7 +234,6 @@ const setupCurrencyCode = (countryId: number): string => {
               ?true:false,
             },
           }
-
         } else {
           return (
             <span className={`${cellElement.data?.title=="اجمالي المبيعات"||

@@ -22,10 +22,11 @@ const ProductSummaryReportStockLedger: React.FC<{filter:ProductSummaryFilter;  s
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+         format: "dd-MMM-yyyy"
     },
     {
       dataField: "particulars",

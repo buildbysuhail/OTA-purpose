@@ -18,21 +18,13 @@ const SalesRoute = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {
-      dataField: "siNo",
-      caption: t("SiNo"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -42,6 +34,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "parentRoute",
@@ -51,6 +44,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -60,6 +54,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "creditLimit",
@@ -69,6 +64,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "parentRouteID",
@@ -77,6 +73,7 @@ const SalesRoute = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible:false
     },
     {
       dataField: "isActive",
@@ -85,6 +82,7 @@ const SalesRoute = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible:false
     },
     {
       dataField: "salesRouteID",
@@ -94,6 +92,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "salesMan",
@@ -103,6 +102,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "warehouse",
@@ -112,6 +112,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "salesManID",
@@ -121,6 +122,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "warehouseID",
@@ -130,6 +132,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "incentivePerc",
@@ -139,6 +142,7 @@ const SalesRoute = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "actions",

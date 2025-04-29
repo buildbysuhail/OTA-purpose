@@ -64,17 +64,17 @@ export const SalesRouteManage: React.FC = React.memo(() => {
         />
 
         <ERPDataCombobox
-          {...getFieldProps("parentRoute")}
-          id="parentRoute"
+          {...getFieldProps("parentRouteID")}
+          id="parentRouteID"
           field={{
-            id: "parentRoute",
+            id: "parentRouteID",
             required: true,
             getListUrl: Urls.data_salesRoute,
             valueKey: "id",
             labelKey: "name",
           }}
           label={t("parent_route")}
-          onChangeData={(data: any) => handleFieldChange("parentRoute", data.parentRoute)}
+          onChangeData={(data: any) => handleFieldChange("parentRouteID", data.parentRouteID)}
         />
 
         <ERPInput
@@ -97,7 +97,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           field={{
             id: "salesMan",
             required: true,
-            getListUrl: Urls.data_salesRoute,
+            getListUrl: Urls.data_employees,
             valueKey: "id",
             labelKey: "name",
           }}

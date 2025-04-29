@@ -465,9 +465,15 @@ const PurchaseTaxGSTTaxwise = () => {
   const customizeDateGroup = (itemInfo: any) => `Group Total`;
   const _summaryItems: SummaryConfig[] = [
     {
-      column: "form",
+      column: "party",
       summaryType: "custom",
       customizeText: customizeDate,
+    },
+    {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     },
     {
       column: "taxableValue",
@@ -500,7 +506,7 @@ const PurchaseTaxGSTTaxwise = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cess",
+      column: "cessAmt",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -518,6 +524,14 @@ const PurchaseTaxGSTTaxwise = () => {
       showInGroupFooter: true,
       customizeText: customizeDateGroup,
     },
+     {
+      column: "qty",
+      summaryType: "sum",
+      isGroupItem: true,
+      showInGroupFooter: true,
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "taxableValue",
       summaryType: "sum",
@@ -559,7 +573,7 @@ const PurchaseTaxGSTTaxwise = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cess",
+      column: "cessAmt",
       summaryType: "sum",
       isGroupItem: true,
       showInGroupFooter: true,

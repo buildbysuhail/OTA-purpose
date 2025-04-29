@@ -92,31 +92,31 @@ export const SalesRouteManage: React.FC = React.memo(() => {
         />
 
         <ERPDataCombobox
-          {...getFieldProps("salesMan")}
-          id="salesMan"
+          {...getFieldProps("salesManID")}
+          id="salesManID"
           field={{
-            id: "salesMan",
+            id: "salesManID",
             required: true,
             getListUrl: Urls.data_employees,
             valueKey: "id",
             labelKey: "name",
           }}
           label={t("salesman")}
-          onChangeData={(data: any) => handleFieldChange("salesMan", data.salesMan)}
+          onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
         />
 
         <ERPDataCombobox
-          {...getFieldProps("warehouse")}
-          id="warehouse"
+          {...getFieldProps("warehouseID")}
+          id="warehouseID"
           field={{
-            id: "warehouse",
+            id: "warehouseID",
             required: true,
             getListUrl: Urls.data_warehouse,
             valueKey: "id",
             labelKey: "name",
           }}
           label={t("warehouse")}
-          onChangeData={(data: any) => handleFieldChange("warehouse", data.warehouse)}
+          onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
         />
       </div>
 

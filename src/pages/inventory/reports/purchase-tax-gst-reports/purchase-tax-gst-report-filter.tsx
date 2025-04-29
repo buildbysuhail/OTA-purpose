@@ -42,11 +42,11 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           className="w-32"
           placeholder="0.00"
           datatype="number"
-          onChangeData={(val: string) => handleFieldChange("gSTPerc", val)}
+          onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
 
         <ERPDataCombobox
-          {...getFieldProps("taxCategory")}
+          {...getFieldProps("taxCategoryID")}
           field={{
             id: "taxCategoryID",
             getListUrl: Urls.data_taxCategory,
@@ -56,16 +56,17 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           className="w-full"
           onSelectItem={(data) => {
             handleFieldChange({
-              taxCategory: data.label,
-              taxCategoryName: data.label
+              taxCategoryID: data.value,
+              taxCategory: (data.value)?.toString(),
             });
           }}
         />
 
       <ERPDataCombobox
-          {...getFieldProps("voucherForm")}
+          {...getFieldProps("voucherFormId")}
+          label="voucherForm"
           field={{
-            id: "formType",
+            id: "voucherFormId",
             getListUrl: Urls.data_form_type,
             valueKey: "id",
             labelKey: "name",
@@ -95,15 +96,11 @@ export const PurchaseGstReportFilterInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
   gSTPerc: null,
-  voucherType: "",
+  isVchForm: false,
   voucherForm: "",
-  isTransactionDate: 0,
+  isTransactionDate: false,
   taxCategory: "",
   excludeNA: 0,
-  rdbCash: 0,
-  rdbBank: 0,
-  refDate: 0,
-  gstCategory: 0,
-  formType: 0,
-  taxWiseHSN: 0,
+  rdbCash: false,
+  rdbBank: false,
 }

@@ -11,14 +11,15 @@ const PurchaseTaxGSTTaxwise = () => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
+   
     {
-      dataField: "id",
-      caption: t("id"),
-      dataType: "number",
+      dataField: "date",
+      caption: t("date"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
-      visible: false,
+      width: 100,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -29,15 +30,7 @@ const PurchaseTaxGSTTaxwise = () => {
       width: 75,
       showInPdf: true,
     },
-    {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
+  
     {
       dataField: "gstin",
       caption: t("gst_in"),
@@ -71,11 +64,63 @@ const PurchaseTaxGSTTaxwise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
+      dataField: "productName",
+      caption: t("product"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
+      dataField: "groupName",
+      caption: t("group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
     },
     {
       dataField: "refNumber",
       caption: t("ref_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
+      dataField: "refDate",
+      caption: t("ref_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -89,30 +134,29 @@ const PurchaseTaxGSTTaxwise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
     },
     {
-      dataField: "cgstPerc",
-      caption: t("cgstperc"),
+      dataField: "hsnCode",
+      caption: t("hsn_code"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+
+    },
+    {
+      dataField: "qty",
+      caption: t("quantity"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf: true,
+
     },
     {
-      dataField: "sgstPerc",
-      caption: t("sgstperc"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "igstPerc",
-      caption: t("igstperc"),
-      dataType: "number",
+      dataField: "unit",
+      caption: t("unit"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
@@ -151,6 +195,15 @@ const PurchaseTaxGSTTaxwise = () => {
       }
     },
     {
+      dataField: "cgstPerc",
+      caption: t("cgstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
       dataField: "cgst",
       caption: t("cgst"),
       dataType: "number",
@@ -181,6 +234,15 @@ const PurchaseTaxGSTTaxwise = () => {
             : getFormattedValue(parseFloat(cellElement.data.cgst));
         }
       }
+    },
+    {
+      dataField: "sgstPerc",
+      caption: t("sgstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
     },
     {
       dataField: "sgst",
@@ -215,6 +277,15 @@ const PurchaseTaxGSTTaxwise = () => {
       }
     },
     {
+      dataField: "igstPerc",
+      caption: t("igstperc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
       dataField: "igst",
       caption: t("igst"),
       dataType: "number",
@@ -245,85 +316,6 @@ const PurchaseTaxGSTTaxwise = () => {
             : getFormattedValue(parseFloat(cellElement.data.igst));
         }
       }
-    },
-    {
-      dataField: "total",
-      caption: t("total"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.total == null
-              ? ""
-              : getFormattedValue(cellElement.data.total);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.total == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total));
-        }
-      },
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "remarks",
-      caption: t("remarks"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "financialYearID",
-      caption: t("financial_year_id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: false,
-      showInPdf: true,
-    },
-    {
-      dataField: "productName",
-      caption: t("product_name"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "gstPercentage",
-      caption: t("gstpercentage"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      groupIndex: 0
     },
     {
       dataField: "cessPerc",
@@ -408,40 +400,46 @@ const PurchaseTaxGSTTaxwise = () => {
       },
     },
     {
-      dataField: "hsnCode",
-      caption: t("hsn_code"),
-      dataType: "string",
+      dataField: "total",
+      caption: t("total"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
-      visible: false,
+      width: 80,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(cellElement.data.total);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.total == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.total));
+        }
+      },
     },
     {
-      dataField: "qty",
-      caption: t("quantity"),
+      dataField: "gstPercentage",
+      caption: t("gstpercentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
-    },
-    {
-      dataField: "unit",
-      caption: t("unit"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
       showInPdf: true,
-    },
-    {
-      dataField: "groupName",
-      caption: t("group_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
+      groupIndex: 0
     },
   ];
   const { getFormattedValue } = useNumberFormat();
@@ -594,10 +592,7 @@ const PurchaseTaxGSTTaxwise = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="of From Date : {fromDate} To Date : {toDate}
-               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
-               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
-               {formType > 0 && , Form Type : [formType]}"
+                filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
                 gridHeader={t("purchase_gst_report")}
                 dataUrl={Urls.purchase_gst_taxwise}

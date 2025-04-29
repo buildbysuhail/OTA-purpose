@@ -371,7 +371,7 @@
     "address2":"Address2",
     "ref_no":"Ref. Number",
     "cgstperc":"CGST%",
-    "sgstperc":"CGST%",
+    "sgstperc":"SGST%",
     "igstperc":"IGST%",
     "cgst":"CGST",
     "sgst":"SGST",

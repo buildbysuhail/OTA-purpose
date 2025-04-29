@@ -9,6 +9,7 @@ import Urls from "../../../../redux/urls";
 import KsaEInvoiceReportFilter, { KsaEInvoiceReportFilterInitialState } from "./ksa-e-invoice-filter";
 
 const KsaEInvoiceReportDetailed = () => {
+      const { getFormattedValue } = useNumberFormat();
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
         {
@@ -109,8 +110,30 @@ const KsaEInvoiceReportDetailed = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.grandTotal == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.grandTotal, false, 4);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.grandTotal == null
+                    ? ""
+                    : getFormattedValue(cellElement.data.grandTotal, false, 4);
+                }
+              },
+            },
         {
             dataField: "totalGross",
             caption: t("total_gross"),
@@ -119,7 +142,30 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.totalGross == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.totalGross, false, 4);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.totalGross == null
+                    ? ""
+                    : getFormattedValue(cellElement.data.totalGross, false, 4);
+                }
+              },
+            },
         {
             dataField: "vatAmount",
             caption: t("vat_amount"),
@@ -128,7 +174,30 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.vatAmount == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.vatAmount, false, 4);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.vatAmount == null
+                    ? ""
+                    : getFormattedValue(cellElement.data.vatAmount, false, 4);
+                }
+              },
+            },
         {
             dataField: "billDiscount",
             caption: t("bill_discount"),
@@ -137,7 +206,30 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.billDiscount == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.billDiscount, false, 2);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.billDiscount == null
+                    ? ""
+                    : getFormattedValue(cellElement.data.billDiscount, false, 2);
+                }
+              },
+            },
         {
             dataField: "taxOnDiscount",
             caption: t("tax_on_discount"),
@@ -146,14 +238,38 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.taxOnDiscount == null
+                      ? ""
+                      : getFormattedValue(cellElement.data.taxOnDiscount, false, 4);
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.taxOnDiscount == null
+                    ? ""
+                    : getFormattedValue(cellElement.data.taxOnDiscount, false, 4);
+                }
+              },
+            },
         {
             dataField: "systemDateTime",
             caption: t("system_date_time"),
-            dataType: "datetime",
+            dataType: "date",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
+            format: "dd-MMM-yyyy",
             width: 150,
         },
         {
@@ -209,26 +325,27 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            format: "dd-MMM-yyyy",
         },
-        {
-            dataField: "sentCount",
-            caption: t("sent_count"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 80,
-        },
-        {
-            dataField: "invTransactionMasterID",
-            caption: t("inv_transaction_master_id"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            visible: false,
-            width: 120,
-        },
+        // {
+        //     dataField: "sentCount",
+        //     caption: t("sent_count"),
+        //     dataType: "number",
+        //     allowSearch: true,
+        //     allowFiltering: true,
+        //     allowSorting: true,
+        //     width: 80,
+        // },
+        // {
+        //     dataField: "invTransactionMasterID",
+        //     caption: t("inv_transaction_master_id"),
+        //     dataType: "number",
+        //     allowSearch: true,
+        //     allowFiltering: true,
+        //     allowSorting: true,
+        //     visible: false,
+        //     width: 120,
+        // },
     ];
     return (
         <Fragment>

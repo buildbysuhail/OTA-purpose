@@ -124,13 +124,13 @@ export const SpecialPrice: React.FC = () => {
       debugger;
       handleDataChange({
         ...obj,
-        productBatchId: response.ProductBatchId,
-        productName: response.ProductName,
-        unitId: response.UnitId,
-        unit: response.Unit,
-        stdSalesPrice: response.StdSalesPrice,
-        stdPurchasePrice: response.StdPurchasePrice,
-        specialPrice: response.SpecialPrice ?? 0,
+        productBatchId: response.productBatchId,
+        productName: response.productName,
+        unitId: response.unitId,
+        unitName: response.unit,
+        stdSalesPrice: response.stdSalesPrice,
+        stdPurchasePrice: response.stdPurchasePrice,
+        salesPrice: response.specialPrice ?? 0,
       });
     } catch (error) {
       console.error("Error loading data:", error);

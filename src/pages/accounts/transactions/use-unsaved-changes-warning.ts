@@ -143,7 +143,6 @@ export const useUnsavedChangesWarning = () => {
 
   useEffect(() => {
     const blockNavigation = async (e: MouseEvent) => {
-      debugger;
       const target = e.target as HTMLElement | null;
       const closestAnchor = target?.closest("a") as HTMLElement | null;
 

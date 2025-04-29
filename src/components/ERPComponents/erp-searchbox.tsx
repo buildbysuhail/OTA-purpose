@@ -6,6 +6,8 @@ import { Column, KeyboardNavigation, Paging, Scrolling, Selection } from 'devext
 import { useTranslation } from 'react-i18next';
 import CustomStore from 'devextreme/data/custom_store';
 import ERPInput from "../../components/ERPComponents/erp-input";
+import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
+import { RootState } from '../../redux/store';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputId?:string;
   label?: string;
@@ -107,7 +109,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
   const batchGridRef = useRef<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation("inventory");
-
+  const appState = useAppSelector( (state: RootState) => state.AppState?.appState);
   const debouncedFetch = useMemo(
     () =>
       debounce(async (value: string) => {
@@ -134,10 +136,6 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
       });
       setShowProductGrid(false);
     }
-      // Clear product data
-      if (onProductSelected) {
-        onProductSelected({ productName: "", productID: "" });
-      }
     if (onChange) onChange(e);
   };
 
@@ -227,12 +225,13 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
 
   return (
     <div className=''>
-      <div className="mb-4 relative">
-        {label && (
+        {/* {label && (
           <label htmlFor={rest.id || rest.name} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
           </label>
-        )}
+        )} */}
+      <div className=" relative ">
+      
         <ERPInput
           noLabel
           type="text"
@@ -243,9 +242,8 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           onKeyDown={handleInputKeyDown}
           disableEnterNavigation
         />
-      </div>
-      {showProductGrid && (
-           <div className="absolute  z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+          {showProductGrid && (
+           <div className="absolute top-full  left-0     mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={dataGridRef}
             loadPanel={{ enabled: false }}
@@ -270,7 +268,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
       )}
 
       {showBatchGrid && (
-            <div className="absolute z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+            <div className="absolute top-full  left-0    mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={batchGridRef}
             loadPanel={{ enabled: false }}
@@ -311,6 +309,11 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
         </div>
       )}
 
+
+      </div>
+    
+
+     
     </div>
 
   );

@@ -10,6 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   productDataUrl?: string;
   batchDataUrl?: string;
   keyId?: string;
+  onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any) => void;
   searchByCode?: boolean;
 }
@@ -93,7 +94,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected, searchByCode, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
@@ -144,6 +145,9 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
     async (e: any) => {
       if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
         const selectedRow = e.component.getSelectedRowsData()[0];
+        if(onProductSelected){
+          onProductSelected(selectedRow)
+        }
         try {
           const batchStore = await createBatchStore(selectedRow.productID, batchDataUrl);
           setProductDetailStore(batchStore);
@@ -188,6 +192,29 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
     }
   }, []);
 
+   const handleInputKeyDown = useCallback(
+       async (e: React.KeyboardEvent<HTMLInputElement>) => {
+         if (e.key === 'Enter' && showProductGrid && dataGridRef.current) {
+           const grid: any = dataGridRef.current.instance;
+           const rows = grid.getVisibleRows();
+           if (rows.length > 0) {
+             // 2) select the first row
+             grid.selectRowsByIndexes([0]);
+             // 3) scroll/focus to it
+             const key = grid.getKeyByRowIndex(0);
+             grid.navigateToRow(key);
+             setTimeout(() => {
+               const cell = grid.getCellElement(0, 0);
+               cell?.focus();
+             }, 0);
+             // 4) trigger your existing logic to load batches
+             handleGridKeyDown({ event: e, component: grid });
+           }
+         }
+       },
+       [showProductGrid, handleGridKeyDown]
+     );
+
   return (
     <div className=''>
       <div className="mb-4 relative">
@@ -201,7 +228,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
           ref={inputRef}
           value={inputValue}
           onChange={handleChange}
-          // onKeyDown={handleInputKeyDown}
+          onKeyDown={handleInputKeyDown}
           className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -217,6 +244,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
             showRowLines={true}
             remoteOperations={{ filtering: true, paging: true, sorting: true }}
             onKeyDown={handleGridKeyDown}
+            
           >
             <Selection mode="single" />
             <Paging pageSize={10} />

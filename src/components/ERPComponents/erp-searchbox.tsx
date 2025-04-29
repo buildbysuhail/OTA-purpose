@@ -5,7 +5,11 @@ import { DataGrid } from 'devextreme-react';
 import { Column, KeyboardNavigation, Paging, Scrolling, Selection } from 'devextreme-react/cjs/data-grid';
 import { useTranslation } from 'react-i18next';
 import CustomStore from 'devextreme/data/custom_store';
+import ERPInput from "../../components/ERPComponents/erp-input";
+import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
+import { RootState } from '../../redux/store';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputId?:string;
   label?: string;
   productDataUrl?: string;
   batchDataUrl?: string;
@@ -14,6 +18,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onRowSelected?: (data: any) => void;
   searchByCode?: boolean;
 }
+
 interface LoadResult {
   data: any[];
   totalCount: number;
@@ -94,7 +99,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
@@ -104,7 +109,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
   const batchGridRef = useRef<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation("inventory");
-
+  const appState = useAppSelector( (state: RootState) => state.AppState?.appState);
   const debouncedFetch = useMemo(
     () =>
       debounce(async (value: string) => {
@@ -112,7 +117,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
         setStore(result);
         const loadResult = await result.load() as LoadResult;
         setShowProductGrid(loadResult.totalCount > 0);
-      }, 1000),
+      }, 200),
     [productDataUrl]
   );
 
@@ -220,23 +225,25 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
 
   return (
     <div className=''>
-      <div className="mb-4 relative">
-        {label && (
+        {/* {label && (
           <label htmlFor={rest.id || rest.name} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
           </label>
-        )}
-        <input
-          {...rest}
-          ref={inputRef}
+        )} */}
+      <div className=" relative ">
+      
+        <ERPInput
+          noLabel
+          type="text"
+          id="test"
+          placeholder="Search Here"
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleInputKeyDown}
-          className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disableEnterNavigation
         />
-      </div>
-      {showProductGrid && (
-        <div className="w-full">
+          {showProductGrid && (
+           <div className="absolute top-full  left-0     mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={dataGridRef}
             loadPanel={{ enabled: false }}
@@ -261,7 +268,7 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
       )}
 
       {showBatchGrid && (
-        <div className="w-full">
+            <div className="absolute top-full  left-0    mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={batchGridRef}
             loadPanel={{ enabled: false }}
@@ -302,6 +309,11 @@ const ERPProductSearch: React.FC<InputProps> = ({ label, productDataUrl, batchDa
         </div>
       )}
 
+
+      </div>
+    
+
+     
     </div>
 
   );

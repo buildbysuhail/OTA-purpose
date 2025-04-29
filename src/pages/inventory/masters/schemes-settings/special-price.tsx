@@ -363,10 +363,7 @@ export const SpecialPrice: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPProductSearch
-                    type="text"
-                    id="test"
-                    keyId="testserch"
-                    placeholder="Search Here"
+                    onChange={(e) => console.log("Input changed:", e.target.value)}
                     productDataUrl={Urls.load_product_details}
                     searchByCode={getFieldProps("searchByCode").value}
                     onRowSelected={(data: any) => {

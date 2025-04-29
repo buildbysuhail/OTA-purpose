@@ -637,7 +637,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/scheme_settings_discount" element={<SchemeSettingsDiscount />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
-        <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
         <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
         {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
         <Route path="/inventory-masters/test-page" element={<TestSearch />} />

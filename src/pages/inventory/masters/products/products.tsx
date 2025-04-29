@@ -247,7 +247,7 @@ const Products = () => {
         width: 100
       },
       {
-        dataField: "taxCategoryId",
+        dataField: "taxCategoryID",
         caption: t("tax_category_id"),
         dataType: "number",
         allowSorting: true,
@@ -257,7 +257,7 @@ const Products = () => {
         width: 100
       },
       {
-        dataField: "basicUnitId",
+        dataField: "basicUnitID",
         caption: t("basic_unit_id"),
         dataType: "number",
         allowSorting: true,
@@ -267,7 +267,7 @@ const Products = () => {
         width: 100
       },
       {
-        dataField: "productCategoryId",
+        dataField: "productCategoryID",
         caption: t("product_category_id"),
         dataType: "number",
         allowSorting: true,

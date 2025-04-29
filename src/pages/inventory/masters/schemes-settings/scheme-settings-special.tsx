@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Tab, Tabs } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import SpecialPrice from "./special-price";
@@ -19,7 +19,43 @@ const SchemeSettingsSpecial = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
+  const availableTabs = clientSession.isAppGlobal
+  ? ["specialPrice", "focScheme", "multiFOCScheme", "giftOnBilling", "quantityLimit", "qtySlabOffer"]
+  : ["specialPrice", "focScheme"];
 
+useEffect(() => {
+  if (!availableTabs.includes(activeTab)) {
+    setActiveTab("specialPrice");
+  }
+}, [clientSession.isAppGlobal]);
+const tabConfig = [
+  { label: t("special_price"), value: "specialPrice" },
+  { label: t("foc_scheme"), value: "focScheme" },
+  ...(clientSession.isAppGlobal ? [
+    { label: t("multi_foc_scheme"), value: "multiFOCScheme" },
+    { label: t("gift_on_billing"), value: "giftOnBilling" },
+    { label: t("quantity_limit"), value: "quantityLimit" },
+    { label: t("qty_slab_offer"), value: "qtySlabOffer" }
+  ] : [])
+];
+const renderTabContent = () => {
+  switch (activeTab) {
+    case "specialPrice":
+      return <SpecialPrice />;
+    case "focScheme":
+      return <FOCScheme />;
+    case "multiFOCScheme":
+      return <MultiFOCScheme />;
+    case "giftOnBilling":
+      return <GiftOnBilling />;
+    case "quantityLimit":
+      return <QuantityLimit />;
+    case "qtySlabOffer":
+      return <QuantitySlabOffer />;
+    default:
+      return null;
+  }
+};
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -27,71 +63,24 @@ const SchemeSettingsSpecial = () => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <Tabs
-                  value={activeTab}
-                  onChange={handleTabChange}
-                  variant="scrollable"
-                  scrollButtons="auto">
-                  <Tab
-                    className="dark:text-dark-text"
-                    label={t("special_price")}
-                    value="specialPrice"
-                  />
-                  <Tab
-                    className="dark:text-dark-text"
-                    label={t("foc_scheme")}
-                    value="focScheme"
-                  />
-                {/* {
-                  clientSession.isAppGlobal && 
-                  <> */}
-                    <Tab
-                    className="dark:text-dark-text"
-                    label={t("multi_foc_scheme")}
-                    value="multiFOCScheme"
-                  />
-                  <Tab
-                    className="dark:text-dark-text"
-                    label={t("gift_on_billing")}
-                    value="giftOnBilling"
-                  />
-                  <Tab
-                    className="dark:text-dark-text"
-                    label={t("quantity_limit")}
-                    value="quantityLimit"
-                  />
-                  <Tab
-                    className="dark:text-dark-text"
-                    label={t("qty_slab_offer")}
-                    value="qtySlabOffer"
-                  />
-                  {/* </>
-                } */}
-                </Tabs>
-                <div className="pt-2">
-                  {activeTab === "specialPrice" && (
-                    <SpecialPrice />
-                  )}
-
-                  {activeTab === "focScheme" && (
-                    <FOCScheme />
-                  )}
-                  {activeTab === "multiFOCScheme" && (
-                    <MultiFOCScheme />
-                  )}
-
-                  {activeTab === "giftOnBilling" && (
-                    <GiftOnBilling />
-                  )}
-
-                  {activeTab === "quantityLimit" && (
-                    <QuantityLimit />
-                  )}
-
-                  {activeTab === "qtySlabOffer" && (
-                    <QuantitySlabOffer />
-                  )}
-                </div>
+              <Tabs
+  value={activeTab}
+  onChange={handleTabChange}
+  variant="scrollable"
+  scrollButtons="auto"
+>
+  {tabConfig.map(tab => (
+    <Tab
+      key={tab.value}
+      className="dark:text-dark-text"
+      label={tab.label}
+      value={tab.value}
+    />
+  ))}
+</Tabs>
+<div className="pt-2">
+  {renderTabContent()}
+</div>
               </div>
             </div>
           </div>

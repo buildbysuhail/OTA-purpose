@@ -251,7 +251,7 @@ export const QuantityLimit: React.FC = () => {
                             id: "department",
                             valueKey: "id",
                             labelKey: "name",
-                            // getListUrl:Urls.data_sections
+                            getListUrl:Urls.data_sections
                         }}
                         disabled={formState.data.selectedOption !== "department"}
                         className="w-full"

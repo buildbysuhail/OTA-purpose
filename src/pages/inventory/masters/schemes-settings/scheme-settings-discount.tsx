@@ -13,9 +13,9 @@ const api = new APIClient();
 
 export const initialSchemeSettingsDiscount = {
     data: {
-        id: 0,
-        sl: 0,
-        pCode: "",
+        productGroupID: 0,
+        BranchID: 0,
+        SchemeID: "",
         product: "",
         autoBarcode: "",
         selected: false,
@@ -168,7 +168,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
                     {...getFieldProps("scheme")}
                     field={{
                         id: "scheme",
-                        // getListUrl: Urls.data_schemes,
+                        getListUrl: Urls.data_schemes,
                         valueKey: "id",
                         labelKey: "name"
                     }}

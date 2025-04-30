@@ -150,6 +150,8 @@ export const GiftOnBilling: React.FC = () => {
             rangeFrom: obj.totalBillRangeFrom,
             rangeTo: obj.totalBillRangeTo,
             giftItem: obj.itemName,
+            giftProductId: obj.giftProductId,
+            giftProductBatchId: obj.giftProductBatchId
         };
         setGridData(prevData => [...prevData, newItem]);
         handleClear();
@@ -257,6 +259,7 @@ export const GiftOnBilling: React.FC = () => {
             setIsDataLoading(true);
             const url = `${Urls.select_product_by_product_id_multi_foc}${obj.giftProductId}`;//change url it for demo
             const response = await api.get(url);
+            debugger;
             const updatedData: Partial<GiftOnBillingData> =
             {
                 giftProductBatchId: response.GiftProductBatchID,

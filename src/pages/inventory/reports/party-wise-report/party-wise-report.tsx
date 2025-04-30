@@ -17,22 +17,7 @@ interface PartyWiseReportProps {
 
 const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [showFilter, setShowFilter] = useState<boolean>(true);
   const [filter, setFilter] = useState<any>(PartyWiseReportFilterInitialState);
-  const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
-  const onCloseFilter = useCallback(() => {
-    if (filterShowCount === 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-    }
-    setShowFilter(false);
-  }, [filterShowCount]);
-
-  const onFilterChanged = useCallback((updatedFilter: any) => {
-    setFilter(updatedFilter);
-  }, []);
-
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -72,7 +57,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
       dataField: "address1",
@@ -96,7 +81,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 300,
     },
     {
       dataField: "netAmount",
@@ -161,7 +146,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       },
     },
     {
-      dataField: "refNo",
+      dataField: "ref_no",
       caption: t("ref_no"),
       dataType: "string",
       allowSearch: true,
@@ -169,7 +154,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       width: 80,
     },
     {
-      dataField: "refDate",
+      dataField: "ref_Date",
       caption: t("ref_date"),
       dataType: "date",
       allowSearch: true,

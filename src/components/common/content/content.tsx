@@ -143,19 +143,12 @@ import DailySalesStatementReport from "../../../pages/inventory/reports/daily-st
 import PurchaseOrderTransitReport from "../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/inventory/reports/Purchase-Tax-report/Purchase-Tax-report";
 import PurchaseTaxGSTDailySummary from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report";
-import PurchaseReturnTaxGSTDailySummary from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-daily-summary-report";
-import PurchaseReturnTaxGSTMonthlySummary from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-monthly-summary-report";
 import PurchaseTaxGSTMonthlySummary from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-monthly-summary-report";
 import PurchaseTaxGSTRegisterFormat from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-register-format-report";
-import PurchaseReturnTaxGSTRegisterFormat from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-register-format-report";
 import PurchaseTaxGSTAdvRegisterFormat from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-adv-register-format-report";
-import PurchaseReturnTaxGSTAdvRegisterFormat from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-adv-register-format-report";
 import PurchaseTaxGSTDetailed from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-detailed-report";
-import PurchaseReturnTaxGSTDetailed from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-detailed-report";
 import PurchaseTaxGSTTaxwise from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report";
-import PurchaseReturnTaxGSTTaxwise from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-report";
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
-import PurchaseReturnTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
 import VatReturnForm from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form";
 import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
@@ -478,7 +471,7 @@ const Content: FC<ContentProps> = () => {
         {/* Reports - Inventory */}
         <Route path="/inventory/purchase_summary_report" element={<SummaryReport dataUrl={urls.purchase_summary_report} gridHeader="purchase_summary_report" gridId="grd_purchase_summary" />} />
         <Route path="/inventory/purchase_register_report" element={<RegisterReport dataUrl={urls.purchase_register_report} gridHeader="purchase_register_report" gridId="grd_purchase_register" />} />
-        <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_report" gridId="grd_party_wise" />} />
+        <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_purchase_summary_report" gridId="grd_party_wise" />} />
         <Route path="/inventory/purchase_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.purchase_tax_report_detailed} gridHeader="purchase_tax_report_detailed" gridId="grd_purchase_tax_report_detailed" />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<TaxReportSummary dataUrl={urls.purchase_tax_report_summary} gridHeader="purchase_tax_report_summary" gridId="grd_purchase_tax_summary" />} />
         <Route path="/inventory/purchase_return_summary" element={<SummaryReport dataUrl={urls.purchase_return_summary} gridHeader="purchase_return_summary_report" gridId="grd_purchase_return_summary"/>} />
@@ -584,20 +577,22 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         {/* global */}
-        <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary />} />
-        <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary />} />
-        <Route path="/inventory/purchase_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat />} />
-        <Route path="/inventory/purchase_gst_adv_register_format_report" element={<PurchaseTaxGSTAdvRegisterFormat />} />
-        <Route path="/inventory/purchase_gst_detailed_report" element={<PurchaseTaxGSTDetailed />} />
-        <Route path="/inventory/purchase_gst_taxwise_report" element={<PurchaseTaxGSTTaxwise />} />
-        <Route path="/inventory/purchase_gst_taxwise_with_hsn_report" element={<PurchaseTaxGSTTaxwiseWithHSN />} />
-        <Route path="/inventory/purchase_return_gst_monthly_summary_report" element={<PurchaseReturnTaxGSTMonthlySummary />} />
-        <Route path="/inventory/purchase_return_gst_daily_summary_report" element={<PurchaseReturnTaxGSTDailySummary />} />
-        <Route path="/inventory/purchase_return_gst_register_format_report" element={<PurchaseReturnTaxGSTRegisterFormat />} />
-        <Route path="/inventory/purchase_return_gst_adv_register_format_report" element={<PurchaseReturnTaxGSTAdvRegisterFormat />} />
-        <Route path="/inventory/purchase_return_gst_detailed_report" element={<PurchaseReturnTaxGSTDetailed />} />
-        <Route path="/inventory/purchase_return_gst_taxwise_report" element={<PurchaseReturnTaxGSTTaxwise />} />
-        <Route path="/inventory/purchase_return_gst_taxwise_with_hsn_report" element={<PurchaseReturnTaxGSTTaxwiseWithHSN />} />
+        <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_daily_summary_report"/>} />
+        <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_monthly_summary_report" />} />
+        <Route path="/inventory/purchase_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_register_report" />} />
+        <Route path="/inventory/purchase_gst_adv_register_format_report" element={<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_adv_register_report" />} />
+        <Route path="/inventory/purchase_gst_detailed_report" element={<PurchaseTaxGSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_detailed_report" />} />
+        <Route path="/inventory/purchase_gst_taxwise_report" element={<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_taxwise_report" />} />
+        <Route path="/inventory/purchase_gst_taxwise_with_hsn_report" element={<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />} />
+
+
+        <Route path="/inventory/purchase_return_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_daily_summary_report"/>} />
+        <Route path="/inventory/purchase_return_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_monthly_summary_report" />} />
+        <Route path="/inventory/purchase_return_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_register_report" />} />
+        <Route path="/inventory/purchase_return_gst_adv_register_format_report" element={<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_adv_register_report" />} />
+        <Route path="/inventory/purchase_return_gst_detailed_report" element={<PurchaseTaxGSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_detailed_report" />} />
+        <Route path="/inventory/purchase_return_gst_taxwise_report" element={<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_taxwise_report" />} />
+        <Route path="/inventory/purchase_return_gst_taxwise_with_hsn_report" element={<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />} />
         <Route path="/inventory/purchase_return_gst_sales_and_return_report" element={<PurchaseReturnTaxGSTSalesAndReturn />} />
         {/* global end */}
 

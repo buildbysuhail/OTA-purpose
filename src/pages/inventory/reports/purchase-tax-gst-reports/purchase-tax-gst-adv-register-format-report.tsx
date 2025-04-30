@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -7,8 +7,13 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
-
-const PurchaseTaxGSTAdvRegisterFormat = () => {
+import { useLocation } from "react-router-dom";
+interface PurchaseTaxGSTAdvRegisterFormatProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
@@ -1156,7 +1161,11 @@ const PurchaseTaxGSTAdvRegisterFormat = () => {
       customizeText: customizeSummaryRow,
     },
   ];
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -1172,13 +1181,10 @@ const PurchaseTaxGSTAdvRegisterFormat = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="of From Date : {fromDate} To Date : {toDate}
-               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
-               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
-               {formType > 0 && , Form Type : [formType]}"
+                filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
-                gridHeader={t("purchase_gst_report")}
-                dataUrl={Urls.purchase_gst_adv_register_format}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -1189,7 +1195,7 @@ const PurchaseTaxGSTAdvRegisterFormat = () => {
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_gst_adv_register_report"
+                gridId={gridId}
               />
             </div>
           </div>

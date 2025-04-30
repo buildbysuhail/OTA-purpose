@@ -165,7 +165,7 @@ const PurchaseRegisterFilter = ({
           />
         )}
 
-        {applicationSettings.inventorySettings?.maintainWarehouse == true && (
+        {/* {applicationSettings.inventorySettings?.maintainWarehouse == true && ( */}
           <ERPDataCombobox
             label={t("warehouse")}
             {...getFieldProps("warehouseID")}
@@ -182,7 +182,7 @@ const PurchaseRegisterFilter = ({
               });
             }}
           />
-        )}
+        {/* )} */}
 
         {/* SelectFromTypebyVoucherType -- global*/}
         {/* SelectFromTypebyVoucherType */}

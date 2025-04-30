@@ -51,6 +51,29 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxCategory == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxCategory, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxCategory == null
+            ? ""
+            : getFormattedValue(cellElement.data.taxCategory, false, 2);
+        }
+      },
     },
     {
       dataField: "vatPercentage",
@@ -59,6 +82,29 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.vatPercentage == null
+              ? ""
+              : getFormattedValue(cellElement.data.vatPercentage, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.vatPercentage == null
+            ? ""
+            : getFormattedValue(cellElement.data.vatPercentage, false, 2);
+        }
+      },
     },
     {
       dataField: "taxableValue",

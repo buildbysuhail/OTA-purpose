@@ -48,7 +48,7 @@ const Schemes = () => {
     {
       dataField: "dateFrom",
       caption: t("date_from"),
-      dataType: "string",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -58,7 +58,7 @@ const Schemes = () => {
     {
       dataField: "dateTo",
       caption: t("date_to"),
-      dataType: "number",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

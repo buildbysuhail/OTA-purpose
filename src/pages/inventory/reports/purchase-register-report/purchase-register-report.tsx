@@ -275,41 +275,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
       },
       {
-        dataField: "unitPrice1",
-        caption: t("unit_price_1"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.unitPrice1 == null
-                ? ""
-                : getFormattedValue(cellElement.data.unitPrice1, false, 3);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.unitPrice1 == null
-              ? ""
-              : getFormattedValue(
-                parseFloat(cellElement.data.unitPrice1),
-                false,
-                3
-              );
-          }
-        },
-      },
-      {
         dataField: "vat",
         caption: t("vat"),
         dataType: "number",
@@ -542,7 +507,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
+        // visible: false,
         width: 100,
         cellRender: (
           cellElement: any,
@@ -577,7 +542,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 90,
       },
       {
-        dataField: "additionalExpenses",
+        dataField: "additionalExpense",
         caption: t("additional_expenses"),
         dataType: "number",
         allowSearch: true,
@@ -591,9 +556,9 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         ) => {
           if (exportCell != undefined) {
             const value =
-              cellElement.data?.additionalExpenses == null
+              cellElement.data?.additionalExpense == null
                 ? ""
-                : getFormattedValue(cellElement.data.additionalExpenses);
+                : getFormattedValue(cellElement.data.additionalExpense);
             return {
               ...exportCell,
               text: value,
@@ -601,10 +566,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
               alignmentExcel: { horizontal: "right" },
             };
           } else {
-            return cellElement.data?.additionalExpenses == null
+            return cellElement.data?.additionalExpense == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.additionalExpenses)
+                parseFloat(cellElement.data.additionalExpense)
               );
           }
         },
@@ -704,7 +669,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
-        dataField: "groupCategory",
+        dataField: "groupCategoryName",
         caption: t("group_category_name"),
         dataType: "string",
         allowSearch: true,
@@ -910,16 +875,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
-        dataField: "VATNumber",
+        dataField: "vatNumber",
         caption: t("vat_number"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "autoBarcode1",
-        caption: t("autobarcode1"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -1481,14 +1438,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      {
-        dataField: "taxNo",
-        caption: t("TaxNo"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+      // {
+      //   dataField: "taxNo",
+      //   caption: t("TaxNo"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
       {
         dataField: "gstNo",
         caption: t("GSTNo"),
@@ -1497,22 +1454,22 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-      {
-        dataField: "sl",
-        caption: t("Sl"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "unitName",
-        caption: t("UnitName"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+      // {
+      //   dataField: "sl",
+      //   caption: t("Sl"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "unitName",
+      //   caption: t("UnitName"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
       {
         dataField: "priceCategoryID",
         caption: t("PriceCategoryID"),
@@ -1521,76 +1478,76 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-      {
-        dataField: "totalProfitPercent",
-        caption: t("Total Profit%"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.totalProfitPercent == null
-                ? ""
-                : getFormattedValue(
-                  cellElement.data.totalProfitPercent,
-                  false,
-                  2
-                );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.totalProfitPercent == null
-              ? ""
-              : getFormattedValue(
-                parseFloat(cellElement.data.totalProfitPercent),
-                false,
-                2
-              );
-          }
-        },
-      },
-      {
-        dataField: "avgPrice",
-        caption: t("AvgPrice"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.avgPrice == null
-                ? ""
-                : getFormattedValue(cellElement.data.avgPrice);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.avgPrice == null
-              ? ""
-              : getFormattedValue(parseFloat(cellElement.data.avgPrice));
-          }
-        },
-      },
+      // {
+      //   dataField: "totalProfitPercent",
+      //   caption: t("Total Profit%"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.totalProfitPercent == null
+      //           ? ""
+      //           : getFormattedValue(
+      //             cellElement.data.totalProfitPercent,
+      //             false,
+      //             2
+      //           );
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.totalProfitPercent == null
+      //         ? ""
+      //         : getFormattedValue(
+      //           parseFloat(cellElement.data.totalProfitPercent),
+      //           false,
+      //           2
+      //         );
+      //     }
+      //   },
+      // },
+      // {
+      //   dataField: "avgPrice",
+      //   caption: t("AvgPrice"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.avgPrice == null
+      //           ? ""
+      //           : getFormattedValue(cellElement.data.avgPrice);
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.avgPrice == null
+      //         ? ""
+      //         : getFormattedValue(parseFloat(cellElement.data.avgPrice));
+      //     }
+      //   },
+      // },
       {
         dataField: "referenceNumber",
         caption: t("ReferenceNumber"),
@@ -1636,9 +1593,9 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
     // Filter columns based on the `visible` property
     return baseColumns
       .filter((column) => {
-        if (column.dataField == "xRate") {
-          return filter.voucherForm == "Import";
-        }
+        // if (column.dataField == "xRate") {
+        //   return filter.voucherForm == "Import";
+        // }
         if (column.dataField == "baseUnitQuantity") {
           return userSession.dbIdValue == "543140180640";
         }
@@ -1657,6 +1614,12 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           return {
             ...column,
             caption: "QRPay",
+          };
+        }
+        if (column.dataField == "xRate" && filter.voucherForm != "Import") {
+          return {
+            ...column,
+            visible: false,
           };
         }
         return column;

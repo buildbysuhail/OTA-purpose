@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -6,8 +6,13 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
-
-const PurchaseTaxGSTTaxwiseWithHSN = () => {
+import { useLocation } from "react-router-dom";
+interface PurchaseTaxGSTTaxwiseWithHSNProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
@@ -28,7 +33,7 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+
     },
     {
       dataField: "hsnCode",
@@ -37,7 +42,7 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+
     },
     {
       dataField: "qty",
@@ -46,7 +51,30 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.qty == null
+              ? ""
+              : getFormattedValue(cellElement.data.qty);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.qty == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.qty));
+        }
+      }
     },
     {
       dataField: "unit",
@@ -97,6 +125,29 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+        }
+      }
     },
     {
       dataField: "cgst",
@@ -138,6 +189,29 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
+        }
+      }
     },
     {
       dataField: "sgst",
@@ -179,6 +253,29 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.igstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igstPerc));
+        }
+      }
     },
     {
       dataField: "igst",
@@ -220,6 +317,29 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cessPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.cessPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cessPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cessPerc));
+        }
+      }
     },
     {
       dataField: "cessAmt",
@@ -261,6 +381,29 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.addCessPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.addCessPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.addCessPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
+        }
+      }
     },
     {
       dataField: "addCess",
@@ -336,15 +479,15 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       visible: false,
       showInPdf: true,
     },
-    {
-      dataField: "groupName",
-      caption: t("group_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "groupName",
+    //   caption: t("group_name"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    //   showInPdf: true,
+    // },
   ];
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -373,6 +516,12 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       summaryType: "custom",
       customizeText: customizeDate,
     },
+     {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "taxableValue",
       summaryType: "sum",
@@ -404,7 +553,7 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cess",
+      column: "cessAmt",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -422,6 +571,14 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       showInGroupFooter: true,
       customizeText: customizeDateGroup,
     },
+     {
+      column: "qty",
+      summaryType: "sum",
+      isGroupItem: true,
+      showInGroupFooter: true,
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "taxableValue",
       summaryType: "sum",
@@ -463,7 +620,7 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cess",
+      column: "cessAmt",
       summaryType: "sum",
       isGroupItem: true,
       showInGroupFooter: true,
@@ -479,7 +636,11 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
       customizeText: customizeSummaryRow,
     },
   ];
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -495,13 +656,10 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="of From Date : {fromDate} To Date : {toDate}
-               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
-               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
-               {formType > 0 && , Form Type : [formType]}"
+                filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
-                gridHeader={t("purchase_gst_report")}
-                dataUrl={Urls.purchase_gst_taxwise_with_hsn}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -512,7 +670,7 @@ const PurchaseTaxGSTTaxwiseWithHSN = () => {
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_gst_taxwise_with_hsn_report"
+                gridId={gridId}
               />
             </div>
           </div>

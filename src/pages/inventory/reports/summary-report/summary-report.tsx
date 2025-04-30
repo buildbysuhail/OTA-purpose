@@ -771,37 +771,38 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       //   allowFiltering: true,
       //   width: 100,
       // },
-      {
-        dataField: "totalExciseTax",
-        caption: t("total_excise_tax"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.totalExciseTax == null
-                ? 0
-                : getFormattedValue(cellElement.data.totalExciseTax);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.totalExciseTax == null
-              ? 0
-              : getFormattedValue(cellElement.data.totalExciseTax);
-          }
-        },
-      },
+      //in 1050 shown only on summary calculation
+      // {
+      //   dataField: "totalExciseTax",
+      //   caption: t("total_excise_tax"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.totalExciseTax == null
+      //           ? 0
+      //           : getFormattedValue(cellElement.data.totalExciseTax);
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.totalExciseTax == null
+      //         ? 0
+      //         : getFormattedValue(cellElement.data.totalExciseTax);
+      //     }
+      //   },
+      // },
     
       // {
       //   dataField: "toWarehouseName",
@@ -932,12 +933,16 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "exchangeRate") {
           return filter.voucher_form !== "Import";
         }
+        if (column.dataField == "salesAmount" || column.dataField == "totalProfit") {
+          return userSession.dbIdValue == "489995732270";
+        }
         if (column.dataField == "uPI" || column.dataField == "cardAmt") {
           return applicationSettings.accountsSettings.allowMultiPayments;
         }
         if (column.dataField == "printCount") {
           return userSession.dbIdValue == "543140180640";
         }
+
         return true;
       })
       .map((column) => {
@@ -1048,7 +1053,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       //only in multipayment and inventorysumary
       {
-        column: "sRAmount",
+        column: "srAmount",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
@@ -1092,28 +1097,28 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
-      //inventory summary only
-      {
-        column: "totalExciseTax",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-      },
+      // //inventory summary only
+      // {
+      //   column: "totalExciseTax",
+      //   summaryType: "sum",
+      //   valueFormat: "currency",
+      //   customizeText: customizeSummaryRow,
+      // },
     ];
     // Filter columns based on the `visible` property
     return _summaryItems.filter((column) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      if (column.column == "totalExciseTax") {
-        return (
-          !clientSession.isAppGlobal &&
-          userSession.dbIdValue !== "489995732270" &&
-          userSession.dbIdValue !== "543140180640" &&
-          !applicationSettings.accountsSettings.allowMultiPayments &&
-          !filter.IsInactive
-        );
-      }
+      // if (column.column == "totalExciseTax") {
+      //   return (
+      //     !clientSession.isAppGlobal &&
+      //     userSession.dbIdValue !== "489995732270" &&
+      //     userSession.dbIdValue !== "543140180640" &&
+      //     !applicationSettings.accountsSettings.allowMultiPayments &&
+      //     !filter.IsInactive
+      //   );
+      // }
       if (column.column == "netValue" || column.column == "srAmount") {
         return (
           !clientSession.isAppGlobal &&
@@ -1125,9 +1130,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (column.column == "couponAmt") {
         return userSession.dbIdValue !== "543140180640" && !filter.IsInactive;
       }
-      if (column.column == "taxOnDiscount" || column.column == "roundAmount") {
-        return filter.IsInactive;
-      }
+      // if (column.column == "roundAmount") {
+      //   return !filter.IsInactive;
+      // }
 
       return true;
     });

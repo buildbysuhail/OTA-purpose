@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -6,8 +6,13 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
-
-const PurchaseTaxGSTTaxwise = () => {
+import { useLocation } from "react-router-dom";
+interface PurchaseTaxGSTTaxwiseProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
@@ -589,7 +594,11 @@ const PurchaseTaxGSTTaxwise = () => {
       customizeText: customizeSummaryRow,
     },
   ];
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
 
   return (
     <Fragment>
@@ -608,8 +617,8 @@ const PurchaseTaxGSTTaxwise = () => {
                 columns={columns}
                 filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
-                gridHeader={t("purchase_gst_report")}
-                dataUrl={Urls.purchase_gst_taxwise}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -620,7 +629,7 @@ const PurchaseTaxGSTTaxwise = () => {
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_gst_taxwise_report"
+                gridId={gridId}
               />
             </div>
           </div>

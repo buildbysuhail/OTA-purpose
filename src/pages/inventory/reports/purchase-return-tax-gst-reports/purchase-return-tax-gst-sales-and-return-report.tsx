@@ -5,11 +5,11 @@ import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseReturnGstReportFilter, { PurchaseReturnGstReportFilterInitialState } from "./purchase-return-tax-gst-report-filter";
+import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "../purchase-tax-gst-reports/purchase-tax-gst-report-filter";
 
 const PurchaseReturnTaxGSTSalesAndReturn = () => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseReturnGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "hsn",
@@ -26,6 +26,29 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 75,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.qty == null
+              ? ""
+              : getFormattedValue(cellElement.data.qty,false,4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.qty == null
+            ? ""
+            : getFormattedValue(cellElement.data.qty,false,4);
+        }
+      },
     },
     {
       dataField: "taxableValue",
@@ -153,7 +176,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
     },
     {
       dataField: "cess",
-      caption: t("cess_amount"),
+      caption: t("cess"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -184,7 +207,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
     },
     {
       dataField: "addCess",
-      caption: t("addcess_amount"),
+      caption: t("addcess"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -230,7 +253,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total, false, 4);
+              : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -240,17 +263,18 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(cellElement.data.total, false, 4);
+            : getFormattedValue(cellElement.data.total);
         }
       },
     },
     {
       dataField: "financialYearID",
       caption: t("financial_year_id"),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
   ];
 
@@ -279,6 +303,12 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       column: "hsn",
       summaryType: "custom",
       customizeText: customizeDate,
+    },
+      {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     },
     {
       column: "taxableValue",
@@ -350,10 +380,10 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseReturnGstReportFilter />}
+                filterContent={<PurchaseGstReportFilter />}
                 filterHeight={240}
                 filterWidth={790}
-                filterInitialData={PurchaseReturnGstReportFilterInitialState}
+                filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId="grd_purchase_return_gst_sales_and_return_report"

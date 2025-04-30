@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -6,8 +6,13 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
-
-const PurchaseTaxGSTMonthlySummary = () => {
+import { useLocation } from "react-router-dom";
+interface PurchaseTaxGSTMonthlySummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const PurchaseTaxGSTMonthlySummary: FC<PurchaseTaxGSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
   const columns: DevGridColumn[] = [
@@ -46,6 +51,29 @@ const PurchaseTaxGSTMonthlySummary = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.gstPercentage == null
+              ? ""
+              : getFormattedValue(cellElement.data.gstPercentage);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.gstPercentage == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
+        }
+      },
     },
     {
       dataField: "taxableValue",
@@ -193,7 +221,7 @@ const PurchaseTaxGSTMonthlySummary = () => {
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total, false, 4);
+              : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -203,7 +231,7 @@ const PurchaseTaxGSTMonthlySummary = () => {
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(cellElement.data.total, false, 4);
+            : getFormattedValue(cellElement.data.total);
         }
       },
     }
@@ -265,8 +293,13 @@ const PurchaseTaxGSTMonthlySummary = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-  ];
 
+  ];
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -282,13 +315,10 @@ const PurchaseTaxGSTMonthlySummary = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="of From Date : {fromDate} To Date : {toDate}
-               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
-               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
-               {formType > 0 && , Form Type : [formType]}"
+                filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
-                gridHeader={t("purchase_gst_report")}
-                dataUrl={Urls.purchase_gst_monthly_summary}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -299,7 +329,7 @@ const PurchaseTaxGSTMonthlySummary = () => {
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_gst_monthly_summary_report"
+                gridId={gridId}
               />
             </div>
           </div>

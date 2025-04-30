@@ -5,7 +5,7 @@ import DataGrid, {
   KeyboardNavigation,
   Paging,
   RemoteOperations,
-  Scrolling
+  Scrolling,
 } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -15,23 +15,27 @@ import {
   PathValue,
   productDto,
   ProductFieldPath,
-  ProductUnitInputDto
+  ProductPriceInputDto,
+  ProductUnitInputDto,
 } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
 import { APIClient } from "../../../../../helpers/api-client";
 import { getAccordionSummaryUtilityClass } from "@mui/material";
+import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 
 const api = new APIClient();
 const ProductMultiUnitsIndia: React.FC<{
+  appSettings: ApplicationSettingsType;
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
   ) => void;
-  getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+  getFieldProps: (fieldId: string, type?: string) => FormField | any;
+}> = React.memo(({ t, handleFieldChange, getFieldProps, 
+  appSettings, }) => {
   const unitDAta: ProductUnitInputDto = {
     productUnitID: 0,
     productBatchID: 0,
@@ -56,23 +60,83 @@ const ProductMultiUnitsIndia: React.FC<{
     data: { unit: string; barcode: String }[];
   }>({ index: 0, open: false, unit: "", data: [] });
 
-  const handleAddUnit = async() => {
-    setUnit(unitDAta);
-    handleFieldChange("units", [...getFieldProps("units").value, unit]);
+  const handleAddUnit = async () => {
+    const updated = [...getFieldProps("units").value, unit];
+    handleFieldChange("units", updated);
     const obj = getFieldProps("*");
+      if (appSettings.productsSettings.allowMultirate) {
     
-     // Get price categories from API
-     const priceCategories = await api.getAsync(Urls.data_pricectegory);
-     if (priceCategories && priceCategories.length > 0) {
-      priceCategories.forEach((category: any) => {
-        // if(obj.mu)
-      })
-     }
-  
+      loadMultiRateToGrid(obj,updated)
+  }
+    
+    // Get price categories from API
+    // if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
+    //   const priceCategories = await api.getAsync(Urls.data_pricectegory);
+    //   if (priceCategories && priceCategories.length > 0) {
+    //     priceCategories.forEach((category: any) => {});
+    //   }
+    // }
+
+    setUnit(unitDAta);
+  };
+  const loadMultiRates = async (
+    obj: any,
+    update:any
+  ): Promise<ProductPriceInputDto[]> => {
+    try {
+      const rates: ProductPriceInputDto[] = [...obj.prices || []];
+      const priceCategories = await api.getAsync(Urls.data_pricectegory);
+      
+      if (!priceCategories || priceCategories.length === 0) {
+        return rates; 
+      } 
+      // Transform price categories into new rates using map
+      const newRates = priceCategories.map((cat: any) => ({
+        PriceCategory: cat.name,
+        Unit: update.unitName,
+        UnitID: update.unitID,
+        PriceCategoryID: cat.id,
+        MRRemoveLine: "X",
+        PurchaseRate: (update.purPrice * (update.multiFactor || 1)).toFixed(update.decimalPoints || 2),
+        MRP: update.mrp || 0
+      }));
+
+      return [...rates, ...newRates];
+      
+    } catch (err) {
+      console.error("Error in loadMultiRates:", err);
+      return obj.prices || []; 
+    }
   };
 
+  const loadMultiRateToGrid = async (obj:productDto,updateUnit:any): Promise<void> => {
+
+      const mlRate = loadMultiRates(obj,updateUnit)
+        if ((obj.product.unitID??0) > 0) {
+          if (obj.prices.find((x: any) => x.unitID == obj.product.unitID) == undefined) {
+                await loadMultiRates(cbUnit.text, cbUnit.selectedValue);
+            }
+        }
+    
+        // for (const row of dgvMultiUnits) {
+        //     if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
+        //         await loadMultiRates(
+        //             row.UOM,
+        //             row.MultiUnitID,
+        //             val(row.MultiFactor),
+        //             val(row.MuMRP)
+        //         );
+        //     }
+        // }
+    
+};
+
   const handleRemoveUnit = (rowId: number) => {
-    handleFieldChange("units", [...getFieldProps("units").value?.filter((_: any, index: any) => index !== rowId)]);
+    handleFieldChange("units", [
+      ...getFieldProps("units").value?.filter(
+        (_: any, index: any) => index !== rowId
+      ),
+    ]);
   };
 
   const setMultiBarcode = (rowId: number) => {
@@ -85,13 +149,13 @@ const ProductMultiUnitsIndia: React.FC<{
 
     const data =
       barcodeArray == undefined ||
-        barcodeArray == null ||
-        barcodeArray.length == 0
+      barcodeArray == null ||
+      barcodeArray.length == 0
         ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
         : barcodeArray.map((barcode: any) => ({
-          unit: units[rowId].unit ?? "",
-          barcode,
-        }));
+            unit: units[rowId].unit ?? "",
+            barcode,
+          }));
     setOpenMB({
       index: rowId,
       open: true,
@@ -121,7 +185,7 @@ const ProductMultiUnitsIndia: React.FC<{
       data: [],
       index: 0,
       open: false,
-      unit: ""
+      unit: "",
     }));
   };
 
@@ -177,7 +241,6 @@ const ProductMultiUnitsIndia: React.FC<{
               }
               className="flex-1 min-w-[120px] max-w-[222px]"
             />
-
 
             <ERPInput
               id="salesPrice"
@@ -271,9 +334,11 @@ const ProductMultiUnitsIndia: React.FC<{
               const _unts = getFieldProps("units").value;
               if (e.changes.length > 0) {
                 const changes = e.changes[0];
-                if (changes.type === 'update') {
+                if (changes.type === "update") {
                   const updatedUnits = [..._unts];
-                  const index = _unts.findIndex((u: any) => u.unitID === changes.key?.unitID);
+                  const index = _unts.findIndex(
+                    (u: any) => u.unitID === changes.key?.unitID
+                  );
                   updatedUnits[index] = {
                     ...updatedUnits[index],
                     ...changes.data,
@@ -285,10 +350,7 @@ const ProductMultiUnitsIndia: React.FC<{
           >
             <Paging defaultPageSize={5} />
 
-            <Editing
-              mode="cell"
-              allowUpdating={true}
-            />
+            <Editing mode="cell" allowUpdating={true} />
 
             <KeyboardNavigation
               editOnKeyPress={true}
@@ -296,10 +358,7 @@ const ProductMultiUnitsIndia: React.FC<{
               enterKeyDirection={"row"}
             />
 
-            <Column
-              dataField="unit"
-              caption={t("uom")}
-            />
+            <Column dataField="unit" caption={t("uom")} />
 
             <Column
               dataField="multiFactor"
@@ -308,11 +367,7 @@ const ProductMultiUnitsIndia: React.FC<{
               allowEditing
             />
 
-            <Column
-              dataField="barCode"
-              allowEditing
-              caption={t("barcode")}
-            />
+            <Column dataField="barCode" allowEditing caption={t("barcode")} />
 
             <Column
               dataField="salesPrice"
@@ -352,7 +407,12 @@ const ProductMultiUnitsIndia: React.FC<{
               caption={t("mb")}
               dataType="boolean"
               cellRender={(cellData) => (
-                <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold" onClick={() => setMultiBarcode(cellData.rowIndex)}>X</a>
+                <a
+                  className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
+                  onClick={() => setMultiBarcode(cellData.rowIndex)}
+                >
+                  X
+                </a>
               )}
             />
 
@@ -418,7 +478,10 @@ const ProductMultiUnitsIndia: React.FC<{
                   valueKey: "id",
                 }}
                 onChangeData={(data) =>
-                  handleFieldChange("batch.defReportUnitID", data.defReportUnitID)
+                  handleFieldChange(
+                    "batch.defReportUnitID",
+                    data.defReportUnitID
+                  )
                 }
                 className="w-full"
               />
@@ -446,11 +509,21 @@ const ProductMultiUnitsIndia: React.FC<{
                 onEditorPrepared={(e) => {
                   if (e.parentType === "dataRow") {
                     const currentRowData = e.row?.data;
-                    if (!currentRowData || !currentRowData.unit || currentRowData.unit.trim() === "") {
+                    if (
+                      !currentRowData ||
+                      !currentRowData.unit ||
+                      currentRowData.unit.trim() === ""
+                    ) {
                       e.editorElement.setAttribute("disabled", "true");
-                      e.editorElement.setAttribute("title", "Enter a valid unit to enable editing.");
+                      e.editorElement.setAttribute(
+                        "title",
+                        "Enter a valid unit to enable editing."
+                      );
                     } else {
-                      e.editorElement.removeEventListener("keydown", (e.editorElement as any)._onBarcodeKeyDown);
+                      e.editorElement.removeEventListener(
+                        "keydown",
+                        (e.editorElement as any)._onBarcodeKeyDown
+                      );
 
                       const barcodeKeyDownHandler = (event: KeyboardEvent) => {
                         if (event.key === "Enter") {
@@ -460,12 +533,16 @@ const ProductMultiUnitsIndia: React.FC<{
                           });
                         }
                       };
-                      (e.editorElement as any)._onBarcodeKeyDown = barcodeKeyDownHandler;
-                      e.editorElement.addEventListener("keydown", barcodeKeyDownHandler);
+                      (e.editorElement as any)._onBarcodeKeyDown =
+                        barcodeKeyDownHandler;
+                      e.editorElement.addEventListener(
+                        "keydown",
+                        barcodeKeyDownHandler
+                      );
                     }
                   }
-                }}>
-
+                }}
+              >
                 <KeyboardNavigation
                   editOnKeyPress={true}
                   enterKeyAction={"moveFocus"}
@@ -510,12 +587,15 @@ const ProductMultiUnitsIndia: React.FC<{
           width={780}
           height={570}
           disableOutsideClickClose={false}
-          footer={(
+          footer={
             <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
               <ERPSubmitButton
                 type="reset"
-                onClick={() => setOpenMB({ index: 0, open: false, unit: "", data: [] })}
-                className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]">
+                onClick={() =>
+                  setOpenMB({ index: 0, open: false, unit: "", data: [] })
+                }
+                className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
+              >
                 {t("cancel")}
               </ERPSubmitButton>
 
@@ -523,11 +603,12 @@ const ProductMultiUnitsIndia: React.FC<{
                 type="button"
                 className="max-w-[115px]"
                 variant="primary"
-                onClick={handleSaveMB}>
+                onClick={handleSaveMB}
+              >
                 {t("save")}
               </ERPSubmitButton>
             </div>
-          )}
+          }
         />
       )}
     </div>

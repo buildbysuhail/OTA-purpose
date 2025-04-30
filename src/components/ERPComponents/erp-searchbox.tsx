@@ -8,6 +8,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import ERPInput from "../../components/ERPComponents/erp-input";
 import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
 import { RootState } from '../../redux/store';
+import ERPCheckbox from './erp-checkbox';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputId?:string;
   label?: string;
@@ -16,7 +17,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   keyId?: string;
   onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any) => void;
-  searchByCode?: boolean;
+  checkboxLabel?: string; 
 }
 
 interface LoadResult {
@@ -26,11 +27,8 @@ interface LoadResult {
   groupCount?: number;
 }
 const api = new APIClient();
-// Demo data to be used until API is available.
-// function isNotEmpty(value: string | undefined | null) {
-//     return value !== undefined && value !== null && value !== "";
-//   }
-const createStore = async (value: string, productDataUrl?: string) => {
+
+const createStore = async (value: string,byCode:boolean, productDataUrl?: string) => {
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
@@ -44,6 +42,7 @@ const createStore = async (value: string, productDataUrl?: string) => {
       try {
         const payload = {
           productName: value,
+          searchByCode:byCode
         };
         const url = productDataUrl || "";
         const response = await api.postAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`, payload);
@@ -99,31 +98,38 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected, searchByCode, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected,checkboxLabel, onChange, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
   const [showBatchGrid, setShowBatchGrid] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState({
+                                                    searchValue:"",
+                                                    searchByCode:false,
+
+                                              });
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation("inventory");
-  const appState = useAppSelector( (state: RootState) => state.AppState?.appState);
+
   const debouncedFetch = useMemo(
     () =>
       debounce(async (value: string) => {
-        const result = await createStore(value, productDataUrl);
+        let byCode = inputValue.searchByCode;
+        const result = await createStore(value,byCode,productDataUrl);
         setStore(result);
         const loadResult = await result.load() as LoadResult;
         setShowProductGrid(loadResult.totalCount > 0);
       }, 200),
-    [productDataUrl]
+    [productDataUrl,inputValue.searchByCode]
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setInputValue(value);
+    setInputValue((prev) => ({
+      ...prev,
+      searchValue: value,
+    }));
     setShowBatchGrid(false)
     if (value.length >= 3) {
       debouncedFetch(value);
@@ -138,7 +144,6 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
     }
     if (onChange) onChange(e);
   };
-
   // Cancel any pending debounced calls on component unmount.
   useEffect(() => {
     return () => {
@@ -148,8 +153,43 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
 
   const handleGridKeyDown = useCallback(
     async (e: any) => {
-      if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
-        const selectedRow = e.component.getSelectedRowsData()[0];
+      const grid: any = dataGridRef.current?.instance();
+      
+      // Handle ArrowDown to select next row
+      if (e.event.key === 'ArrowDown') {
+        e.event.preventDefault();
+        const rows = grid.getVisibleRows();
+        const selectedRowKeys = grid.getSelectedRowKeys();
+        
+        if (rows.length > 0 && selectedRowKeys.length > 0) {
+          const currentIndex = rows.findIndex((row: any) => row.key === selectedRowKeys[0]);
+          const nextIndex = currentIndex < rows.length - 1 ? currentIndex + 1 : currentIndex;
+          
+          grid.selectRowsByIndexes([nextIndex]);
+          grid.navigateToRow(grid.getKeyByRowIndex(nextIndex));
+        }
+        return;
+      }
+      
+      // Handle ArrowUp to select previous row
+      if (e.event.key === 'ArrowUp') {
+        e.event.preventDefault();
+        const rows = grid.getVisibleRows();
+        const selectedRowKeys = grid.getSelectedRowKeys();
+        
+        if (rows.length > 0 && selectedRowKeys.length > 0) {
+          const currentIndex = rows.findIndex((row: any) => row.key === selectedRowKeys[0]);
+          const prevIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+          
+          grid.selectRowsByIndexes([prevIndex]);
+          grid.navigateToRow(grid.getKeyByRowIndex(prevIndex));
+        }
+        return;
+      }
+      
+      // Original Enter key functionality
+      if (e.event.key === 'Enter' && grid.getSelectedRowKeys().length > 0) {
+        const selectedRow = grid.getSelectedRowsData()[0];
         if(onProductSelected){
           onProductSelected(selectedRow)
         }
@@ -159,7 +199,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           setShowProductGrid(false);
           setShowBatchGrid(true);
         } catch (err) {
-          setShowBatchGrid(false); // Hide batch grid on error
+          setShowBatchGrid(false);
         }
       }
     },
@@ -174,7 +214,10 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           onRowSelected(selectedRow); // Call the onRowSelected callback with selected row data
         }
         setShowBatchGrid(false); // Optionally hide the batch grid
-        setInputValue(''); // Optionally clear the input
+        setInputValue((prev) => ({
+          ...prev,
+          searchValue: '', // Clear the searchValue
+        }))
       }
     },
     [onRowSelected]
@@ -224,7 +267,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
 
 
   return (
-    <div className=''>
+    <div className="flex items-center gap-4">
         {/* {label && (
           <label htmlFor={rest.id || rest.name} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
@@ -237,7 +280,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           type="text"
           id="test"
           placeholder="Search Here"
-          value={inputValue}
+          value={inputValue.searchValue}
           onChange={handleChange}
           onKeyDown={handleInputKeyDown}
           disableEnterNavigation
@@ -254,7 +297,6 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
             showRowLines={true}
             remoteOperations={{ filtering: true, paging: true, sorting: true }}
             onKeyDown={handleGridKeyDown}
-            
           >
             <Selection mode="single" />
             <Paging pageSize={10} />
@@ -308,14 +350,17 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           </DataGrid>
         </div>
       )}
-
-
       </div>
-    
-
-     
+        <ERPCheckbox
+          id='searchByCode'
+          checked={inputValue.searchByCode}
+          label={ checkboxLabel || t('Code')}
+          onChange={(e)=> setInputValue((prev) => ({
+            ...prev,
+            searchByCode: e.target.checked,
+          }))}
+        />
     </div>
-
   );
 };
 

@@ -365,7 +365,6 @@ export const SpecialPrice: React.FC = () => {
                   <ERPProductSearch
                     onChange={(e) => console.log("Input changed:", e.target.value)}
                     productDataUrl={Urls.load_product_details}
-                    searchByCode={getFieldProps("searchByCode").value}
                     onRowSelected={(data: any) => {
                       const obj = getFieldProps("*");
                       handleDataChange({

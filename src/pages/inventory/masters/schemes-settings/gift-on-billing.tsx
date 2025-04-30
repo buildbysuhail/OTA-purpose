@@ -262,8 +262,8 @@ export const GiftOnBilling: React.FC = () => {
             debugger;
             const updatedData: Partial<GiftOnBillingData> =
             {
-                giftProductBatchId: response.GiftProductBatchID,
-                giftBarcode: response.AutoBarcode,
+                giftProductBatchId: response.productBatchID,
+                giftBarcode: response.autoBarcode,
             }
             handleDataChange({
                 ...obj,

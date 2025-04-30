@@ -424,22 +424,22 @@ export const GiftOnBilling: React.FC = () => {
                         caption={t("range_to")}
                     />
                     <Column
-                        dataField="giftBarcode"
+                        dataField="autoBarcode"
                         width={60}
                         caption={t("barcode")}
                     />
                     <Column
-                        dataField="giftItem"
+                        dataField="productName"
                         width={385}
                         caption={t("gift_item")}
                     />
                     <Column
-                        dataField="qty"
+                        dataField="quantity"
                         width={40}
                         caption={t("qty")}
                     />
                     <Column
-                        dataField="productBatchId"
+                        dataField="giftProductBatchID"
                         width={70}
                         caption={t("product_batch_id")}
                     />
@@ -449,7 +449,7 @@ export const GiftOnBilling: React.FC = () => {
                         caption={t("cash_coupon_value")}
                     />
                     <Column
-                        dataField="price"
+                        dataField="specialPrice"
                         width={100}
                         caption={t("special_price")}
                     />

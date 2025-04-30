@@ -60,84 +60,73 @@ const ProductMultiUnitsIndia: React.FC<{
   const handleAddUnit = async () => {
     const updated = [...getFieldProps("units").value, unit];
     handleFieldChange("units", updated);
-
     const obj = getFieldProps("*");
-
-    // Get price categories from API
     if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
-      const priceCategories = await api.getAsync(Urls.data_pricectegory);
-      if (priceCategories && priceCategories.length > 0) {
-        priceCategories.forEach((category: any) => {});
-      }
+      loadMultiRateToGrid(obj,updated)
     }
+    
+    // Get price categories from API
+    // if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
+    //   const priceCategories = await api.getAsync(Urls.data_pricectegory);
+    //   if (priceCategories && priceCategories.length > 0) {
+    //     priceCategories.forEach((category: any) => {});
+    //   }
+    // }
 
     setUnit(unitDAta);
   };
-  function loadMultiRates(
-    unitName: string,
-    unitID: number,
-    multiFactor: number = 1,
-    mrp: number = 0,
-    dtPriceCat: {id: number, name: string}[],
-    purPrice: number,
-    decimalPoints: number,
-    existingRates: ProductPriceInputDto[]
-  ): ProductPriceInputDto[] {
-    const rates: ProductPriceInputDto[] = [...existingRates];
-    let gridIndex = rates.length;
-  
+  const loadMultiRates = async (
+    obj: any,
+    update:any
+  ): Promise<ProductPriceInputDto[]> => {
     try {
+      const rates: ProductPriceInputDto[] = [...obj.prices || []];
       const priceCategories = await api.getAsync(Urls.data_pricectegory);
-      if (priceCategories && priceCategories.length > 0) {
-      for (let i = 0; i < dtPriceCat.length; i++) {
-        const cat = dtPriceCat[i];
-  
-        const newRate: any = {
-          // SlNo: gridIndex + 1,
-          PriceCategory: cat["Price Category Name"],
-          Unit: unitName,
-          UnitID: unitID,
-          PriceCategoryID: cat["ID"].toString(),
-          MRRemoveLine: "X",
-          PurchaseRate: (purPrice * multiFactor).toFixed(decimalPoints),
-          MRP: mrp,
-        };
-  
-        rates.push(newRate);
-      }
-    }
+      
+      if (!priceCategories || priceCategories.length === 0) {
+        return rates; 
+      } 
+      // Transform price categories into new rates using map
+      const newRates = priceCategories.map((cat: any) => ({
+        PriceCategory: cat.name,
+        Unit: update.unitName,
+        UnitID: update.unitID,
+        PriceCategoryID: cat.id,
+        MRRemoveLine: "X",
+        PurchaseRate: (update.purPrice * (update.multiFactor || 1)).toFixed(update.decimalPoints || 2),
+        MRP: update.mrp || 0
+      }));
+
+      return [...rates, ...newRates];
+      
     } catch (err) {
       console.error("Error in loadMultiRates:", err);
+      return obj.prices || []; 
     }
-  
-    return rates;
-  }
-  function loadMaultiRateToGrid(): void { //1st
-    let isUnitChanged = true;
-  
-    if (isUnitChanged) {
-      if (cbUnit.selectedValue !== null) {
-        if (!checkUnitNameExists(cbUnit.text)) {
-          loadMultiRates(cbUnit.text, cbUnit.selectedValue);
-        }
-      }
-  
-      for (const row of dgvMultiUnits) {
-        if (!checkUnitNameExists(row.UOM)) {
-          loadMultiRates(
-            row.UOM,
-            row.MultiUnitID,
-            val(row.MultiFactor),
-            val(row.MuMRP)
-          );
-        }
-      }
-  
-      isUnitChanged = false;
-    }
-  
-    setMu(); // Assumed defined elsewhere
-  }
+  };
+
+  const loadMultiRateToGrid = async (obj:any,updateUnit:any): Promise<void> => {
+
+      const mlRate = loadMultiRates(obj,updateUnit)
+        // if (cbUnit.selectedValue !== null) {
+        //     if (!await checkUnitNameExists(cbUnit.text)) {
+        //         await loadMultiRates(cbUnit.text, cbUnit.selectedValue);
+        //     }
+        // }
+    
+        // for (const row of dgvMultiUnits) {
+        //     if (!await checkUnitNameExists(row.UOM)) {
+        //         await loadMultiRates(
+        //             row.UOM,
+        //             row.MultiUnitID,
+        //             val(row.MultiFactor),
+        //             val(row.MuMRP)
+        //         );
+        //     }
+        // }
+    
+};
+
   const handleRemoveUnit = (rowId: number) => {
     handleFieldChange("units", [
       ...getFieldProps("units").value?.filter(

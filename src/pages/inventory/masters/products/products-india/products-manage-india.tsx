@@ -15,6 +15,7 @@ import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { calculateMarkup, calculateSalesPrice, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { BusinessType } from "../../../../../enums/business-types";
+import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 
@@ -34,6 +35,51 @@ export const ProductManageIndia: React.FC<{
         const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
+    function handlePriceValidation() {
+      try {
+        debugger;
+        const obj = getFieldProps("*") as productDto;
+        const showWarning = appSettings.inventorySettings.showRateWarning.toUpperCase();
+    
+        if (showWarning === "WARN") {
+          if ((obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
+            ERPAlert.show(
+              {
+                text:"Sales Price is less than Purchase Price. Do you want to continue?",
+              title:"Warning",
+              type:"warn",
+              onCancel() {
+                setFocus("salesPrice");     
+              },
+              }
+            )
+          }
+        } else if (showWarning === "BLOCK" && (obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
+          setFocus("salesPrice");
+        }
+    
+        if (appSettings.productsSettings.allowMultirate) {
+          if (cbUnit && sales > 0) {
+            showMessageBox("Multi Rates Exist! Update Multi Rates.", "Multi Rates", "info");
+    
+            if (multiRates.length === 0) {
+              try {
+                loadMultiRateToGrid();
+              } catch (err: any) {
+                console.error(err.message);
+              }
+            }
+    
+            setFocus("mrp");
+          }
+        }
+    
+        mrpSaleRateCompare(mrp, sales, "mrp");
+      } catch (err: any) {
+        showMessageBox(err.message, "Error", "warn");
+      }
+    }
+
 useEffect(() => {
   productNameRef?.current?.focus()
   productNameRef?.current?.select()

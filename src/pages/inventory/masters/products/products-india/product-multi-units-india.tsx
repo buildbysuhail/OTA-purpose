@@ -23,16 +23,19 @@ import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
 import { APIClient } from "../../../../../helpers/api-client";
 import { getAccordionSummaryUtilityClass } from "@mui/material";
+import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 
 const api = new APIClient();
 const ProductMultiUnitsIndia: React.FC<{
+  appSettings: ApplicationSettingsType;
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField | any;
-}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+}> = React.memo(({ t, handleFieldChange, getFieldProps, 
+  appSettings, }) => {
   const unitDAta: ProductUnitInputDto = {
     productUnitID: 0,
     productBatchID: 0,
@@ -61,9 +64,10 @@ const ProductMultiUnitsIndia: React.FC<{
     const updated = [...getFieldProps("units").value, unit];
     handleFieldChange("units", updated);
     const obj = getFieldProps("*");
-    if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
+      if (appSettings.productsSettings.allowMultirate) {
+    
       loadMultiRateToGrid(obj,updated)
-    }
+  }
     
     // Get price categories from API
     // if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
@@ -105,17 +109,17 @@ const ProductMultiUnitsIndia: React.FC<{
     }
   };
 
-  const loadMultiRateToGrid = async (obj:any,updateUnit:any): Promise<void> => {
+  const loadMultiRateToGrid = async (obj:productDto,updateUnit:any): Promise<void> => {
 
       const mlRate = loadMultiRates(obj,updateUnit)
-        // if (cbUnit.selectedValue !== null) {
-        //     if (!await checkUnitNameExists(cbUnit.text)) {
-        //         await loadMultiRates(cbUnit.text, cbUnit.selectedValue);
-        //     }
-        // }
+        if ((obj.product.unitID??0) > 0) {
+          if (obj.prices.find((x: any) => x.unitID == obj.product.unitID) == undefined) {
+                await loadMultiRates(cbUnit.text, cbUnit.selectedValue);
+            }
+        }
     
         // for (const row of dgvMultiUnits) {
-        //     if (!await checkUnitNameExists(row.UOM)) {
+        //     if (obj.prices.find((x: any) => x.unitID == unit.unitID) == undefined) {
         //         await loadMultiRates(
         //             row.UOM,
         //             row.MultiUnitID,

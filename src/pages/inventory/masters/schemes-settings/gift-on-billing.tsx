@@ -257,7 +257,7 @@ export const GiftOnBilling: React.FC = () => {
                 return;
             }
             setIsDataLoading(true);
-            const url = `${Urls.select_product_by_product_id_multi_foc}${obj.giftProductId}`;//change url it for demo
+            const url = `${Urls.gift_on_billing}${obj.giftProductId}`;//change url it for demo
             const response = await api.get(url);
             debugger;
             const updatedData: Partial<GiftOnBillingData> =

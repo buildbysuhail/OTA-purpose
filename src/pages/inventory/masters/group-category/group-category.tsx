@@ -70,7 +70,7 @@ const GroupCategory = () => {
     {
       dataField: "remarks",
       caption: t("remarks"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

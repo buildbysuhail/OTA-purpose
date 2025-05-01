@@ -205,7 +205,7 @@
     "qty_limit": "Qty limit",
     "scheme_rate": "Scheme rate",
     "free_qty": "Free qty",
-    "scheme_state": "Scheme state",
+    "scheme_status": "Scheme status",
     "item_batch_no": "Item batch no",
     "disc_percentage": "Disc percentage",
     "item_product": "Item product",

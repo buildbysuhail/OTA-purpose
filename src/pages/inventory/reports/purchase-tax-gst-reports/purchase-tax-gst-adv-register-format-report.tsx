@@ -42,7 +42,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 75,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -51,7 +51,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "refNumber",
@@ -59,7 +59,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "refDate",
@@ -85,7 +85,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -94,7 +94,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "gstin",
@@ -102,7 +102,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -143,7 +143,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -211,12 +211,21 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       showInPdf: true,
     },
     {
+      dataField: "taxable0",
+      caption: t("taxable_0"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
+    {
       dataField: "taxAmt0",
       caption: t("tax_amount_0"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -243,8 +252,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable0",
-      caption: t("taxable_0"),
+      dataField: "taxable5",
+      caption: t("taxable_5"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -257,7 +266,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -289,7 +298,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -321,7 +330,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -348,8 +357,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable5",
-      caption: t("taxable_5"),
+      dataField: "taxable12",
+      caption: t("taxable_12"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -362,7 +371,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -394,7 +403,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -426,7 +435,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -453,8 +462,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable12",
-      caption: t("taxable_12"),
+      dataField: "taxable18",
+      caption: t("taxable_18"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -467,7 +476,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -499,7 +508,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -531,7 +540,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -558,8 +567,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable18",
-      caption: t("taxable_18"),
+      dataField: "taxable28",
+      caption: t("taxable_28"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -572,7 +581,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -604,7 +613,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -636,7 +645,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -663,8 +672,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable28",
-      caption: t("taxable_28"),
+      dataField: "taxable28_12",
+      caption: t("taxable_28_12"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -677,7 +686,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -709,7 +718,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -741,7 +750,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -768,8 +777,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable28_12",
-      caption: t("taxable_28_12"),
+      dataField: "taxable6",
+      caption: t("taxable_6"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -782,7 +791,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -813,7 +823,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -845,7 +855,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -872,8 +882,8 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable6",
-      caption: t("taxable_6"),
+      dataField: "taxable3",
+      caption: t("taxable_3"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -886,7 +896,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -918,7 +928,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -950,7 +960,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -977,15 +987,6 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       },
     },
     {
-      dataField: "taxable3",
-      caption: t("taxable_3"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
       dataField: "financialYearID",
       caption: t("financial_year_id"),
       dataType: "number",
@@ -995,6 +996,7 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
       showInPdf: true,
     },
   ];
+  
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {

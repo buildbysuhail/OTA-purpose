@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -11,7 +11,7 @@ import { APIClient } from "../../../../../helpers/api-client";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
-import { PathValue, productDto, ProductFieldPath } from "../products-type";
+import { DetailsDto, PathValue, productDto, ProductFieldPath } from "../products-type";
 import { calculateMarkup, calculateSalesPrice, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { BusinessType } from "../../../../../enums/business-types";
@@ -30,17 +30,22 @@ export const ProductManageIndia: React.FC<{
 
   getFieldProps: (fieldId: string, type?: any) => FormField | any;
 }> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings, handleDataChange }) => {
-  
+
   const clientSession = useSelector((state: RootState) => state.ClientSession)
         const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
+    const salesPriceRef = useRef<HTMLInputElement>(null);
     function handlePriceValidation() {
       try {
         debugger;
         const obj = getFieldProps("*") as productDto;
         const showWarning = appSettings.inventorySettings.showRateWarning.toUpperCase();
-    
+        const setFocus = () => {
+          if (salesPriceRef.current) {
+            salesPriceRef.current.focus();
+          }
+        };
         if (showWarning === "WARN") {
           if ((obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
             ERPAlert.show(
@@ -48,35 +53,54 @@ export const ProductManageIndia: React.FC<{
                 text:"Sales Price is less than Purchase Price. Do you want to continue?",
               title:"Warning",
               type:"warn",
-              onCancel() {
-                setFocus("salesPrice");     
-              },
+              onCancel: setFocus
               }
             )
           }
         } else if (showWarning === "BLOCK" && (obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
-          setFocus("salesPrice");
+          setFocus();
         }
     
         if (appSettings.productsSettings.allowMultirate) {
-          if (cbUnit && sales > 0) {
-            showMessageBox("Multi Rates Exist! Update Multi Rates.", "Multi Rates", "info");
+          if (  obj.product.unitID &&
+            obj.product.stdSalesPrice !== undefined &&
+            obj.product.stdSalesPrice > 0) {
+              ERPAlert.show(
+                {
+                  text:`Multi Rates Exist! Update Multi Rates.", "Multi Rates", "info`,
+                title:"Warning",
+                type:"warn",
+                onCancel: setFocus
+                }
+              )
+              // owMessageBox("Multi Rates Exist! Update Multi Rates.", "Multi Rates", "info");
     
-            if (multiRates.length === 0) {
+            if (obj.prices.length === 0) {
               try {
-                loadMultiRateToGrid();
+                // loadMultiRateToGrid();
               } catch (err: any) {
                 console.error(err.message);
               }
             }
     
-            setFocus("mrp");
+            // setFocus("mrp");
           }
         }
     
-        mrpSaleRateCompare(mrp, sales, "mrp");
+        // mrpSaleRateCompare(mrp, sales, "mrp");
       } catch (err: any) {
-        showMessageBox(err.message, "Error", "warn");
+        ERPAlert.show(
+          {
+          text:`${err.message},"Error",`,
+          title:"Error",
+          icon: 'error',
+          type:"error",
+          // onCancel() {
+          //   setFocus("salesPrice");     
+          // },
+          }
+        )
+   
       }
     }
 
@@ -411,6 +435,7 @@ useEffect(() => {
                                 disabled={getFieldProps("product.itemType").value === "Dummy"}
                                 placeholder="0.00"
                                 type="number"
+                                ref={salesPriceRef }
                                 required={false}
                                 onChangeData={(data: any) => {
                                   debugger;
@@ -420,7 +445,7 @@ useEffect(() => {
                                   const  _data = {...prev,
                                     product: {...prev.product, 
                                       stdSalesPrice: data.product.stdSalesPrice,
-                                      }   ,
+                                      },
                                       markup: markupPercentage                   
                                   };
                                   
@@ -428,6 +453,7 @@ useEffect(() => {
                                   handleDataChange(_data)
                                 }
                               }
+                              onBlur={handlePriceValidation}
                               />
 
                <ERPInput
@@ -559,18 +585,18 @@ useEffect(() => {
                   
                 }}
                  onChangeData={(data: any) => {
-                                      const prev = getFieldProps("*");
-                                      const _data: productDto = {
-                                        ...prev,
-                                      };
-                                      _data.product.itemType = data.itemType;
-                                      if (data.itemType == "Dummy") {
-                                        _data.product.stdPurchasePrice = 0;
-                                        _data.product.stdSalesPrice = 0;
-                                        _data.product.manual = true;
-                                      }
-                                      handleDataChange(_data);
-                                    }}
+                          const prev = getFieldProps("*");
+                          const _data: productDto = {
+                            ...prev,
+                          };
+                          _data.product.itemType = data.itemType;
+                          if (data.itemType == "Dummy") {
+                            _data.product.stdPurchasePrice = 0;
+                            _data.product.stdSalesPrice = 0;
+                            _data.product.manual = true;
+                          }
+                          handleDataChange(_data);
+                        }}
                 label={t("product_type")}
                 className="flex-1 min-w-[240px]"
                 options={[

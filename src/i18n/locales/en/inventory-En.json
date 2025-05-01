@@ -205,7 +205,7 @@
     "qty_limit": "Qty limit",
     "scheme_rate": "Scheme rate",
     "free_qty": "Free qty",
-    "scheme_state": "Scheme state",
+    "scheme_status": "Scheme status",
     "item_batch_no": "Item batch no",
     "disc_percentage": "Disc percentage",
     "item_product": "Item product",
@@ -416,5 +416,7 @@
     "cgst_1_5":"CGST 1.5%",
     "sgst_1_5":"SGST 1.5%",
     "igst_3":"IGST 3%",
-    "taxable_3":"Taxable 3%"
+    "taxable_3":"Taxable 3%",
+    "active":"Active",
+    "inactive":"Inactive"
 }

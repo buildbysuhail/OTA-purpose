@@ -12,11 +12,15 @@ import GridId from "../../../../redux/gridId";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const CreditPurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
+  
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -634,7 +638,7 @@ const CreditPurchaseSummaryReport = () => {
                   filterHeight={400}
                   filterContent={<CreditPurchaseSummaryReportFilter />}
                   filterInitialData={
-                    CreditPurchaseSummaryReportFilterInitialState
+                    {...CreditPurchaseSummaryReportFilterInitialState, fromDate: clientSession.softwareDate}
                   }
                   hideGridAddButton={true}
                   reload={true}

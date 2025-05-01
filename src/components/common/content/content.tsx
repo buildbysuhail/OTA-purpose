@@ -186,6 +186,14 @@ import SalesmanIncentiveReport from "../../../pages/inventory/reports/salesman-i
 import PrivilegeCardReport from "../../../pages/inventory/reports/privilege-card-report/privilege-card";
 import Gstr1Report from "../../../pages/inventory/reports/GSTR1Report/gstr1-report";
 import Gstr3bReport from "../../../pages/inventory/reports/GSTR3B-report/gstr3b-report";
+import GSTR1B2B from "../../../pages/inventory/reports/GSTR1/GSTR1-B2B/gstr1-b2b";
+import GSTR1B2CLarge from "../../../pages/inventory/reports/GSTR1/GSTR1-B2C-Large/gstr1-b2c-large";
+import GSTR1B2CSmall from "../../../pages/inventory/reports/GSTR1/GSTR1-B2C-Small/gstr1-b2c-small";
+import GSTR1CDNR from "../../../pages/inventory/reports/GSTR1/GSTR1-CDNR/gstr1-cdnr";
+import GSTR1CDNUR from "../../../pages/inventory/reports/GSTR1/GSTR1-CDNUR/gstr1-cdnur";
+import GSTR1HSNSummary from "../../../pages/inventory/reports/GSTR1/GSTR1-Summary-of-HSN/gstr1-summaryOfHSN";
+import GSTR1Docs from "../../../pages/inventory/reports/GSTR1/GSTR1-Docs/gstr1-docs";
+import GSTR3BReport from "../../../pages/inventory/reports/GSTR3B/gstr3b";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -518,6 +526,14 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/sales_return_register" element={<RegisterReport dataUrl={urls.sales_return_register} gridHeader="sales_return_register" gridId="grd_sales_return_register" />} />
         <Route path="/inventory/sales_and_sales_return_report" element={<SalesAndSalesReturn />} />
         <Route path="/inventory/sales_order_summary_report" element={<SummaryReport dataUrl={urls.sales_order_summary} gridHeader="sales_order_summary" gridId="grd_sales_order_summary" />} />
+        <Route path="/inventory/gstr1b2b_report" element={<GSTR1B2B />} />
+        <Route path="/inventory/gstr1b2cLarge_report" element={<GSTR1B2CLarge />} />
+        <Route path="/inventory/gstr1b2cSmall_report" element={<GSTR1B2CSmall />} />
+        <Route path="/inventory/gstr1cdnr_report" element={<GSTR1CDNR />} />
+        <Route path="/inventory/gstr1cdnur_report" element={<GSTR1CDNUR />} />
+        <Route path="/inventory/gstr1hsnSummary_report" element={<GSTR1HSNSummary />} />
+        <Route path="/inventory/gstr1Docs_report" element={<GSTR1Docs />} />
+        <Route path="/inventory/gstr3b_report" element={<GSTR3BReport />} />
         {/* global */}
         <Route path="/inventory/sales_estimate_summary_report" element={<SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />} />
         {/* --- */}

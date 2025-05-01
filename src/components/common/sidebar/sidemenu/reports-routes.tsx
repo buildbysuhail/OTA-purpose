@@ -266,8 +266,16 @@ export const ReportsMenuItems = [
       { id: 171, path: `${import.meta.env.BASE_URL}reports/_/inventory/vat_return_form_arabic`, type: 'link', active: false, selected: false, title: 'vat_return_form_arabic', icon: AiOutlineFileText },
       { id: 172, path: `${import.meta.env.BASE_URL}reports/_/inventory/ksa_e_invoice_summary_report`, type: 'link', active: false, selected: false, title: 'ksa_e_invoice_summary', icon: AiOutlineFileText },
       { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/ksa_e_invoice_detailed_report`, type: 'link', active: false, selected: false, title: 'ksa_e_invoice_detailed', icon: AiOutlineFileText },
-      { id: 177, path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report', icon: AiOutlineFileText },
-      { id: 178, path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1b2b_report`, type: 'link', active: false, selected: false, title: 'gstr1_b2b', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1b2cLarge_report`, type: 'link', active: false, selected: false, title: 'gstr1_b2cLarge', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1b2cSmall_report`, type: 'link', active: false, selected: false, title: 'gstr1b2c_Small', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1cdnr_report`, type: 'link', active: false, selected: false, title: 'gstr1_cdnr', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1cdnur_report`, type: 'link', active: false, selected: false, title: 'gstr1_cdnur', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1hsnSummary_report`, type: 'link', active: false, selected: false, title: 'gstr1_summary_of_hsn', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1Docs_report`, type: 'link', active: false, selected: false, title: 'gstr1_docs', icon: AiOutlineFileText },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b', icon: AiOutlineFileText },
+      // { id: 177, path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report', icon: AiOutlineFileText },
+      // { id: 178, path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report', icon: AiOutlineFileText },
          ]
   },
   {

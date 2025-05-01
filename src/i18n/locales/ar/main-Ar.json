@@ -524,5 +524,10 @@
   "purchase_return_gst_register_format_report": "تقرير تنسيق سجل ضريبة مرتجع الشراء",
   "purchase_return_gst_taxwise_report": "تقرير ضريبة مرتجع الشراء حسب الضريبة",
   "purchase_return_gst_taxwise_with_hsn_report": "تقرير ضريبة مرتجع الشراء حسب الضريبة مع رمز HSN",
-  "purchase_return_gst_sales_and_return_report": "تقرير ضريبة مبيعات ومرتجعات الشراء"
+  "purchase_return_gst_sales_and_return_report": "تقرير ضريبة مبيعات ومرتجعات الشراء",
+
+  "export_options": "خيارات التصدير",
+  "export_to_pdf": "تصدير إلى PDF",
+  "export_to_excel": "تصدير إلى Excel",
+  "print": "طباعة"
 }

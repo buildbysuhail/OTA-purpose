@@ -501,6 +501,10 @@
     "purchase_return_gst_register_format_report":"Purchase Return Tax Register Format Report",
     "purchase_return_gst_taxwise_report":"Purchase Return Tax wise Report",
     "purchase_return_gst_taxwise_with_hsn_report":"Purchase Return Tax wise With HSN Report",
-    "purchase_return_gst_sales_and_return_report":"Purchase Return Tax Sales and Return Report"
+    "purchase_return_gst_sales_and_return_report":"Purchase Return Tax Sales and Return Report",
 
+    "export_options":"Export Options",
+    "export_to_pdf":"Export to Pdf",
+    "export_to_excel":"Export to Excel",
+    "print":"Print"
 }

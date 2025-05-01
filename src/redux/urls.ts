@@ -530,6 +530,14 @@ const Urls = {
   vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic: "/Inventory/RptTAXReport/VatReturnFormArabic",
 
+  gstr1b2b: "/Inventory/RptGSTR1Report/SelectGSTR1B2B/",
+  gstr1b2cLarge: "/Inventory/RptGSTR1Report/SelectGSTR1B2CL/",
+  gstr1b2cSmall: "/Inventory/RptGSTR1Report/SelectGSTR1B2CS/",
+  gstr1cdnr: "/Inventory/RptGSTR1Report/SelectGSTR1CDNR/",
+  gstr1cdnur: "/Inventory/RptGSTR1Report/SelectGSTR1CDNUR/",
+  gstr1hsnSummary: "/Inventory/RptGSTR1Report/SelectGSTR1SummaryOfHSN/",
+  gstr1Docs: "api/Inventory/RptGSTR1Report/SelectGSTR1Docs/",
+
   //Report End
   //Inventory Reports Starts
   //Purchase
@@ -615,7 +623,7 @@ const Urls = {
   load_product_details_foc: "/Inventory/FOC/LoadProductDetails", // POST (with query params for DataSourceLoadOptions)
   select_foc_product_batch_grid_foc: "/Inventory/FOC/LoadBatchDetails/",
 
-  
+
   // URLs for MultiFOCController (Inventory Module)
   insert_multi_foc_details: "/Inventory/MultiFOC/", // POST
   select_quantity_discount_scheme_for_MultiFOC_by_scheme_id: "/Inventory/MultiFOC/BySchemeId/", // GET
@@ -630,12 +638,12 @@ const Urls = {
   select_gift_product_by_product_id: "/Inventory/GiftOnBilling/", // GET (append {productId})
   delete_gift_on_billing: "/Inventory/GiftOnBilling/", // DELETE (pass body as List<GiftSchemeDto>)
   select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // 
-  gift_on_billing:"/Inventory/GiftOnBilling/",
+  gift_on_billing: "/Inventory/GiftOnBilling/",
   // URLs for QuantityLimitController (Inventory Module)
-    insert_item_qty_limit: "/Inventory/QuantityLimit/", // POST
-    select_quantity_limit: "/Inventory/QuantityLimit/", // GET
-    select_products_for_product_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
-    delete_quantity_limit: "/Inventory/QuantityLimit/", // DELETE (pass body as List<ItemQtyLimitSchemeDto>)
+  insert_item_qty_limit: "/Inventory/QuantityLimit/", // POST
+  select_quantity_limit: "/Inventory/QuantityLimit/", // GET
+  select_products_for_product_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
+  delete_quantity_limit: "/Inventory/QuantityLimit/", // DELETE (pass body as List<ItemQtyLimitSchemeDto>)
   // URLs for QuantitySlabController (Inventory Module)
   qty_slab_offer: "/Inventory/QuantitySlab/", // POST
 

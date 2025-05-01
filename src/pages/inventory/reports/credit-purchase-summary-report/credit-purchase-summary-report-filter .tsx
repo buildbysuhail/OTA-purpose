@@ -4,9 +4,14 @@ import moment from "moment"
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox"
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 import Urls from "../../../../redux/urls"
-
+import { useSelector } from "react-redux"
+import { RootState } from "../../../../redux/store"
+const clientSession = useSelector((state: RootState) => state.ClientSession);
 const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("inventory")
+   const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="flex flex-col md:flex-row items-center gap-4">
@@ -26,6 +31,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
         <ERPDataCombobox
           {...getFieldProps("salesRouteID")}
           label={t("sales_route")}
@@ -39,7 +45,8 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           }}
           onSelectItem={(data) => handleFieldChange({ salesRouteID: data.value, SalesRouteName: data.label })}
         />
-
+        )}
+          {applicationSettings.accountsSettings?.allowSalesCounter == true && (
         <ERPDataCombobox
           {...getFieldProps("counterID")}
           label={t("counter")}
@@ -53,7 +60,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           }}
           onSelectItem={(data) => handleFieldChange({ counterID: data.value, CounterName: data.label })}
         />
-
+        )}
         <ERPDataCombobox
           {...getFieldProps("salemanID")}
           label={t("saleman")}
@@ -67,21 +74,6 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           }}
           onSelectItem={(data) => handleFieldChange({ salemanID: data.value, SalemanName: data.label })}
         />
-
-        <ERPDataCombobox
-          {...getFieldProps("productID")}
-          label={t("product")}
-          field={{
-            id: "productID",
-            getListUrl: Urls.data_products,
-            params: "",
-            valueKey: "id",
-            labelKey: "name",
-            nameKey: "alias",
-          }}
-          onSelectItem={(data) => handleFieldChange({ productID: data.value, ProductName: data.label })}
-        />
-
         <ERPDataCombobox
           {...getFieldProps("partyID")}
           label={t("party")}
@@ -131,7 +123,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
 export default CreditPurchaseSummaryReportFilter
 
 export const CreditPurchaseSummaryReportFilterInitialState = {
-  fromDate: moment().local().subtract(30, "days").toDate(),
+  fromDate: clientSession.softwareDate,
   toDate: new Date(),
   salesRouteID: 0,
   counterID: 0,

@@ -6,7 +6,6 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 import Urls from "../../../../redux/urls"
 import { useSelector } from "react-redux"
 import { RootState } from "../../../../redux/store"
-const clientSession = useSelector((state: RootState) => state.ClientSession);
 const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("inventory")
    const applicationSettings = useSelector(
@@ -46,6 +45,19 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           onSelectItem={(data) => handleFieldChange({ salesRouteID: data.value, SalesRouteName: data.label })}
         />
         )}
+         <ERPDataCombobox
+          {...getFieldProps("salemanID")}
+          label={t("saleman")}
+          field={{
+            id: "salemanID",
+            getListUrl: Urls.data_employees,
+            params: "",
+            valueKey: "id",
+            labelKey: "name",
+            nameKey: "alias",
+          }}
+          onSelectItem={(data) => handleFieldChange({ salemanID: data.value, SalemanName: data.label })}
+        />
           {applicationSettings.accountsSettings?.allowSalesCounter == true && (
         <ERPDataCombobox
           {...getFieldProps("counterID")}
@@ -61,19 +73,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           onSelectItem={(data) => handleFieldChange({ counterID: data.value, CounterName: data.label })}
         />
         )}
-        <ERPDataCombobox
-          {...getFieldProps("salemanID")}
-          label={t("saleman")}
-          field={{
-            id: "salemanID",
-            getListUrl: Urls.data_employees,
-            params: "",
-            valueKey: "id",
-            labelKey: "name",
-            nameKey: "alias",
-          }}
-          onSelectItem={(data) => handleFieldChange({ salemanID: data.value, SalemanName: data.label })}
-        />
+       
         <ERPDataCombobox
           {...getFieldProps("partyID")}
           label={t("party")}
@@ -123,7 +123,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
 export default CreditPurchaseSummaryReportFilter
 
 export const CreditPurchaseSummaryReportFilterInitialState = {
-  fromDate: clientSession.softwareDate,
+  fromDate: null,
   toDate: new Date(),
   salesRouteID: 0,
   counterID: 0,

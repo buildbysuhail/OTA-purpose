@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
-import { FC, Fragment } from "react"
+import { FC, Fragment, useMemo } from "react"
 import PartyMonthwisePurchaseSummaryReportFilter, { PartyMonthwisePurchaseSummaryReportFilterInitialState } from "./Party-monthwise-purchase-summary-report-filter"
 import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
 import GridId from "../../../../redux/gridId"
 import { ActionType } from "../../../../redux/types"
 import Urls from "../../../../redux/urls"
@@ -19,16 +19,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    // {
-    //   dataField: "iD",
-    //   caption: t("id"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 80,
-    //   visible: false,
-    //   showInPdf: true,
-    // },
     {
       dataField: "branch",
       caption: t("branch"),
@@ -87,34 +77,34 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       visible: true,
       showInPdf: true,
     },
-    {
-      dataField: "addressStreet",
-      caption: t("address_street"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "addressCity",
-      caption: t("address_city"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-    },
-    {
-      dataField: "addressDistrict",
-      caption: t("address_district"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-    },
+    // {
+    //   dataField: "addressStreet",
+    //   caption: t("address_street"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    //   visible: true,
+    //   showInPdf: true,
+    // },
+    // {
+    //   dataField: "addressCity",
+    //   caption: t("address_city"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    //   visible: true,
+    // },
+    // {
+    //   dataField: "addressDistrict",
+    //   caption: t("address_district"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    //   visible: true,
+    // },
     {
       dataField: "route",
       caption: t("route"),
@@ -179,7 +169,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,2)
           return {
             ...exportCell,
             text: value,
@@ -187,7 +177,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
+          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,2))
         }
       },
     },
@@ -201,35 +191,64 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       visible: true,
       showInPdf: true,
     },
-    {
-      dataField: "grandTotal",
-      caption: t("grand_total"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 120,
-      visible: true,
-      showInPdf: true,
-      alignment: "right",
-      format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.grandTotal == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
+  ];
+    // {
+    //   dataField: "grandTotal",
+    //   caption: t("grand_total"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 120,
+    //   visible: true,
+    //   showInPdf: true,
+    //   alignment: "right",
+    //   format: "fixedPoint",
+    //   cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+    //     if (exportCell != undefined) {
+    //       const value =
+    //         cellElement.data?.grandTotal == null
+    //           ? ""
+    //           : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))
+    //       return {
+    //         ...exportCell,
+    //         text: value,
+    //         alignment: "right",
+    //         alignmentExcel: { horizontal: "right" },
+    //       }
+    //     } else {
+    //       return (cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
+    //     }
+    //   },
+    // },
+    const customizeSummaryRow = useMemo(() => {
+        return (itemInfo: { value: any }) => {
+          const value = itemInfo.value;
+          if (
+            value === null ||
+            value === undefined ||
+            value === "" ||
+            isNaN(value)
+          ) {
+            return "0"; // Ensure "0" is displayed when value is missing
           }
-        } else {
-          return (cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
-        }
-      },
-    },
-  ]
+          return getFormattedValue(value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
+        };
+      }, []);
+    const summaryItems: SummaryConfig[] = [
+        {
+          column: "partyType",
+          summaryType: "custom",
+          valueFormat: "string",
+          displayFormat: "TOTAL",
+        },
+        {
+          column: "adjustmentAmount",
+          summaryType: "sum",
+          valueFormat: "currency",
+          customizeText: customizeSummaryRow,
+        },
+      ];
+  
 
   return (
     <Fragment>

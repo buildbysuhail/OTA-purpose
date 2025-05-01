@@ -1,0 +1,266 @@
+import { useTranslation } from "react-i18next";
+import { Fragment } from "react/jsx-runtime";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { ActionType } from "../../../../redux/types";
+import { FC, useMemo } from "react";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import Urls from "../../../../redux/urls";
+import GSTR3BReportFilter, { GSTR3BReportFilterInitialState } from "./gstr3b-filter";
+
+const GSTR3BReport = () => {
+    const { t } = useTranslation('accountsReport');
+    const columns: DevGridColumn[] = [
+        {
+            dataField: "slNo",
+            caption: t("sl_no"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 50,
+        },
+        {
+            dataField: "types",
+            caption: t("types"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+        {
+            dataField: "details",
+            caption: t("details"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "natureOfSupplies",
+            caption: t("nature_of_supplies"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "placeOfSupply",
+            caption: t("place_of_supply"),
+            dataType: "string",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "totalTaxableValue",
+            caption: t("total_taxable_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+        {
+            dataField: "integratedTax",
+            caption: t("integrated_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 120,
+        },
+        {
+            dataField: "centralTax",
+            caption: t("central_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 120,
+        },
+        {
+            dataField: "stateOrUTTax",
+            caption: t("state_ut_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 120,
+        },
+        {
+            dataField: "cess",
+            caption: t("cess"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 100,
+        },
+        {
+            dataField: "interStateSupplies",
+            caption: t("inter_state_supplies"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+        {
+            dataField: "intraStateSupplies",
+            caption: t("intra_state_supplies"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+        {
+            dataField: "unregisteredTaxableValue",
+            caption: t("unregistered_taxable_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "unregisteredIntegratedTax",
+            caption: t("unregistered_integrated_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "taxableTaxableValue",
+            caption: t("taxable_taxable_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "taxableIntegratedTax",
+            caption: t("taxable_integrated_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 180,
+        },
+        {
+            dataField: "uinTaxableValue",
+            caption: t("uin_taxable_value"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+        {
+            dataField: "uinIntegratedTax",
+            caption: t("uin_integrated_tax"),
+            dataType: "number",
+            allowSearch: true,
+            allowFiltering: true,
+            allowSorting: true,
+            width: 150,
+        },
+    ];
+
+    const { getFormattedValue } = useNumberFormat();
+    const customizeSummaryRow = useMemo(() => {
+        return (itemInfo: { value: any }) => {
+            const value = itemInfo.value;
+            if (value === null || value === undefined || value === "" || isNaN(value)) {
+                return "0";
+            }
+            return getFormattedValue(value) || "0";
+        };
+    }, [getFormattedValue]);
+
+    const summaryItems: SummaryConfig[] = [
+        {
+            column: "totalTaxableValue",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "integratedTax",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "centralTax",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "stateOrUTTax",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "cess",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "interStateSupplies",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        },
+        {
+            column: "intraStateSupplies",
+            summaryType: "sum",
+            valueFormat: "currency",
+            customizeText: customizeSummaryRow,
+        }
+    ];
+
+    return (
+        <Fragment>
+            <div className="grid grid-cols-12 gap-x-6">
+                <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+                    <div className="px-4 pt-4 pb-2 ">
+                        <div className="grid grid-cols-1 gap-3">
+                            <ErpDevGrid
+                                summaryItems={summaryItems}
+                                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                                columns={columns}
+                                moreOption={true}
+                                gridHeader={t("gstr3b_report")}
+                                // dataUrl={Urls.gstr3b_report}
+                                hideGridAddButton={true}
+                                enablefilter={true}
+                                showFilterInitially={true}
+                                method={ActionType.POST}
+                                filterContent={<GSTR3BReportFilter />}
+                                filterWidth={790}
+                                filterHeight={370}
+                                filterInitialData={GSTR3BReportFilterInitialState}
+                                reload={true}
+                                gridId="grd_gstr3b_report"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Fragment>
+    );
+};
+
+export default GSTR3BReport;

@@ -62,7 +62,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.stockInWarehouse == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse))
+              : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse),false,4)
           return {
             ...exportCell,
             text: value,
@@ -70,7 +70,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.stockInWarehouse == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse)))
+          return ( cellElement.data?.stockInWarehouse == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse),false,4))
         }
       },
     },
@@ -90,7 +90,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.stockInTransit == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit))
+              : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit),false,4)
           return {
             ...exportCell,
             text: value,
@@ -98,7 +98,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.stockInTransit == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit)))
+          return ( cellElement.data?.stockInTransit == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit),false,4))
         }
       },
     },
@@ -118,7 +118,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.orderPending == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderPending))
+              : getFormattedValue(Number.parseFloat(cellElement.data.orderPending),false,4)
           return {
             ...exportCell,
             text: value,
@@ -126,7 +126,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.orderPending == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderPending)))
+          return ( cellElement.data?.orderPending == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderPending),false,4))
         }
       },
     },
@@ -144,7 +144,7 @@ const PurchaseOrderTransitReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,4)
           return {
             ...exportCell,
             text: value,
@@ -152,7 +152,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
+          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,4))
         }
       },
     },
@@ -172,7 +172,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.orderManual == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderManual))
+              : getFormattedValue(Number.parseFloat(cellElement.data.orderManual),false,4)
           return {
             ...exportCell,
             text: value,
@@ -180,7 +180,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.orderManual == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderManual)))
+          return ( cellElement.data?.orderManual == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderManual),false,4))
         }
       },
     },
@@ -196,7 +196,7 @@ const PurchaseOrderTransitReport = () => {
         ) {
           return "0"; // Ensure "0" is displayed when value is missing
         }
-        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+        return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
       };
     }, []);
   

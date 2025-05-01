@@ -28,9 +28,7 @@ const PartyMonthwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldC
 }
 
 export default PartyMonthwisePurchaseSummaryReportFilter
-
-// Updated initial state to match C# property names
 export const PartyMonthwisePurchaseSummaryReportFilterInitialState = {
-  fromDate: moment().local().subtract(30, "days").toDate(),
+  fromDate: moment().local().toDate(),
   toDate: new Date(),
 }

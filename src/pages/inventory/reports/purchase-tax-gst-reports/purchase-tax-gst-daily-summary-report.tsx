@@ -63,6 +63,29 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.gstPercentage == null
+              ? ""
+              : getFormattedValue(cellElement.data.gstPercentage);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.gstPercentage == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
+        }
+      },
     },
     {
       dataField: "taxableValue",
@@ -97,7 +120,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
       },
     },
     {
-      dataField: "totalGst",
+      dataField: "totalGST",
       caption: t("total_gst"),
       dataType: "number",
       allowSearch: true,
@@ -112,9 +135,9 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.totalGst == null
+            cellElement.data?.totalGST == null
               ? ""
-              : getFormattedValue(cellElement.data.totalGst);
+              : getFormattedValue(cellElement.data.totalGST);
           return {
             ...exportCell,
             text: value,
@@ -122,9 +145,9 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.totalGst == null
+          return cellElement.data?.totalGST == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.totalGst));
+            : getFormattedValue(parseFloat(cellElement.data.totalGST));
         }
       },
     },
@@ -210,7 +233,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total, false, 4);
+              : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -220,7 +243,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(cellElement.data.total, false, 4);
+            : getFormattedValue(cellElement.data.total);
         }
       },
     }

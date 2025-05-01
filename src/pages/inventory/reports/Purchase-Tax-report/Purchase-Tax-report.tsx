@@ -15,15 +15,6 @@ const PurchaseTaxReport = () => {
 
   const columns: DevGridColumn[] = [
     {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-    },
-    {
       dataField: "date",
       caption: t("date"),
       dataType: "date",
@@ -32,11 +23,7 @@ const PurchaseTaxReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")
-      },
+     format:"dd-MMM-yyyy"
     },
     {
       dataField: "customerName",
@@ -107,7 +94,7 @@ const PurchaseTaxReport = () => {
           const value =
             cellElement.data?.vatPercentage == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage))
+              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,4)
           return {
             ...exportCell,
             text: value,
@@ -119,7 +106,7 @@ const PurchaseTaxReport = () => {
             <span>
               {cellElement.data?.vatPercentage == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage))}
+                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,4)}
             </span>
           )
         }
@@ -139,7 +126,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))
+            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)
           return {
             ...exportCell,
             text: value,
@@ -151,7 +138,7 @@ const PurchaseTaxReport = () => {
             <span>
               {cellElement.data?.vatAmount == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))}
+                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)}
             </span>
           )
         }

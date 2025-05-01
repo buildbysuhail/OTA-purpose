@@ -24,16 +24,17 @@ const DailySalesStatementReport = () => {
       visible: false,
       showInPdf: true,
     },
-    // {
-    //   dataField: "form",
-    //   caption: t("form"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 100,
-    //   visible: true,
-    //   showInPdf: true,
-    // },
+    {
+      dataField: "form",
+      caption: t("form"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      groupIndex:0,
+      width: 100,
+      visible: true,
+      showInPdf: true,
+    },
     {
       dataField: "vchNo",
       caption: t("voucherNo"),
@@ -217,7 +218,7 @@ const DailySalesStatementReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value) : getFormattedValue(-1 * value) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value,false,2) : getFormattedValue(-1 * value,false,2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -261,9 +262,10 @@ const DailySalesStatementReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                autoExpandAll={true}
                   columns={columns}
-                  filterText="daily_statement_sales"
-                  gridHeader={t("daily_statement_sales")}
+                  gridHeader={t("daily_statement_report_of_sales")}
+                   filterText=" From {fromDate} To {toDate}"
                   dataUrl={Urls.daily_statement_sales}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}

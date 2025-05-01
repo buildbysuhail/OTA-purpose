@@ -31,6 +31,7 @@ const DailyStatementAllReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
+      groupIndex:0,
       showInPdf: true,
     },
     {
@@ -197,7 +198,6 @@ const DailyStatementAllReport = () => {
       dataField: "voucherType",
       caption: t("voucher_type"),
       dataType: "string",
-      groupIndex: 0,
       allowSearch: true,
       allowFiltering: true,
       width: 80,
@@ -217,10 +217,11 @@ const DailyStatementAllReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value) : getFormattedValue(-1 * value) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value,false,2) : getFormattedValue(-1 * value,false,2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeGroup = (itemInfo: any) => `Group Total`;
   const summaryItems: SummaryConfig[] = [
     {
       column: "party",
@@ -251,6 +252,45 @@ const DailyStatementAllReport = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
+    {
+      column: "party",
+      summaryType: "max",
+      isGroupItem:true,
+      showInGroupFooter: true,
+      customizeText: customizeGroup,
+    },
+    {
+      column: "cash",
+      summaryType: "sum",
+      isGroupItem:true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      isGroupItem:true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "bank",
+      summaryType: "sum",
+      isGroupItem:true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      isGroupItem:true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
   ];
 
   return (
@@ -261,9 +301,10 @@ const DailyStatementAllReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                autoExpandAll={true}
                   columns={columns}
-                  filterText="Daily Sales Statement All"
-                  gridHeader={t("daily_statement_all")}
+                   filterText=" From {fromDate} To {toDate}"
+                   gridHeader={t("daily_statement_report_of_all")}
                   dataUrl={Urls.daily_statement_all}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}

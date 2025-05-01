@@ -492,7 +492,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/price_list_report" element={<PriceList />} />
         <Route path="/inventory/itemwise_purchase_summary" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary" />} />
         <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="item_wise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary" />} />
-        {/* <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} /> */}
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />} />
@@ -541,9 +540,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/party_monthwise_sales_summary_report" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />} />
         <Route path="/inventory/coupon_reports" element={<CouponReports />} />
         <Route path="/inventory/scheme_wise_sales_report" element={<SchemeWiseSales />} />
-        <Route path="/inventory/sales_tax_report" element={<SalesTax />} />
-        <Route path="/inventory/ksa_e_invoice_summary_report" element={<KsaEInvoiceReportSummary />} />
-        <Route path="/inventory/ksa_e_invoice_detailed_report" element={<KsaEInvoiceReportDetailed />} />
         <Route path="/inventory/itemwise_sales_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_summary} gridHeader="itemwise_sales_summary" gridId="grd_itemwise_sales_summary" />} />
         <Route path="/inventory/itemwise_sales_return_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_return_summary} gridHeader="itemwise_sales_return_summary" gridId="grd_itemwise_sales_return_summary" />} />
         <Route path="/inventory/itemwise_sales_order_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_order_summary} gridHeader="itemwise_sales_order_summary" gridId="grd_itemwise_sales_order_summary" />} />
@@ -595,9 +591,13 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_return_gst_taxwise_with_hsn_report" element={<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />} />
         <Route path="/inventory/purchase_return_gst_sales_and_return_report" element={<PurchaseReturnTaxGSTSalesAndReturn />} />
         {/* global end */}
-
+        <Route path="/inventory/purchase_tax_vat" element={<PurchaseTaxReport />} />
+        <Route path="/inventory/sales_tax_report" element={<SalesTax />} />
         <Route path="/inventory/vat_return_form" element={<VatReturnForm />} />
         <Route path="/inventory/vat_return_form_arabic" element={<VatReturnFormArabic />} />
+        <Route path="/inventory/ksa_e_invoice_summary_report" element={<KsaEInvoiceReportSummary />} />
+        <Route path="/inventory/ksa_e_invoice_detailed_report" element={<KsaEInvoiceReportDetailed />} />
+      
 {/* global Start */}
 <Route path="/taxReport/gstr1_report" element={<Gstr1Report />} />
 <Route path="/taxReport/gstr3b_report" element={<Gstr3bReport />} />
@@ -611,7 +611,7 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        <Route path="/inventory/purchase_tax_vat" element={<PurchaseTaxReport />} />
+   
       
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />

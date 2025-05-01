@@ -123,7 +123,7 @@ const ItemWiseSummaryFilter = ({
                     label={t("product_code")}
                     {...getFieldProps("productCode")}
                     className="w-full"
-                    onChangeData={(val: string) => handleFieldChange("productCode", val)}
+                    onChangeData={(data: any) => handleFieldChange("productCode", data.productCode)}
                 />
 
                 <ERPDataCombobox

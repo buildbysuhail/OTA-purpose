@@ -126,7 +126,7 @@ const PurchaseRegisterFilter = ({
           label={t("product_code")}
           {...getFieldProps("productCode")}
           className="w-full"
-          onChangeData={(val: string) => handleFieldChange("productCode", val)}
+          onChangeData={(data) => handleFieldChange("productCode", data.productCode)}
         />
 
         <ERPDataCombobox

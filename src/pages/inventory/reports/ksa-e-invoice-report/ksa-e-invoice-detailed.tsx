@@ -356,8 +356,9 @@ const KsaEInvoiceReportDetailed = () => {
                             <ErpDevGrid
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
+                                moreOption={false}
                                 gridHeader={t("ksa_e_invoice_report_detailed")}
+                                     filterText=" From :{fromDate} - {toDate}"
                                 dataUrl={Urls.ksa_e_invoice_detailed}
                                 hideGridAddButton={true}
                                 enablefilter={true}

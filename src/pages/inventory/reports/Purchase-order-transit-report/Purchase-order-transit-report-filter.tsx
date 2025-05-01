@@ -108,7 +108,7 @@ export default PurchaseOrderTransitReportFilter
 
 // Updated initial state to match C# property names
 export const PurchaseOrderTransitReportInitialState = {
-  dateFrom: moment().local().subtract(30, "days").toDate(),
+  dateFrom: moment().local().toDate(),
   dateTo: new Date(),
   WarehouseID: 0,
   PartyID: 0,

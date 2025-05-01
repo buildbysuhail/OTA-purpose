@@ -2,12 +2,6 @@ import { useTranslation } from "react-i18next"
 import moment from "moment"
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 
-// Updated interface to match C# properties
-// interface ReportFilterProps {
-//   getFieldProps: (field: string) => any
-//   handleFieldChange: (field: string | object, value?: any) => void
-// }
-
 const PurchaseTaxReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport")
 
@@ -26,29 +20,13 @@ const PurchaseTaxReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         className="w-full"
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)} // Updated field name
       />
-      {/* <ERPDataCombobox
-        {...getFieldProps("bankLedgerID")}
-        label={t("bank_ledger")}
-        field={{
-          id: "bankLedgerID",
-          getListUrl: Urls.data_acc_ledgers,
-          params: `ledgerType=${LedgerType.BankAccount}`,
-          valueKey: "id",
-          labelKey: "name",
-          nameKey: "alias",
-        }}
-        onSelectItem={(data) => handleFieldChange({ bankLedgerID: data.value, BankLedgerName: data.label })}
-      /> */}
     </div>
   )
 }
 
 export default PurchaseTaxReportFilter
-
-// Updated initial state to match C# property names
 export const PurchaseTaxReportFilterInitialState = {
-  fromDate: moment().local().subtract(45, "days").toDate(),
-  toDate: new Date(), // Default empty string
-  // bankLedgerID: 0,
+  fromDate: moment().local().toDate(),
+  toDate: new Date(), 
 }
 

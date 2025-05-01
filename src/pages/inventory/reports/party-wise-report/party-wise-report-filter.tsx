@@ -57,8 +57,8 @@ const PartyWiseReportFilter = ({
                             }
                         /> */}
                 <ERPDataCombobox
-                    noLabel={true}
                     {...getFieldProps("productID")}
+                    label={t("products")}
                     field={{
                         id: "productID",
                         getListUrl: Urls.data_products,

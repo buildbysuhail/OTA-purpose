@@ -384,7 +384,6 @@ const FOCScheme: React.FC = () => {
                     keyId="testserch"
                     placeholder="Search Here"
                     productDataUrl={Urls.load_product_details_foc}
-                    searchByCode={getFieldProps("searchByCode").value}
                     onRowSelected={(data: any) => {
                       const obj = getFieldProps("*");
                       handleDataChange({
@@ -399,13 +398,6 @@ const FOCScheme: React.FC = () => {
                       } as FOCSchemeData);
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_foc}
-                  />
-                </div>
-                <div className="sm:ml-4">
-                  <ERPCheckbox
-                    {...getFieldProps("searchByCode")}
-                    label={t("code")}
-                    onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
                   />
                 </div>
               </div>

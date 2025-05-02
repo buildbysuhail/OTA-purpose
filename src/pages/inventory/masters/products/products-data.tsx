@@ -36,7 +36,8 @@ const initialProductData: productDto = {
     financialYearID: 0,
     basicUnitID: -2,
     sectionID: 0,
-    defaultVendorID: -2
+    defaultVendorID: -2,
+    basicUnitName: ""
   },
   productValidation: {
     productName: "",

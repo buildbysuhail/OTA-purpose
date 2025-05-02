@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import ERPFormButtons from "../../../../components/ERPComponents/erp-form-buttons";
@@ -17,7 +17,6 @@ import ProductDetailsGcc from "./products-gcc/product-details-gcc";
 import ProductOthersIndia from "./products-india/product-others-india";
 import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
-import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
 import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
 import SearchCommon from "./common/product-search";
@@ -39,6 +38,7 @@ import {
 } from "../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
+import ProductMultiUnitsIndia, { ProductMultiUnitsIndiaRef } from "./products-india/product-multi-units-india";
 
 const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
@@ -76,14 +76,23 @@ export const ProductMaster: React.FC = React.memo(() => {
       data: initialProductData,
     },
   });
-  const _handleFieldChange: <Path extends ProductFieldPath>(
-    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
-    value?: PathValue<productDto, Path>
-  ) => void = handleFieldChange;
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const handleTabChange = (index: number) => {
-    setActiveTab(index);
+  const childRef = useRef<ProductMultiUnitsIndiaRef>(null);
+  const handleTabChange = async(index: number) => {
+    setActiveTab(index); 
+    debugger;
+    if (childRef.current) {
+    const tabs = getTabs();
+    const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
+    if (multiRatesIndex !== undefined && multiRatesIndex !== -1 && multiRatesIndex == index) {
+      const obj = getFieldProps("*") as productDto;
+      if (appSettings?.productsSettings?.allowMultirate && obj.prices && obj.prices.length == 0) {
+        const rates = await childRef.current.loadMultiRateToGrid(obj, obj.units);
+        handleDataChange({ ...obj, prices: rates });
+      }
+    }
+  }
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
@@ -217,6 +226,7 @@ export const ProductMaster: React.FC = React.memo(() => {
 
         <div key="multi_units">
           <ProductMultiUnitsIndia
+           ref={childRef}
           handleDataChange ={handleDataChange }
             appSettings={appSettings}
             t={t}

@@ -944,7 +944,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setFilteredItems(items); // Reset filtered items to original list
       onChange?.(value);
       if (onChangeData) {
-        debugger;
+        
         const updatedData = { ...data };
     
         if (value && data && id) {

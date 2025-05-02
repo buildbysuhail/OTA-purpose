@@ -84,7 +84,7 @@ const MultiRates: React.FC<{
         visible: true,
       },
       {
-        dataField: "mRP",
+        dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
         allowSorting: true,
@@ -161,95 +161,6 @@ const MultiRates: React.FC<{
     fetchData();
   }, []);
 
-  // const handleRowUpdating = (e: any) => {
-  //     const newData = e.newData
-  //     const rowData = data.find((item) => item.unitID === e.key.unitID)
-  //     if (!rowData) {
-  //         e.cancel = true
-  //         return
-  //     }
-
-  //     // Calculate the final values after the update
-  //     const finalMrp = "mrp" in newData ? newData.mrp : rowData.mrp
-  //     const finalSalesPrice = "salesPrice" in newData ? newData.salesPrice : rowData.salesPrice
-  //     // Store original values for potential reversion
-  //     const originalMrp = rowData.mrp
-  //     const originalSalesPrice = rowData.salesPrice
-  //     const index = data.findIndex((item) => item.unitID === e.key.unitID)
-  //     // Check if the final state would be valid (MRP >= Sales Price)
-  //     if (typeof finalMrp === "number" && typeof finalSalesPrice === "number" && finalSalesPrice > finalMrp) {
-  //         ERPAlert.show({
-  //             title: t("warning"),
-  //             text: `${t("sales_price")} (${finalSalesPrice}) > ${t("mrp")} (${finalMrp}). ${t("mrp_must_be_greater_or_equal")}`,
-  //             icon: "warning",
-  //             onConfirm: () => {
-  //                 e.cancel = true
-  //                 // Get the index of the row that was being edited
-  //                 if (index !== -1) {
-  //                     // Determine which field was being edited and revert accordingly
-  //                     if ("mrp" in newData) {
-  //                         // If MRP was being edited, adjust the sales price to match MRP
-  //                         // This ensures MRP >= Sales Price
-  //                         const updatedData = [...data]
-  //                         updatedData[index] = {
-  //                             ...updatedData[index],
-  //                             mrp: originalMrp,
-  //                             salesPrice: originalSalesPrice,
-  //                         }
-  //                         setData(updatedData)
-  //                         handleFieldChange("prices", updatedData)
-  //                         // Update UI directly if needed
-  //                         // if (dataGridRef.current) {
-  //                         //   dataGridRef.current.instance.cellValue(index, "mrp", originalMrp)
-  //                         //   dataGridRef.current.instance.cellValue(index, "salesPrice", originalSalesPrice)
-  //                         // }
-  //                     } else if ("salesPrice" in newData) {
-  //                         // If sales price was being edited, revert to original sales price
-  //                         const updatedData = [...data]
-  //                         updatedData[index] = {
-  //                             ...updatedData[index],
-  //                             salesPrice: originalSalesPrice,
-  //                         }
-  //                         setData(updatedData)
-  //                         handleFieldChange("prices", updatedData)
-
-  //                         // // Update UI directly if needed
-  //                         // if (dataGridRef.current) {
-  //                         //   dataGridRef.current.instance.cellValue(index, "salesPrice", originalSalesPrice)
-  //                         // }
-  //                     }
-  //                 }
-  //                 return
-  //             },
-  //             onCancel: () => {
-  //                 e.cancel = true;
-  //                 const updatedData = [...data]
-  //                 updatedData[index] = {
-  //                     ...updatedData[index],
-  //                     mrp: originalMrp,
-  //                     salesPrice: originalSalesPrice,
-  //                 }
-  //                 setData(updatedData)
-  //                 handleFieldChange("prices", updatedData)
-  //                 return
-  //             },
-  //         })
-  //         return // Stop further processing
-  //     }
-
-  //     // If we reach here, the update is valid
-  //     const proposedData: ProductPriceInputDto = {
-  //         ...rowData,
-  //         ...newData,
-  //     }
-  //     if (index !== -1) {
-  //         const updatedData = [...data]
-  //         updatedData[index] = proposedData
-  //         setData(updatedData)
-  //         handleFieldChange("prices", updatedData)
-  //     }
-  // }
-
   const handleContentReady = (e: any) => {
     setTimeout(() => {
       e.component.editCell(0, "salesPrice");
@@ -274,7 +185,7 @@ const MultiRates: React.FC<{
               };
               // setUnits(updatedUnits);
               handleFieldChange("prices", [...updatedUnits]);
-              if ("mrp" in changes.data) {
+              if ("salesPrice" in changes.data) {
               const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
               const finalMrp = e.changes[0].data.mrp ?? 0;
               if (finalSalesPrice > finalMrp) {

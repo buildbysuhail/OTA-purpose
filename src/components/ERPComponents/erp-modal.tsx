@@ -112,8 +112,8 @@ const ERPModal = React.memo(
       // Then calculate position
       let newX, newY;
       if (isMaximized) {
-        newX = 15;
-        newY = 15;
+        newX = 25;
+        newY = 25;
         setInitPosition({
           x: (windowWidth - width) / 2,
           y: (windowHeight - height) / 2
@@ -130,28 +130,23 @@ const ERPModal = React.memo(
       setIsPositionCalculated(true);
     };
     
-    // useEffect(() => {
-    //   calculateDimensionsAndPosition();
-    // }, [isOpen, isMaximized, width, height]);
-    
- 
+      // Reset state when modal closes
+      useEffect(() => {
+        if (!isOpen) {
+        setIsMaximized(false);
+        setPosition({ x: 0, y: 0 });
+        setIsPositionCalculated(false);
+      }
+      }, [isOpen]);
 
-    // const handleClose = () => {
-    //   closeModal(false);
-    //   setIsMaximized(false)
-    //   setPosition({ x: 0, y: 0 });
-    //   setIsPositionCalculated(false);
-    // }
-  // Reset state when isOpen changes
-  useEffect(() => {
-    if (!isOpen) {
-      setIsMaximized(initialMaximize);
-      setPosition({ x: 0, y: 0 });
-     setIsPositionCalculated(false);
-    } else {
+      // Calculate dimensions and position when modal opens or props change
+      useEffect(() => {
+      if (isOpen) {
       calculateDimensionsAndPosition();
-    }
-  }, [isOpen, isMaximized, width, height]);
+      }
+      }, [isOpen, isMaximized, width, height]);
+
+
 
   const handleClose = () => {
     closeModal(false);

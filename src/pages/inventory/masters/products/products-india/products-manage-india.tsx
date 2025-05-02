@@ -62,7 +62,7 @@ export const ProductManageIndia: React.FC<{
         }
     
         if (appSettings.productsSettings.allowMultirate) {
-          if (  obj.product.unitID &&
+          if (  obj.product.basicUnitID &&
             obj.product.stdSalesPrice !== undefined &&
             obj.product.stdSalesPrice > 0) {
               ERPAlert.show(
@@ -210,7 +210,10 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_productcategory
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
+                  onChangeData={(data: any) => {
+                    debugger;
+                    handleFieldChange("product.productCategoryID", data.product.productCategoryID)
+                  }}
                   label={t("product_category")}
                   className="w-full"
                   required={true}
@@ -297,7 +300,10 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_units,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.basicUnitID", data.BasicUnitID)}
+                  onChangeData={(data: any) => {
+                    debugger;
+                    handleFieldChange("product.basicUnitID", data.basicUnitID)
+                  }}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}

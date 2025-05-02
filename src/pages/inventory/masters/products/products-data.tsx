@@ -14,7 +14,6 @@ const initialProductData: productDto = {
     aliasItemCode: "",
     aliasItemName: "",
     remarks: "",
-    unitID: 0,
     minimumStock: 0,
     maximumStock: 0,
     reorderLevel: 0,
@@ -35,7 +34,7 @@ const initialProductData: productDto = {
     unitQty: 1,
     packingSlip: true,
     financialYearID: 0,
-    basicUnitID: 0,
+    basicUnitID: 1,
     sectionID: 0,
     defaultVendorID: -2
   },
@@ -133,32 +132,7 @@ const initialProductData: productDto = {
     notes9: "",
     notes10: ""
   },
-  prices: [
-    {
-      productMultiPriceID: 0,
-      productBatchID: 0,
-      priceCategoryID: 0,
-      salesPrice: 0,
-      purchasePrice: 0,
-      discountPerc: 0,
-      unitID: 1,
-      profitAmt: 0,
-      mrp: 0,
-      msp: 0
-    },
-    {
-      productMultiPriceID: 0,
-      productBatchID: 0,
-      priceCategoryID: 0,
-      salesPrice: 0,
-      purchasePrice: 0,
-      discountPerc: 0,
-      unitID: 2,
-      profitAmt: 0,
-      mrp: 0,
-      msp: 0
-    }
-  ],
+  prices: [],
   units: [],
   nutrients: [
     {
@@ -167,21 +141,6 @@ const initialProductData: productDto = {
     }
   ],
   supplierProducts: [],
-  multiUnits: [
-    // {
-    //   productBatchID: 0,
-    //   unit1: 0,
-    //   unit2: 0,
-    //   unit3: 0,
-    //   unit4: 0,
-    //   unit5: 0,
-    //   unit6: 0,
-    //   unit7: 0,
-    //   unit8: 0,
-    //   unit9: 0,
-    //   unit10: 0,
-    // }
-  ],
   config: {
     showProductDuplicateWarning: true,
     showProductDetailesAfterSave: true,

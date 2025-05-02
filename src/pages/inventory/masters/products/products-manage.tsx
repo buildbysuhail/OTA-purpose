@@ -217,6 +217,8 @@ export const ProductMaster: React.FC = React.memo(() => {
 
         <div key="multi_units">
           <ProductMultiUnitsIndia
+          handleDataChange ={handleDataChange }
+            appSettings={appSettings}
             t={t}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}

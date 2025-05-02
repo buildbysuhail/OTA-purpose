@@ -44,7 +44,7 @@ export interface productDto {
   supplierProducts: SupplierProductsInputDto[];
   config: ProductLocalConfig;
   productImageString: string;
-  multiUnits: ProductUnitDto[]; // newly created
+  // multiUnits: ProductUnitDto[]; // newly created
   barcode: string;  
   sectionID:number;
   upcBarcode:boolean;
@@ -73,7 +73,6 @@ export interface DetailsDto {
   aliasItemCode?: string; // AliasItemCode: string?
   aliasItemName?: string; // AliasItemName: string?
   remarks?: string; // Remarks: string?
-  unitID?: number; // UnitID: long?
   minimumStock?: number; // MinimumStock: decimal?
   maximumStock?: number; // MaximumStock: decimal?
   reorderLevel?: number; // ReorderLevel: decimal?
@@ -234,10 +233,12 @@ export interface ProductPriceInputDto {
   productMultiPriceID: number;
   productBatchID: number;
   priceCategoryID: number;
+  priceCategory: string;
   salesPrice: number;
   purchasePrice: number;
   discountPerc: number;
   unitID: number;
+  unit: string;
   profitAmt: number;
   mrp: number;
   msp: number;

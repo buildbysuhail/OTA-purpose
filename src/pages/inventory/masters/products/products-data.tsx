@@ -159,7 +159,8 @@ const initialProductData: productDto = {
   batchCriteria: false,
   details: false,
   onHold: false,
-  taxCategoryTaxPercentage: 0
+  taxCategoryTaxPercentage: 0,
+  hasDisabled: false
 };
 
 export default initialProductData;

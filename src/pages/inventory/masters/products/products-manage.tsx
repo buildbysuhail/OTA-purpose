@@ -416,7 +416,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        submitDisabled={!appSettings.branchSettings.maintainMasterEntry}
+        submitDisabled={!appSettings.branchSettings.maintainMasterEntry || getFieldProps("hasDisabled").value == true}
         onSubmit={handleSubmit}
       />
     </div>

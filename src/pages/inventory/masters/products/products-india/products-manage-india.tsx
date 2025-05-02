@@ -623,7 +623,7 @@ useEffect(() => {
                 />
               }
                 <ERPCheckbox
-                  {...getFieldProps("product.details")}
+                  {...getFieldProps("details")}
                   label={t("details")}
                   onChange={(e) => handleFieldChange('details', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}

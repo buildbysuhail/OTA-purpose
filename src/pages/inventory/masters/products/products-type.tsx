@@ -54,6 +54,7 @@ export interface productDto {
   batchCriteria:boolean;
   details:boolean;
   onHold:boolean;
+  hasDisabled:boolean;
   taxCategoryTaxPercentage:number;
 }
 

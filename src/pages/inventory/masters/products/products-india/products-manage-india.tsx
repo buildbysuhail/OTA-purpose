@@ -583,6 +583,7 @@ useEffect(() => {
                   labelKey: "name",
                   getListUrl: Urls.data_batchcriteria,
                 }}
+                enableClearOption={false}
                 disabled={getFieldProps("batchCriteria").value != true}
                 className="flex-1 min-w-[120px]"
                 noLabel={true}

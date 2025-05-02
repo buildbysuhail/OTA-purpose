@@ -555,6 +555,7 @@ export const ProductManageGcc: React.FC<{
                       labelKey: "name",
                       getListUrl: Urls.data_batchcriteria,
                     }}
+                    enableClearOption={false}
                     className="w-full"
                     disabled={getFieldProps("batchCriteria").value != true}
                     noLabel={true}

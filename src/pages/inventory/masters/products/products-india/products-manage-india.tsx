@@ -16,6 +16,7 @@ import { calculateMarkup, calculateSalesPrice, isNullOrUndefinedOrEmpty } from "
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { BusinessType } from "../../../../../enums/business-types";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
+import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
 
 const api = new APIClient();
 
@@ -29,14 +30,16 @@ export const ProductManageIndia: React.FC<{
     ) => void;
 
   getFieldProps: (fieldId: string, type?: any) => FormField | any;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings, handleDataChange }) => {
+  productMultiUnitsIndiaRef: React.RefObject<ProductMultiUnitsIndiaRef>;
+
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings, handleDataChange ,productMultiUnitsIndiaRef}) => {
 
   const clientSession = useSelector((state: RootState) => state.ClientSession)
         const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
     const salesPriceRef = useRef<HTMLInputElement>(null);
-    function handlePriceValidation() {
+    async function handlePriceValidation() {
       try {
         debugger;
         const obj = getFieldProps("*") as productDto;
@@ -78,7 +81,10 @@ export const ProductManageIndia: React.FC<{
     
             if (obj.prices.length === 0) {
               try {
-                // loadMultiRateToGrid();
+                if (productMultiUnitsIndiaRef.current) {
+                  const rates = await productMultiUnitsIndiaRef.current.loadMultiRateToGrid(obj, obj.units);
+                  handleDataChange({ ...obj, prices: rates });
+                }
               } catch (err: any) {
                 console.error(err.message);
               }

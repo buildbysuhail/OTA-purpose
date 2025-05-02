@@ -556,7 +556,7 @@ useEffect(() => {
             <div className="flex flex-wrap items-center gap-1 mb-3">
               <div className="flex items-center flex-shrink-0">
                 <ERPCheckbox
-                  {...getFieldProps("product.batchCriteria")}
+                  {...getFieldProps("batchCriteria")}
                   label={t("batch_criteria")}
                   onChange={(e) => handleFieldChange('batchCriteria', e.target.checked)}
                   className="flex-1 min-w-[120px]"

@@ -6,7 +6,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 import Urls from "../../../../redux/urls"
 import ERPInput from "../../../../components/ERPComponents/erp-input"
 
-const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation("inventory")
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -45,8 +45,9 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
 
-        {/* <ERPDataCombobox
+        <ERPDataCombobox
           {...getFieldProps("taxCategoryID")}
+          label="taxCategory"
           field={{
             id: "taxCategoryID",
             getListUrl: Urls.data_taxCategory,
@@ -60,7 +61,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
               taxCategory: (data.value)?.toString(),
             });
           }}
-        /> */}
+        />
 
       <ERPDataCombobox
           {...getFieldProps("voucherFormId")}
@@ -90,9 +91,9 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
   )
 }
 
-export default PurchaseGstReportFilter
+export default PurchaseGstReportFilterGstCat
 
-export const PurchaseGstReportFilterInitialState = {
+export const PurchaseGstReportFilterGstCatInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
   gSTPerc: null,

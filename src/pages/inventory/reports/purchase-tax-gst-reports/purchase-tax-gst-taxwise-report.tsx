@@ -7,6 +7,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
+import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
 interface PurchaseTaxGSTTaxwiseProps {
   gridHeader: string;
   dataUrl: string;
@@ -14,7 +15,7 @@ interface PurchaseTaxGSTTaxwiseProps {
 }
 const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
    
     {
@@ -156,7 +157,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+        }
+      }
     },
     {
       dataField: "unit",
@@ -207,6 +230,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+        }
+      }
     },
     {
       dataField: "cgst",
@@ -248,6 +294,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
+        }
+      }
     },
     {
       dataField: "sgst",
@@ -289,6 +358,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igstPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.igstPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igstPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igstPerc));
+        }
+      }
     },
     {
       dataField: "igst",
@@ -330,6 +422,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cessPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.cessPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cessPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cessPerc));
+        }
+      }
     },
     {
       dataField: "cessAmt",
@@ -371,6 +486,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.addCessPerc == null
+              ? ""
+              : getFormattedValue(cellElement.data.addCessPerc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.addCessPerc == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
+        }
+      }
     },
     {
       dataField: "addCess",
@@ -623,10 +761,10 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilter />}
+                filterContent={<PurchaseGstReportFilterGstCat />}
                 filterHeight={240}
                 filterWidth={790}
-                filterInitialData={PurchaseGstReportFilterInitialState}
+                filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}

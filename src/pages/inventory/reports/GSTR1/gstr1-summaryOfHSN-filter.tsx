@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
-import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../../redux/urls";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import Urls from "../../../../redux/urls";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 
-const GSTR1CDNRFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+
+const GSTR1HSNSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport');
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
@@ -26,13 +27,14 @@ const GSTR1CDNRFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-4">
+                
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucherForm,
-                        valueKey: "id",
+                        getListUrl: Urls.data_form_type,
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     className="w-full"
@@ -47,9 +49,24 @@ const GSTR1CDNRFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
                         onChangeData={(data) => handleFieldChange("excludeNA", data.excludeNA)}
                     />
                     <ERPCheckbox
-                        {...getFieldProps("excludePR")}
-                        label={t("exclude_pr")}
-                        onChangeData={(data) => handleFieldChange("excludePR", data.excludePR)}
+                        {...getFieldProps("si")}
+                        label={t("si")}
+                        onChangeData={(data) => handleFieldChange("si", data.si)}
+                    />
+                    <ERPCheckbox
+                        {...getFieldProps("bsi")}
+                        label={t("bsi")}
+                        onChangeData={(data) => handleFieldChange("bsi", data.bsi)}
+                    />
+                    <ERPCheckbox
+                        {...getFieldProps("sr")}
+                        label={t("sr")}
+                        onChangeData={(data) => handleFieldChange("sr", data.sr)}
+                    />
+                    <ERPCheckbox
+                        {...getFieldProps("includeSr")}
+                        label={t("includeSr")}
+                        onChangeData={(data) => handleFieldChange("includeSr", data.includeSr)}
                     />
                 </div>
             </div>
@@ -57,18 +74,15 @@ const GSTR1CDNRFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
     );
 }
 
-export default GSTR1CDNRFilter;
+export default GSTR1HSNSummaryFilter;
 
-export const GSTR1CDNRFilterInitialState = {
-    fromDate: moment().local().startOf("month").toDate(),
-    toDate: moment().local().endOf("month").toDate(),
+export const GSTR1HSNSummaryFilterInitialState = {
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     voucherForm: "",
-    rType: "",
-    voucherType: "",
-    excludeNA: 0,
-    excludePR: 0,
-    includeSr: 0,
-    includeSE_PE: 0,
-    cdnr_pr: 0,
-    cdnur_pr: 0,
+    excludeNA: false,
+    includeSr: false,
+    si:false,
+    bsi:false,
+    sr:false,
 };

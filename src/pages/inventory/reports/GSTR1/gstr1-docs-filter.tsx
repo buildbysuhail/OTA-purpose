@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../../redux/urls";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import Urls from "../../../../redux/urls";
 
-const GSTR1B2BFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const GSTR1DocsFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport');
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
@@ -25,15 +25,14 @@ const GSTR1B2BFilter = ({ getFieldProps, handleFieldChange, formState }: any) =>
                     />
                 </div>
             </div>
-
             <div className="grid grid-cols-1 gap-4">
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucherForm,
-                        valueKey: "id",
+                        getListUrl: Urls.data_form_type,
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     className="w-full"
@@ -41,29 +40,29 @@ const GSTR1B2BFilter = ({ getFieldProps, handleFieldChange, formState }: any) =>
                         handleFieldChange("voucherForm", data.value);
                     }}
                 />
-
-
-                <ERPCheckbox
-                    {...getFieldProps("excludeNA")}
-                    label={t("exclude_na")}
-                    onChangeData={(data) => handleFieldChange("excludeNA", data.excludeNA)}
-                />
+                <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
+                    <ERPCheckbox
+                        {...getFieldProps("excludeNA")}
+                        label={t("exclude_na")}
+                        onChangeData={(data) => handleFieldChange("excludeNA", data.excludeNA)}
+                    />
+                    <ERPCheckbox
+                        {...getFieldProps("includeSE_PE")}
+                        label={t("includeSE_PE")}
+                        onChangeData={(data) => handleFieldChange("includeSE_PE", data.includeSE_PE)}
+                    />
+                </div>
             </div>
         </div>
     );
 }
 
-export default GSTR1B2BFilter;
+export default GSTR1DocsFilter;
 
-export const GSTR1B2BFilterInitialState = {
-    fromDate: moment().local().startOf("month").toDate(),
-    toDate: moment().local().endOf("month").toDate(),
+export const GSTR1DocsFilterInitialState = {
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     voucherForm: "",
-    rType: "",
-    voucherType: "",
-    excludeNA: 0,
-    includeSr: 0,
-    includeSE_PE: 0,
-    cdnr_pr: 0,
-    cdnur_pr: 0,
+    excludeNA: false,
+    includeSE_PE: false,
 };

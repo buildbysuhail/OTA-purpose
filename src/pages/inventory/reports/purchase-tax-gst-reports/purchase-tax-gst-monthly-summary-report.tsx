@@ -7,6 +7,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
+import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
 interface PurchaseTaxGSTMonthlySummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -14,7 +15,7 @@ interface PurchaseTaxGSTMonthlySummaryProps {
 }
 const PurchaseTaxGSTMonthlySummary: FC<PurchaseTaxGSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -323,10 +324,10 @@ const PurchaseTaxGSTMonthlySummary: FC<PurchaseTaxGSTMonthlySummaryProps> = ({ g
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilter />}
+                filterContent={<PurchaseGstReportFilterGstCat />}
                 filterHeight={240}
                 filterWidth={790}
-                filterInitialData={PurchaseGstReportFilterInitialState}
+                filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}

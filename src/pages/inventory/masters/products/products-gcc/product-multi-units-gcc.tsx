@@ -14,9 +14,15 @@ import {
   PathValue,
   productDto,
   ProductUnitInputDto,
+  ProductPriceInputDto,
 } from "../products-type";
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
+import {
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../../../utilities/Utils";
 import { APIClient } from "../../../../../helpers/api-client";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
 const api = new APIClient();
 const ProductMultiUnitsGCC: React.FC<{
   t: any;
@@ -46,7 +52,96 @@ const ProductMultiUnitsGCC: React.FC<{
   const [multiUnits, setMultiUnits] = useState<{
     [key: string]: ProductUnitInputDto;
   }>({});
+  const clientSession = useSelector((state: RootState) => state.ClientSession)
   const [barcode, setBarcode] = useState<boolean>(false);
+  const setMultiUnitsMaster = (multiUnits: any) => {
+    const fList = Object.entries(multiUnits).map(
+      ([key, unit]) => unit
+    ) as ProductUnitInputDto[];
+    handleFieldChange("units", fList);
+    // setMultiUnits(multiUnits);
+  };
+      const unitDAta: ProductUnitInputDto = {
+        productUnitID: 0,
+        productBatchID: 0,
+        unitID: 0,
+        multiFactor: 0,
+        barCode: "",
+        description: "",
+        descriptionFL: "",
+        unitRemarks: "",
+        gatePass: true,
+        multiBarcodes: "",
+        salesPrice: 0,
+        mrp: 0,
+        msp: 0,
+      };
+      const loadMultiRateToGrid = async (
+            obj: productDto,
+            updateUnit: any
+          ): Promise<ProductPriceInputDto[]> => {
+            debugger;
+            let mlRate = getFieldProps("prices").value;
+           
+      
+            const mUnits = updateUnit;
+            for (const row of mUnits) {
+              if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
+                mlRate = await loadMultiRates(
+                  row.unitID ?? 0,
+                  row.unit ?? "",
+                  obj,
+                  mlRate
+                );
+              }
+            }
+            return mlRate;
+          };
+   const loadMultiRates = async (
+        unitId: number,
+        unit: string,
+        obj: productDto,
+        multiRates: Array<ProductPriceInputDto>
+      ): Promise<ProductPriceInputDto[]> => {
+        try {
+          const rates: ProductPriceInputDto[] = [...(multiRates || [])];
+          const priceCategories = await api.getAsync(Urls.data_pricectegory);
+  
+          if (!priceCategories || priceCategories.length === 0) {
+            return rates;
+          }
+          // Transform price categories into new rates using map
+          const newRates: ProductPriceInputDto[] = priceCategories.map(
+            (cat: any) => ({
+              priceCategory: cat.name,
+              unit: unit,
+              unitID: unitId,
+              priceCategoryID: cat.id,
+              purchaseRate:  clientSession.isAppGlobal ? parseFloat(
+                getFormattedValue(
+                  (obj?.product?.stdPurchasePrice ?? 0) *
+                    (unitDAta.multiFactor || 1)
+                )
+              ): 0,
+              mrp: clientSession.isAppGlobal ?obj?.product?.mrp || 0 : 0,
+  
+              // Fill in all required fields below
+              productMultiPriceID: 0,
+              productBatchID: 0,
+              salesPrice: 0,
+              discountPerc: 0,
+              profitAmt: 0,
+              msp: 0,
+              purchasePrice: 0,
+            })
+          );
+  
+          return [...rates, ...newRates];
+        } catch (err) {
+          console.error("Error in loadMultiRates:", err);
+          return obj.prices || [];
+        }
+      };
   useEffect(() => {
     const responseData = getFieldProps("units").value as ProductUnitInputDto[];
     const baseUnit = getFieldProps("product.basicUnitID").value;
@@ -55,7 +150,9 @@ const ProductMultiUnitsGCC: React.FC<{
     for (let i = paddedData.length; i < 12; i++) {
       paddedData.push(generateInitialUnit());
     }
-    paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID) ? baseUnit : paddedData[0].unitID;
+    paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
+      ? baseUnit
+      : paddedData[0].unitID;
     const result: { [key: string]: ProductUnitInputDto } = {};
     paddedData.forEach((unit, index) => {
       result[`unit${index + 1}`] = unit;
@@ -85,16 +182,20 @@ const ProductMultiUnitsGCC: React.FC<{
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChange={(data) => {
-                  debugger;
-                  setMultiUnits((prev) => ({
-                    ...prev,
-                    [key]: {
-                      ...prev[key],
-                      unitID: data?.value ?? null,
-                      unit: data?.label ?? "",
-                    },
-                  }));
+                onChange={(selected) => {
+                  setMultiUnits((prev) => {
+                    const updated = {
+                      ...prev,
+                      [key]: {
+                        ...prev[key],
+                        unitID: selected?.value ?? null,
+                        unit: selected?.label ?? "",
+                      },
+                    };
+                    setMultiUnitsMaster(updated);
+
+                    return updated;
+                  });
                 }}
                 className="w-48"
               />
@@ -105,6 +206,7 @@ const ProductMultiUnitsGCC: React.FC<{
             <ERPInput
               id={`unit${unitNum}multiFactor`}
               noLabel={true}
+                type="number"
               readOnly={unitNum === 1}
               value={unitData.multiFactor ?? (unitNum === 1 ? "1" : "0")}
               onChange={(e) => {
@@ -115,14 +217,19 @@ const ProductMultiUnitsGCC: React.FC<{
                   const d = 1 / value;
                   sd = Math.round(d * 100) / 100;
                 }
-                setMultiUnits((prev: any) => ({
-                  ...prev,
-                  [key]: {
-                    ...prev[key],
-                    multiFactor: e.target.value,
-                    multiFactorValue: sd,
-                  },
-                }));
+                setMultiUnits((prev: any) => {
+                  const updated = {
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      multiFactor: e.target.value,
+                      multiFactorValue: sd,
+                    },
+                  };
+                  setMultiUnitsMaster(updated);
+
+                  return updated;
+                });
               }}
               className={`w-24 text-center ${
                 unitData.unitID ? "bg-[#fef9c3]" : ""
@@ -153,14 +260,19 @@ const ProductMultiUnitsGCC: React.FC<{
                   } catch (error) {
                     console.error("Error:", error);
                   }
-                  setMultiUnits((prev: any) => ({
-                    ...prev,
-                    [key]: {
-                      ...prev[key],
-                      multiFactor: sd,
-                      multiFactorValue: e.target.value,
-                    },
-                  }));
+                  setMultiUnits((prev: any) => {
+                    const updated = {
+                      ...prev,
+                      [key]: {
+                        ...prev[key],
+                        multiFactor: sd,
+                        multiFactorValue: e.target.value,
+                      },
+                    };
+                    setMultiUnitsMaster(updated);
+
+                    return updated;
+                  });
                 }}
                 className={`w-24 text-center ${
                   unitData.unitID ? "bg-[#fef9c3]" : ""
@@ -178,13 +290,18 @@ const ProductMultiUnitsGCC: React.FC<{
                 noLabel={true}
                 value={unitData.barCode ?? ""}
                 onChange={(e) => {
-                  setMultiUnits((prev) => ({
-                    ...prev,
-                    [key]: {
-                      ...prev[key],
-                      barCode: e.target.value,
-                    },
-                  }));
+                  setMultiUnits((prev) => {
+                    const updated = {
+                      ...prev,
+                      [key]: {
+                        ...prev[key],
+                        barCode: e.target.value,
+                      },
+                    };
+                    setMultiUnitsMaster(updated);
+
+                    return updated;
+                  });
                 }}
                 className="w-32"
               />
@@ -200,13 +317,18 @@ const ProductMultiUnitsGCC: React.FC<{
                 noLabel={true}
                 value={unitData.salesPrice?.toString() ?? "0.00"}
                 onChange={(e) => {
-                  setMultiUnits((prev) => ({
-                    ...prev,
+                  setMultiUnits((prev) => {
+                    const updated = {
+                      ...prev,
                     [key]: {
                       ...prev[key],
                       salesPrice: parseFloat(e.target.value) || 0,
                     },
-                  }));
+                    };
+                    setMultiUnitsMaster(updated);
+
+                    return updated;
+                  });
                 }}
                 className="w-32 text-right"
               />
@@ -219,13 +341,18 @@ const ProductMultiUnitsGCC: React.FC<{
               noLabel={true}
               value={unitData.unitRemarks ?? ""}
               onChange={(e) => {
-                setMultiUnits((prev) => ({
-                  ...prev,
-                  [key]: {
-                    ...prev[key],
-                    unitRemarks: e.target.value,
-                  },
-                }));
+                setMultiUnits((prev) => {
+                  const updated = {
+                    ...prev,
+                    [key]: {
+                      ...prev[key],
+                      unitRemarks: e.target.value,
+                    },
+                  };
+                  setMultiUnitsMaster(updated);
+
+                  return updated;
+                });
               }}
               className="w-40"
             />
@@ -249,7 +376,7 @@ const ProductMultiUnitsGCC: React.FC<{
                   <ERPCheckbox
                     id="barcode"
                     label={t("barcode")}
-                    onChange={async(data) => {
+                    onChange={async (data) => {
                       const updatedUnits = { ...multiUnits };
 
                       for (let i = 2; i <= 10; i++) {
@@ -258,12 +385,13 @@ const ProductMultiUnitsGCC: React.FC<{
 
                         if (
                           unit &&
-                          (unit?.unitID??0) > 0 &&
+                          (unit?.unitID ?? 0) > 0 &&
                           isNullOrUndefinedOrEmpty(unit.barCode)
                         ) {
                           try {
-                            const newBarcode =
-                              await api.getAsync(`${Urls.products}SelectNextGeneratedSystemBarcode`) // Replace with actual API call
+                            const newBarcode = await api.getAsync(
+                              `${Urls.products}SelectNextGeneratedSystemBarcode`
+                            ); // Replace with actual API call
                             updatedUnits[key] = {
                               ...unit,
                               barCode: newBarcode,
@@ -278,6 +406,8 @@ const ProductMultiUnitsGCC: React.FC<{
                       }
 
                       setMultiUnits(updatedUnits);
+                      
+                      setMultiUnitsMaster(updatedUnits);
                       setBarcode((prev: boolean) => !prev);
                     }}
                   />
@@ -347,3 +477,7 @@ const ProductMultiUnitsGCC: React.FC<{
 });
 
 export default ProductMultiUnitsGCC;
+function getFormattedValue(arg0: number): string {
+  throw new Error("Function not implemented.");
+}
+

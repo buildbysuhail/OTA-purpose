@@ -78,17 +78,17 @@ export const ProductMaster: React.FC = React.memo(() => {
   });
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const childRef = useRef<ProductMultiUnitsIndiaRef>(null);
+  const productMultiUnitsIndiaRef = useRef<ProductMultiUnitsIndiaRef>(null);
   const handleTabChange = async(index: number) => {
     setActiveTab(index); 
     debugger;
-    if (childRef.current) {
+    if (productMultiUnitsIndiaRef.current) {
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (multiRatesIndex !== undefined && multiRatesIndex !== -1 && multiRatesIndex == index) {
       const obj = getFieldProps("*") as productDto;
       if (appSettings?.productsSettings?.allowMultirate && obj.prices && obj.prices.length == 0) {
-        const rates = await childRef.current.loadMultiRateToGrid(obj, obj.units);
+        const rates = await productMultiUnitsIndiaRef.current.loadMultiRateToGrid(obj, obj.units);
         handleDataChange({ ...obj, prices: rates });
       }
     }
@@ -226,7 +226,7 @@ export const ProductMaster: React.FC = React.memo(() => {
 
         <div key="multi_units">
           <ProductMultiUnitsIndia
-           ref={childRef}
+           ref={productMultiUnitsIndiaRef}
           handleDataChange ={handleDataChange }
             appSettings={appSettings}
             t={t}

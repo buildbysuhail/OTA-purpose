@@ -1,20 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import DataGrid, {
-  Column,
-  FilterRow,
-  HeaderFilter,
-  Scrolling,
-  KeyboardNavigation,
-  Editing,
-} from "devextreme-react/data-grid";
+import DataGrid, { Column, FilterRow, HeaderFilter, Scrolling, KeyboardNavigation, Editing, } from "devextreme-react/data-grid";
 import React from "react";
 import { FormField } from "../../../../../utilities/form-types";
-import {
-  PathValue,
-  productDto,
-  ProductFieldPath,
-  ProductPriceInputDto,
-} from "../products-type";
+import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, } from "../products-type";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 interface ColumnDefinition {
   dataField: string;
@@ -40,6 +28,7 @@ const MultiRates: React.FC<{
 }> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal }) => {
   // Add a ref to access DataGrid instance
   const dataGridRef = React.useRef<any>(null);
+  const initialFocusDone = React.useRef(false);
   const [data, setData] = useState<ProductPriceInputDto[]>([]);
   const allColumns = useMemo<ColumnDefinition[]>(
     () => [
@@ -133,8 +122,7 @@ const MultiRates: React.FC<{
         allowEditing: true,
         // width: 80,
       },
-    ],
-    [t]
+    ], [t]
   );
 
   // Filter columns based on isGlobal
@@ -157,15 +145,20 @@ const MultiRates: React.FC<{
     setData(updatedData);
     return updatedData;
   };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const handleContentReady = (e: any) => {
-    setTimeout(() => {
-      e.component.editCell(0, "salesPrice");
-    }, 100);
+    if (!initialFocusDone.current) {
+      initialFocusDone.current = true;
+      setTimeout(() => {
+        e.component.editCell(0, "salesPrice");
+      }, 100);
+    }
   };
+
   return (
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
       <DataGrid
@@ -186,22 +179,22 @@ const MultiRates: React.FC<{
               // setUnits(updatedUnits);
               handleFieldChange("prices", [...updatedUnits]);
               if ("salesPrice" in changes.data) {
-              const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
-              const finalMrp = e.changes[0].data.mrp ?? 0;
-              if (finalSalesPrice > finalMrp) {
-                ERPAlert.show({
-                  title: t("warning"),
-                  text: `${t("sales_price")} (${finalSalesPrice}) > ${t(
-                    "mrp"
-                  )} (${finalMrp}). ${t("mrp_must_be_greater_or_equal")}`,
-                  icon: "warning",
-                  onConfirm: () => {
-                    return;
-                  },
-                });
-                return; // Stop further processing
+                const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
+                const finalMrp = e.changes[0].data.mrp ?? 0;
+                if (finalSalesPrice > finalMrp) {
+                  ERPAlert.show({
+                    title: t("warning"),
+                    text: `${t("sales_price")} (${finalSalesPrice}) > ${t(
+                      "mrp"
+                    )} (${finalMrp}). ${t("mrp_must_be_greater_or_equal")}`,
+                    icon: "warning",
+                    onConfirm: () => {
+                      return;
+                    },
+                  });
+                  return; // Stop further processing
+                }
               }
-            }
             }
           }
         }}
@@ -241,17 +234,18 @@ const MultiRates: React.FC<{
       </DataGrid>
 
       {/* <DataGrid
-  ref={dataGridRef}
-  dataSource={[{ id: 1, salesPrice: 100 }]}
-  onContentReady={(e) => {
-    setTimeout(() => {
-      e.component.editCell(0, "salesPrice");
-    }, 100);
-  }}
->
-  <Column dataField="salesPrice" allowEditing={true} />
-  <Editing allowUpdating={true} mode="cell" />
-</DataGrid> */}
+            ref={dataGridRef}
+            dataSource={[{ id: 1, salesPrice: 100 }]}
+            onContentReady={(e) => {
+              setTimeout(() => {
+              e.component.editCell(0, "salesPrice");
+            }, 100);
+          }}>
+
+          <Column dataField="salesPrice" allowEditing={true} />
+          <Editing allowUpdating={true} mode="cell" />
+          </DataGrid> */
+      }
     </div>
   );
 });

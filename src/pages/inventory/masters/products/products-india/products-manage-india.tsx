@@ -44,10 +44,11 @@ export const ProductManageIndia: React.FC<{
         const setFocus = () => {
           if (salesPriceRef.current) {
             salesPriceRef.current.focus();
+            // salesPriceRef.current.select();
           }
         };
-        if (showWarning === "WARN") {
-          if ((obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
+        if (showWarning === "WARN" && (obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
+         
             ERPAlert.show(
               {
                 text:"Sales Price is less than Purchase Price. Do you want to continue?",
@@ -56,12 +57,12 @@ export const ProductManageIndia: React.FC<{
               onCancel: setFocus
               }
             )
-          }
+        
         } else if (showWarning === "BLOCK" && (obj.product.stdPurchasePrice??0) > (obj.product.stdSalesPrice??0)) {
           setFocus();
         }
     
-        if (appSettings.productsSettings.allowMultirate) {
+        if (appSettings.productsSettings.allowMultirate){
           if (  obj.product.basicUnitID &&
             obj.product.stdSalesPrice !== undefined &&
             obj.product.stdSalesPrice > 0) {
@@ -73,7 +74,7 @@ export const ProductManageIndia: React.FC<{
                 onCancel: setFocus
                 }
               )
-              // owMessageBox("Multi Rates Exist! Update Multi Rates.", "Multi Rates", "info");
+            
     
             if (obj.prices.length === 0) {
               try {

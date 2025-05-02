@@ -874,7 +874,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           field?.valueKey ?? ""
         );
         let final: Option | null = null;
-debugger;
         // Handle value == -2 by selecting the first item if items are loaded
         if (value === -2 ) {
           if(items.length == 0) {

@@ -27,7 +27,7 @@ const initialProductData: productDto = {
     itemType: "",
     createdUserID: 0,
     supplierID: 0,
-    taxCategoryID: 0,
+    taxCategoryID: -2,
     batchCriteria: "",
     isRawMaterial: false,
     isFinishedGood: true,

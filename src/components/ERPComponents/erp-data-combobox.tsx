@@ -911,6 +911,24 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           setDisplayValue(final?.label ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) : "");
         }
 
+        // // Updated clearing condition
+        // if (
+        //   (value === undefined || value === null) &&
+        //   (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
+        //   value !== -2
+        // ) {
+        //   setInitial(null);
+        //   if (triggerEffect === true || value === null) {
+        //     handleItemClick({ value: "", label: "" });
+        //     setInputValue("");
+        //   }
+        //   setDisplayValue("");
+        // } else if (final !== initial && value !== -2) {
+        //   setInitial(final);
+        //   setInputValue(final?.label || "");
+        //   setDisplayValue(final?.label ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) : "");
+        // }
+
         // Set activeIndex for keyboard navigation
         setActiveIndex(
           final != null
@@ -924,7 +942,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         memoizedFilteredItems,
         value,
         // initial, // Added to check for changes
-        ref,
+        // ref,
+        // triggerEffect
       ]);
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({
@@ -1688,12 +1707,13 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               <div
                 className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
                 style={{
-                  background:
-                    initial?.value !== undefined &&
-                    initial?.value !== null &&
-                    initial?.value !== ""
-                      ? `rgb(${inputBoxState?.selectColor})`
-                      : "#f9f9f9",
+                  // background:
+                  //   initial?.value !== undefined &&
+                  //   initial?.value !== null &&
+                  //   initial?.value !== ""
+                  //     ? `rgb(${inputBoxState?.selectColor})`
+                  //     : "#f9f9f9",
+                      background: initial ? `rgb(${inputBoxState?.selectColor})` : "#f9f9f9",
                   ...(document.documentElement.dir === "rtl"
                     ? {
                         borderTopLeftRadius: `${

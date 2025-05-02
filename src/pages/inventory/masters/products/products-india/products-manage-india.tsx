@@ -376,9 +376,20 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_taxCategory,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.taxCategoryID)}
+                  // onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.taxCategoryID)}
+                  onChange={(data:any)=>{
+                    const prev = getFieldProps("*") 
+                    const  _data = {...prev,
+                      product: {...prev.product, 
+                        taxCategoryID: data.value,
+                        } 
+
+                    };
+                    handleDataChange(_data)
+                  }}
                   label={t("tax_category")}
                   className="w-full"
+                  required={true}
                 />
 
                 <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">

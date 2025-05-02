@@ -325,12 +325,13 @@ const ProductMultiUnitsIndia: React.FC<{
                 onChange={(e) => {
                   const obj = getFieldProps("*") as productDto;
                   const mFactor = Number(e.target.value);
+                  debugger;
                   setUnit((prev) => ({
                     ...prev,
                     multiFactor: Number(e.target.value),
-                    salesPrice: obj?.product?.stdSalesPrice ?? 0 * mFactor,
-                    mrp: obj?.product?.mrp ?? 0 * mFactor,
-                    msp: obj?.batch?.msp ?? 0 * mFactor,
+                    salesPrice: Number(obj?.product?.stdSalesPrice ?? 0) * mFactor,
+                    mrp: Number(obj?.product?.mrp ?? 0) * mFactor,
+                    msp: Number(obj?.batch?.msp ?? 0) * mFactor,
                   }));
                 }}
                 className="flex-1 min-w-[120px] max-w-[222px]"

@@ -297,7 +297,10 @@ const ProductMultiUnitsIndia: React.FC<{
                       undefined ||
                     obj?.product?.basicUnitID == e.value
                   ) {
-                    ERPAlert.show({text: "Unit Already Selected ,Please Change it !!", title: "Already used"});
+                    ERPAlert.show({
+                      text: "Unit Already Selected ,Please Change it !!",
+                      title: "Already used",
+                    });
                     setUnit((prev) => ({
                       ...prev,
                       unitID: 0,
@@ -319,12 +322,16 @@ const ProductMultiUnitsIndia: React.FC<{
                 value={unit.multiFactor}
                 label={t("multi_factor")}
                 type="number"
-                onChange={(e) =>
+                onChange={(e) => {
+                  const obj = getFieldProps("*") as productDto;
+                  const mFactor = Number(e.target.value);
                   setUnit((prev) => ({
                     ...prev,
                     multiFactor: Number(e.target.value),
-                  }))
-                }
+                    salesPrice: obj?.product?.stdSalesPrice ?? 0 * mFactor,
+                    msp: obj?.batch?.msp ?? 0 * mFactor,
+                  }));
+                }}
                 className="flex-1 min-w-[120px] max-w-[222px]"
               />
 

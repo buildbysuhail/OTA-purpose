@@ -62,7 +62,7 @@ export const ProductManageIndia: React.FC<{
         }
     
         if (appSettings.productsSettings.allowMultirate) {
-          if (  obj.product.unitID &&
+          if (  obj.product.basicUnitID &&
             obj.product.stdSalesPrice !== undefined &&
             obj.product.stdSalesPrice > 0) {
               ERPAlert.show(
@@ -210,7 +210,10 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_productcategory
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
+                  onChangeData={(data: any) => {
+                    debugger;
+                    handleFieldChange("product.productCategoryID", data.product.productCategoryID)
+                  }}
                   label={t("product_category")}
                   className="w-full"
                   required={true}
@@ -297,7 +300,10 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_units,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.basicUnitID", data.BasicUnitID)}
+                  onChangeData={(data: any) => {
+                    debugger;
+                    handleFieldChange("product.basicUnitID", data.basicUnitID)
+                  }}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
@@ -376,9 +382,10 @@ useEffect(() => {
                     labelKey: "name",
                     getListUrl: Urls.data_taxCategory,
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.taxCategoryID)}
+                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.product.taxCategoryID)}
                   label={t("tax_category")}
                   className="w-full"
+                  required={true}
                 />
 
                 <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
@@ -550,7 +557,7 @@ useEffect(() => {
             <div className="flex flex-wrap items-center gap-1 mb-3">
               <div className="flex items-center flex-shrink-0">
                 <ERPCheckbox
-                  {...getFieldProps("product.batchCriteria")}
+                  {...getFieldProps("batchCriteria")}
                   label={t("batch_criteria")}
                   onChange={(e) => handleFieldChange('batchCriteria', e.target.checked)}
                   className="flex-1 min-w-[120px]"
@@ -617,7 +624,7 @@ useEffect(() => {
                 />
               }
                 <ERPCheckbox
-                  {...getFieldProps("product.details")}
+                  {...getFieldProps("details")}
                   label={t("details")}
                   onChange={(e) => handleFieldChange('details', e.target.checked)}
                 // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}

@@ -69,6 +69,9 @@ const ProductDetailsIndiaBatches: React.FC<{
       gridAddButtonIcon="ri-add-line"
       pageSize={40}
       onCellClick={handleCellClick}
+      onSelectionChanged={() => {
+         handleFieldChange("hasDisabled",true);
+      }}
     />
   );
 });

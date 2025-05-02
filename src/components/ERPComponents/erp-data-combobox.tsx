@@ -874,9 +874,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           field?.valueKey ?? ""
         );
         let final: Option | null = null;
-
+debugger;
         // Handle value == -2 by selecting the first item if items are loaded
-        if (value === -2 && items.length > 0) {
+        if (value === -2 ) {
+          if(items.length == 0) {
+            return;
+          }
           final = items[0]; // Select first item
           handleItemClick(final);
         } else {
@@ -891,21 +894,18 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             fieldKey === "currency";
           final = _selected || _default || _exceptional || initialValue || null;
         }
-        if (!value && !data?.[field?.id ?? ""]) {
-        
-              setInitial(null);
-              if (triggerEffect == true || value === null) {
-                handleItemClick({ value: "", label: "" });
-                setInputValue("");
-              }
-              // if (filteredItems.length > 0 && inputValue === "") {
-              //   // Update inputValue if filteredItems has items and inputValue is empty
-              //   setInputValue(final?.label || "");
-              // }
-              setDisplayValue("");
-            }
-        // Update state only if final differs from current initial to avoid unnecessary renders
-        if (final !== initial) {
+        if (
+          (value === undefined || value === null) &&
+          (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
+          value !== -2
+        ) {
+          setInitial(null);
+          if (triggerEffect === true || value === null) {
+            handleItemClick({ value: "", label: "" });
+            setInputValue("");
+          }
+          setDisplayValue("");
+        } else if (final !== initial && value !== -2) {
           setInitial(final);
           setInputValue(final?.label || "");
           setDisplayValue(final?.label ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) : "");
@@ -924,7 +924,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         memoizedFilteredItems,
         value,
         // initial, // Added to check for changes
-        ref,
+        // ref,
+        // triggerEffect
       ]);
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({
@@ -943,8 +944,29 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setDisplayValue("");
       setFilteredItems(items); // Reset filtered items to original list
       onChange?.(value);
-      onChangeData &&
-        onChangeData(value && data ? { ...data, [id]: value?.value } : {});
+      if (onChangeData) {
+        debugger;
+        const updatedData = { ...data };
+    
+        if (value && data && id) {
+          const keys = id.split(".");
+          let current = updatedData;
+    
+          for (let i = 0; i < keys.length - 1; i++) {
+            const key = keys[i];
+            if (!current[key] || typeof current[key] !== "object") {
+              current[key] = {}; // create nested object if not present
+            }
+            current = current[key];
+          }
+    
+          current[keys[keys.length - 1]] = value.value;
+        }
+    
+        onChangeData(updatedData);
+      }
+      // onChangeData &&
+      //   onChangeData(value && data ? { ...data, [id]: value?.value } : {});
       handleChange?.(field?.id ?? "", value?.value);
       handleChangeData?.(field?.id ?? "", value?.value);
       onSelectItem?.(value);
@@ -1688,12 +1710,13 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               <div
                 className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
                 style={{
-                  background:
-                    initial?.value !== undefined &&
-                    initial?.value !== null &&
-                    initial?.value !== ""
-                      ? `rgb(${inputBoxState?.selectColor})`
-                      : "#f9f9f9",
+                  // background:
+                  //   initial?.value !== undefined &&
+                  //   initial?.value !== null &&
+                  //   initial?.value !== ""
+                  //     ? `rgb(${inputBoxState?.selectColor})`
+                  //     : "#f9f9f9",
+                      background: initial ? `rgb(${inputBoxState?.selectColor})` : "#f9f9f9",
                   ...(document.documentElement.dir === "rtl"
                     ? {
                         borderTopLeftRadius: `${

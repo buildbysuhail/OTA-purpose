@@ -329,6 +329,7 @@ const ProductMultiUnitsIndia: React.FC<{
                     ...prev,
                     multiFactor: Number(e.target.value),
                     salesPrice: obj?.product?.stdSalesPrice ?? 0 * mFactor,
+                    mrp: obj?.product?.mrp ?? 0 * mFactor,
                     msp: obj?.batch?.msp ?? 0 * mFactor,
                   }));
                 }}

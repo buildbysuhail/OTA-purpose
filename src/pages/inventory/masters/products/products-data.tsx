@@ -34,7 +34,7 @@ const initialProductData: productDto = {
     unitQty: 1,
     packingSlip: true,
     financialYearID: 0,
-    basicUnitID: 1,
+    basicUnitID: -2,
     sectionID: 0,
     defaultVendorID: -2
   },

@@ -150,7 +150,7 @@ export const ProductManageGcc: React.FC<{
 
               <div className="flex flex-wrap gap-2 mb-3">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
-                {getFieldProps("product.productID")?.value}
+                {/* {getFieldProps("product.productID")?.value} */}
                  <ERPDataCombobox
                               ref={productNameRef}
                                 {...getFieldProps("product.productID")}
@@ -354,8 +354,7 @@ export const ProductManageGcc: React.FC<{
                     required={false}
                     onChangeData={(data: any) =>
                       handleFieldChange(
-                        "product.stdPurchasePrice",
-                        data.product.stdPurchasePrice
+                        {"product.stdPurchasePrice":data.product.stdPurchasePrice, "batch.stdPurchasePrice":data.product.stdPurchasePrice}
                       )
                     }
                   />
@@ -386,6 +385,10 @@ export const ProductManageGcc: React.FC<{
                       const prev = getFieldProps("*");
                       const _data = {
                         ...prev,
+                        batch: {
+                          ...prev.batch,
+                          stdSalesPrice: data.product.stdSalesPrice,
+                        },
                         product: {
                           ...prev.product,
                           stdSalesPrice: data.product.stdSalesPrice,

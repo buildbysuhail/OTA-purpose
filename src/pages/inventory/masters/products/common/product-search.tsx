@@ -30,15 +30,17 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        showInPdf:true
       },
       {
-        dataField: "productId",
+        dataField: "productID",
         caption: t("product_id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        visible:false
       },
       {
         dataField: "productCode",
@@ -48,6 +50,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "product",
@@ -57,6 +60,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "groupName",
@@ -66,6 +70,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "category",
@@ -75,6 +80,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "taxCategory",
@@ -84,6 +90,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "unit",
@@ -93,6 +100,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "salesPrice",
@@ -102,6 +110,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "purchasePrice",
@@ -111,6 +120,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "brandName",
@@ -120,6 +130,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "arabicName",
@@ -129,6 +140,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "stock",
@@ -138,6 +150,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "isActive",
@@ -147,6 +160,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true
       },
       {
         dataField: "reOrderLevel",
@@ -156,6 +170,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "reOrderQty",
@@ -165,6 +180,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "canSell",
@@ -174,6 +190,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "canPurchase",
@@ -183,6 +200,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "canManufacture",
@@ -192,6 +210,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "itemAlias",
@@ -201,6 +220,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "itemType",
@@ -210,6 +230,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "commodityCode",
@@ -219,6 +240,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "productGroupId",
@@ -228,6 +250,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "taxCategoryId",
@@ -237,6 +260,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "basicUnitId",
@@ -246,6 +270,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "productCategoryId",
@@ -255,6 +280,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "batchCriteria",
@@ -264,6 +290,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "hsnCode",
@@ -273,6 +300,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "mrp",
@@ -282,6 +310,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "stockMin",
@@ -291,6 +320,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "stockMax",
@@ -300,6 +330,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "isRawMaterial",
@@ -309,6 +340,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "isFinishedGood",
@@ -318,6 +350,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "unitQty",
@@ -327,6 +360,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "packingSlip",
@@ -336,6 +370,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "mannualBarcode",
@@ -345,6 +380,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "autoBarcode",
@@ -354,6 +390,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "isWeighingScale",
@@ -363,6 +400,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "batchNo",
@@ -372,6 +410,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "netWt",
@@ -381,6 +420,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
       {
         dataField: "unitName",
@@ -390,6 +430,7 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false
       },
     ],
     []

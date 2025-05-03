@@ -23,7 +23,7 @@ const PurchaseTaxReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-     format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "customerName",
@@ -94,7 +94,7 @@ const PurchaseTaxReport = () => {
           const value =
             cellElement.data?.vatPercentage == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,4)
+              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -106,7 +106,7 @@ const PurchaseTaxReport = () => {
             <span>
               {cellElement.data?.vatPercentage == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,4)}
+                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage), false, 4)}
             </span>
           )
         }
@@ -126,7 +126,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)
+            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -138,7 +138,7 @@ const PurchaseTaxReport = () => {
             <span>
               {cellElement.data?.vatAmount == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)}
+                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount), false, 4)}
             </span>
           )
         }
@@ -247,25 +247,25 @@ const PurchaseTaxReport = () => {
   ]
 
   const customizeSummaryRow = useMemo(() => {
-      return (itemInfo: { value: any }) => {
-        const value = itemInfo.value;
-        if (
-          value === null ||
-          value === undefined ||
-          value === "" ||
-          isNaN(value)
-        ) {
-          return "0"; // Ensure "0" is displayed when value is missing
-        }
-        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
-      };
-    }, []);
-const summaryItems: SummaryConfig[] = [
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
+  const summaryItems: SummaryConfig[] = [
     {
       column: "customerName",
       summaryType: "custom",
       valueFormat: "string",
-      displayFormat:"TOTAL"
+      displayFormat: "TOTAL"
     },
     {
       column: "taxableAmount",
@@ -305,7 +305,7 @@ const summaryItems: SummaryConfig[] = [
                   showFilterInitially={true}
                   filterWidth={335}
                   filterHeight={230}
-                  filterContent={<PurchaseTaxReportFilter/>}
+                  filterContent={<PurchaseTaxReportFilter />}
                   filterInitialData={PurchaseTaxReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}

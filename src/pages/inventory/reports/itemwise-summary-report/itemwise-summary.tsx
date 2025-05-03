@@ -1,8 +1,6 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -16,18 +14,13 @@ interface ItemWiseSummaryReportProps {
   dataUrl: string;
   gridId: string;
 }
+
 const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(
-    ItemWiseSummaryFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(ItemWiseSummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
-
-
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       //iscategorywise  groupindex =0 for category
@@ -473,12 +466,12 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
       );
     }
   }, [filter.isCategoryWise, dataGridRef.current?.instance()]);
-  
+
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1)
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -514,11 +507,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<ItemWiseSummaryFilter />}
-                filterHeight={550}
+                filterHeight={460}
                 filterWidth={700}
-                filterInitialData={
-                  ItemWiseSummaryFilterInitialState
-                }
+                filterInitialData={ItemWiseSummaryFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}

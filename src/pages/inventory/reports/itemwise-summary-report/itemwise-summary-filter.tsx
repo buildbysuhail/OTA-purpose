@@ -16,7 +16,7 @@ const ItemWiseSummaryFilter = ({
     const { t } = useTranslation("accountsReport");
     const clientSession = useSelector((state: RootState) => state.ClientSession);
     return (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden">
             <div className="grid grid-cols-1 gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <ERPDateInput
@@ -34,7 +34,7 @@ const ItemWiseSummaryFilter = ({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-end gap-4">
                 {
                     clientSession.isAppGlobal == true && (
                         <ERPDataCombobox

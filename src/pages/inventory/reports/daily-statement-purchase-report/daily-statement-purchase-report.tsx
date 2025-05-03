@@ -11,9 +11,7 @@ import GridId from "../../../../redux/gridId"
 const DailyStatementPurchaseReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
-
   const columns: DevGridColumn[] = [
-   
     {
       dataField: "form",
       caption: t("form"),
@@ -22,12 +20,12 @@ const DailyStatementPurchaseReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      groupIndex:0,
+      groupIndex: 0,
       showInPdf: true,
     },
     {
       dataField: "vchNo",
-      caption: t("vch_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -208,7 +206,7 @@ const DailyStatementPurchaseReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value,false,2) : getFormattedValue(-1 * value,false,2) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -252,7 +250,7 @@ const DailyStatementPurchaseReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                autoExpandAll={true}
+                  autoExpandAll={true}
                   columns={columns}
                   gridHeader={t("daily_statement_report_of_purchase")}
                   filterText=" From {fromDate} To {toDate}"

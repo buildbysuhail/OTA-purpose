@@ -11,7 +11,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column"
 const DailyStatementAllReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
-
   const columns: DevGridColumn[] = [
     {
       dataField: "iD",
@@ -31,7 +30,7 @@ const DailyStatementAllReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      groupIndex:0,
+      groupIndex: 0,
       showInPdf: true,
     },
     {
@@ -217,7 +216,7 @@ const DailyStatementAllReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value,false,2) : getFormattedValue(-1 * value,false,2) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -255,14 +254,14 @@ const DailyStatementAllReport = () => {
     {
       column: "party",
       summaryType: "max",
-      isGroupItem:true,
+      isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeGroup,
     },
     {
       column: "cash",
       summaryType: "sum",
-      isGroupItem:true,
+      isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
@@ -270,7 +269,7 @@ const DailyStatementAllReport = () => {
     {
       column: "credit",
       summaryType: "sum",
-      isGroupItem:true,
+      isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
@@ -278,7 +277,7 @@ const DailyStatementAllReport = () => {
     {
       column: "bank",
       summaryType: "sum",
-      isGroupItem:true,
+      isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
@@ -286,7 +285,7 @@ const DailyStatementAllReport = () => {
     {
       column: "total",
       summaryType: "sum",
-      isGroupItem:true,
+      isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
@@ -301,10 +300,10 @@ const DailyStatementAllReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                autoExpandAll={true}
+                  autoExpandAll={true}
                   columns={columns}
-                   filterText=" From {fromDate} To {toDate}"
-                   gridHeader={t("daily_statement_report_of_all")}
+                  filterText=" From {fromDate} To {toDate}"
+                  gridHeader={t("daily_statement_report_of_all")}
                   dataUrl={Urls.daily_statement_all}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
@@ -315,7 +314,7 @@ const DailyStatementAllReport = () => {
                   enablefilter={true}
                   showFilterInitially={false}
                   filterWidth={360}
-                  filterHeight={250}
+                  filterHeight={150}
                   filterContent={<DailyStatementAllReportFilter />}
                   filterInitialData={DailyStatementAllReportInitialState}
                   hideGridAddButton={true}
@@ -330,5 +329,4 @@ const DailyStatementAllReport = () => {
   )
 }
 
-export default DailyStatementAllReport
-
+export default DailyStatementAllReport;

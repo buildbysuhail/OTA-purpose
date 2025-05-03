@@ -94,7 +94,7 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
 
       const mUnits = updateUnit;
       for (const row of mUnits) {
-        if (mlRate.find((x: any) => x.unitID == unit.unitID) == undefined) {
+        if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
           mlRate = await loadMultiRates(
             row.unitID ?? 0,
             row.unit ?? "",

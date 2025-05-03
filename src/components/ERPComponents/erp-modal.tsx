@@ -100,52 +100,47 @@ const ERPModal = React.memo(
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
     
-      // Calculate dimensions first
-      const newWidth = isMaximized 
-        ? windowWidth - 50 
-        : Math.min(windowWidth - 40, width);
-        
-      const newHeight = isMaximized
-        ? windowHeight - 50
-        : Math.min(windowHeight - 40, height);
+      let newWidth, newHeight, newX, newY;
     
-      // Then calculate position
-      let newX, newY;
       if (isMaximized) {
-        newX = 25;
-        newY = 25;
+        newWidth = windowWidth - 50;
+        newHeight = windowHeight - 50;
+        newX = (windowWidth - newWidth) / 2; 
+        newY = (windowHeight - newHeight) / 2; 
         setInitPosition({
           x: (windowWidth - width) / 2,
-          y: (windowHeight - height) / 2
+          y: (windowHeight - height) / 2,
         });
       } else {
+        newWidth = Math.min(windowWidth - 40, width);
+        newHeight = Math.min(windowHeight - 40, height);
         newX = Math.max((windowWidth - newWidth) / 2, 0);
         newY = Math.max((windowHeight - newHeight) / 2, 0);
       }
-    
-      // Update all state together
       setModalWidth(newWidth);
       setModalHeight(newHeight);
       setPosition({ x: newX, y: newY });
       setIsPositionCalculated(true);
     };
-    
       // Reset state when modal closes
+
       useEffect(() => {
         if (!isOpen) {
         setIsMaximized(false);
         setPosition({ x: 0, y: 0 });
+        setInitPosition({ x: 0, y: 0 });
+        setModalWidth(width);
+        setModalHeight(height);
         setIsPositionCalculated(false);
       }
       }, [isOpen]);
 
       // Calculate dimensions and position when modal opens or props change
       useEffect(() => {
-      if (isOpen) {
-      calculateDimensionsAndPosition();
-      }
-      }, [isOpen, isMaximized, width, height]);
-
+        if (isOpen) {
+        calculateDimensionsAndPosition();
+        }
+        }, [isOpen, isMaximized, width, height]);
 
 
   const handleClose = () => {
@@ -254,18 +249,23 @@ const ERPModal = React.memo(
     e.stopPropagation(); 
   }}
  onDragStop={(_, d) => {
-  if (!isMaximized) setPosition({ x: d.x, y: d.y });
+  if (!isMaximized) {
+    setPosition({ x: d.x, y: d.y });
+    // setInitPosition({ x: d.x, y: d.y });
+  }
        
       }}
       onResizeStop={(_, __, ref, ___, pos) => {
         setModalHeight(ref.offsetHeight);
         setModalWidth(ref.offsetWidth);
         setPosition(pos);
+        // setInitPosition({ x: pos.x, y: pos.y });
       }}
        onResize={(_, __, ref, ___, pos) => {
          setPosition({ x: pos.x, y: pos.y });
          setModalHeight(ref.offsetHeight);
          setModalWidth(ref.offsetWidth);
+        //  setInitPosition({ x: pos.x, y: pos.y });
        }}
        disableDragging ={isMaximized}
        enableResizing={!isMaximized}
@@ -316,6 +316,7 @@ const ERPModal = React.memo(
                   } 
                   setIsMaximized(!isMaximized);
                 }}
+
                 aria-label={isMaximized ? "Restore" : "Maximize"}
               >
                 {isMaximized ? <Minimize2 size={15} /> : <Maximize2 size={15} />}

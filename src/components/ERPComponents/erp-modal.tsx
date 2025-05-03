@@ -5,7 +5,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import React, { cloneElement, Fragment, useEffect, useRef, useState } from "react";
+import React, { cloneElement, Fragment, useCallback, useEffect, useRef, useState } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import {
@@ -130,22 +130,27 @@ const ERPModal = React.memo(
       setIsPositionCalculated(true);
     };
     
-    useEffect(() => {
-      calculateDimensionsAndPosition();
-    }, [isOpen, isMaximized, width, height]);
-    
-    // useEffect(() => {
-    //   const handleResize = () => calculateDimensionsAndPosition();
-    //   window.addEventListener('resize', handleResize);
-    //   return () => window.removeEventListener('resize', handleResize);
-    // }, [isOpen, isMaximized]);
+      // Reset state when modal closes
+      useEffect(() => {
+        if (!isOpen) {
+        setIsMaximized(false);
+        setPosition({ x: 0, y: 0 });
+        setIsPositionCalculated(false);
+      }
+      }, [isOpen]);
 
-    const handleClose = () => {
-      closeModal(false);
-      setIsMaximized(false)
-      setPosition({ x: 0, y: 0 });
-      setIsPositionCalculated(false);
-    }
+      // Calculate dimensions and position when modal opens or props change
+      useEffect(() => {
+      if (isOpen) {
+      calculateDimensionsAndPosition();
+      }
+      }, [isOpen, isMaximized, width, height]);
+
+
+
+  const handleClose = () => {
+    closeModal(false);
+  }; 
     const handleSubmit = () => {
       if (onSubmitModel) {
         onSubmitModel();

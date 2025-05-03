@@ -143,6 +143,7 @@ const ProductMultiUnitsGCC: React.FC<{
         }
       };
   useEffect(() => {
+    debugger;
     const responseData = getFieldProps("units").value as ProductUnitInputDto[];
     const baseUnit = getFieldProps("product.basicUnitID").value;
     const paddedData: ProductUnitInputDto[] = [...responseData];
@@ -159,6 +160,7 @@ const ProductMultiUnitsGCC: React.FC<{
     });
 
     setMultiUnits(result);
+    setMultiUnitsMaster(result)
   }, []);
 
   const renderUnitRows = () => {

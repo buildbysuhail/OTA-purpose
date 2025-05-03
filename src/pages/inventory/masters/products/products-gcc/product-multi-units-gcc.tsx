@@ -24,11 +24,11 @@ import { APIClient } from "../../../../../helpers/api-client";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
-export interface ProductMultiUnitsIndiaRef {
+export interface ProductMultiUnitsGccRef {
   loadMultiRateToGrid: (obj: productDto, units: any) => Promise<ProductPriceInputDto[]>;
 }
 const api = new APIClient();
-const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsIndiaRef, {
+const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },

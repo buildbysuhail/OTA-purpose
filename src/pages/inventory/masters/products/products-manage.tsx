@@ -417,6 +417,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div className="flex flex-col gap-1">
         {isIndia ? (
           <ProductManageIndia
+            productMultiUnitsIndiaRef={productMultiUnitsIndiaRef}
             handleDataChange={handleDataChange}
             appSettings={appSettings}
             formState={formState}

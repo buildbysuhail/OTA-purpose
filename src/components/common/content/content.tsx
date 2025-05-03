@@ -210,6 +210,7 @@ const loading = (
 const Content: FC<ContentProps> = () => {
   const [myClass, setMyClass] = useState("");
   const userSession = useSelector((state: RootState) => state.UserSession);
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <Suspense fallback={loading}>
       <Routes>
@@ -638,7 +639,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
         <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
-        <Route path="/inventory-masters/tax-category" element={<TaxCategory />} />
+        <Route path="/inventory-masters/tax-category" element={clientSession.isAppGlobal ?  <TaxCategory />:  <TaxCategory />} />
         <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
         <Route path="/inventory-masters/section" element={<Section />} />
         <Route path="/inventory-masters/schemes" element={<Schemes />} />

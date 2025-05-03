@@ -54,55 +54,55 @@ const ProductSummaryReport: React.FC<{
   onKeyChange,
 }) => {
 
-  const popupData = useSelector((state: RootState) => state.PopupData);
+    const popupData = useSelector((state: RootState) => state.PopupData);
 
-  const updateFilterWithBatchID = (
-    loadedData?: ProductSummaryReport[],
-    rowData?: ProductSummaryReport
-  ) => {
-    const productBatchID =
-      rowData?.productBatchID || loadedData?.[0]?.productBatchID;
+    const updateFilterWithBatchID = (
+      loadedData?: ProductSummaryReport[],
+      rowData?: ProductSummaryReport
+    ) => {
+      const productBatchID =
+        rowData?.productBatchID || loadedData?.[0]?.productBatchID;
 
-    if (
-      productBatchID &&
-      productBatchID !== popupData.productSummaryReport.key
-    ) {
-      debugger;
-      // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: productBatchID} ));
-      onKeyChange(productBatchID);
-    }
+      if (
+        productBatchID &&
+        productBatchID !== popupData.productSummaryReport.key
+      ) {
+        debugger;
+        // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: productBatchID} ));
+        onKeyChange(productBatchID);
+      }
+    };
+
+    return (
+      <Fragment>
+        <div className="grid grid-cols-12">
+          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            <div className="px-4 pt-4 pb-2">
+              <div className="grid grid-cols-1 gap-3">
+                <ProductSummaryReport1
+                  onReloadChange={onReloadChange}
+                  reloadBase={reloadBase}
+                  filter={filter}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            <div className="px-4 pt-4 pb-2">
+              <div className="grid grid-cols-1 gap-3">
+                <ProductSummaryReport2
+                  onReloadChange2={onReloadChange2}
+                  reloadBase2={reloadBase2}
+                  filter={filter}
+                  updateFilterWithBatchID={updateFilterWithBatchID}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    );
   };
-
-  return (
-    <Fragment>
-      <div className="grid grid-cols-12">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2">
-            <div className="grid grid-cols-1 gap-3">
-              <ProductSummaryReport1
-                onReloadChange={onReloadChange}
-                reloadBase={reloadBase}
-                filter={filter}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2">
-            <div className="grid grid-cols-1 gap-3">
-              <ProductSummaryReport2
-                onReloadChange2={onReloadChange2}
-                reloadBase2={reloadBase2}
-                filter={filter}
-                updateFilterWithBatchID={updateFilterWithBatchID}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Fragment>
-  );
-};
 
 export default React.memo(ProductSummaryReport, (prevProps, nextProps) => {
   debugger;
@@ -111,6 +111,6 @@ export default React.memo(ProductSummaryReport, (prevProps, nextProps) => {
   return (
     pf === nf &&
     prevProps.reloadBase === nextProps.reloadBase &&
-    prevProps.reloadBase2 === nextProps.reloadBase2 
+    prevProps.reloadBase2 === nextProps.reloadBase2
   );
 });

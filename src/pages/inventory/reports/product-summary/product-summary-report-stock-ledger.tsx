@@ -7,9 +7,8 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
 
-const ProductSummaryReportStockLedger: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean}> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
+const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean }> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
-
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
@@ -26,7 +25,7 @@ const ProductSummaryReportStockLedger: React.FC<{filter:ProductSummaryFilter;  s
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-         format: "dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "particulars",
@@ -213,7 +212,7 @@ const ProductSummaryReportStockLedger: React.FC<{filter:ProductSummaryFilter;  s
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: false, sorting: false,summary:true }}
+                remoteOperations={{ filtering: true, paging: false, sorting: false, summary: true }}
                 columns={columns}
                 gridHeader={t("product_summary_stock_ledger")}
                 dataUrl={Urls.product_summary_stock_ledger}

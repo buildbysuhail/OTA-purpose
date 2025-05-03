@@ -592,6 +592,7 @@ const Urls = {
   schemes: "/Inventory/schemes/",
   Warehouse: "/Inventory/Warehouse/",
   taxCategory: "/Inventory/TaxCategory/",
+  tcsCategory:"/Inventory/TcsCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
   daily_statement_sales:

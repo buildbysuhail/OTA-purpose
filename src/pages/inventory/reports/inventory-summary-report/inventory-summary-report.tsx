@@ -60,7 +60,7 @@ const InventorySummaryReport = () => {
         },
         {
             dataField: "voucherType",
-            caption: t("v_type"),
+            caption: t("voucher_type"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,

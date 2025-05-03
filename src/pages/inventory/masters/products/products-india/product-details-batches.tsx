@@ -5,7 +5,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { toggleAccountGroupPopup } from "../../../../../redux/slices/popup-reducer";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 
-const ProductDetailsIndiaBatches: React.FC<{
+const ProductDetailsBatches: React.FC<{
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
@@ -43,7 +43,7 @@ const ProductDetailsIndiaBatches: React.FC<{
     { dataField: "apc", caption: t("APC"), width: 100, dataType: "string" },
     { dataField: "stock", caption: t("Stock"), width: 100, dataType: "number", alignment: "right" },
   ], [t]);
-  
+
 
   // ✅ Handle cell click
   const handleCellClick = useCallback(
@@ -70,10 +70,10 @@ const ProductDetailsIndiaBatches: React.FC<{
       pageSize={40}
       onCellClick={handleCellClick}
       onSelectionChanged={() => {
-         handleFieldChange("hasDisabled",true);
+        handleFieldChange("hasDisabled", true);
       }}
     />
   );
 });
 
-export default ProductDetailsIndiaBatches;
+export default ProductDetailsBatches;

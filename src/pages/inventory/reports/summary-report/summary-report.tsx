@@ -4,7 +4,7 @@ import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import  { SummaryFilterInitialState, } from "./summary-report-filter";
+import { SummaryFilterInitialState, } from "./summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -20,9 +20,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -394,7 +392,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "cardAmt",
-        caption: t("CardAmt"),
+        caption: t("card_amount"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -423,39 +421,39 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-        //if AccountsSettings.AllowMultiPayments start
-        {
-          dataField: "uPI",
-          caption: t("UPI"), //appglobal UPI else QRpay
-          dataType: "number",
-          allowSearch: true,
-          allowFiltering: true,
-          width: 100,
-          cellRender: (
-            cellElement: any,
-            cellInfo: any,
-            filter: any,
-            exportCell: any
-          ) => {
-            if (exportCell != undefined) {
-              const value =
-                cellElement.data?.uPI == null
-                  ? 0
-                  : getFormattedValue(cellElement.data.uPI);
-              return {
-                ...exportCell,
-                text: value,
-                alignment: "right",
-                alignmentExcel: { horizontal: "right" },
-              };
-            } else {
-              return cellElement.data?.uPI == null
+      //if AccountsSettings.AllowMultiPayments start
+      {
+        dataField: "uPI",
+        caption: t("upi"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.uPI == null
                 ? 0
                 : getFormattedValue(cellElement.data.uPI);
-            }
-          },
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.uPI == null
+              ? 0
+              : getFormattedValue(cellElement.data.uPI);
+          }
         },
-        
+      },
+
       {
         dataField: "financialYearID",
         caption: t("financial_year_id"),
@@ -503,7 +501,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "couponAmt",
-        caption: t("coupon_amt"),
+        caption: t("coupon_amount"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -803,7 +801,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       //     }
       //   },
       // },
-    
+
       // {
       //   dataField: "toWarehouseName",
       //   caption: t("to_warehouse_name"),
@@ -915,7 +913,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       //   width: 100,
       // },
 
-    
+
       //////// end
       // show when dbidvalue=543140180640
       {
@@ -1173,7 +1171,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 method={ActionType.POST}
                 filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
-                filterHeight={450}
+                filterHeight={300}
                 filterWidth={790}
                 filterInitialData={SummaryFilterInitialState}
                 onFilterChanged={(f: any) => {

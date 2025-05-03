@@ -3,6 +3,7 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import {
   formStateHandleFieldChange,
+  formStateLoadDataUpdate,
   formStateMasterHandleFieldChange,
 } from "../reducer";
 import React from "react";
@@ -47,15 +48,13 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
             id="FormType"
             className="min-w-[160px]"
             label={t("Form_Type")}
-            data={formState.formType}
+            data={formState?.loadData}
             onSelectItem={(e) => {
               dispatch(
-                formStateHandleFieldChange({
-                  fields: { formType: e.value },
-                })
+                formStateLoadDataUpdate({key:"formType", value:e.value})
               );
             }}
-            value={formState.formType}
+            value={formState?.loadData?.formType}
             field={{
               id: "FormType",
               valueKey: "id",

@@ -529,6 +529,10 @@ export interface UserConfig {
   inputBoxStyle?: inputBox
   isExpanded?: boolean;
 }
+export interface LoadData {
+  formType?: string;
+  vPrefix?: string;
+  vNumber?: string;}
 export interface TransactionFormState {
   store: any;
   formCode: string; 
@@ -577,9 +581,8 @@ export interface TransactionFormState {
   priceCategory: string;
   netTotal: number;
   netAmount: number;
-  formType?: string;
-  Vprefix?: string;
-  VNumber?: string;
+  loadData: LoadData
+  
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -679,9 +682,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   totTax: { visible: true, disabled: false, label: "tot_tax" },
   grandTotal: { visible: true, disabled: false, label: "grand_total" },
   netTotal: { visible: true, disabled: false, label: "net_total" },
-  formType: { visible: true, disabled: false, label: "form_type" },
-  Vprefix: { visible: true, disabled: false, label: "vprefix" },
-  VNumber: { visible: true, disabled: false, label: "v_number" },
 
 };
 export type FormElementsState = {
@@ -706,9 +706,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   openUnsavedPrompt: false,
   priceCategory: "",
   remarks: "",
-  formType: "",
-  Vprefix: "",
-  VNumber: "",
   userConfig: {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,
@@ -770,7 +767,12 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   enableDebitAccount: false,
   enableTaxNumber: false,
   netTotal: 0,
-  netAmount: 0
+  netAmount: 0,
+  loadData: {
+    formType: undefined,
+    vPrefix: undefined,
+    vNumber: undefined
+  }
 }
 export interface PrintTransProps {
   masterAccount: string;

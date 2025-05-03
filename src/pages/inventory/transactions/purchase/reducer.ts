@@ -9,6 +9,7 @@ import {
   FormElementState,
   Attachments,
   TransactionMaster3,
+  LoadData,
 } from "./transaction-types";
 import { clearEntryControl } from "./functions";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
@@ -102,6 +103,16 @@ const InvTransactionSlice = createSlice({
     ) => {
       const { key, value } = action.payload;
       (state.transaction[key] as typeof value) = value;
+    },
+    formStateLoadDataUpdate: (
+      state,
+      action: PayloadAction<{
+        key: keyof LoadData;
+        value: TransactionData[keyof TransactionData];
+      }>
+    ) => {
+      const { key, value } = action.payload;
+      (state.loadData[key] as typeof value) = value;
     },
 
     // Update a specific field in the master object within the transaction
@@ -487,7 +498,8 @@ export const {
   formStateTransactionAttachmentsRowUpdate,
   formStateTransactionAttachmentsRowRemove,
   formStateMasterHandleFieldChange,
-  formStateTransactionMaster3HandleFieldChange
+  formStateTransactionMaster3HandleFieldChange,
+  formStateLoadDataUpdate
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

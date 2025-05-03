@@ -7,7 +7,7 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import Urls from "../../../../../redux/urls";
 import initialProductData from "../products-data";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { FormField } from "../../../../../utilities/form-types";
 import {
   ProductFieldPath,
@@ -23,8 +23,12 @@ import {
 import { APIClient } from "../../../../../helpers/api-client";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+
+export interface ProductMultiUnitsIndiaRef {
+  loadMultiRateToGrid: (obj: productDto, units: any) => Promise<ProductPriceInputDto[]>;
+}
 const api = new APIClient();
-const ProductMultiUnitsGCC: React.FC<{
+const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsIndiaRef, {
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -32,7 +36,7 @@ const ProductMultiUnitsGCC: React.FC<{
   ) => void;
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+}>(({ t, handleFieldChange, getFieldProps }, ref) => {
   const generateInitialUnit = (): ProductUnitInputDto => ({
     productUnitID: undefined,
     productBatchID: undefined,
@@ -52,6 +56,13 @@ const ProductMultiUnitsGCC: React.FC<{
   const [multiUnits, setMultiUnits] = useState<{
     [key: string]: ProductUnitInputDto;
   }>({});
+
+   useImperativeHandle(ref, () => ({
+        loadMultiRateToGrid: async (obj: productDto, units: any) => {
+          return await loadMultiRateToGrid(obj, units);
+        }
+      }));
+      
   const clientSession = useSelector((state: RootState) => state.ClientSession)
   const [barcode, setBarcode] = useState<boolean>(false);
   const setMultiUnitsMaster = (multiUnits: any) => {

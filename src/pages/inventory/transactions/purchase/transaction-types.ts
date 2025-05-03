@@ -529,6 +529,10 @@ export interface UserConfig {
   inputBoxStyle?: inputBox
   isExpanded?: boolean;
 }
+export interface LoadData {
+  formType?: string;
+  vPrefix?: string;
+  vNumber?: string;}
 export interface TransactionFormState {
   store: any;
   formCode: string; 
@@ -577,6 +581,8 @@ export interface TransactionFormState {
   priceCategory: string;
   netTotal: number;
   netAmount: number;
+  loadData: LoadData
+  
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -761,7 +767,12 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   enableDebitAccount: false,
   enableTaxNumber: false,
   netTotal: 0,
-  netAmount: 0
+  netAmount: 0,
+  loadData: {
+    formType: undefined,
+    vPrefix: undefined,
+    vNumber: undefined
+  }
 }
 export interface PrintTransProps {
   masterAccount: string;

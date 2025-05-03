@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 
@@ -30,6 +29,7 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
                 <div className="flex items-center gap-2">
                     <div className="flex-1">
                         <ERPDataCombobox
+                            label={t("employee")}
                             {...getFieldProps("employee")}
                             field={{
                                 id: "employee",
@@ -37,9 +37,7 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
                                 valueKey: "id",
                                 labelKey: "name",
                             }}
-                            onSelectItem={(data) => {
-                                handleFieldChange("employee", data.value);
-                            }}
+                            onSelectItem={(data) => { handleFieldChange("employee", data.value); }}
                         />
                     </div>
                 </div>

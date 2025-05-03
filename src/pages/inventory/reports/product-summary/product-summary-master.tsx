@@ -39,7 +39,7 @@ const ProductSummaryMaster = ({
   formState,
 }: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
-const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
   const [reload, setReload] = useState<boolean>(true);
   const [reload2, setReload2] = useState<boolean>(true);
@@ -50,8 +50,8 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
       dateTo: new Date(),
       productID: 1,
       productBatchID: 0,
-      voucherType:"PI",
-      productCode:"",
+      voucherType: "PI",
+      productCode: "",
       warehouseID: 0,
       showBatchWise: true,
     },
@@ -62,36 +62,36 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
       dateTo: new Date(),
       productID: 1,
       productBatchID: 0,
-      voucherType:"PI",
-      productCode:"",
+      voucherType: "PI",
+      productCode: "",
       warehouseID: 0,
       showBatchWise: false,
     },
   });
 
-const [batchID, setBatchID] = useState<number|null>(null);
+  const [batchID, setBatchID] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("basicInfo");
   const [activeId, setActiveId] = useState(0);
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    if(newValue == "basicInfo") {
+    if (newValue == "basicInfo") {
       setReload(true)
-                      setReload2(true)
+      setReload2(true)
     }
     setActiveTab(newValue);
   };
 
-    const popupData = useSelector((state: RootState) => state.PopupData);
+  const popupData = useSelector((state: RootState) => state.PopupData);
   // const onKeyChange = (id: any) => {
   //   setActiveId(id);
   //   // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id} ));
   // }
   const activeIdRef = useRef<number | null>(null);
 
-const onKeyChange = (id: any) => {
-  activeIdRef.current = id;
-  // Optionally, call any side effects here without causing a re-render
-  // e.g., dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id}));
-};
+  const onKeyChange = (id: any) => {
+    activeIdRef.current = id;
+    // Optionally, call any side effects here without causing a re-render
+    // e.g., dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id}));
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-1 gap-x-6">
@@ -173,61 +173,61 @@ const onKeyChange = (id: any) => {
                     }))
                   }
                 />
-  {
-        applicationSettings.inventorySettings?.maintainWarehouse == true && (
-                <ERPDataCombobox
-                  id="warehouseID"
-                  value={filter.filter.warehouseID}
-                  customSize="sm"
-                  className="min-w-[300px]"
-                  data={filter.filter}
-                  label={t("warehouse")}
-                  field={{
-                    id: "warehouseID",
-                    getListUrl: Urls.data_warehouse,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  onChangeData={(data: any) =>
-                    setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        warehouseID: data.warehouseID,
-                      },
-                    }))
-                  }
-                />
-              )}
+                {
+                  applicationSettings.inventorySettings?.maintainWarehouse == true && (
+                    <ERPDataCombobox
+                      id="warehouseID"
+                      value={filter.filter.warehouseID}
+                      customSize="sm"
+                      className="min-w-[300px]"
+                      data={filter.filter}
+                      label={t("warehouse")}
+                      field={{
+                        id: "warehouseID",
+                        getListUrl: Urls.data_warehouse,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      onChangeData={(data: any) =>
+                        setFilter((prev: any) => ({
+                          ...prev,
+                          filter: {
+                            ...prev.filter,
+                            warehouseID: data.warehouseID,
+                          },
+                        }))
+                      }
+                    />
+                  )
+                }
                 <div className="flex items-center">
-                <ERPCheckbox
-                  id="showBatchWise"
-                  label={t("show_batch_wise")}
-                  checked={filter.filter.showBatchWise}
-                  data={filter.filter}
-                  onChangeData={(data: any) => {
-                    return setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        showBatchWise: data.showBatchWise,
-                      },
-                    }))
-                  }
-                  }
-                />
+                  <ERPCheckbox
+                    id="showBatchWise"
+                    label={t("show_batch_wise")}
+                    checked={filter.filter.showBatchWise}
+                    data={filter.filter}
+                    onChangeData={(data: any) => {
+                      return setFilter((prev: any) => ({
+                        ...prev,
+                        filter: {
+                          ...prev.filter,
+                          showBatchWise: data.showBatchWise,
+                        },
+                      }))
+                    }}
+                  />
                 </div>
                 <div className="mt-[24px] sm:mt-0 sm:self-end">
                   <ERPButton
                     type="button"
                     variant="primary"
                     className="h-[32px] w-full sm:w-auto"
-                    onClick={() =>{ 
+                    onClick={() => {
                       setReload(true)
                       setReload2(true)
-                     // First, turn the reload flags off
-                     _setFilter(filter);
-                    //  Promise.resolve().then(() => setReload(true));
+                      // First, turn the reload flags off
+                      _setFilter(filter);
+                      //  Promise.resolve().then(() => setReload(true));
                     }}
                     title={t("show")}
                   />
@@ -261,147 +261,180 @@ const onKeyChange = (id: any) => {
                 <div className="pt-2">
                   {
                     activeTab === "basicInfo" && (
-                      <>
                       <ProductSummaryReport onKeyChange={onKeyChange}
-                      filter={_filter}
-                       onReloadChange={()=> {console.log('onReloadChange');
-                       setReload(false)}} 
-                      reloadBase={reload} onReloadChange2={()=> setReload2(false)} reloadBase2={reload2}
+                        filter={_filter}
+                        onReloadChange={() => { setReload(false) }}
+                        reloadBase={reload} onReloadChange2={() => setReload2(false)} reloadBase2={reload2}
                       />
-                      </>
-                      
                     )
                   }
 
                   {
                     activeTab === "stockLedger" && (
                       <ProductSummaryReportStockLedger
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload}
                       />
                     )
                   }
 
-{
+                  {
                     activeTab === "purchase" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
-                      voucherType={"PI"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload}
+                        voucherType={"PI"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "sales" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"SI"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"SI"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "purchase_return" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"PR"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"PR"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "purchase_order" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"PO"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"PO"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "sales_return" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}    voucherType={"SR"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"SR"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "sales_order" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}   voucherType={"SO"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"SO"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "damage" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}    voucherType={"DMG"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"DMG"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "excess" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"EX"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"EX"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "shortage" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}  voucherType={"SH"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"SH"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "op_stock" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}     voucherType={"OS"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"OS"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "purchase_estimate" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}   voucherType={"PE"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"PE"}
                       />
                     )
                   }
-                    {
+
+                  {
                     activeTab === "others" && (
                       <ProductSummaryReportByTransaction
-                      filter={{...filter, filter: {
-                        ...filter.filter,
-                        productBatchID: activeIdRef.current??0
-                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}     voucherType={"OT"}
+                        filter={{
+                          ...filter, filter: {
+                            ...filter.filter,
+                            productBatchID: activeIdRef.current ?? 0
+                          }
+                        }} setFilter={setFilter} onReloadChange={() => setReload(false)} reloadBase={reload} voucherType={"OT"}
                       />
                     )
                   }

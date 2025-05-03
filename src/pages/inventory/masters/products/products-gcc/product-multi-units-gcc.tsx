@@ -7,7 +7,7 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import Urls from "../../../../../redux/urls";
 import initialProductData from "../products-data";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { FormField } from "../../../../../utilities/form-types";
 import {
   ProductFieldPath,
@@ -23,8 +23,12 @@ import {
 import { APIClient } from "../../../../../helpers/api-client";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+
+export interface ProductMultiUnitsGccRef {
+  loadMultiRateToGrid: (obj: productDto, units: any, mlRate: any) => Promise<ProductPriceInputDto[]>;
+}
 const api = new APIClient();
-const ProductMultiUnitsGCC: React.FC<{
+const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -32,7 +36,7 @@ const ProductMultiUnitsGCC: React.FC<{
   ) => void;
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+}>(({ t, handleFieldChange, getFieldProps }, ref) => {
   const generateInitialUnit = (): ProductUnitInputDto => ({
     productUnitID: undefined,
     productBatchID: undefined,
@@ -52,6 +56,13 @@ const ProductMultiUnitsGCC: React.FC<{
   const [multiUnits, setMultiUnits] = useState<{
     [key: string]: ProductUnitInputDto;
   }>({});
+
+   useImperativeHandle(ref, () => ({
+        loadMultiRateToGrid: async (obj: productDto, units: any, mlRate: any) => {
+          return await loadMultiRateToGrid(obj, units, mlRate);
+        }
+      }));
+      
   const clientSession = useSelector((state: RootState) => state.ClientSession)
   const [barcode, setBarcode] = useState<boolean>(false);
   const setMultiUnitsMaster = (multiUnits: any) => {
@@ -78,15 +89,15 @@ const ProductMultiUnitsGCC: React.FC<{
       };
       const loadMultiRateToGrid = async (
             obj: productDto,
-            updateUnit: any
+            updateUnit: any,
+            mlRate: any
           ): Promise<ProductPriceInputDto[]> => {
             debugger;
-            let mlRate = getFieldProps("prices").value;
            
       
             const mUnits = updateUnit;
             for (const row of mUnits) {
-              if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
+              if  (row.unitID > 0 && row.multiFactor > 0 && mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
                 mlRate = await loadMultiRates(
                   row.unitID ?? 0,
                   row.unit ?? "",
@@ -143,8 +154,10 @@ const ProductMultiUnitsGCC: React.FC<{
         }
       };
   useEffect(() => {
-    const responseData = getFieldProps("units").value as ProductUnitInputDto[];
-    const baseUnit = getFieldProps("product.basicUnitID").value;
+    debugger;
+    const obj = getFieldProps("*") as unknown as productDto;
+    const responseData = obj.units;
+    const baseUnit = obj.product.basicUnitID;
     const paddedData: ProductUnitInputDto[] = [...responseData];
 
     for (let i = paddedData.length; i < 12; i++) {
@@ -153,12 +166,19 @@ const ProductMultiUnitsGCC: React.FC<{
     paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
       ? baseUnit
       : paddedData[0].unitID;
+      paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
+        ? obj.product.basicUnitName
+        : paddedData[0].unit;
+      paddedData[0].multiFactor = isNullOrUndefinedOrZero(paddedData[0].multiFactor)
+        ? 1
+        : paddedData[0].multiFactor;
     const result: { [key: string]: ProductUnitInputDto } = {};
     paddedData.forEach((unit, index) => {
       result[`unit${index + 1}`] = unit;
     });
 
     setMultiUnits(result);
+    setMultiUnitsMaster(result)
   }, []);
 
   const renderUnitRows = () => {

@@ -192,6 +192,8 @@ import GSTR1CDNUR from "../../../pages/inventory/reports/GSTR1/gstr1-cdnur";
 import GSTR1HSNSummary from "../../../pages/inventory/reports/GSTR1/gstr1-summaryOfHSN";
 import GSTR1Docs from "../../../pages/inventory/reports/GSTR1/gstr1-docs";
 import GSTR3BReport from "../../../pages/inventory/reports/GSTR3B/gstr3b";
+import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-india/tax-category-india";
+import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -481,14 +483,14 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport dataUrl={urls.party_wise_report} gridHeader="party_wise_purchase_summary_report" gridId="grd_party_wise" />} />
         <Route path="/inventory/purchase_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.purchase_tax_report_detailed} gridHeader="purchase_tax_report_detailed" gridId="grd_purchase_tax_report_detailed" />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<TaxReportSummary dataUrl={urls.purchase_tax_report_summary} gridHeader="purchase_tax_report_summary" gridId="grd_purchase_tax_summary" />} />
-        <Route path="/inventory/purchase_return_summary" element={<SummaryReport dataUrl={urls.purchase_return_summary} gridHeader="purchase_return_summary_report" gridId="grd_purchase_return_summary"/>} />
+        <Route path="/inventory/purchase_return_summary" element={<SummaryReport dataUrl={urls.purchase_return_summary} gridHeader="purchase_return_summary_report" gridId="grd_purchase_return_summary" />} />
         <Route path="/inventory/purchase_return_register" element={<RegisterReport dataUrl={urls.purchase_return_register} gridHeader="purchase_return_register_report" gridId="grd_purchase_return_register" />} />
-        <Route path="/inventory/purchase_estimate_summary" element={<SummaryReport dataUrl={urls.purchase_estimate_summary} gridHeader="purchase_estimate_summary_report" gridId="grd_purchase_estimate_summary"/>} />
+        <Route path="/inventory/purchase_estimate_summary" element={<SummaryReport dataUrl={urls.purchase_estimate_summary} gridHeader="purchase_estimate_summary_report" gridId="grd_purchase_estimate_summary" />} />
         <Route path="/inventory/purchase_order_summary" element={<SummaryReport dataUrl={urls.purchase_order_summary} gridHeader="purchase_order_summary" gridId="grd_purchase_order_summary" />} />
         <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
         <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />} />
         <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
-       
+
 
 
         {/* global */}
@@ -524,7 +526,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/sales_return_register" element={<RegisterReport dataUrl={urls.sales_return_register} gridHeader="sales_return_register" gridId="grd_sales_return_register" />} />
         <Route path="/inventory/sales_and_sales_return_report" element={<SalesAndSalesReturn />} />
         <Route path="/inventory/sales_order_summary_report" element={<SummaryReport dataUrl={urls.sales_order_summary} gridHeader="sales_order_summary" gridId="grd_sales_order_summary" />} />
-       
+
         {/* global */}
         <Route path="/inventory/sales_estimate_summary_report" element={<SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />} />
         {/* --- */}
@@ -581,7 +583,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         {/* global */}
-        <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_daily_summary_report"/>} />
+        <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_daily_summary_report" />} />
         <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_monthly_summary_report" />} />
         <Route path="/inventory/purchase_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_register_report" />} />
         <Route path="/inventory/purchase_gst_adv_register_format_report" element={<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_adv_register_report" />} />
@@ -590,7 +592,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_gst_taxwise_with_hsn_report" element={<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />} />
 
 
-        <Route path="/inventory/purchase_return_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_daily_summary_report"/>} />
+        <Route path="/inventory/purchase_return_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_daily_summary_report" />} />
         <Route path="/inventory/purchase_return_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_monthly_summary_report" />} />
         <Route path="/inventory/purchase_return_gst_register_format_report" element={<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_register_report" />} />
         <Route path="/inventory/purchase_return_gst_adv_register_format_report" element={<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_report" gridId="grd_purchase_return_gst_adv_register_report" />} />
@@ -605,18 +607,18 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/vat_return_form_arabic" element={<VatReturnFormArabic />} />
         <Route path="/inventory/ksa_e_invoice_summary_report" element={<KsaEInvoiceReportSummary />} />
         <Route path="/inventory/ksa_e_invoice_detailed_report" element={<KsaEInvoiceReportDetailed />} />
-      
-{/* global Start */}
-<Route path="/inventory/gstr1b2b_report" element={<GSTR1B2B />} />
+
+        {/* global Start */}
+        <Route path="/inventory/gstr1b2b_report" element={<GSTR1B2B />} />
         <Route path="/inventory/gstr1b2cLarge_report" element={<GSTR1B2CLarge />} />
         <Route path="/inventory/gstr1b2cSmall_report" element={<GSTR1B2CSmall />} />
         <Route path="/inventory/gstr1cdnr_report" element={<GSTR1CDNR />} />
         <Route path="/inventory/gstr1cdnur_report" element={<GSTR1CDNUR />} />
         <Route path="/inventory/gstr1hsnSummary_report" element={<GSTR1HSNSummary />} />
         <Route path="/inventory/gstr1Docs_report" element={<GSTR1Docs />} />
-        
+
         <Route path="/inventory/gstr3b_report" element={<GSTR3BReport />} />
-{/* global end */}
+        {/* global end */}
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}
@@ -626,8 +628,6 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-   
-      
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
@@ -639,7 +639,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
         <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
-        <Route path="/inventory-masters/tax-category" element={clientSession.isAppGlobal ?  <TaxCategory />:  <TaxCategory />} />
+        <Route path="/inventory-masters/tax-category" element={clientSession.isAppGlobal ? <TaxCategoryIndia /> : <TaxCategory />} />
+        <Route path="/inventory-masters/tcs-category" element={<TcsCategory />} />
         <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
         <Route path="/inventory-masters/section" element={<Section />} />
         <Route path="/inventory-masters/schemes" element={<Schemes />} />

@@ -17,7 +17,7 @@ import ProductDetailsGcc from "./products-gcc/product-details-gcc";
 import ProductOthersIndia from "./products-india/product-others-india";
 import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
-import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
+import ProductMultiUnitsGCC, { ProductMultiUnitsGccRef } from "./products-gcc/product-multi-units-gcc";
 import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
 import SearchCommon from "./common/product-search";
 import ImageCommon from "./common/product-image";
@@ -82,10 +82,10 @@ export const ProductMaster: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const productMultiUnitsIndiaRef = useRef<ProductMultiUnitsIndiaRef>(null);
+  const productMultiUnitsGccRef = useRef<ProductMultiUnitsGccRef>(null);
   const handleTabChange = async (index: number) => {
     setActiveTab(index);
     debugger;
-    if (productMultiUnitsIndiaRef.current) {
       const tabs = getTabs();
       const multiRatesIndex = tabs?.findIndex(
         (tab) => tab === t("multi_rates")
@@ -96,20 +96,32 @@ export const ProductMaster: React.FC = React.memo(() => {
         multiRatesIndex == index
       ) {
         const obj = getFieldProps("*") as productDto;
+        debugger;
         if (
           appSettings?.productsSettings?.allowMultirate &&
           obj.prices &&
-          obj.prices.length == 0
+          ((obj.prices.length == 0  && (obj.product.productID??0) > 0) || ((obj.product.productID??0) <= 0))
         ) {
-          const rates =
+          if(productMultiUnitsIndiaRef.current) {
+            const rates =
             await productMultiUnitsIndiaRef.current.loadMultiRateToGrid(
               obj,
               obj.units
             );
           handleDataChange({ ...obj, prices: rates });
+          }
+          if(productMultiUnitsGccRef.current) {
+            
+            const rates =
+            await productMultiUnitsGccRef.current.loadMultiRateToGrid(
+              obj,
+              obj.units, 
+              (obj.product.productID??0) > 0 ? getFieldProps("prices").value : []
+            );
+          handleDataChange({ ...obj, prices: rates });
+          }
         }
       }
-    }
   };
 
   const updatePrice = async () => {
@@ -356,6 +368,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         </div>,
         <div key="multi_units">
           <ProductMultiUnitsGCC
+          ref={productMultiUnitsGccRef}
             t={t}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}

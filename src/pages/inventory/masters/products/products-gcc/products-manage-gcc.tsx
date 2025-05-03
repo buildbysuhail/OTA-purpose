@@ -211,8 +211,11 @@ export const ProductManageGcc: React.FC<{
                       labelKey: "name",
                       getListUrl: Urls.data_units,
                     }}
-                    onChangeData={(data: any) =>
+                    onSelectItem={(data: any) =>
+                    {
+                      debugger;
                       handleFieldChange({"batch.basicUnitID": data.value,"product.basicUnitID": data.value, "product.basicUnitName": data.label})
+                    }
                     }
                     label={t("base_unit")}
                     className="w-full"

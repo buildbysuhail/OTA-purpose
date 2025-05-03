@@ -39,14 +39,15 @@ interface ProductSummaryReport {
   batchNo: string;
 }
 
-const ProductSummaryReport2: React.FC<{filter?:ProductSummaryFilter; 
-   onReloadChange2: () => void; 
+const ProductSummaryReport2: React.FC<{
+  filter?: ProductSummaryFilter;
+  onReloadChange2: () => void;
   reloadBase2: boolean;
   updateFilterWithBatchID: (
-    loadedData?: ProductSummaryReport[], 
+    loadedData?: ProductSummaryReport[],
     rowData?: ProductSummaryReport
   ) => void;
-}> = ({ filter, onReloadChange2, reloadBase2, updateFilterWithBatchID}) => {
+}> = ({ filter, onReloadChange2, reloadBase2, updateFilterWithBatchID }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
@@ -57,7 +58,7 @@ const ProductSummaryReport2: React.FC<{filter?:ProductSummaryFilter;
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       width: 100,
     },
     {
@@ -138,15 +139,8 @@ const ProductSummaryReport2: React.FC<{filter?:ProductSummaryFilter;
   //     onBatchIDChange(batchID);
   //   }
   // }, [batchID, onBatchIDChange]);
-  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => {
-    debugger;
-    updateFilterWithBatchID(loadedData);
-  };
-  const onRowClick = (e: any) => {
-    debugger;
-    updateFilterWithBatchID(undefined, e.data);
-  };
-  
+  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => { updateFilterWithBatchID(loadedData); };
+  const onRowClick = (e: any) => { updateFilterWithBatchID(undefined, e.data); };
   const customizeSummaryRow = (itemInfo: { value: any }) => {
     const value = itemInfo.value;
     if (value === null || value === undefined || value === "" || isNaN(value)) {
@@ -182,7 +176,7 @@ const ProductSummaryReport2: React.FC<{filter?:ProductSummaryFilter;
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              key="grd_product_summary_batch_info"
+                key="grd_product_summary_batch_info"
                 summaryItems={batchInfoSummaryItems}
                 onInitialDataLoad={onInitialDataLoad}
                 onRowClick={onRowClick}
@@ -203,7 +197,6 @@ const ProductSummaryReport2: React.FC<{filter?:ProductSummaryFilter;
                 reload={reloadBase2}
                 changeReload={() => {
                   console.log('onReloadChange2');
-                  
                   onReloadChange2 && onReloadChange2();
                 }}
               />

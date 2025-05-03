@@ -13,7 +13,7 @@ const GSTR3BReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     name="supplyType"
                     value="inAndOutSupplies"
                     label={t("in_and_out_supplies_liable_to_reverse_charge")}
-                    checked={formState.supplyType === "inAndOutSupplies"}
+                    checked={getFieldProps("supplyType").value == "inAndOutSupplies"}
                     onChange={(e) => handleFieldChange("supplyType", e.target.value)}
                 />
                 <ERPRadio
@@ -21,7 +21,7 @@ const GSTR3BReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     name="supplyType"
                     value="eligibleITC"
                     label={t("eligible_itc")}
-                    checked={formState.supplyType === "eligibleITC"}
+                    checked={getFieldProps("supplyType").value == "eligibleITC"}
                     onChange={(e) => handleFieldChange("supplyType", e.target.value)}
                 />
                 <ERPRadio
@@ -29,7 +29,7 @@ const GSTR3BReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     name="supplyType"
                     value="exemptNilRated"
                     label={t("exempt_nil_rated_non_gst_inward_supplies")}
-                    checked={formState.supplyType === "exemptNilRated"}
+                    checked={getFieldProps("supplyType").value == "exemptNilRated"}
                     onChange={(e) => handleFieldChange("supplyType", e.target.value)}
                 />
                 <ERPRadio
@@ -37,7 +37,7 @@ const GSTR3BReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     name="supplyType"
                     value="interStateSupplies"
                     label={t("details_of_inter_state_supplies")}
-                    checked={formState.supplyType === "interStateSupplies"}
+                    checked={getFieldProps("supplyType").value == "interStateSupplies"}
                     onChange={(e) => handleFieldChange("supplyType", e.target.value)}
                 />
             </div>

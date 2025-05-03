@@ -524,7 +524,7 @@ const Urls = {
   purchase_return_gst_register_format:
     "/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format:
-    "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+    "/Inventory/RptGSTReport/PurchaseReturnTaxAdvRegisterFormatReport",
   purchase_return_gst_sales_and_return:
     "/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
   vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
@@ -536,7 +536,11 @@ const Urls = {
   gstr1cdnr: "/Inventory/RptGSTR1Report/SelectGSTR1CDNR/",
   gstr1cdnur: "/Inventory/RptGSTR1Report/SelectGSTR1CDNUR/",
   gstr1hsnSummary: "/Inventory/RptGSTR1Report/SelectGSTR1SummaryOfHSN/",
-  gstr1Docs: "api/Inventory/RptGSTR1Report/SelectGSTR1Docs/",
+  gstr1Docs: "/Inventory/RptGSTR1Report/SelectGSTR1Docs/",
+  gstr3b_InoutSupplies: "/Inventory/RptGSTR3BReport/SelectGSTR3BInOutSuppliesToReverseCharge/",
+  gstr3b_EligibleITC: "/Inventory/RptGSTR3BReport/SelectGSTR3BEligibleITC/",
+  gstr3b_ExemptNilRated: "/Inventory/RptGSTR3BReport/SelectGSTR3BExemptNilRatedNonGSTInwardSupplies/",
+  gstr3b_InterstateSupplies: "/Inventory/RptGSTR3BReport/SelectGSTR3BInterStateSupplies/",
 
   //Report End
   //Inventory Reports Starts

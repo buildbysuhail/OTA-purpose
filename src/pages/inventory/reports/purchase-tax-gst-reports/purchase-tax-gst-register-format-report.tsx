@@ -1,12 +1,16 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
+import PurchaseGstReportFilter, {
+  PurchaseGstReportFilterInitialState,
+} from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
 
 interface PurchaseTaxGSTRegisterFormatProps {
@@ -14,9 +18,15 @@ interface PurchaseTaxGSTRegisterFormatProps {
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ gridHeader, dataUrl, gridId }) => {
+const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(
+    PurchaseGstReportFilterInitialState
+  );
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -26,16 +36,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-      },
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "voucherNo",
@@ -69,16 +70,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-      },
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "party",
@@ -156,7 +148,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
           const value =
             cellElement.data?.cess == null
               ? ""
-              : getFormattedValue(cellElement.data.cess);
+              : getFormattedValue(cellElement.data.cess,false,4);
           return {
             ...exportCell,
             text: value,
@@ -166,7 +158,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
         } else {
           return cellElement.data?.cess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cess));
+            : getFormattedValue(parseFloat(cellElement.data.cess),false,4);
         }
       },
     },
@@ -178,6 +170,29 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable0 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable0,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable0 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable0),false,6);
+        }
+      },
     },
     {
       dataField: "taxAmt0",
@@ -197,7 +212,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
           const value =
             cellElement.data?.taxAmt0 == null
               ? ""
-              : getFormattedValue(cellElement.data.taxAmt0);
+              : getFormattedValue(cellElement.data.taxAmt0,false,2);
           return {
             ...exportCell,
             text: value,
@@ -207,637 +222,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
         } else {
           return cellElement.data?.taxAmt0 == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxAmt0));
-        }
-      },
-    },
-    {
-      dataField: "taxable5",
-      caption: t("taxable_5"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT2_5",
-      caption: t("cgst_2_5"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT2_5 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT2_5);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT2_5 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT2_5));
-        }
-      },
-    },
-    {
-      dataField: "sgsT2_5",
-      caption: t("sgst_2_5"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT2_5 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT2_5);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT2_5 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT2_5));
-        }
-      },
-    },
-    {
-      dataField: "igsT5",
-      caption: t("igst_5"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT5 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT5);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT5 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT5));
-        }
-      },
-    },
-    {
-      dataField: "taxable12",
-      caption: t("taxable_12"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT6",
-      caption: t("cgst_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT6 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT6);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT6 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT6));
-        }
-      },
-    },
-    {
-      dataField: "sgsT6",
-      caption: t("sgst_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT6 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT6);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT6 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT6));
-        }
-      },
-    },
-    {
-      dataField: "igsT12",
-      caption: t("igst_12"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT12 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT12);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT12 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT12));
-        }
-      },
-    },
-    {
-      dataField: "taxable18",
-      caption: t("taxable_18"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT9",
-      caption: t("cgst_9"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT9 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT9);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT9 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT9));
-        }
-      },
-    },
-    {
-      dataField: "sgsT9",
-      caption: t("sgst_9"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT9 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT9);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT9 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT9));
-        }
-      },
-    },
-    {
-      dataField: "igsT18",
-      caption: t("igst_18"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT18 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT18);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT18 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT18));
-        }
-      },
-    },
-    {
-      dataField: "taxable28",
-      caption: t("taxable_28"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT14",
-      caption: t("cgst_14"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT14 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT14);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT14 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT14));
-        }
-      },
-    },
-    {
-      dataField: "sgsT14",
-      caption: t("sgst_14"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT14 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT14);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT14 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT14));
-        }
-      },
-    },
-    {
-      dataField: "igsT28",
-      caption: t("igst_28"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT28 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT28);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT28 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT28));
-        }
-      },
-    },
-    {
-      dataField: "taxable28_12",
-      caption: t("taxable_28_12"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT14_6",
-      caption: t("cgst_14_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT14_6 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT14_6);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT14_6 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT14_6));
-        }
-      },
-    },
-    {
-      dataField: "sgsT14_6",
-      caption: t("sgst_14_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT14_6 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT14_6);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT14_6 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT14_6));
-        }
-      },
-    },
-    {
-      dataField: "igsT28_12",
-      caption: t("igst_28_12"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT28_12 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT28_12);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT28_12 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT28_12));
-        }
-      },
-    },
-    {
-      dataField: "taxable6",
-      caption: t("taxable_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "cgsT3",
-      caption: t("cgst_3"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.cgsT3 == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgsT3);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.cgsT3 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT3));
-        }
-      },
-    },
-    {
-      dataField: "sgsT3",
-      caption: t("sgst_3"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgsT3 == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgsT3);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgsT3 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT3));
-        }
-      },
-    },
-    {
-      dataField: "igsT6",
-      caption: t("igst_6"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igsT6 == null
-              ? ""
-              : getFormattedValue(cellElement.data.igsT6);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igsT6 == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT6));
+            : getFormattedValue(parseFloat(cellElement.data.taxAmt0),false,2);
         }
       },
     },
@@ -849,6 +234,29 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable3 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable3,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable3 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable3),false,6);
+        }
+      },
     },
     {
       dataField: "cgsT1_5",
@@ -868,7 +276,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
           const value =
             cellElement.data?.cgsT1_5 == null
               ? ""
-              : getFormattedValue(cellElement.data.cgsT1_5);
+              : getFormattedValue(cellElement.data.cgsT1_5,false,6);
           return {
             ...exportCell,
             text: value,
@@ -878,7 +286,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
         } else {
           return cellElement.data?.cgsT1_5 == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgsT1_5));
+            : getFormattedValue(parseFloat(cellElement.data.cgsT1_5),false,6);
         }
       },
     },
@@ -900,7 +308,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
           const value =
             cellElement.data?.sgsT1_5 == null
               ? ""
-              : getFormattedValue(cellElement.data.sgsT1_5);
+              : getFormattedValue(cellElement.data.sgsT1_5,false,6);
           return {
             ...exportCell,
             text: value,
@@ -910,7 +318,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
         } else {
           return cellElement.data?.sgsT1_5 == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgsT1_5));
+            : getFormattedValue(parseFloat(cellElement.data.sgsT1_5),false,6);
         }
       },
     },
@@ -932,7 +340,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
           const value =
             cellElement.data?.igsT3 == null
               ? ""
-              : getFormattedValue(cellElement.data.igsT3);
+              : getFormattedValue(cellElement.data.igsT3,false,6);
           return {
             ...exportCell,
             text: value,
@@ -942,26 +350,17 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
         } else {
           return cellElement.data?.igsT3 == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igsT3));
+            : getFormattedValue(parseFloat(cellElement.data.igsT3),false,6);
         }
       },
     },
     {
-      dataField: "financialYearID",
-      caption: t("financial_year_id"),
+      dataField: "taxable5",
+      caption: t("taxable_5"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "addnlCessAmt",
-      caption: t("addcess_amount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -971,9 +370,9 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.addnlCessAmt == null
+            cellElement.data?.taxable5 == null
               ? ""
-              : getFormattedValue(cellElement.data.addnlCessAmt);
+              : getFormattedValue(cellElement.data.taxable5,false,6);
           return {
             ...exportCell,
             text: value,
@@ -981,15 +380,752 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.addnlCessAmt == null
+          return cellElement.data?.taxable5 == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addnlCessAmt));
+            : getFormattedValue(parseFloat(cellElement.data.taxable5),false,6);
         }
       },
     },
     {
-      dataField: "addnlCessPerc",
-      caption: t("addcessperc"),
+      dataField: "cgsT2_5",
+      caption: t("cgst_2_5"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT2_5 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT2_5,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT2_5 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT2_5),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT2_5",
+      caption: t("sgst_2_5"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT2_5 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT2_5,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT2_5 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT2_5),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT5",
+      caption: t("igst_5"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT5 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT5,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT5 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT5),false,6);
+        }
+      },
+    },
+    {
+      dataField: "taxable6",
+      caption: t("taxable_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "cgsT3",
+      caption: t("cgst_3"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT3 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT3,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT3 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT3),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT3",
+      caption: t("sgst_3"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT3 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT3,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT3 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT3),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT6",
+      caption: t("igst_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "taxable12",
+      caption: t("taxable_12"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable12 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable12,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable12 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable12),false,6);
+        }
+      },
+    },
+    {
+      dataField: "cgsT6",
+      caption: t("cgst_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT6",
+      caption: t("sgst_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT12",
+      caption: t("igst_12"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT12 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT12,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT12 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT12),false,6);
+        }
+      },
+    },
+    {
+      dataField: "taxable18",
+      caption: t("taxable_18"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable18 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable18,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable18 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable18),false,6);
+        }
+      },
+    },
+    {
+      dataField: "cgsT9",
+      caption: t("cgst_9"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT9 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT9,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT9 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT9),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT9",
+      caption: t("sgst_9"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT9 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT9,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT9 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT9),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT18",
+      caption: t("igst_18"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT18 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT18,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT18 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT18),false,6);
+        }
+      },
+    },
+    {
+      dataField: "taxable28",
+      caption: t("taxable_28"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable28 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable28,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable28 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable28),false,6);
+        }
+      },
+    },
+    {
+      dataField: "cgsT14",
+      caption: t("cgst_14"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT14 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT14,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT14 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT14),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT14",
+      caption: t("sgst_14"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT14 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT14,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT14 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT14),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT28",
+      caption: t("igst_28"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT28 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT28,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT28 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT28),false,6);
+        }
+      },
+    },
+    {
+      dataField: "taxable28_12",
+      caption: t("taxable_28_12"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.taxable28_12 == null
+              ? ""
+              : getFormattedValue(cellElement.data.taxable28_12,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.taxable28_12 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.taxable28_12),false,6);
+        }
+      },
+    },
+    {
+      dataField: "cgsT14_6",
+      caption: t("cgst_14_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cgsT14_6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.cgsT14_6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cgsT14_6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cgsT14_6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "sgsT14_6",
+      caption: t("sgst_14_6"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sgsT14_6 == null
+              ? ""
+              : getFormattedValue(cellElement.data.sgsT14_6,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sgsT14_6 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.sgsT14_6),false,6);
+        }
+      },
+    },
+    {
+      dataField: "igsT28_12",
+      caption: t("igst_28_12"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.igsT28_12 == null
+              ? ""
+              : getFormattedValue(cellElement.data.igsT28_12,false,6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.igsT28_12 == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.igsT28_12),false,6);
+        }
+      },
+    },
+
+    {
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -997,12 +1133,11 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       showInPdf: true,
     },
   ];
-  
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
       console.log(itemInfo);
       const value = itemInfo.value;
       if (
@@ -1024,13 +1159,13 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeDate,
     },
     {
-      column: "total",
+      column: "cess",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cess",
+      column: "taxable0",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -1048,19 +1183,19 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cGST1_5",
+      column: "cgsT1_5",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "sGST1_5",
+      column: "sgsT1_5",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "iGST3",
+      column: "igsT3",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -1072,19 +1207,19 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cGST2_5",
+      column: "cgsT2_5",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "sGST2_5",
+      column: "sgsT2_5",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "iGST5",
+      column: "igsT5",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -1096,19 +1231,19 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cGST6",
+      column: "cgsT6",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "sGST6",
+      column: "sgsT6",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "iGST12",
+      column: "igsT12",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -1120,23 +1255,24 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cGST9",
+      column: "cgsT9",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "sGST9",
+      column: "sgsT9",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "iGST18",
+      column: "igsT18",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
+
     {
       column: "taxable28",
       summaryType: "sum",
@@ -1144,19 +1280,43 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cGST14",
+      column: "cgsT14",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "sGST14",
+      column: "sgsT14",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "iGST28",
+      column: "igsT28",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "taxable28_12",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cgsT14_6",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "sgsT14_6",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "igsT28_12",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -1165,8 +1325,8 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({ g
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

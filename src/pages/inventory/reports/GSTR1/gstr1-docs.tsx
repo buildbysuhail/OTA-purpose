@@ -1,25 +1,16 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
-import { ActionType } from "../../../../../redux/types";
-import Urls from "../../../../../redux/urls";
-import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../../redux/types";
+import Urls from "../../../../redux/urls";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import GSTR1DocsFilter, { GSTR1DocsFilterInitialState } from "./gstr1-docs-filter";
 
 const GSTR1Docs = () => {
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
-        {
-            dataField: "slNo",
-            caption: t("sl_no"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 50,
-        },
         {
             dataField: "natureOfDocument",
             caption: t("nature_of_document"),
@@ -66,33 +57,6 @@ const GSTR1Docs = () => {
             width: 120,
         },
     ];
-
-    const { getFormattedValue } = useNumberFormat();
-    const customizeSummaryRow = useMemo(() => {
-        return (itemInfo: { value: any }) => {
-            const value = itemInfo.value;
-            if (value === null || value === undefined || value === "" || isNaN(value)) {
-                return "0";
-            }
-            return getFormattedValue(value) || "0";
-        };
-    }, [getFormattedValue]);
-
-    const summaryItems: SummaryConfig[] = [
-        {
-            column: "totalNumber",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "cancelled",
-            summaryType: "sum",
-            valueFormat: "fixedPoint",
-            customizeText: customizeSummaryRow,
-        }
-    ];
-
     return (
         <Fragment>
             <div className="grid grid-cols-12 gap-x-6">
@@ -100,7 +64,6 @@ const GSTR1Docs = () => {
                     <div className="px-4 pt-4 pb-2 ">
                         <div className="grid grid-cols-1 gap-3">
                             <ErpDevGrid
-                                summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}

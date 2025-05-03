@@ -3,24 +3,17 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import GSTR3BReportFilter, { GSTR3BReportFilterInitialState } from "./gstr3b-filter";
 
 const GSTR3BReport = () => {
+      const [filter, setFilter] = useState<any>(GSTR3BReportFilterInitialState);
     const { t } = useTranslation('accountsReport');
-    const columns: DevGridColumn[] = [
-        {
-            dataField: "slNo",
-            caption: t("sl_no"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 50,
-        },
-        {
+    const columns: DevGridColumn[] = useMemo(() => {
+        const baseColumns: DevGridColumn[] = [
+          {
             dataField: "types",
             caption: t("types"),
             dataType: "string",
@@ -174,62 +167,18 @@ const GSTR3BReport = () => {
             width: 150,
         },
     ];
+    // Filter columns based on the `visible` property
+    return baseColumns
+      .filter((column) => {
+        if (column.dataField == "types" ||column.dataField == "totalTaxableValue"||column.dataField == "integratedTax"||
+            column.dataField == "centralTax"||column.dataField == "stateOrUTTax"||column.dataField == "cess") {
+          return filter.supplyType=="inAndOutSupplies";
+        }
+        return false;
+      })
+  }, [t, filter]);
 
     const { getFormattedValue } = useNumberFormat();
-    const customizeSummaryRow = useMemo(() => {
-        return (itemInfo: { value: any }) => {
-            const value = itemInfo.value;
-            if (value === null || value === undefined || value === "" || isNaN(value)) {
-                return "0";
-            }
-            return getFormattedValue(value) || "0";
-        };
-    }, [getFormattedValue]);
-
-    const summaryItems: SummaryConfig[] = [
-        {
-            column: "totalTaxableValue",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "integratedTax",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "centralTax",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "stateOrUTTax",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "cess",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "interStateSupplies",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        },
-        {
-            column: "intraStateSupplies",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
-        }
-    ];
 
     return (
         <Fragment>
@@ -238,12 +187,13 @@ const GSTR3BReport = () => {
                     <div className="px-4 pt-4 pb-2 ">
                         <div className="grid grid-cols-1 gap-3">
                             <ErpDevGrid
-                                summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
                                 gridHeader={t("gstr3b_report")}
-                                // dataUrl={Urls.gstr3b_report}
+                                dataUrl= {filter.supplyType=="inAndOutSupplies"? Urls.gstr3b_InoutSupplies
+                                    :filter.supplyType=="eligibleITC"?Urls.gstr3b_EligibleITC
+                                    :filter.supplyType=="exemptNilRated"?Urls.gstr3b_ExemptNilRated:Urls.gstr3b_InterstateSupplies
+                                }
                                 hideGridAddButton={true}
                                 enablefilter={true}
                                 showFilterInitially={true}
@@ -251,6 +201,9 @@ const GSTR3BReport = () => {
                                 filterContent={<GSTR3BReportFilter />}
                                 filterWidth={790}
                                 filterHeight={370}
+                                onFilterChanged={(f: any) => {
+                                    setFilter(f);
+                                  }}
                                 filterInitialData={GSTR3BReportFilterInitialState}
                                 reload={true}
                                 gridId="grd_gstr3b_report"

@@ -17,8 +17,8 @@ export const initialWarehouseData = {
     shortName: "",
     remarks: "",
     warehouseType: "",
-    isStockWarehouse: true,
-    isCommon: true,
+    isStockWarehouse: false,
+    isCommon: false,
     cashLedgerID: 0,
     negativeStock: ""
   },

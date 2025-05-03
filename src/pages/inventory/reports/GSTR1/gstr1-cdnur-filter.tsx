@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
-import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../../redux/urls";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import Urls from "../../../../redux/urls";
+
 
 const GSTR1CDNURFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport');
@@ -31,8 +32,8 @@ const GSTR1CDNURFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucherForm,
-                        valueKey: "id",
+                        getListUrl: Urls.data_form_type,
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     className="w-full"
@@ -47,9 +48,9 @@ const GSTR1CDNURFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
                         onChangeData={(data) => handleFieldChange("excludeNA", data.excludeNA)}
                     />
                     <ERPCheckbox
-                        {...getFieldProps("excludePR")}
+                        {...getFieldProps("cdnur_pr")}
                         label={t("exclude_pr")}
-                        onChangeData={(data) => handleFieldChange("excludePR", data.excludePR)}
+                        onChangeData={(data) => handleFieldChange("cdnur_pr", data.cdnur_pr)}
                     />
                 </div>
             </div>
@@ -60,15 +61,9 @@ const GSTR1CDNURFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
 export default GSTR1CDNURFilter;
 
 export const GSTR1CDNURFilterInitialState = {
-    fromDate: moment().local().startOf("month").toDate(),
-    toDate: moment().local().endOf("month").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     voucherForm: "",
-    rType: "",
-    voucherType: "",
-    excludeNA: 0,
-    excludePR: 0,
-    includeSr: 0,
-    includeSE_PE: 0,
-    cdnr_pr: 0,
-    cdnur_pr: 0,
+    excludeNA: false,
+    cdnur_pr: false,
 };

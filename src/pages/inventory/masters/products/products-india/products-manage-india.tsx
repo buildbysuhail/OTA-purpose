@@ -303,7 +303,7 @@ useEffect(() => {
                   }}
                   onSelectItem={(data: any) => {
                     debugger;
-                    handleFieldChange({"product.basicUnitID": data.value, "product.basicUnitName": data.label})
+                    handleFieldChange({"batch.basicUnitID": data.value,"product.basicUnitID": data.value, "product.basicUnitName": data.label})
                   }}
                   label={t("base_unit")}
                   className="w-full"
@@ -433,7 +433,7 @@ useEffect(() => {
                 required={false}
                 className="flex-1 min-w-[120px]"
                 onChangeData={(data: any) => {
-                  handleFieldChange("product.stdPurchasePrice", data.product.stdPurchasePrice)
+                  handleFieldChange({"product.stdPurchasePrice": data.product.stdPurchasePrice, "batch.stdPurchasePrice": data.product.stdPurchasePrice})
                 }}
               />
 
@@ -451,6 +451,9 @@ useEffect(() => {
                                     , parseFloat((data.product.stdSalesPrice??0).toString()),data.taxCategoryTaxPercentage,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
                                     const prev = getFieldProps("*")
                                   const  _data = {...prev,
+                                    batch: {...prev.batch, 
+                                      stdSalesPrice: data.product.stdSalesPrice,
+                                      },
                                     product: {...prev.product, 
                                       stdSalesPrice: data.product.stdSalesPrice,
                                       },
@@ -508,7 +511,7 @@ useEffect(() => {
                 type="number"
                 required={false}
                 className="flex-1 min-w-[120px]"
-                onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
+                onChangeData={(data: any) => handleFieldChange({"product.mrp": data.product.mrp, "batch.mrp": data.product.mrp})}
               />
 { getFieldProps("config.showOpeningStock").value == true && 
               <ERPInput

@@ -212,7 +212,7 @@ export const ProductManageGcc: React.FC<{
                       getListUrl: Urls.data_units,
                     }}
                     onChangeData={(data: any) =>
-                      handleFieldChange("product.basicUnitID", data.basicUnitID)
+                      handleFieldChange({"batch.basicUnitID": data.value,"product.basicUnitID": data.value, "product.basicUnitName": data.label})
                     }
                     label={t("base_unit")}
                     className="w-full"

@@ -224,7 +224,7 @@ const TaxCategoryIndia = () => {
               onSuccess: () => { dispatch(toggleTaxCategoryIndia({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
               confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-              url: Urls?.taxCategory, key: cellElement?.data?.taxCategoryID
+              url: Urls?.gstCategory, key: cellElement?.data?.taxCategoryID
             }}
           />
         )
@@ -245,9 +245,9 @@ const TaxCategoryIndia = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("tax_category")}
-                  dataUrl={Urls.taxCategory}
-                  gridId="grd_taxCategory"
+                  gridHeader={t("gst_category")}
+                  dataUrl={Urls.gstCategory}
+                  gridId="grd_gstCategory"
                   popupAction={toggleTaxCategoryIndia}
                   gridAddButtonType="popup"
                   changeReload={(reload: any) => { dispatch(toggleTaxCategoryIndia({ ...rootState, reload: reload })); }}
@@ -261,7 +261,7 @@ const TaxCategoryIndia = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.taxCategoryIndia.isOpen || false}
-        title={t("tax_category")}
+        title={t("gst_category")}
         isForm={true}
         width={600}
         height={440}

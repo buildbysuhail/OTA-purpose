@@ -1,4 +1,4 @@
-interface TaxCategory {
+export interface TaxCategory {
   taxCategoryID?: number;
   taxCategoryName: string;
   s_SGSTPerc: number;
@@ -15,7 +15,7 @@ interface TaxCategory {
   p_CalamityCessPerc: number;
 }
 
-const initialTaxCategoryData: TaxCategory = {
+export const initialTaxCategoryData: TaxCategory = {
   taxCategoryName: "",
   s_SGSTPerc: 0,
   p_SGSTPerc: 0,

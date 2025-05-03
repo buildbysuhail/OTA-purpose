@@ -443,5 +443,6 @@
     "tcs_category_%":"TCS Category %",
     "tcs_category":"TCS Category",
     "tcs_perc":"TCS Perc",
-    "tcs_percentage":"TCS Percentage"
+    "tcs_percentage":"TCS Percentage",
+    "gst_category":"GST Category"
 }

@@ -7,6 +7,7 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleTaxCategoryIndia } from "../../../../redux/slices/popup-reducer";
+import { initialTaxCategoryData, TaxCategory } from "./tax-category-type-india";
 
 export const TaxCategoryManageIndia: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -20,7 +21,7 @@ export const TaxCategoryManageIndia: React.FC = React.memo(() => {
     isLoading,
     handleClose
   } = useFormManager<TaxCategory>({
-    url: Urls.taxCategory,
+    url: Urls.gstCategory,
     onClose: useCallback(() => dispatch(toggleTaxCategoryIndia({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleTaxCategoryIndia({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.taxCategoryIndia.key,
@@ -35,8 +36,8 @@ export const TaxCategoryManageIndia: React.FC = React.memo(() => {
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("taxCategoryName")}
-          label={t("tax_category")}
-          placeholder={t("tax_category")}
+          label={t("gst_category")}
+          placeholder={t("gst_category")}
           onChangeData={(data: any) => {
             handleFieldChange("taxCategoryName", data.taxCategoryName);
           }}

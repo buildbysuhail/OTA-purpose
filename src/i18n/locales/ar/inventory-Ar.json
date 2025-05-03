@@ -444,5 +444,6 @@
     "tcs_category_%": "نسبة فئة TCS",
     "tcs_category": "فئة TCS",
     "tcs_perc": "نسبة TCS",
-    "tcs_percentage": "نسبة TCS"
+    "tcs_percentage": "نسبة TCS",
+    "gst_category": "فئة ضريبة GST"
 }

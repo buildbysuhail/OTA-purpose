@@ -126,6 +126,7 @@ import BillDiscountInput from "./components/BillDiscountInput";
 import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
+import GrnNumber from "./components/grn-Number";
 
 interface BilledItem {
   id?: number;
@@ -214,6 +215,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+
+  const handleButtonClick = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
 
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
 
@@ -1879,6 +1889,30 @@ const handleAddData = (newItem: any) => {
                         : "flex flex-wrap items-center gap-4 leading-none"
                     }
                   >
+                    <ERPButton
+                      title={t("Grn_Number")}
+                      onClick={handleButtonClick}
+                      // onClick={() => goToPreviousPage()}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                    />
+                    {isModalOpen && (
+                    <ERPModal
+                      isOpen={isModalOpen}
+                      title="GrnNumber"
+                      width={500}
+                      height={300}
+                      closeModal={closeModal} // Close modal on close action
+                      content={
+                      <GrnNumber
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleLoadByRefNo={handleLoadByRefNo}
+
+                      />
+                    }
+                    />
+                  )}
                     <LedgerCode
                       ref={ledgerCodeRef}
                       handleKeyDown={handleKeyDown}

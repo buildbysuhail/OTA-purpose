@@ -577,6 +577,9 @@ export interface TransactionFormState {
   priceCategory: string;
   netTotal: number;
   netAmount: number;
+  formType?: string;
+  Vprefix?: string;
+  VNumber?: string;
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -676,6 +679,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   totTax: { visible: true, disabled: false, label: "tot_tax" },
   grandTotal: { visible: true, disabled: false, label: "grand_total" },
   netTotal: { visible: true, disabled: false, label: "net_total" },
+  formType: { visible: true, disabled: false, label: "form_type" },
+  Vprefix: { visible: true, disabled: false, label: "vprefix" },
+  VNumber: { visible: true, disabled: false, label: "v_number" },
 
 };
 export type FormElementsState = {
@@ -700,6 +706,9 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   openUnsavedPrompt: false,
   priceCategory: "",
   remarks: "",
+  formType: "",
+  Vprefix: "",
+  VNumber: "",
   userConfig: {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,

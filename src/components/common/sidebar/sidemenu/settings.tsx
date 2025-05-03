@@ -62,6 +62,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/vehicles`, type: 'link', active: false, selected: false, title: 'vehicles' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/warehouse`, type: 'link', active: false, selected: false, title: 'warehouse' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/tax-category`, type: 'link', active: false, selected: false, title: 'tax_category' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/tcs-category`, type: 'link', active: false, selected: false, title: 'tcs_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/salesman-route`, type: 'link', active: false, selected: false, title: 'sales_man_route' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/section`, type: 'link', active: false, selected: false, title: 'section' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/schemes`, type: 'link', active: false, selected: false, title: 'schemes' },

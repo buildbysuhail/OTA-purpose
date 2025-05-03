@@ -29,6 +29,7 @@ const PrivilegeCardReportFilter = ({ getFieldProps, handleFieldChange, formState
                     <div className="flex-1">
                         <ErpInput
                             id="cardNo"
+                            label={t("card_no")}
                             {...getFieldProps("cardNo")}
                             onChangeData={(data) => handleFieldChange("cardNo", data.cardNo)}
                         />

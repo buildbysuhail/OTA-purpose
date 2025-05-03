@@ -59,6 +59,8 @@ interface popupData {
   vehicles: popupDataProps
   warehouse: popupDataProps
   taxCategory: popupDataProps
+  taxCategoryIndia: popupDataProps
+  tcsCategory: popupDataProps
   schemes: popupDataProps
   salesRoute: popupDataProps
   hide_acc_ledger: popupDataProps
@@ -126,6 +128,8 @@ const initialState: popupData = {
   vehicles: { isOpen: false, key: null, mode: "edit", reload: true },
   warehouse: { isOpen: false, key: null, mode: "edit", reload: true },
   taxCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  taxCategoryIndia: { isOpen: false, key: null, mode: "edit", reload: true },
+  tcsCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   schemes: { isOpen: false, key: null, mode: "edit", reload: true },
   salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
   specialSchemes: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -306,6 +310,12 @@ const popupDataSlice = createSlice({
     toggleTaxCategory: (state, action: PayloadAction<popupDataProps>) => {
       state.taxCategory = action.payload;
     },
+    toggleTaxCategoryIndia: (state, action: PayloadAction<popupDataProps>) => {
+      state.taxCategoryIndia = action.payload;
+    },
+    toggleTcsCategory: (state, action: PayloadAction<popupDataProps>) => {
+      state.tcsCategory = action.payload;
+    },
     toggleSchemes: (state, action: PayloadAction<popupDataProps>) => {
       state.schemes = action.payload;
     },
@@ -401,6 +411,8 @@ export const {
   toggleVehicles,
   toggleWarehouse,
   toggleTaxCategory,
+  toggleTaxCategoryIndia,
+  toggleTcsCategory,
   toggleSchemes,
   toggleSalesRoute,
   toggleSpecialSchemes,

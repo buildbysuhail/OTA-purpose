@@ -39,10 +39,11 @@ interface ProductSummaryReport {
   batchNo: string;
 }
 
-const ProductSummaryReport1: React.FC<{filter?:ProductSummaryFilter; 
-  onReloadChange: () => void; 
-  reloadBase: boolean; 
-  }> = ({ filter, onReloadChange, reloadBase}) => {
+const ProductSummaryReport1: React.FC<{
+  filter?: ProductSummaryFilter;
+  onReloadChange: () => void;
+  reloadBase: boolean;
+}> = ({ filter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
@@ -177,9 +178,9 @@ const ProductSummaryReport1: React.FC<{filter?:ProductSummaryFilter;
       width: 100,
     }
   ];
-  
-  
-  
+
+
+
   const customizeSummaryRow = (itemInfo: { value: any }) => {
     const value = itemInfo.value;
     if (value === null || value === undefined || value === "" || isNaN(value)) {
@@ -216,9 +217,8 @@ const ProductSummaryReport1: React.FC<{filter?:ProductSummaryFilter;
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              key="product_summary_basic_info"
+                key="product_summary_basic_info"
                 summaryItems={basicInfoSummaryItems}
-
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={basicInfoColumns}
                 gridHeader={t("product_summary_basic_info")}
@@ -234,7 +234,6 @@ const ProductSummaryReport1: React.FC<{filter?:ProductSummaryFilter;
             </div>
           </div>
         </div>
-      
       </div>
     </Fragment>
   );

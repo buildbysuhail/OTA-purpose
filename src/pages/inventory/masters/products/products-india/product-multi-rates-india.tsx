@@ -148,7 +148,7 @@ const MultiRates: React.FC<{
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [getFieldProps("prices").value]);
 
   const handleContentReady = (e: any) => {
     if (!initialFocusDone.current) {

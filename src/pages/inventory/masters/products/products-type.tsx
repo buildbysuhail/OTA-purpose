@@ -100,6 +100,7 @@ export interface DetailsDto {
   stdPurchasePrice?: number; // MRP: decimal?
   stdSalesPrice?: number; // MRP: decimal?
   basicUnitID: number;
+  basicUnitName: string;
   hold?: boolean; // newly added
   active?:boolean; // newly added
   manual?:boolean; // newly added

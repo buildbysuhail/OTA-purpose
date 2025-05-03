@@ -15,7 +15,7 @@ import {
   productDto,
   ProductUnitInputDto,
 } from "../products-type";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
 import { APIClient } from "../../../../../helpers/api-client";
 const api = new APIClient();
 const ProductMultiUnitsGCC: React.FC<{
@@ -55,7 +55,7 @@ const ProductMultiUnitsGCC: React.FC<{
     for (let i = paddedData.length; i < 12; i++) {
       paddedData.push(generateInitialUnit());
     }
-    paddedData[0].unitID = baseUnit;
+    paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID) ? baseUnit : paddedData[0].unitID;
     const result: { [key: string]: ProductUnitInputDto } = {};
     paddedData.forEach((unit, index) => {
       result[`unit${index + 1}`] = unit;

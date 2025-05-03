@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import DataGrid, {
   Column,
   Editing,
@@ -27,8 +27,11 @@ import { ApplicationSettingsType } from "../../../../settings/system/application
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 
+export interface ProductMultiUnitsIndiaRef {
+  loadMultiRateToGrid: (obj: productDto, units: any) => Promise<ProductPriceInputDto[]>;
+}
 const api = new APIClient();
-const ProductMultiUnitsIndia: React.FC<{
+const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
   appSettings: ApplicationSettingsType;
   t: any;
   handleFieldChange: <Path extends ProductFieldPath>(
@@ -37,8 +40,13 @@ const ProductMultiUnitsIndia: React.FC<{
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField | any;
   handleDataChange: (value?: any) => void;
-}> = React.memo(
-  ({ t, handleFieldChange, getFieldProps, handleDataChange, appSettings }) => {
+}>(({
+  t,
+  handleFieldChange,
+  getFieldProps,
+  handleDataChange,
+  appSettings
+}, ref) => {
     const unitDAta: ProductUnitInputDto = {
       productUnitID: 0,
       productBatchID: 0,
@@ -64,6 +72,45 @@ const ProductMultiUnitsIndia: React.FC<{
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
 
+    const loadMultiRateToGrid = async (
+      obj: productDto,
+      updateUnit: any
+    ): Promise<ProductPriceInputDto[]> => {
+      debugger;
+      let mlRate = getFieldProps("prices").value;
+      if ((obj.product.basicUnitID ?? 0) > 0) {
+        if (
+          mlRate.find((x: any) => x.unitID == obj.product.basicUnitID) ==
+          undefined
+        ) {
+          mlRate = await loadMultiRates(
+            obj.product.basicUnitID ?? 0,
+            obj.product.basicUnitName ?? "",
+            obj,
+            mlRate
+          );
+        }
+      }
+
+      const mUnits = updateUnit;
+      for (const row of mUnits) {
+        if (mlRate.find((x: any) => x.unitID == unit.unitID) == undefined) {
+          mlRate = await loadMultiRates(
+            row.unitID ?? 0,
+            row.unit ?? "",
+            obj,
+            mlRate
+          );
+        }
+      }
+      debugger;
+      return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
+    };
+    useImperativeHandle(ref, () => ({
+      loadMultiRateToGrid: async (obj: productDto, units: any) => {
+        return await loadMultiRateToGrid(obj, units);
+      }
+    }));
     const handleAddUnit = async () => {
       debugger;
       const obj = getFieldProps("*");
@@ -121,39 +168,6 @@ const ProductMultiUnitsIndia: React.FC<{
       }
     };
 
-    const loadMultiRateToGrid = async (
-      obj: productDto,
-      updateUnit: any
-    ): Promise<ProductPriceInputDto[]> => {
-      let mlRate = getFieldProps("prices").value;
-      if ((obj.product.basicUnitID ?? 0) > 0) {
-        if (
-          mlRate.find((x: any) => x.unitID == obj.product.basicUnitID) ==
-          undefined
-        ) {
-          mlRate = await loadMultiRates(
-            obj.product.basicUnitID ?? 0,
-            obj.product.unitName ?? "",
-            obj,
-            mlRate
-          );
-        }
-      }
-
-      const mUnits = updateUnit;
-      for (const row of mUnits) {
-        if (mlRate.find((x: any) => x.unitID == unit.unitID) == undefined) {
-          mlRate = await loadMultiRates(
-            row.unitID ?? 0,
-            row.unit ?? "",
-            obj,
-            mlRate
-          );
-        }
-      }
-      debugger;
-      return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
-    };
 
     function setMultiRatesDefaultMRP(
       multiUnits: ProductUnitInputDto[],
@@ -730,4 +744,4 @@ const ProductMultiUnitsIndia: React.FC<{
   }
 );
 
-export default ProductMultiUnitsIndia;
+export default React.memo(ProductMultiUnitsIndia);

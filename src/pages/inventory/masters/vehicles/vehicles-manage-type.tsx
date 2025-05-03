@@ -25,8 +25,8 @@ export const initialvehiclesData = {
     manufacture: "",
     ownerName: "",
     color: "",
-    isCommon: true,
-    isRental: true,
+    isCommon: false,
+    isRental: false,
     odometer: "",
     remarks: ""
   },

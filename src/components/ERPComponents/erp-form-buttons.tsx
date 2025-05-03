@@ -2,6 +2,17 @@ import React from "react";
 import ERPButton from "./erp-button";
 import { useTranslation } from "react-i18next";
 
+interface CustomButtonProps {
+  title: string;
+  onClick: () => void;
+  disabled?: boolean;
+  variant?: "primary" | "secondary";
+  loading?: boolean;
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
+  onEnterPress?: () => void;
+}
 
 interface ERPFormButtonsProps {
   isEdit?: boolean;
@@ -23,7 +34,10 @@ interface ERPFormButtonsProps {
   onClearEnterPress?: () => void;
   onCancelEnterPress?: () => void;
   onSubmitEnterPress?: () => void;
+  customButtons?: CustomButtonProps[]
+  customButtonsPosition?: "left" | "right";
 }
+
 
 export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   isEdit = false,
@@ -44,10 +58,38 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   onClearEnterPress,
   onCancelEnterPress,
   onSubmitEnterPress,
+  customButtons = [],
+  customButtonsPosition = "left",
+  
 }) => {
   const { t } = useTranslation('main');
   return (
-    <div className="absolute -bottom-0 h-[42px] py-[4px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
+    <div className="absolute -bottom-0 h-[42px] flex flex-row  left-0  w-full   dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  px-[10px] rounded-b-md">
+   
+  <div
+    className={` flex space-x-2 py-[4px] basis-1/2 ${
+      customButtonsPosition === "left" ? "justify-start" : "justify-end"
+    }`}
+  >
+     {customButtons.length > 0 && 
+    customButtons.map((button, index) => (
+      <ERPButton
+        key={`custom-button-${index}`}
+        title={button.title}
+        onClick={button.onClick}
+        disabled={button.disabled}
+        variant={button.variant || "secondary"}
+        loading={button.loading}
+        skip={button.skip}
+        jumpTo={button.jumpTo}
+        jumpTarget={button.jumpTarget}
+        onEnterPress={button.onEnterPress}
+      />
+    ))
+  }
+  </div>
+
+      <div className="flex justify-end  space-x-2 py-[4px] basis-1/2 ">
       {onClear && (
         <ERPButton
           title={t("clear")}
@@ -71,7 +113,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
           variant="secondary"
         />
       )}
-
+     
       {onSubmit && (
         <ERPButton
           title={t("submit")}
@@ -85,8 +127,12 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
           variant="primary"
         />
       )}
+      </div>
+      
     </div>
   );
 };
 
 export default ERPFormButtons;
+
+

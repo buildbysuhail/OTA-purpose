@@ -461,13 +461,24 @@ export const ProductMaster: React.FC = React.memo(() => {
         </ERPTab>
       </div>
 
-      <ERPButton
+      {/* <ERPButton
         // disabled={ appSettings.branchSettings.maintainMasterEntry || (formState.data.product.productID??0) <= 0 || !appSettings.branchSettings?.useBranchWiseSalesPrice}
         onClick={() => updatePrice()}
         title="Update Price"
-      />
+      /> */}
       <ERPFormButtons
-      
+      customButtons={[
+        {
+          title: "Update Price",
+          onClick: updatePrice,
+          disabled:
+            appSettings.branchSettings.maintainMasterEntry ||
+            (formState.data.product.productID ?? 0) <= 0 ||
+            !appSettings.branchSettings?.useBranchWiseSalesPrice,
+          variant: "secondary",
+        },
+      ]}
+   
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}

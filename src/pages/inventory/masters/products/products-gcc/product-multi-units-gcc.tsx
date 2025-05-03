@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
 export interface ProductMultiUnitsGccRef {
-  loadMultiRateToGrid: (obj: productDto, units: any) => Promise<ProductPriceInputDto[]>;
+  loadMultiRateToGrid: (obj: productDto, units: any, mlRate: any) => Promise<ProductPriceInputDto[]>;
 }
 const api = new APIClient();
 const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
@@ -58,8 +58,8 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   }>({});
 
    useImperativeHandle(ref, () => ({
-        loadMultiRateToGrid: async (obj: productDto, units: any) => {
-          return await loadMultiRateToGrid(obj, units);
+        loadMultiRateToGrid: async (obj: productDto, units: any, mlRate: any) => {
+          return await loadMultiRateToGrid(obj, units, mlRate);
         }
       }));
       
@@ -89,15 +89,15 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
       };
       const loadMultiRateToGrid = async (
             obj: productDto,
-            updateUnit: any
+            updateUnit: any,
+            mlRate: any
           ): Promise<ProductPriceInputDto[]> => {
             debugger;
-            let mlRate = getFieldProps("prices").value;
            
       
             const mUnits = updateUnit;
             for (const row of mUnits) {
-              if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
+              if  (row.unitID > 0 && row.multiFactor > 0 && mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
                 mlRate = await loadMultiRates(
                   row.unitID ?? 0,
                   row.unit ?? "",
@@ -155,8 +155,9 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
       };
   useEffect(() => {
     debugger;
-    const responseData = getFieldProps("units").value as ProductUnitInputDto[];
-    const baseUnit = getFieldProps("product.basicUnitID").value;
+    const obj = getFieldProps("*") as unknown as productDto;
+    const responseData = obj.units;
+    const baseUnit = obj.product.basicUnitID;
     const paddedData: ProductUnitInputDto[] = [...responseData];
 
     for (let i = paddedData.length; i < 12; i++) {
@@ -165,6 +166,12 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
     paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
       ? baseUnit
       : paddedData[0].unitID;
+      paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
+        ? obj.product.basicUnitName
+        : paddedData[0].unit;
+      paddedData[0].multiFactor = isNullOrUndefinedOrZero(paddedData[0].multiFactor)
+        ? 1
+        : paddedData[0].multiFactor;
     const result: { [key: string]: ProductUnitInputDto } = {};
     paddedData.forEach((unit, index) => {
       result[`unit${index + 1}`] = unit;

@@ -100,7 +100,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         if (
           appSettings?.productsSettings?.allowMultirate &&
           obj.prices &&
-          obj.prices.length == 0
+          ((obj.prices.length == 0  && (obj.product.productID??0) > 0) || ((obj.product.productID??0) <= 0))
         ) {
           if(productMultiUnitsIndiaRef.current) {
             const rates =
@@ -111,10 +111,12 @@ export const ProductMaster: React.FC = React.memo(() => {
           handleDataChange({ ...obj, prices: rates });
           }
           if(productMultiUnitsGccRef.current) {
+            
             const rates =
             await productMultiUnitsGccRef.current.loadMultiRateToGrid(
               obj,
-              obj.units
+              obj.units, 
+              (obj.product.productID??0) > 0 ? getFieldProps("prices").value : []
             );
           handleDataChange({ ...obj, prices: rates });
           }

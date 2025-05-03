@@ -12,7 +12,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column"
 const DailySalesStatementReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
-
   const columns: DevGridColumn[] = [
     {
       dataField: "iD",
@@ -30,14 +29,14 @@ const DailySalesStatementReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      groupIndex:0,
+      groupIndex: 0,
       width: 100,
       visible: true,
       showInPdf: true,
     },
     {
       dataField: "vchNo",
-      caption: t("voucherNo"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -218,7 +217,7 @@ const DailySalesStatementReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value,false,2) : getFormattedValue(-1 * value,false,2) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -262,10 +261,10 @@ const DailySalesStatementReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                autoExpandAll={true}
+                  autoExpandAll={true}
                   columns={columns}
                   gridHeader={t("daily_statement_report_of_sales")}
-                   filterText=" From {fromDate} To {toDate}"
+                  filterText=" From {fromDate} To {toDate}"
                   dataUrl={Urls.daily_statement_sales}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}

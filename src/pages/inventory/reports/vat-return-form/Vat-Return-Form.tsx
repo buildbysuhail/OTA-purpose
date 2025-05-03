@@ -253,7 +253,7 @@ const setupCurrencyCode = (countryId: number): string => {
       },
      {
       dataField: "vatAmount",
-      caption: t("vat_amount "),
+      caption: t("vat_amount"),
       dataType: "number",
       showInPdf: true,
       allowSearch: true,
@@ -344,7 +344,7 @@ const setupCurrencyCode = (countryId: number): string => {
                 <ErpDevGrid
                   columns={columns}
                   filterText="From : {fromDate} - {toDate}"
-                  gridHeader={t("VAT Return Form")}
+                  gridHeader={t("vat_return_form")}
                   dataUrl={Urls.vat_return_form}
                   method={ActionType.POST}
                   gridId="grd_vat_return_form"

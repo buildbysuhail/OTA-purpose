@@ -115,6 +115,7 @@ export const ProductMaster: React.FC = React.memo(() => {
   const updatePrice = async () => {
     const obj = getFieldProps("*") as productDto;
     debugger;
+    debugger;
     if (!isNullOrUndefinedOrEmpty(obj.product.autoBarcode)) {
       const payload = {
         units: obj.units,
@@ -123,7 +124,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         minSalesPrice: obj.batch.msp
       }
 
-      const res = await api.postAsync(`${Urls.products}updatePrice`,payload);
+      const res = await api.postAsync(`${Urls.products}updateProductPrice`,payload);
       handleResponse(res);
     }
   };
@@ -460,8 +461,8 @@ export const ProductMaster: React.FC = React.memo(() => {
       </div>
 
       <ERPButton
-        disabled={ appSettings.branchSettings.maintainMasterEntry || (formState.data.product.productID??0) <= 0 || !appSettings.branchSettings?.useBranchWiseSalesPrice}
-        onSubmit={() => updatePrice()}
+        // disabled={ appSettings.branchSettings.maintainMasterEntry || (formState.data.product.productID??0) <= 0 || !appSettings.branchSettings?.useBranchWiseSalesPrice}
+        onClick={() => updatePrice()}
         title="Update Price"
       />
       <ERPFormButtons

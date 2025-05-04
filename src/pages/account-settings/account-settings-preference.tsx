@@ -35,6 +35,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const [_phone, set_Phone] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
   const [isOpenPhoneChange, setIsOpenPhoneChange] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [postDataEmail, setPostDataEmail] = useState<any>({
     data: { userName: "", password: "", newValue: "" },
     validations: { userName: "", password: "", newValue: "" },
@@ -179,13 +180,18 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   // };
 
   const saveThemeChange = async () => {
+    try{
+    setIsSaving(true);
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
     localStorage.setItem("ut", btoa(JSON.stringify(appState)));
     handleResponse(res, () => {
       localStorage.setItem("ut", btoa(JSON.stringify(appState)));
-    });
+    });}
+    finally{
+      setIsSaving(false);
+    }
   };
 
   const resetThemeChange = async () => {
@@ -524,6 +530,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         title={t("save_changes")}
                         onClick={saveThemeChange}
                         variant="primary"
+                        loading={isSaving}
+                        disabled={isSaving}
                       />
                     </div>
                   </div>
@@ -907,6 +915,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       title={t("save_changes")}
                       onClick={saveThemeChange}
                       variant="primary"
+                      loading={isSaving}
+                      disabled={isSaving}
                     />
                   </div>
                 </div>

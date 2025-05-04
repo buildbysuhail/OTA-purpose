@@ -4,6 +4,9 @@ import { FormField } from "../../../../../utilities/form-types";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { toggleAccountGroupPopup } from "../../../../../redux/slices/popup-reducer";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 const ProductDetailsBatches: React.FC<{
   handleFieldChange: <Path extends ProductFieldPath>(
@@ -56,6 +59,8 @@ const ProductDetailsBatches: React.FC<{
     [handleFieldChange]
   );
 
+  const { getFormattedValue } = useNumberFormat()
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <ErpDevGrid
       columns={columns}
@@ -69,7 +74,50 @@ const ProductDetailsBatches: React.FC<{
       gridAddButtonIcon="ri-add-line"
       pageSize={40}
       onCellClick={handleCellClick}
-      onSelectionChanged={() => {
+      onSelectionChanged={(e) => {
+        debugger;
+        const obj = getFieldProps("*") as any as productDto;
+        const modifiedData = {...obj};
+        const row = e.selectedRowsData[0];
+
+        if (!row) return;
+      
+        modifiedData.batch.productBatchID = row.productBatchID;
+          modifiedData.batch.warehouseID = +row.warehouseID || 0;
+          modifiedData.product.stdSalesPrice = +row.stdSalesPrice || 0;
+          modifiedData.product.mrp = +row.mrp || 0;
+          modifiedData.product.stdPurchasePrice = +row.stdPurchasePrice || 0;
+          modifiedData.batch.msp = +row.minSalePrice || 0;
+          modifiedData.batch.brandID = +row.brandID || 0;
+          modifiedData.batch.displayCost = +row.displayCost === 0 ? +row.purchasePrice : +row.displayCost;
+        
+          modifiedData.batch.autoBarcode = row.autoBarcode?.toString() || "";
+          modifiedData.batch.batchNo = row.batchNo?.toString() || "";
+          modifiedData.batch.manualBarcode = row.mannualBarcode?.toString() || "";
+          modifiedData.batch.openingStock = +row.openingStock || 0;
+          
+          modifiedData.batch.stock = parseFloat(getFormattedValue((row.stock || 0),false,3));
+          modifiedData.batch.aPC = row.apc?.toString() || "";
+          modifiedData.batch.specification = row.specification?.toString() || "";
+          modifiedData.batch.isActive = Boolean(row.isActive);
+
+          modifiedData.batch.defSalesUnitID = +row.defSalesUnitID || 0;
+          modifiedData.batch.defPurchaseUnitID = +row.defPurchaseUnitID || 0;
+          modifiedData.batch.defReportUnitID = +row.defReportUnitID || 0;
+
+          modifiedData.batch.expiryDate = row.expiryDate ? new Date(row.expiryDate) : undefined;
+          modifiedData.batch.mfgDate = row.mfgDate ? new Date(row.mfgDate) : undefined;
+          
+          modifiedData.batch.location = row.location?.toString() || "";
+
+        if (clientSession.isAppGlobal) {
+      
+         
+          
+         
+        } else {
+          
+        }
         handleFieldChange("hasDisabled", true);
       }}
     />

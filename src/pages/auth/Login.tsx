@@ -227,9 +227,12 @@ const Login = () => {
                     {t("forgot-password")}?
                   </span> */}
                   </div>
-
-                  <button type="submit" className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6]">
-                    {
+                  <button
+                    type="submit"
+                    className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={comapanies?.loading || loginData?.loading}
+                  >
+                     {
                       comapanies?.loading || loginData?.loading ? (
                         <div className="true ml-1 h-4 w-4 bg-white rounded-full animate-ping"></div>
                       ) : (

@@ -45,6 +45,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
     const { t } = useTranslation('inventory');
     const [leftGridData, setLeftGridData] = useState<SchemeSettingsDiscountData[]>([]);
     const [rightGridData, setRightGridData] = useState<SchemeSettingsDiscountData[]>([]);
+    const [isSaving, setIsSaving] = useState(false); 
     const [isDataLoading, setIsDataLoading] = useState(false);
     const [productGroupValue, setProductGroupValue] = useState("ACETON");
     const [schemeValue, setSchemeValue] = useState("jhulhg");
@@ -80,10 +81,18 @@ export const SchemeSettingsDiscount: React.FC = () => {
     }, []);
 
     const handleSave = useCallback(() => {
+        if (isSaving) return;
+        setIsSaving(true); 
+        try {
         // Save logic would go here
         // api.post(Urls.scheme_settings_discount, rightGridData);
         console.log("Saving data:", rightGridData);
-    }, [rightGridData]);
+        }catch (error) {
+            console.error("Error saving data:", error);
+        } finally {
+            setIsSaving(false); // Reset saving state
+        }
+    }, [rightGridData, isSaving]);
 
     const handleClear = useCallback(() => {
         clearForm();

@@ -375,6 +375,17 @@ export default function SettingsPage() {
     roundingMethod:
       "Determine how numerical values are rounded in calculations and financial reports.",
   };
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const handleButtonClick = async () => {
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true); 
+    try {
+      await handleSubmit(); 
+    } finally {
+      setIsButtonDisabled(false); 
+    }
+  };
 
   // const appState = useAppSelector(
   //   (state: RootState) => state.AppState.appState
@@ -901,8 +912,8 @@ export default function SettingsPage() {
           variant="primary"
           type="button"
           loading={isSaving}
-          disabled={isSaving}
-          onClick={handleSubmit}
+          disabled={isSaving || isButtonDisabled}
+          onClick={handleButtonClick}
         />
       </div>
     </div>

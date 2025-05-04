@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import initialProductData from "../products-data";
@@ -13,6 +13,9 @@ import { t } from "i18next";
 import { FormField } from "../../../../../utilities/form-types";
 import { accFormStateHandleFieldChange } from "../../../../accounts/transactions/reducer";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import ChangeBarcode from "../common/change-barcode";
+import POSFastMovingItems from "../common/fast-mooving";
 
 const api = new APIClient();
 const ProductOthersGcc: React.FC<{
@@ -69,22 +72,25 @@ const ProductOthersGcc: React.FC<{
           
             fetchData();
           }, []);
+          
+              const [activePopup, setActivePopup] = useState<string | null>(null);
+              const openPopup = (popupType: string) => setActivePopup(popupType);
+              const closePopup = () => setActivePopup(null);
     return (
         <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
             <div className="flex items-center gap-4">
-                <ERPButton
-                    title={t("change_autobarcode")}
-                    variant="secondary"
-                />
-                <ERPButton
-                    title={t("pos_fast_moving_items")}
-                    variant="secondary"
-                    className="whitespace-nowrap"
-                />
-                <ERPButton
-                    title={t("price_list_editor")}
-                    variant="secondary"
-                />
+            <ERPButton
+              title={t("pos_fast_moving_items")}
+              variant="secondary"
+              onClick={() => openPopup("fastMoving")}
+              className="flex-grow min-w-[180px] sm:flex-grow-0"
+            />
+            <ERPButton
+              title={t("change_autobarcode")}
+              variant="secondary"
+              onClick={() => openPopup("autoBarcode")}
+              className="flex-grow min-w-[180px] sm:flex-grow-0"
+            />
             </div>
             <div className="flex flex-wrap gap-4">
                 <ERPCheckbox
@@ -113,6 +119,29 @@ const ProductOthersGcc: React.FC<{
                     onChange={(data) => handleFieldChangeAndResetSettings("showDisplayCost", data.target.checked)}
                 />
             </div>
+            {activePopup === "fastMoving" && (
+          <ERPModal
+            isOpen={true}
+            closeModal={(reload: boolean) => closePopup()}
+            title={t("pos_fast_moving_items")}
+            content={<POSFastMovingItems />}
+            width={780}
+            height={570}
+            disableOutsideClickClose={false}
+          />
+        )}
+
+        {activePopup === "autoBarcode" && (
+          <ERPModal
+            isOpen={true}
+            closeModal={(reload: boolean) => closePopup()}
+            title={t("change_autobarcode")}
+            content={<ChangeBarcode />}
+            width={400}
+            height={300}
+            disableOutsideClickClose={false}
+          />
+        )}
         </div>
     );
 });

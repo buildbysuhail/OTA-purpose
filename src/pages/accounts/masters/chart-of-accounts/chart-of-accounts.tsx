@@ -181,6 +181,8 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                   title={t("refresh")}
                   variant="primary"
                   onClick={loadAccountStructure}
+                  disabled={loading}
+                  loading={loading}
                 />
               </div>
 

@@ -34,6 +34,8 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  debugger;
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = () => {
     const newValue = !isExpanded;
@@ -64,6 +66,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
 
   const postUserConfig = async () => {
     try {
+      setIsLoading(true);
       const response = await api.post(`${Urls.post_acc_user_config}`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
@@ -73,6 +76,10 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
       console.error("Error post System Code settings:", error);
     } finally {
       setIsOpen(false);
+      // setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
     }
   };
 
@@ -329,7 +336,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         footer={
           <div className="h-[42px] pt-[4px] pb-[2px] w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
             <ERPButton title={t("reset")} onClick={resetThemeChange} type="reset" />
-            <ERPButton title={t("save_changes")} onClick={postUserConfig} variant="primary" />
+            <ERPButton title={t("save_changes")} onClick={postUserConfig} loading={isLoading} disabled={isLoading} variant="primary" />
           </div>
         }
       />

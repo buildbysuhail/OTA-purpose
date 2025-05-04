@@ -118,7 +118,7 @@ const ProductDetailsBatches: React.FC<{
         } else {
           
         }
-        handleFieldChange("hasDisabled", true);
+        handleFieldChange("elements.hasDisabled", true);
       }}
     />
   );

@@ -99,6 +99,7 @@ interface ERPDataComboboxProps {
   autoFocus?: boolean;
   disabled?: boolean;
   initialValue?: any;
+  initialInputValue?: string;
   isPaginated?: boolean;
   isInModal?: boolean;
   disabledApiCall?: boolean;
@@ -396,6 +397,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       labelInfoProps,
       info,
       initialValue,
+      initialInputValue,
       className,
       disabledApiCall = false,
       validation,
@@ -420,7 +422,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [filteredItems, setFilteredItems] = useState<Option[]>([]);
     const [displayValue, setDisplayValue] = useState("");
     const [activeIndex, setActiveIndex] = useState(-1);
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState(initialInputValue);
     const comboboxRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<List>(null);
     const componentRef = useRef<HTMLDivElement>(null);

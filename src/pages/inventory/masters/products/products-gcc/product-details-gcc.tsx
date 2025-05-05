@@ -85,11 +85,12 @@ export const ProductDetailsGcc: React.FC<{
                                     id: "brandID",
                                     valueKey: "id",
                                     labelKey: "name",
+                                    getListUrl: Urls.data_brands,
                                 }}
                                 onChangeData={(data) => handleFieldChange("product.brandID", data.brandID)}
                                 className="w-full"
                                 label={t("brand_mfg")}
-                                options={[]}
+                                // options={[]}
                             />
 
                             <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
@@ -112,11 +113,12 @@ export const ProductDetailsGcc: React.FC<{
                                 id: "productCategoryID",
                                 valueKey: "id",
                                 labelKey: "name",
+                                getListUrl: Urls.data_productcategory,
                             }}
                             onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
                             label={t("product_category")}
                             className="w-full"
-                            options={[]}
+                            // options={[]}
                         />
 
                         <ERPInput

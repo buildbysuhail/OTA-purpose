@@ -6,8 +6,9 @@ import { Column, KeyboardNavigation, Paging, Scrolling, Selection } from 'devext
 import { useTranslation } from 'react-i18next';
 import CustomStore from 'devextreme/data/custom_store';
 import ERPInput from "../../components/ERPComponents/erp-input";
-import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
-import { RootState } from '../../redux/store';
+import {
+  isNullOrUndefinedOrEmpty,
+} from "../../utilities/Utils";
 import ERPCheckbox from './erp-checkbox';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputId?:string;
@@ -18,6 +19,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any) => void;
   checkboxLabel?: string; 
+  value?: string; 
 }
 
 interface LoadResult {
@@ -98,19 +100,28 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected,checkboxLabel, onChange, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected,checkboxLabel, onChange, value, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
   const [showBatchGrid, setShowBatchGrid] = useState(false);
   const [inputValue, setInputValue] = useState({
-                                                    searchValue:"",
+                                                    searchValue:value,
                                                     searchByCode:false,
 
                                               });
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
   const { t } = useTranslation("inventory");
+
+useEffect(() => {
+  console.log(value);
+  
+  setInputValue((prev) => ({
+    ...prev,
+    searchValue: value,
+  }));
+},[value])
 
   const debouncedFetch = useMemo(
     () =>
@@ -194,10 +205,13 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
           onProductSelected(selectedRow)
         }
         try {
+          if(!isNullOrUndefinedOrEmpty(batchDataUrl)) {
           const batchStore = await createBatchStore(selectedRow.productID, batchDataUrl);
           setProductDetailStore(batchStore);
-          setShowProductGrid(false);
           setShowBatchGrid(true);
+          }
+          
+          setShowProductGrid(false);
         } catch (err) {
           setShowBatchGrid(false);
         }
@@ -243,7 +257,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
 
    const handleInputKeyDown = useCallback(
        async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        debugger;
+        
          if (e.key === 'ArrowDown' && showProductGrid && dataGridRef.current) {
            const grid: any = dataGridRef.current.instance();
            const rows = grid.getVisibleRows();
@@ -309,7 +323,7 @@ const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, 
         </div>
       )}
 
-      {showBatchGrid && (
+      {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
             <div className="absolute top-full  left-0    mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
           <DataGrid
             ref={batchGridRef}

@@ -515,7 +515,24 @@ export const ProductMaster: React.FC = React.memo(() => {
             !appSettings.branchSettings?.useBranchWiseSalesPrice,
           variant: "secondary",
         },
-      ]}
+        {
+          title: "Flavors",
+          onClick: updatePrice,
+         
+          variant: "secondary",
+        },
+        {
+          title: "Multi Barcode",
+          onClick: updatePrice,
+         
+          variant: "secondary",
+        },
+      ].filter((x: any) =>{
+        // return true;
+        const obj = getFieldProps("*") as any as productDto;
+        if(x.titles == "Flavors" && )
+      }) as []
+    }
    
         onClear={handleClear}
         isEdit={isEdit}

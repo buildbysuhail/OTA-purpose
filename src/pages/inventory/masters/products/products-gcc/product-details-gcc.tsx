@@ -175,14 +175,14 @@ export const ProductDetailsGcc: React.FC<{
                             onChange={(data) => handleFieldChange("product.mfgDate", data.target.value)}
                         />
 
-                        <ERPInput
+                        {/* <ERPInput
                             {...getFieldProps("product.mrp")}
                             label={t("mrp")}
                             placeholder="0.00"
                             type="number"
                             required={false}
                             onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
-                        />
+                        /> */}
 
                         <ERPDataCombobox
                             {...getFieldProps("product.location")}

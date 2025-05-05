@@ -39,6 +39,7 @@ const initialProductData: productDto = {
     defaultVendorID: -2,
     basicUnitName: ""
   },
+  elements: {flavorVisible: false, hasDisabled: false, mbVisible: false},
   productValidation: {
     productName: "",
     productGroupId: "",

@@ -7,7 +7,10 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { APIClient } from "../../../../../helpers/api-client";
+import Urls from "../../../../../redux/urls";
 
+const api = new APIClient();
 const ProductDetailsBatches: React.FC<{
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -49,16 +52,18 @@ const ProductDetailsBatches: React.FC<{
 
 
   // ✅ Handle cell click
-  const handleCellClick = useCallback(
-    (e: any) => {
-      if (e?.data) {
-        // You can change this to set individual fields if needed
-        handleFieldChange("batch", e.data);
-      }
-    },
-    [handleFieldChange]
+  // const handleCellClick = useCallback(
+  //   (e: any) => {
+  //     if (e?.data) {
+  //       // You can change this to set individual fields if needed
+  //       handleFieldChange("batch", e.data);
+  //     }
+  //   },
+  //   [handleFieldChange]
+  // );
+  const appSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
   );
-
   const { getFormattedValue } = useNumberFormat()
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
@@ -73,8 +78,8 @@ const ProductDetailsBatches: React.FC<{
       gridAddButtonType="popup"
       gridAddButtonIcon="ri-add-line"
       pageSize={40}
-      onCellClick={handleCellClick}
-      onSelectionChanged={(e) => {
+      // onCellClick={handleCellClick}
+      onSelectionChanged={async(e) => {
         debugger;
         const obj = getFieldProps("*") as any as productDto;
         const modifiedData = {...obj};
@@ -109,6 +114,17 @@ const ProductDetailsBatches: React.FC<{
           modifiedData.batch.mfgDate = row.mfgDate ? new Date(row.mfgDate) : undefined;
           
           modifiedData.batch.location = row.location?.toString() || "";
+if(!modifiedData.elements) {
+  modifiedData.elements = {flavorVisible: false, hasDisabled: false, mbVisible: false};
+}
+          modifiedData.elements.flavorVisible = true;
+          modifiedData.elements.mbVisible = true;
+          if(appSettings.productsSettings.allowMultiUnits) {
+
+            const qString = new URLSearchParams({ productBatchID: row.productBatchID }).toString();
+            const units = await api.getAsync(`${Urls.products}SelectProductUnits`, qString);
+            handleFieldChange("units", units??[])
+          }
 
         if (clientSession.isAppGlobal) {
       

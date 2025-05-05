@@ -528,9 +528,16 @@ export const ProductMaster: React.FC = React.memo(() => {
           variant: "secondary",
         },
       ].filter((x: any) =>{
+        const obj = getFieldProps("*") as any as productDto;
+        if(x.titles == "Flavors" && !clientSession.isAppGlobal && !obj.elements.flavorVisible) {
+          return false
+        }
+        if((x.titles == "Multi Barcode" && !clientSession.isAppGlobal) 
+          || (x.titles == "Multi Barcode" && clientSession.isAppGlobal && !obj.elements.mbVisible)) {
+          return false
+        }
+        
         return true;
-        // const obj = getFieldProps("*") as any as productDto;
-        // if(x.titles == "Flavors" && )
       }) as []
     }
    

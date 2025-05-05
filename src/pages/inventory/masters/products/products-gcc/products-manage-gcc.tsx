@@ -19,6 +19,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { BusinessType } from "../../../../../enums/business-types";
+import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
 const api = new APIClient();
 export const ProductManageGcc: React.FC<{
   appSettings: ApplicationSettingsType;
@@ -151,7 +152,20 @@ export const ProductManageGcc: React.FC<{
               <div className="flex flex-wrap gap-2 mb-3">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 {/* {getFieldProps("product.productID")?.value} */}
-                 <ERPDataCombobox
+                               <ERPProductSearch
+                               value={getFieldProps("product.productName").value}
+                                                  onChange={(e) =>  handleFieldChange({
+                                                    "product.productName": e.target.value 
+                                                  })}
+                                                  productDataUrl={Urls.load_product_details}
+                                                  onProductSelected={(data: any) => {
+                                                    debugger;
+                                                    handleFieldChange({
+                                                      "product.productName": data.productName 
+                                                    });
+                                                  }}
+                                                />
+                 {/* <ERPDataCombobox
                               ref={productNameRef}
                                 {...getFieldProps("product.productID")}
                                 id="productName"
@@ -162,11 +176,19 @@ export const ProductManageGcc: React.FC<{
                                   getListUrl: Urls.data_products
                                 }}
                                 onTextChange={(data: any) => handleFieldChange("product.productName", data)}
+                                // initialInputValue={getFieldProps("product.productName").value}
+                                // onChValue={}
+                                onChangeData={(data: any) => {
+                                  handleFieldChange({
+                                    "product.tmpProductID": data.value,
+                                    "product.productName": data.label
+                                  });
+                                }}
                                 // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
                                 label={t("product_name")}
                                 className="w-full"
                                 required={true}
-                              />
+                              /> */}
 
                   <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <Ellipsis className="w-4 h-4" />
@@ -183,11 +205,14 @@ export const ProductManageGcc: React.FC<{
                       labelKey: "name",
                       getListUrl: Urls.data_productgroup,
                     }}
+                    // onChangeData={(data: any) =>
+                    //   handleFieldChange(
+                    //     "product.productGroupID",
+                    //     data.productGroupID
+                    //   )
+                    // }
                     onChangeData={(data: any) =>
-                      handleFieldChange(
-                        "product.productGroupID",
-                        data.productGroupID
-                      )
+                      handleFieldChange("product.productGroupID", data.productGroupID)
                     }
                     label={t("product_group")}
                     className="w-full"
@@ -277,10 +302,13 @@ export const ProductManageGcc: React.FC<{
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
-                      data.product.unitQty
+                      data.batch.manualBarcode
                     )
                   }
                 />
+                {/* <p>{getFieldProps("product.unitQty")?.value}</p>
+                <p>next</p>
+                <p>{getFieldProps("batch.manualBarcode")?.value}</p> */}
 
                 {appSettings.productsSettings.allowMultiUnits && (
                   <ERPCheckbox

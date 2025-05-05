@@ -196,7 +196,7 @@ const ProductDetailsIndia: React.FC<{
                   type="number"
                   required={false}
                   onChangeData={(data: productDto) =>
-                    handleFieldChange("product.marginPercentage", data.product.marginPercentage)
+                    handleFieldChange("product.netWeight", data.product.netWeight)
                   }
                   className="truncate flex-1 min-w-[100px]"
                 />
@@ -229,6 +229,7 @@ const ProductDetailsIndia: React.FC<{
             <div className="flex flex-wrap gap-2 w-full">
               <ERPDataCombobox
                 {...getFieldProps("batch.location")}
+                id = "location"
                 field={{
                   id: "location",
                   valueKey: "id",
@@ -239,16 +240,16 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("batch.location", data.batch.location)
                 }
                 label={t("location")}
-                options={[]}
+                // options={[]}
                 className="flex-2 min-w-[200px]"
               />
             </div>
           </div>
 
           <div className="border border-gray-200 rounded-md p-2 pt-6 relative">
-            <h6 className="absolute top-[-13px] left-4 rounded-md bg-gray-500 px-4 py-1 text-white">
-              {t("list_in")}
-            </h6>
+          <h6 className="absolute top-[-13px] left-4 text-[14px] font-semibold text-gray-700 bg-transparent px-0 py-0">
+            {t("list_in")}
+          </h6>
             <div className="flex flex-wrap gap-x-6 gap-y-4 mt-2">
               <ERPCheckbox
                 {...getFieldProps("product.canPurchase")}

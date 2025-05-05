@@ -66,6 +66,7 @@ export interface Elements {
 }
 export interface DetailsDto {
   productID?: number; // ProductID: long?
+  tmpProductID?: number; // ProductID: long?
   productCode?: string; // ProductCode: string?
   productName?: string; // ProductName: string?
   productGroupID?: number; // ProductGroupId: long?
@@ -110,6 +111,7 @@ export interface DetailsDto {
   hold?: boolean; // newly added
   active?:boolean; // newly added
   manual?:boolean; // newly added
+  netWeight?: number;
 }
 
 export interface ProductValidationDto {

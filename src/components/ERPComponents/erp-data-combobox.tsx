@@ -44,6 +44,8 @@ import { useDispatch } from "react-redux";
 import { setData } from "../../redux/slices/data/reducer";
 import localData from "../../enums/local-datas";
 import CachedUrls from "../../redux/cached-urls";
+import ERPButton from "./erp-button";
+import ERPModal from "./erp-modal";
 
 interface Option {
   value: any;
@@ -113,6 +115,17 @@ interface ERPDataComboboxProps {
   variant?: "filled" | "outlined" | "standard" | "normal";
   localInputBox?: inputBox; // Local styling preferences
   name?: any; 
+  addNewOption?:boolean;
+  addNewOptionCobonent?:{
+    popupAction?:any;
+    isOpen: boolean;
+    title: string;
+    width?: number;
+    height?:number;
+    isForm?: boolean;
+    closeModal: () => void;
+    content?: any;
+  };
 }
 
 interface RowProps {
@@ -122,6 +135,9 @@ interface RowProps {
     selectedValue: Option | null;
     handleSelect: (item: Option) => void;
     activeIndex: number;
+    addNewOption?: boolean;
+    handleAddNewClick?: () => void;
+
   };
   index: number;
   style: React.CSSProperties;
@@ -200,16 +216,31 @@ const Row = ({
   index,
   style,
 }: RowProps & { customSize?: "sm" | "md" | "lg" | "customize" }) => {
-  const { items, selectedValue, handleSelect, activeIndex } = data;
+  const { items, selectedValue, handleSelect, activeIndex, addNewOption, handleAddNewClick } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
   const isActive = activeIndex === index;
   const sizeClasses = getSizeClasses(data.customSize);
-
+  const isAddNew = item.value === "__add_new__";
   const appState = useAppSelector(
     (state: RootState) => state.AppState?.appState
   );
-
+  if (isAddNew && addNewOption) {
+    return (
+      <div
+        style={style}
+        className="relative cursor-pointer select-none w-full rounded-sm px-3 py-2"
+      >
+        <ERPButton
+          type="button"
+          variant="primary"
+          onClick={handleAddNewClick}
+          title={"add_new"}
+          className="w-full text-sm"
+        />
+      </div>
+    );
+  }
   return (
     <Combobox.Option
       style={style}
@@ -277,9 +308,11 @@ const ComboboxList = React.forwardRef<
     onSelect: (item: Option) => void;
     activeIndex: number;
     customSize?: "sm" | "md" | "lg" | "customize";
+    addNewOption?: boolean;
+    handleAddNewClick?: () => void;
   } & { appState: "rtl" | "ltr" }
 >((props, ref) => {
-  const { items, selectedValue, onSelect, activeIndex, customSize, appState } =
+  const { items, selectedValue, onSelect, activeIndex, customSize, appState,addNewOption,handleAddNewClick} =
     props;
   const itemData = {
     items,
@@ -287,6 +320,8 @@ const ComboboxList = React.forwardRef<
     handleSelect: onSelect,
     activeIndex,
     customSize,
+    addNewOption,
+    handleAddNewClick,
   };
 
   return (
@@ -410,6 +445,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       variant,
       localInputBox, // Destructure localInputBox
       triggerEffect,
+      addNewOption = false,
+      addNewOptionCobonent
+
     }: ERPDataComboboxProps,
     ref
   ) => {
@@ -437,7 +475,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [_customSize, setCustomSize] = useState(
       customSize ? customSize : inputBoxState?.inputSize
     );
-    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
+    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI ??false);
     const [_variant, set_variant] = useState<
       "filled" | "outlined" | "standard" | undefined
     >(variant === "normal" ? undefined : variant);
@@ -841,26 +879,49 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
     };
 
+    // const filterItems = useCallback(
+    //   (searchQuery: string) => {
+    //     if (!searchQuery.trim()) {
+    //       setFilteredItems(items);
+    //       return;
+    //     }
+    //     const words = searchQuery.toLowerCase().split(/\s+/);
+    //     const filtered = items?.filter((item) => {
+    //       if (!item?.label) return false;
+    //       const itemLabel = item.label.toLowerCase();
+    //       return words.every((word) => itemLabel.includes(word));
+    //     });
+    //     setFilteredItems(filtered || []);
+    //   },
+    //   [items]
+    // );
+    // FIXED: Simplified filterItems to ensure "Add New" option is always appended when addNewOption is true
     const filterItems = useCallback(
       (searchQuery: string) => {
-        if (!searchQuery.trim()) {
-          setFilteredItems(items);
-          return;
+        let filtered = items;
+        if (searchQuery.trim()) {
+          const words = searchQuery.toLowerCase().split(/\s+/);
+          filtered = items?.filter((item) => {
+            if (!item?.label) return false;
+            const itemLabel = item.label.toLowerCase();
+            return words.every((word) => itemLabel.includes(word));
+          }) || [];
         }
-        const words = searchQuery.toLowerCase().split(/\s+/);
-        const filtered = items?.filter((item) => {
-          if (!item?.label) return false;
-          const itemLabel = item.label.toLowerCase();
-          return words.every((word) => itemLabel.includes(word));
-        });
-        setFilteredItems(filtered || []);
+        if (addNewOption) {
+          filtered = [
+            ...filtered,
+            { label: "add new", value: "__add_new__", is_active: true },
+          ];
+        }
+        setFilteredItems(filtered);
       },
-      [items]
+      [items, addNewOption]
     );
 
     useEffect(() => {
       filterItems(query);
     }, [query, filterItems]);
+
     const memoizedField = useMemo(() => field, [field?.id, field?.params]);
     const memoizedData = useMemo(() => data, [JSON.stringify(data)]);
     const memoizedItems = useMemo(() => items, [JSON.stringify(items)]);
@@ -1025,6 +1086,22 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Focus next available input if found
       if (nextIndex >= 0 && nextIndex < formInputs.length) {
         (formInputs[nextIndex] as HTMLElement).focus();
+      }
+    };
+
+    const handleAddNewClick = () => {
+      if (addNewOptionCobonent && addNewOptionCobonent.popupAction) {
+        dispatch(addNewOptionCobonent.popupAction({ isOpen: true, key: null, reload: false }));
+        setIsOpen(false); // Close the dropdown
+      }
+    };
+
+    const handleCloseModal = (reload: boolean) => {
+      if (addNewOptionCobonent) {
+        addNewOptionCobonent.closeModal();
+        if (reload) {
+          loadData();
+        }
       }
     };
 
@@ -1822,11 +1899,29 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       activeIndex={activeIndex}
                       customSize={_customSize}
                       appState={appState.dir}
+                      addNewOption={addNewOption}
+                      handleAddNewClick={handleAddNewClick}
                     />
                   )}
                 </div>,
                 document.body // Render to body to escape parent constraints
               )}
+          {addNewOption &&
+              addNewOptionCobonent &&
+              addNewOptionCobonent.isOpen &&
+              (
+                <ERPModal
+                  isOpen={addNewOptionCobonent.isOpen}
+                  title={addNewOptionCobonent.title}
+                  width={addNewOptionCobonent.width || 600}
+                  height={addNewOptionCobonent.height || 350}
+                  isForm={true}
+                  closeModal={handleCloseModal}
+                  content={addNewOptionCobonent.content}
+                />
+               
+              )}
+
           </Combobox>
           {info != undefined && info != null && info != "" && (
             <div className="text-[#374151] text-xs font-medium ">

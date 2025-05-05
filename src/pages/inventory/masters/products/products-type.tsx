@@ -54,10 +54,16 @@ export interface productDto {
   batchCriteria:boolean;
   details:boolean;
   onHold:boolean;
-  hasDisabled:boolean;
   taxCategoryTaxPercentage:number;
+  elements: Elements
 }
 
+export interface Elements {
+  
+  hasDisabled:boolean;
+  flavorVisible:boolean;
+  mbVisible:boolean;
+}
 export interface DetailsDto {
   productID?: number; // ProductID: long?
   tmpProductID?: number; // ProductID: long?

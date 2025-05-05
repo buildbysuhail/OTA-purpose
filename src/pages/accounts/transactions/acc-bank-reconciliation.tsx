@@ -637,12 +637,12 @@ const BankReconciliation = () => {
                   <div className="col-span-3">
                     <ERPButton
                       title={t("show")}
-                      onClick={() => {
-                        handleShow();
+                      onClick={handleShow }
+                        
                         // setKey((prev: number) => {
                         //   return prev + 1;
                         // });
-                      }}
+                     
                       loading={loading.show}
                       variant="secondary"
                       className="mt-[15px] !mb-0 w-[100px]"

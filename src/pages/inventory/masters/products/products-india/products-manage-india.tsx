@@ -17,6 +17,9 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { BusinessType } from "../../../../../enums/business-types";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
+import { popupDataProps, toggleProductGroup } from "../../../../../redux/slices/popup-reducer";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { ProductGroupManage } from "../../product-group/product-group-manage";
 
 const api = new APIClient();
 
@@ -33,7 +36,7 @@ export const ProductManageIndia: React.FC<{
   productMultiUnitsIndiaRef: React.RefObject<ProductMultiUnitsIndiaRef>;
 
 }> = React.memo(({ formState, handleFieldChange, getFieldProps, appSettings, handleDataChange ,productMultiUnitsIndiaRef}) => {
-
+const rootState = useRootState();
   const clientSession = useSelector((state: RootState) => state.ClientSession)
         const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("inventory");
@@ -115,6 +118,10 @@ useEffect(() => {
   productNameRef?.current?.focus()
   productNameRef?.current?.select()
 },[productNameRef])
+  function dispatch(arg0: { payload: popupDataProps; type: "popupData/toggleProductGroup"; }): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -235,6 +242,14 @@ useEffect(() => {
                   label={t("product_group")}
                   className="w-full"
                   required={true}
+                  // addNewOption={true}
+                  // addNewOptionCobonent={{
+                  //   title:t("product_group"),
+                  //   popupAction:toggleProductGroup,
+                  //   isOpen:rootState.PopupData.productGroup.isOpen || false,
+                  //    closeModal:() => dispatch(toggleProductGroup({ isOpen: false })),
+                  //    content:<ProductGroupManage />
+                  // }} 
                 />
 
                 <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
@@ -291,6 +306,14 @@ useEffect(() => {
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
+                  addNewOption={true}
+                  addNewOptionCobonent={{
+                    title:t("product_group"),
+                    popupAction:toggleProductGroup,
+                    isOpen:rootState.PopupData.productGroup.isOpen || false,
+                     closeModal:() => dispatch(toggleProductGroup({ isOpen: false })),
+                     content:<ProductGroupManage />
+                  }} 
                 />
 
                 <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">

@@ -118,30 +118,7 @@ useEffect(() => {
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        <div className="flex justify-end">
-          <ERPInput
-            {...getFieldProps("barcode")}
-            label={t("barcode")}
-            placeholder={t("barcode")}
-            required={false}
-            disableEnterNavigation
-            onKeyDown={async (e: any) => {
-              const barcode = e.target.value;
-            if (e.key === "Enter" && barcode != null && barcode != "") {
-              try {
-                  const data = await api.getAsync(`${Urls.products}ByBarcode/${barcode}`);
-                  
-                  handleDataChange(data);
-                  
-                } catch (error) {
-                  console.error("API call failed", error);
-                }
-              }
-            }}
-            onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
-            className="w-full md:w-1/3"
-          />
-        </div>
+        
 
         <div className="flex flex-wrap gap-1">
           <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-3">

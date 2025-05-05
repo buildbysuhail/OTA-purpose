@@ -31,6 +31,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import moment from "moment";
 import MultiRates from "./products-india/product-multi-rates-india";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
 import {
   calculateMarkup,
   isNullOrUndefinedOrEmpty,
@@ -427,6 +428,30 @@ export const ProductMaster: React.FC = React.memo(() => {
       ];
   return (
     <div className="w-full modal-content">
+      <div className="flex justify-end">
+                <ERPInput
+                  {...getFieldProps("barcode")}
+                  label={t("barcode")}
+                  placeholder={t("barcode")}
+                  required={false}
+                  disableEnterNavigation
+                  onKeyDown={async (e: any) => {
+                    const barcode = e.target.value;
+                  if (e.key === "Enter" && barcode != null && barcode != "") {
+                    try {
+                        const data = await api.getAsync(`${Urls.products}ByBarcode/${barcode}`);
+                        
+                        handleDataChange(data);
+                        
+                      } catch (error) {
+                        console.error("API call failed", error);
+                      }
+                    }
+                  }}
+                  onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
+                  className="w-full md:w-1/3"
+                />
+              </div>
       <div className="flex flex-col gap-1">
         {isIndia ? (
           <ProductManageIndia

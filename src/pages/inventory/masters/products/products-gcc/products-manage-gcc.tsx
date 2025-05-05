@@ -62,7 +62,7 @@ export const ProductManageGcc: React.FC<{
     return (
       <div className="w-full modal-content">
         <div className="flex flex-col gap-1">
-          <div className="flex justify-end">
+          {/* <div className="flex justify-end">
             <ERPInput
               {...getFieldProps("barcode")}
               label={t("barcode")}
@@ -87,7 +87,7 @@ export const ProductManageGcc: React.FC<{
                 handleFieldChange("barcode", data.barcode)
               }
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-wrap gap-1">
             <div className="flex-1 min-w-[300px] border border-[#ccc] rounded-md p-2">

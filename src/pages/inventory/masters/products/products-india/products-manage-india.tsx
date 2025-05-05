@@ -565,32 +565,42 @@ useEffect(() => {
               />
             </div>
 }
+           
+
             <div className="flex flex-wrap items-center gap-1 mb-3">
-              <div className="flex items-center flex-shrink-0">
-                <ERPCheckbox
-                  {...getFieldProps("batchCriteria")}
-                  label={t("batch_criteria")}
-                  onChange={(e) => handleFieldChange('batchCriteria', e.target.checked)}
-                  className="flex-1 min-w-[120px]"
-                // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
-                />
+                <div className="flex items-center">
+                  <ERPCheckbox
+                    {...getFieldProps("batchCriteria")}
+                    label={t("batch_criteria")}
+                    onChange={(data) =>
+                      handleFieldChange("batchCriteria", data.target.checked)
+                    }
+                  />
+                </div>
+                <div className="flex-1 min-w-[200px]">
+                  <ERPDataCombobox
+                    {...getFieldProps("product.batchCriteria")}
+                    id="batchCriteria"
+                    field={{
+                      id: "batchCriteria",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_batchcriteria,
+                    }}
+                    enableClearOption={false}
+                    className="w-full"
+                    disabled={getFieldProps("batchCriteria").value != true}
+                    noLabel={true}
+                    onChangeData={(data: any) =>
+                      handleFieldChange(
+                        "product.batchCriteria",
+                        data.batchCriteria
+                      )
+                    }
+                  />
+                </div>
               </div>
 
-              <ERPDataCombobox
-                {...getFieldProps("product.batchCriteria")}
-                field={{
-                  id: "batchCriteria",
-                  valueKey: "id",
-                  labelKey: "name",
-                  getListUrl: Urls.data_batchcriteria,
-                }}
-                enableClearOption={false}
-                disabled={getFieldProps("batchCriteria").value != true}
-                className="flex-1 min-w-[120px]"
-                noLabel={true}
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.batchCriteria)}
-              />
-            </div>
 
             <div className="flex flex-wrap gap-2 mb-3 items-end">
               <ERPDataCombobox

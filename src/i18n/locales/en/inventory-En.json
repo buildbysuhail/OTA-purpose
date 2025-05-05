@@ -444,5 +444,22 @@
     "tcs_category":"TCS Category",
     "tcs_perc":"TCS Perc",
     "tcs_percentage":"TCS Percentage",
-    "gst_category":"GST Category"
+    "gst_category":"GST Category",
+    "margin":"Margin",
+    "cost":"Cost",
+    "mark_(up/down)":"Mark(Up/Down)",
+    "pi_no":"PI No",
+    "v_type":"VType",
+    "v_prefix":"VPrefix",
+    "v_no":"VNo",
+    "form_type":"Form type",
+    "brand":"Brand",
+    "branch":"Branch",
+    "price_update_(up_down)":"Price update(Up/Down)%",
+    "update_std_rate":"Update std rate",
+    "load_items":"Load items",
+    "search_products":"Search products",
+    "standard":"Standard",
+    "product_prices_gcc":"Product Prices GCC",
+    "product_prices_india":"Product Prices India"
 }

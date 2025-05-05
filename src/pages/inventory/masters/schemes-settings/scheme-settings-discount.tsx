@@ -177,7 +177,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
                     {...getFieldProps("scheme")}
                     field={{
                         id: "scheme",
-                        getListUrl: Urls.data_schemes,
+                        getListUrl: Urls.data_scheme_master,
                         valueKey: "id",
                         labelKey: "name"
                     }}

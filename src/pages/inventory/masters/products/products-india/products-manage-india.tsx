@@ -239,6 +239,15 @@ useEffect(() => {
                     handleDataChange(_data)
                   }
                   }
+                  
+                  addNewOption={true}
+                  addNewOptionCobonent={{
+                    title:t("product_group"),
+                    popupAction:toggleProductGroup,
+                    isOpen:rootState.PopupData.productGroup.isOpen || false,
+                     closeModal:() => dispatch(toggleProductGroup({ isOpen: false })),
+                     content:<ProductGroupManage />
+                  }} 
                   label={t("product_group")}
                   className="w-full"
                   required={true}
@@ -306,14 +315,6 @@ useEffect(() => {
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
-                  addNewOption={true}
-                  addNewOptionCobonent={{
-                    title:t("product_group"),
-                    popupAction:toggleProductGroup,
-                    isOpen:rootState.PopupData.productGroup.isOpen || false,
-                     closeModal:() => dispatch(toggleProductGroup({ isOpen: false })),
-                     content:<ProductGroupManage />
-                  }} 
                 />
 
                 <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">

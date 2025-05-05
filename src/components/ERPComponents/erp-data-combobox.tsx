@@ -225,22 +225,7 @@ const Row = ({
   const appState = useAppSelector(
     (state: RootState) => state.AppState?.appState
   );
-  if (isAddNew && addNewOption) {
-    return (
-      <div
-        style={style}
-        className="relative cursor-pointer select-none w-full rounded-sm px-3 py-2"
-      >
-        <ERPButton
-          type="button"
-          variant="primary"
-          onClick={handleAddNewClick}
-          title={"add_new"}
-          className="w-full text-sm"
-        />
-      </div>
-    );
-  }
+  
   return (
     <Combobox.Option
       style={style}
@@ -297,7 +282,7 @@ const Row = ({
         </div>
       )}
     </Combobox.Option>
-  );
+  )
 };
 
 const ComboboxList = React.forwardRef<
@@ -1903,6 +1888,16 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       handleAddNewClick={handleAddNewClick}
                     />
                   )}
+                 <footer className="fixed bottom-0 left-0 w-full bg-gray-800 text-white p-4 text-center z-40">
+                 <ERPButton
+        type="button"
+        variant="primary"
+        onClick={handleAddNewClick}
+        title={"add_new"}
+        className="w-full text-sm"
+      />
+      </footer>
+      
                 </div>,
                 document.body // Render to body to escape parent constraints
               )}

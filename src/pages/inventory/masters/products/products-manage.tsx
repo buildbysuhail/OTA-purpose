@@ -168,9 +168,9 @@ export const ProductMaster: React.FC = React.memo(() => {
     }
   
     try {
-      const response = await api.getAsync(`${Urls.product_flavours}${productId}`)??[];
+      const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`)??[];
       handleResponse(response);
-      const dataWithNewRow = [...response, { id: null, flavor: '' }];
+      const dataWithNewRow = [...response, { productId: 0, flavor: '' }];
       setFlavorsOpen({
         open: true,
         productId,
@@ -183,7 +183,7 @@ export const ProductMaster: React.FC = React.memo(() => {
 
   const handleSaveFlavor =  async () => {
  //call a api
- const response = await api.post(Urls.product_flavours,flavorsOpen.data);
+ const response = await api.post(`${Urls.products}AddFlavours`,flavorsOpen.data);
    handleResponse(response, () => {
       setFlavorsOpen((prev: any) => ({
       open: true,
@@ -662,7 +662,7 @@ export const ProductMaster: React.FC = React.memo(() => {
                       />
     
                       <Column
-                        dataField="id"
+                        dataField="productId"
                         caption={t("si_no")}
                         allowEditing={false}
                         dataType="string"

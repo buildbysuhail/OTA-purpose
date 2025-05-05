@@ -26,6 +26,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
   const [isOpen, setIsOpen] = useState<boolean>(false);
   /* ########################################################################################### */
   const { t } = useTranslation('main');
+  const [isSaving, setIsSaving] = useState(false);
 
   const onChange = (e: any) => {
     onApplyPreferences(e);
@@ -118,17 +119,23 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
   };
 
   const handleApplyPreferences = async () => {
-    const preference = JSON.stringify(preferences)
-    // Save preferences to localStorage
-    localStorage.setItem(
-      `gridPreferences_${gridId}`,
-      preference
-    );
-    await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference })
-    setIsOpen(false);
-    // Call the callback function to apply preferences
-    onChange(preferences);
-  }
+    if (isSaving) return; // Prevent multiple clicks
+    setIsSaving(true); // Disable the button
+  
+    try {
+      const preference = JSON.stringify(preferences);
+      // Save preferences to localStorage
+      localStorage.setItem(`gridPreferences_${gridId}`, preference);
+      await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference });
+      setIsOpen(false);
+      // Call the callback function to apply preferences
+      onChange(preferences);
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+    } finally {
+      setIsSaving(false); // Re-enable the button
+    }
+  };
 
   // ==================================================================
   const onClose = () => { };
@@ -307,7 +314,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
             </ERPSubmitButton>
             <ERPSubmitButton type="button" className=" max-w-[115px]"
               variant="primary"
-              onClick={handleApplyPreferences}>
+              onClick={handleApplyPreferences}
+              disabled={isSaving}>
               {t("save")}
             </ERPSubmitButton>
           </div>

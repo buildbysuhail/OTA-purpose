@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ERPButton from "./erp-button";
 import { useTranslation } from "react-i18next";
 
@@ -63,6 +63,19 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   
 }) => {
   const { t } = useTranslation('main');
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+
+  const handleSubmit = async () => {
+    if (onSubmit) {
+      setIsSubmitClicked(true);
+      try {
+        await onSubmit(); // Assuming `onSubmit` is an async function
+        setIsSubmitClicked(false); // Reset after successful submission
+      } catch (error) {
+        setIsSubmitClicked(false); // Reset if validation or submission fails
+      }
+    }
+  };
   return (
     <div className="absolute -bottom-0 h-[42px] flex flex-row  left-0  w-full   dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  px-[10px] rounded-b-md">
    
@@ -115,11 +128,11 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
       )}
      
       {onSubmit && (
-        <ERPButton
+          <ERPButton
           title={t("submit")}
-          onClick={onSubmit}
-          loading={isLoading}
-          disabled={submitDisabled}
+          onClick={handleSubmit}
+          loading={isLoading || isSubmitClicked}
+          disabled={submitDisabled || isSubmitClicked}
           skip={skipSubmit}
           jumpTo={jumpToSubmit}
           jumpTarget={jumpTargetSubmit}

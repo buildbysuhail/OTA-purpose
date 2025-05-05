@@ -37,7 +37,7 @@ const NotificationSettings = () => {
     t("email"),
     t("whatsApp"),
     t("sms"),
-    t("app_notification"),
+    // t("app_notification"),
   ];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
   const [loading, setLoading] = useState(false);
@@ -147,7 +147,7 @@ const NotificationSettings = () => {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className=" dark:!bg-dark-bg bg-[#fafafa]">
+                      <tbody className="dark:!bg-dark-bg bg-[#fafafa]">
                         {
                           TableBody.length > 0 ? (
                             TableBody?.filter((item) =>
@@ -171,7 +171,7 @@ const NotificationSettings = () => {
                                     {
                                       item.email === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "email")} className="">
-                                          <i title="template" className="ri-edit-box-line text-xl  text-[#00000017] group-hover:text-[#047857] duration-300"></i>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )
                                     }
@@ -179,7 +179,7 @@ const NotificationSettings = () => {
                                 </td>
                                 {/* WhatsApp Switch */}
                                 <td className="py-2 px-4 group">
-                                  <div className="flex justify-start items-center space-x-4 ">
+                                  <div className="flex justify-start items-center space-x-4">
                                     <ERPSwitch
                                       size="sm"
                                       defaultValue={item.whatsapp === "1"}
@@ -195,10 +195,9 @@ const NotificationSettings = () => {
                                     }
                                   </div>
                                 </td>
-
                                 {/* SMS Switch */}
                                 <td className="py-2 px-4 group">
-                                  <div className="flex justify-start items-center space-x-4 ">
+                                  <div className="flex justify-start items-center space-x-4">
                                     <ERPSwitch
                                       size="sm"
                                       defaultValue={item.sms === "1"}
@@ -208,25 +207,6 @@ const NotificationSettings = () => {
                                     {
                                       item.sms === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "sms")}>
-                                          <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
-                                        </span>
-                                      )
-                                    }
-                                  </div>
-                                </td>
-
-                                {/* In-App Notification Switch */}
-                                <td className="py-2 px-4 group">
-                                  <div className="flex justify-start items-center space-x-4">
-                                    <ERPSwitch
-                                      size="sm"
-                                      defaultValue={item.inAppNotification === "1"}
-                                      value={item.inAppNotification === "1"}
-                                      onChange={(e) => handleSwitchChange(item.transactionCode, "inAppNotification", e.target.checked)}
-                                    />
-                                    {
-                                      item.inAppNotification === "1" && (
-                                        <span onClick={() => toggleTooltip(item.transactionCode, "inAppNotification")}>
                                           <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )

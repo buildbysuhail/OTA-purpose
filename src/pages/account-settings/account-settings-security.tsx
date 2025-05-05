@@ -16,18 +16,27 @@ interface AccountSettingsProps { }
 const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { t } = useTranslation('main')
   const resetPassword = async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({
-        apiUrl: Urls.updatePassword,
-        data: { password: password },
-      }) as any
-    ).unwrap();
-    handleResponse(response, () => {
-      setPassword("");
-    });
+    if (isLoading) return; // Prevent multiple clicks
+    setIsLoading(true); // Set loading state to true
+    try {
+      const response: ResponseModelWithValidation<any, any> = await dispatch(
+        postAction({
+          apiUrl: Urls.updatePassword,
+          data: { password: password },
+        }) as any
+      ).unwrap();
+      handleResponse(response, () => {
+        setPassword("");
+      });
+    } catch (error) {
+      console.error("Error resetting password:", error);
+    } finally {
+      setIsLoading(false); 
+    }
   };
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
@@ -61,7 +70,8 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
                     <div className="w-full p-2 flex justify-end">
                       <ERPButton
                         title={t("reset")}
-                        disabled={password == null || password == ""}
+                        loading={isLoading}
+                        disabled={isLoading || password == null || password == ""}
                         onClick={resetPassword}
                         variant="primary"
                       />

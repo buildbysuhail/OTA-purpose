@@ -48,8 +48,13 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { DataGrid } from "devextreme-react";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
-
-const api = new APIClient();
+import {ProductMultiBarcodeManage} from "../products/product-multibarcode-manage";
+export interface MultiBarcodeState {
+  index: number;
+  open: boolean;
+  data: { unit: string; barcode: string }[];
+}
+ const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
@@ -61,6 +66,9 @@ export const ProductMaster: React.FC = React.memo(() => {
         productId: number | null ;
         data: any;
       }>({  open: false, productId: null , data: [] });
+
+      const [multiBarcode, setMultiBarcode] = useState<MultiBarcodeState>({ index: 0, open: false, data: [] });
+
   const {
     isEdit,
     handleSubmit,
@@ -180,6 +188,15 @@ export const ProductMaster: React.FC = React.memo(() => {
       console.error("Error loading flavors:", error);
     }
   };
+  //multibarcode open
+const handleMultibarcode = async ()=>{
+  setMultiBarcode((prev)=>({
+   ...prev,
+  open:true
+  }))
+}
+
+//save multibarcode 
 
   const handleSaveFlavor =  async () => {
  //call a api
@@ -576,7 +593,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         },
         {
           title: "Multi Barcode",
-          onClick: updatePrice,
+          onClick:handleMultibarcode,
           variant: "secondary",
         },
       ].filter((x: any) =>{
@@ -716,9 +733,50 @@ export const ProductMaster: React.FC = React.memo(() => {
                   }
                   width={780}
                   height={570}
-                  disableOutsideClickClose={false}
-                 
+                  disableOutsideClickClose={false}         
                 />  
+
+                <ERPModal   
+                  isOpen={multiBarcode.open}
+                  closeModal={(reload: boolean) =>
+                    setMultiBarcode({ index:0, open: false, data: [] })
+                  }
+                  title={t("multi_barcode")}
+                  content={<ProductMultiBarcodeManage 
+                    multiBarcode={multiBarcode}
+                    setMultiBarcode={setMultiBarcode}
+                  />}
+               
+                  // footer={
+                  //   <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+                  //     <ERPSubmitButton
+                  //       type="reset"
+                  //       onClick={() =>
+                  //         setFlavorsOpen({
+                  //           open: false,
+                  //           productId: null,
+                  //           data: [],
+                  //         })
+                  //       }
+                  //       className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
+                  //     >
+                  //       {t("cancel")}
+                  //     </ERPSubmitButton>
+      
+                  //     <ERPSubmitButton
+                  //       type="button"
+                  //       className="max-w-[115px]"
+                  //       variant="primary"
+                  //       onClick={handleSaveFlavor}
+                  //     >
+                  //       {t("save")}
+                  //     </ERPSubmitButton>
+                  //   </div>
+                  // }
+                  width={780}
+                  height={570}
+                  disableOutsideClickClose={false}         
+                /> 
     </div>
 
     

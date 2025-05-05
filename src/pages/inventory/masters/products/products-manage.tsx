@@ -170,7 +170,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     try {
       const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`)??[];
       handleResponse(response);
-      const dataWithNewRow = [...response, { productId: 0, flavor: '' }];
+      const dataWithNewRow = [...response, { flavor: '' }];
       setFlavorsOpen({
         open: true,
         productId,
@@ -183,7 +183,9 @@ export const ProductMaster: React.FC = React.memo(() => {
 
   const handleSaveFlavor =  async () => {
  //call a api
- const response = await api.post(`${Urls.products}AddFlavours`,flavorsOpen.data);
+    const obj = getFieldProps("*") as productDto;
+    const productId = obj.product?.productID ?? 0;
+ const response = await api.post(`${Urls.products}AddFlavours`, {productID: productId,flavours:flavorsOpen.data.map((item: any) => item.flavor)});
    handleResponse(response, () => {
       setFlavorsOpen((prev: any) => ({
       open: true,
@@ -630,7 +632,7 @@ export const ProductMaster: React.FC = React.memo(() => {
                             ) => {
                               if (event.key === "Enter") {
                                 setFlavorsOpen((prev: any) => {
-                                  const newRow = { productId: prev.productId, flavor: "" };
+                                  const newRow = { flavor: "" };
                                   return { ...prev, data: [...prev.data, newRow] };
                                 });
                               }

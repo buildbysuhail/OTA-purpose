@@ -605,7 +605,7 @@ const Urls = {
   group_category: "/Inventory/GroupCategory/",
   payment_receipt_billwise_advice_for_print:
     "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
-
+  product_flavours:"/Inventory/Product/GetFlavours/",
   // URLs for SpecialPriceController (Inventory Module)
   insert_special_price_scheme: "/Inventory/SpecialPrice/", // POST
   insert_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/", // POST
@@ -653,6 +653,7 @@ const Urls = {
   // URLs for QuantitySlabController (Inventory Module)
   qty_slab_offer: "/Inventory/QuantitySlab/", // POST
 
+  //Urls for Flavours (product )
 
   //Transaction
   // common

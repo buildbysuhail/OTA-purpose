@@ -43,6 +43,11 @@ import ProductMultiUnitsIndia, {
   ProductMultiUnitsIndiaRef,
 } from "./products-india/product-multi-units-india";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { DataGrid } from "devextreme-react";
+import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
+import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 
 const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
@@ -50,6 +55,12 @@ export const ProductMaster: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { t } = useTranslation("inventory");
   const [canEdit, setCanEdit] = useState<boolean>(false);
+
+    const [flavorsOpen, setFlavorsOpen] = useState<{
+        open: boolean;
+        productId: number | null ;
+        data: any;
+      }>({  open: false, productId: null , data: [] });
   const {
     isEdit,
     handleSubmit,
@@ -140,6 +151,47 @@ export const ProductMaster: React.FC = React.memo(() => {
       const res = await api.postAsync(`${Urls.products}updateProductPrice`,payload);
       handleResponse(res);
     }
+  };
+
+
+
+  const handleFlavorOpen = async () => {
+    const obj = getFieldProps("*") as productDto;
+    const productId = obj.product?.productID ?? 0;
+    if (isNullOrUndefinedOrZero(productId)) {
+      ERPAlert.show({
+        text: "Product not found. Please select a product.",
+        title: "Warning",
+        type: "warn",
+      });
+      return;
+    }
+  
+    try {
+      const response = await api.getAsync(`${Urls.product_flavours}${productId}`)??[];
+      handleResponse(response);
+      const dataWithNewRow = [...response, { id: null, flavor: '' }];
+      setFlavorsOpen({
+        open: true,
+        productId,
+        data: dataWithNewRow,
+      });
+    } catch (error) {
+      console.error("Error loading flavors:", error);
+    }
+  };
+
+  const handleSaveFlavor =  async () => {
+ //call a api
+ const response = await api.post(Urls.product_flavours,flavorsOpen.data);
+   handleResponse(response, () => {
+      setFlavorsOpen((prev: any) => ({
+      open: true,
+      productId:null,
+      data:  [],
+      }));
+     })
+    
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
@@ -517,14 +569,12 @@ export const ProductMaster: React.FC = React.memo(() => {
         },
         {
           title: "Flavors",
-          onClick: updatePrice,
-         
+          onClick: handleFlavorOpen,
           variant: "secondary",
         },
         {
           title: "Multi Barcode",
           onClick: updatePrice,
-         
           variant: "secondary",
         },
       ].filter((x: any) =>{
@@ -551,7 +601,125 @@ export const ProductMaster: React.FC = React.memo(() => {
         }
         onSubmit={handleSubmit}
       />
+                <ERPModal   
+                  isOpen={flavorsOpen.open}
+                  closeModal={(reload: boolean) =>
+                    setFlavorsOpen({  open: false, productId: null, data: [] })
+                  }
+                  title={t("flavors")}
+                  content={
+                    <div className="w-full">
+                    <DataGrid
+                      dataSource={flavorsOpen.data}
+                      height={300}
+                      key="barcode"
+                      showBorders={true}
+                      showRowLines={true}
+                      // onFocusedCellChanging={onFocusedCellChanging}
+                      onEditorPrepared={(e) => {
+                        if (e.parentType === "dataRow") {
+                          const currentRowData = e.row?.data;
+                       
+                            e.editorElement.removeEventListener(
+                              "keydown",
+                              (e.editorElement as any)._onBarcodeKeyDown
+                            );
+    
+                            const barcodeKeyDownHandler = (
+                              event: KeyboardEvent
+                            ) => {
+                              if (event.key === "Enter") {
+                                setFlavorsOpen((prev: any) => {
+                                  const newRow = { productId: prev.productId, flavor: "" };
+                                  return { ...prev, data: [...prev.data, newRow] };
+                                });
+                              }
+                            };
+                            (e.editorElement as any)._onBarcodeKeyDown =
+                              barcodeKeyDownHandler;
+                            e.editorElement.addEventListener(
+                              "keydown",
+                              barcodeKeyDownHandler
+                            );
+                          
+                        }
+                      }}
+                    >
+                      <KeyboardNavigation
+                        editOnKeyPress={true}
+                        enterKeyAction={"moveFocus"}
+                        enterKeyDirection={"column"}
+                      />
+    
+                      <Paging pageSize={100} />
+    
+                      <Scrolling mode="standard" />
+    
+                      <RemoteOperations
+                        filtering={false}
+                        sorting={false}
+                        paging={false}
+                      />
+    
+                      <Column
+                        dataField="id"
+                        caption={t("si_no")}
+                        allowEditing={false}
+                        dataType="string"
+                        width={150}
+                      />
+    
+                      <Column
+                        dataField="flavor"
+                        caption={t("flavor")}
+                        dataType="string"
+                        allowEditing={true}
+                        minWidth={150}
+                      />
+    
+                      <Editing
+                        allowUpdating={true}
+                        allowAdding={false}
+                        allowDeleting={false}
+                        mode="cell"
+                      />
+                    </DataGrid>
+                  </div>
+                  }
+                  footer={
+                    <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+                      <ERPSubmitButton
+                        type="reset"
+                        onClick={() =>
+                          setFlavorsOpen({
+                            open: false,
+                            productId: null,
+                            data: [],
+                          })
+                        }
+                        className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
+                      >
+                        {t("cancel")}
+                      </ERPSubmitButton>
+      
+                      <ERPSubmitButton
+                        type="button"
+                        className="max-w-[115px]"
+                        variant="primary"
+                        onClick={handleSaveFlavor}
+                      >
+                        {t("save")}
+                      </ERPSubmitButton>
+                    </div>
+                  }
+                  width={780}
+                  height={570}
+                  disableOutsideClickClose={false}
+                 
+                />  
     </div>
+
+    
   );
 });
 

@@ -528,9 +528,9 @@ export const ProductMaster: React.FC = React.memo(() => {
           variant: "secondary",
         },
       ].filter((x: any) =>{
-        // return true;
-        const obj = getFieldProps("*") as any as productDto;
-        if(x.titles == "Flavors" && )
+        return true;
+        // const obj = getFieldProps("*") as any as productDto;
+        // if(x.titles == "Flavors" && )
       }) as []
     }
    

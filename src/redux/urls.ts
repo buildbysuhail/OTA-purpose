@@ -578,6 +578,7 @@ const Urls = {
     "/Accounts/Import/DownloadPrivilegeCardsFormat/",
 
   // Inventory
+  productBarcode:"/Inventory/ProductBarcode",
   products: "/Inventory/Product/",
   get_product_config: "/Inventory/Product/GetProductConfig/",
   update_product_config: "/Inventory/Product/UpdateProductConfig/",

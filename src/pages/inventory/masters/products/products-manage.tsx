@@ -50,9 +50,8 @@ import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrollin
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import {ProductMultiBarcodeManage} from "../products/product-multibarcode-manage";
 export interface MultiBarcodeState {
-  index: number;
   open: boolean;
-  data: { unit: string; barcode: string }[];
+  data: { unitCode: string; barcodes: string;unitID:number}[];
 }
  const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
@@ -68,7 +67,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         data: any;
       }>({  open: false, productId: null , data: [] });
 
-      const [multiBarcode, setMultiBarcode] = useState<MultiBarcodeState>({ index: 0, open: false, data: [] });
+      const [multiBarcode, setMultiBarcode] = useState<MultiBarcodeState>({  open: false, data: [] });
 
   const {
     isEdit,
@@ -212,10 +211,28 @@ export const ProductMaster: React.FC = React.memo(() => {
   };
   //multibarcode open
 const handleMultibarcode = async ()=>{
+  const obj = getFieldProps("*") as productDto;
+  const batchId = obj.batch?.productBatchID 
+  // if (isNullOrUndefinedOrZero(batchId)) {
+  //   ERPAlert.show({
+  //     text: "Product Batch not found. Please select a Product Batch.",
+  //     title: "Warning",
+  //     type: "warn",
+  //   });
+  //   return;
+  // }
+  
+  try {
+    const response = await api.getAsync(`${Urls.productBarcode}?productBatchId=${1}`) ?? [];
   setMultiBarcode((prev)=>({
-   ...prev,
-  open:true
+    ...prev,
+    open:true,
+    data:response
   }))
+  } catch (error) {
+    console.error("Error loading flavors:", error);
+  }
+
 }
 
 //save multibarcode 
@@ -326,6 +343,8 @@ const handleMultibarcode = async ()=>{
 
     fetchCode();
   }, []);
+
+  const units = (getFieldProps("*") as productDto).units || [];
   // Define tab labels based on country
   const getTabs = () => {
     if (isSaudi) {
@@ -775,12 +794,13 @@ const handleMultibarcode = async ()=>{
                 <ERPModal   
                   isOpen={multiBarcode.open}
                   closeModal={(reload: boolean) =>
-                    setMultiBarcode({ index:0, open: false, data: [] })
+                    setMultiBarcode({ open: false, data: [] })
                   }
                   title={t("multi_barcode")}
                   content={<ProductMultiBarcodeManage 
                     multiBarcode={multiBarcode}
                     setMultiBarcode={setMultiBarcode}
+                    units={units}
                   />}
                
                   // footer={

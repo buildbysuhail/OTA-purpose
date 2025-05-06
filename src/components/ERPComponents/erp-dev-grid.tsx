@@ -63,7 +63,6 @@ import ERPToast from "./erp-toast";
 import moment from "moment";
 import {
   formatDateFields,
-  identifyDateFormat,
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
   formatDate as appFormatDate,
@@ -71,7 +70,7 @@ import {
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
-import { EllipsisVertical, FileUp, Plus, Printer } from "lucide-react";
+import { ArrowDown, ArrowUp, EllipsisVertical, FileText, FileUp, Menu, Plus, Printer, Search, Settings, Table, X } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
 import { useReportPrint } from "./reports/use-reports-print";
@@ -1413,6 +1412,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     };
 
+    const handlePrintMobilePdf = async () => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const doc = await generatePdf(gridInstance, true); 
+        doc?.autoPrint(); 
+        doc?.save(gridHeader);
+      }
+    };
+    
+
     const handleInvoke = useCallback(
       (row: any) => {
         // Extracting data from row
@@ -1687,6 +1696,124 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] =
       useState(GridPreferenceChooserAccTrance);
+
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const handleMobileMenuClick = () => {
+      setIsMobileMenuOpen(true);
+    };
+
+    const handleMobileMenuClose = () => {
+      setIsMobileMenuOpen(false);
+    };
+
+    const handlePrintExcel = async () => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const workbook = new Workbook();
+        const worksheet = workbook.addWorksheet(gridHeader);
+
+        const totalColumns = gridInstance.getVisibleColumns().length;
+        const lastColumnLetter = String.fromCharCode(64 + totalColumns);
+        let currentRow = 1;
+        let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+        ) {
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value = userSession.headerFooter.heading7;
+          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+          currentRow += 1;
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+        ) {
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value = userSession.headerFooter.heading8;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+          currentRow += 1;
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+        ) {
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value = userSession.headerFooter.heading9;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+          currentRow += 1;
+        }
+
+        const pageTitle = `${gridHeader} - ${header}`;
+        mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+        worksheet.mergeCells(mergeRange);
+        worksheet.getCell(`A${currentRow}`).value = pageTitle;
+        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+        worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+        currentRow += 2;
+
+        const customizeCell = (options: any) => {
+          if (options.gridCell.rowType !== "data") return;
+          const column = gridCols.find(
+            (x) => x.dataField === options.gridCell.column.dataField
+          );
+
+          if (column) {
+            const renderResult = column.cellRender
+              ? column.cellRender(
+                { data: options.gridCell.data },
+                options.gridCell,
+                filter,
+                options.excelCell.style
+              )
+              : undefined;
+
+            let isDefined = renderResult !== undefined;
+            let isObject = typeof renderResult === "object";
+            let isValidReactElement = React.isValidElement(renderResult);
+
+            if (isDefined && isObject && !isValidReactElement) {
+              options.excelCell.style = {
+                ...renderResult,
+                alignment: renderResult?.alignmentExcel,
+              };
+              options.excelCell.value = renderResult?.text;
+            } else {
+              options.excelCell = options.excelCell; 
+            }
+          }
+        };
+
+        await exportDataGridToExcel({
+          component: gridInstance,
+          worksheet,
+          autoFilterEnabled: true,
+          topLeftCell: `A${currentRow}`,
+          customizeCell,
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/octet-stream" });
+        saveAs(blob, `${gridHeader}.xlsx`);
+      }
+    };
+
+    const mobileSearchRef = useRef<HTMLInputElement>(null);
+    const [searchText, setSearchText] = useState("");
+    useEffect(() => {
+      if (isMobileMenuOpen && gridRef.current) {
+        const currentSearchText = gridRef.current.instance().option("searchPanel.text") || "";
+        setSearchText(currentSearchText);
+      }
+    }, [isMobileMenuOpen]);
+
     return (
       <Fragment>
         <div
@@ -1842,6 +1969,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 </Item>
               )}
               {isPreferenceChooserVisible && (
+              <div className="hidden sm:block">
                 <Item key={appState?.dir} location="before">
                   <GridPreferenceChooser
                     columns={columns}
@@ -1850,15 +1978,190 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
                   />
                 </Item>
+              </div>
               )}
+
+                <Item>
+                <div className="block sm:hidden relative">
+                  <button
+                    onClick={handleMobileMenuClick}
+                    className="ti-btn bg-gradient-to-r from-[#6366f1] to-[#7e22ce] text-white rounded-lg p-2.5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    aria-label="Open menu"
+                  >
+                    <Menu className="w-4 h-4" />
+                  </button>
+
+                  {isMobileMenuOpen && (
+                    <div
+                      className="absolute bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 text-black dark:text-white animate-fadeIn"
+                      style={{
+                        width: "300px",
+                        maxHeight: "500px",
+                        overflowY: "auto",
+                        top: "120%",
+                        right: "-10px"
+                      }}
+                    >
+                      <button
+                        onClick={handleMobileMenuClose}
+                        className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 transition-colors duration-200"
+                        aria-label="Close menu"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+
+                      <div className="p-5">
+                        {!hideGridHeader && (
+                          <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex flex-col">
+                              <div className="font-medium text-gray-800 dark:text-gray-200">
+                                <span className="text-sm text-[#4f46e5] dark:text-[#818cf8] block mb-1 font-semibold">{gridHeader}</span>
+                                <span className="text-lg font-semibold">{header}</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <ul className="space-y-3">
+                          {enableScrollButton && (
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  scrollTo();
+                                  handleMobileMenuClose();
+                                }}
+                                className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                              >
+                                <span className="flex items-center">
+                                  <div className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none">
+                                    {isAtBottom ? (
+                                      <ArrowUp className="w-4 h-4" />
+                                    ) : (
+                                      <ArrowDown className="w-4 h-4" />
+                                    )}
+                                  </div>
+                                  <span className="ml-2">{isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}</span>
+                                </span>
+                              </button>
+                            </li>
+                          )}
+
+                          <li className="mb-3">
+                            <div className="relative">
+                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className="w-4 h-4 text-gray-400" />
+                              </div>
+                              <input
+                                // ref={mobileSearchRef}           
+                                autoFocus
+                                type="text"
+                                value={searchText}
+                                onChange={(e) => {
+                                  setSearchText(e.target.value);
+                                  if (gridRef.current) {
+                                    gridRef.current.instance().searchByText(e.target.value);
+                                  }
+                                }}
+                                placeholder={t("search")}
+                                className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm transition-all duration-200"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                          </li>
+
+                          {!hideDefaultExportButton && allowExport && (
+                            <li className="py-1">
+                              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden">
+                                <span className="block px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                  {t("export_options")}
+                                </span>
+                                <button
+                                  className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                                  onClick={() => {
+                                    handlePrintMobilePdf();
+                                    handleMobileMenuClose();
+                                  }}
+                                >
+                                  <FileText className="w-4 h-4 mr-3 text-[#ef4444]" />
+                                  <span>{t("export_to_pdf")}</span>
+                                </button>
+                                <button
+                                  className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                                  onClick={() => {
+                                    handlePrintExcel();
+                                    handleMobileMenuClose();
+                                  }}
+                                >
+                                  <Table className="w-4 h-4 mr-3 text-[#22c55e]" />
+                                  <span>{t("export_to_excel")}</span>
+                                </button>
+                              </div>
+                            </li>
+                          )}
+
+                          {showPrintButton && (
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                onClick={() => {
+                                  handlePrintPdf();
+                                  handleMobileMenuClose();
+                                }}
+                              >
+                                <Printer className="w-4 h-4 mr-3 text-[#6366f1]" />
+                                <span>{t("print")}</span>
+                              </button>
+                            </li>
+                          )}
+
+                          {ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
+                            <li>
+                              <div
+                                onClick={() => {
+                                  setIsPreferenceChooserVisible(true);
+                                  handleMobileMenuClose();
+                                }}
+                                className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 cursor-pointer"
+                              >
+                                <Settings className="w-4 h-4 mr-3 text-[#6366f1]" />
+                                <span>{t("preferences")}</span>
+                              </div>
+                            </li>
+                          )}
+
+                          {!hideGridAddButton && (
+                            <button
+                              onClick={() => gridAddButtonType === "link" ? window.location.href = gridAddButtonLink : onPopupOpenClick()}
+                              className="absolute bottom-[25px] right-[25px] w-12 h-12 rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7e22ce] text-white shadow-lg hover:shadow-xl flex items-center justify-center z-50 transform hover:scale-110 transition-all duration-300"
+                              aria-label={addButtonText || t("new")}
+                            >
+                              <Plus className="w-6 h-6" />
+                            </button>
+                          )}
+
+                          {customToolbarItems
+                            ?.filter((item: any) => item.location === "before" || item.location === "after")
+                            .map((toolbarItem: any, index: any) => (
+                              <li key={index} className="py-1">
+                                <div
+                                  onClick={handleMobileMenuClose}
+                                  className="px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                >
+                                  {toolbarItem.item}
+                                </div>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Item>
 
               {enableScrollButton && (
                 <Item>
-                  <div
-                    title={
-                      isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")
-                    }
-                  >
+                  <div className="hidden sm:block" title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}>
                     <button
                       type="button"
                       onClick={() => {
@@ -1872,25 +2175,27 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 </Item>
               )}
 
-              {!hideDefaultSearchPanel && <Item name="searchPanel" />}
+              {!hideDefaultSearchPanel && (<Item cssClass="!hidden sm:!block" name="searchPanel" />)}
 
               {!hideDefaultExportButton && allowExport && (
-                <Item name="exportButton" />
+                <Item cssClass="!hidden sm:!block" name="exportButton" />
               )}
 
-              {showPrintButton && ( // Conditionally render the print button
+              {showPrintButton && (
                 <Item>
+                <div className="hidden sm:block">
                   <button
                     className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
                     onClick={handlePrintPdf}
                   >
                     <Printer className="w-4 h-4" />
                   </button>
+                </div>
                 </Item>
               )}
               {moreOption && (
                 <Item>
-                  <div className="relative">
+                  <div className="relative hidden sm:block">
                     <button
                       className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
                       onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
@@ -1901,10 +2206,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       <div
                         className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
                         style={{
-                          top: "100%", // Position the popup right below the button
-                          left: "-90px", // Align it with the left edge of the button
-                          width: "221px", // Set your desired width
-                          marginTop: "4px", // Add some spacing between the button and the popup
+                          top: "100%",
+                          left: "-90px",
+                          width: "221px",
+                          marginTop: "4px",
                         }}
                       >
                         <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
@@ -1950,7 +2255,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             <li>
                               <button
                                 className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                // onClick={}
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
@@ -1968,6 +2272,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
               {enablefilter == true && (
                 <Item>
+                <div className="hidden sm:block">
                   <ErpGridGlobalFilter
                     width={filterWidth}
                     height={filterHeight}
@@ -1975,29 +2280,29 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     gridId={gridId}
                     validations={filterValidations}
                     initialData={filter}
-                    content={
-                      filterContent
-                      // <LedgerReportFilter /> // Pass standalone JSX content
-                    }
+                    content={filterContent}
                     toogleFilter={showFilter}
                     onApplyFilters={(filters) => onApplyFilter(filters)}
-                    // onClose={onCloseFilter}
                   />
+                </div>
                 </Item>
               )}
 
               {ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
                 <Item>
+                <div className="hidden sm:block">
                   <GridPreferenceChooser
                     columns={columns}
                     gridId={gridId}
                     onApplyPreferences={onApplyPreferences}
                   />
+                </div>
                 </Item>
               )}
 
               {!hideGridAddButton && (
                 <Item>
+                <div className="hidden sm:block">
                   <div>
                     {gridAddButtonType == "link" && (
                       <Link
@@ -2016,6 +2321,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         startIcon={gridAddButtonIcon}
                       />
                     )}
+                  </div>
                   </div>
                 </Item>
               )}

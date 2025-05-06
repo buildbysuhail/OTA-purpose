@@ -194,6 +194,8 @@ import GSTR1Docs from "../../../pages/inventory/reports/GSTR1/gstr1-docs";
 import GSTR3BReport from "../../../pages/inventory/reports/GSTR3B/gstr3b";
 import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-india/tax-category-india";
 import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
+import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
+import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -646,9 +648,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/schemes" element={<Schemes />} />
         <Route path="/inventory-masters/scheme_settings_special" element={<SchemeSettingsSpecial />} />
         <Route path="/inventory-masters/scheme_settings_discount" element={<SchemeSettingsDiscount />} />
+        <Route path="/inventory-masters/product_price_settings" element={clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
-        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
+        {/* <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} /> */}
         {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
         <Route path="/inventory-masters/test-page" element={<TestSearch />} />
       </Routes>

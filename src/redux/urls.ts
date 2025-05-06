@@ -79,6 +79,7 @@ const Urls = {
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",
   data_sections: "/Inventory/Data/Sections",
+  data_kitchen: "/Inventory/Data/Kitchens",
   data_groupcategory: "/Inventory/Data/GroupCategory",
   data_locations: "/Inventory/Data/Locations",
   data_productcategory: "/Inventory/Data/ProductCategory",
@@ -577,6 +578,7 @@ const Urls = {
     "/Accounts/Import/DownloadPrivilegeCardsFormat/",
 
   // Inventory
+  productBarcode:"/Inventory/ProductBarcode",
   products: "/Inventory/Product/",
   get_product_config: "/Inventory/Product/GetProductConfig/",
   update_product_config: "/Inventory/Product/UpdateProductConfig/",

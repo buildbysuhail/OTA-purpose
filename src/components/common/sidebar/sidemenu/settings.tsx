@@ -68,9 +68,10 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/schemes`, type: 'link', active: false, selected: false, title: 'schemes' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/scheme_settings_special`, type: 'link', active: false, selected: false, title: 'schemes_settings_special' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/scheme_settings_discount`, type: 'link', active: false, selected: false, title: 'schemes_settings_discount' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product_price_settings`, type: 'link', active: false, selected: false, title: 'product_price_settings' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/sales-route`, type: 'link', active: false, selected: false, title: 'sales_route' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/group-category`, type: 'link', active: false, selected: false, title: 'group_category' },
-      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/listed-product-prices`, type: 'link', active: false, selected: false, title: 'listed_product_prices' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/listed-product-prices`, type: 'link', active: false, selected: false, title: 'listed_product_prices' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/test-page`, type: 'link', active: false, selected: false, title: 'test_page' },
     ]
   },

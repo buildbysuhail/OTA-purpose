@@ -651,7 +651,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/product_price_settings" element={clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
-        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
+        {/* <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} /> */}
         {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
         <Route path="/inventory-masters/test-page" element={<TestSearch />} />
       </Routes>

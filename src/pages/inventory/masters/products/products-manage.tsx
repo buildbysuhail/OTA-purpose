@@ -51,16 +51,17 @@ import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-but
 
 const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
+  const [isLoremIpsumModalOpen, setIsLoremIpsumModalOpen] = useState<boolean>(false);
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("inventory");
   const [canEdit, setCanEdit] = useState<boolean>(false);
 
-    const [flavorsOpen, setFlavorsOpen] = useState<{
-        open: boolean;
-        productId: number | null ;
-        data: any;
-      }>({  open: false, productId: null , data: [] });
+  const [flavorsOpen, setFlavorsOpen] = useState<{
+    open: boolean;
+    productId: number | null;
+    data: any;
+  }>({ open: false, productId: null, data: [] });
   const {
     isEdit,
     handleSubmit,
@@ -98,42 +99,63 @@ export const ProductMaster: React.FC = React.memo(() => {
   const handleTabChange = async (index: number) => {
     setActiveTab(index);
     debugger;
-      const tabs = getTabs();
-      const multiRatesIndex = tabs?.findIndex(
-        (tab) => tab === t("multi_rates")
-      );
+    const tabs = getTabs();
+    const multiRatesIndex = tabs?.findIndex(
+      (tab) => tab === t("multi_rates")
+    );
+    if (
+      multiRatesIndex !== undefined &&
+      multiRatesIndex !== -1 &&
+      multiRatesIndex == index
+    ) {
+      const obj = getFieldProps("*") as productDto;
+      debugger;
       if (
-        multiRatesIndex !== undefined &&
-        multiRatesIndex !== -1 &&
-        multiRatesIndex == index
+        appSettings?.productsSettings?.allowMultirate &&
+        obj.prices &&
+        ((obj.prices.length == 0 && (obj.product.productID ?? 0) > 0) || ((obj.product.productID ?? 0) <= 0))
       ) {
-        const obj = getFieldProps("*") as productDto;
-        debugger;
-        if (
-          appSettings?.productsSettings?.allowMultirate &&
-          obj.prices &&
-          ((obj.prices.length == 0  && (obj.product.productID??0) > 0) || ((obj.product.productID??0) <= 0))
-        ) {
-          if(productMultiUnitsIndiaRef.current) {
-            const rates =
+        if (productMultiUnitsIndiaRef.current) {
+          const rates =
             await productMultiUnitsIndiaRef.current.loadMultiRateToGrid(
               obj,
               obj.units
             );
           handleDataChange({ ...obj, prices: rates });
-          }
-          if(productMultiUnitsGccRef.current) {
-            
-            const rates =
+        }
+        if (productMultiUnitsGccRef.current) {
+
+          const rates =
             await productMultiUnitsGccRef.current.loadMultiRateToGrid(
               obj,
-              obj.units, 
-              (obj.product.productID??0) > 0 ? getFieldProps("prices").value : []
+              obj.units,
+              (obj.product.productID ?? 0) > 0 ? getFieldProps("prices").value : []
             );
           handleDataChange({ ...obj, prices: rates });
-          }
         }
       }
+    }
+  };
+
+  const handleAbcButtonClick = () => {
+    setIsLoremIpsumModalOpen(true);
+  };
+
+  const LoremIpsumContent = () => {
+    return (
+      <div className="p-4">
+        <h2 className="text-xl font-bold mb-4">Lorem Ipsum</h2>
+        <p className="mb-3">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim.
+        </p>
+        <p className="mb-3">
+          Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
+        </p>
+        <p>
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum. Morbi in ipsum sit amet pede facilisis laoreet.
+        </p>
+      </div>
+    );
   };
 
   const updatePrice = async () => {
@@ -148,7 +170,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         minSalesPrice: obj.batch.msp
       }
 
-      const res = await api.postAsync(`${Urls.products}updateProductPrice`,payload);
+      const res = await api.postAsync(`${Urls.products}updateProductPrice`, payload);
       handleResponse(res);
     }
   };
@@ -166,9 +188,9 @@ export const ProductMaster: React.FC = React.memo(() => {
       });
       return;
     }
-  
+
     try {
-      const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`)??[];
+      const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`) ?? [];
       handleResponse(response);
       const dataWithNewRow = [...response, { flavor: '' }];
       setFlavorsOpen({
@@ -181,19 +203,19 @@ export const ProductMaster: React.FC = React.memo(() => {
     }
   };
 
-  const handleSaveFlavor =  async () => {
- //call a api
+  const handleSaveFlavor = async () => {
+    //call a api
     const obj = getFieldProps("*") as productDto;
     const productId = obj.product?.productID ?? 0;
- const response = await api.post(`${Urls.products}AddFlavours`, {productID: productId,flavours:flavorsOpen.data.map((item: any) => item.flavor)});
-   handleResponse(response, () => {
+    const response = await api.post(`${Urls.products}AddFlavours`, { productID: productId, flavours: flavorsOpen.data.map((item: any) => item.flavor) });
+    handleResponse(response, () => {
       setFlavorsOpen((prev: any) => ({
-      open: true,
-      productId:null,
-      data:  [],
+        open: true,
+        productId: null,
+        data: [],
       }));
-     })
-    
+    })
+
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
@@ -324,188 +346,188 @@ export const ProductMaster: React.FC = React.memo(() => {
 
   // Define tab content in the desired order for each country
   const tabContents = isIndia
-    ? [
-        <div key="details">
-          {" "}
-          <ProductDetailsIndia
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-            t={t}
-          />
-        </div>,
+  ? [
+    <div key="details">
+      {" "}
+      <ProductDetailsIndia
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+        t={t}
+      />
+    </div>,
 
-        <div key="multi_units">
-          <ProductMultiUnitsIndia
-            ref={productMultiUnitsIndiaRef}
-            handleDataChange={handleDataChange}
-            appSettings={appSettings}
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="multi_rates">
-          <MultiRates
-            isGlobal={true}
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="image">
-          <ImageCommon
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="others">
-          {" "}
-          <ProductOthersIndia
-            handleDataChange={handleDataChange}
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="sales">
-          <SalesCommon getFieldProps={getFieldProps} />
-        </div>,
-        <div key="purchase">
-          <PurchaseCommon getFieldProps={getFieldProps} />
-        </div>,
-        <div key="stock">
-          <StockCommon
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="suppliers">
-          <SuppliersCommon
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-        <div key="promotion_details">
-          <PromotionCommon getFieldProps={getFieldProps}></PromotionCommon>
-        </div>,
-        <div key="search">
-          <SearchCommon />
-        </div>,
-        <div key="nutrition_facts">
-          <NutritionFactsIndia
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-      ]
-    : [
-        <div key="details">
-          <ProductManageGcc
-            handleDataChange={handleDataChange}
-            appSettings={appSettings}
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-            switchToMultiRatesTab={switchToMultiRatesTab}
-          />
+    <div key="multi_units">
+      <ProductMultiUnitsIndia
+        ref={productMultiUnitsIndiaRef}
+        handleDataChange={handleDataChange}
+        appSettings={appSettings}
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="multi_rates">
+      <MultiRates
+        isGlobal={true}
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="image">
+      <ImageCommon
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="others">
+      {" "}
+      <ProductOthersIndia
+        handleDataChange={handleDataChange}
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="sales">
+      <SalesCommon getFieldProps={getFieldProps} />
+    </div>,
+    <div key="purchase">
+      <PurchaseCommon getFieldProps={getFieldProps} />
+    </div>,
+    <div key="stock">
+      <StockCommon
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="suppliers">
+      <SuppliersCommon
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+    <div key="promotion_details">
+      <PromotionCommon getFieldProps={getFieldProps}></PromotionCommon>
+    </div>,
+    <div key="search">
+      <SearchCommon />
+    </div>,
+    <div key="nutrition_facts">
+      <NutritionFactsIndia
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+  ]
+  : [
+    <div key="details">
+      <ProductManageGcc
+        handleDataChange={handleDataChange}
+        appSettings={appSettings}
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+        switchToMultiRatesTab={switchToMultiRatesTab}
+      />
 
-          <ProductDetailsGcc
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="multi_units">
-          <ProductMultiUnitsGCC
-          ref={productMultiUnitsGccRef}
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="multi_rates">
-          <MultiRates
-            isGlobal={false}
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="search">
-          <SearchCommon />
-        </div>,
-        <div key="image">
-          <ImageCommon
-            t={t}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="others">
-          <ProductOthersGcc
-            handleDataChange={handleDataChange}
-            appSettings={appSettings}
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="sales">
-          <SalesCommon getFieldProps={getFieldProps} />
-        </div>,
-        <div key="purchase">
-          <PurchaseCommon getFieldProps={getFieldProps} />
-        </div>,
-        <div key="stock">
-          <StockCommon
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="suppliers">
-          <SuppliersCommon
-            formState={formState}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-          />
-        </div>,
-        <div key="notes">
-          <ProductNotesGcc />
-        </div>,
-      ];
+      <ProductDetailsGcc
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="multi_units">
+      <ProductMultiUnitsGCC
+        ref={productMultiUnitsGccRef}
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="multi_rates">
+      <MultiRates
+        isGlobal={false}
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="search">
+      <SearchCommon />
+    </div>,
+    <div key="image">
+      <ImageCommon
+        t={t}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="others">
+      <ProductOthersGcc
+        handleDataChange={handleDataChange}
+        appSettings={appSettings}
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="sales">
+      <SalesCommon getFieldProps={getFieldProps} />
+    </div>,
+    <div key="purchase">
+      <PurchaseCommon getFieldProps={getFieldProps} />
+    </div>,
+    <div key="stock">
+      <StockCommon
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="suppliers">
+      <SuppliersCommon
+        formState={formState}
+        getFieldProps={getFieldProps}
+        handleFieldChange={handleFieldChange}
+      />
+    </div>,
+    <div key="notes">
+      <ProductNotesGcc />
+    </div>,
+  ];
   return (
     <div className="w-full modal-content">
       <div className="flex justify-end">
-                <ERPInput
-                  {...getFieldProps("barcode")}
-                  label={t("barcode")}
-                  placeholder={t("barcode")}
-                  required={false}
-                  disableEnterNavigation
-                  onKeyDown={async (e: any) => {
-                    const barcode = e.target.value;
-                  if (e.key === "Enter" && barcode != null && barcode != "") {
-                    try {
-                        const data = await api.getAsync(`${Urls.products}ByBarcode/${barcode}`);
-                        
-                        handleDataChange(data);
-                        
-                      } catch (error) {
-                        console.error("API call failed", error);
-                      }
-                    }
-                  }}
-                  onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
-                  className="w-full md:w-1/3"
-                />
-              </div>
+        <ERPInput
+          {...getFieldProps("barcode")}
+          label={t("barcode")}
+          placeholder={t("barcode")}
+          required={false}
+          disableEnterNavigation
+          onKeyDown={async (e: any) => {
+            const barcode = e.target.value;
+            if (e.key === "Enter" && barcode != null && barcode != "") {
+              try {
+                const data = await api.getAsync(`${Urls.products}ByBarcode/${barcode}`);
+
+                handleDataChange(data);
+
+              } catch (error) {
+                console.error("API call failed", error);
+              }
+            }
+          }}
+          onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
+          className="w-full md:w-1/3"
+        />
+      </div>
       <div className="flex flex-col gap-1">
         {isIndia ? (
           <ProductManageIndia
@@ -558,41 +580,55 @@ export const ProductMaster: React.FC = React.memo(() => {
         onClick={() => updatePrice()}
         title="Update Price"
       /> */}
+
+<ERPModal
+        title="Lorem Ipsum"
+        isOpen={isLoremIpsumModalOpen}
+        closeModal={() => setIsLoremIpsumModalOpen(false)}
+        content={<LoremIpsumContent />}
+        width={600}
+        height={400}
+      />
       <ERPFormButtons
-      customButtons={[
-        {
-          title: "Update Price",
-          onClick: updatePrice,
-          disabled:
-            appSettings.branchSettings.maintainMasterEntry ||
-            (formState.data.product.productID ?? 0) <= 0 ||
-            !appSettings.branchSettings?.useBranchWiseSalesPrice,
-          variant: "secondary",
-        },
-        {
-          title: "Flavors",
-          onClick: handleFlavorOpen,
-          variant: "secondary",
-        },
-        {
-          title: "Multi Barcode",
-          onClick: updatePrice,
-          variant: "secondary",
-        },
-      ].filter((x: any) =>{
-        const obj = getFieldProps("*") as any as productDto;
-        if(x.titles == "Flavors" && !clientSession.isAppGlobal && !obj.elements.flavorVisible) {
-          return false
+        customButtons={[
+          {
+            title: "Update Price",
+            onClick: updatePrice,
+            disabled:
+              appSettings.branchSettings.maintainMasterEntry ||
+              (formState.data.product.productID ?? 0) <= 0 ||
+              !appSettings.branchSettings?.useBranchWiseSalesPrice,
+            variant: "secondary",
+          },
+          {
+            title: "ABC",
+            onClick: handleAbcButtonClick,
+            variant: "primary",
+          },
+          {
+            title: "Flavors",
+            onClick: handleFlavorOpen,
+            variant: "secondary",
+          },
+          {
+            title: "Multi Barcode",
+            onClick: updatePrice,
+            variant: "secondary",
+          },
+        ].filter((x: any) => {
+          const obj = getFieldProps("*") as any as productDto;
+          if (x.titles == "Flavors" && !clientSession.isAppGlobal && !obj.elements.flavorVisible) {
+            return false
+          }
+          if ((x.titles == "Multi Barcode" && !clientSession.isAppGlobal)
+            || (x.titles == "Multi Barcode" && clientSession.isAppGlobal && !obj.elements.mbVisible)) {
+            return false
+          }
+
+          return true;
+        }) as []
         }
-        if((x.titles == "Multi Barcode" && !clientSession.isAppGlobal) 
-          || (x.titles == "Multi Barcode" && clientSession.isAppGlobal && !obj.elements.mbVisible)) {
-          return false
-        }
-        
-        return true;
-      }) as []
-    }
-   
+
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
@@ -603,125 +639,125 @@ export const ProductMaster: React.FC = React.memo(() => {
         }
         onSubmit={handleSubmit}
       />
-                <ERPModal   
-                  isOpen={flavorsOpen.open}
-                  closeModal={(reload: boolean) =>
-                    setFlavorsOpen({  open: false, productId: null, data: [] })
-                  }
-                  title={t("flavors")}
-                  content={
-                    <div className="w-full">
-                    <DataGrid
-                      dataSource={flavorsOpen.data}
-                      height={300}
-                      key="barcode"
-                      showBorders={true}
-                      showRowLines={true}
-                      // onFocusedCellChanging={onFocusedCellChanging}
-                      onEditorPrepared={(e) => {
-                        if (e.parentType === "dataRow") {
-                          const currentRowData = e.row?.data;
-                       
-                            e.editorElement.removeEventListener(
-                              "keydown",
-                              (e.editorElement as any)._onBarcodeKeyDown
-                            );
-    
-                            const barcodeKeyDownHandler = (
-                              event: KeyboardEvent
-                            ) => {
-                              if (event.key === "Enter") {
-                                setFlavorsOpen((prev: any) => {
-                                  const newRow = { flavor: "" };
-                                  return { ...prev, data: [...prev.data, newRow] };
-                                });
-                              }
-                            };
-                            (e.editorElement as any)._onBarcodeKeyDown =
-                              barcodeKeyDownHandler;
-                            e.editorElement.addEventListener(
-                              "keydown",
-                              barcodeKeyDownHandler
-                            );
-                          
-                        }
-                      }}
-                    >
-                      <KeyboardNavigation
-                        editOnKeyPress={true}
-                        enterKeyAction={"moveFocus"}
-                        enterKeyDirection={"column"}
-                      />
-    
-                      <Paging pageSize={100} />
-    
-                      <Scrolling mode="standard" />
-    
-                      <RemoteOperations
-                        filtering={false}
-                        sorting={false}
-                        paging={false}
-                      />
-    
-                      <Column
-                        dataField="productId"
-                        caption={t("si_no")}
-                        allowEditing={false}
-                        dataType="string"
-                        width={150}
-                      />
-    
-                      <Column
-                        dataField="flavor"
-                        caption={t("flavor")}
-                        dataType="string"
-                        allowEditing={true}
-                        minWidth={150}
-                      />
-    
-                      <Editing
-                        allowUpdating={true}
-                        allowAdding={false}
-                        allowDeleting={false}
-                        mode="cell"
-                      />
-                    </DataGrid>
-                  </div>
-                  }
-                  footer={
-                    <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
-                      <ERPSubmitButton
-                        type="reset"
-                        onClick={() =>
-                          setFlavorsOpen({
-                            open: false,
-                            productId: null,
-                            data: [],
-                          })
-                        }
-                        className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
-                      >
-                        {t("cancel")}
-                      </ERPSubmitButton>
-      
-                      <ERPSubmitButton
-                        type="button"
-                        className="max-w-[115px]"
-                        variant="primary"
-                        onClick={handleSaveFlavor}
-                      >
-                        {t("save")}
-                      </ERPSubmitButton>
-                    </div>
-                  }
-                  width={780}
-                  height={570}
-                  disableOutsideClickClose={false}
-                 
-                />  
+      <ERPModal
+        isOpen={flavorsOpen.open}
+        closeModal={(reload: boolean) =>
+          setFlavorsOpen({ open: false, productId: null, data: [] })
+        }
+        title={t("flavors")}
+        content={
+          <div className="w-full">
+            <DataGrid
+              dataSource={flavorsOpen.data}
+              height={300}
+              key="barcode"
+              showBorders={true}
+              showRowLines={true}
+              // onFocusedCellChanging={onFocusedCellChanging}
+              onEditorPrepared={(e) => {
+                if (e.parentType === "dataRow") {
+                  const currentRowData = e.row?.data;
+
+                  e.editorElement.removeEventListener(
+                    "keydown",
+                    (e.editorElement as any)._onBarcodeKeyDown
+                  );
+
+                  const barcodeKeyDownHandler = (
+                    event: KeyboardEvent
+                  ) => {
+                    if (event.key === "Enter") {
+                      setFlavorsOpen((prev: any) => {
+                        const newRow = { flavor: "" };
+                        return { ...prev, data: [...prev.data, newRow] };
+                      });
+                    }
+                  };
+                  (e.editorElement as any)._onBarcodeKeyDown =
+                    barcodeKeyDownHandler;
+                  e.editorElement.addEventListener(
+                    "keydown",
+                    barcodeKeyDownHandler
+                  );
+
+                }
+              }}
+            >
+              <KeyboardNavigation
+                editOnKeyPress={true}
+                enterKeyAction={"moveFocus"}
+                enterKeyDirection={"column"}
+              />
+
+              <Paging pageSize={100} />
+
+              <Scrolling mode="standard" />
+
+              <RemoteOperations
+                filtering={false}
+                sorting={false}
+                paging={false}
+              />
+
+              <Column
+                dataField="productId"
+                caption={t("si_no")}
+                allowEditing={false}
+                dataType="string"
+                width={150}
+              />
+
+              <Column
+                dataField="flavor"
+                caption={t("flavor")}
+                dataType="string"
+                allowEditing={true}
+                minWidth={150}
+              />
+
+              <Editing
+                allowUpdating={true}
+                allowAdding={false}
+                allowDeleting={false}
+                mode="cell"
+              />
+            </DataGrid>
+          </div>
+        }
+        footer={
+          <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+            <ERPSubmitButton
+              type="reset"
+              onClick={() =>
+                setFlavorsOpen({
+                  open: false,
+                  productId: null,
+                  data: [],
+                })
+              }
+              className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
+            >
+              {t("cancel")}
+            </ERPSubmitButton>
+
+            <ERPSubmitButton
+              type="button"
+              className="max-w-[115px]"
+              variant="primary"
+              onClick={handleSaveFlavor}
+            >
+              {t("save")}
+            </ERPSubmitButton>
+          </div>
+        }
+        width={780}
+        height={570}
+        disableOutsideClickClose={false}
+
+      />
     </div>
 
-    
+
   );
 });
 

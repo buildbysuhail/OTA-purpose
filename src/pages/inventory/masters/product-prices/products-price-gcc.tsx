@@ -11,6 +11,10 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select";
+import { APIClient } from "../../../../helpers/api-client";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import ERPFormButtons from "../../../../components/ERPComponents/erp-form-buttons";
 
 export interface ProductPriceGCCData {
     slNo: string;
@@ -24,41 +28,124 @@ export interface ProductPriceGCCData {
     stock: string;
 }
 
+export interface ProductPriceFormData{
+    data:{
+        isBrandValue:boolean;
+        brandValue:number;
+        searchProducts:string;
+        updateStdRate:boolean;
+        standard:boolean;
+        productGroup:boolean;
+        productGroupValue:number;
+    };
+    validations:{
+        brandValue:string;
+        searchProducts:string;
+        productGroupValue:string;
+    }
+  
+}
+const api = new APIClient();
+const initailProductPriceFormData:ProductPriceFormData={
+  data:{
+    isBrandValue:false,
+    brandValue:-1,
+    searchProducts:"",
+    updateStdRate:false,
+    standard:false,
+    productGroup:false,
+    productGroupValue:-1,
+  },
+  validations:{
+        brandValue:"",
+        searchProducts:"",
+        productGroupValue:"",
+  }
+}
+
 const ProductPricesGCC: React.FC = React.memo(() => {
     const dispatch = useDispatch();
     const { t } = useTranslation('inventory');
+    const [productPform,setproductPform] = useState<ProductPriceFormData>(initailProductPriceFormData)
+    const [isLoading,setIsLoading]=useState(false)
     const [gridData, setGridData] = useState<ProductPriceGCCData[]>([]);
 
-    const {
-        isEdit,
-        handleSubmit,
-        handleClear,
-        handleFieldChange,
-        getFieldProps,
-        isLoading,
-    } = useFormManager<ProductPriceGCCData>({
-        url: Urls.CompanyProfiles,
-        onSuccess: useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false })), [dispatch]),
-        method: ActionType.POST,
-        useApiClient: true
-    });
+    // const handleAddToGrid = () => {
+    //     // Add current form data to grid
+    //     const newItem: ProductPriceGCCData = {
+    //         slNo: String(gridData.length + 1),
+    //         productCode: "",
+    //         productName: "",
+    //         priceCategory: "",
+    //         groupName: "",
+    //         unit: "",
+    //         salesRate: "",
+    //         salesDisc: "",
+    //         stock: ""
+    //     };
+    //     setGridData([...gridData, newItem]);
+    // };
+  
+    const handelGetGridData =async()=>{
+        setIsLoading(true)
+        try{
+            const postBody = {
+                isBrandValue: productPform.data.isBrandValue ? 1 : -1,
+                brandValue: productPform.data.brandValue,
+                searchProducts: productPform.data.searchProducts,
+                updateStdRate: productPform.data.updateStdRate ? 1 : -1,
+                standard: productPform.data.standard ? 1 : -1,
+                productGroup: productPform.data.productGroup ? 1 : -1,
+                productGroupValue: productPform.data.productGroupValue,
+            };
+            const response = await api.postAsync(Urls.productPrice,postBody) ;
+            handleResponse(response,()=>{
+             if(response){
+                setGridData(response)
+             }
+            });
 
-    const handleAddToGrid = () => {
-        // Add current form data to grid
-        const newItem: ProductPriceGCCData = {
-            slNo: String(gridData.length + 1),
-            productCode: "",
-            productName: "",
-            priceCategory: "",
-            groupName: "",
-            unit: "",
-            salesRate: "",
-            salesDisc: "",
-            stock: ""
-        };
-        setGridData([...gridData, newItem]);
-    };
+        }catch(error){
+           console.error("Error loading flavors:", error);
+        }finally{
+         setIsLoading(false)
+        }
+    }
+    const handleSubmit =async()=>{
+    //     setLoading(true)
+    //     try {
+    //       console.log("multibarcode",multiBarcode);
+          
+    //       const response = await api.postAsync(Urls.productBarcode,multiBarcode);
+    //       handleResponse(response,()=>{
+    //         setMultiBarcode((prev)=>({
+    //           open:false,
+    //           data:[]
+    //         }))
+    //       })
+    
+    //     } catch (error) {
+    //       console.error("Error loading flavors:", error);
+    //     }
+    //   finally{
+    //     setLoading(false)
+    //   }
+      }
 
+      const handleClear =()=>{
+
+        // setFormData({
+        //   unitID: 0,
+        //   unit: "",
+        //   barcodes: "",
+        // });
+    
+        // setMultiBarcode((prev)=>({
+        //   ...prev,
+        //   data:[]
+        // }))
+    
+      }
     const columns: DevGridColumn[] = useMemo(() => [
         {
             dataField: "slNo",
@@ -149,8 +236,17 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                 <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
                     <div className="grid grid-cols-2 items-start gap-2">
                         <div className="flex flex-col w-full gap-2 border border-[#ededed] p-4 rounded-md">
-                            <ERPDataCombobox
-                                {...getFieldProps("brandValue")}
+                            <div className="flex flex-row gap-3">
+                      
+                                   <ERPCheckbox
+                                          label={t("brand")}
+                                        id="isBrandValue"
+                                        data={productPform.data}
+                                        checked={productPform.data?.isBrandValue}
+                                        onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                    />
+                        
+                             <ERPDataCombobox
                                 id="brandValue"
                                 field={{
                                     id: "brandValue",
@@ -158,91 +254,152 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                                     valueKey: "id",
                                     labelKey: "name",
                                 }}
-                                label={t("brand")}
-                                onChangeData={(data: any) => handleFieldChange("brandValue", data.brandValue)}
+                                noLabel
+                                disabled={!productPform.data?.isBrandValue}
+                                required={true}
+                                data={productPform.data}
+                                defaultData={productPform?.data}
+                                value={productPform.data?.brandValue}
+                                validation={productPform?.validations?.brandValue}
+                                onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
                             />
+              
+                            </div>
                             <ERPInput
-                                {...getFieldProps("searchProducts")}
                                 id="searchProducts"
-                                label={t("search_products")}
-                                onChangeData={(data: any) => handleFieldChange("searchProducts", data.searchProducts)}
+                                label={t("searchProducts")}
+                                type="text"
+                                value={productPform.data?.searchProducts}
+                                className="w-full"
+                                placeholder={t("searchProducts")}
+                                data={productPform.data}
+                                validation={productPform?.validations?.searchProducts}
+                                onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
                             />
-                            <ERPCheckbox
-                                {...getFieldProps('updateStdRate')}
-                                label={t("update_std_rate")}
-                                onChangeData={(data: any) => handleFieldChange('updateStdRate', data.updateStdRate)}
-                            />
+                           
+                        
+                        <ERPCheckbox
+                            label={t("updateStdRate")}
+                            id="updateStdRate"
+                            data={productPform.data}
+                            checked={productPform.data?.updateStdRate}
+                            onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                        />
                         </div>
                         <div className="h-[11.4rem] w-full overflow-y-auto border border-gray-200 rounded-md">
                             <div className="p-4">
                                 <div className="flex flex-col gap-2">
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
-                                    <ERPCheckbox
-                                        {...getFieldProps('standard')}
-                                        label={t("standard")}
-                                        onChangeData={(data: any) => handleFieldChange('standard', data.standard)}
-                                    />
+                                     {/* <ERPMultiSelect
+                                                  label="Countries"
+                                                  options={[
+                                                    { id: 1, name: "Urgent" },
+                                                    { id: 2, name: "Important" },
+                                                    { id: 3, name: "Review" },
+                                                    { id: 4, name: "Pending" },
+                                                    { id: 5, name: "Completed" },
+                                                  ]}
+                                                  selectedValues={getFieldProps("sdsd").value}
+                                                  onChange={(data) => handleFieldChange("sdsd", data)}
+                                                  placeholder="Select countries"
+                                                  searchPlaceholder="Search countries..."
+                                                  outputFormat="array"
+                                                /> */}
+                                <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                               
+                               <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                  <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                 <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                 <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                  <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                  <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
+                                  <ERPCheckbox
+                                    label={t("standard")}
+                                    id="standard"
+                                    data={productPform.data}
+                                    checked={productPform.data?.standard}
+                                    onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                                />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 border border-[#ededed] p-4 rounded-md">
                         <div className="flex items-end gap-2">
-                            <ERPCheckbox
-                                {...getFieldProps('productGroup')}
-                                label={t("product_group")}
-                                onChangeData={(data: any) => handleFieldChange('productGroup', data.productGroup)}
-                            />
+                        <ERPCheckbox
+                            label={t("productGroup")}
+                            id="productGroup"
+                            data={productPform.data}
+                            checked={productPform.data?.productGroup}
+                            onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
+                        />
                             <ERPDataCombobox
-                                {...getFieldProps("productGroupValue")}
                                 id="productGroupValue"
                                 field={{
                                     id: "productGroupValue",
-                                    getListUrl: Urls.data_productgroup,
+                                    getListUrl: Urls.data_brands,
                                     valueKey: "id",
                                     labelKey: "name",
                                 }}
-                                label={t("product_group")}
-                                onChangeData={(data: any) => handleFieldChange('productGroupValue', data.productGroupValue)}
+                                noLabel
+                                // disabled={!productPform.data?.productGroup}
+                                required={true}
+                                data={productPform.data}
+                                defaultData={productPform?.data}
+                                value={productPform.data?.productGroupValue}
+                                validation={productPform?.validations?.productGroupValue}
+                                onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
                             />
+                        
                         </div>
                         <div>
                             <ERPButton
                                 title={t("load_items")}
+                                variant="primary"
+                                loading={isLoading}
+                                onClick={handelGetGridData}
+                                disabled={isLoading}
                             />
                         </div>
                     </div>
@@ -251,6 +408,7 @@ const ProductPricesGCC: React.FC = React.memo(() => {
 
             <div className="mt-4 bg-white border rounded-lg shadow-sm p-2">
                 <ErpDevGrid
+                heightToAdjustOnWindows={430}
                     columns={columns}
                     gridId="grd_product_prices_gcc"
                     data={gridData}
@@ -258,6 +416,21 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                     hideGridAddButton={true}
                     gridHeader={t("product_prices_gcc")}
                 />
+            <div className="flex items-center justify-end gap-4 mt-2">
+                    <ERPButton
+                    title={t("save")}
+                    variant="primary"
+                    loading={isLoading}
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                />
+                    <ERPButton
+                    title={t("clear")}
+                    variant="secondary"
+                    onClick={handleClear}
+                    disabled={isLoading}
+                />
+            </div>
             </div>
         </div>
     );

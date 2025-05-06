@@ -32,6 +32,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   onChangeData?: (data: any) => void;
   disableEnterNavigation?: boolean;
   onKeyDown?: (e: any) => void;
+  onEnterKeyDown?: (e: any) => void;
   onKeyUp?: (e: any) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -84,6 +85,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       onFocus,
       onBlur,
       onKeyDown,
+      onEnterKeyDown,
       onKeyUp,
       data,
       type = "text",
@@ -865,11 +867,19 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 step={step}
                 accept={accept}
                 onKeyDown={(e) => {
-                  disableEnterNavigation == true
-                    ? onKeyDown != undefined
-                      ? onKeyDown(e)
-                      : undefined
-                    : handleKeyDown(e);
+                  const isEnter =
+                    e.key === "NumpadEnter" || e.key === "Enter" || e.keyCode === 13 || e.which === 13;
+                
+                  if (disableEnterNavigation === true) {
+                    if (onKeyDown) {
+                      onKeyDown(e);
+                    }
+                    if (isEnter && onEnterKeyDown) {
+                      onEnterKeyDown(e);
+                    }
+                  } else {
+                    handleKeyDown(e);
+                  }
                 }}
                 onKeyUp={onKeyUp}
                 data-skip={skip}

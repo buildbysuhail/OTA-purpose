@@ -108,10 +108,7 @@ export const SpecialPrice: React.FC = () => {
   }, [getFieldProps]);
 
   const onBarcodeKeyDown = useCallback(async (e: any) => {
-    debugger;
-    if(e.code != "Enter") {
-      return
-    }
+    
     try {
       const obj = getFieldProps("*");
       if (isNullOrUndefinedOrZero(obj.barcode)) {
@@ -162,7 +159,7 @@ export const SpecialPrice: React.FC = () => {
         schemeID: obj.schemeID,
         GroupID: obj.groupID,
       };
-      const url = `${Urls.insert_special_price_scheme_by_group_id}ByGroup`;
+      const url = `${Urls.special_price_scheme_by_group_id}ByGroup`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
         debugger;
@@ -177,7 +174,7 @@ export const SpecialPrice: React.FC = () => {
         groupID: isNullOrUndefinedOrEmpty(obj.groupID) ? 0 : obj.groupID,
         unitID: isNullOrUndefinedOrEmpty(obj.unitID) ? 0 : obj.unitID,
       };
-      const url = `${Urls.insert_special_price_scheme}`;
+      const url = `${Urls.special_price_scheme}`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
         handleLoad();
@@ -187,10 +184,15 @@ export const SpecialPrice: React.FC = () => {
 
   const handleClear = useCallback(() => {
     clearForm();
+    setGridData([])
   }, [clearForm]);
 
-  const handleRemoveRow = useCallback((rowId: number) => {
-    // Implementation for removing rows
+  const handleRemoveRow = useCallback(async(rowId: number) => {
+    const url = `${Urls.special_price_scheme}${rowId}`;
+      const response = await api.delete(url);
+      handleResponse(response, () => {
+        setGridData((prev: any) => prev.filter((x: any) => x.specialPriceID != rowId))
+      });
   }, []);
 
   const renderDeleteCell = (cellData: any) => {
@@ -278,7 +280,7 @@ export const SpecialPrice: React.FC = () => {
                       handleFieldChange("barcode", data.barcode)
                     }
                     disableEnterNavigation
-                    onKeyDown={onBarcodeKeyDown}
+                    onEnterKeyDown={onBarcodeKeyDown}
                   />
                 </div>
               </div>
@@ -304,7 +306,7 @@ export const SpecialPrice: React.FC = () => {
                 <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
                   <label>{t("unit")}:</label>
                 </div>
-                <div className="flex-1">
+                <div className="flex-4">
                   <ERPInput
                     {...getFieldProps("unitName")}
                     noLabel={true}
@@ -318,13 +320,15 @@ export const SpecialPrice: React.FC = () => {
               </div>
 
               <div className="flex items-center">
-                <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("product")}:</label>
-                </div>
-                <div className="flex-1">
-                  <span className="text-[#dc2626]">{getFieldProps("productName").value??"Item"}</span>
-                </div>
-              </div>
+  <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+    <label>{t("product")}:</label>
+  </div>
+  <div className="flex-1">
+    <span className="text-[#dc2626] max-w-full sm:max-w-[200px] truncate overflow-hidden whitespace-nowrap block">
+      {getFieldProps("productName").value ?? "Item"}
+    </span>
+  </div>
+</div>
             </div>
           </div>
 
@@ -346,13 +350,7 @@ export const SpecialPrice: React.FC = () => {
                     }
                   />
                 </div>
-                <div className="sm:ml-4">
-                  <ERPCheckbox
-                    {...getFieldProps("searchByCode")}
-                    label={t("Code")}
-                    onChangeData={(data: any) => handleFieldChange("searchByCode", data.searchByCode)}
-                  />
-                </div>
+               
               </div>
             </div>
 

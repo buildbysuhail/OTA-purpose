@@ -12,6 +12,7 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 export interface ProductPriceIndiaData {
   slNo: string;
@@ -21,12 +22,13 @@ export interface ProductPriceIndiaData {
   groupName: string;
   unit: string;
   salesDisc: string;
-  mrp: string;
-  margin: string;
-  salesRate: string;
-  qty: string;
-  cost: string;
-  markUpDown: string;
+  mrp: number;
+  margin: number;
+  salesRate: number;
+  qty: number;
+  cost: number;
+  markUpDown: number;
+  priceUpdateValue: number
 }
 
 const ProductPricesIndia: React.FC = React.memo(() => {
@@ -54,19 +56,20 @@ const ProductPricesIndia: React.FC = React.memo(() => {
   const handleAddToGrid = () => {
     // Add current form data to grid
     const newItem: ProductPriceIndiaData = {
-      slNo: String(gridData.length + 1),
-      productCode: "",
-      productName: "",
-      priceCategory: "",
-      groupName: "",
-      unit: "",
-      salesDisc: "",
-      mrp: "",
-      margin: "",
-      salesRate: "",
-      qty: "",
-      cost: "",
-      markUpDown: "",
+        slNo: String(gridData.length + 1),
+        productCode: "",
+        productName: "",
+        priceCategory: "",
+        groupName: "",
+        unit: "",
+        salesDisc: "",
+        mrp: 0,
+        margin: 0,
+        salesRate: 0,
+        qty: 0,
+        cost: 0,
+        markUpDown: 0,
+        priceUpdateValue: 0
     };
     setGridData([...gridData, newItem]);
   };
@@ -194,6 +197,7 @@ const ProductPricesIndia: React.FC = React.memo(() => {
     []
   );
 
+   const { getFormattedValue } = useNumberFormat()
   return (
     <div className="p-4 bg-gray-100">
       <div className="bg-white border rounded-lg p-4 shadow-sm">
@@ -345,20 +349,64 @@ const ProductPricesIndia: React.FC = React.memo(() => {
             />
             <div className="flex items-end gap-2">
               <ERPDataCombobox
-                {...getFieldProps("priceUpdate")}
-                id="priceUpdate"
+                {...getFieldProps("priceUpdateType")}
+                id="priceUpdateType"
                 field={{
-                  id: "priceUpdate",
-                  getListUrl: Urls.data_warehouse,
+                  id: "priceUpdateType",
                   valueKey: "id",
                   labelKey: "name",
                 }}
+                options={[
+                    {id:"Cost", name:"Cost"},
+                    {id:"MRP", name:"MRP"}
+                ]}
                 label={t("price_update_(up_down)")}
                 onChangeData={(data: any) =>
-                  handleFieldChange("priceUpdate", data.priceUpdate)
+                  handleFieldChange("priceUpdateType", data.priceUpdateType)
                 }
               />
-              <ERPInput noLabel={true} id={""} />
+              <ERPInput
+              type="number"
+                {...getFieldProps("priceUpdateValue")}
+                noLabel={true}
+                id={""}
+                onEnterKeyDown={(e) => {
+                    const obj = getFieldProps("*");
+                  const value = parseFloat(obj.priceUpdateValue);
+                  if (isNaN(value)) return;
+
+                  const updatedData = gridData.map((row) => {
+                    const MRP =row.mrp;
+                    const Cost = row.cost;
+
+                    let Result = 0;
+                    let SalesRate = 0;
+                    let Margin = 0;
+
+                    if (obj.priceUpdateType === "Cost") {
+                      Result = Cost + (Cost * value) / 100;
+                    } else if (obj.priceUpdateType === "MRP") {
+                      Result = MRP - (MRP * value) / 100;
+                    }
+
+                    Result = parseFloat(getFormattedValue(Result));
+                    SalesRate = Result;
+
+                    if (Cost !== 0) {
+                      Margin = ((SalesRate - Cost) / Cost) * 100;
+                    }
+
+                    return {
+                      ...row,
+                      markUpDown: value,
+                      salesRate: SalesRate,
+                      margin: parseFloat(getFormattedValue(Margin)),
+                    };
+                  });
+
+                  setGridData(updatedData);
+                }}
+              />
             </div>
             <ERPCheckbox
               {...getFieldProps("updateStdRate")}

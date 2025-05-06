@@ -117,6 +117,7 @@ const FOCScheme: React.FC = () => {
       setIsDataLoading(true);
 
       const url = `${Urls.select_product_by_barcode_foc}${obj.barCode}`;
+      debugger;
       const response = await api.get(url);
       handleDataChange(
         {
@@ -171,7 +172,7 @@ const FOCScheme: React.FC = () => {
       });
       return false;
     }
-
+    debugger;
     const payload = {
       schemeID: obj.schemeID,
       productBatchID: obj.productBatchID,
@@ -195,10 +196,15 @@ const FOCScheme: React.FC = () => {
 
   const handleClear = useCallback(() => {
     clearForm();
+    setGridData([])
   }, [clearForm]);
 
-  const handleRemoveRow = useCallback((rowId: number) => {
-    // Implementation for removing rows
+  const handleRemoveRow = useCallback(async(rowId: number) => {
+    const url = `${Urls.special_price_scheme}${rowId}`;
+      const response = await api.delete(url);
+      handleResponse(response, () => {
+        setGridData((prev: any) => prev.filter((x: any) => x.qtyDiscountID != rowId))
+      });
   }, []);
 
   const renderDeleteCell = (cellData: any) => {
@@ -206,7 +212,7 @@ const FOCScheme: React.FC = () => {
       <div className="flex justify-center">
         <button
           className="text-[#ef4444] font-bold px-2"
-          onClick={() => handleRemoveRow(cellData.data.focSchemeID)}
+          onClick={() => handleRemoveRow(cellData.data.qtyDiscountID)}
         >
           X
         </button>
@@ -394,6 +400,14 @@ const FOCScheme: React.FC = () => {
                         barCode: data.autoBarcode,
                         stdSalesPrice: data.sPrice,
                         stdPurchasePrice: data.pPrice,
+                        // productName: data.productName,
+                      } as FOCSchemeData);
+                    }}
+                    onProductSelected={(data: any) => {
+                      debugger;
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
                         productName: data.productName,
                       } as FOCSchemeData);
                     }}

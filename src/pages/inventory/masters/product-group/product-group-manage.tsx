@@ -1,7 +1,10 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { initialProductGroupData, ProductGroupData } from "./products-group-manage-type";
+import {
+  initialProductGroupData,
+  ProductGroupData,
+} from "./products-group-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -10,6 +13,8 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { RootState } from "../../../../redux/store";
+import { BusinessType } from "../../../../enums/business-types";
 
 export const ProductGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -21,17 +26,31 @@ export const ProductGroupManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    handleClose
+    handleClose,
   } = useFormManager<ProductGroupData>({
     url: Urls.productGroup,
-    onClose: useCallback(() => dispatch(toggleProductGroup({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleProductGroup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(
+      () =>
+        dispatch(
+          toggleProductGroup({ isOpen: false, key: null, reload: false })
+        ),
+      [dispatch]
+    ),
+    onSuccess: useCallback(
+      () =>
+        dispatch(
+          toggleProductGroup({ isOpen: false, key: null, reload: true })
+        ),
+      [dispatch]
+    ),
     key: rootState.PopupData.productGroup.key,
     useApiClient: true,
-    initialData: initialProductGroupData
+    initialData: initialProductGroupData,
   });
-  const { t } = useTranslation('inventory');
-
+  const { t } = useTranslation("inventory");
+  const appSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   return (
     <div className="w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -49,14 +68,18 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           {...getFieldProps("arabicName")}
           label={t("regional_language")}
           placeholder={t("regional_language")}
-          onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
+          onChangeData={(data: any) =>
+            handleFieldChange("arabicName", data.arabicName)
+          }
         />
 
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
-          onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          onChangeData={(data: any) =>
+            handleFieldChange("shortName", data.shortName)
+          }
         />
 
         <ERPDataCombobox
@@ -70,7 +93,9 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           }}
           label={t("parent_group")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("parentGroupID", data.parentGroupID)}
+          onChangeData={(data: any) =>
+            handleFieldChange("parentGroupID", data.parentGroupID)
+          }
         />
 
         <ERPDataCombobox
@@ -83,7 +108,9 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("group_category")}
-          onChangeData={(data: any) => handleFieldChange("groupCategoryID", data.groupCategoryID)}
+          onChangeData={(data: any) =>
+            handleFieldChange("groupCategoryID", data.groupCategoryID)
+          }
         />
 
         <ERPDataCombobox
@@ -96,8 +123,28 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("section")}
-          onChangeData={(data: any) => handleFieldChange("sectionID", data.sectionID)}
+          onChangeData={(data: any) =>
+            handleFieldChange("sectionID", data.sectionID)
+          }
         />
+
+        {appSettings.mainSettings.maintainBusinessType ==
+          BusinessType.Restaurant && (
+          <ERPDataCombobox
+            {...getFieldProps("kitchenID")}
+            id="kitchenID"
+            field={{
+              id: "kitchenID",
+              getListUrl: Urls.data_kitchen,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label={t("section")}
+            onChangeData={(data: any) =>
+              handleFieldChange("kitchenID", data.kitchenID)
+            }
+          />
+        )}
 
         <ERPDataCombobox
           {...getFieldProps("gStatus")}
@@ -106,11 +153,13 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             valueKey: "value",
             labelKey: "label",
           }}
-          onChangeData={(data: any) => handleFieldChange("gStatus", data.gStatus)}
-          label={t('g_status')}
+          onChangeData={(data: any) =>
+            handleFieldChange("gStatus", data.gStatus)
+          }
+          label={t("g_status")}
           options={[
-            { value: 'Active', label: t('active') },
-            { value: 'Inactive', label: t('inactive') },
+            { value: "Active", label: t("active") },
+            { value: "Inactive", label: t("inactive") },
           ]}
         />
 
@@ -118,26 +167,34 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
-          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          onChangeData={(data: any) =>
+            handleFieldChange("remarks", data.remarks)
+          }
         />
 
         <ERPInput
           {...getFieldProps("marginPerc")}
           label={t("margin_percentage")}
           placeholder={t("margin_percentage")}
-          onChangeData={(data: any) => handleFieldChange("marginPerc", data.marginPerc)}
+          onChangeData={(data: any) =>
+            handleFieldChange("marginPerc", data.marginPerc)
+          }
         />
 
         <ERPCheckbox
-          {...getFieldProps('isEditable')}
+          {...getFieldProps("isEditable")}
           label={t("editable")}
-          onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
+          onChangeData={(data: any) =>
+            handleFieldChange("isEditable", data.isEditable)
+          }
         />
 
         <ERPCheckbox
-          {...getFieldProps('isDeletable')}
+          {...getFieldProps("isDeletable")}
           label={t("deletable")}
-          onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
+          onChangeData={(data: any) =>
+            handleFieldChange("isDeletable", data.isDeletable)
+          }
         />
       </div>
       <ERPFormButtons

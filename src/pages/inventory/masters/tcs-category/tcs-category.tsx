@@ -28,16 +28,17 @@ const TcsCategory = () => {
       showInPdf:true
     },
     {
-      dataField: "tCSCategoryID",
+      dataField: "tcsCategoryID",
       caption: t("tcs_category_id"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible :false
     },
     {
-      dataField: "tCSCategoryName",
+      dataField: "tcsCategoryName",
       caption: t("tcs_category_name"),
       dataType: "string",
       allowSorting: true,
@@ -47,7 +48,7 @@ const TcsCategory = () => {
       showInPdf:true
     },
     {
-      dataField: "tCSCategoryPerc",
+      dataField: "tcsCategoryPerc",
       caption: t("tcs_category_%"),
       dataType: "number",
       allowSorting: true,

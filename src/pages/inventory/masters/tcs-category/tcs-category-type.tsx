@@ -1,9 +1,9 @@
 export interface TcsCategoryData {
-  categoryName: string;
-  tcsPerc: number;
+  tcsCategoryName: string;
+  tcsCategoryPerc: number;
 }
 
 export const initialTcsCategoryData: TcsCategoryData = {
-  categoryName: "",
-  tcsPerc: 0
+  tcsCategoryName: "",
+  tcsCategoryPerc: 0
 };

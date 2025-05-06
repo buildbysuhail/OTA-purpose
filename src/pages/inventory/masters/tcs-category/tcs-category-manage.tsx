@@ -35,19 +35,19 @@ export const TcsCategoryManage: React.FC = React.memo(() => {
     <div className="w-full modal-content">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-3">
         <ERPInput
-          {...getFieldProps("categoryName")}
+          {...getFieldProps("tcsCategoryName")}
           label={t("category_name")}
           placeholder={t("category_name")}
           onChangeData={(data: any) => {
-            handleFieldChange("categoryName", data.categoryName);
+            handleFieldChange("tcsCategoryName", data.tcsCategoryName);
           }}
         />
         <ERPInput
-          {...getFieldProps("tcsPerc")}
+          {...getFieldProps("tcsCategoryPerc")}
           label={t("tcs_perc")}
           placeholder={t("tcs_percentage")}
           onChangeData={(data: any) => {
-            handleFieldChange("tcsPerc", data.tcsPerc);
+            handleFieldChange("tcsCategoryPerc", data.tcsCategoryPerc);
           }}
         />
       </div>

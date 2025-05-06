@@ -162,7 +162,6 @@ const initialProductData: productDto = {
   details: false,
   onHold: false,
   taxCategoryTaxPercentage: 0,
-  hasDisabled: false
 };
 
 export default initialProductData;

@@ -445,5 +445,18 @@
     "tcs_category": "فئة TCS",
     "tcs_perc": "نسبة TCS",
     "tcs_percentage": "نسبة TCS",
-    "gst_category": "فئة ضريبة GST"
+    "gst_category": "فئة ضريبة GST",
+    "margin": "الهامش",
+    "cost": "التكلفة",
+    "mark_(up/down)": "التعديل (أعلى/أسفل)",
+    "pi_no": "رقم PI",
+    "v_type": "نوع المستند",
+    "v_prefix": "بادئة المستند",
+    "v_no": "رقم المستند",
+    "form_type": "نوع النموذج",
+    "brand": "العلامة التجارية",
+    "branch": "الفرع",
+    "price_update_(up_down)": "تحديث السعر (زيادة/نقصان)%",
+    "update_std_rate": "تحديث السعر القياسي",
+    "load_items": "تحميل العناصر"
 }

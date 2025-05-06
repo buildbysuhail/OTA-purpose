@@ -589,5 +589,6 @@
   "service_report":"Service Report",
   "salesman_incentive_report":"Salesman Incentive Report",
   "privilege_card":"Privilege Card",
-  "tcs_category":"TCS Category"
+  "tcs_category":"TCS Category",
+  "product_price_settings":"Product Price Settings"
 }

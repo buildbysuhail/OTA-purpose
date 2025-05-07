@@ -464,6 +464,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleMouseLeave = () => setIsHovered(false);
     const handleFocus = () => setIsFocused(true);
     const handleBlur = (e: any) => {
+      e.stopPropagation();
       setIsFocused(false);
       // setIsOpen(false);
       onBlur?.(e);
@@ -1049,7 +1050,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleAddNewClick = (e: React.MouseEvent) => {
-      alert("Button clicked!");
       console.log("Add New button clicked"); // Debug log
       e.stopPropagation();
       e.preventDefault();
@@ -1736,7 +1736,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={handleFocus}
-                // onBlur={handleBlur}
+                onBlur={handleBlur}
                 autoComplete="off"
                 spellCheck={false}
                 autoFocus={autoFocus}

@@ -458,5 +458,10 @@
     "branch": "الفرع",
     "price_update_(up_down)": "تحديث السعر (زيادة/نقصان)%",
     "update_std_rate": "تحديث السعر القياسي",
-    "load_items": "تحميل العناصر"
+    "load_items": "تحميل العناصر",
+    "free_barcode": "باركود العنصر المجاني",
+    "free_unit": "الوحدة المجانية",
+    "product_barcode": "باركود المنتج",
+    "product_details": "تفاصيل المنتج",
+    "free_product_details": "تفاصيل المنتج المجاني"
 }

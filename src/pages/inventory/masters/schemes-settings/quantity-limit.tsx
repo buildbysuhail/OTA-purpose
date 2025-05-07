@@ -11,6 +11,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 export const initialQuantityLimit = {
@@ -49,9 +50,11 @@ export interface QuantityLimitData {
 
 export interface QuantityLimitItemData {
     id: number;
-    sl: number;
-    barcode: string;
-    product: string;
+    slNo: number;
+    autoBarcode: string;
+    barCode:string;
+    productID:number;
+    productName: string;
     qtyLimit: number;
 }
 
@@ -80,7 +83,6 @@ export const QuantityLimit: React.FC = () => {
 
     const handleLoad = useCallback(async () => {
         const obj = getFieldProps("*");
-debugger;
        let payload ={
              sectionID:isNullOrUndefinedOrZero(obj.sectionID)?-1: obj.sectionID, 
              productCategoryId:isNullOrUndefinedOrZero(obj.productCategoryId)?-1: obj.productCategoryId,
@@ -89,39 +91,23 @@ debugger;
              isBarcode: isNullOrUndefinedOrEmpty(obj.barcode)? false : true ,
         }
         let queryString = Object.entries(payload)
-  .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
-  .join("&");
+       .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+       .join("&");
+  
         try {
           setIsDataLoading(true);
 
-        //   const response = await api.get(`${Urls.select_products_for_product_qty_limit}?${payload}`)
            const response = await api.getAsync(`${Urls.select_products_for_product_qty_limit}?${queryString}`)
-          if (response) {
-            const transformedData: QuantityLimitItemData[] = response.map(
-              (item: any, index: number) => ({
-                id: item.id || index + 1,
-                sl: index + 1,
-                barcode: item.barcode ,
-                product: item.product ,
-                qtyLimit: item.qtyLimit,
-              })
-            );
-            setGridData(transformedData);
-          } else {
-            ERPAlert.show({
-              title: "",
-              icon: "info",
-              text: "No data found for the provided input.",
-            });
-            setGridData([]);
-          }
+           handleResponse(response)
+           setGridData(response);
+           handleClear()
         } catch (error) {
           console.error(`Error fetching data for`, error);
           setGridData([]);
         } finally {
           setIsDataLoading(false);
         }
-      }, [formState.data]);
+      }, []);
 
     const handleClear = useCallback(() => {
         clearForm();
@@ -279,6 +265,8 @@ debugger;
                     title={t("load")}
                     variant="primary"
                     onClick={handleLoad}
+                    loading={isDataLoading}
+                    disabled={isDataLoading}
                 />
                 <ERPButton
                     title={t("save")}
@@ -298,8 +286,7 @@ debugger;
                     showBorders={true}
                     rowAlternationEnabled={true}
                     className="w-full">
-                    <Paging defaultPageSize={30} />
-                    <Scrolling mode="virtual"></Scrolling>
+                    <Paging defaultPageSize={100} />
                     <Editing
                         mode="cell"
                         allowUpdating={true}
@@ -307,40 +294,35 @@ debugger;
                         allowAdding={false}
                     />
                     <Column
-                        caption={t("si")}
+                        dataField="slNo"
+                        caption={t("slNo")}
+                        dataType="number"
                         width={40}
-                        cellRender={(data) => data.rowIndex + 1}
+                        
                     />
                     <Column
-                        dataField="autoBarcode"
+                        dataField="barCode"
                         width={100}
+                        dataType="string"
                         caption={t("barcode")}
                     />
-                    <Column
-                        dataField="productBatchID"
+                        <Column
+                        dataField="autoBarcode"
                         width={100}
-                        caption={t("productBatchID")}
-                    />
-                    <Column
-                        dataField="productID"
-                        width={100}
-                        caption={t("productID")}
-                    />
-                    <Column
-                        dataField="itemQtyLimitID"
-                        width={100}
-                        caption={t("itemQtyLimitID")}
+                        dataType="string"
+                        caption={t("auto_barcode")}
                     />
                     <Column
                         dataField="productName"
                         width={200}
+                        dataType="string"
                         caption={t("product")}
                     />
-                    <Column
+                    {/* <Column
                         dataField="qtyLimit"
                         width={80}
                         caption={t("qty_limit")}
-                    />
+                    /> */}
                     <Column
                         caption={t("X")}
                         cellRender={renderDeleteCell}

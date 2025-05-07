@@ -595,7 +595,7 @@ const Urls = {
   Warehouse: "/Inventory/Warehouse/",
   taxCategory: "/Inventory/TaxCategory/",
   gstCategory: "/Inventory/GSTCategory/",
-  tcsCategory:"/Inventory/TcsCategory/",
+  tcsCategory:"/Inventory/TCSCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
   daily_statement_sales:
@@ -609,15 +609,14 @@ const Urls = {
     "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
   product_flavours:"/Inventory/Product/GetFlavours/",
   // URLs for SpecialPriceController (Inventory Module)
-  insert_special_price_scheme: "/Inventory/SpecialPrice/", // POST
-  insert_special_price_scheme_by_group_id: "/Inventory/SpecialPrice/", // POST
+  special_price_scheme: "/Inventory/SpecialPrice/", // POST
+  special_price_scheme_by_group_id: "/Inventory/SpecialPrice/", // POST
   select_special_price_scheme_by_scheme_id:
     "/Inventory/SpecialPrice/BySchemeID/", // GET
   select_product_by_barcode: "/Inventory/SpecialPrice/ByBarcode/", // GET
   select_item_for_special_price_scheme_by_group_id:
     "/Inventory/SpecialPrice/ByGroupId/", // GET
   select_price_schemes_for_combo: "/Inventory/SpecialPrice/SpecialPriceCombo/", // GET
-  delete_special_price_scheme: "/Inventory/SpecialPrice/", // DELETE
   load_product_details: "/Inventory/SpecialPrice/LoadProductDetails/", // GET (with body + query)
   select_foc_product_batch_grid: "/Inventory/SpecialPrice/LoadBatchDetails/", // GET
 
@@ -640,6 +639,8 @@ const Urls = {
   select_product_by_barcode_multi_foc: "/Inventory/MultiFOC/ByBarcode/", // GET (append {barCode})
   delete_multi_foc: "/Inventory/MultiFOC/",
   select_quantity_schemes_for_combo_MultiFOC: "/Inventory/MultiFOC/MultiFOCCombo", // GET
+  load_product_details_multi_foc: "/Inventory/MultiFOC/LoadProductDetails", // POST (with query params for DataSourceLoadOptions)
+  select_foc_product_batch_grid_multi_foc: "/Inventory/MultiFOC/LoadBatchDetails/",
 
   // URLs for GiftOnBillingController (Inventory Module)
   insert_gift_on_billing: "/Inventory/GiftOnBilling/", // POST

@@ -16,6 +16,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import CustomStore from "devextreme/data/custom_store";
 import MultiFocSchemeBatchGrid from "./multi-foc-scheme-batch-grid";
+import ERPProductSearch from "../../../../components/ERPComponents/erp-searchbox";
 
 const api = new APIClient();
 
@@ -154,51 +155,7 @@ const MultiFOCScheme: React.FC = () => {
     }
   }, [getFieldProps, handleDataChange]);
 
-  const fetchByField = useCallback(
-    async (fieldType: "productID" | "freeProductID") => {
-      try {
-        const obj = getFieldProps("*");
-        const fieldValue = fieldType === "productID" ? obj.productID : obj.freeProductID;
-
-        if (isNullOrUndefinedOrEmpty(fieldValue)) {
-          return;
-        }
-
-        setIsDataLoading(true);
-        const url = `${Urls.select_product_by_product_id_multi_foc}${fieldValue}`; //change url it for demo
-        const response = await api.get(url);
-
-        if (response?.length === 1) {
-          const updatedData: Partial<FOCSchemeData> =
-            fieldType === "productID"
-              ? {
-                unitID: response.unitID,
-                barCode: response.barCode,
-                qtyLimit: response.qtyLimit,
-              }
-              : {
-                freeUnitID: response.unitID,
-                freeItemBarcode: response.barCode,
-                freeQty: response.qtyLimit,
-              };
-          handleDataChange({
-            ...obj,
-            ...updatedData,
-          } as FOCSchemeData);
-        } else if (response?.length > 1) {
-          setProductDetailStore(response)
-          setShowBatchGrid(true)
-        } else {
-          // Handle empty response
-        }
-        setIsDataLoading(false);
-      } catch (error) {
-        console.error(`Error fetching ${fieldType} data:`, error);
-        setIsDataLoading(false);
-      }
-    },
-    [getFieldProps, handleDataChange]
-  );
+  
 
   // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
@@ -273,20 +230,6 @@ const MultiFOCScheme: React.FC = () => {
       setGridData([]);
     }
   }, [formState.data.loadAllMultiFos, fetchAllMultiFosData]);
-
-  // Trigger fetchByField for productName changes
-  useEffect(() => {
-    if (formState.data.productID) {
-      fetchByField("productID");
-    }
-  }, [formState.data.productID, fetchByField]);
-
-  // Trigger fetchByField for freeProductName changes
-  useEffect(() => {
-    if (formState.data.freeProductID) {
-      fetchByField("freeProductID");
-    }
-  }, [formState.data.freeProductID, fetchByField]);
 
   const handleRemoveRow = useCallback((schemeID: number) => {
     setGridData((prevGridData) => {
@@ -370,28 +313,45 @@ const MultiFOCScheme: React.FC = () => {
                   onBlur={() => fetchByBarcode()}
                 />
               </div>
+              
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("product_name")}</label>
               </div>
               <div className="md:col-span-4">
-                <ERPDataCombobox
-                  {...getFieldProps("productID")}
-                  field={{
-                    id: "productID",
-                    getListUrl: Urls.data_products,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  noLabel={true}
-                  className="w-full max-w-[350px]"
-                  onChange={(data: any) => {
-                    handleFieldChange({
-                      productID: data.value,
-                      productName: data.name,
+              <ERPProductSearch
+              value={getFieldProps("nameOrCode").value}
+              onChange={(e) => {
+                handleFieldChange({
+                  nameOrCode: e.target.value,
                     });
                   }}
-                  disabled={isFormDisabled}
-                />
+                    type="text"
+                    id="test"
+                    keyId="testserch"
+                    placeholder="Search Here"
+                    productDataUrl={Urls.load_product_details_multi_foc}
+                    onRowSelected={(data: any) => {
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        productBatchID: data.productBatchID,
+                        unitID: data.unitID,
+                        unitName: data.unit,
+                        barCode: data.autoBarcode,
+                      } as FOCSchemeData);
+                    }}
+                    onProductSelected={(data: any) => {
+                      debugger;
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        productName: data.productName,
+                        productID: data.productID,
+                      } as FOCSchemeData);
+                    }}
+                    batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
+                  />
+              
               </div>
             </div>
 
@@ -459,23 +419,40 @@ const MultiFOCScheme: React.FC = () => {
                   <label className="text-left font-medium">{t("product_name")}</label>
                 </div>
                 <div className="md:col-span-4">
-                  <ERPDataCombobox
-                    {...getFieldProps("freeProductID")}
-                    field={{
-                      id: "freeProductID",
-                      getListUrl: Urls.data_products,
-                      valueKey: "id",
-                      labelKey: "name",
+                 
+
+<ERPProductSearch
+              value={getFieldProps("nameOrCode_free").value}
+              onChange={(e) => {
+                handleFieldChange({
+                  nameOrCode_free: e.target.value,
+                    });
+                  }}
+                    type="text"
+                    id="test"
+                    keyId="testSearchFree"
+                    placeholder="Search Here"
+                    productDataUrl={Urls.load_product_details_multi_foc}
+                    onRowSelected={(data: any) => {
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        freeProductBatchID: data.productBatchID,
+                        freeUnitID: data.unitID,
+                        freeUnitName: data.unit,
+                        freeItemBarcode: data.autoBarcode,
+                      } as FOCSchemeData);
                     }}
-                    noLabel={true}
-                    className="w-full max-w-[350px]"
-                    onChange={(data: any) => {
-                      handleFieldChange({
-                        freeProductID: data.value,
-                        freeProductName: data.name
-                      });
+                    onProductSelected={(data: any) => {
+                      debugger;
+                      const obj = getFieldProps("*");
+                      handleDataChange({
+                        ...obj,
+                        freeProductName: data.productName,
+                        freeProductID: data.productID,
+                      } as FOCSchemeData);
                     }}
-                    disabled={isFormDisabled}
+                    batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
                   />
                 </div>
               </div>
@@ -601,13 +578,7 @@ const MultiFOCScheme: React.FC = () => {
       </div>
 
       {/* Batch Grid Modal */}
-      <div className="relative">
-        <MultiFocSchemeBatchGrid
-          show={showBatchGrid}
-          dataSource={productDetailStore}
-          gridRef={batchGridRef}
-        />
-      </div>
+      
     </div>
   );
 };

@@ -199,7 +199,7 @@ useEffect(() => {
       }
       
       // Original Enter key functionality
-      if (e.event.key === 'Enter' && grid.getSelectedRowKeys().length > 0) {
+      if ((e.event.key === 'NumpadEnter' || e.event.key === 'Enter') && grid.getSelectedRowKeys().length > 0) {
         const selectedRow = grid.getSelectedRowsData()[0];
         if(onProductSelected){
           onProductSelected(selectedRow)
@@ -313,9 +313,9 @@ useEffect(() => {
             onKeyDown={handleGridKeyDown}
           >
             <Selection mode="single" />
-            <Paging pageSize={10} />
+            <Paging pageSize={30} />
             <Scrolling mode="virtual" />
-            <KeyboardNavigation enabled={true} editOnKeyPress={false} enterKeyAction="moveFocus" enterKeyDirection="row" />
+            <KeyboardNavigation enabled={true} editOnKeyPress={false}  enterKeyDirection="row" />
             <Column dataField="productCode" caption={t("product_code")} dataType="string" width={100} />
             <Column dataField="productID" caption={t("productID")} dataType="number" visible={false} />
             <Column dataField="productName" caption={t("ProductName")} dataType="string" minWidth={150} />

@@ -68,13 +68,13 @@ const TcsCategory = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleTcsCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleTcsCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            view={{ type: "popup", action: () => toggleTcsCategory({ isOpen: true, key: cellElement?.data?.tcsCategoryID, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleTcsCategory({ isOpen: true, key: cellElement?.data?.tcsCategoryID, reload: false }) }}
             delete={{
               onSuccess: () => { dispatch(toggleTcsCategory({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
               confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-              url: Urls?.tcsCategory, key: cellElement?.data?.id
+              url: Urls?.tcsCategory, key: cellElement?.data?.tcsCategoryID
             }}
           />
         )

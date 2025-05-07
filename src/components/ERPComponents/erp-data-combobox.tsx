@@ -465,7 +465,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleFocus = () => setIsFocused(true);
     const handleBlur = (e: any) => {
       setIsFocused(false);
-      setIsOpen(false);
+      // setIsOpen(false);
       onBlur?.(e);
     };
     const [_reload, set_reload] = useState(reload);

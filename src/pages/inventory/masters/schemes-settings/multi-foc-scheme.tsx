@@ -91,7 +91,25 @@ const MultiFOCScheme: React.FC = () => {
 
   // Determine if form and button should be disabled based on loadAllMultiFos
   const isFormDisabled = formState.data.loadAllMultiFos;
-
+const handleSave = useCallback(async () => {
+        console.log("Saving data:", gridData);
+         // Check if gridData is empty
+                  if (gridData.length === 0) {
+                    ERPAlert.show({
+                      title: "",
+                      icon: "warning",
+                      text: "No data to save. Please add items to the grid.",
+                    });
+                    return;
+                  }
+        try{
+            const payload = gridData;
+            const response = await api.post(Urls.qty_slab_offer, payload);
+            handleResponse(response, () =>   handleClear());
+        }catch(error){
+            console.error("Error saving data:", error);
+        }
+    }, [gridData]);
   const fetchByBarcode = useCallback(async () => {
     try {
       const obj = getFieldProps("*");
@@ -572,7 +590,25 @@ const MultiFOCScheme: React.FC = () => {
           <Column caption="X" cellRender={renderDeleteCell} width={30} />
         </DataGrid>
       </div>
-
+      <div className="flex flex-row max-md:flex-col items-center mt-2">
+                <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
+                <div className="flex items-center">
+               
+                    <div className="flex gap-2 ml-4">
+                       
+                        <ERPButton
+                            title={t("clear")}
+                            variant="secondary"
+                            onClick={handleClear}
+                        />
+                        <ERPButton
+                            title={t("save")}
+                            variant="primary"
+                            onClick={handleSave}
+                        />
+                    </div>
+                </div>
+            </div>
       {/* Batch Grid Modal */}
       
     </div>

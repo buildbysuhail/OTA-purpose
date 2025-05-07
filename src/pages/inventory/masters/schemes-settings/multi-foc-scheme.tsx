@@ -77,20 +77,12 @@ const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
-  // State for selected product
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [showBatchGrid, setShowBatchGrid] = useState(false);
-  const [productDetailStore, setProductDetailStore] = useState<any[]>([]);
-  const batchGridRef = useRef<any>(null);
 
   const {
-    isEdit,
-    handleSubmit,
     handleFieldChange,
     handleDataChange,
     handleClear,
     getFieldProps,
-    isLoading,
     formState,
   } = useFormManager<FOCSchemeData>({
     initialData: initialFOCScheme,
@@ -270,6 +262,7 @@ const MultiFOCScheme: React.FC = () => {
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("scheme")}</label>
               </div>
+              {getFieldProps("schemeID").value}
               <div className="md:col-span-6">
                 <ERPDataCombobox
                   {...getFieldProps("schemeID")}
@@ -282,6 +275,7 @@ const MultiFOCScheme: React.FC = () => {
                   noLabel={true}
                   className="w-full max-w-[350px]"
                   onChangeData={(data: any) => {
+                    debugger;
                     handleFieldChange("schemeID", data.schemeID);
                   }}
                   disabled={isFormDisabled}
@@ -345,11 +339,13 @@ const MultiFOCScheme: React.FC = () => {
                       const obj = getFieldProps("*");
                       handleDataChange({
                         ...obj,
-                        productName: data.productName,
+                        productName: formState.data.productName,
+                        testserch: data.productName,
                         productID: data.productID,
                       } as FOCSchemeData);
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
+                    clearAfterSelection={false}
                   />
               
               </div>
@@ -448,7 +444,7 @@ const MultiFOCScheme: React.FC = () => {
                       const obj = getFieldProps("*");
                       handleDataChange({
                         ...obj,
-                        freeProductName: data.productName,
+                        freeProductName: formState.data.productName,
                         freeProductID: data.productID,
                       } as FOCSchemeData);
                     }}

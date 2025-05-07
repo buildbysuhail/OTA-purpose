@@ -1936,6 +1936,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                     }
                   }}
                   content={addNewOptionCobonent.content}
+                  disableOutsideClickClose={true}
                 />
                
               )}

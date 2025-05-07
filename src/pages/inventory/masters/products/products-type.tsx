@@ -137,6 +137,8 @@ export interface ProductLocalConfig {
   calculateMarkUpValue: boolean;
   showDisplayCost: boolean;
   showOpeningStock: boolean;
+  showMultiBarcodeOnSave:boolean;
+  showFlavourOnSave:boolean;
 }
 
 export interface ProductBatchInputDto {

@@ -18,7 +18,7 @@ type ERPButtonProps = {
   disableEnterNavigation?: boolean;
   loading?: boolean;
   startIcon?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
   onKeyDown?: (e: any) => void;
   className?: string;
   customVariant?: string;

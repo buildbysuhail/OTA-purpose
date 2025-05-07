@@ -7,7 +7,7 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleProducts } from "../../../../redux/slices/popup-reducer";
-import { PathValue, productDto, ProductFieldPath } from "./products-type";
+import { PathValue, productDto, ProductFieldPath, ProductLocalConfig } from "./products-type";
 import initialProductData from "./products-data";
 import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 import ProductDetailsIndia from "./products-india/product-details-india";
@@ -49,10 +49,13 @@ import { DataGrid } from "devextreme-react";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import {ProductMultiBarcodeManage} from "../products/product-multibarcode-manage";
+
 export interface MultiBarcodeState {
   open: boolean;
-  data: { unitCode: string; barcodes: string;unitID:number}[];
+  data: { unitCode: string; barcodes: string; unitID: number }[];
+  onClose?: (reload: boolean) => void;// Add onClose to the interface
 }
+
  const api = new APIClient();
 export const ProductMaster: React.FC = React.memo(() => {
   const [isLoremIpsumModalOpen, setIsLoremIpsumModalOpen] = useState<boolean>(false);
@@ -61,13 +64,18 @@ export const ProductMaster: React.FC = React.memo(() => {
   const { t } = useTranslation("inventory");
   const [canEdit, setCanEdit] = useState<boolean>(false);
 
-    const [flavorsOpen, setFlavorsOpen] = useState<{
-        open: boolean;
-        productId: number | null ;
-        data: any;
-      }>({  open: false, productId: null , data: [] });
+        const [flavorsOpen, setFlavorsOpen] = useState<{
+          open: boolean;
+          productId: number | null;
+          data: any;
+          onClose?: (reload: boolean) => void; // Add onClose to the state
+        }>({ open: false, productId: null, data: [], onClose: undefined });
 
-      const [multiBarcode, setMultiBarcode] = useState<MultiBarcodeState>({  open: false, data: [] });
+      const [multiBarcode, setMultiBarcode] = useState<MultiBarcodeState>({
+        open: false,
+        data: [],
+        onClose: undefined // Add onClose to the state
+      });
 
   const {
     isEdit,
@@ -96,7 +104,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     keyField: "productID",
     loadInitialData: false,
     initialData: {
-      data: initialProductData,
+    data: initialProductData,
     },
   });
   const [activeTab, setActiveTab] = React.useState(0);
@@ -182,74 +190,171 @@ export const ProductMaster: React.FC = React.memo(() => {
     }
   };
 
+  const handleFlavorOpen = () => {
+    return new Promise<void>((resolve) => {
+      const obj = getFieldProps("*") as productDto;
+      const productId = obj.product?.productID ?? 0;
+      if (isNullOrUndefinedOrZero(productId)) {
+        ERPAlert.show({
+          text: "Product not found. Please select a product.",
+          title: "Warning",
+          type: "warn",
+        });
+        resolve(); // Resolve immediately if no product ID
+        return;
+      }
 
+      const onClose = () => {
+        setFlavorsOpen({ open: false, productId: null, data: [], onClose: undefined });
+        resolve(); // Resolve the promise when modal is closed
+      };
 
-  const handleFlavorOpen = async () => {
-    const obj = getFieldProps("*") as productDto;
-    const productId = obj.product?.productID ?? 0;
-    if (isNullOrUndefinedOrZero(productId)) {
-      ERPAlert.show({
-        text: "Product not found. Please select a product.",
-        title: "Warning",
-        type: "warn",
-      });
-      return;
-    }
-
-    try {
-      const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`) ?? [];
-      handleResponse(response);
-      const dataWithNewRow = [...response, { flavor: '' }];
-      setFlavorsOpen({
-        open: true,
-        productId,
-        data: dataWithNewRow,
-      });
-    } catch (error) {
-      console.error("Error loading flavors:", error);
-    }
+      api.getAsync(`${Urls.products}GetFlavours/${productId}`)
+        .then((response) => {
+          handleResponse(response);
+          const dataWithNewRow = [...(response ?? []), { flavor: '' }];
+          setFlavorsOpen({
+            open: true,
+            productId,
+            data: dataWithNewRow,
+            onClose, // Set the onClose function in state
+          });
+        })
+        .catch((error) => {
+          console.error("Error loading flavors:", error);
+          resolve(); // Resolve even on error to proceed
+        });
+    });
   };
+
+  // const handleFlavorOpen = async () => {
+  //   const obj = getFieldProps("*") as productDto;
+  //   const productId = obj.product?.productID ?? 0;
+  //   if (isNullOrUndefinedOrZero(productId)) {
+  //     ERPAlert.show({
+  //       text: "Product not found. Please select a product.",
+  //       title: "Warning",
+  //       type: "warn",
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`) ?? [];
+  //     handleResponse(response);
+  //     const dataWithNewRow = [...response, { flavor: '' }];
+  //     setFlavorsOpen({
+  //       open: true,
+  //       productId,
+  //       data: dataWithNewRow,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error loading flavors:", error);
+  //   }
+  // };
+
+  const handleSubmitProductManage = async()=>{ 
+     const config =   getFieldProps("config").value as ProductLocalConfig
+     if(config.showFlavourOnSave){
+      await handleFlavorOpen()
+     }
+
+     if(config.showMultiBarcodeOnSave){
+      await handleMultibarcode()
+     }
+     
+     handleSubmit();
+  }
   //multibarcode open
-const handleMultibarcode = async ()=>{
-  const obj = getFieldProps("*") as productDto;
-  const batchId = obj.batch?.productBatchID 
+
+// const handleMultibarcode = async ()=>{
+//   const obj = getFieldProps("*") as productDto;
+//   const batchId = obj.batch?.productBatchID 
+//   // if (isNullOrUndefinedOrZero(batchId)) {
+//   //   ERPAlert.show({
+//   //     text: "Product Batch not found. Please select a Product Batch.",
+//   //     title: "Warning",
+//   //     type: "warn",
+//   //   });
+//   //   return;
+//   // }
+  
+//   try {
+//     const response = await api.getAsync(`${Urls.productBarcode}?productBatchId=${1}`) ?? [];
+//   setMultiBarcode((prev)=>({
+//     ...prev,
+//     open:true,
+//     data:response
+//   }))
+//   } catch (error) {
+//     console.error("Error loading flavors:", error);
+//   }
+
+// }
+
+const handleMultibarcode = () => {
+  return new Promise<void>((resolve) => {
+    const obj = getFieldProps("*") as productDto;
+    const batchId = obj.batch?.productBatchID;
   // if (isNullOrUndefinedOrZero(batchId)) {
   //   ERPAlert.show({
   //     text: "Product Batch not found. Please select a Product Batch.",
   //     title: "Warning",
   //     type: "warn",
   //   });
+  // resolve();
   //   return;
   // }
-  
-  try {
-    const response = await api.getAsync(`${Urls.productBarcode}?productBatchId=${1}`) ?? [];
-  setMultiBarcode((prev)=>({
-    ...prev,
-    open:true,
-    data:response
-  }))
-  } catch (error) {
-    console.error("Error loading flavors:", error);
-  }
+    const onClose = () => {
+      setMultiBarcode({ open: false, data: [], onClose: undefined });
+      resolve();
+    };
 
-}
+    api.getAsync(`${Urls.productBarcode}?productBatchId=${batchId || 1}`)
+      .then((response) => {
+        setMultiBarcode({
+          open: true,
+          data: response ?? [],
+          onClose,
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading multi-barcodes:", error);
+        resolve();
+      });
+  });
+};
 
 //save multibarcode 
 
+  // const handleSaveFlavor = async () => {
+  //   //call a api
+  //   const obj = getFieldProps("*") as productDto;
+  //   const productId = obj.product?.productID ?? 0;
+  //   const response = await api.post(`${Urls.products}AddFlavours`, { productID: productId, flavours: flavorsOpen.data.map((item: any) => item.flavor) });
+  //   handleResponse(response, () => {
+  //     setFlavorsOpen((prev: any) => ({
+  //       open: false,
+  //       productId: null,
+  //       data: [],
+  //     }));
+  //   })
+
+  // };
   const handleSaveFlavor = async () => {
-    //call a api
     const obj = getFieldProps("*") as productDto;
     const productId = obj.product?.productID ?? 0;
-    const response = await api.post(`${Urls.products}AddFlavours`, { productID: productId, flavours: flavorsOpen.data.map((item: any) => item.flavor) });
-    handleResponse(response, () => {
-      setFlavorsOpen((prev: any) => ({
-        open: true,
-        productId: null,
-        data: [],
-      }));
-    })
-
+    try {
+      const response = await api.post(`${Urls.products}AddFlavours`, {
+        productID: productId,
+        flavours: flavorsOpen.data.map((item: any) => item.flavor),
+      });
+      handleResponse(response);
+    } catch (error) {
+      console.error("Error saving flavors:", error);
+    } finally {
+      flavorsOpen.onClose?.(false);
+    }
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
@@ -673,13 +778,14 @@ const handleMultibarcode = async ()=>{
           !appSettings.branchSettings.maintainMasterEntry ||
           getFieldProps("hasDisabled").value == true
         }
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitProductManage}
       />
                 <ERPModal   
                   isOpen={flavorsOpen.open}
-                  closeModal={(reload: boolean) =>
-                    setFlavorsOpen({  open: false, productId: null, data: [] })
-                  }
+                  // closeModal={(reload: boolean) =>
+                  //   setFlavorsOpen({  open: false, productId: null, data: [] })
+                  // }
+                  closeModal={flavorsOpen.onClose ?? (() => {})}
                   title={t("flavors")}
                   content={
                     <div className="w-full">
@@ -764,13 +870,14 @@ const handleMultibarcode = async ()=>{
                     <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
                       <ERPSubmitButton
                         type="reset"
-                        onClick={() =>
-                          setFlavorsOpen({
-                            open: false,
-                            productId: null,
-                            data: [],
-                          })
-                        }
+                        onClick={() => flavorsOpen.onClose?.(false)}
+                        // onClick={() =>
+                        //   setFlavorsOpen({
+                        //     open: false,
+                        //     productId: null,
+                        //     data: [],
+                        //   })
+                        // }
                         className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
                       >
                         {t("cancel")}
@@ -793,9 +900,10 @@ const handleMultibarcode = async ()=>{
 
                 <ERPModal   
                   isOpen={multiBarcode.open}
-                  closeModal={(reload: boolean) =>
-                    setMultiBarcode({ open: false, data: [] })
-                  }
+                  closeModal={multiBarcode.onClose ?? (() => {})}
+                  // closeModal={(reload: boolean) =>
+                  //   setMultiBarcode({ open: false, data: [] })
+                  // }
                   title={t("multi_barcode")}
                   content={<ProductMultiBarcodeManage 
                     multiBarcode={multiBarcode}

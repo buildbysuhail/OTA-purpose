@@ -1,5 +1,4 @@
 import { productDto } from "./products-type";
-
 const initialProductData: productDto = {
   product: {
     productID: 0,
@@ -149,7 +148,9 @@ const initialProductData: productDto = {
     blockConvertProductNameToUpperCase: false,
     calculateMarkUpValue: true,
     showDisplayCost: true,
-    showOpeningStock: false
+    showOpeningStock: false,
+    showMultiBarcodeOnSave:false,
+    showFlavourOnSave:false
   },
   productImageString: "",
   barcode: "",

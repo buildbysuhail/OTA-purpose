@@ -378,7 +378,7 @@ useEffect(() => {
   );
 };
 
-export default ERPProductSearch;
+export default React.memo(ERPProductSearch);
 
 // delete
 // key = specialPriceID

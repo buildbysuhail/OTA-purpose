@@ -82,45 +82,6 @@ export const QuantityLimit: React.FC = () => {
     };
 
     const handleLoad = useCallback(async () => {
-        // const { selectedOption, department, category, productGroup, barcode } = formState.data;
-        // let fieldValue: string;
-        // let endpoint: string;
-    
-        // switch (selectedOption) {
-        //   case "department":
-        //     fieldValue = department;
-        //     endpoint = `${Urls.select_products_for_product_qty_limit}?SectionID=${department}`;
-        //     break;
-        //   case "category":
-        //     fieldValue = category;
-        //     endpoint = `${Urls.select_products_for_product_qty_limit}?ProductCategoryID=${category}`
-        //     break;
-        //   case "productGroup":
-        //     fieldValue = productGroup;
-        //     endpoint = `${Urls.select_products_for_product_qty_limit}?ProductGroupID=${productGroup}`
-        //     break;
-        //   case "barcode":
-        //     fieldValue = barcode;
-        //     endpoint = `${Urls.select_products_for_product_qty_limit}?Barcode=${barcode}&IsBarcode=true`
-        //     break;
-        //   default:
-        //     ERPAlert.show({
-        //       title: "",
-        //       icon: "warning",
-        //       text: "Please select a valid option.",
-        //     });
-        //     return;
-        // }
-    
-        // Validate the field value
-        // if (isNullOrUndefinedOrEmpty(fieldValue)) {
-        //   ERPAlert.show({
-        //     title: "",
-        //     icon: "warning",
-        //     text: `Please enter a valid ${selectedOption} value.`,
-        //   });
-        //   return;
-        // }
         const obj = getFieldProps("*");
        let payload ={
              sectionID:isNullOrUndefinedOrZero(obj.sectionID)?-1: obj.sectionID, 
@@ -340,7 +301,7 @@ export const QuantityLimit: React.FC = () => {
                         
                     />
                     <Column
-                        dataField="autoBarcode"
+                        dataField="barCode"
                         width={100}
                         dataType="string"
                         caption={t("barcode")}

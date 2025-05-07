@@ -135,9 +135,6 @@ interface RowProps {
     selectedValue: Option | null;
     handleSelect: (item: Option) => void;
     activeIndex: number;
-    addNewOption?: boolean;
-    handleAddNewClick?: () => void;
-
   };
   index: number;
   style: React.CSSProperties;
@@ -216,7 +213,7 @@ const Row = ({
   index,
   style,
 }: RowProps & { customSize?: "sm" | "md" | "lg" | "customize" }) => {
-  const { items, selectedValue, handleSelect, activeIndex, addNewOption, handleAddNewClick } = data;
+  const { items, selectedValue, handleSelect, activeIndex} = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
   const isActive = activeIndex === index;
@@ -293,11 +290,9 @@ const ComboboxList = React.forwardRef<
     onSelect: (item: Option) => void;
     activeIndex: number;
     customSize?: "sm" | "md" | "lg" | "customize";
-    addNewOption?: boolean;
-    handleAddNewClick?: () => void;
   } & { appState: "rtl" | "ltr" }
 >((props, ref) => {
-  const { items, selectedValue, onSelect, activeIndex, customSize, appState,addNewOption,handleAddNewClick} =
+  const { items, selectedValue, onSelect, activeIndex, customSize, appState,} =
     props;
   const itemData = {
     items,
@@ -305,8 +300,7 @@ const ComboboxList = React.forwardRef<
     handleSelect: onSelect,
     activeIndex,
     customSize,
-    addNewOption,
-    handleAddNewClick,
+
   };
 
   return (
@@ -864,44 +858,24 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
     };
 
-    // const filterItems = useCallback(
-    //   (searchQuery: string) => {
-    //     if (!searchQuery.trim()) {
-    //       setFilteredItems(items);
-    //       return;
-    //     }
-    //     const words = searchQuery.toLowerCase().split(/\s+/);
-    //     const filtered = items?.filter((item) => {
-    //       if (!item?.label) return false;
-    //       const itemLabel = item.label.toLowerCase();
-    //       return words.every((word) => itemLabel.includes(word));
-    //     });
-    //     setFilteredItems(filtered || []);
-    //   },
-    //   [items]
-    // );
-    // FIXED: Simplified filterItems to ensure "Add New" option is always appended when addNewOption is true
     const filterItems = useCallback(
       (searchQuery: string) => {
-        let filtered = items;
-        if (searchQuery.trim()) {
-          const words = searchQuery.toLowerCase().split(/\s+/);
-          filtered = items?.filter((item) => {
-            if (!item?.label) return false;
-            const itemLabel = item.label.toLowerCase();
-            return words.every((word) => itemLabel.includes(word));
-          }) || [];
+        if (!searchQuery.trim()) {
+          setFilteredItems(items);
+          return;
         }
-        if (addNewOption) {
-          filtered = [
-            ...filtered,
-            { label: "add new", value: "__add_new__", is_active: true },
-          ];
-        }
-        setFilteredItems(filtered);
+        const words = searchQuery.toLowerCase().split(/\s+/);
+        const filtered = items?.filter((item) => {
+          if (!item?.label) return false;
+          const itemLabel = item.label.toLowerCase();
+          return words.every((word) => itemLabel.includes(word));
+        });
+        setFilteredItems(filtered || []);
       },
-      [items, addNewOption]
+      [items]
     );
+  
+
 
     useEffect(() => {
       filterItems(query);
@@ -983,7 +957,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       });
     };
 
-    const handleItemClick = (value: Option) => {
+    const handleItemClick = (value: Option ) => {
       setInitial(value);
       setIsOpen(false);
       setQuery("");
@@ -1074,12 +1048,27 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
     };
 
-    const handleAddNewClick = () => {
-      if (addNewOptionCobonent && addNewOptionCobonent.popupAction) {
-        dispatch(addNewOptionCobonent.popupAction({ isOpen: true, key: null, reload: false }));
-        setIsOpen(false); // Close the dropdown
+    const handleAddNewClick = (e: React.MouseEvent) => {
+      alert("Button clicked!");
+      console.log("Add New button clicked"); // Debug log
+      e.stopPropagation();
+      e.preventDefault();
+    
+      if (addNewOptionCobonent?.popupAction) {
+        console.log("Dispatching popup action"); // Debug log
+        dispatch(addNewOptionCobonent.popupAction({ isOpen: true }));
       }
+      setIsOpen(false);
     };
+
+    // const handleAddNewClick = () => {
+    //   debugger;
+    //   if (addNewOptionCobonent && addNewOptionCobonent.popupAction) {
+    //     dispatch(addNewOptionCobonent.popupAction({ isOpen: true, key: null, reload: false }));
+    //     setIsOpen(false); // Close the dropdown
+    //   }
+    //   console.log("add new combo",addNewOptionCobonent);
+    // };
 
     const handleCloseModal = (reload: boolean) => {
       if (addNewOptionCobonent) {
@@ -1876,6 +1865,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       {t("no_data_found")}
                     </div>
                   ) : (
+                    <>
                     <ComboboxList
                       ref={listRef}
                       items={filteredItems}
@@ -1884,38 +1874,39 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       activeIndex={activeIndex}
                       customSize={_customSize}
                       appState={appState.dir}
-                      addNewOption={addNewOption}
-                      handleAddNewClick={handleAddNewClick}
                     />
+                    {/* {addNewOption && (
+                      <div className="">
+                        <ERPButton
+                          type="button"
+                          variant="primary"
+                          onClick={handleAddNewClick}
+                          title={t("add_new")}
+                          className="w-full text-sm"
+                        />
+                      </div>
+                     )}  */}
+                     {addNewOption && (
+  <div className="p-2 border-t">
+    <button
+      type="button"
+      onClick={handleAddNewClick}
+      className="w-full bg-slate-800 text-white py-1 px-3 rounded text-sm"
+    >
+      {t("add_new")}
+    </button>
+  </div>
+)}
+
+                  </>
+               
                   )}
-                 <footer className="fixed bottom-0 left-0 w-full bg-gray-800 text-white p-4 text-center z-40">
-                 <ERPButton
-        type="button"
-        variant="primary"
-        onClick={handleAddNewClick}
-        title={"add_new"}
-        className="w-full text-sm"
-      />
-      </footer>
+                
       
                 </div>,
                 document.body // Render to body to escape parent constraints
               )}
-          {addNewOption &&
-              addNewOptionCobonent &&
-              addNewOptionCobonent.isOpen &&
-              (
-                <ERPModal
-                  isOpen={addNewOptionCobonent.isOpen}
-                  title={addNewOptionCobonent.title}
-                  width={addNewOptionCobonent.width || 600}
-                  height={addNewOptionCobonent.height || 350}
-                  isForm={true}
-                  closeModal={handleCloseModal}
-                  content={addNewOptionCobonent.content}
-                />
-               
-              )}
+        
 
           </Combobox>
           {info != undefined && info != null && info != "" && (
@@ -1928,6 +1919,26 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             validation != "" && (
               <ERPElementValidationMessage validation={validation} />
             )}
+              {addNewOption &&
+              addNewOptionCobonent &&
+              addNewOptionCobonent.isOpen &&
+              (
+                <ERPModal
+                  isOpen={addNewOptionCobonent.isOpen}
+                  title={addNewOptionCobonent.title}
+                  width={addNewOptionCobonent.width || 600}
+                  height={addNewOptionCobonent.height || 350}
+                  isForm={true}
+                  // closeModal={handleCloseModal}
+                  closeModal={() => {
+                    if (addNewOptionCobonent.closeModal) {
+                      addNewOptionCobonent.closeModal();
+                    }
+                  }}
+                  content={addNewOptionCobonent.content}
+                />
+               
+              )}
         </div>
       );
     }

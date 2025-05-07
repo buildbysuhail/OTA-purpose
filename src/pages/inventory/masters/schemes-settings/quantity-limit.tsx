@@ -355,7 +355,22 @@ debugger;
                         caption={t("barcode")}
                     />
                     <Column
-                        dataField="product"
+                        dataField="productBatchID"
+                        width={100}
+                        caption={t("productBatchID")}
+                    />
+                    <Column
+                        dataField="productID"
+                        width={100}
+                        caption={t("productID")}
+                    />
+                    <Column
+                        dataField="itemQtyLimitID"
+                        width={100}
+                        caption={t("itemQtyLimitID")}
+                    />
+                    <Column
+                        dataField="productName"
                         width={200}
                         caption={t("product")}
                     />

@@ -20,6 +20,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onRowSelected?: (data: any) => void;
   checkboxLabel?: string; 
   value?: string; 
+  clearAfterSelection?: boolean; 
 }
 
 interface LoadResult {
@@ -100,7 +101,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected,checkboxLabel, onChange, value, ...rest }) => {
+const ERPProductSearch: React.FC<InputProps> = ({inputId,label, productDataUrl, batchDataUrl, keyId, onRowSelected,onProductSelected,checkboxLabel, onChange, value, clearAfterSelection = true, ...rest }) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
   const [showProductGrid, setShowProductGrid] = useState(false);
@@ -228,10 +229,12 @@ useEffect(() => {
           onRowSelected(selectedRow); // Call the onRowSelected callback with selected row data
         }
         setShowBatchGrid(false); // Optionally hide the batch grid
-        setInputValue((prev) => ({
-          ...prev,
-          searchValue: '', // Clear the searchValue
-        }))
+        if(clearAfterSelection) {
+        // setInputValue((prev) => ({
+        //   ...prev,
+        //   searchValue: '', // Clear the searchValue
+        // }))
+      }
       }
     },
     [onRowSelected]

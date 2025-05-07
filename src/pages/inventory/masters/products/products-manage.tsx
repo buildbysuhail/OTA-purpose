@@ -431,17 +431,18 @@ const handleMultibarcode = () => {
         );
         data.onHold = holdStatus;
       }
+debugger
 
-      if (!clientSession.isAppGlobal) {
+      // if (!clientSession.isAppGlobal) {
         const markupPercentage = calculateMarkup(
           data.product.stdPurchasePrice ?? 0,
           data.product.stdSalesPrice ?? 0,
-          data.taxCategoryTaxPercentage,
+          data.product.taxCategoryValue??0,
           appSettings.productsSettings.showRateBeforeTax,
           getFormattedValue
         );
         data.markup = markupPercentage;
-      }
+      // }
 
       handleDataChange({ ...data });
     }
@@ -491,6 +492,7 @@ const handleMultibarcode = () => {
     <div key="details">
       {" "}
       <ProductDetailsIndia
+      clientSession={clientSession}
         formState={formState}
         getFieldProps={getFieldProps}
         handleFieldChange={handleFieldChange}
@@ -579,7 +581,7 @@ const handleMultibarcode = () => {
       />
 
       <ProductDetailsGcc
-        formState={formState}
+      clientSession={clientSession}
         getFieldProps={getFieldProps}
         handleFieldChange={handleFieldChange}
       />

@@ -20,14 +20,24 @@ const ProductDetailsBatches: React.FC<{
   getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ handleFieldChange, t, getFieldProps }) => {
 
+  const { getFormattedValue } = useNumberFormat();
+  const renderCell = (cellData: any, field: string) => {
+    return (
+      <div
+      >
+        {parseFloat(getFormattedValue(cellData.data[field], false, 4))}
+      </div>
+    );
+  };
   const columns: DevGridColumn[] = useMemo(() => [
     { dataField: "batchNo", caption: t("Batch No"), width: 60, dataType: "string" },
     { dataField: "autoBarcode", caption: t("Auto Barcode"), width: 70, dataType: "string" },
-    { dataField: "mannualBarcode", caption: t("Manual Barcode"), width: 70, dataType: "string" },
+    { dataField: "manualBarcode", caption: t("Manual Barcode"), width: 70, dataType: "string" },
     { dataField: "godown", caption: t("Godown"), width: 75, dataType: "string" },
-    { dataField: "stdSalesPrice", caption: t("Sales Rate"), width: 75, dataType: "number", alignment: "right" },
-    { dataField: "minSalePrice", caption: t("Min Sale Price"), width: 75, dataType: "number", alignment: "right" },
-    { dataField: "mrp", caption: t("MRP"), width: 100, dataType: "number", alignment: "right" },
+    { dataField: "stdSalesPrice",  cellRender: (cellData: any ) => renderCell(cellData, "stdSalesPrice"), caption: t("Sales Rate"), width: 75, dataType: "number", alignment: "right" }, 
+    { dataField: "stdPurchasePrice",cellRender: (cellData: any ) => renderCell(cellData, "stdPurchasePrice"), caption: t("Purchase Rate"), width: 75, dataType: "number", alignment: "right" },
+    { dataField: "msp", caption: t("Min Sale Price"),cellRender: (cellData: any ) => renderCell(cellData, "msp"), width: 75, dataType: "number", alignment: "right" },
+    { dataField: "mrp", caption: t("MRP"), width: 100,cellRender: (cellData: any ) => renderCell(cellData, "mrp"), dataType: "number", alignment: "right" },
     { dataField: "specification", caption: t("Specification"), width: 100, dataType: "string" },
     { dataField: "defSalesUnitId", caption: t("DefSalesUnitID"), width: 100, dataType: "number", alignment: "center" },
     { dataField: "defPurchaseUnitId", caption: t("DefPurchaseUnitID"), width: 100, dataType: "number", alignment: "center" },
@@ -64,7 +74,6 @@ const ProductDetailsBatches: React.FC<{
   const appSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { getFormattedValue } = useNumberFormat()
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <ErpDevGrid

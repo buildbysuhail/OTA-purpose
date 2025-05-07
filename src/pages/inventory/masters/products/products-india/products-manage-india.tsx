@@ -170,7 +170,11 @@ export const ProductManageIndia: React.FC<{
     }): void {
       throw new Error("Function not implemented.");
     }
-
+useEffect(() => {
+      const obj = getFieldProps("*") as any as productDto;
+      const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice??0, obj.product.stdSalesPrice??0,obj.taxCategoryTaxPercentage,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
+      handleFieldChange("markup", markupPercentage)
+    },[])
     return (
       <div className="w-full modal-content">
         <div className="flex flex-col gap-1">
@@ -621,7 +625,7 @@ export const ProductManageIndia: React.FC<{
                     })
                   }
                 />
-                {getFieldProps("config.showOpeningStock").value == true && (
+                {/* {getFieldProps("config.showOpeningStock").value == true && (
                   <ERPInput
                     {...getFieldProps("batch.openingStock")}
                     disabled={
@@ -639,7 +643,7 @@ export const ProductManageIndia: React.FC<{
                       )
                     }
                   />
-                )}
+                )} */}
                 <ERPInput
                   {...getFieldProps("batch.msp")}
                   label={t("msp")}
@@ -651,7 +655,7 @@ export const ProductManageIndia: React.FC<{
                     handleFieldChange("batch.msp", data.batch.msp)
                   }
                 />
-
+{/* 
                 <ERPInput
                   {...getFieldProps("batch.stock")}
                   label={t("stock")}
@@ -662,7 +666,7 @@ export const ProductManageIndia: React.FC<{
                   onChangeData={(data: any) =>
                     handleFieldChange("batch.stock", data.batch.stock)
                   }
-                />
+                /> */}
               </div>
               {appSettings.mainSettings.maintainMultilanguage__ == true && (
                 <div className="mb-3">

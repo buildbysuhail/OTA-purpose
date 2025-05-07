@@ -101,7 +101,7 @@ export interface DetailsDto {
   unitQty?: number; // UnitQty: int?
   packingSlip?: boolean; // PackingSlip: bool?
   financialYearID?: number; // FinancialYearID: long?
-  unitName?: string; // UnitName: string?
+  netWeightUnit?: string; // UnitName: string?
   mrp?: number; // MRP: decimal?
   autoBarcode?: string; // UnitName: string?
   stdPurchasePrice?: number; // MRP: decimal?
@@ -111,7 +111,8 @@ export interface DetailsDto {
   hold?: boolean; // newly added
   active?:boolean; // newly added
   manual?:boolean; // newly added
-  netWeight?: number;
+  netWt?: number;
+  taxCategoryValue?: number; // readOnly
 }
 
 export interface ProductValidationDto {

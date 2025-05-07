@@ -462,6 +462,9 @@
     "standard":"Standard",
     "product_prices_gcc":"Product Prices GCC",
     "product_prices_india":"Product Prices India",
-    "free_barcode":"Free Item Barcode",
-    "free_unit":"Free Unit"
+    "free_barcode":"Free Item BarCode",
+    "free_unit":"Free Unit",
+    "product_barcode":"Product BarCode",
+    "product_details":"Product Details",
+    "free_product_details":"Free Product Details"
 }

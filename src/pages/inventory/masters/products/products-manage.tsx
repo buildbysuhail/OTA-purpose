@@ -227,31 +227,6 @@ export const ProductMaster: React.FC = React.memo(() => {
     });
   };
 
-  // const handleFlavorOpen = async () => {
-  //   const obj = getFieldProps("*") as productDto;
-  //   const productId = obj.product?.productID ?? 0;
-  //   if (isNullOrUndefinedOrZero(productId)) {
-  //     ERPAlert.show({
-  //       text: "Product not found. Please select a product.",
-  //       title: "Warning",
-  //       type: "warn",
-  //     });
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await api.getAsync(`${Urls.products}GetFlavours/${productId}`) ?? [];
-  //     handleResponse(response);
-  //     const dataWithNewRow = [...response, { flavor: '' }];
-  //     setFlavorsOpen({
-  //       open: true,
-  //       productId,
-  //       data: dataWithNewRow,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error loading flavors:", error);
-  //   }
-  // };
 
   const handleSubmitProductManage = async()=>{ 
      const config =   getFieldProps("config").value as ProductLocalConfig
@@ -266,31 +241,6 @@ export const ProductMaster: React.FC = React.memo(() => {
      handleSubmit();
   }
   //multibarcode open
-
-// const handleMultibarcode = async ()=>{
-//   const obj = getFieldProps("*") as productDto;
-//   const batchId = obj.batch?.productBatchID 
-//   // if (isNullOrUndefinedOrZero(batchId)) {
-//   //   ERPAlert.show({
-//   //     text: "Product Batch not found. Please select a Product Batch.",
-//   //     title: "Warning",
-//   //     type: "warn",
-//   //   });
-//   //   return;
-//   // }
-  
-//   try {
-//     const response = await api.getAsync(`${Urls.productBarcode}?productBatchId=${1}`) ?? [];
-//   setMultiBarcode((prev)=>({
-//     ...prev,
-//     open:true,
-//     data:response
-//   }))
-//   } catch (error) {
-//     console.error("Error loading flavors:", error);
-//   }
-
-// }
 
 const handleMultibarcode = () => {
   return new Promise<void>((resolve) => {
@@ -327,20 +277,7 @@ const handleMultibarcode = () => {
 
 //save multibarcode 
 
-  // const handleSaveFlavor = async () => {
-  //   //call a api
-  //   const obj = getFieldProps("*") as productDto;
-  //   const productId = obj.product?.productID ?? 0;
-  //   const response = await api.post(`${Urls.products}AddFlavours`, { productID: productId, flavours: flavorsOpen.data.map((item: any) => item.flavor) });
-  //   handleResponse(response, () => {
-  //     setFlavorsOpen((prev: any) => ({
-  //       open: false,
-  //       productId: null,
-  //       data: [],
-  //     }));
-  //   })
 
-  // };
   const handleSaveFlavor = async () => {
     const obj = getFieldProps("*") as productDto;
     const productId = obj.product?.productID ?? 0;
@@ -349,12 +286,12 @@ const handleMultibarcode = () => {
         productID: productId,
         flavours: flavorsOpen.data.map((item: any) => item.flavor),
       });
-      handleResponse(response);
+      handleResponse(response,()=>{
+        flavorsOpen.onClose?.(false);
+      });
     } catch (error) {
       console.error("Error saving flavors:", error);
-    } finally {
-      flavorsOpen.onClose?.(false);
-    }
+    } 
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {

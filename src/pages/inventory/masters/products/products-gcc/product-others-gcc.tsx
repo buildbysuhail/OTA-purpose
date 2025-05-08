@@ -46,8 +46,7 @@ const ProductOthersGcc: React.FC<{
             , [fieldId]: value
         }
         const res = await api.postAsync(Urls.update_product_config, pay);
-        const _data = {
-            ...prev}
+        const _data = {...prev}
             _data.config = pay
 
           handleDataChange(_data);
@@ -56,6 +55,7 @@ const ProductOthersGcc: React.FC<{
           useEffect(() => {
             const fetchData = async () => {
               try {
+                debugger;
                 const prev = getFieldProps("*");
                 const base64 = await api.getAsync(Urls.get_product_config);
                 const _userConfig = atob(base64);
@@ -76,7 +76,7 @@ const ProductOthersGcc: React.FC<{
               const [activePopup, setActivePopup] = useState<string | null>(null);
               const openPopup = (popupType: string) => setActivePopup(popupType);
               const closePopup = () => setActivePopup(null);
-    return (
+     return (
         <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
             <div className="flex items-center gap-4">
             <ERPButton
@@ -117,6 +117,16 @@ const ProductOthersGcc: React.FC<{
                     {...getFieldProps("config.showDisplayCost")}
                     label={t("show_display_cost")}
                     onChange={(data) => handleFieldChangeAndResetSettings("showDisplayCost", data.target.checked)}
+                />
+                  <ERPCheckbox
+                    {...getFieldProps("config.showMultiBarcodeOnSave")}
+                    label={t("show_multibacode_onsave")}
+                    onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
+                />
+                  <ERPCheckbox
+                    {...getFieldProps("config.showFlavourOnSave")}
+                    label={t("show_flavour_onsave")}
+                    onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
                 />
             </div>
             {activePopup === "fastMoving" && (

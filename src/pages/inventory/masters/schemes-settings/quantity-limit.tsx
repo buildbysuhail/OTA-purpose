@@ -185,15 +185,28 @@ export const QuantityLimit: React.FC = () => {
 
     // Get selected rows based on selectedRowKeys
     const selectedRows = gridData.filter((row) =>selectedRow.includes(row.slNo));
-    const productIDs = selectedRows.map(row => ({
-      productID: row.productID ,
+    // Separate rows into those to delete locally (itemQtyLimitID === 0) and those to delete via API (itemQtyLimitID !== 0)
+  const rowsToDeleteLocally = selectedRows.filter(row => row.itemQtyLimitID === 0);
+  const rowsToDeleteViaApi = selectedRows.filter(row => row.itemQtyLimitID !== 0);
+    const payload = rowsToDeleteViaApi.map(row => ({
+      ItemQtyLimitID: row.itemQtyLimitID ,
     }));
     try {
       setDeleteLoading(true);
       // Make API call to delete with productIDs
-      const response = await api.delete(`${Urls.quantity_limit}`, {data:productIDs} );
-      handleResponse(response);
-      setSelectedRow([]); 
+    if (rowsToDeleteLocally.length > 0) {
+      setGridData((prev) =>
+        prev.filter((row) => !rowsToDeleteLocally.some((selected) => selected.slNo === row.slNo))
+      );
+    }
+    if (rowsToDeleteViaApi.length > 0) {
+      const response = await api.delete(`${Urls.quantity_limit}`, {data:payload} );
+      handleResponse(response,()=>{
+        setSelectedRow([]); 
+      });
+     
+    }
+
     } catch (error) {
       console.error(`Error deleting rows:`, error);
     } finally {
@@ -495,7 +508,6 @@ export const QuantityLimit: React.FC = () => {
           />
           <Column
             dataField="productName"
-            width={250}
             dataType="string"
             caption={t("product")}
           />

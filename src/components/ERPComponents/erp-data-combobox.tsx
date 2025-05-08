@@ -691,6 +691,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       field?.freezeDataLoad,
       _reload,
       disabledApiCall,
+options
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);

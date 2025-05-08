@@ -115,6 +115,19 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
       debugger;
       const obj = getFieldProps("*");
       const updated = [...obj.units, unit];
+
+      const selected = fList.filter(x => x.unitID??0 > 0).map((x: any) => ({
+        id: Number(x.unitID),       // Ensure type matches: number
+        name: String(x.unit),       // Ensure type matches: string
+      }))
+      const unSelected = units.filter(x => !selected.map(x => x.id).includes(x.id??0)).map((x: any) => ({
+        id: Number(x.id),       // Ensure type matches: number
+        name: String(x.name),       // Ensure type matches: string
+      }))
+      debugger;
+      setSelectedUnits(selected);
+      unSetSelectedUnits(unSelected);
+      
       if (appSettings?.productsSettings?.allowMultirate) {
         const rates = await loadMultiRateToGrid(obj, updated);
         handleDataChange({ ...obj, prices: rates, units: updated });
@@ -288,7 +301,15 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
         unit: "",
       }));
     };
-
+const [selectedUnits, setSelectedUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
+  const [units, setUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
+  const [unSelectedUnits, unSetSelectedUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
     return (
       <div className="border border-[#ccc] rounded-md p-4 w-full">
         <div className="flex flex-col gap-4">

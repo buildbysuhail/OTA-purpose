@@ -38,7 +38,7 @@ export const initialQuantityLimit: {
     barcode: "",
     quantityLimit: 0,
     itemData: [],
-    id: 0,
+    itemQtyLimitID: 0,
     department: "",
     category: "",
   },
@@ -52,7 +52,7 @@ export const initialQuantityLimit: {
 };
 
 export interface QuantityLimitData {
-  id: number;
+  itemQtyLimitID: number;
   selectedOption: string;
   section: string;
   department: string;
@@ -68,7 +68,7 @@ export interface QuantityLimitData {
 }
 
 export interface QuantityLimitItemData {
-  id: number;
+  itemQtyLimitID: number;
   slNo: number;
   autoBarcode: string;
   barCode: string;
@@ -140,7 +140,20 @@ export const QuantityLimit: React.FC = () => {
       setIsDataLoading(false);
     }
   }, []);
+  const handleAdd = useCallback(async () => {
+    try {
+      setIsDataLoading(true);
 
+      const response = await api.postAsync(`${Urls.select_quantity_limit}`,gridData);
+      setGridData(response);
+      handleClear();
+    } catch (error) {
+      console.error(`Error fetching data for`, error);
+      setGridData([]);
+    } finally {
+      setIsDataLoading(false);
+    }
+  }, [gridData]);
   const handleClear = useCallback(() => {
     setQuantityLimitForm(initialQuantityLimit);
   }, []);
@@ -155,13 +168,14 @@ export const QuantityLimit: React.FC = () => {
     }
   }, [selectAll]);
 
-  const handleRemoveRow = useCallback((rowId: number) => {
-    setGridData((prevData) => prevData.filter((item) => item.id !== rowId));
+  const handleRemoveRow = useCallback(async(rowId: number) => {
+    const url = `${Urls.delete_quantity_limit}${rowId}`;
+    const response = await api.delete(url);
+    handleResponse(response, () => {
+      setGridData((prev: any) => prev.filter((x: any) => x.itemQtyLimitID != rowId))
+    });
   }, []);
 
-  const handleSave = useCallback(() => {
-    console.log("Saving data:", gridData);
-  }, [gridData]);
 
   const handleSelectAllToDelete = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,7 +189,7 @@ export const QuantityLimit: React.FC = () => {
       <div className="flex justify-center">
         <button
           className="text-[#ef4444] font-bold px-2"
-          onClick={() => handleRemoveRow(cellData.data.id)}
+          onClick={() => handleRemoveRow(cellData.data.itemQtyLimitID)}
         >
           X
         </button>
@@ -360,7 +374,7 @@ export const QuantityLimit: React.FC = () => {
 
                 return {
                   ...item,
-                  qtyLimit: quantityLimit,
+                  maxQty: quantityLimit,
                 };
               });
 
@@ -371,11 +385,6 @@ export const QuantityLimit: React.FC = () => {
       </div>
       <div className="flex justify-end gap-2">
         <ERPButton
-          title={t("delete")}
-          variant="primary"
-          onClick={handleDelete}
-        />
-        <ERPButton
           title={t("load")}
           variant="primary"
           onClick={handleLoad}
@@ -385,7 +394,7 @@ export const QuantityLimit: React.FC = () => {
         <ERPButton
           title={t("save")}
           variant="primary"
-          onClick={handleSave}
+          onClick={handleAdd}
         />
         <ERPButton
           title={t("clear")}
@@ -432,6 +441,11 @@ export const QuantityLimit: React.FC = () => {
             dataType="string"
             caption={t("product")}
           />
+          <Column
+              dataField="maxQty"
+              width={80}
+              caption={t("qty_limit")}
+          /> 
           <Column caption={t("X")} cellRender={renderDeleteCell} width={40} />
         </DataGrid>
       </div>

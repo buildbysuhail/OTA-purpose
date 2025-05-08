@@ -149,6 +149,20 @@ export const QuantityLimit: React.FC = () => {
       setIsDataLoading(false);
     }
   }, []);
+  const handleAdd = useCallback(async () => {
+    try {
+      setIsDataLoading(true);
+
+      const response = await api.postAsync(`${Urls.select_quantity_limit}`,gridData);
+      setGridData(response);
+      handleClear();
+    } catch (error) {
+      console.error(`Error fetching data for`, error);
+      setGridData([]);
+    } finally {
+      setIsDataLoading(false);
+    }
+  }, [gridData]);
   const handleClear = useCallback(() => {
     clearForm();
   }, [clearForm]);
@@ -171,10 +185,6 @@ export const QuantityLimit: React.FC = () => {
     });
   }, []);
 
-  const handleSave = useCallback(() => {
-    console.log("Saving data:", gridData);
-    // select_products_for_product_qty_limit
-  }, [gridData]);
 
   const handleSelectAllToDelete = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -362,7 +372,7 @@ export const QuantityLimit: React.FC = () => {
 
                 return {
                   ...item,
-                  qtyLimit: quantityLimit,
+                  maxQty: quantityLimit,
                 };
               });
 
@@ -387,7 +397,7 @@ export const QuantityLimit: React.FC = () => {
         <ERPButton
           title={t("save")}
           variant="primary"
-          // onClick={handleAdd}
+          onClick={handleAdd}
         />
         <ERPButton title={t("clear")} variant="primary" onClick={handleClear} />
       </div>
@@ -430,11 +440,11 @@ export const QuantityLimit: React.FC = () => {
             dataType="string"
             caption={t("product")}
           />
-          {/* <Column
-                        dataField="qtyLimit"
-                        width={80}
-                        caption={t("qty_limit")}
-                    /> */}
+          <Column
+              dataField="maxQty"
+              width={80}
+              caption={t("qty_limit")}
+          /> 
           <Column caption={t("X")} cellRender={renderDeleteCell} width={40} />
         </DataGrid>
       </div>

@@ -152,6 +152,19 @@ const ProductOthersIndia: React.FC<{
                 className="min-w-[250px] flex-1"
               /> */}
             </div>
+            <div className="flex flex-wrap gap-x-8 gap-y-2">
+               <ERPCheckbox
+                    {...getFieldProps("config.showMultiBarcodeOnSave")}
+                    label={t("show_multibacode_onsave")}
+                    onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
+                />
+                  <ERPCheckbox
+                    {...getFieldProps("config.showFlavourOnSave")}
+                    label={t("show_flavour_onsave")}
+                    onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
+                />
+            </div>
+           
           </div>
         </div>
 

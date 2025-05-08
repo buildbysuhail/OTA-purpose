@@ -10,7 +10,6 @@ import DataGrid, {
   Paging,
   Scrolling,
 } from "devextreme-react/data-grid";
-import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -23,6 +22,7 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import { productDto } from "../products/products-type";
 
 const api = new APIClient();
+
 export const initialQuantityLimit: {
   data: QuantityLimitData;
   validations: any;
@@ -82,22 +82,13 @@ export const QuantityLimit: React.FC = () => {
   const [gridData, setGridData] = useState<QuantityLimitItemData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-
-  const {
-    isEdit,
-    handleSubmit,
-    handleFieldChange,
-    handleClear: clearForm,
-    getFieldProps,
-    isLoading,
-    formState,
-  } = useFormManager<QuantityLimitData>({
-    initialData: initialQuantityLimit,
-    useApiClient: true,
-  });
+  const [quantityLimitForm, setQuantityLimitForm] = useState(initialQuantityLimit);
 
   const handleOptionChange = (option: string) => {
-    handleFieldChange("selectedOption", option);
+    setQuantityLimitForm((prev) => ({
+      ...prev,
+      data: { ...prev.data, selectedOption: option },
+    }));
   };
 
   const handleLoadByProp = useCallback(async (obj: QuantityLimitData) => {
@@ -126,7 +117,7 @@ export const QuantityLimit: React.FC = () => {
       );
       handleResponse(response);
       setGridData(response);
-      //   handleClear();
+      handleClear();
     } catch (error) {
       console.error(`Error fetching data for`, error);
       setGridData([]);
@@ -149,9 +140,10 @@ export const QuantityLimit: React.FC = () => {
       setIsDataLoading(false);
     }
   }, []);
+
   const handleClear = useCallback(() => {
-    clearForm();
-  }, [clearForm]);
+    setQuantityLimitForm(initialQuantityLimit);
+  }, []);
 
   const handleClearAll = useCallback(() => {
     setGridData([]);
@@ -169,7 +161,6 @@ export const QuantityLimit: React.FC = () => {
 
   const handleSave = useCallback(() => {
     console.log("Saving data:", gridData);
-    // select_products_for_product_qty_limit
   }, [gridData]);
 
   const handleSelectAllToDelete = useCallback(
@@ -200,26 +191,30 @@ export const QuantityLimit: React.FC = () => {
             id="department"
             name="limitOption"
             label={t("department")}
-            checked={formState.data.selectedOption === "department"}
+            checked={quantityLimitForm.data.selectedOption === "department"}
             className="w-full"
             onChange={() => handleOptionChange("department")}
           />
           <ERPDataCombobox
-            {...getFieldProps("sectionID")}
-            value={formState.data.department}
-            noLabel={true}
+            id="sectionID"
             field={{
               id: "sectionID",
               valueKey: "id",
               labelKey: "name",
               getListUrl: Urls.data_sections,
             }}
-            disabled={formState.data.selectedOption !== "department"}
+            noLabel
+            data={quantityLimitForm.data}
+            value={quantityLimitForm.data.sectionID}
+            disabled={quantityLimitForm.data.selectedOption !== "department"}
             className="w-full"
             onChangeData={(data: any) => {
-              const obj = { ...getFieldProps("*"), sectionID: data.sectionID };
+              const obj = { ...quantityLimitForm.data, sectionID: data.sectionID };
               handleLoadByProp(obj);
-              handleFieldChange("sectionID", data.sectionID);
+              setQuantityLimitForm((prev) => ({
+                ...prev,
+                data: { ...prev.data, sectionID: data.sectionID },
+              }));
             }}
           />
         </div>
@@ -230,28 +225,32 @@ export const QuantityLimit: React.FC = () => {
             name="limitOption"
             label={t("category")}
             className="w-full"
-            checked={formState.data.selectedOption === "category"}
+            checked={quantityLimitForm.data.selectedOption === "category"}
             onChange={() => handleOptionChange("category")}
           />
           <ERPDataCombobox
-            {...getFieldProps("productCategoryId")}
-            value={formState.data.category}
-            noLabel={true}
+            id="productCategoryId"
             field={{
               id: "productCategoryId",
               valueKey: "id",
               labelKey: "name",
               getListUrl: Urls.data_productcategory,
             }}
-            disabled={formState.data.selectedOption !== "category"}
+            noLabel
+            data={quantityLimitForm.data}
+            value={quantityLimitForm.data.productCategoryId}
+            disabled={quantityLimitForm.data.selectedOption !== "category"}
             className="w-full"
             onChangeData={(data: any) => {
               const obj = {
-                ...getFieldProps("*"),
+                ...quantityLimitForm.data,
                 productCategoryId: data.productCategoryId,
               };
               handleLoadByProp(obj);
-              handleFieldChange("productCategoryId", data.productCategoryId);
+              setQuantityLimitForm((prev) => ({
+                ...prev,
+                data: { ...prev.data, productCategoryId: data.productCategoryId },
+              }));
             }}
           />
         </div>
@@ -262,28 +261,32 @@ export const QuantityLimit: React.FC = () => {
             name="limitOption"
             label={t("product_group")}
             className="w-full"
-            checked={formState.data.selectedOption === "productGroup"}
+            checked={quantityLimitForm.data.selectedOption === "productGroup"}
             onChange={() => handleOptionChange("productGroup")}
           />
           <ERPDataCombobox
-            {...getFieldProps("productGroupId")}
-            value={formState.data.productGroup}
-            noLabel={true}
+            id="productGroupId"
             field={{
               id: "productGroupId",
               valueKey: "id",
               labelKey: "name",
               getListUrl: Urls.data_productgroup,
             }}
-            disabled={formState.data.selectedOption !== "productGroup"}
+            noLabel
+            data={quantityLimitForm.data}
+            value={quantityLimitForm.data.productGroupID}
+            disabled={quantityLimitForm.data.selectedOption !== "productGroup"}
             className="w-full"
             onChangeData={(data: any) => {
               const obj = {
-                ...getFieldProps("*"),
+                ...quantityLimitForm.data,
                 productGroupID: data.productGroupId,
               };
               handleLoadByProp(obj);
-              handleFieldChange("productGroupId", data.productGroupId);
+              setQuantityLimitForm((prev) => ({
+                ...prev,
+                data: { ...prev.data, productGroupID: data.productGroupId },
+              }));
             }}
           />
         </div>
@@ -294,48 +297,50 @@ export const QuantityLimit: React.FC = () => {
             name="barcode"
             label={t("barcode")}
             className="w-full"
-            checked={formState.data.selectedOption === "barcode"}
+            checked={quantityLimitForm.data.selectedOption === "barcode"}
             onChange={() => handleOptionChange("barcode")}
           />
           <ERPInput
-            {...getFieldProps("barcode")}
-            value={formState.data.barcode}
-            noLabel={true}
-            disabled={formState.data.selectedOption !== "barcode"}
+            id="barcode"
+            noLabel
+            value={quantityLimitForm.data.barcode}
+            disabled={quantityLimitForm.data.selectedOption !== "barcode"}
             className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("barcode", data.barcode)
-            }
+            data={quantityLimitForm.data}
+            onChangeData={(data: any) => {
+              setQuantityLimitForm((prev) => ({
+                ...prev,
+                data: { ...prev.data, barcode: data.barcode },
+              }));
+            }}
             disableEnterNavigation
             onEnterKeyDown={(data: any) => {
-              debugger;
-              const obj = { ...getFieldProps("*") };
-              handleLoadByProp(obj);
+              handleLoadByProp(quantityLimitForm.data);
             }}
           />
         </div>
 
         <div>
           <ERPInput
+            id="quantityLimit"
             name="quantityLimit"
-            {...getFieldProps("quantityLimit")}
-            value={formState.data.quantityLimit}
             label={t("quantity_limit")}
             type="number"
+            value={quantityLimitForm.data.quantityLimit}
             className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("quantityLimit", parseInt(data.quantityLimit))
-            }
+            data={quantityLimitForm.data}
+            onChangeData={(data: any) => {
+              setQuantityLimitForm((prev) => ({
+                ...prev,
+                data: { ...prev.data, quantityLimit: parseInt(data.quantityLimit) },
+              }));
+            }}
             disableEnterNavigation
             onEnterKeyDown={() => {
-                
-              const quantityLimit = Number(
-                getFieldProps("quantityLimit")?.value
-              );
+              const quantityLimit = Number(quantityLimitForm.data.quantityLimit);
 
               if (!quantityLimit || isNaN(quantityLimit)) {
                 alert("Please enter a valid Quantity Limit.");
-                // Optionally, you can set focus back to the qty input field here
                 return;
               }
 
@@ -345,15 +350,12 @@ export const QuantityLimit: React.FC = () => {
                 alert(
                   "There is no product. Please fill products before setting the quantity limit."
                 );
-                // Optionally, you can set focus to another element here
                 return;
               }
 
               const updatedList = productList.map((item) => {
                 if (!item.productID) {
-                    return {
-                        ...item,
-                      };
+                  return { ...item };
                 }
 
                 return {
@@ -383,9 +385,13 @@ export const QuantityLimit: React.FC = () => {
         <ERPButton
           title={t("save")}
           variant="primary"
-          // onClick={handleAdd}
+          onClick={handleSave}
         />
-        <ERPButton title={t("clear")} variant="primary" onClick={handleClear} />
+        <ERPButton
+          title={t("clear")}
+          variant="primary"
+          onClick={handleClear}
+        />
       </div>
 
       <div className="bg-white border border-gray-300 mt-4">
@@ -426,23 +432,9 @@ export const QuantityLimit: React.FC = () => {
             dataType="string"
             caption={t("product")}
           />
-          {/* <Column
-                        dataField="qtyLimit"
-                        width={80}
-                        caption={t("qty_limit")}
-                    /> */}
           <Column caption={t("X")} cellRender={renderDeleteCell} width={40} />
         </DataGrid>
       </div>
-
-      {/* <div className="flex items-center mt-2">
-                <ERPCheckbox
-                    id="selectAll"
-                    label={t("select_all_to_delete")}
-                    checked={selectAll}
-                    onChange={handleSelectAllToDelete}
-                />
-            </div> */}
     </div>
   );
 };

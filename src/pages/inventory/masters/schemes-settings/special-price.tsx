@@ -34,13 +34,16 @@ export const initialSpecialPrice: {
     batchID: 0,
     stdSalesPrice: 0,
     stdPurchasePrice: 0,
-    unitName: ""
+    unitName: "",
+    productName:"",
+    productID:0,
   },
   validations: {
     group: "",
     scheme: "",
     barcode: "",
     salesPrice: "",
+   
   },
 };
 
@@ -59,13 +62,15 @@ export interface SpecialPriceData {
   batchID: number;
   stdSalesPrice: number;
   stdPurchasePrice: number;
+  productName:string;
+  productID:number;
 }
 
 export const SpecialPrice: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<SpecialPriceData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
-
+  const [specialPriceForm,setSpecialPriceForm] = useState(initialSpecialPrice)
   const {
     isEdit,
     handleSubmit,
@@ -75,14 +80,11 @@ export const SpecialPrice: React.FC = () => {
     getFieldProps,
     isLoading,
     formState,
-  } = useFormManager<SpecialPriceData>({
-    initialData: initialSpecialPrice,
-    useApiClient: true,
-  });
+  } = useFormManager({});
 
   const handleLoad = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = specialPriceForm.data;
       if (isNullOrUndefinedOrZero(obj.schemeID)) {
         ERPAlert.show({
           title: "",
@@ -105,37 +107,49 @@ export const SpecialPrice: React.FC = () => {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps]);
+  }, [specialPriceForm]);
 
   const onBarcodeKeyDown = useCallback(async (e: any) => {
     
     try {
-      const obj = getFieldProps("*");
+      const obj = specialPriceForm.data;
       if (isNullOrUndefinedOrZero(obj.barcode)) {
-       
         return;
       }
       setIsDataLoading(true);
       const url = `${Urls.select_product_by_barcode}${obj.barcode}`;
       const response = await api.get(url);
       debugger;
-      handleDataChange({
-        ...obj,
-        productBatchId: response.productBatchId,
+      setSpecialPriceForm((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+         productBatchId: response.productBatchId,
         productName: response.productName,
         unitId: response.unitId,
         unitName: response.unit,
         stdSalesPrice: response.stdSalesPrice,
         stdPurchasePrice: response.stdPurchasePrice,
         salesPrice: response.specialPrice ?? 0,
-      });
+        },
+      }));
+      // handleDataChange({
+      //   ...obj,
+      //   productBatchId: response.productBatchId,
+      //   productName: response.productName,
+      //   unitId: response.unitId,
+      //   unitName: response.unit,
+      //   stdSalesPrice: response.stdSalesPrice,
+      //   stdPurchasePrice: response.stdPurchasePrice,
+      //   salesPrice: response.specialPrice ?? 0,
+      // });
     } catch (error) {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps]);
+  }, [specialPriceForm]);
   const handleAdd = useCallback(async () => {
-    const obj: SpecialPriceData = getFieldProps("*");
+    const obj: SpecialPriceData = specialPriceForm.data
 
     if (isNullOrUndefinedOrZero(obj.schemeID)) {
       ERPAlert.show({
@@ -180,12 +194,13 @@ export const SpecialPrice: React.FC = () => {
         handleLoad();
       });
     }
-  }, [getFieldProps, handleLoad]);
+  }, [specialPriceForm, handleLoad]);
 
   const handleClear = useCallback(() => {
-    clearForm();
+    // clearForm();
+    setSpecialPriceForm(initialSpecialPrice)
     setGridData([])
-  }, [clearForm]);
+  }, []);
 
   const handleRemoveRow = useCallback(async(rowId: number) => {
     const url = `${Urls.special_price_scheme}${rowId}`;
@@ -216,16 +231,23 @@ export const SpecialPrice: React.FC = () => {
           <div className="space-y-2 sm:space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <ERPCheckbox
+                {/* <ERPCheckbox
                   {...getFieldProps("isGroup")}
                   label={t("group")}
                   onChangeData={(data: any) =>
                     handleFieldChange("isGroup", data.isGroup)
                   }
+                /> */}
+                  <ERPCheckbox
+                    label={t("isGroup")}
+                    id="isGroup"
+                    data={specialPriceForm.data}
+                    checked={specialPriceForm.data?.isGroup}
+                    onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
                 />
               </div>
               <div className="flex-1">
-                <ERPDataCombobox
+                {/* <ERPDataCombobox
                   {...getFieldProps("groupID")}
                   noLabel={true}
                   disabled={!formState.data.isGroup}
@@ -240,7 +262,24 @@ export const SpecialPrice: React.FC = () => {
                   onChangeData={(data: any) =>
                     handleFieldChange("groupID", data.groupID)
                   }
-                />
+                /> */}
+                  <ERPDataCombobox
+                      id="groupID"
+                      field={{
+                          id: "groupID",
+                          getListUrl:  Urls.data_productgroup,
+                          valueKey: "id",
+                          labelKey: "name",
+                      }}
+                      noLabel
+                      disabled={!specialPriceForm.data.isGroup}
+                      required={true}
+                      data={specialPriceForm.data}
+                      defaultData={specialPriceForm?.data}
+                      value={specialPriceForm.data?.groupID}
+                      className="w-full"
+                      onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+                  />
               </div>
             </div>
 
@@ -249,7 +288,7 @@ export const SpecialPrice: React.FC = () => {
                 <label>{t("scheme")}:</label>
               </div>
               <div className="flex-1">
-                <ERPDataCombobox
+                {/* <ERPDataCombobox
                   {...getFieldProps("schemeID")}
                   field={{
                     id: "schemeID",
@@ -262,7 +301,24 @@ export const SpecialPrice: React.FC = () => {
                   onChangeData={(data: any) => {
                     handleFieldChange("schemeID", data.schemeID);
                   }}
-                />
+                /> */}
+                  <ERPDataCombobox
+                      id="schemeID"
+                      field={{
+                          id: "schemeID",
+                          getListUrl:  Urls.select_price_schemes_for_combo,
+                          valueKey: "id",
+                          labelKey: "name",
+                      }}
+                      noLabel
+                      disabled={!specialPriceForm.data.isGroup}
+                      required={true}
+                      data={specialPriceForm.data}
+                      defaultData={specialPriceForm?.data}
+                      value={specialPriceForm.data?.schemeID}
+                      className="w-full"
+                      onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+                  />
               </div>
             </div>
 
@@ -272,7 +328,7 @@ export const SpecialPrice: React.FC = () => {
                   <label>{t("barcode")}:</label>
                 </div>
                 <div className="flex-1">
-                  <ERPInput
+                  {/* <ERPInput
                     {...getFieldProps("barcode")}
                     noLabel={true}
                     className="w-full"
@@ -281,7 +337,20 @@ export const SpecialPrice: React.FC = () => {
                     }
                     disableEnterNavigation
                     onEnterKeyDown={onBarcodeKeyDown}
-                  />
+                  /> */}
+                      <ERPInput
+                        id="barcode"
+                        noLabel
+                        type="text"
+                        value={specialPriceForm.data?.barcode}
+                        className="w-full"
+                        placeholder={t("barcode")}
+                        data={specialPriceForm.data}
+                        validation={specialPriceForm?.validations?.barcode}
+                        onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+                        disableEnterNavigation
+                        onEnterKeyDown={onBarcodeKeyDown}
+                    />
                 </div>
               </div>
 
@@ -290,7 +359,7 @@ export const SpecialPrice: React.FC = () => {
                   <label>{t("price")}:</label>
                 </div>
                 <div className="flex-1">
-                  <ERPInput
+                  {/* <ERPInput
                     {...getFieldProps("salesPrice")}
                     noLabel={true}
                     type="number"
@@ -298,7 +367,18 @@ export const SpecialPrice: React.FC = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("salesPrice", parseFloat(data.salesPrice))
                     }
-                  />
+                  /> */}
+                   <ERPInput
+                        id="salesPrice"
+                        noLabel
+                        type="number"
+                        value={specialPriceForm.data?.salesPrice}
+                        className="w-full"
+                        placeholder={t("salesPrice")}
+                        data={specialPriceForm.data}
+                        onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+                 
+                    />
                 </div>
               </div>
 
@@ -307,7 +387,7 @@ export const SpecialPrice: React.FC = () => {
                   <label>{t("unit")}:</label>
                 </div>
                 <div className="flex-4">
-                  <ERPInput
+                  {/* <ERPInput
                     {...getFieldProps("unitName")}
                     noLabel={true}
                     disabled
@@ -315,7 +395,18 @@ export const SpecialPrice: React.FC = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("unitName", data.unitName)
                     }
-                  />
+                  /> */}
+
+                   <ERPInput
+                        id="unitName"
+                        noLabel
+                        value={specialPriceForm.data?.unitName}
+                        className="w-full"
+                        placeholder={t("unitName")}
+                        data={specialPriceForm.data}
+                        onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+                 
+                    />
                 </div>
               </div>
 
@@ -325,7 +416,9 @@ export const SpecialPrice: React.FC = () => {
   </div>
   <div className="flex-1">
     <span className="text-[#dc2626] max-w-full sm:max-w-[200px] truncate overflow-hidden whitespace-nowrap block">
-      {getFieldProps("productName").value ?? "Item"}
+      {/* {getFieldProps("productName").value  ?? "Item"}
+       */}
+         <span className="text-[#dc2626]">{specialPriceForm.data?.productName}</span>
     </span>
   </div>
 </div>
@@ -340,7 +433,7 @@ export const SpecialPrice: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-full sm:w-32 mb-2 sm:mb-0">
-                  <ERPInput
+                  {/* <ERPInput
                     {...getFieldProps("groupPrice")}
                     noLabel={true}
                     type="number"
@@ -348,7 +441,19 @@ export const SpecialPrice: React.FC = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("groupPrice", parseFloat(data.groupPrice))
                     }
-                  />
+                  /> */}
+
+                   <ERPInput
+                        id="groupPrice"
+                        noLabel
+                        type="number"
+                        value={specialPriceForm.data?.groupPrice}
+                        className="w-full"
+                        placeholder={t("groupPrice")}
+                        data={specialPriceForm.data}
+                        onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
+
+                    />
                 </div>
                
               </div>
@@ -364,26 +469,52 @@ export const SpecialPrice: React.FC = () => {
                     onChange={(e) => console.log("Input changed:", e.target.value)}
                     productDataUrl={Urls.load_product_details}
                     onRowSelected={(data: any) => {
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        unitID: data.unitID,
-                        unitName: data.unit,
-                        barcode: data.autoBarcode,
-                        salesPrice: data.sPrice,
-                        stdSalesPrice: data.sPrice,
-                        stdPurchasePrice: data.pPrice,
-                        batchID: data.productBatchID,
-                      } as SpecialPriceData);
+                      setSpecialPriceForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          unitID: data.unitID,
+                          unitName: data.unit,
+                          barcode: data.autoBarcode,
+                          salesPrice: data.sPrice,
+                          stdSalesPrice: data.sPrice,
+                          stdPurchasePrice: data.pPrice,
+                          batchID: data.productBatchID,
+                        },
+                      }));
                     }}
+                    
                     onProductSelected={(data: any) => {
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        productName: data.productName,
-                        productID: data.productID,
-                      } as SpecialPriceData);
+                      setSpecialPriceForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          productName: data.productName,
+                          productID: data.productID,
+                        },
+                      }));
                     }}
+                    // onRowSelected={(data: any) => {
+                    //   const obj = specialPriceForm;
+                    //   handleDataChange({
+                    //     ...obj,
+                    //     unitID: data.unitID,
+                    //     unitName: data.unit,
+                    //     barcode: data.autoBarcode,
+                    //     salesPrice: data.sPrice,
+                    //     stdSalesPrice: data.sPrice,
+                    //     stdPurchasePrice: data.pPrice,
+                    //     batchID: data.productBatchID,
+                    //   } as SpecialPriceData);
+                    // }}
+                    // onProductSelected={(data: any) => {
+                    //   const obj = getFieldProps("*");
+                    //   handleDataChange({
+                    //     ...obj,
+                    //     productName: data.productName,
+                    //     productID: data.productID,
+                    //   } as SpecialPriceData);
+                    // }}
                     batchDataUrl={Urls.select_foc_product_batch_grid}
                   />
                 </div>
@@ -395,7 +526,9 @@ export const SpecialPrice: React.FC = () => {
                 <label>{t("std_sales_price")}:</label>
               </div>
               <div className="flex-1">
-                <span className="text-[#dc2626]">{getFieldProps("stdSalesPrice").value}</span>
+                {/* <span className="text-[#dc2626]">{getFieldProps("stdSalesPrice").value}</span> */}
+                <span className="text-[#dc2626]">{specialPriceForm.data?.stdSalesPrice}</span>
+
               </div>
             </div>
 
@@ -404,7 +537,9 @@ export const SpecialPrice: React.FC = () => {
                 <label>{t("std_purchase_price")}:</label>
               </div>
               <div className="flex-1">
-                <span className="text-[#dc2626]">{getFieldProps("stdPurchasePrice").value}</span>
+                {/* <span className="text-[#dc2626]">{getFieldProps("stdPurchasePrice").value}</span> */}
+                <span className="text-[#dc2626]">{specialPriceForm.data?.stdPurchasePrice}</span>
+
               </div>
             </div>
             <div className="flex justify-end flex-wrap gap-2">

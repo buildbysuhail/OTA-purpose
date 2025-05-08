@@ -4,7 +4,6 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
-import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -44,6 +43,8 @@ export const initialFOCScheme = {
     searchByCode: false,
     freeUnitID: 0,
     freeUnitName: "",
+    nameOrCode: "",
+    nameOrCode_free: "",
   },
   validations: {},
 };
@@ -71,48 +72,39 @@ export interface FOCSchemeData {
   stdPurchasePrice: number;
   freeStdPurchasePrice: number;
   searchByCode: boolean;
+  nameOrCode: string;
+  nameOrCode_free: string;
 }
 
 const MultiFOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
+  const [focSchemeForm, setFocSchemeForm] = useState(initialFOCScheme);
 
-  const {
-    handleFieldChange,
-    handleDataChange,
-    handleClear,
-    getFieldProps,
-    formState,
-  } = useFormManager<FOCSchemeData>({
-    initialData: initialFOCScheme,
-    useApiClient: true,
-  });
+  const isFormDisabled = focSchemeForm.data.loadAllMultiFos;
 
-  // Determine if form and button should be disabled based on loadAllMultiFos
-  const isFormDisabled = formState.data.loadAllMultiFos;
-const handleSave = useCallback(async () => {
-        console.log("Saving data:", gridData);
-         // Check if gridData is empty
-                  if (gridData.length === 0) {
-                    ERPAlert.show({
-                      title: "",
-                      icon: "warning",
-                      text: "No data to save. Please add items to the grid.",
-                    });
-                    return;
-                  }
-        try{
-            const payload = gridData;
-            const response = await api.post(Urls.qty_slab_offer, payload);
-            handleResponse(response, () =>   handleClear());
-        }catch(error){
-            console.error("Error saving data:", error);
-        }
-    }, [gridData]);
+  const handleSave = useCallback(async () => {
+    if (gridData.length === 0) {
+      ERPAlert.show({
+        title: "",
+        icon: "warning",
+        text: "No data to save. Please add items to the grid.",
+      });
+      return;
+    }
+    try {
+      const payload = gridData;
+      const response = await api.post(Urls.qty_slab_offer, payload);
+      handleResponse(response, () => handleClear());
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+  }, [gridData]);
+
   const fetchByBarcode = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = focSchemeForm.data;
       if (isNullOrUndefinedOrEmpty(obj.barCode)) {
         return;
       }
@@ -122,24 +114,27 @@ const handleSave = useCallback(async () => {
       handleResponse(
         response,
         () => {
-          handleDataChange({
-            ...obj,
-            productBatchID: response.productBatchID,
-          } as FOCSchemeData);
+          setFocSchemeForm((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              productBatchID: response.productBatchID,
+            },
+          }));
         },
-        () => { },
-        false
+        // () => {},
+        // false
       );
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps, handleDataChange]);
+  }, [focSchemeForm]);
 
   const fetchByFreeItemBarcode = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = focSchemeForm.data;
       if (isNullOrUndefinedOrEmpty(obj.freeItemBarcode)) {
         return;
       }
@@ -149,25 +144,24 @@ const handleSave = useCallback(async () => {
       handleResponse(
         response,
         () => {
-          handleDataChange({
-            ...obj,
-            freeProductBatchID: response.productBatchID,
-
-          } as FOCSchemeData);
+          setFocSchemeForm((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              freeProductBatchID: response.productBatchID,
+            },
+          }));
         },
-        () => { },
-        false
+        // () => {},
+        // false
       );
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps, handleDataChange]);
+  }, [focSchemeForm]);
 
-  
-
-  // New function to fetch all MultiFOS data when loadAllMultiFos is checked
   const fetchAllMultiFosData = useCallback(async (schemeID: number) => {
     setIsDataLoading(true);
     try {
@@ -187,8 +181,7 @@ const handleSave = useCallback(async () => {
   }, []);
 
   const handleAdd = useCallback(async () => {
-    const obj: FOCSchemeData = getFieldProps("*");
-    console.log("Form state before adding:", obj);
+    const obj: FOCSchemeData = focSchemeForm.data;
     if (isNullOrUndefinedOrZero(obj.schemeID)) {
       ERPAlert.show({
         title: "",
@@ -222,33 +215,39 @@ const handleSave = useCallback(async () => {
       stdPurchasePrice: obj.stdPurchasePrice,
       freeStdPurchasePrice: obj.freeStdPurchasePrice,
       searchByCode: obj.searchByCode,
+      nameOrCode: obj.nameOrCode,
+      nameOrCode_free: obj.nameOrCode_free,
     };
 
     setGridData((prevGridData) => {
       if (prevGridData instanceof CustomStore) {
-        return [newSchemeData]; // Reset to array with new data
+        return [newSchemeData];
       }
       return [...prevGridData, newSchemeData];
     });
     handleClear();
-  }, [getFieldProps, handleClear]);
+  }, [focSchemeForm]);
 
-  useEffect(() => {
-    if (formState.data.loadAllMultiFos) {
-      fetchAllMultiFosData(formState.data.schemeID);
-    } else {
-      setGridData([]);
-    }
-  }, [formState.data.loadAllMultiFos, fetchAllMultiFosData]);
+  const handleClear = useCallback(() => {
+    setFocSchemeForm(initialFOCScheme);
+  }, []);
 
   const handleRemoveRow = useCallback((schemeID: number) => {
     setGridData((prevGridData) => {
       if (prevGridData instanceof CustomStore) {
-        return []; // Reset to empty array if CustomStore this not complete the implement need to work on it
+        return [];
       }
       return prevGridData.filter((item: FOCSchemeData) => item.schemeID !== schemeID);
     });
   }, []);
+
+  useEffect(() => {
+    if (focSchemeForm.data.loadAllMultiFos) {
+      fetchAllMultiFosData(focSchemeForm.data.schemeID);
+    } else {
+      setGridData([]);
+    }
+  }, [focSchemeForm.data.loadAllMultiFos, fetchAllMultiFosData]);
 
   const renderDeleteCell = (cellData: any) => {
     return (
@@ -266,110 +265,116 @@ const handleSave = useCallback(async () => {
   return (
     <div className="w-full p-2 bg-gray-100">
       <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
-        {/* Main container with border and gray background */}
         <div className="border border-gray-300 rounded">
-          {/* Header with dotted border */}
           <div className="border-b border-dotted border-gray-400 bg-gray-300 px-2 py-1">
             <h6 className="text-[#991B1B] font-medium m-0">{t("product_details")}</h6>
           </div>
 
-          {/* Main form content */}
           <div className="p-2">
-            {/* Scheme and LoadAll row */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2 items-center">
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("scheme")}</label>
               </div>
-              {getFieldProps("schemeID").value}
               <div className="md:col-span-6">
                 <ERPDataCombobox
-                  {...getFieldProps("schemeID")}
+                  id="schemeID"
                   field={{
                     id: "schemeID",
                     getListUrl: Urls.select_quantity_schemes_for_combo_MultiFOC,
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  noLabel={true}
+                  noLabel
+                  data={focSchemeForm.data}
+                  value={focSchemeForm.data.schemeID}
                   className="w-full max-w-[350px]"
                   onChangeData={(data: any) => {
-                    debugger;
-                    handleFieldChange("schemeID", data.schemeID);
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: { ...prev.data, schemeID: data.schemeID },
+                    }));
                   }}
                   disabled={isFormDisabled}
                 />
               </div>
               <div className="md:col-span-4 flex justify-end">
                 <ERPCheckbox
-                  {...getFieldProps("loadAllMultiFos")}
+                  id="loadAllMultiFos"
                   label={t("Load All Multi FOC")}
+                  data={focSchemeForm.data}
+                  checked={focSchemeForm.data.loadAllMultiFos}
                   onChangeData={(data: any) => {
-                    handleFieldChange("loadAllMultiFos", data.loadAllMultiFos);
+                    setFocSchemeForm((prev) => ({ ...prev, data }));
                   }}
                 />
               </div>
             </div>
 
-            {/* Product Barcode and Name row */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("product_barcode")}</label>
               </div>
               <div className="md:col-span-4">
                 <ERPInput
-                  {...getFieldProps("barCode")}
-                  noLabel={true}
-                  className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
-                  onChangeData={(data: any) => handleFieldChange("barCode", data.barCode)}
+                  id="barCode"
+                  noLabel
+                  value={focSchemeForm.data.barCode}
+                  className="w-full lg:w-36 max-md:w-[200px] max-sm:w-full"
+                  data={focSchemeForm.data}
+                  onChangeData={(data: any) => {
+                    setFocSchemeForm((prev) => ({ ...prev, data }));
+                  }}
                   disabled={isFormDisabled}
-                  onBlur={() => fetchByBarcode()}
+                  onBlur={async (e) => {
+                    await fetchByBarcode();
+                  }}
                 />
               </div>
-              
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("product_name")}</label>
               </div>
               <div className="md:col-span-4">
-              <ERPProductSearch
-              value={getFieldProps("nameOrCode").value}
-              onChange={(e) => {
-                handleFieldChange({
-                  nameOrCode: e.target.value,
-                    });
+                <ERPProductSearch
+                  value={focSchemeForm.data.nameOrCode}
+                  onChange={(e) => {
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: { ...prev.data, nameOrCode: e.target.value },
+                    }));
                   }}
-                    type="text"
-                    id="test"
-                    keyId="testserch"
-                    placeholder="Search Here"
-                    productDataUrl={Urls.load_product_details_multi_foc}
-                    onRowSelected={(data: any) => {
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
+                  type="text"
+                  id="test"
+                  keyId="testserch"
+                  placeholder="Search Here"
+                  productDataUrl={Urls.load_product_details_multi_foc}
+                  onRowSelected={(data: any) => {
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: {
+                        ...prev.data,
                         productBatchID: data.productBatchID,
                         unitID: data.unitID,
                         unitName: data.unit,
                         barCode: data.autoBarcode,
-                      } as FOCSchemeData);
-                    }}
-                    onProductSelected={(data: any) => {
-                      debugger;
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        productName: formState.data.productName,
-                        testserch: data.productName,
+                      },
+                    }));
+                  }}
+                  onProductSelected={(data: any) => {
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: {
+                        ...prev.data,
+                        productName: data.productName,
                         productID: data.productID,
-                      } as FOCSchemeData);
-                    }}
-                    batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
-                    clearAfterSelection={false}
-                  />
-              
+                      },
+                    }));
+                  }}
+                  batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
+                  clearAfterSelection={false}
+                />
               </div>
             </div>
 
-            {/* Qty Limit and Unit row */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
               <div className="md:col-span-2">
                 <label className="text-left font-medium">{t("qty_limit")}</label>
@@ -377,11 +382,15 @@ const handleSave = useCallback(async () => {
               <div className="md:col-span-4">
                 <div className="w-24">
                   <ERPInput
-                    {...getFieldProps("qtyLimit")}
-                    noLabel={true}
+                    id="qtyLimit"
+                    noLabel
                     type="number"
+                    value={focSchemeForm.data.qtyLimit}
                     className="w-full"
-                    onChangeData={(data: any) => handleFieldChange("qtyLimit", parseFloat(data.qtyLimit))}
+                    data={focSchemeForm.data}
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                     disabled={isFormDisabled}
                   />
                 </div>
@@ -391,40 +400,49 @@ const handleSave = useCallback(async () => {
               </div>
               <div className="md:col-span-4">
                 <ERPDataCombobox
-                  {...getFieldProps("unitID")}
+                  id="unitID"
                   field={{
                     id: "unitID",
                     getListUrl: Urls.data_units,
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  noLabel={true}
-                  className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
-                  onChangeData={(data: any) => handleFieldChange("unitID", data.id)}
+                  noLabel
+                  data={focSchemeForm.data}
+                  value={focSchemeForm.data.unitID}
+                  className="w-full lg:w-36 max-md:w-[200px] max-sm:w-full"
+                  onChangeData={(data: any) => {
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: { ...prev.data, unitID: data.id },
+                    }));
+                  }}
                   disabled={isFormDisabled}
                 />
               </div>
             </div>
           </div>
 
-          {/* Free Product Details section */}
           <div className="border-t border-gray-400 border-dotted mt-1">
             <div className="border-b border-dotted border-gray-400 bg-gray-300 px-2 py-1">
               <h6 className="text-[#991B1B] font-medium m-0">{t("free_product_details")}</h6>
             </div>
 
             <div className="p-2">
-              {/* Free Product Barcode and Name row */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
                 <div className="md:col-span-2">
                   <label className="text-left font-medium">{t("product_barcode")}</label>
                 </div>
                 <div className="md:col-span-4">
                   <ERPInput
-                    {...getFieldProps("freeItemBarcode")}
-                    noLabel={true}
+                    id="freeItemBarcode"
+                    noLabel
+                    value={focSchemeForm.data.freeItemBarcode}
                     className="w-full max-w-[350px]"
-                    onChangeData={(data: any) => handleFieldChange("freeItemBarcode", data.freeItemBarcode)}
+                    data={focSchemeForm.data}
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                     disabled={isFormDisabled}
                     onBlur={() => fetchByFreeItemBarcode()}
                   />
@@ -433,45 +451,46 @@ const handleSave = useCallback(async () => {
                   <label className="text-left font-medium">{t("product_name")}</label>
                 </div>
                 <div className="md:col-span-4">
-                 
-
-<ERPProductSearch
-              value={getFieldProps("nameOrCode_free").value}
-              onChange={(e) => {
-                handleFieldChange({
-                  nameOrCode_free: e.target.value,
-                    });
-                  }}
+                  <ERPProductSearch
+                    value={focSchemeForm.data.nameOrCode_free}
+                    onChange={(e) => {
+                      setFocSchemeForm((prev) => ({
+                        ...prev,
+                        data: { ...prev.data, nameOrCode_free: e.target.value },
+                      }));
+                    }}
                     type="text"
                     id="test"
                     keyId="testSearchFree"
                     placeholder="Search Here"
                     productDataUrl={Urls.load_product_details_multi_foc}
                     onRowSelected={(data: any) => {
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        freeProductBatchID: data.productBatchID,
-                        freeUnitID: data.unitID,
-                        freeUnitName: data.unit,
-                        freeItemBarcode: data.autoBarcode,
-                      } as FOCSchemeData);
+                      setFocSchemeForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          freeProductBatchID: data.productBatchID,
+                          freeUnitID: data.unitID,
+                          freeUnitName: data.unit,
+                          freeItemBarcode: data.autoBarcode,
+                        },
+                      }));
                     }}
                     onProductSelected={(data: any) => {
-                      debugger;
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        freeProductName: formState.data.productName,
-                        freeProductID: data.productID,
-                      } as FOCSchemeData);
+                      setFocSchemeForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          freeProductName: data.productName,
+                          freeProductID: data.productID,
+                        },
+                      }));
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
                   />
                 </div>
               </div>
 
-              {/* Free Qty and Unit row */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2">
                 <div className="md:col-span-2">
                   <label className="text-left font-medium">{t("free_qty")}</label>
@@ -479,11 +498,15 @@ const handleSave = useCallback(async () => {
                 <div className="md:col-span-4">
                   <div className="w-24">
                     <ERPInput
-                      {...getFieldProps("freeQty")}
-                      noLabel={true}
+                      id="freeQty"
+                      noLabel
                       type="number"
+                      value={focSchemeForm.data.freeQty}
                       className="w-full"
-                      onChangeData={(data: any) => handleFieldChange("freeQty", parseFloat(data.freeQty))}
+                      data={focSchemeForm.data}
+                      onChangeData={(data: any) => {
+                        setFocSchemeForm((prev) => ({ ...prev, data }));
+                      }}
                       disabled={isFormDisabled}
                     />
                   </div>
@@ -494,16 +517,23 @@ const handleSave = useCallback(async () => {
                 <div className="md:col-span-4 flex items-center justify-between">
                   <div className="flex-grow">
                     <ERPDataCombobox
-                      {...getFieldProps("freeUnitID")}
+                      id="freeUnitID"
                       field={{
                         id: "freeUnitID",
                         getListUrl: Urls.data_units,
                         valueKey: "id",
                         labelKey: "name",
                       }}
-                      noLabel={true}
-                      className="w-full lg:w-36  max-md:w-[200px] max-sm:w-full"
-                      onChangeData={(data: any) => handleFieldChange("freeUnitID", data.id)}
+                      noLabel
+                      data={focSchemeForm.data}
+                      value={focSchemeForm.data.freeUnitID}
+                      className="w-full lg:w-36 max-md:w-[200px] max-sm:w-full"
+                      onChangeData={(data: any) => {
+                        setFocSchemeForm((prev) => ({
+                          ...prev,
+                          data: { ...prev.data, freeUnitID: data.id },
+                        }));
+                      }}
                       disabled={isFormDisabled}
                     />
                   </div>
@@ -523,7 +553,6 @@ const handleSave = useCallback(async () => {
         </div>
       </div>
 
-      {/* Grid section */}
       <div className="overflow-x-auto">
         <DataGrid
           dataSource={gridData}
@@ -538,7 +567,6 @@ const handleSave = useCallback(async () => {
             allowDeleting={false}
             allowAdding={false}
           />
-
           <Column
             dataField="barCode"
             dataType="string"
@@ -591,26 +619,22 @@ const handleSave = useCallback(async () => {
         </DataGrid>
       </div>
       <div className="flex flex-row max-md:flex-col items-center mt-2">
-                <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
-                <div className="flex items-center">
-               
-                    <div className="flex gap-2 ml-4">
-                       
-                        <ERPButton
-                            title={t("clear")}
-                            variant="secondary"
-                            onClick={handleClear}
-                        />
-                        <ERPButton
-                            title={t("save")}
-                            variant="primary"
-                            onClick={handleSave}
-                        />
-                    </div>
-                </div>
-            </div>
-      {/* Batch Grid Modal */}
-      
+        <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
+        <div className="flex items-center">
+          <div className="flex gap-2 ml-4">
+            <ERPButton
+              title={t("clear")}
+              variant="secondary"
+              onClick={handleClear}
+            />
+            <ERPButton
+              title={t("save")}
+              variant="primary"
+              onClick={handleSave}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

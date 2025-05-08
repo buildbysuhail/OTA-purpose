@@ -4,7 +4,6 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
-import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -68,25 +67,12 @@ const FOCScheme: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<FOCSchemeData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
-  const clientSession = useSelector((state: RootState) => state.ClientSession)
-
-  const {
-    isEdit,
-    handleSubmit,
-    handleFieldChange,
-    handleDataChange,
-    handleClear: clearForm,
-    getFieldProps,
-    isLoading,
-    formState,
-  } = useFormManager<FOCSchemeData>({
-    initialData: initialFOCScheme,
-    useApiClient: true,
-  });
+  const [focSchemeForm, setFocSchemeForm] = useState(initialFOCScheme);
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
 
   const handleLoad = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = focSchemeForm.data;
       if (isNullOrUndefinedOrZero(obj.schemeID)) {
         ERPAlert.show({
           title: "",
@@ -107,39 +93,40 @@ const FOCScheme: React.FC = () => {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps]);
+  }, [focSchemeForm]);
+
   const fetchByBarcode = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = focSchemeForm.data;
       if (isNullOrUndefinedOrEmpty(obj.barCode)) {
         return;
       }
       setIsDataLoading(true);
 
       const url = `${Urls.select_product_by_barcode_foc}${obj.barCode}`;
-      debugger;
       const response = await api.get(url);
-      handleDataChange(
-        {
-          ...obj,
+      setFocSchemeForm((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
           productBatchID: response.productBatchID,
           unitID: response.unitId,
           unitName: response.unit,
           productName: response.productName,
           stdSalesPrice: response.stdSalesPrice,
           stdPurchasePrice: response.stdPurchasePrice,
-
-        } as FOCSchemeData);
+        },
+      }));
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps, handleDataChange]);
+  }, [focSchemeForm]);
 
   const fetchByFreeItemBarcode = useCallback(async () => {
     try {
-      const obj = getFieldProps("*");
+      const obj = focSchemeForm.data;
       if (isNullOrUndefinedOrEmpty(obj.freeItemBarcode)) {
         return;
       }
@@ -147,22 +134,25 @@ const FOCScheme: React.FC = () => {
 
       const url = `${Urls.select_product_by_barcode_foc}${obj.freeItemBarcode}`;
       const response = await api.get(url);
-      handleDataChange({
-        ...obj,
-        freeProductBatchID: response.productBatchID,
-        freeProductName: response.productName,
-        freeStdSalesPrice: response.stdSalesPrice,
-        freeStdPurchasePrice: response.stdPurchasePrice,
-      } as FOCSchemeData);
+      setFocSchemeForm((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          freeProductBatchID: response.productBatchID,
+          freeProductName: response.productName,
+          freeStdSalesPrice: response.stdSalesPrice,
+          freeStdPurchasePrice: response.stdPurchasePrice,
+        },
+      }));
       setIsDataLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
       setIsDataLoading(false);
     }
-  }, [getFieldProps, handleDataChange]);
+  }, [focSchemeForm]);
 
   const handleAdd = useCallback(async () => {
-    const obj: FOCSchemeData = getFieldProps("*");
+    const obj: FOCSchemeData = focSchemeForm.data;
 
     if (isNullOrUndefinedOrZero(obj.schemeID)) {
       ERPAlert.show({
@@ -172,7 +162,7 @@ const FOCScheme: React.FC = () => {
       });
       return false;
     }
-    debugger;
+
     const payload = {
       schemeID: obj.schemeID,
       productBatchID: obj.productBatchID,
@@ -192,19 +182,19 @@ const FOCScheme: React.FC = () => {
     handleResponse(response, () => {
       handleLoad();
     });
-  }, [getFieldProps, handleLoad]);
+  }, [focSchemeForm, handleLoad]);
 
   const handleClear = useCallback(() => {
-    clearForm();
-    setGridData([])
-  }, [clearForm]);
+    setFocSchemeForm(initialFOCScheme);
+    setGridData([]);
+  }, []);
 
-  const handleRemoveRow = useCallback(async(rowId: number) => {
+  const handleRemoveRow = useCallback(async (rowId: number) => {
     const url = `${Urls.special_price_scheme}${rowId}`;
-      const response = await api.delete(url);
-      handleResponse(response, () => {
-        setGridData((prev: any) => prev.filter((x: any) => x.qtyDiscountID != rowId))
-      });
+    const response = await api.delete(url);
+    handleResponse(response, () => {
+      setGridData((prev: any) => prev.filter((x: any) => x.qtyDiscountID != rowId));
+    });
   }, []);
 
   const renderDeleteCell = (cellData: any) => {
@@ -224,7 +214,6 @@ const FOCScheme: React.FC = () => {
     <div className="w-full p-2 bg-gray-100">
       <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
         <div className="grid grid-cols-1 gap-3">
-          {/* Left column */}
           <div className="space-y-2 sm:space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
@@ -232,25 +221,28 @@ const FOCScheme: React.FC = () => {
               </div>
               <div className="flex-1">
                 <ERPDataCombobox
-                  {...getFieldProps("schemeID")}
+                  id="schemeID"
                   field={{
                     id: "schemeID",
                     getListUrl: Urls.select_quantity_schemes_for_combo,
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  noLabel={true}
+                  noLabel
+                  data={focSchemeForm.data}
+                  value={focSchemeForm.data.schemeID}
                   className="max-w-[350px]"
                   onChangeData={async (data: any) => {
-                    const obj = getFieldProps("*");
                     const res = await api.getAsync(`${Urls.select_scheme_qty_details_by_id}${data.schemeID}`);
-                    debugger
-                    handleDataChange({
-                      ...obj,
-                      qtyLimit: res.QtyLimit,
-                      freeQty: res.FreeQty,
-                      schemeID: data.schemeID,
-                    } as FOCSchemeData);
+                    setFocSchemeForm((prev) => ({
+                      ...prev,
+                      data: {
+                        ...prev.data,
+                        qtyLimit: res.QtyLimit,
+                        freeQty: res.FreeQty,
+                        schemeID: data.schemeID,
+                      },
+                    }));
                   }}
                 />
               </div>
@@ -263,13 +255,15 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPInput
-                    {...getFieldProps("qtyLimit")}
+                    id="qtyLimit"
+                    noLabel
                     readOnly
-                    noLabel={true}
+                    value={focSchemeForm.data.qtyLimit}
                     className="w-full"
-                    onChangeData={(data: any) =>
-                      handleFieldChange("qtyLimit", data.qtyLimit)
-                    }
+                    data={focSchemeForm.data}
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                   />
                 </div>
               </div>
@@ -281,14 +275,16 @@ const FOCScheme: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <div className="w-full sm:w-32 mb-2 sm:mb-0">
                     <ERPInput
-                      {...getFieldProps("freeQty")}
-                      noLabel={true}
+                      id="freeQty"
+                      noLabel
                       type="number"
                       readOnly
+                      value={focSchemeForm.data.freeQty}
                       className="w-full"
-                      onChangeData={(data: any) =>
-                        handleFieldChange("freeQty", parseFloat(data.freeQty))
-                      }
+                      data={focSchemeForm.data}
+                      onChangeData={(data: any) => {
+                        setFocSchemeForm((prev) => ({ ...prev, data }));
+                      }}
                     />
                   </div>
                 </div>
@@ -299,7 +295,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("std_sales_price")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data.stdSalesPrice}</span>
+                  <span className="text-[#dc2626]">{focSchemeForm.data.stdSalesPrice}</span>
                 </div>
               </div>
             </div>
@@ -311,18 +307,20 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPInput
-                    {...getFieldProps("barCode")}
-                    noLabel={true}
+                    id="barCode"
+                    noLabel
+                    value={focSchemeForm.data.barCode}
                     className="w-full"
+                    data={focSchemeForm.data}
                     onKeyDown={(e: any) => {
                       if (e.key === "Enter") {
                         fetchByBarcode();
                       }
                     }}
                     disableEnterNavigation
-                    onChangeData={(data: any) =>
-                      handleFieldChange("barCode", data.barCode)
-                    }
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                   />
                 </div>
               </div>
@@ -333,13 +331,15 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPInput
-                    {...getFieldProps("unitName")}
-                    noLabel={true}
+                    id="unitName"
+                    noLabel
                     readOnly
+                    value={focSchemeForm.data.unitName}
                     className="w-full"
-                    onChangeData={(data: any) =>
-                      handleFieldChange("unitName", data.unitName)
-                    }
+                    data={focSchemeForm.data}
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                   />
                 </div>
               </div>
@@ -349,35 +349,37 @@ const FOCScheme: React.FC = () => {
                   <label>{t("std_purchase_price")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data.stdPurchasePrice}</span>
+                  <span className="text-[#dc2626]">{focSchemeForm.data.stdPurchasePrice}</span>
                 </div>
               </div>
             </div>
-{clientSession.isAppGlobal &&
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
-              <div className="flex flex-col sm:flex-row sm:items-center">
-                <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("free_item_barcode")}:</label>
-                </div>
-                <div className="flex-1">
-                  <ERPInput
-                    {...getFieldProps("freeItemBarcode")}
-                    noLabel={true}
-                    className="w-full"
-                    onKeyDown={(e: any) => {
-                      if (e.key === "Enter") {
-                        fetchByFreeItemBarcode();
-                      }
-                    }}
-                    disableEnterNavigation
-                    onChangeData={(data: any) =>
-                      handleFieldChange("freeItemBarcode", data.freeItemBarcode)
-                    }
-                  />
+            {clientSession.isAppGlobal && (
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
+                    <label>{t("free_item_barcode")}:</label>
+                  </div>
+                  <div className="flex-1">
+                    <ERPInput
+                      id="freeItemBarcode"
+                      noLabel
+                      value={focSchemeForm.data.freeItemBarcode}
+                      className="w-full"
+                      data={focSchemeForm.data}
+                      onKeyDown={(e: any) => {
+                        if (e.key === "Enter") {
+                          fetchByFreeItemBarcode();
+                        }
+                      }}
+                      disableEnterNavigation
+                      onChangeData={(data: any) => {
+                        setFocSchemeForm((prev) => ({ ...prev, data }));
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-}
+            )}
             <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
@@ -391,25 +393,27 @@ const FOCScheme: React.FC = () => {
                     placeholder="Search Here"
                     productDataUrl={Urls.load_product_details_foc}
                     onRowSelected={(data: any) => {
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        productBatchID: data.productBatchID,
-                        unitID: data.unitID,
-                        unitName: data.unit,
-                        barCode: data.autoBarcode,
-                        stdSalesPrice: data.sPrice,
-                        stdPurchasePrice: data.pPrice,
-                        // productName: data.productName,
-                      } as FOCSchemeData);
+                      setFocSchemeForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          productBatchID: data.productBatchID,
+                          unitID: data.unitID,
+                          unitName: data.unit,
+                          barCode: data.autoBarcode,
+                          stdSalesPrice: data.sPrice,
+                          stdPurchasePrice: data.pPrice,
+                        },
+                      }));
                     }}
                     onProductSelected={(data: any) => {
-                      debugger;
-                      const obj = getFieldProps("*");
-                      handleDataChange({
-                        ...obj,
-                        productName: data.productName,
-                      } as FOCSchemeData);
+                      setFocSchemeForm((prev) => ({
+                        ...prev,
+                        data: {
+                          ...prev.data,
+                          productName: data.productName,
+                        },
+                      }));
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_foc}
                   />
@@ -422,12 +426,14 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPInput
-                    {...getFieldProps("remarks")}
-                    noLabel={true}
+                    id="remarks"
+                    noLabel
+                    value={focSchemeForm.data.remarks}
                     className="w-full"
-                    onChangeData={(data: any) =>
-                      handleFieldChange("remarks", data.remarks)
-                    }
+                    data={focSchemeForm.data}
+                    onChangeData={(data: any) => {
+                      setFocSchemeForm((prev) => ({ ...prev, data }));
+                    }}
                   />
                 </div>
               </div>
@@ -439,7 +445,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("item_name")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data?.productName}</span>
+                  <span className="text-[#dc2626]">{focSchemeForm.data?.productName}</span>
                 </div>
               </div>
 
@@ -448,7 +454,7 @@ const FOCScheme: React.FC = () => {
                   <label>{t("free_item_name")}:</label>
                 </div>
                 <div className="flex-1">
-                  <span className="text-[#dc2626]">{formState.data?.freeProductName}</span>
+                  <span className="text-[#dc2626]">{focSchemeForm.data?.freeProductName}</span>
                 </div>
               </div>
             </div>
@@ -474,7 +480,6 @@ const FOCScheme: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid section */}
       <div className="overflow-x-auto">
         <DataGrid
           dataSource={gridData}

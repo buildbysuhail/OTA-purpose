@@ -463,5 +463,10 @@
     "free_unit": "الوحدة المجانية",
     "product_barcode": "باركود المنتج",
     "product_details": "تفاصيل المنتج",
-    "free_product_details": "تفاصيل المنتج المجاني"
+    "free_product_details": "تفاصيل المنتج المجاني",
+    "select_price_categories": "اختر فئات الأسعار",
+    "search_price_categories": "ابحث في فئات الأسعار",
+    "branches": "الفروع",
+    "select_branches": "اختر الفروع",
+    "search_branches": "ابحث في الفروع"
 }

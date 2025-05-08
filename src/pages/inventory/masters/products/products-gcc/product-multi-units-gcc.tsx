@@ -56,6 +56,15 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   const [multiUnits, setMultiUnits] = useState<{
     [key: string]: ProductUnitInputDto;
   }>({});
+  const [selectedUnits, setSelectedUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
+  const [units, setUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
+  const [unSelectedUnits, unSetSelectedUnits] = useState<{
+    id: number, name: string
+  }[]>([{id:0, name: ""}]);
 
    useImperativeHandle(ref, () => ({
         loadMultiRateToGrid: async (obj: productDto, units: any, mlRate: any) => {
@@ -66,10 +75,23 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   const clientSession = useSelector((state: RootState) => state.ClientSession)
   const [barcode, setBarcode] = useState<boolean>(false);
   const setMultiUnitsMaster = (multiUnits: any) => {
+    debugger
     const fList = Object.entries(multiUnits).map(
       ([key, unit]) => unit
     ) as ProductUnitInputDto[];
     handleFieldChange("units", fList);
+    debugger
+    const selected = fList.filter(x => x.unitID??0 > 0).map((x: any) => ({
+      id: Number(x.unitID),       // Ensure type matches: number
+      name: String(x.unit),       // Ensure type matches: string
+    }))
+    const unSelected = units.filter(x => !selected.map(x => x.id).includes(x.id??0)).map((x: any) => ({
+      id: Number(x.id),       // Ensure type matches: number
+      name: String(x.name),       // Ensure type matches: string
+    }))
+    debugger;
+    setSelectedUnits(selected);
+    unSetSelectedUnits(unSelected);
     // setMultiUnits(multiUnits);
   };
       const unitDAta: ProductUnitInputDto = {
@@ -180,7 +202,20 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
     setMultiUnits(result);
     setMultiUnitsMaster(result)
   }, []);
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const response = await api.getAsync(Urls.data_units); // adjust API endpoint
+        const fList = response;
 
+        setUnits(fList);
+      } catch (error) {
+        console.error("Error fetching units:", error);
+      }
+    };
+
+    fetchUnits();
+  }, []);
   const renderUnitRows = () => {
     return Object.entries(multiUnits).map(([key, unitData], index) => {
       const unitNum = index + 1;
@@ -197,8 +232,8 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                 value={unitData.unitID}
                 noLabel={true}
                 disabled={unitNum === 1}
+                options={unSelectedUnits}
                 field={{
-                  getListUrl: Urls.data_units,
                   valueKey: "id",
                   labelKey: "name",
                 }}
@@ -451,10 +486,10 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
           <ERPDataCombobox
             {...getFieldProps("batch.defSalesUnitID")}
             label={t("sales")}
+            options={selectedUnits}
             field={{
-              getListUrl: Urls.data_units,
               valueKey: "id",
-              labelKey: "name",
+              labelKey: "name", 
             }}
             onChangeData={(data) =>
               handleFieldChange("batch.defSalesUnitID", data.defSalesUnitID)
@@ -463,9 +498,9 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
           />
           <ERPDataCombobox
             {...getFieldProps("batch.defPurchaseUnitID")}
-            label={t("purchase")}
+            label={t("purchase")}            
+            options={selectedUnits}
             field={{
-              getListUrl: Urls.data_units,
               valueKey: "id",
               labelKey: "name",
             }}
@@ -479,9 +514,9 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
           />
           <ERPDataCombobox
             {...getFieldProps("batch.defReportUnitID")}
-            label={t("report")}
+            label={t("report")}            
+            options={selectedUnits}
             field={{
-              getListUrl: Urls.data_units,
               valueKey: "id",
               labelKey: "name",
             }}

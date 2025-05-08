@@ -163,8 +163,12 @@ export const QuantityLimit: React.FC = () => {
     }
   }, [selectAll]);
 
-  const handleRemoveRow = useCallback((rowId: number) => {
-    setGridData((prevData) => prevData.filter((item) => item.id !== rowId));
+  const handleRemoveRow = useCallback(async(rowId: number) => {
+    const url = `${Urls.special_price_scheme}${rowId}`;
+    const response = await api.delete(url);
+    handleResponse(response, () => {
+      setGridData((prev: any) => prev.filter((x: any) => x.qtyDiscountID != rowId))
+    });
   }, []);
 
   const handleSave = useCallback(() => {

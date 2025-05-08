@@ -43,7 +43,7 @@ export const fields = [
     "MRPPerUnit",
     "MSP",
     "MSPCode",
-    "NetWeight",
+    "netWt",
     "Nutrient01",
     "Nutrient02",
     "Nutrient03",

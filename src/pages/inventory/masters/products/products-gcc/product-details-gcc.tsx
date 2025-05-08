@@ -8,9 +8,10 @@ import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import ProductDetailsBatches from "../products-india/product-details-batches";
+import { productDto } from "../products-type";
 
 export const ProductDetailsGcc: React.FC<{
-    formState: any;
+    clientSession: any;
     handleFieldChange: (
         fields:
             | string
@@ -21,7 +22,7 @@ export const ProductDetailsGcc: React.FC<{
     ) => void;
 
     getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+}> = React.memo(({ clientSession, handleFieldChange, getFieldProps }) => {
 
     const { t } = useTranslation("inventory");
     return (
@@ -160,7 +161,28 @@ export const ProductDetailsGcc: React.FC<{
                             required={false}
                             onChangeData={(data) => handleFieldChange("product.batchNo", data.product.batchNo)}
                         />
-
+                                        <ERPInput
+                                          {...getFieldProps("product.netWt")}
+                                          label={t("net_weight_(in_grams)")}
+                                          placeholder="0.00"
+                                          type="number"
+                                          required={false}
+                                          onChangeData={(data: productDto) =>
+                                            handleFieldChange("product.netWt", data.product.netWt)
+                                          }
+                                          className="truncate flex-1 min-w-[100px]"
+                                        />
+                        
+                                        <ERPInput
+                                          {...getFieldProps("product.netWeightUnit")}
+                                          label={t("unit_name")}
+                                          placeholder={t("eg:gm/ml")}
+                                          required={false}
+                                          onChangeData={(data: productDto) =>
+                                            handleFieldChange("product.netWeightUnit", data.product.netWeightUnit)
+                                          }
+                                          className="flex-1 min-w-[80px]"
+                                        />
                         <ERPDateInput
                             {...getFieldProps("product.expiryDate")}
                             label={t("exp_date")}
@@ -230,12 +252,13 @@ export const ProductDetailsGcc: React.FC<{
                                 label={t("is_active_batch")}
                                 onChange={(data) => handleFieldChange("product.active", data.target.checked)}
                             />
-
+                            {clientSession.dbIdValue == "543140180640" && 
                             <ERPCheckbox
                                 {...getFieldProps("product.hold")}
                                 label={t("hold")}
                                 onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
                             />
+}
                         </div>
                     </div>
                     <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches>

@@ -140,17 +140,17 @@ const ProductOthersIndia: React.FC<{
                 }
                 className="min-w-[250px] flex-1"
               />
-              <ERPCheckbox
-                {...getFieldProps("config.openingStock")}
+              {/* <ERPCheckbox
+                {...getFieldProps("config.showOpeningStock")}
                 label={t("show_opening_stock")}
                 onChange={(e) =>
                   handleFieldChangeAndResetSettings(
-                    "openingStock",
+                    "showOpeningStock",
                     e.target.checked
                   )
                 }
                 className="min-w-[250px] flex-1"
-              />
+              /> */}
             </div>
           </div>
         </div>

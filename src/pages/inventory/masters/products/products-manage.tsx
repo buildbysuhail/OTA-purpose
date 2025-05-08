@@ -326,17 +326,18 @@ const handleMultibarcode = async ()=>{
         );
         data.onHold = holdStatus;
       }
+debugger
 
-      if (!clientSession.isAppGlobal) {
+      // if (!clientSession.isAppGlobal) {
         const markupPercentage = calculateMarkup(
           data.product.stdPurchasePrice ?? 0,
           data.product.stdSalesPrice ?? 0,
-          data.taxCategoryTaxPercentage,
+          data.product.taxCategoryValue??0,
           appSettings.productsSettings.showRateBeforeTax,
           getFormattedValue
         );
         data.markup = markupPercentage;
-      }
+      // }
 
       handleDataChange({ ...data });
     }
@@ -386,6 +387,7 @@ const handleMultibarcode = async ()=>{
     <div key="details">
       {" "}
       <ProductDetailsIndia
+      clientSession={clientSession}
         formState={formState}
         getFieldProps={getFieldProps}
         handleFieldChange={handleFieldChange}
@@ -474,7 +476,7 @@ const handleMultibarcode = async ()=>{
       />
 
       <ProductDetailsGcc
-        formState={formState}
+      clientSession={clientSession}
         getFieldProps={getFieldProps}
         handleFieldChange={handleFieldChange}
       />
@@ -673,7 +675,9 @@ const handleMultibarcode = async ()=>{
           !appSettings.branchSettings.maintainMasterEntry ||
           getFieldProps("hasDisabled").value == true
         }
-        onSubmit={handleSubmit}
+        onSubmit={
+          
+          handleSubmit}
       />
                 <ERPModal   
                   isOpen={flavorsOpen.open}

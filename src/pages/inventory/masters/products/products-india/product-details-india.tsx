@@ -10,6 +10,7 @@ import Urls from "../../../../../redux/urls";
 import ProductDetailsBatches from "./product-details-batches";
 
 const ProductDetailsIndia: React.FC<{
+  clientSession: any,
   formState: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -17,7 +18,7 @@ const ProductDetailsIndia: React.FC<{
   ) => void;
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, t, getFieldProps }) => {
+}> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession }) => {
   return (
     <>
       {getFieldProps("details").value &&
@@ -168,6 +169,7 @@ const ProductDetailsIndia: React.FC<{
                 {...getFieldProps("product.autoBarcode")}
                 label={t("auto_barcode")}
                 placeholder=""
+                readOnly
                 required={false}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("product.autoBarcode", data.product.autoBarcode)
@@ -190,24 +192,24 @@ const ProductDetailsIndia: React.FC<{
 
               <div className="flex flex-1 gap-1 min-w-[200px]">
                 <ERPInput
-                  {...getFieldProps("product.netWeight")}
+                  {...getFieldProps("product.netWt")}
                   label={t("net_weight_(in_grams)")}
                   placeholder="0.00"
                   type="number"
                   required={false}
                   onChangeData={(data: productDto) =>
-                    handleFieldChange("product.netWeight", data.product.netWeight)
+                    handleFieldChange("product.netWt", data.product.netWt)
                   }
                   className="truncate flex-1 min-w-[100px]"
                 />
 
                 <ERPInput
-                  {...getFieldProps("product.unitName")}
+                  {...getFieldProps("product.netWeightUnit")}
                   label={t("unit_name")}
                   placeholder={t("eg:gm/ml")}
                   required={false}
                   onChangeData={(data: productDto) =>
-                    handleFieldChange("product.unitName", data.product.unitName)
+                    handleFieldChange("product.netWeightUnit", data.product.netWeightUnit)
                   }
                   className="flex-1 min-w-[80px]"
                 />
@@ -301,7 +303,7 @@ const ProductDetailsIndia: React.FC<{
               //   handleFieldChange("product.gatePass", data.gatePass)
               // }
               />
-
+{clientSession.dbIdValue == "543140180640" && 
               <ERPCheckbox
                 {...getFieldProps("product.hold")}
                 label={t("hold")}
@@ -310,6 +312,7 @@ const ProductDetailsIndia: React.FC<{
               //   handleFieldChange("product.hold", data.hold)
               // }
               />
+}
             </div>
           </div>
           <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches>

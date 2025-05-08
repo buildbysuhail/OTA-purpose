@@ -54,11 +54,11 @@ export const ProductManageGcc: React.FC<{
         productCodeRef?.current?.select();
       }
     }, [getFieldProps("product.manual").value]);
-    // useEffect(() => {
-    //   const product = getFieldProps("product").value;
-    //   const markupPercentage = calculateMarkup(product.stdPurchasePrice??0, product.stdSalesPrice??0,1,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
-    //   handleFieldChange("markup", markupPercentage)
-    // },[getFieldProps("product.stdSalesPrice")])
+    useEffect(() => {
+      const obj = getFieldProps("*") as any as productDto;
+      const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice??0, obj.product.stdSalesPrice??0,obj.taxCategoryTaxPercentage,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
+      handleFieldChange("markup", markupPercentage)
+    },[])
 
     return (
       <div className="w-full modal-content">
@@ -644,15 +644,12 @@ export const ProductManageGcc: React.FC<{
                       nameKey: "alias",
                       getListUrl: Urls.data_taxCategory,
                     }}
-                    onChange={(data: any) => {
-                      const prev = getFieldProps("*");
-                      const _data = {
-                        ...prev,
-                        product: { ...prev.product, taxCategoryID: data.value },
-                        taxCategoryTaxPercentage: parseFloat(data.name),
-                      };
-                      handleDataChange(_data);
-                    }}
+                    onSelectItem={(data: any) =>
+                      handleFieldChange(
+                        {"product.taxCategoryID":
+                        data.value, "taxCategoryTaxPercentage": data.name}
+                      )
+                    }
                     label={t("tax_category")}
                     className="w-full"
                   />

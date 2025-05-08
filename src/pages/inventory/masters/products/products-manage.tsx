@@ -191,11 +191,19 @@ export const ProductMaster: React.FC = React.memo(() => {
      }
      if(clientSession.isAppGlobal) {
       if(isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
-        alert("Fill HSN Code")
-        return
+        ERPAlert.show(
+          {title:"Validation Failed",
+          text:"HSN Code missing, are you sure to continue?",
+          onConfirm:() => {handleSubmit()}
+          })
+      }
+      else{
+        handleSubmit()
       }
      }
+     else{
      handleSubmit();
+     }
   }
   //multibarcode open
 
@@ -217,7 +225,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         resolve();
       };
 
-      api.getAsync(`${Urls.productBarcode}?productBatchId=${batchId || 1}`)
+      api.getAsync(`${Urls.productBarcode}/${batchId || 0}`)
         .then((response) => {
           setMultiBarcode({
             open: true,
@@ -789,6 +797,7 @@ export const ProductMaster: React.FC = React.memo(() => {
           multiBarcode={multiBarcode}
           setMultiBarcode={setMultiBarcode}
           units={units}
+          productBatchID={getFieldProps("batch.productBatchID").value}
         />}
 
         // footer={

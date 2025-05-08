@@ -17,9 +17,10 @@ interface ProductMultiBarcodeManageProps {
   multiBarcode: MultiBarcodeState;
   setMultiBarcode: React.Dispatch<React.SetStateAction<MultiBarcodeState>>;
   units: ProductUnitInputDto[];
+  productBatchID: number
 }
 const api = new APIClient();
-export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps> = React.memo(({multiBarcode,setMultiBarcode,units}) => {
+export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps> = React.memo(({multiBarcode,setMultiBarcode,units, productBatchID}) => {
   const { t } = useTranslation("inventory");
   const [loading,setLoading]=useState(false)
   const [formData,setFormData] = useState({
@@ -56,7 +57,13 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
     try {
       console.log("multibarcode",multiBarcode);
       
-      const response = await api.postAsync(Urls.productBarcode,multiBarcode);
+      const response = await api.postAsync(
+        Urls.productBarcode,
+        multiBarcode.data.map((x: any) => ({
+          ...x,
+          productBatchID
+        }))
+      );
       handleResponse(response,()=>{
         setMultiBarcode((prev)=>({
           open:false,

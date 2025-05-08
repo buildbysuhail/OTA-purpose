@@ -29,7 +29,7 @@ export const ProductDetailsGcc: React.FC<{
         <>
             {getFieldProps("details").value == true &&
                 <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-                    <div className="grid grid-cols-4 gap-1 border border-gray-200 rounded-md p-2">
+                    <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
                         <div className="grid grid-cols-3 gap-1">
                             <ERPInput
                                 {...getFieldProps("product.minimumStock")}
@@ -48,6 +48,7 @@ export const ProductDetailsGcc: React.FC<{
                                 required={false}
                                 onChangeData={(data) => handleFieldChange("product.maximumStock", data.product.maximumStock)}
                             />
+
                             <ERPInput
                                 {...getFieldProps("product.reorderQty")}
                                 label={t("re_order_qty")}
@@ -60,7 +61,7 @@ export const ProductDetailsGcc: React.FC<{
 
                         <div className="flex items-center gap-1">
                             <ERPDataCombobox
-                                {...getFieldProps("product.warehouseID")}
+                                {...getFieldProps("batch.warehouseID")}
                                 id="warehouseID"
                                 field={{
                                     getListUrl: Urls.data_warehouse,
@@ -68,11 +69,10 @@ export const ProductDetailsGcc: React.FC<{
                                     valueKey: "id",
                                     labelKey: "name",
                                 }}
-                                onChangeData={(data) => handleFieldChange("product.warehouseID", data.warehouseID)}
+                                onChangeData={(data) => handleFieldChange("batch.warehouseID", data.batch.warehouseID)}
                                 className="w-full"
                                 label={t("warehouse")}
                             />
-
                             <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                                 <Ellipsis className="w-4 h-4" />
                             </button>
@@ -80,7 +80,7 @@ export const ProductDetailsGcc: React.FC<{
 
                         <div className="flex items-center gap-1">
                             <ERPDataCombobox
-                                {...getFieldProps("product.brandID")}
+                                {...getFieldProps("batch.brandID")}
                                 id="brandID"
                                 field={{
                                     id: "brandID",
@@ -88,12 +88,11 @@ export const ProductDetailsGcc: React.FC<{
                                     labelKey: "name",
                                     getListUrl: Urls.data_brands,
                                 }}
-                                onChangeData={(data) => handleFieldChange("product.brandID", data.brandID)}
+                                onChangeData={(data) => handleFieldChange("batch.brandID", data.batch.brandID)}
                                 className="w-full"
                                 label={t("brand_mfg")}
-                                // options={[]}
+                            // options={[]}
                             />
-
                             <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                                 <Ellipsis className="w-4 h-4" />
                             </button>
@@ -119,15 +118,15 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
                             label={t("product_category")}
                             className="w-full"
-                            // options={[]}
+                        // options={[]}
                         />
 
                         <ERPInput
-                            {...getFieldProps("product.specification")}
+                            {...getFieldProps("batch.specification")}
                             label={t("specification")}
                             placeholder=""
                             required={false}
-                            onChangeData={(data) => handleFieldChange("product.specification", data.product.specification)}
+                            onChangeData={(data) => handleFieldChange("batch.specification", data.batch.specification)}
                         />
 
                         <ERPInput
@@ -155,46 +154,42 @@ export const ProductDetailsGcc: React.FC<{
                         />
 
                         <ERPInput
-                            {...getFieldProps("product.batchNo")}
+                            {...getFieldProps("batch.batchNo")}
                             label={t("batch_no")}
                             placeholder=""
                             required={false}
-                            onChangeData={(data) => handleFieldChange("product.batchNo", data.product.batchNo)}
+                            onChangeData={(data) => handleFieldChange("batch.batchNo", data.batch.batchNo)}
                         />
-                                        <ERPInput
-                                          {...getFieldProps("batch.netWt")}
-                                          label={t("net_weight_(in_grams)")}
-                                          placeholder="0.00"
-                                          type="number"
-                                          required={false}
-                                          onChangeData={(data: productDto) =>
-                                            handleFieldChange("batch.netWt", data.batch.netWt)
-                                          }
-                                          className="truncate flex-1 min-w-[100px]"
-                                        />
-                        
-                                        <ERPInput
-                                          {...getFieldProps("batch.netWeightUnit")}
-                                          label={t("unit_name")}
-                                          placeholder={t("eg:gm/ml")}
-                                          required={false}
-                                          onChangeData={(data: productDto) =>
-                                            handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)
-                                          }
-                                          className="flex-1 min-w-[80px]"
-                                        />
+                        <ERPInput
+                            {...getFieldProps("batch.netWt")}
+                            label={t("net_weight_(in_grams)")}
+                            placeholder="0.00"
+                            type="number"
+                            required={false}
+                            onChangeData={(data: productDto) => handleFieldChange("batch.netWt", data.batch.netWt)}
+                            className="truncate flex-1 min-w-[100px]"
+                        />
+
+                        <ERPInput
+                            {...getFieldProps("batch.netWeightUnit")}
+                            label={t("unit_name")}
+                            placeholder={t("eg:gm/ml")}
+                            required={false}
+                            onChangeData={(data: productDto) => handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)}
+                            className="flex-1 min-w-[80px]"
+                        />
                         <ERPDateInput
-                            {...getFieldProps("product.expiryDate")}
+                            {...getFieldProps("batch.expiryDate")}
                             label={t("exp_date")}
                             required={false}
-                            onChange={(data) => handleFieldChange("product.expiryDate", data.target.value)}
+                            onChange={(data) => handleFieldChange("batch.expiryDate", data.target.value)}
                         />
 
                         <ERPDateInput
-                            {...getFieldProps("product.mfgDate")}
+                            {...getFieldProps("batch.mfgDate")}
                             label={t("mfg_date")}
                             required={false}
-                            onChange={(data) => handleFieldChange("product.mfgDate", data.target.value)}
+                            onChange={(data) => handleFieldChange("batch.mfgDate", data.target.value)}
                         />
 
                         {/* <ERPInput
@@ -218,10 +213,16 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data) => handleFieldChange("product.location", data.location)}
                             label={t("location")}
                         />
+
+                        <ERPCheckbox
+                            {...getFieldProps("product.active")}
+                            label={t("is_active_batch")}
+                            onChange={(data) => handleFieldChange("product.active", data.target.checked)}
+                        />
                     </div>
 
                     <div className="border border-gray-200 rounded-md p-2 relative">
-                        <h6 className="absolute top-[-13px] rounded-md bg-gray-500 px-4 py-1">{t("list_in")}</h6>
+                        <h6 className="absolute top-[-13px] rounded-md px-4 py-1">{t("list_in")}</h6>
                         <div className="flex flex-wrap items-center gap-6 mt-5">
                             <ERPCheckbox
                                 {...getFieldProps("product.canPurchase")}
@@ -247,18 +248,14 @@ export const ProductDetailsGcc: React.FC<{
                                 onChange={(data) => handleFieldChange("product.isRawMaterial", data.target.checked)}
                             />
 
-                            <ERPCheckbox
-                                {...getFieldProps("product.active")}
-                                label={t("is_active_batch")}
-                                onChange={(data) => handleFieldChange("product.active", data.target.checked)}
-                            />
-                            {clientSession.dbIdValue == "543140180640" && 
-                            <ERPCheckbox
-                                {...getFieldProps("product.hold")}
-                                label={t("hold")}
-                                onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
-                            />
-}
+                            {
+                                clientSession.dbIdValue == "543140180640" &&
+                                <ERPCheckbox
+                                    {...getFieldProps("product.hold")}
+                                    label={t("hold")}
+                                    onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
+                                />
+                            }
                         </div>
                     </div>
                     <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches>

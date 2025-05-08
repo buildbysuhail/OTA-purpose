@@ -79,7 +79,7 @@ const MultiRates: React.FC<{
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        allowEditing: true,
+        allowEditing: false,
       },
       {
         dataField: "msp",
@@ -118,7 +118,7 @@ const MultiRates: React.FC<{
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible: true,
+        visible: false,
         allowEditing: true,
         // width: 80,
       },

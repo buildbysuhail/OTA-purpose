@@ -165,6 +165,7 @@ export const QuantityLimit: React.FC = () => {
   }, [gridData]);
   const handleClear = useCallback(() => {
     clearForm();
+    setGridData([]);
   }, [clearForm]);
 
   const handleClearAll = useCallback(() => {
@@ -382,11 +383,6 @@ export const QuantityLimit: React.FC = () => {
         </div>
       </div>
       <div className="flex justify-end gap-2">
-        <ERPButton
-          title={t("delete")}
-          variant="primary"
-          onClick={handleDelete}
-        />
         <ERPButton
           title={t("load")}
           variant="primary"

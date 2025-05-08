@@ -38,7 +38,7 @@ export const initialQuantityLimit: {
     barcode: "",
     quantityLimit: 0,
     itemData: [],
-    id: 0,
+    itemQtyLimitID: 0,
     department: "",
     category: "",
   },
@@ -52,7 +52,7 @@ export const initialQuantityLimit: {
 };
 
 export interface QuantityLimitData {
-  id: number;
+  itemQtyLimitID: number;
   selectedOption: string;
   section: string;
   department: string;
@@ -68,7 +68,7 @@ export interface QuantityLimitData {
 }
 
 export interface QuantityLimitItemData {
-  id: number;
+  itemQtyLimitID: number;
   slNo: number;
   autoBarcode: string;
   barCode: string;
@@ -178,7 +178,7 @@ export const QuantityLimit: React.FC = () => {
   }, [selectAll]);
 
   const handleRemoveRow = useCallback((rowId: number) => {
-    setGridData((prevData) => prevData.filter((item) => item.id !== rowId));
+    setGridData((prevData) => prevData.filter((item) => item.itemQtyLimitID !== rowId));
   }, []);
 
 
@@ -194,7 +194,7 @@ export const QuantityLimit: React.FC = () => {
       <div className="flex justify-center">
         <button
           className="text-[#ef4444] font-bold px-2"
-          onClick={() => handleRemoveRow(cellData.data.id)}
+          onClick={() => handleRemoveRow(cellData.data.itemQtyLimitID)}
         >
           X
         </button>

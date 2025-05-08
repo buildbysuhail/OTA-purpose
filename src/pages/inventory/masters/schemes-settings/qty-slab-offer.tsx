@@ -295,7 +295,7 @@ export const QuantitySlabOffer: React.FC = () => {
                     label={t("item_name")}
                     field={{
                         id: "productID",
-                        getListUrl: Urls.data_productgroup,
+                        getListUrl: Urls.data_products,
                         valueKey: "id",
                         labelKey: "name",
                         required: true

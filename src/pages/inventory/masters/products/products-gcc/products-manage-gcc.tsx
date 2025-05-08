@@ -281,7 +281,7 @@ export const ProductManageGcc: React.FC<{
                     if (
                       e.target.checked == true &&
                       isNullOrUndefinedOrEmpty(
-                        getFieldProps("product.autoBarcode").value
+                        getFieldProps("batch.manualBarcode").value
                       )
                     ) {
                       const newBarcode = await api.getAsync(

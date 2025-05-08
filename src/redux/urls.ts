@@ -74,6 +74,7 @@ const Urls = {
   data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
+  data_nutrients: "/Inventory/Data/Nutrients",
   data_scheme_master: "/Inventory/Data/SchemeType/",
   data_products: "/Inventory/Data/Products",
   data_brands: "/Inventory/Data/Brands",

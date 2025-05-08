@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import ERPInput from "../../components/ERPComponents/erp-input";
+import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 
 // Define TypeScript interfaces
 interface OptionItem {
@@ -135,74 +137,43 @@ export default function ERPMultiSelect({
 
   return (
     <div className="space-y-2 relative" ref={dropdownRef}>
-      {label && (
-        <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
-          {Icon && <Icon className="h-4 w-4 mr-2 text-gray-400" />}
-          {label}
-        </label>
-      )}
-
-      <div
-        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer flex items-center justify-between"
+      <ERPInput
+        label={label}
+        value={displayValue}
+        placeholder={placeholder}
+        disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="flex-1 overflow-hidden text-ellipsis">
-          {selectedValues?.length === 0 ? (
-            <span className="text-gray-400">{placeholder}</span>
-          ) : (
-            <span>{displayValue}</span>
-          )}
-        </div>
-        <div className="flex-shrink-0">
-          {isOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          )}
-        </div>
-      </div>
+        id={''}
+      />
 
       {isOpen && (
         <div className={`absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}>
           <div className="p-2 sticky top-0 bg-white border-b">
-            <input
+            <ERPInput
+              noLabel={true}
+              value={searchTerm}
+              placeholder={searchPlaceholder}
+              disabled={disabled}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              id={''}
+            />
+            {/* <input
               type="text"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
               placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onClick={(e) => e.stopPropagation()}
-            />
+            /> */}
           </div>
           <div className="option-list">
             {filteredOptions.map((option) => (
               <div
                 key={option.id}
-                className={`px-4 py-2 cursor-pointer hover:bg-blue-50 ${Array.isArray(selectedValues) &&
+                className={`px-4 py-2 cursor-pointer hover:bg-[#EFF6FF] ${Array.isArray(selectedValues) &&
                   selectedValues.some((item: any) => item.id === option.id)
-                  ? "bg-blue-100 font-medium"
+                  ? "bg-[#DBEAFE] font-medium"
                   : ""
                   }`}
                 onClick={(e) => {
@@ -213,7 +184,7 @@ export default function ERPMultiSelect({
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    className="mr-2 h-4 w-4 text-[#2563EB] rounded border-gray-300 focus:ring-[#3B82F6]"
                     checked={Array.isArray(selectedValues) && selectedValues.some((item: any) => item.id === option.id)}
                     onChange={() => { }}
                     onClick={(e) => e.stopPropagation()}

@@ -6,22 +6,12 @@ import { useTranslation } from "react-i18next";
 import DataGrid, { Column } from "devextreme-react/data-grid";
 import { FormField } from "../../../../../utilities/form-types";
 import { ProductFieldPath, PathValue, productDto, ProductNutrientsInputDto } from "../products-type";
+import Urls from "../../../../../redux/urls";
 
 interface NutrientOption {
     id: string;
     name: string;
 }
-
-const nutrientOptions: NutrientOption[] = [
-    { id: "Protein", name: "Protein" },
-    { id: "Carbohydrates", name: "Carbohydrates" },
-    { id: "Fat", name: "Fat" },
-    { id: "Fiber", name: "Fiber" },
-    { id: "Vitamin A", name: "Vitamin A" },
-    { id: "Vitamin C", name: "Vitamin C" },
-    { id: "Calcium", name: "Calcium" },
-    { id: "Iron", name: "Iron" },
-];
 
 const initialNutrientData: ProductNutrientsInputDto = {
     nutrients: "",
@@ -62,9 +52,9 @@ const NutritionFactsIndia: React.FC<{
                             id: "nutrient",
                             valueKey: "id",
                             labelKey: "name",
+                            getListUrl: Urls.data_nutrients
                         }}
                         label={t("nutrients")}
-                        options={nutrientOptions}
                         onChange={(e) => {
                             setNutrition((prev) => ({
                                 ...prev,

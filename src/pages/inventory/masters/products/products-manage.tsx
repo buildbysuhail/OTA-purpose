@@ -179,17 +179,23 @@ export const ProductMaster: React.FC = React.memo(() => {
     });
   };
 
-  const handleSubmitProductManage = async () => {
-    const config = getFieldProps("config").value as ProductLocalConfig
-    if (config.showFlavourOnSave) {
+
+  const handleSubmitProductManage = async()=>{ 
+     const obj =   getFieldProps("*") as any as productDto
+     if(obj.config.showFlavourOnSave){
       await handleFlavorOpen()
     }
 
-    if (config.showMultiBarcodeOnSave) {
+     if(obj.config.showMultiBarcodeOnSave){
       await handleMultibarcode()
-    }
-
-    handleSubmit();
+     }
+     if(clientSession.isAppGlobal) {
+      if(isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
+        alert("Fill HSN Code")
+        return
+      }
+     }
+     handleSubmit();
   }
   //multibarcode open
 
@@ -283,6 +289,7 @@ export const ProductMaster: React.FC = React.memo(() => {
           `${Urls.products}${rootState.PopupData.products?.key}`
         )) as productDto;
         nextProductCode = data.product.productCode ?? "";
+        data.details = true;
       } else {
         data = initialProductData;
         nextProductCode = await api.getAsync(

@@ -131,7 +131,7 @@ if(!modifiedData.elements) {
           if(appSettings.productsSettings.allowMultiUnits) {
 
             const qString = new URLSearchParams({ productBatchID: row.productBatchID }).toString();
-            const units = await api.getAsync(`${Urls.products}SelectProductUnits`, qString);
+            const units = await api.getAsync(`${Urls.products}SelectProductUnits/${row.productBatchID}`);
             handleFieldChange("units", units??[])
           }
 

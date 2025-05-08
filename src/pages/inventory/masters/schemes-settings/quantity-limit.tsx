@@ -461,6 +461,7 @@ export const QuantityLimit: React.FC = () => {
           selectedRowKeys={selectedRow}
           onSelectionChanged={onSelectionChanged}
         >
+           <Scrolling mode="virtual" />
             <Selection
           mode="multiple"
           selectAllMode={ "page"}

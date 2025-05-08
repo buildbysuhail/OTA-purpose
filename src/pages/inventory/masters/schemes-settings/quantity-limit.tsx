@@ -178,10 +178,10 @@ export const QuantityLimit: React.FC = () => {
   }, [selectAll]);
 
   const handleRemoveRow = useCallback(async(rowId: number) => {
-    const url = `${Urls.special_price_scheme}${rowId}`;
+    const url = `${Urls.delete_quantity_limit}${rowId}`;
     const response = await api.delete(url);
     handleResponse(response, () => {
-      setGridData((prev: any) => prev.filter((x: any) => x.qtyDiscountID != rowId))
+      setGridData((prev: any) => prev.filter((x: any) => x.itemQtyLimitID != rowId))
     });
   }, []);
 

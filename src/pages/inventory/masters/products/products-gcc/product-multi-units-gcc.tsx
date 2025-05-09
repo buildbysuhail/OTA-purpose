@@ -232,7 +232,17 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                 value={unitData.unitID}
                 noLabel={true}
                 disabled={unitNum === 1}
-                options={unSelectedUnits}
+                options={
+                  index === 0
+                    ? units
+                    : [
+                        ...unSelectedUnits,
+                        {
+                          id: multiUnits[key].unitID,
+                          name: multiUnits[key].unit,
+                        },
+                      ]
+                }
                 field={{
                   valueKey: "id",
                   labelKey: "name",

@@ -213,10 +213,10 @@ export const ProductDetailsGcc: React.FC<{
                                 id: "location",
                                 valueKey: "id",
                                 labelKey: "name",
+                                getListUrl: Urls.data_locations
                             }}
                             onChangeData={(data) => handleFieldChange("product.location", data.location)}
                             label={t("location")}
-                            options={[]}
                         />
                     </div>
 

@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import DataGrid, {
   Column,
   Editing,
@@ -28,25 +33,29 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 
 export interface ProductMultiUnitsIndiaRef {
-  loadMultiRateToGrid: (obj: productDto, units: any) => Promise<ProductPriceInputDto[]>;
+  loadMultiRateToGrid: (
+    obj: productDto,
+    units: any
+  ) => Promise<ProductPriceInputDto[]>;
 }
 const api = new APIClient();
-const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
-  appSettings: ApplicationSettingsType;
-  t: any;
-  handleFieldChange: <Path extends ProductFieldPath>(
-    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
-    value?: PathValue<productDto, Path>
-  ) => void;
-  getFieldProps: (fieldId: string, type?: string) => FormField | any;
-  handleDataChange: (value?: any) => void;
-}>(({
-  t,
-  handleFieldChange,
-  getFieldProps,
-  handleDataChange,
-  appSettings
-}, ref) => {
+const ProductMultiUnitsIndia = forwardRef<
+  ProductMultiUnitsIndiaRef,
+  {
+    appSettings: ApplicationSettingsType;
+    t: any;
+    handleFieldChange: <Path extends ProductFieldPath>(
+      fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+      value?: PathValue<productDto, Path>
+    ) => void;
+    getFieldProps: (fieldId: string, type?: string) => FormField | any;
+    handleDataChange: (value?: any) => void;
+  }
+>(
+  (
+    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings },
+    ref
+  ) => {
     const unitDAta: ProductUnitInputDto = {
       productUnitID: 0,
       productBatchID: 0,
@@ -109,25 +118,40 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
     useImperativeHandle(ref, () => ({
       loadMultiRateToGrid: async (obj: productDto, units: any) => {
         return await loadMultiRateToGrid(obj, units);
-      }
+      },
     }));
     const handleAddUnit = async () => {
       debugger;
       const obj = getFieldProps("*");
       const updated = [...obj.units, unit];
 
-      const selected = fList.filter(x => x.unitID??0 > 0).map((x: any) => ({
-        id: Number(x.unitID),       // Ensure type matches: number
-        name: String(x.unit),       // Ensure type matches: string
-      }))
-      const unSelected = units.filter(x => !selected.map(x => x.id).includes(x.id??0)).map((x: any) => ({
-        id: Number(x.id),       // Ensure type matches: number
-        name: String(x.name),       // Ensure type matches: string
-      }))
+      let selected = updated
+        .filter((x) => x.unitID ?? 0 > 0)
+        .map((x: any) => ({
+          id: Number(x.unitID), // Ensure type matches: number
+          name: String(x.unit), // Ensure type matches: string
+        }));
+        if (obj.product.basicUnitID) {
+          const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
+          if (!exists)          
+          selected =  [
+            ...(selected ?? []),
+            {
+              id: Number(obj.product.basicUnitID),
+              name: units.find(x => x.id == obj.product.basicUnitID)?.name??"", // Replace with the actual name if needed
+            },
+          ];
+        }
+      const unSelected = units
+        .filter((x) => !selected.map((x) => x.id).includes(x.id ?? 0))
+        .map((x: any) => ({
+          id: Number(x.id), // Ensure type matches: number
+          name: String(x.name), // Ensure type matches: string
+        }));
       debugger;
       setSelectedUnits(selected);
       unSetSelectedUnits(unSelected);
-      
+
       if (appSettings?.productsSettings?.allowMultirate) {
         const rates = await loadMultiRateToGrid(obj, updated);
         handleDataChange({ ...obj, prices: rates, units: updated });
@@ -135,6 +159,52 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
 
       setUnit(unitDAta);
     };
+    useEffect(() => {
+      const fetchUnits = async () => {
+        try {
+          const response = await api.getAsync(Urls.data_units); // adjust API endpoint
+          const fList = response;
+          setUnits(fList);
+
+          const obj = getFieldProps("*") as any as productDto;
+          const updated = [...obj.units, unit];
+debugger
+          let selected = updated
+            .filter((x) => x.unitID ?? 0 > 0)
+            .map((x: any) => ({
+              id: Number(x.unitID), // Ensure type matches: number
+              name: String(x.unit), // Ensure type matches: string
+            }));
+            if (obj.product.basicUnitID && response) {
+              const basic = obj.product.basicUnitID == -2 ? response[0].id : obj.product.basicUnitID
+              const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
+              
+              const name = response.find((x: any) => x.id ==basic)?.name;
+              if (!exists && name)          
+              selected =  [
+                ...(selected ?? []),
+                {
+                  id: Number(basic),
+                  name: name??"", // Replace with the actual name if needed
+                },
+              ];
+            }
+          const unSelected = response
+            .filter((x: any) => !selected.map((x) => x.id).includes(x.id ?? 0))
+            .map((x: any) => ({
+              id: Number(x.id), // Ensure type matches: number
+              name: String(x.name), // Ensure type matches: string
+            }));
+          debugger;
+          setSelectedUnits(selected);
+          unSetSelectedUnits(unSelected);
+        } catch (error) {
+          console.error("Error fetching units:", error);
+        }
+      };
+
+      fetchUnits();
+    }, []);
     const loadMultiRates = async (
       unitId: number,
       unit: string,
@@ -180,7 +250,6 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
         return obj.prices || [];
       }
     };
-
 
     function setMultiRatesDefaultMRP(
       multiUnits: ProductUnitInputDto[],
@@ -301,15 +370,24 @@ const ProductMultiUnitsIndia = forwardRef<ProductMultiUnitsIndiaRef, {
         unit: "",
       }));
     };
-const [selectedUnits, setSelectedUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
-  const [units, setUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
-  const [unSelectedUnits, unSetSelectedUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
+    const [selectedUnits, setSelectedUnits] = useState<
+      {
+        id: number;
+        name: string;
+      }[]
+    >([{ id: 0, name: "" }]);
+    const [units, setUnits] = useState<
+      {
+        id: number;
+        name: string;
+      }[]
+    >([{ id: 0, name: "" }]);
+    const [unSelectedUnits, unSetSelectedUnits] = useState<
+      {
+        id: number;
+        name: string;
+      }[]
+    >([{ id: 0, name: "" }]);
     return (
       <div className="border border-[#ccc] rounded-md p-4 w-full">
         <div className="flex flex-col gap-4">
@@ -319,9 +397,9 @@ const [selectedUnits, setSelectedUnits] = useState<{
                 id="unitID"
                 value={unit.unitID}
                 label={t("unit")}
+                options={unSelectedUnits}
                 field={{
                   id: "unitID",
-                  getListUrl: Urls.data_units,
                   labelKey: "name",
                   valueKey: "id",
                 }}
@@ -364,7 +442,8 @@ const [selectedUnits, setSelectedUnits] = useState<{
                   setUnit((prev) => ({
                     ...prev,
                     multiFactor: Number(e.target.value),
-                    salesPrice: Number(obj?.product?.stdSalesPrice ?? 0) * mFactor,
+                    salesPrice:
+                      Number(obj?.product?.stdSalesPrice ?? 0) * mFactor,
                     mrp: Number(obj?.product?.mrp ?? 0) * mFactor,
                     msp: Number(obj?.batch?.msp ?? 0) * mFactor,
                   }));
@@ -577,10 +656,9 @@ const [selectedUnits, setSelectedUnits] = useState<{
                 <ERPDataCombobox
                   {...getFieldProps("batch.defSalesUnitID")}
                   id="defSalesUnitID"
-                  label={t("sales")}
+                  options={selectedUnits}
                   field={{
                     id: "defSalesUnitID",
-                    getListUrl: Urls.data_units,
                     labelKey: "name",
                     valueKey: "id",
                   }}
@@ -598,9 +676,9 @@ const [selectedUnits, setSelectedUnits] = useState<{
                   {...getFieldProps("batch.defPurchaseUnitID")}
                   id="defPurchaseUnitID"
                   label={t("purchase")}
+                  options={selectedUnits}
                   field={{
                     id: "defPurchaseUnitID",
-                    getListUrl: Urls.data_units,
                     labelKey: "name",
                     valueKey: "id",
                   }}
@@ -618,9 +696,9 @@ const [selectedUnits, setSelectedUnits] = useState<{
                   {...getFieldProps("batch.defReportUnitID")}
                   id="defReportUnitID"
                   label={t("report")}
+                  options={selectedUnits}
                   field={{
                     id: "defReportUnitID",
-                    getListUrl: Urls.data_units,
                     labelKey: "name",
                     valueKey: "id",
                   }}

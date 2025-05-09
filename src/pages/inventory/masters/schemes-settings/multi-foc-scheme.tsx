@@ -97,7 +97,7 @@ const MultiFOCScheme: React.FC = () => {
     }
     try {
       const payload = gridData;
-      const response = await api.post(Urls.qty_slab_offer, payload);
+      const response = await api.post(Urls.insert_multi_foc_details, payload);
       handleResponse(response, () => handleClear());
     } catch (error) {
       console.error("Error saving data:", error);
@@ -351,6 +351,7 @@ const MultiFOCScheme: React.FC = () => {
                   placeholder="Search Here"
                   productDataUrl={Urls.load_product_details_multi_foc}
                   onRowSelected={(data: any) => {
+                    debugger;
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {
@@ -363,11 +364,13 @@ const MultiFOCScheme: React.FC = () => {
                     }));
                   }}
                   onProductSelected={(data: any) => {
+                    debugger;
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {
                         ...prev.data,
                         productName: data.productName,
+                        nameOrCode: data.productName,
                         productID: data.productID,
                       },
                     }));
@@ -485,6 +488,7 @@ const MultiFOCScheme: React.FC = () => {
                         data: {
                           ...prev.data,
                           freeProductName: data.productName,
+                          nameOrCode_free: data.productName,
                           freeProductID: data.productID,
                         },
                       }));

@@ -298,6 +298,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         )) as productDto;
         nextProductCode = data.product.productCode ?? "";
         data.details = true;
+        data.taxCategoryTaxPercentage = data?.product?.taxCategoryValue??0
       } else {
         data = initialProductData;
         nextProductCode = await api.getAsync(

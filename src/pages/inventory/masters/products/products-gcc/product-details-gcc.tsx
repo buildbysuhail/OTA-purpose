@@ -60,7 +60,7 @@ export const ProductDetailsGcc: React.FC<{
 
                         <div className="flex items-center gap-1">
                             <ERPDataCombobox
-                                {...getFieldProps("product.warehouseID")}
+                                {...getFieldProps("batch.warehouseID")}
                                 id="warehouseID"
                                 field={{
                                     getListUrl: Urls.data_warehouse,
@@ -68,7 +68,7 @@ export const ProductDetailsGcc: React.FC<{
                                     valueKey: "id",
                                     labelKey: "name",
                                 }}
-                                onChangeData={(data) => handleFieldChange("product.warehouseID", data.warehouseID)}
+                                onChangeData={(data) => handleFieldChange("batch.warehouseID", data.batch.warehouseID)}
                                 className="w-full"
                                 label={t("warehouse")}
                             />
@@ -80,7 +80,7 @@ export const ProductDetailsGcc: React.FC<{
 
                         <div className="flex items-center gap-1">
                             <ERPDataCombobox
-                                {...getFieldProps("product.brandID")}
+                                {...getFieldProps("batch.brandID")}
                                 id="brandID"
                                 field={{
                                     id: "brandID",
@@ -88,7 +88,7 @@ export const ProductDetailsGcc: React.FC<{
                                     labelKey: "name",
                                     getListUrl: Urls.data_brands,
                                 }}
-                                onChangeData={(data) => handleFieldChange("product.brandID", data.brandID)}
+                                onChangeData={(data) => handleFieldChange("batch.brandID", data.batch.brandID)}
                                 className="w-full"
                                 label={t("brand_mfg")}
                                 // options={[]}
@@ -123,11 +123,11 @@ export const ProductDetailsGcc: React.FC<{
                         />
 
                         <ERPInput
-                            {...getFieldProps("product.specification")}
+                            {...getFieldProps("batch.specification")}
                             label={t("specification")}
                             placeholder=""
                             required={false}
-                            onChangeData={(data) => handleFieldChange("product.specification", data.product.specification)}
+                            onChangeData={(data) => handleFieldChange("batch.specification", data.batch.specification)}
                         />
 
                         <ERPInput
@@ -155,11 +155,11 @@ export const ProductDetailsGcc: React.FC<{
                         />
 
                         <ERPInput
-                            {...getFieldProps("product.batchNo")}
+                            {...getFieldProps("batch.batchNo")}
                             label={t("batch_no")}
                             placeholder=""
                             required={false}
-                            onChangeData={(data) => handleFieldChange("product.batchNo", data.product.batchNo)}
+                            onChangeData={(data) => handleFieldChange("batch.batchNo", data.batch.batchNo)}
                         />
                                         <ERPInput
                                           {...getFieldProps("batch.netWt")}
@@ -184,17 +184,17 @@ export const ProductDetailsGcc: React.FC<{
                                           className="flex-1 min-w-[80px]"
                                         />
                         <ERPDateInput
-                            {...getFieldProps("product.expiryDate")}
+                            {...getFieldProps("batch.expiryDate")}
                             label={t("exp_date")}
                             required={false}
-                            onChange={(data) => handleFieldChange("product.expiryDate", data.target.value)}
+                            onChange={(data) => handleFieldChange("batch.expiryDate", data.target.value)}
                         />
 
                         <ERPDateInput
-                            {...getFieldProps("product.mfgDate")}
+                            {...getFieldProps("batch.mfgDate")}
                             label={t("mfg_date")}
                             required={false}
-                            onChange={(data) => handleFieldChange("product.mfgDate", data.target.value)}
+                            onChange={(data) => handleFieldChange("batch.mfgDate", data.target.value)}
                         />
 
                         {/* <ERPInput

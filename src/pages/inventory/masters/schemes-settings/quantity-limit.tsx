@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -7,8 +7,10 @@ import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import DataGrid, {
   Column,
   Editing,
+  FilterRow,
   Paging,
   Scrolling,
+  Selection,
 } from "devextreme-react/data-grid";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
@@ -81,27 +83,43 @@ export const QuantityLimit: React.FC = () => {
   const { t } = useTranslation("inventory");
   const [gridData, setGridData] = useState<QuantityLimitItemData[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
-  const [selectAll, setSelectAll] = useState(false);
+  const [isDeleteLoading, setDeleteLoading] = useState(false);
+  const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<number[]>([]);
   const [quantityLimitForm, setQuantityLimitForm] = useState(initialQuantityLimit);
+  const [gridHeight,setGridHeight]=useState(500)
 
-  const handleOptionChange = (option: string) => {
-    setQuantityLimitForm((prev) => ({
-      ...prev,
-      data: { ...prev.data, selectedOption: option },
-    }));
-  };
+    useEffect(() => {
+      let wh = window.innerHeight - 300;
+      setGridHeight(wh);
+    }, [window.innerHeight]);
+
+    const handleOptionChange = (option: string) => {
+      setQuantityLimitForm((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          selectedOption: option,
+          // Reset irrelevant fields based on the selected option
+          sectionID: option === "department" ? prev.data.sectionID : 0,
+          productCategoryId: option === "category" ? prev.data.productCategoryId : 0,
+          productGroupID: option === "productGroup" ? prev.data.productGroupID : 0,
+          barcode: option === "barcode" ? prev.data.barcode : "",
+        },
+      }));
+    };
 
   const handleLoadByProp = useCallback(async (obj: QuantityLimitData) => {
     let payload = {
-      sectionID: isNullOrUndefinedOrZero(obj.sectionID) ? -1 : obj.sectionID,
-      productCategoryId: isNullOrUndefinedOrZero(obj.productCategoryId)
+      sectionID: (isNullOrUndefinedOrZero(obj.sectionID) && obj.selectedOption !== "department") ? -1 : obj.sectionID,
+      productCategoryId:( isNullOrUndefinedOrZero(obj.productCategoryId)&& obj.selectedOption !== "category") 
         ? -1
         : obj.productCategoryId,
-      productGroupId: isNullOrUndefinedOrZero(obj.productGroupID)
+      productGroupId: ( isNullOrUndefinedOrZero(obj.productGroupID)&& obj.selectedOption !== "productGroup") 
         ? -1
         : obj.productGroupID,
-      barcode: isNullOrUndefinedOrEmpty(obj.barcode) ? "" : obj.barcode,
-      isBarcode: isNullOrUndefinedOrEmpty(obj.barcode) ? false : true,
+      barcode: ( isNullOrUndefinedOrEmpty(obj.barcode)&& obj.selectedOption !== "barcode")  ? "" : obj.barcode,
+      isBarcode: ( isNullOrUndefinedOrEmpty(obj.barcode)&& obj.selectedOption !== "barcode")  ? false : true,
     };
     let queryString = Object.entries(payload)
       .map(
@@ -110,27 +128,23 @@ export const QuantityLimit: React.FC = () => {
       .join("&");
 
     try {
-      setIsDataLoading(true);
-
       const response = await api.getAsync(
         `${Urls.select_products_for_product_qty_limit}?${queryString}`
       );
       handleResponse(response);
       setGridData(response);
-      handleClear();
+      // handleClear();
     } catch (error) {
       console.error(`Error fetching data for`, error);
       setGridData([]);
-    } finally {
-      setIsDataLoading(false);
-    }
+    } 
   }, []);
 
   const handleLoad = useCallback(async () => {
     try {
       setIsDataLoading(true);
 
-      const response = await api.getAsync(`${Urls.select_quantity_limit}`);
+      const response = await api.getAsync(`${Urls.quantity_limit}`);
       setGridData(response);
       handleClear();
     } catch (error) {
@@ -140,56 +154,80 @@ export const QuantityLimit: React.FC = () => {
       setIsDataLoading(false);
     }
   }, []);
+
   const handleAdd = useCallback(async () => {
     try {
-      setIsDataLoading(true);
-
-      const response = await api.postAsync(`${Urls.select_quantity_limit}`,gridData);
+      setIsSaveLoading(true);
+      const response = await api.postAsync(`${Urls.quantity_limit}`,gridData);
       setGridData(response);
       handleClear();
     } catch (error) {
       console.error(`Error fetching data for`, error);
       setGridData([]);
     } finally {
-      setIsDataLoading(false);
+      setIsSaveLoading(false);
     }
   }, [gridData]);
+
   const handleClear = useCallback(() => {
     setQuantityLimitForm(initialQuantityLimit);
   }, []);
 
-  const handleClearAll = useCallback(() => {
-    setGridData([]);
-  }, []);
-
-  const handleDelete = useCallback(() => {
-    if (selectAll) {
-      setGridData([]);
+  const handleDelete = useCallback(async () => {
+    if (!selectedRow.length) {
+        ERPAlert.show({
+              title: "",
+              icon: "error",
+              text: "no rows selected",
+            });
+      return;
     }
-  }, [selectAll]);
 
-  const handleRemoveRow = useCallback(async(rowId: number) => {
-    const url = `${Urls.delete_quantity_limit}${rowId}`;
-    const response = await api.delete(url);
-    handleResponse(response, () => {
-      setGridData((prev: any) => prev.filter((x: any) => x.itemQtyLimitID != rowId))
-    });
-  }, []);
+    // Get selected rows based on selectedRowKeys
+    const selectedRows = gridData.filter((row) =>selectedRow.includes(row.slNo));
+    const productIDs = selectedRows.map(row => ({
+      productID: row.productID ,
+    }));
+    try {
+      setDeleteLoading(true);
+      // Make API call to delete with productIDs
+      const response = await api.delete(`${Urls.quantity_limit}`, {data:productIDs} );
+      handleResponse(response);
+      setSelectedRow([]); 
+    } catch (error) {
+      console.error(`Error deleting rows:`, error);
+    } finally {
+      setDeleteLoading(false);
+    }
+  }, [gridData, selectedRow, t]);
 
-
-  const handleSelectAllToDelete = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSelectAll(e.target.checked);
+  const onSelectionChanged = useCallback(
+    ({ selectedRowKeys }: { selectedRowKeys: number[] }) => {
+      setSelectedRow(selectedRowKeys);
     },
     []
   );
+  
+  const handleRemoveRow = useCallback(async(rowId: number) => {
+    ERPAlert.show({
+      title: "Warning",
+      icon: "warning",
+      text: "Are sure you want remove this row!",
+      onConfirm: () => {
+        setGridData((prev: any[]) =>
+          prev.filter((x: any) => x.slNo !== rowId)
+        );
+      },
+    });
+      
+  }, []);
 
   const renderDeleteCell = (cellData: any) => {
     return (
       <div className="flex justify-center">
         <button
           className="text-[#ef4444] font-bold px-2"
-          onClick={() => handleRemoveRow(cellData.data.itemQtyLimitID)}
+          onClick={() => handleRemoveRow(cellData.data.slNo)}
         >
           X
         </button>
@@ -391,25 +429,44 @@ export const QuantityLimit: React.FC = () => {
           loading={isDataLoading}
           disabled={isDataLoading}
         />
+          <ERPButton
+          title={t("clear")}
+          variant="secondary"
+          onClick={handleClear}
+        />
         <ERPButton
           title={t("save")}
           variant="primary"
           onClick={handleAdd}
+          loading={isSaveLoading}
+          disabled={isSaveLoading}
         />
-        <ERPButton
-          title={t("clear")}
-          variant="primary"
-          onClick={handleClear}
+    
+          <ERPButton
+          title={t("delete")}
+          variant="secondary"
+          onClick={handleDelete}
+          disabled={isDeleteLoading || !selectedRow.length}
         />
       </div>
 
       <div className="bg-white border border-gray-300 mt-4">
         <DataGrid
           dataSource={gridData}
+          height={gridHeight}
           showBorders={true}
           rowAlternationEnabled={true}
           className="w-full"
+          keyExpr="slNo"
+          selectedRowKeys={selectedRow}
+          onSelectionChanged={onSelectionChanged}
         >
+            <Selection
+          mode="multiple"
+          selectAllMode={ "page"}
+          showCheckBoxesMode={"always" }
+        />
+        {/* <FilterRow visible={true} /> */}
           <Paging defaultPageSize={100} />
           <Editing
             mode="cell"
@@ -421,32 +478,33 @@ export const QuantityLimit: React.FC = () => {
             dataField="slNo"
             caption={t("slNo")}
             dataType="number"
-            width={40}
+            width={100}
           />
           <Column
             dataField="barCode"
-            width={100}
+            width={200}
             dataType="string"
             caption={t("barcode")}
           />
           <Column
             dataField="autoBarcode"
-            width={100}
+            width={200}
             dataType="string"
             caption={t("auto_barcode")}
           />
           <Column
             dataField="productName"
-            width={200}
+            width={250}
             dataType="string"
             caption={t("product")}
           />
           <Column
               dataField="maxQty"
-              width={80}
+              dataType="number"
+              width={100}
               caption={t("qty_limit")}
           /> 
-          <Column caption={t("X")} cellRender={renderDeleteCell} width={40} />
+           <Column caption={t("X")} cellRender={renderDeleteCell} width={40} />
         </DataGrid>
       </div>
     </div>

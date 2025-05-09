@@ -495,26 +495,27 @@ export const QuantityLimit: React.FC = () => {
           variant="primary"
           onClick={handleLoad}
           loading={isDataLoading}
-          disabled={isDataLoading || isApiLoading}
+          disabled={isSaveLoading || isDataLoading || isApiLoading  || isDeleteLoading}
         />
         <ERPButton
           title={t("clear")}
           variant="secondary"
           onClick={handleClear}
+          disabled={isSaveLoading || isDataLoading || isApiLoading  || isDeleteLoading}
         />
         <ERPButton
           title={t("save")}
           variant="primary"
           onClick={handleAdd}
           loading={isSaveLoading}
-          disabled={isSaveLoading}
+          disabled={isSaveLoading || isDataLoading || isApiLoading  || isDeleteLoading}
         />
 
         <ERPButton
           title={t("delete")}
           variant="secondary"
           onClick={handleDelete}
-          disabled={isDeleteLoading || !selectedRow.length}
+          disabled={isSaveLoading || isDataLoading || isApiLoading  || isDeleteLoading || !selectedRow.length}
         />
       </div>
 
@@ -550,6 +551,11 @@ export const QuantityLimit: React.FC = () => {
             width={100}
           />
           <Column
+            dataField="productName"
+            dataType="string"
+            caption={t("product")}
+          />
+          <Column
             dataField="barCode"
             width={200}
             dataType="string"
@@ -560,11 +566,6 @@ export const QuantityLimit: React.FC = () => {
             width={200}
             dataType="string"
             caption={t("auto_barcode")}
-          />
-          <Column
-            dataField="productName"
-            dataType="string"
-            caption={t("product")}
           />
           <Column
             dataField="maxQty"

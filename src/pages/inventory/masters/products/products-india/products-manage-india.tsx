@@ -305,8 +305,10 @@ useEffect(() => {
                       title: t("product_group"),
                       popupAction: toggleProductGroup,
                       isOpen: rootState.PopupData.productGroup.isOpen || false,
+                      id:rootState.PopupData.productGroup.id,
+                      name:rootState.PopupData.productGroup.name,
                       closeModal: () =>
-                        dispatch(toggleProductGroup({ isOpen: false })),
+                      dispatch(toggleProductGroup({ isOpen: false })),
                       content: <ProductGroupManage />,
                     }}
                     label={t("product_group")}

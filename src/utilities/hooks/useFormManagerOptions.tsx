@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 
 export interface UseFormManagerOptions {
   url?: string;
-  onSuccess?: () => void;
+  onSuccess?: (response: any) => void;
   onClose?: () => void;
   onError?: (error: any) => void;
   key?: string;
@@ -230,7 +230,8 @@ export function useFormManager<T>({
         handleResponse(
           response,
           () => {
-            onSuccess?.();
+
+            onSuccess?.(response.item);
             handleClear();
           },
           () => {
@@ -269,7 +270,7 @@ export function useFormManager<T>({
         handleResponse(
           response,
           () => {
-            onSuccess?.();
+            onSuccess?.(response.item);
             handleClear();
           },
           () => {
@@ -281,6 +282,14 @@ export function useFormManager<T>({
               error: null,
               loading: false,
             });
+            if (isMessages && response.messages && response.messages.length > 0) {
+              ERPAlert.show({
+                title: t("Validation Error"),
+                icon: "warning",
+                text: response.messages.join("\n"),
+                confirmButtonText: t("Ok"),
+              });
+            }
             onError?.(response);
           }
         );
@@ -298,6 +307,7 @@ export function useFormManager<T>({
     onSuccess,
     onError,
     useApiClient,
+    isMessages,
     url,
   ]);
 

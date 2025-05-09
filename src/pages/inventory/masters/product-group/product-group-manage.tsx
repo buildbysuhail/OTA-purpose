@@ -37,9 +37,9 @@ export const ProductGroupManage: React.FC = React.memo(() => {
       [dispatch]
     ),
     onSuccess: useCallback(
-      () =>
+      (resItem:ProductGroupData) =>
         dispatch(
-          toggleProductGroup({ isOpen: false, key: null, reload: true })
+          toggleProductGroup({ isOpen: false, key: null, reload: true , id: resItem.productGroupID, name:resItem.groupName })
         ),
       [dispatch]
     ),

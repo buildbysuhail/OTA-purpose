@@ -122,6 +122,8 @@ interface ERPDataComboboxProps {
     title: string;
     width?: number;
     height?:number;
+    id?:number;
+    name?:string;
     isForm?: boolean;
     closeModal: () => void;
     content?: any;
@@ -658,6 +660,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       inputBoxState?.focusBgColor,
       inputBoxState?.defaultBgColor,
     ]);
+
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (
@@ -697,13 +700,36 @@ options
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
-    // useEffect(() => {
-    //   if (value == -2) {
-    //     loadData();
-    //   }
-    // }, [
-    //   value
-    // ]);
+// New useEffect to handle new item from modal
+useEffect(() => {
+  if (
+    addNewOption &&
+    addNewOptionCobonent?.id &&
+    addNewOptionCobonent?.name &&
+    !addNewOptionCobonent.isOpen
+  ) {
+    const newItem: Option = {
+      value: addNewOptionCobonent.id,
+      label: addNewOptionCobonent.name,
+      is_active: true,
+      name: addNewOptionCobonent.name,
+    };
+
+    // Check if the item already exists to avoid duplicates
+    if (!items.some((item) => item.value === newItem.value)) {
+      setItems((prevItems) => [...prevItems, newItem]);
+      setFilteredItems((prevItems) => [...prevItems, newItem]);
+    }
+
+    // Select the new item
+    handleItemClick(newItem);
+  }
+}, [
+  addNewOption,
+  addNewOptionCobonent?.id,
+  addNewOptionCobonent?.name,
+  addNewOptionCobonent?.isOpen,
+]);
     const filterLedgers = async (
       ledgers: any[],
       queryString: string

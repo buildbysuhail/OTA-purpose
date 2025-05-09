@@ -37,6 +37,7 @@ export const initialFOCScheme = {
     freeProductID: 0,
     stdSalesPrice: 0,
     freeStdSalesPrice: 0,
+    multiFocSchemeID:0,
     stdPurchasePrice: 0,
     freeStdPurchasePrice: 0,
     freeProductName: "",
@@ -63,6 +64,7 @@ export interface FOCSchemeData {
   freeUnitName: string;
   productName: string;
   freeProductName: string;
+  multiFocSchemeID:number;
   productID: number;
   freeProductID: number;
   barCode: string;
@@ -205,6 +207,7 @@ const MultiFOCScheme: React.FC = () => {
       freeUnitID: obj.freeUnitID,
       freeUnitName: obj.freeUnitName,
       productName: obj.productName,
+      multiFocSchemeID:obj.multiFocSchemeID,
       freeProductName: obj.freeProductName,
       productID: obj.productID,
       freeProductID: obj.freeProductID,
@@ -237,7 +240,7 @@ const MultiFOCScheme: React.FC = () => {
       if (prevGridData instanceof CustomStore) {
         return [];
       }
-      return prevGridData.filter((item: FOCSchemeData) => item.schemeID !== schemeID);
+      return prevGridData.filter((item: FOCSchemeData) => item.multiFocSchemeID !== schemeID);
     });
   }, []);
 
@@ -254,7 +257,7 @@ const MultiFOCScheme: React.FC = () => {
       <div className="flex justify-center">
         <button
           className="text-[#ef4444] font-bold px-2"
-          onClick={() => handleRemoveRow(cellData.data.schemeID)}
+          onClick={() => handleRemoveRow(cellData.data.multiFocSchemeID)}
         >
           X
         </button>

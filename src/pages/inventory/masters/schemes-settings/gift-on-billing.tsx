@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
+import DataGrid, { Column, Editing, Paging, Selection } from "devextreme-react/data-grid";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
@@ -87,7 +87,9 @@ export const GiftOnBilling: React.FC = () => {
     const { t } = useTranslation('inventory');
     const [gridData, setGridData] = useState<GiftOnBillingData[]>([]);
     const [isDataLoading, setIsDataLoading] = useState(false);
+      const [isDeleteLoading, setDeleteLoading] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
+      const [selectedRow, setSelectedRow] = useState<number[]>([]);
 
     const {
         isEdit,
@@ -158,6 +160,60 @@ export const GiftOnBilling: React.FC = () => {
     }, [formState.data, gridData]);
 
     const handleClear = useCallback(() => { clearForm(); }, [clearForm]);
+    const handleDelete = useCallback(async () => {
+        if (!selectedRow.length) {
+          ERPAlert.show({
+            title: "",
+            icon: "error",
+            text: "no rows selected",
+          });
+          return;
+        }
+    
+        // Get selected rows based on selectedRowKeys
+        const selectedRows = gridData.filter((row) =>
+          selectedRow.includes(row.giftOnBillingID)
+        );
+        const rowsToDeleteLocally = selectedRows.filter(
+          (row) => row.giftOnBillingID === 0
+        );
+        const rowsToDeleteViaApi = selectedRows.filter(
+          (row) => row.giftOnBillingID !== 0
+        );
+        const payload = rowsToDeleteViaApi.map((row) => ({
+            giftOnBillingID: row.giftOnBillingID,
+        }));
+        try {
+          setDeleteLoading(true);
+          // Make API call to delete with productIDs
+          if (rowsToDeleteLocally.length > 0) {
+            setGridData((prev) =>
+              prev.filter(
+                (row) =>
+                  !rowsToDeleteLocally.some(
+                    (selected) => selected.giftOnBillingID === row.giftOnBillingID
+                  )
+              )
+            );
+          }
+          debugger;
+          if (rowsToDeleteViaApi.length > 0) {
+            const response = await api.delete(`${Urls.gift_on_billing}`, {
+              data: payload,
+            });
+            handleResponse(response, () => {
+                const removed = payload.map(x => x.giftOnBillingID);
+                debugger;
+                setGridData((prev: any[]) => prev.filter((x: any) => !removed.includes(x.giftOnBillingID)));
+            });
+          }
+        } catch (error) {
+          console.error(`Error deleting rows:`, error);
+        } finally {
+          setDeleteLoading(false);
+        }
+      }, [gridData, selectedRow, t]);
+    
     const handleRemoveRow = useCallback((rowId: number) => { setGridData(prevData => prevData.filter(item => item.giftOnBillingID !== rowId)); }, []);
 
     const handleSave = useCallback(async () => {
@@ -290,7 +346,12 @@ export const GiftOnBilling: React.FC = () => {
             fetchByProduct();
         }
     }, [formState.data.giftProductId]);
-
+const onSelectionChanged = useCallback(
+    ({ selectedRowKeys }: { selectedRowKeys: number[] }) => {
+      setSelectedRow(selectedRowKeys);
+    },
+    []
+  );
     return (
         <div className="w-full p-2 bg-gray-100">
             <div className="bg-white p-2 rounded-md shadow-sm mb-4">
@@ -383,9 +444,9 @@ export const GiftOnBilling: React.FC = () => {
                     
                     <ERPButton
                         title={t("delete")}
-                        disabled={!formState.data.loadAllGiftOnBilling}
+                        disabled={!formState.data.loadAllGiftOnBilling || isDeleteLoading || selectedRow.length == 0}
                         variant="secondary"
-                        onClick={handleClear}
+                        onClick={handleDelete}
                     />
                 </div>
             </div>
@@ -395,6 +456,9 @@ export const GiftOnBilling: React.FC = () => {
                     dataSource={gridData}
                     showBorders={true}
                     rowAlternationEnabled={true}
+                    keyExpr="giftOnBillingID"
+                    selectedRowKeys={selectedRow}
+                    onSelectionChanged={onSelectionChanged}
                     className="w-full">
                     <Paging defaultPageSize={10} />
                     <Editing
@@ -403,16 +467,13 @@ export const GiftOnBilling: React.FC = () => {
                         allowDeleting={false}
                         allowAdding={false}
                     />
-                    <Column
-                        caption="Sl"
-                        width={30}
-                        cellRender={(data) => data.rowIndex + 1}
-                    />
-                    <Column
-                        dataField="clear"
-                        width={60}
-                        caption={t("clear")}
-                    />
+                     <Selection
+            mode="multiple"
+            selectAllMode={"page"}
+            showCheckBoxesMode={"always"}
+          />
+               
+                   
                     <Column
                         dataField="rangeFrom"
                         width={45}

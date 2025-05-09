@@ -66,7 +66,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
   
     const handleLoadByProp = useCallback(async (obj:SchemeSettingsDiscountForm) => {
             let payload = {
-                sectionID:  isNullOrUndefinedOrZero(obj.SchemeID)?-1:obj.SchemeID,
+                SchemeID:  isNullOrUndefinedOrZero(obj.SchemeID)?-1:obj.SchemeID,
                 ProductGroupID:isNullOrUndefinedOrZero(obj.ProductGroupID)?-1:obj.ProductGroupID
               };
               let queryString = Object.entries(payload)
@@ -169,6 +169,9 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             showPrintButton={false}
                             className="w-full"
                             heightToAdjustOnWindows={450}
+                            selectionMode="multiple"
+                            allowSelection={true}
+                            allowSelectAll={true}
                             columns={[
                                
                                 { dataField: "sl", width: 50, caption: t("si") },

@@ -730,14 +730,6 @@ export const ProductMaster: React.FC = React.memo(() => {
               />
 
               <Column
-                dataField="productId"
-                caption={t("si_no")}
-                allowEditing={false}
-                dataType="string"
-                width={150}
-              />
-
-              <Column
                 dataField="flavor"
                 caption={t("flavor")}
                 dataType="string"

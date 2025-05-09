@@ -61,6 +61,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
         Urls.productBarcode,
         multiBarcode.data.map((x: any) => ({
           ...x,
+          barcode:x.barcodes,
           productBatchID
         }))
       );

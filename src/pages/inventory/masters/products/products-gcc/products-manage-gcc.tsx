@@ -149,7 +149,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-col gap-2 mb-3">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 {/* {getFieldProps("product.productID")?.value} */}
                                <ERPProductSearch

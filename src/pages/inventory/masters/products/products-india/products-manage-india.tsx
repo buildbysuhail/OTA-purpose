@@ -434,7 +434,7 @@ useEffect(() => {
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
-                      data.product.unitQty
+                      data.batch.manualBarcode
                     )
                   }
                 />

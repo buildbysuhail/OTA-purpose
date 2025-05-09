@@ -186,19 +186,12 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
             paging={false}
           />
 
-          <Column
-            dataField="barcodes"
-            caption={t("barcodes")}
-            allowEditing={true}
-            dataType="string"
-            width={150}
-          />
         <Column
             dataField="unitID"
             caption={t("unitID")}
             dataType="number"
             allowEditing={false}
-            minWidth={150}
+            width={150}
             visible={false}
           />
           <Column
@@ -206,9 +199,16 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
             caption={t("unit")}
             dataType="string"
             allowEditing={false}
-            minWidth={150}
+            width={150}
           />
 
+          <Column
+            dataField="barcodes"
+            caption={t("barcodes")}
+            allowEditing={true}
+            dataType="string"
+          
+          />
           <Editing
             allowUpdating={true}
             allowAdding={false}

@@ -659,6 +659,8 @@ const Urls = {
   // URLs for QuantitySlabController (Inventory Module)
   qty_slab_offer: "/Inventory/QuantitySlab/", // POST
 
+  //Urls for scheme discount
+  scheme_discount: "Inventory/SchemeSettings",
   //Urls for Flavours (product )
 
   //Transaction

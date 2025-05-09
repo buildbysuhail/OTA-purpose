@@ -8,14 +8,17 @@ import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
+import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 
 export const initialSchemeSettingsDiscount = {
     data: {
-        productGroupID: 0,
+        ProductGroupID: 0,
         BranchID: 0,
-        SchemeID: "",
+        SchemeID: 0,
         product: "",
         autoBarcode: "",
         selected: false,
@@ -40,6 +43,10 @@ export interface SchemeSettingsDiscountData {
     isEditable: boolean;
     isDeletable: boolean;
 }
+interface SchemeSettingsDiscountForm{
+    ProductGroupID:number | null;
+    SchemeID:number | null
+}
 
 export const SchemeSettingsDiscount: React.FC = () => {
     const { t } = useTranslation('inventory');
@@ -51,62 +58,68 @@ export const SchemeSettingsDiscount: React.FC = () => {
     const [schemeValue, setSchemeValue] = useState("jhulhg");
     const [selectAllLeft, setSelectAllLeft] = useState(false);
     const [selectAllRight, setSelectAllRight] = useState(false);
-
-    const {
-        isEdit,
-        handleSubmit,
-        handleFieldChange,
-        handleClear: clearForm,
-        getFieldProps,
-        isLoading,
-        formState,
-    } = useFormManager<SchemeSettingsDiscountData>({
-        initialData: initialSchemeSettingsDiscount,
-        useApiClient: true,
+    const [schemeDiscountForm, setSchemeDiscountForm] = useState<SchemeSettingsDiscountForm>({
+        ProductGroupID: 0,
+        SchemeID: 0,
     });
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  
+    // const handleSave = useCallback(() => {
+    //     if (isSaving) return;
+    //     setIsSaving(true); 
+    //     try {
+    //     // Save logic would go here
+    //     // api.post(Urls.scheme_settings_discount, rightGridData);
+    //     console.log("Saving data:", rightGridData);
+    //     }catch (error) {
+    //         console.error("Error saving data:", error);
+    //     } finally {
+    //         setIsSaving(false); // Reset saving state
+    //     }
+    // }, [rightGridData, isSaving]);
 
-    const handleLoad = useCallback(async () => {
-        try {
-            setIsDataLoading(true);
-            // Simulate loading data from API
-            // const response = await api.get(Urls.scheme_settings_discount);
-            // if (response && response.data) {
-            //     setLeftGridData(response.data);
-            // }
-            setIsDataLoading(false);
-        } catch (error) {
-            console.error("Error loading data:", error);
-            setIsDataLoading(false);
-        }
-    }, []);
+    // const handleClear = useCallback(() => {
+    //     clearForm();
+    //     setRightGridData([]);
+    //     setSelectAllLeft(false);
+    //     setSelectAllRight(false);
+    //     // Reset all selections in left grid
+    //     setLeftGridData(prev => prev.map(item => ({ ...item, selected: false })));
+    // }, [clearForm]);
 
-    const handleSave = useCallback(() => {
-        if (isSaving) return;
-        setIsSaving(true); 
-        try {
-        // Save logic would go here
-        // api.post(Urls.scheme_settings_discount, rightGridData);
-        console.log("Saving data:", rightGridData);
-        }catch (error) {
-            console.error("Error saving data:", error);
-        } finally {
-            setIsSaving(false); // Reset saving state
-        }
-    }, [rightGridData, isSaving]);
+    // const handleClose = useCallback(() => {
+    //     console.log("Close clicked");
+    //     // Implementation for close functionality
+    // }, []);
+    const handleLoadByProp = useCallback(async (obj:SchemeSettingsDiscountForm) => {
+            let payload = {
+                sectionID:  isNullOrUndefinedOrZero(obj.SchemeID)?-1:obj.SchemeID,
+                ProductGroupID:isNullOrUndefinedOrZero(obj.ProductGroupID)?-1:obj.ProductGroupID
+              };
+              let queryString = Object.entries(payload)
+              .map(
+                ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val??0)}`
+              )
+              .join("&");
+              try {
+                setIsApiLoading(true);
+              const response = await api.getAsync(
+                `${Urls.scheme_discount}?${queryString}`
+              );
+              handleResponse(response,()=>{
+                setLeftGridData(response)
 
-    const handleClear = useCallback(() => {
-        clearForm();
-        setRightGridData([]);
-        setSelectAllLeft(false);
-        setSelectAllRight(false);
-        // Reset all selections in left grid
-        setLeftGridData(prev => prev.map(item => ({ ...item, selected: false })));
-    }, [clearForm]);
-
-    const handleClose = useCallback(() => {
-        console.log("Close clicked");
-        // Implementation for close functionality
-    }, []);
+              });
+            //   setGridData(response);
+              // handleClear();
+            } catch (error) {
+              console.error(`Error fetching data for`, error);
+            //   setGridData([]);
+            }finally{
+                setIsApiLoading(false)
+            }
+        
+      }, []);
 
     const handleRowSelection = useCallback((gridType: 'left' | 'right', rowId: number, isSelected: boolean) => {
         if (gridType === 'left') {
@@ -161,7 +174,31 @@ export const SchemeSettingsDiscount: React.FC = () => {
         <div className="w-full modal-content flex flex-col gap-4 p-4">
             {/* Top Section - Dropdowns */}
             <div className="grid grid-cols-6 gap-4">
-                <ERPDataCombobox
+                   <ERPDataCombobox
+                            id="ProductGroupID"
+                            field={{
+                              id: "ProductGroupID",
+                              valueKey: "id",
+                              labelKey: "name",
+                              getListUrl: Urls.data_productgroup,
+                            }}
+                            label={t("product_group")}
+                            data={schemeDiscountForm}
+                            value={schemeDiscountForm.ProductGroupID}
+                            className="w-full"
+                            onChangeData={(data: any) => {
+                              const obj = {
+                                ...schemeDiscountForm,
+                                ProductGroupID:  data.ProductGroupID,
+                              };
+                              handleLoadByProp(obj);
+                              setSchemeDiscountForm((prev) => ({
+                                ...prev,
+                               ProductGroupID: data.ProductGroupID ,
+                              }));
+                            }}
+                          />
+                {/* <ERPDataCombobox
                     {...getFieldProps("productGroup")}
                     field={{
                         id: "productGroup",
@@ -172,8 +209,8 @@ export const SchemeSettingsDiscount: React.FC = () => {
                     label={t("product_group")}
                     value={productGroupValue}
                     onChangeData={(data: any) => setProductGroupValue(data.productGroup)}
-                />
-                <ERPDataCombobox
+                /> */}
+                {/* <ERPDataCombobox
                     {...getFieldProps("scheme")}
                     field={{
                         id: "scheme",
@@ -184,7 +221,31 @@ export const SchemeSettingsDiscount: React.FC = () => {
                     label={t("schemes")}
                     value={schemeValue}
                     onChangeData={(data: any) => setSchemeValue(data.scheme)}
-                />
+                /> */}
+                    <ERPDataCombobox
+                            id="SchemeID"
+                            field={{
+                              id: "SchemeID",
+                              valueKey: "id",
+                              labelKey: "name",
+                              getListUrl:`${Urls.scheme_discount}/forCombo`,
+                            }}
+                            label={t("scheme_id")}
+                            data={schemeDiscountForm}
+                            value={schemeDiscountForm.SchemeID}
+                            className="w-full"
+                            onChangeData={(data: any) => {
+                              const obj = {
+                                ...schemeDiscountForm,
+                                SchemeID:  data.SchemeID,
+                              };
+                              handleLoadByProp(obj);
+                              setSchemeDiscountForm((prev) => ({
+                                ...prev,
+                               SchemeID: data.SchemeID ,
+                              }));
+                            }}
+                          />
             </div>
 
             {/* Main Grid Section */}
@@ -221,12 +282,12 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             gridId={""}
                         />
                     </div>
-                    <ERPCheckbox
+                    {/* <ERPCheckbox
                         label={t("select_all")}
                         checked={selectAllLeft}
                         onChangeData={() => handleSelectAll('left', !selectAllLeft)}
                         id={""}
-                    />
+                    /> */}
                 </div>
 
                 {/* Right Grid - Remove from Scheme */}
@@ -261,12 +322,12 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             gridId={""}
                         />
                     </div>
-                    <ERPCheckbox
+                    {/* <ERPCheckbox
                         label={t("select_all")}
                         checked={selectAllRight}
                         onChangeData={() => handleSelectAll('right', !selectAllRight)}
                         id={""}
-                    />
+                    /> */}
                 </div>
             </div>
 
@@ -275,18 +336,18 @@ export const SchemeSettingsDiscount: React.FC = () => {
                 <ERPButton
                     title={t("save")}
                     variant="primary"
-                    onClick={handleSave}
-                    disabled={isLoading}
+                    // onClick={handleSave}
+                    // disabled={isLoading}
                 />
                 <ERPButton
                     title={t("clear")}
                     variant="secondary"
-                    onClick={handleClear}
+                    // onClick={handleClear}
                 />
                 <ERPButton
                     title={t("close")}
                     variant="secondary"
-                    onClick={handleClose}
+                    // onClick={handleClose}
                 />
             </div>
         </div>

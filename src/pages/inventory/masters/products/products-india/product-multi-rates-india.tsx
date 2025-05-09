@@ -168,16 +168,6 @@ const MultiRates: React.FC<{
           if (e.changes.length > 0) {
             const changes = e.changes[0];
             if (changes.type === "update") {
-              const updatedUnits = [..._unts];
-              const index = _unts.findIndex(
-                (u: any) => u.unitID === changes.key?.unitID
-              );
-              updatedUnits[index] = {
-                ...updatedUnits[index],
-                ...changes.data,
-              };
-              // setUnits(updatedUnits);
-              handleFieldChange("prices", [...updatedUnits]);
               if ("salesPrice" in changes.data) {
                 const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
                 const finalMrp = e.changes[0].data.mrp ?? 0;
@@ -195,6 +185,18 @@ const MultiRates: React.FC<{
                   return; // Stop further processing
                 }
               }
+              debugger;
+              const updatedUnits = [..._unts];
+              const index = _unts.findIndex(
+                (u: any) => u.unitID === changes.key?.unitID && u.priceCategoryID === changes.key?.priceCategoryID
+              );
+              updatedUnits[index] = {
+                ...updatedUnits[index],
+                ...changes.data,
+              };
+              // setUnits(updatedUnits);
+              handleFieldChange("prices", [...updatedUnits]);
+              
             }
           }
         }}

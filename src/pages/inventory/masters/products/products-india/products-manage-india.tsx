@@ -63,6 +63,7 @@ export const ProductManageIndia: React.FC<{
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
     const salesPriceRef = useRef<HTMLInputElement>(null);
+    const mrpRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");
@@ -96,6 +97,11 @@ export const ProductManageIndia: React.FC<{
             salesPriceRef.current.focus();
             // salesPriceRef.current.select();
           }
+        };const setFocusMRP = () => {
+          if (mrpRef.current) {
+            mrpRef.current.focus();
+            // salesPriceRef.current.select();
+          }
         };
         if (
           showWarning === "WARN" &&
@@ -125,6 +131,7 @@ export const ProductManageIndia: React.FC<{
               title: "Warning",
               type: "warn",
               onCancel: setFocus,
+              onConfirm: setFocusMRP,
             });
 
             if (obj.prices.length === 0) {
@@ -406,7 +413,7 @@ useEffect(() => {
                     if (
                       e.target.checked == true &&
                       isNullOrUndefinedOrEmpty(
-                        getFieldProps("product.autoBarcode").value
+                        getFieldProps("batch.manualBarcode").value
                       )
                     ) {
                       const newBarcode = await api.getAsync(
@@ -612,6 +619,7 @@ useEffect(() => {
 
                 <ERPInput
                   {...getFieldProps("product.mrp")}
+                  ref={mrpRef}
                   label={t("mrp")}
                   disabled={getFieldProps("product.itemType").value === "Dummy"}
                   placeholder="0.00"

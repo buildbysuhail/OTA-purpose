@@ -147,11 +147,11 @@ export const ProductDetailsGcc: React.FC<{
                         />
 
                         <ERPInput
-                            {...getFieldProps("product.autoBarcode")}
+                            {...getFieldProps("batch.autoBarcode")}
                             label={t("auto_barcode")}
                             placeholder=""
                             required={false}
-                            onChangeData={(data) => handleFieldChange("product.autoBarcode", data.product.autoBarcode)}
+                            onChangeData={(data) => handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)}
                         />
 
                         <ERPInput
@@ -162,24 +162,24 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data) => handleFieldChange("product.batchNo", data.product.batchNo)}
                         />
                                         <ERPInput
-                                          {...getFieldProps("product.netWt")}
+                                          {...getFieldProps("batch.netWt")}
                                           label={t("net_weight_(in_grams)")}
                                           placeholder="0.00"
                                           type="number"
                                           required={false}
                                           onChangeData={(data: productDto) =>
-                                            handleFieldChange("product.netWt", data.product.netWt)
+                                            handleFieldChange("batch.netWt", data.batch.netWt)
                                           }
                                           className="truncate flex-1 min-w-[100px]"
                                         />
                         
                                         <ERPInput
-                                          {...getFieldProps("product.netWeightUnit")}
+                                          {...getFieldProps("batch.netWeightUnit")}
                                           label={t("unit_name")}
                                           placeholder={t("eg:gm/ml")}
                                           required={false}
                                           onChangeData={(data: productDto) =>
-                                            handleFieldChange("product.netWeightUnit", data.product.netWeightUnit)
+                                            handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)
                                           }
                                           className="flex-1 min-w-[80px]"
                                         />

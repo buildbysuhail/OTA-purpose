@@ -456,7 +456,7 @@
     "brand":"Brand",
     "branch":"Branch",
     "price_update_(up_down)":"Price update(Up/Down)%",
-    "update_std_rate":"Update std rate",
+    "update_std_rate":"Update STD Rate",
     "load_items":"Load items",
     "search_products":"Search products",
     "standard":"Standard",
@@ -466,5 +466,10 @@
     "free_unit":"Free Unit",
     "product_barcode":"Product BarCode",
     "product_details":"Product Details",
-    "free_product_details":"Free Product Details"
+    "free_product_details":"Free Product Details",
+    "select_price_categories":"Select price categories",
+    "search_price_categories":"Search price categories",
+    "branches":"Branches",
+    "select_branches":"Select branches",
+    "search_branches":"Search branches"
 }

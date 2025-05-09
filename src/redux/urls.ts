@@ -34,6 +34,7 @@ const Urls = {
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
   data_cashLedger: "/Accounts/Data/CashLedgers",
+  data_branches:"/Data/Branches/",
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",

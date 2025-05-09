@@ -202,6 +202,9 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             showPrintButton={false}
                             className="w-full"
                             heightToAdjustOnWindows={450}
+                            selectionMode="multiple"
+                            allowSelection={true}
+                            allowSelectAll={true}
                             columns={[
                                 { dataField: "sl", width: 50, caption: t("sl") },
                                 { dataField: "pCode", width: 100, caption: t("p_code") },

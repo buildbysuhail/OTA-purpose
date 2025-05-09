@@ -1,15 +1,18 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { FormField } from "../../../../../utilities/form-types";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 const SalesCommon: React.FC<{
     getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ getFieldProps }) => {
     const { t } = useTranslation('inventory');
+     const { getFormattedValue } = useNumberFormat();
     const columns: DevGridColumn[] = useMemo(() => [
         {
             dataField: "voucherNumber",
@@ -32,11 +35,10 @@ const SalesCommon: React.FC<{
         {
             dataField: "transactionDate",
             caption: t("transaction_date"),
-            dataType: "string",
+            dataType: "date",
             allowSorting: true,
             allowSearch: true,
-            allowFiltering: true,
-            // width: 100,
+            format:"dd-MMM-yyyy"
         },
         {
             dataField: "partyName",
@@ -50,30 +52,123 @@ const SalesCommon: React.FC<{
         {
             dataField: "unitPrice",
             caption: t("unit_price"),
-            dataType: "string",
+            dataType: "number",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.unitPrice == null
+                      ? ""
+                      : getFormattedValue(
+                          Number.parseFloat(cellElement.data.unitPrice),
+                          false,
+                          4
+                        );
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.unitPrice == null
+                    ? ""
+                    : getFormattedValue(
+                        Number.parseFloat(cellElement.data.unitPrice),
+                        false,
+                        4
+                      );
+                }
+              },
+            },
         {
             dataField: "netAmount",
             caption: t("net_amount"),
-            dataType: "string",
+            dataType: "number",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.netAmount == null
+                      ? ""
+                      : getFormattedValue(
+                          Number.parseFloat(cellElement.data.netAmount),
+                          false,
+                          4
+                        );
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.netAmount == null
+                    ? ""
+                    : getFormattedValue(
+                        Number.parseFloat(cellElement.data.netAmount),
+                        false,
+                        4
+                      );
+                }
+              },
+            },
         {
             dataField: "quantity",
             caption: t("quantity"),
-            dataType: "string",
+            dataType: "number",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             width: 100,
-        },
+            cellRender: (
+                cellElement: any,
+                cellInfo: any,
+                filter: any,
+                exportCell: any
+              ) => {
+                if (exportCell != undefined) {
+                  const value =
+                    cellElement.data?.quantity == null
+                      ? ""
+                      : getFormattedValue(
+                          Number.parseFloat(cellElement.data.quantity),
+                          false,
+                          2
+                        );
+                  return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                  };
+                } else {
+                  return cellElement.data?.quantity == null
+                    ? ""
+                    : getFormattedValue(
+                        Number.parseFloat(cellElement.data.quantity),
+                        false,
+                        2
+                      );
+                }
+              },
+            },
         {
             dataField: "unitName",
             caption: t("unit_name"),
@@ -84,11 +179,52 @@ const SalesCommon: React.FC<{
             width: 100,
         },
     ], [t]);
+ const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
 
+//   const summaryItems: SummaryConfig[] = [
+//     {
+//       column: "partyName",
+//       summaryType: "custom",
+//       valueFormat: "string",
+//       displayFormat: "TOTAL",
+//     },
+//     {
+//       column: "netAmount",
+//       summaryType: "sum",
+//       valueFormat: "currency",
+//       customizeText: customizeSummaryRow,
+//     },
+//     {
+//       column: "quantity",
+//       summaryType: "sum",
+//       valueFormat: "currency",
+//       customizeText: customizeSummaryRow,
+//     },
+//   ];
     return (
         <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
                 columns={columns}
+                // summaryItems={summaryItems}
+                // remoteOperations={{
+                //     filtering: true,
+                //     paging: true,
+                //     sorting: true,
+                //     summary: false,
+                //   }}
                 gridHeader={t("sales")}
                 dataUrl={`${Urls.products}SelectProductSalesSummary`}
                 method={ActionType.POST}

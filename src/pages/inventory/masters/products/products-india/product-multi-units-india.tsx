@@ -1,36 +1,18 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
-import DataGrid, {
-  Column,
-  Editing,
-  KeyboardNavigation,
-  Paging,
-  RemoteOperations,
-  Scrolling,
-} from "devextreme-react/data-grid";
+import React, {  forwardRef,  useEffect,  useImperativeHandle,  useState,} from "react";
+import DataGrid, {  Column,  Editing,  KeyboardNavigation,  Paging,  RemoteOperations,  Scrolling,} from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
-import {
-  PathValue,
-  productDto,
-  ProductFieldPath,
-  ProductPriceInputDto,
-  ProductUnitInputDto,
-} from "../products-type";
+import {  PathValue,  productDto,  ProductFieldPath,  ProductPriceInputDto,  ProductUnitInputDto,} from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
 import { APIClient } from "../../../../../helpers/api-client";
-import { getAccordionSummaryUtilityClass } from "@mui/material";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
+import { Barcode, X } from "lucide-react";
 
 export interface ProductMultiUnitsIndiaRef {
   loadMultiRateToGrid: (
@@ -38,6 +20,7 @@ export interface ProductMultiUnitsIndiaRef {
     units: any
   ) => Promise<ProductPriceInputDto[]>;
 }
+
 const api = new APIClient();
 const ProductMultiUnitsIndia = forwardRef<
   ProductMultiUnitsIndiaRef,
@@ -120,6 +103,7 @@ const ProductMultiUnitsIndia = forwardRef<
         return await loadMultiRateToGrid(obj, units);
       },
     }));
+    
     const handleAddUnit = async () => {
       debugger;
       const obj = getFieldProps("*");
@@ -131,17 +115,17 @@ const ProductMultiUnitsIndia = forwardRef<
           id: Number(x.unitID), // Ensure type matches: number
           name: String(x.unit), // Ensure type matches: string
         }));
-        if (obj.product.basicUnitID) {
-          const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
-          if (!exists)          
-          selected =  [
+      if (obj.product.basicUnitID) {
+        const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
+        if (!exists)
+          selected = [
             ...(selected ?? []),
             {
               id: Number(obj.product.basicUnitID),
-              name: units.find(x => x.id == obj.product.basicUnitID)?.name??"", // Replace with the actual name if needed
+              name: units.find(x => x.id == obj.product.basicUnitID)?.name ?? "", // Replace with the actual name if needed
             },
           ];
-        }
+      }
       const unSelected = units
         .filter((x) => !selected.map((x) => x.id).includes(x.id ?? 0))
         .map((x: any) => ({
@@ -168,27 +152,27 @@ const ProductMultiUnitsIndia = forwardRef<
 
           const obj = getFieldProps("*") as any as productDto;
           const updated = [...obj.units, unit];
-debugger
+          debugger
           let selected = updated
             .filter((x) => x.unitID ?? 0 > 0)
             .map((x: any) => ({
               id: Number(x.unitID), // Ensure type matches: number
               name: String(x.unit), // Ensure type matches: string
             }));
-            if (obj.product.basicUnitID && response) {
-              const basic = obj.product.basicUnitID == -2 ? response[0].id : obj.product.basicUnitID
-              const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
-              
-              const name = response.find((x: any) => x.id ==basic)?.name;
-              if (!exists && name)          
-              selected =  [
+          if (obj.product.basicUnitID && response) {
+            const basic = obj.product.basicUnitID == -2 ? response[0].id : obj.product.basicUnitID
+            const exists = selected?.some((u: any) => u.id === Number(obj.product.basicUnitID));
+
+            const name = response.find((x: any) => x.id == basic)?.name;
+            if (!exists && name)
+              selected = [
                 ...(selected ?? []),
                 {
                   id: Number(basic),
-                  name: name??"", // Replace with the actual name if needed
+                  name: name ?? "", // Replace with the actual name if needed
                 },
               ];
-            }
+          }
           const unSelected = response
             .filter((x: any) => !selected.map((x) => x.id).includes(x.id ?? 0))
             .map((x: any) => ({
@@ -228,7 +212,7 @@ debugger
             purchaseRate: parseFloat(
               getFormattedValue(
                 (obj?.product?.stdPurchasePrice ?? 0) *
-                  (unitDAta.multiFactor || 1)
+                (unitDAta.multiFactor || 1)
               )
             ),
             mrp: obj?.product?.mrp || 0,
@@ -331,13 +315,13 @@ debugger
 
       const data =
         barcodeArray == undefined ||
-        barcodeArray == null ||
-        barcodeArray.length == 0
+          barcodeArray == null ||
+          barcodeArray.length == 0
           ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
           : barcodeArray.map((barcode: any) => ({
-              unit: units[rowId].unit ?? "",
-              barcode,
-            }));
+            unit: units[rowId].unit ?? "",
+            barcode,
+          }));
       setOpenMB({
         index: rowId,
         open: true,
@@ -407,7 +391,7 @@ debugger
                   const obj = getFieldProps("*");
                   if (
                     obj?.units?.find((x: any) => x.unitID == e.value) !=
-                      undefined ||
+                    undefined ||
                     obj?.product?.basicUnitID == e.value
                   ) {
                     ERPAlert.show({
@@ -629,13 +613,13 @@ debugger
                 dataField="mb"
                 caption={t("mb")}
                 dataType="boolean"
+                alignment="center"
                 cellRender={(cellData) => (
-                  <a
-                    className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-                    onClick={() => setMultiBarcode(cellData.rowIndex)}
-                  >
-                    X
-                  </a>
+                  <div className="flex items-center justify-center inline-flex hover:shadow-md p-2 rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
+                    <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold" onClick={() => setMultiBarcode(cellData.rowIndex)}>
+                      <Barcode className="w-4 h-4" />
+                    </a>
+                  </div>
                 )}
               />
 
@@ -644,6 +628,14 @@ debugger
                 caption="X"
                 width={70}
                 buttons={[{ name: "delete", text: "x" }]}
+                alignment="center"
+                cellRender={(cellData) => (
+                  <div className="flex items-center justify-center p-2 cursor-pointer">
+                    <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
+                      <X className="w-4 h-4" />
+                    </a>
+                  </div>
+                )}
               />
             </DataGrid>
           </div>

@@ -64,36 +64,9 @@ export const SchemeSettingsDiscount: React.FC = () => {
     });
   const [isApiLoading, setIsApiLoading] = useState(false);
   
-    // const handleSave = useCallback(() => {
-    //     if (isSaving) return;
-    //     setIsSaving(true); 
-    //     try {
-    //     // Save logic would go here
-    //     // api.post(Urls.scheme_settings_discount, rightGridData);
-    //     console.log("Saving data:", rightGridData);
-    //     }catch (error) {
-    //         console.error("Error saving data:", error);
-    //     } finally {
-    //         setIsSaving(false); // Reset saving state
-    //     }
-    // }, [rightGridData, isSaving]);
-
-    // const handleClear = useCallback(() => {
-    //     clearForm();
-    //     setRightGridData([]);
-    //     setSelectAllLeft(false);
-    //     setSelectAllRight(false);
-    //     // Reset all selections in left grid
-    //     setLeftGridData(prev => prev.map(item => ({ ...item, selected: false })));
-    // }, [clearForm]);
-
-    // const handleClose = useCallback(() => {
-    //     console.log("Close clicked");
-    //     // Implementation for close functionality
-    // }, []);
     const handleLoadByProp = useCallback(async (obj:SchemeSettingsDiscountForm) => {
             let payload = {
-                sectionID:  isNullOrUndefinedOrZero(obj.SchemeID)?-1:obj.SchemeID,
+                SchemeID:  isNullOrUndefinedOrZero(obj.SchemeID)?-1:obj.SchemeID,
                 ProductGroupID:isNullOrUndefinedOrZero(obj.ProductGroupID)?-1:obj.ProductGroupID
               };
               let queryString = Object.entries(payload)
@@ -110,65 +83,17 @@ export const SchemeSettingsDiscount: React.FC = () => {
                 setLeftGridData(response)
 
               });
-            //   setGridData(response);
-              // handleClear();
             } catch (error) {
               console.error(`Error fetching data for`, error);
-            //   setGridData([]);
             }finally{
                 setIsApiLoading(false)
             }
         
       }, []);
 
-    const handleRowSelection = useCallback((gridType: 'left' | 'right', rowId: number, isSelected: boolean) => {
-        if (gridType === 'left') {
-            setLeftGridData(prev =>
-                prev.map(item => item.id === rowId ? { ...item, selected: isSelected } : item)
-            );
 
-            // Update selectAll state
-            const allSelected = leftGridData.every(item =>
-                (item.id === rowId && isSelected) || (item.id !== rowId && item.selected)
-            );
-            setSelectAllLeft(allSelected && leftGridData.length > 0);
-        } else {
-            setRightGridData(prev =>
-                prev.map(item => item.id === rowId ? { ...item, selected: isSelected } : item)
-            );
 
-            // Update selectAll state
-            const allSelected = rightGridData.every(item =>
-                (item.id === rowId && isSelected) || (item.id !== rowId && item.selected)
-            );
-            setSelectAllRight(allSelected && rightGridData.length > 0);
-        }
-    }, [leftGridData, rightGridData]);
-
-    const handleSelectAll = useCallback((gridType: 'left' | 'right', isSelected: boolean) => {
-        if (gridType === 'left') {
-            const newSelectionState = !selectAllLeft;
-            setSelectAllLeft(newSelectionState);
-            setLeftGridData(prev => prev.map(item => ({ ...item, selected: newSelectionState })));
-        } else {
-            const newSelectionState = !selectAllRight;
-            setSelectAllRight(newSelectionState);
-            setRightGridData(prev => prev.map(item => ({ ...item, selected: newSelectionState })));
-        }
-    }, [selectAllLeft, selectAllRight]);
-
-    // Render cell with checkbox for selection
-    const renderSelectionCell = (cellData: any, gridType: 'left' | 'right') => {
-        return (
-            <div className="flex justify-center">
-                <input
-                    type="checkbox"
-                    checked={cellData.data.selected}
-                    onChange={(e) => handleRowSelection(gridType, cellData.data.id, e.target.checked)}
-                />
-            </div>
-        );
-    };
+   
 
     return (
         <div className="w-full modal-content flex flex-col gap-4 p-4">
@@ -198,30 +123,6 @@ export const SchemeSettingsDiscount: React.FC = () => {
                               }));
                             }}
                           />
-                {/* <ERPDataCombobox
-                    {...getFieldProps("productGroup")}
-                    field={{
-                        id: "productGroup",
-                        getListUrl: Urls.data_productgroup,
-                        valueKey: "id",
-                        labelKey: "name"
-                    }}
-                    label={t("product_group")}
-                    value={productGroupValue}
-                    onChangeData={(data: any) => setProductGroupValue(data.productGroup)}
-                /> */}
-                {/* <ERPDataCombobox
-                    {...getFieldProps("scheme")}
-                    field={{
-                        id: "scheme",
-                        getListUrl: Urls.data_scheme_master,
-                        valueKey: "id",
-                        labelKey: "name"
-                    }}
-                    label={t("schemes")}
-                    value={schemeValue}
-                    onChangeData={(data: any) => setSchemeValue(data.scheme)}
-                /> */}
                     <ERPDataCombobox
                             id="SchemeID"
                             field={{
@@ -268,12 +169,11 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             showPrintButton={false}
                             className="w-full"
                             heightToAdjustOnWindows={450}
+                            selectionMode="multiple"
+                            allowSelection={true}
+                            allowSelectAll={true}
                             columns={[
-                                {
-                                    caption: "",
-                                    width: 40,
-                                    cellRender: (cellData) => renderSelectionCell(cellData, 'left')
-                                },
+                               
                                 { dataField: "sl", width: 50, caption: t("si") },
                                 { dataField: "pCode", width: 100, caption: t("p_code") },
                                 { dataField: "product", width: 200, caption: t("product") },
@@ -282,12 +182,6 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             gridId={""}
                         />
                     </div>
-                    {/* <ERPCheckbox
-                        label={t("select_all")}
-                        checked={selectAllLeft}
-                        onChangeData={() => handleSelectAll('left', !selectAllLeft)}
-                        id={""}
-                    /> */}
                 </div>
 
                 {/* Right Grid - Remove from Scheme */}
@@ -308,12 +202,10 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             showPrintButton={false}
                             className="w-full"
                             heightToAdjustOnWindows={450}
+                            selectionMode="multiple"
+                            allowSelection={true}
+                            allowSelectAll={true}
                             columns={[
-                                {
-                                    caption: "",
-                                    width: 40,
-                                    cellRender: (cellData) => renderSelectionCell(cellData, 'right')
-                                },
                                 { dataField: "sl", width: 50, caption: t("sl") },
                                 { dataField: "pCode", width: 100, caption: t("p_code") },
                                 { dataField: "product", width: 200, caption: t("product") },
@@ -322,12 +214,6 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             gridId={""}
                         />
                     </div>
-                    {/* <ERPCheckbox
-                        label={t("select_all")}
-                        checked={selectAllRight}
-                        onChangeData={() => handleSelectAll('right', !selectAllRight)}
-                        id={""}
-                    /> */}
                 </div>
             </div>
 

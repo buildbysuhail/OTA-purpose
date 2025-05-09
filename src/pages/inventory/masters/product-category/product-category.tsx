@@ -24,6 +24,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true
     },
     {
       dataField: "id",
@@ -33,6 +34,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      visible:false
     },
     {
       dataField: "productCategoryCode",
@@ -42,7 +44,8 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: false
+      showInPdf:true,
+      visible:false
     },
     {
       dataField: "productCategoryName",
@@ -51,7 +54,8 @@ const ProductCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      minWidth: 200,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -61,6 +65,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "remarks",
@@ -70,6 +75,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "createdUser",
@@ -119,6 +125,7 @@ const ProductCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "actions",

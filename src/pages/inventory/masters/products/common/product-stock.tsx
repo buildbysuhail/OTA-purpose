@@ -10,6 +10,7 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { productDto } from "../products-type";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 const StockCommon: React.FC<{
   formState: any;
@@ -27,6 +28,7 @@ const StockCommon: React.FC<{
   const { t } = useTranslation("inventory");
   const [showGrid, setShowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+    const { getFormattedValue } = useNumberFormat();
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -42,11 +44,12 @@ const StockCommon: React.FC<{
       {
         dataField: "transactionDate",
         caption: t("date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        format:"dd-MMM-yyyy"
       },
       {
         dataField: "partyName",
@@ -92,6 +95,37 @@ const StockCommon: React.FC<{
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.inwardQty == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.inwardQty),
+                    false,
+                    4
+                  );
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.inwardQty == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.inwardQty),
+                  false,
+                  4
+                );
+          }
+        },
       },
       {
         dataField: "outwardQty",
@@ -101,6 +135,37 @@ const StockCommon: React.FC<{
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.outwardQty == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.outwardQty),
+                    false,
+                    4
+                  );
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.outwardQty == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.outwardQty),
+                  false,
+                  4
+                );
+          }
+        },
       },
       {
         dataField: "balance",
@@ -110,6 +175,37 @@ const StockCommon: React.FC<{
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.balance == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.balance),
+                    false,
+                    4
+                  );
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.balance),
+                  false,
+                  4
+                );
+          }
+        },
       },
       {
         dataField: "unit",

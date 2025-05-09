@@ -139,7 +139,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
               valueKey: "id",
               labelKey: "name",
             }}
-            label={t("section")}
+            label={t("kitchen")}
             onChangeData={(data: any) =>
               handleFieldChange("kitchenID", data.kitchenID)
             }

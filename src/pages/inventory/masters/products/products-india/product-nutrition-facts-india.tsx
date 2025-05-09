@@ -55,10 +55,11 @@ const NutritionFactsIndia: React.FC<{
                             getListUrl: Urls.data_nutrients
                         }}
                         label={t("nutrients")}
-                        onChange={(e) => {
+                        onSelectItem={(e) => {
                             setNutrition((prev) => ({
                                 ...prev,
-                                nutrients: e.value,
+                                nutrientsID: e.value,
+                                nutrients: e.label,
                             }));
                         }}
                     />

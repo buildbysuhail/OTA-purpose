@@ -29,7 +29,7 @@ export const ProductDetailsGcc: React.FC<{
         <>
             {getFieldProps("details").value == true &&
                 <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-                    <div className="grid grid-cols-4 gap-1 border border-gray-200 rounded-md p-2">
+                    <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
                         <div className="grid grid-cols-3 gap-1">
                             <ERPInput
                                 {...getFieldProps("product.minimumStock")}
@@ -48,6 +48,7 @@ export const ProductDetailsGcc: React.FC<{
                                 required={false}
                                 onChangeData={(data) => handleFieldChange("product.maximumStock", data.product.maximumStock)}
                             />
+
                             <ERPInput
                                 {...getFieldProps("product.reorderQty")}
                                 label={t("re_order_qty")}
@@ -72,7 +73,6 @@ export const ProductDetailsGcc: React.FC<{
                                 className="w-full"
                                 label={t("warehouse")}
                             />
-
                             <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                                 <Ellipsis className="w-4 h-4" />
                             </button>
@@ -91,9 +91,8 @@ export const ProductDetailsGcc: React.FC<{
                                 onChangeData={(data) => handleFieldChange("batch.brandID", data.batch.brandID)}
                                 className="w-full"
                                 label={t("brand_mfg")}
-                                // options={[]}
+                            // options={[]}
                             />
-
                             <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                                 <Ellipsis className="w-4 h-4" />
                             </button>
@@ -119,7 +118,7 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
                             label={t("product_category")}
                             className="w-full"
-                            // options={[]}
+                        // options={[]}
                         />
 
                         <ERPInput
@@ -161,28 +160,24 @@ export const ProductDetailsGcc: React.FC<{
                             required={false}
                             onChangeData={(data) => handleFieldChange("batch.batchNo", data.batch.batchNo)}
                         />
-                                        <ERPInput
-                                          {...getFieldProps("batch.netWt")}
-                                          label={t("net_weight_(in_grams)")}
-                                          placeholder="0.00"
-                                          type="number"
-                                          required={false}
-                                          onChangeData={(data: productDto) =>
-                                            handleFieldChange("batch.netWt", data.batch.netWt)
-                                          }
-                                          className="truncate flex-1 min-w-[100px]"
-                                        />
-                        
-                                        <ERPInput
-                                          {...getFieldProps("batch.netWeightUnit")}
-                                          label={t("unit_name")}
-                                          placeholder={t("eg:gm/ml")}
-                                          required={false}
-                                          onChangeData={(data: productDto) =>
-                                            handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)
-                                          }
-                                          className="flex-1 min-w-[80px]"
-                                        />
+                        <ERPInput
+                            {...getFieldProps("batch.netWt")}
+                            label={t("net_weight_(in_grams)")}
+                            placeholder="0.00"
+                            type="number"
+                            required={false}
+                            onChangeData={(data: productDto) => handleFieldChange("batch.netWt", data.batch.netWt)}
+                            className="truncate flex-1 min-w-[100px]"
+                        />
+
+                        <ERPInput
+                            {...getFieldProps("batch.netWeightUnit")}
+                            label={t("unit_name")}
+                            placeholder={t("eg:gm/ml")}
+                            required={false}
+                            onChangeData={(data: productDto) => handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)}
+                            className="flex-1 min-w-[80px]"
+                        />
                         <ERPDateInput
                             {...getFieldProps("batch.expiryDate")}
                             label={t("exp_date")}
@@ -218,10 +213,16 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data) => handleFieldChange("product.location", data.location)}
                             label={t("location")}
                         />
+
+                        <ERPCheckbox
+                            {...getFieldProps("product.active")}
+                            label={t("is_active_batch")}
+                            onChange={(data) => handleFieldChange("product.active", data.target.checked)}
+                        />
                     </div>
 
                     <div className="border border-gray-200 rounded-md p-2 relative">
-                        <h6 className="absolute top-[-13px] rounded-md bg-gray-500 px-4 py-1">{t("list_in")}</h6>
+                        <h6 className="absolute top-[-13px] rounded-md px-4 py-1">{t("list_in")}</h6>
                         <div className="flex flex-wrap items-center gap-6 mt-5">
                             <ERPCheckbox
                                 {...getFieldProps("product.canPurchase")}
@@ -247,18 +248,14 @@ export const ProductDetailsGcc: React.FC<{
                                 onChange={(data) => handleFieldChange("product.isRawMaterial", data.target.checked)}
                             />
 
-                            <ERPCheckbox
-                                {...getFieldProps("product.active")}
-                                label={t("is_active_batch")}
-                                onChange={(data) => handleFieldChange("product.active", data.target.checked)}
-                            />
-                            {clientSession.dbIdValue == "543140180640" && 
-                            <ERPCheckbox
-                                {...getFieldProps("product.hold")}
-                                label={t("hold")}
-                                onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
-                            />
-}
+                            {
+                                clientSession.dbIdValue == "543140180640" &&
+                                <ERPCheckbox
+                                    {...getFieldProps("product.hold")}
+                                    label={t("hold")}
+                                    onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
+                                />
+                            }
                         </div>
                     </div>
                     <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches>

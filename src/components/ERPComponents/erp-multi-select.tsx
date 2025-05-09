@@ -139,7 +139,11 @@ export default function ERPMultiSelect({
     <div className="space-y-2 relative" ref={dropdownRef}>
       <ERPInput
         label={label}
-        value={displayValue}
+        value={
+          displayValue.length > 77
+            ? displayValue.substring(0, 77) + '...'
+            : displayValue
+        }
         placeholder={placeholder}
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}

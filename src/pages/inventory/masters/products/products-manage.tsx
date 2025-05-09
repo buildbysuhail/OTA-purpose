@@ -191,11 +191,19 @@ export const ProductMaster: React.FC = React.memo(() => {
      }
      if(clientSession.isAppGlobal) {
       if(isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
-        alert("Fill HSN Code")
-        return
+        ERPAlert.show(
+          {title:"Validation Failed",
+          text:"HSN Code missing, are you sure to continue?",
+          onConfirm:() => {handleSubmit()}
+          })
+      }
+      else{
+        handleSubmit()
       }
      }
+     else{
      handleSubmit();
+     }
   }
   //multibarcode open
 

@@ -486,7 +486,7 @@ const clientSession = useSelector((state: RootState) => state.ClientSession);
                         <div className="grid grid-cols-1 gap-3">
                             <ErpDevGrid
                                 summaryItems={summaryItems}
-                                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                                remoteOperations={{ filtering: false, paging: false, sorting: false ,summary:true}}
                                 columns={columns}
                                 moreOption={true}
                                 gridHeader={t(gridHeader)}

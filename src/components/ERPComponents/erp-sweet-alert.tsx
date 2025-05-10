@@ -98,6 +98,7 @@ ERPAlert.show = (options: ERPAlertProps) => {
       options.onConfirm && options.onConfirm()
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       options.onCancel && options.onCancel()
+      return false;
     }
   })
 }

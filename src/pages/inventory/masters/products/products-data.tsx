@@ -150,7 +150,8 @@ const initialProductData: productDto = {
     showDisplayCost: true,
     showOpeningStock: false,
     showMultiBarcodeOnSave:false,
-    showFlavourOnSave:false
+    showFlavourOnSave:false,
+    capitalizationForProductName:false
   },
   productImageString: "",
   barcode: "",

@@ -138,6 +138,7 @@ export interface ProductLocalConfig {
   showOpeningStock: boolean;
   showMultiBarcodeOnSave:boolean;
   showFlavourOnSave:boolean;
+  capitalizationForProductName?:boolean
 }
 
 export interface ProductBatchInputDto {

@@ -127,6 +127,7 @@ interface ERPDevGridProps {
   rowData?: string;
   dataUrl?: string;
   filterInitialData?: any;
+  filterData?: {changed: boolean, data: any};
   enablefilter?: boolean;
   initialSort?: any;
   filterContent?: React.ReactNode;
@@ -490,6 +491,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       postData,
       rowData,
       filterInitialData,
+      filterData = {changed: false, data: null},
       enablefilter = false,
       filterContent = <></>,
       filterWidth = 400,
@@ -730,6 +732,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilter(filterInitialData);
       }
     }, [filterInitialData]);
+    useEffect(() => {
+      if (filterData  && filterData.changed === true) {
+        setFilter(filterData.data);
+      }
+    }, [filterData]);
     useEffect(() => {
       if (gridId != "" && columns != undefined && columns != null) {
         onApplyPreferences(getInitialPreference(gridId, columns));

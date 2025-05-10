@@ -1976,62 +1976,153 @@ const propNames: string[] = [
   "variant",
   "localInputBox",
   "triggerEffect",
-  "addNewOption",
-  "addNewOptionCobonent"
+  // "addNewOption",
+  // "addNewOptionCobonent"
 ];
+// const propsAreEqual = (
+//   prevProps: ERPDataComboboxProps,
+//   nextProps: ERPDataComboboxProps
+// ) => {
+//   // Skip comparison for the data prop - we don't want to cause re-renders when only data changes
+//   const prob = Object.keys(prevProps);
+//   const nob = Object.keys(nextProps);
+//   const dfd = new Set([...prob, ...nob])
+//   const _arr = Array.from(
+//     dfd
+//   );
+//   const keysToCompare = _arr.filter(key => !propNames.includes(key));
+// debugger
+//   for (const key of keysToCompare) {
+//     const prevValue = prevProps[key as keyof ERPDataComboboxProps];
+//     const nextValue = nextProps[key as keyof ERPDataComboboxProps];
+
+//     // Handle function comparisons
+//     if (typeof prevValue === "function" && typeof nextValue === "function") {
+//       if (prevValue !== nextValue) {
+//         return false;
+//       }
+//       continue;
+//     }
+
+//     // Handle array comparisons
+//     if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
+//       if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+//         return false;
+//       }
+//       continue;
+//     }
+
+//     // Handle object comparisons
+//     if (
+//       typeof prevValue === "object" &&
+//       prevValue !== null &&
+//       typeof nextValue === "object" &&
+//       nextValue !== null
+//     ) {
+//       if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+//         return false;
+//       }
+//       continue;
+//     }
+
+//     // Handle primitive comparisons
+//     if (prevValue !== nextValue) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// };
+const safeCompare = (obj1: any, obj2: any): boolean => {
+  // Handle simple equality cases
+  if (obj1 === obj2) return true;
+  
+  // Handle null/undefined cases
+  if (obj1 == null || obj2 == null) return obj1 === obj2;
+  
+  // Different types
+  if (typeof obj1 !== typeof obj2) return false;
+  
+  // Handle primitives
+  if (typeof obj1 !== 'object') return obj1 === obj2;
+  
+  // Handle arrays
+  if (Array.isArray(obj1) && Array.isArray(obj2)) {
+    if (obj1.length !== obj2.length) return false;
+    for (let i = 0; i < obj1.length; i++) {
+      if (!safeCompare(obj1[i], obj2[i])) return false;
+    }
+    return true;
+  }
+  
+  // Simple check for React elements - just check the type and key
+  if (obj1?.$$typeof === Symbol.for('react.element') && 
+      obj2?.$$typeof === Symbol.for('react.element')) {
+    return obj1.type === obj2.type && obj1.key === obj2.key;
+  }
+  
+  // Handle DOM nodes or anything with circular references - assume they're equal
+  // if they're not objects or we've already handled their specific cases
+  if (typeof obj1 === 'object' && (
+      obj1 instanceof Node || 
+      obj1 instanceof Window || 
+      obj1?.constructor?.name?.includes('Fiber'))) {
+    return true; // Skip complex DOM/React internal objects
+  }
+  
+  // Handle regular objects - check keys and values
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  
+  if (keys1.length !== keys2.length) return false;
+  
+  // Check if all keys in obj1 exist in obj2 with the same values
+  return keys1.every(key => {
+    // Skip known problematic properties
+    if (key.startsWith('__react') || 
+        key === 'ref' || 
+        key === 'children' ||
+        key === '_owner') {
+      return true;
+    }
+    
+    return obj2.hasOwnProperty(key) && safeCompare(obj1[key], obj2[key]);
+  });
+};
+
+// Enhanced propsAreEqual function
 const propsAreEqual = (
   prevProps: ERPDataComboboxProps,
   nextProps: ERPDataComboboxProps
 ) => {
-  // Skip comparison for the data prop - we don't want to cause re-renders when only data changes
-  const prob = Object.keys(prevProps);
-  const nob = Object.keys(nextProps);
-  const dfd = new Set([...prob, ...nob])
-  const _arr = Array.from(
-    dfd
-  );
-  const keysToCompare = _arr.filter(key => !propNames.includes(key));
-debugger
+  // Skip 'data' prop comparison
+  const keysToCompare = Array.from(
+    new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
+  ).filter(key => !propNames.includes(key));
+
   for (const key of keysToCompare) {
     const prevValue = prevProps[key as keyof ERPDataComboboxProps];
     const nextValue = nextProps[key as keyof ERPDataComboboxProps];
 
-    // Handle function comparisons
+    // Skip ref objects comparison
+    if (key === 'ref') continue;
+    
+    // Handle function comparisons - compare references
     if (typeof prevValue === "function" && typeof nextValue === "function") {
       if (prevValue !== nextValue) {
         return false;
       }
       continue;
     }
-
-    // Handle array comparisons
-    if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
-      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        return false;
-      }
-      continue;
-    }
-
-    // Handle object comparisons
-    if (
-      typeof prevValue === "object" &&
-      prevValue !== null &&
-      typeof nextValue === "object" &&
-      nextValue !== null
-    ) {
-      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        return false;
-      }
-      continue;
-    }
-
-    // Handle primitive comparisons
-    if (prevValue !== nextValue) {
+    
+    // Use our safe comparison function for objects and arrays
+    if (!safeCompare(prevValue, nextValue)) {
       return false;
     }
   }
 
   return true;
 };
+
 
 export default memo(ERPDataCombobox, propsAreEqual);

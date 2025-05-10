@@ -100,6 +100,6 @@ export const NetSalesReportFilterInitialState = {
     salesRouteID: 0,
     salesmanID: 0,
     partyID: 0,
-    groupByParty: false,
+    groupByParty: true,
     partyCategoryID: 0,
 };

@@ -271,6 +271,7 @@ const GSTR3BReport = () => {
                   setFilter({...f, showFilterInitially: false});
                 }}
                 filterInitialData={GSTR3BReportFilterInitialState}
+                filterData={{changed: true, data:filter}}
                 reload={true}
                 gridId="grd_gstr3b_report"
               />

@@ -197,6 +197,7 @@ import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-categ
 import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
 import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
 import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
+import GeneralMaster from "../../../pages/inventory/masters/general-master";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -659,6 +660,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/product_price_settings" element={clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
+        <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
         {/* <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} /> */}
         {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
         <Route path="/inventory-masters/test-page" element={<TestSearch />} />

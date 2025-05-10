@@ -8,6 +8,10 @@ import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import ProductDetailsBatches from "./product-details-batches";
+import { toggleProductGroup } from "../../../../../redux/slices/popup-reducer";
+import { ProductGroupManage } from "../../product-group/product-group-manage";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { useDispatch } from "react-redux";
 
 const ProductDetailsIndia: React.FC<{
   clientSession: any,
@@ -19,6 +23,9 @@ const ProductDetailsIndia: React.FC<{
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession }) => {
+   const rootState = useRootState();
+  const dispatch = useDispatch();
+
   return (
     <>
       {getFieldProps("details").value &&
@@ -77,11 +84,21 @@ const ProductDetailsIndia: React.FC<{
                   }
                   className="flex-1"
                   label={t("warehouse")}
+                  addNewOptionCobonent={{
+                    title: t("product_group"),
+                    popupAction: toggleProductGroup,
+                    isOpen: rootState.PopupData.productGroup.isOpen || false,
+                    id:rootState.PopupData.productGroup.id,
+                    name:rootState.PopupData.productGroup.name,
+                    closeModal: () =>
+                    dispatch(toggleProductGroup({ isOpen: false })),
+                    content: <ProductGroupManage />,
+                  }}
                 />
 
-                <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
+                {/* <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
                   <Plus className="w-4 h-4" />
-                </button>
+                </button> */}
               </div>
 
               <div className="flex flex-1 items-end gap-1 min-w-[200px]">
@@ -99,11 +116,22 @@ const ProductDetailsIndia: React.FC<{
                   }
                   className="flex-1"
                   label={t("brand_mfg")}
+                  addNewOption={true}
+                  addNewOptionCobonent={{
+                    title: t("product_group"),
+                    popupAction: toggleProductGroup,
+                    isOpen: rootState.PopupData.productGroup.isOpen || false,
+                    id:rootState.PopupData.productGroup.id,
+                    name:rootState.PopupData.productGroup.name,
+                    closeModal: () =>
+                    dispatch(toggleProductGroup({ isOpen: false })),
+                    content: <ProductGroupManage />,
+                  }}
                 />
 
-                <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
+                {/* <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
                   <Plus className="w-4 h-4" />
-                </button>
+                </button> */}
               </div>
             </div>
 

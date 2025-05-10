@@ -8,7 +8,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 import {
@@ -32,7 +32,7 @@ import {
 } from "../../../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { ProductGroupManage } from "../../product-group/product-group-manage";
-
+import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
 const api = new APIClient();
 
 export const ProductManageIndia: React.FC<{
@@ -55,7 +55,8 @@ export const ProductManageIndia: React.FC<{
     handleDataChange,
     productMultiUnitsIndiaRef,
   }) => {
-    const rootState = useRootState();
+      const rootState = useRootState();
+      const dispatch = useDispatch();
     const clientSession = useSelector(
       (state: RootState) => state.ClientSession
     );
@@ -64,6 +65,7 @@ export const ProductManageIndia: React.FC<{
     const productNameRef = useRef<HTMLInputElement>(null);
     const salesPriceRef = useRef<HTMLInputElement>(null);
     const mrpRef = useRef<HTMLInputElement>(null);
+    const productSearchRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");
@@ -171,12 +173,7 @@ export const ProductManageIndia: React.FC<{
       productNameRef?.current?.focus();
       productNameRef?.current?.select();
     }, [productNameRef]);
-    function dispatch(arg0: {
-      payload: popupDataProps;
-      type: "popupData/toggleProductGroup";
-    }): void {
-      throw new Error("Function not implemented.");
-    }
+ 
 useEffect(() => {
       const obj = getFieldProps("*") as any as productDto;
       const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice??0, obj.product.stdSalesPrice??0,obj.taxCategoryTaxPercentage,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
@@ -236,7 +233,24 @@ useEffect(() => {
                 </div>
               </div>
               {/* {getFieldProps("product.productId").value} */}
-              
+               <ERPProductSearch
+                   showCheckBox={false}
+                  value={getFieldProps("product.productName").value}
+                    onChange={(e) =>  handleFieldChange({
+                      "product.productName": e.target.value 
+                    })}
+                    productDataUrl={Urls.load_product_details}
+                    onProductSelected={(data: any) => {
+                      debugger;
+                      handleFieldChange({
+                        "product.productName": data.productName 
+                      });
+                      setTimeout(() => {
+                        productSearchRef.current?.focus();
+                      }, 100);
+                    }}
+                    ref={productSearchRef}
+                  />
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <div className="flex flex-1 min-w-[240px] items-center gap-1">
@@ -258,11 +272,22 @@ useEffect(() => {
                     label={t("product_category")}
                     className="w-full"
                     required={true}
+                    addNewOption={true}
+                    addNewOptionCobonent={{
+                      title: t("product_group"),
+                      popupAction: toggleProductGroup,
+                      isOpen: rootState.PopupData.productGroup.isOpen || false,
+                      id:rootState.PopupData.productGroup.id,
+                      name:rootState.PopupData.productGroup.name,
+                      closeModal: () =>
+                      dispatch(toggleProductGroup({ isOpen: false })),
+                      content: <ProductGroupManage />,
+                    }}
                   />
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+                  {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <RefreshCcw className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="flex flex-1 min-w-[240px] items-center gap-2">
@@ -293,9 +318,7 @@ useEffect(() => {
                     required={true}
                   />
 
-                  <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
-                    <Plus className="w-4 h-4" />
-                  </button>
+          
                 </div>
               </div>
 
@@ -358,11 +381,22 @@ useEffect(() => {
                     label={t("base_unit")}
                     className="w-full"
                     required={true}
+                    addNewOption={true}
+                    addNewOptionCobonent={{
+                      title: t("product_group"),
+                      popupAction: toggleProductGroup,
+                      isOpen: rootState.PopupData.productGroup.isOpen || false,
+                      id:rootState.PopupData.productGroup.id,
+                      name:rootState.PopupData.productGroup.name,
+                      closeModal: () =>
+                      dispatch(toggleProductGroup({ isOpen: false })),
+                      content: <ProductGroupManage />,
+                    }}
                   />
-
+{/* 
                   <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
                     <Plus className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
 
                 <ERPInput
@@ -456,11 +490,22 @@ useEffect(() => {
                     label={t("tax_category")}
                     className="w-full"
                     required={true}
+                    addNewOption={true}
+                    addNewOptionCobonent={{
+                      title: t("product_group"),
+                      popupAction: toggleProductGroup,
+                      isOpen: rootState.PopupData.productGroup.isOpen || false,
+                      id:rootState.PopupData.productGroup.id,
+                      name:rootState.PopupData.productGroup.name,
+                      closeModal: () =>
+                      dispatch(toggleProductGroup({ isOpen: false })),
+                      content: <ProductGroupManage />,
+                    }}
                   />
 
-                  <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
+                  {/* <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
                     <Plus className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="flex flex-1 min-w-[240px] items-center">

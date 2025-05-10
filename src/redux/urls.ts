@@ -77,6 +77,7 @@ const Urls = {
   data_nutrients: "/Inventory/Data/NutritionFacts",
   data_scheme_master: "/Inventory/Data/SchemeType/",
   data_products: "/Inventory/Data/Products",
+  data_general_master: "/Inventory/Data/GeneralMaster",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",

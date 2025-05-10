@@ -15,20 +15,21 @@ const GeneralMaster: React.FC = () => {
   const [focusCell, setFocusCell] = useState<{ rowIndex: number, colIndex: number } | null>(null);
   const dataGridRef = useRef<any>(null);
 
-  const handleFieldChange = async (fieldName: string, value: any) => {
-    console.log(`Field ${fieldName} changed to`, value);
-    if (fieldName === "masterType" && value) {
-      setMasterType(value);
-      await fetchMasterData(value);
-    }
+useEffect(() => {
+  debugger;
+  const fetchData = async () => {
+    await fetchMasterData(masterType);
   };
 
+  fetchData();
+}, [masterType]);
   const fetchMasterData = async (type: string) => {
     try {
       const response = await axios.get(`${Urls.generalMaster}/${type}`);
       const formattedData = response.data.map((item: any, index: number) => ({
         sino: index + 1,
-        description: item.masterName
+        masterType: type,
+        masterName: item.id
       }));
       formattedData.push({ sino: formattedData.length + 1, description: '' });
       setMasterData(formattedData);
@@ -119,11 +120,14 @@ const GeneralMaster: React.FC = () => {
           label="Master Type"
           field={{
             id: "masterType",
-            getListUrl: Urls.generalMaster,
+            getListUrl: Urls.data_general_master,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("masterType", data.masterType)}
+          onChange={(data: any) => {
+            debugger;
+            setMasterType(data.target.value)
+          }}
         />
       </div>
 

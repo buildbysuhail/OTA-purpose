@@ -671,5 +671,11 @@
   "sr_no_from": "رقم تسلسلي من",
   "sr_no_to": "رقم تسلسلي إلى",
   "total_number": "العدد الإجمالي",
-  "cancelled": "ملغي"
+  "cancelled": "ملغي",
+
+  "transfer_voucher": "قسيمة التحويل",
+  "price_category": "فئة السعر",
+  "sales_transfer_summary": "ملخص تحويل المبيعات",
+  "sales_transfer_register": "سجل تحويل المبيعات",
+  "sales_transfer_partyWise_sales": "تحويل المبيعات حسب الطرف"
 }

@@ -584,6 +584,12 @@ const Content: FC<ContentProps> = () => {
 
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
+
+        <Route path="/inventory/sales_transfer_summary_report" element={<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />} />
+        <Route path="/inventory/sales_transfer_register_report" element={<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />} />
+        <Route path="/inventory/transfer_net_sales" element={<NetSales />} />
+        <Route path="/inventory/sales_transfer_partyWise_sales" element={<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />} />
+
         {/* global */}
         <Route path="/inventory/purchase_gst_daily_summary_report" element={<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_daily_summary_report" />} />
         <Route path="/inventory/purchase_gst_monthly_summary_report" element={<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_report" gridId="grd_purchase_gst_monthly_summary_report" />} />

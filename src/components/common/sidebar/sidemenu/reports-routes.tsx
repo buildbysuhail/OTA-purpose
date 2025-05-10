@@ -249,6 +249,24 @@ export const ReportsMenuItems = [
        ]
   },
   {
+    icon: (<CircleUser className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'sales_transfer',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      { id: 177, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_summary', icon: FaHandHoldingDollar },
+      { id: 178, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_register_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_register', icon: GiReceiveMoney },
+      { id: 179, path: `${import.meta.env.BASE_URL}reports/_/inventory/transfer_net_sales`, type: 'link', active: false, selected: false, title: 'net_sales_transfer', icon: GiSwapBag },
+      { id: 180, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
+    ]
+  },
+  {
     icon: (<Boxes className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',

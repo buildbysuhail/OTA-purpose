@@ -38,12 +38,13 @@ const PurchaseRegisterFilter = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* <ERPDataCombobox
+        
+        <ERPDataCombobox
           label={t("transfer_voucher")}
           {...getFieldProps("transferVoucher")}
           options={[
-              { value: 'si-bt', label: 'SI-BT' },
-              { value: 'se-bt', label: 'SE-BT' }
+              { value: 'SI-BT', label: 'SI-BT' },
+              { value: 'SE-BT', label: 'SE-BT' }
           ]}
           field={{
               id: "transferVoucher",
@@ -51,9 +52,10 @@ const PurchaseRegisterFilter = ({
               labelKey: "label",
           }}
           onSelectItem={(data) => {
-              handleFieldChange("transferVoucher", data.value);
+              handleFieldChange("voucherType", data.value);
           }}
-      /> */}
+      />
+      
 
         {clientSession.isAppGlobal && (
           <ERPDataCombobox

@@ -6,8 +6,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'build',
-    // outDir: 'C:\\Users\\User\\Desktop\\build',
+    // outDir: 'build',
+    outDir: 'C:\\Host\\Polosys\\Ui',
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {

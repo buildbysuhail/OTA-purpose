@@ -84,7 +84,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleProducts({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.products?.key,
     useApiClient: true,
-    keyField: "productID",
+    keyField: "productsdsID",
     isMessages:true,
     loadInitialData: false,
     initialData: {
@@ -648,13 +648,18 @@ export const ProductMaster: React.FC = React.memo(() => {
           },
         ].filter((x: any) => {
           const obj = getFieldProps("*") as any as productDto;
-          if (x.titles == "Flavors" && !clientSession.isAppGlobal && !obj.elements.flavorVisible) {
+          if (x.title == "Flavors"){
+            if((!clientSession.isAppGlobal && !obj.elements.flavorVisible) || (formState.data.product.productID?? 0) == 0) {
             return false
           }
-          if ((x.titles == "Multi Barcode" && !clientSession.isAppGlobal)
-            || (x.titles == "Multi Barcode" && clientSession.isAppGlobal && !obj.elements.mbVisible)) {
+        }
+          debugger;
+          if(x.title == "Multi Barcode") {
+          if (((!clientSession.isAppGlobal)
+            || (clientSession.isAppGlobal && !obj.elements.mbVisible)) || (formState.data.product.productID?? 0) == 0) {
             return false
           }
+        }
 
           return true;
         }) as []

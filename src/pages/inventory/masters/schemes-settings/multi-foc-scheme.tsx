@@ -235,14 +235,21 @@ const MultiFOCScheme: React.FC = () => {
     setFocSchemeForm(initialFOCScheme);
   }, []);
 
-  const handleRemoveRow = useCallback((schemeID: number) => {
-    setGridData((prevGridData) => {
-      if (prevGridData instanceof CustomStore) {
-        return [];
-      }
-      return prevGridData.filter((item: FOCSchemeData) => item.multiFocSchemeID !== schemeID);
+  const handleRemoveRow = useCallback(async (schemeID: number) => {
+  if ((schemeID ?? 0) > 0) {
+    const response = await api.delete(`${Urls.delete_multi_foc}${schemeID}`);
+
+    handleResponse(response, () => {
+      setGridData((prevGridData: any) =>
+        prevGridData.filter((item: FOCSchemeData) => item.multiFocSchemeID !== schemeID)
+      );
     });
-  }, []);
+  } else {
+    setGridData((prevGridData: any) =>
+      prevGridData.filter((item: FOCSchemeData) => item.multiFocSchemeID !== schemeID)
+    );
+  }
+}, []);
 
   useEffect(() => {
     if (focSchemeForm.data.loadAllMultiFos) {

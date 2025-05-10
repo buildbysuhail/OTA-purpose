@@ -311,7 +311,6 @@ export const SpecialPrice: React.FC = () => {
                           labelKey: "name",
                       }}
                       noLabel
-                      disabled={!specialPriceForm.data.isGroup}
                       required={true}
                       data={specialPriceForm.data}
                       defaultData={specialPriceForm?.data}
@@ -447,6 +446,7 @@ export const SpecialPrice: React.FC = () => {
                         id="groupPrice"
                         noLabel
                         type="number"
+                        disabled={!specialPriceForm.data.isGroup}
                         value={specialPriceForm.data?.groupPrice}
                         className="w-full"
                         placeholder={t("groupPrice")}

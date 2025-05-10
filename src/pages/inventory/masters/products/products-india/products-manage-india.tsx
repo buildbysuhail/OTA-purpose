@@ -236,30 +236,7 @@ useEffect(() => {
                 </div>
               </div>
               {/* {getFieldProps("product.productId").value} */}
-              <div className="flex items-center gap-1 mb-3">
-                <ERPDataCombobox
-                  ref={productNameRef}
-                  {...getFieldProps("product.productID")}
-                  id="productName"
-                  field={{
-                    id: "productName",
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_products,
-                  }}
-                  onTextChange={(data: any) =>
-                    handleFieldChange("product.productName", data)
-                  }
-                  // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
-                  label={t("product_name")}
-                  className="w-full"
-                  required={true}
-                />
-
-                <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                  <RefreshCcw className="w-4 h-4" />
-                </button>
-              </div>
+              
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <div className="flex flex-1 min-w-[240px] items-center gap-1">
@@ -752,6 +729,7 @@ useEffect(() => {
                       _data.product.stdSalesPrice = 0;
                       _data.product.manual = true;
                     }
+                    debugger;
                     handleDataChange(_data);
                   }}
                   label={t("product_type")}

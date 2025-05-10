@@ -1,278 +1,285 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import GSTR3BReportFilter, { GSTR3BReportFilterInitialState } from "./gstr3b-filter";
+import GSTR3BReportFilter, {
+  GSTR3BReportFilterInitialState,
+} from "./gstr3b-filter";
 
 const GSTR3BReport = () => {
-      const [filter, setFilter] = useState<any>(GSTR3BReportFilterInitialState);
-    const { t } = useTranslation('accountsReport');
-    const columns: DevGridColumn[] = useMemo(() => {
-        const baseColumns: DevGridColumn[] = [
-            //inout
-          {
-            dataField: "types",
-            caption: t("types"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
-           {
-            dataField: "totalTaxableValue",
-            caption: t("total_taxable_value"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
-  {
-            dataField: "integratedTax",
-            caption: t("integrated_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
+  const [filter, setFilter] = useState<any>(GSTR3BReportFilterInitialState);
+  const { t } = useTranslation("accountsReport");
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
 
-   {
-            dataField: "centralTax",
-            caption: t("central_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "stateOrUTTax",
-            caption: t("state_ut_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "cess",
-            caption: t("cess"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-
-//eligible ITC
-        {
-            dataField: "details",
-            caption: t("details"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-  {
-            dataField: "elintegratedTax",
-            caption: t("integrated_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-
-   {
-            dataField: "elcentralTax",
-            caption: t("central_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "elstateOrUTTax",
-            caption: t("state_ut_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 120,
-        },
-        {
-            dataField: "elcess",
-            caption: t("cess"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 100,
-        },
-//exempt
-        {
-            dataField: "natureOfSupplies",
-            caption: t("nature_of_supplies"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
+      //eligible ITC
          {
-            dataField: "interStateSupplies",
-            caption: t("inter_state_supplies"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
-         {
-            dataField: "intraStateSupplies",
-            caption: t("intra_state_supplies"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
-//interstate
+        dataField: "details",
+        caption: t("details"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      //inout
+      {
+        dataField: "types",
+        caption: t("types"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
+      {
+        dataField: "totalTaxableValue",
+        caption: t("total_taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
+      {
+        dataField: "integratedTax",
+        caption: t("integrated_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 120,
+      },
 
-        {
-            dataField: "placeOfSupply",
-            caption: t("place_of_supply"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "unregisteredTaxableValue",
-            caption: t("unregistered_taxable_value"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "unregisteredIntegratedTax",
-            caption: t("unregistered_integrated_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "taxableTaxableValue",
-            caption: t("taxable_taxable_value"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "taxableIntegratedTax",
-            caption: t("taxable_integrated_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 180,
-        },
-        {
-            dataField: "uinTaxableValue",
-            caption: t("uin_taxable_value"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
-        {
-            dataField: "uinIntegratedTax",
-            caption: t("uin_integrated_tax"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 150,
-        },
+      {
+        dataField: "centralTax",
+        caption: t("central_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 120,
+      },
+      {
+        dataField: "stateOrUTTax",
+        caption: t("state_ut_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 120,
+      },
+      {
+        dataField: "cess",
+        caption: t("cess"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+      },
+      //exempt
+      {
+        dataField: "natureOfSupplies",
+        caption: t("nature_of_supplies"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "interStateSupplies",
+        caption: t("inter_state_supplies"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
+      {
+        dataField: "intraStateSupplies",
+        caption: t("intra_state_supplies"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
+      //interstate
+
+      {
+        dataField: "placeOfSupply",
+        caption: t("place_of_supply"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "unregisteredTaxableValue",
+        caption: t("unregistered_taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "unregisteredIntegratedTax",
+        caption: t("unregistered_integrated_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "taxableTaxableValue",
+        caption: t("taxable_taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "taxableIntegratedTax",
+        caption: t("taxable_integrated_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
+      {
+        dataField: "uinTaxableValue",
+        caption: t("uin_taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
+      {
+        dataField: "uinIntegratedTax",
+        caption: t("uin_integrated_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 150,
+      },
     ];
+    console.log(filter.supplyType );
+    
     // Filter columns based on the `visible` property
-    return baseColumns
-      .filter((column) => {
-        if (column.dataField == "types" ||column.dataField == "totalTaxableValue"||column.dataField == "integratedTax"||
-            column.dataField == "centralTax"||column.dataField == "stateOrUTTax"||column.dataField == "cess") {
-          return filter.supplyType=="inAndOutSupplies";
+    return baseColumns.filter((column) => {
+      if (filter.supplyType == "inAndOutSupplies") {
+        if (
+          column.dataField == "types" ||
+          column.dataField == "totalTaxableValue" ||
+          column.dataField == "integratedTax" ||
+          column.dataField == "centralTax" ||
+          column.dataField == "stateOrUTTax" ||
+          column.dataField == "cess"
+        ) {
+          return true;
         }
-        else
-          if (column.dataField == "details" ||column.dataField == "elintegratedTax"||
-            column.dataField == "elcentralTax"||column.dataField == "elstateOrUTTax"||column.dataField == "elcess") {
-          return filter.supplyType=="eligibleITC";
-        }else
-           if (column.dataField == "natureOfSupplies" ||column.dataField == "interStateSupplies"||
-            column.dataField == "intraStateSupplies") {
-          return filter.supplyType=="exemptNilRated";
-        }else
-         if (column.dataField == "placeOfSupply" ||column.dataField == "unregisteredTaxableValue"||
-            column.dataField == "unregisteredIntegratedTax"|| column.dataField == "taxableTaxableValue"||
-         column.dataField == "taxableIntegratedTax"|| column.dataField == "uinTaxableValue"
-        || column.dataField == "uinIntegratedTax") {
-          return filter.supplyType=="interStateSupplies";
-        }else
-        return false;
-      })
-  }, [t, filter]);
+      }
 
-    const { getFormattedValue } = useNumberFormat();
+      if (filter.supplyType == "eligibleITC") {
+        if (
+          column.dataField == "details" ||
+          column.dataField == "integratedTax" ||
+          column.dataField == "centralTax" ||
+          column.dataField == "stateOrUTTax" ||
+          column.dataField == "cess"
+        ) {
+          return true;
+        }
+      }
 
-    return (
-        <Fragment>
-            <div className="grid grid-cols-12 gap-x-6">
-                <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-                    <div className="px-4 pt-4 pb-2 ">
-                        <div className="grid grid-cols-1 gap-3">
-                            <ErpDevGrid
-                                remoteOperations={{ filtering: false, paging: false, sorting: false }}
-                                columns={columns}
-                                gridHeader={t("gstr3b_report")}
-                                dataUrl= {filter.supplyType=="inAndOutSupplies"? Urls.gstr3b_InoutSupplies
-                                    :filter.supplyType=="eligibleITC"?Urls.gstr3b_EligibleITC
-                                    :filter.supplyType=="exemptNilRated"?Urls.gstr3b_ExemptNilRated:Urls.gstr3b_InterstateSupplies
-                                }
-                                hideGridAddButton={true}
-                                enablefilter={true}
-                                showFilterInitially={true}
-                                method={ActionType.POST}
-                                filterContent={<GSTR3BReportFilter />}
-                                filterWidth={790}
-                                filterHeight={370}
-                                onFilterChanged={(f: any) => {
-                                    setFilter(f);
-                                  }}
-                                filterInitialData={GSTR3BReportFilterInitialState}
-                                reload={true}
-                                gridId="grd_gstr3b_report"
-                            />
-                        </div>
-                    </div>
-                </div>
+      if (filter.supplyType == "exemptNilRated") {
+        if (
+          column.dataField == "natureOfSupplies" ||
+          column.dataField == "interStateSupplies" ||
+          column.dataField == "intraStateSupplies"
+        ) {
+          return true;
+        }
+      }
+
+      if (filter.supplyType == "interStateSupplies") {
+        if (
+          column.dataField == "placeOfSupply" ||
+          column.dataField == "unregisteredTaxableValue" ||
+          column.dataField == "unregisteredIntegratedTax" ||
+          column.dataField == "taxableTaxableValue" ||
+          column.dataField == "taxableIntegratedTax" ||
+          column.dataField == "uinTaxableValue" ||
+          column.dataField == "uinIntegratedTax"
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }, [t, filter.supplyType]);
+
+  const { getFormattedValue } = useNumberFormat();
+
+  return (
+    <Fragment>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+          <div className="px-4 pt-4 pb-2 ">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+              key={filter.supplyType}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
+                columns={columns}
+                gridHeader={t("gstr3b_report")}
+                dataUrl={
+                  filter.supplyType == "inAndOutSupplies"
+                    ? Urls.gstr3b_InoutSupplies
+                    : filter.supplyType == "eligibleITC"
+                    ? Urls.gstr3b_EligibleITC
+                    : filter.supplyType == "exemptNilRated"
+                    ? Urls.gstr3b_ExemptNilRated
+                    : Urls.gstr3b_InterstateSupplies
+                }
+                hideGridAddButton={true}
+                enablefilter={true}
+                showFilterInitially={filter.showFilterInitially}
+                method={ActionType.POST}
+                filterContent={<GSTR3BReportFilter />}
+                filterWidth={790}
+                filterHeight={370}
+                onFilterChanged={(f: any) => {
+                  setFilter({...f, showFilterInitially: false});
+                }}
+                filterInitialData={GSTR3BReportFilterInitialState}
+                reload={true}
+                gridId="grd_gstr3b_report"
+              />
             </div>
-        </Fragment>
-    );
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
 };
 
 export default GSTR3BReport;

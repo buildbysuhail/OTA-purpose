@@ -71,13 +71,13 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
             label={t("Vprefix")}
             data={formState.transaction.master}
             onSelectItem={(e) => {
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: { Vprefix: e.value },
-                })
-              );
+              // dispatch(
+              //   formStateHandleFieldChange({
+              //     fields: { vprefix: e.value },
+              //   })
+              // );
             }}
-            value={formState.Vprefix}
+            // value={formState.Vprefix}
             field={{
               id: "Vprefix",
               valueKey: "id",
@@ -92,7 +92,7 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
             localInputBox={formState?.userConfig?.inputBoxStyle}
             min={1}
             label={t("V Number")}
-            value={formState.VNumber}
+            // value={formState.VNumber}
             type="number"
             className="w-[80px]"
           />

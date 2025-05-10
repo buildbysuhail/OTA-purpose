@@ -324,55 +324,6 @@ const ComboboxList = React.forwardRef<
 ComboboxList.displayName = "ComboboxList";
 const logProps = (props: ERPDataComboboxProps, label: string) => {};
 
-const propsAreEqual = (
-  prevProps: ERPDataComboboxProps,
-  nextProps: ERPDataComboboxProps
-) => {
-  const allKeys = Array.from(
-    new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
-  );
-
-  for (const key of allKeys) {
-    const prevValue = prevProps[key as keyof ERPDataComboboxProps];
-    const nextValue = nextProps[key as keyof ERPDataComboboxProps];
-
-    // Handle function comparisons
-    if (typeof prevValue === "function" && typeof nextValue === "function") {
-      if (prevValue !== nextValue) {
-        return false;
-      }
-      continue;
-    }
-
-    // Handle array comparisons
-    if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
-      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        return false;
-      }
-      continue;
-    }
-
-    // Handle object comparisons
-    if (
-      typeof prevValue === "object" &&
-      prevValue !== null &&
-      typeof nextValue === "object" &&
-      nextValue !== null
-    ) {
-      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        return false;
-      }
-      continue;
-    }
-
-    // Handle primitive comparisons
-    if (prevValue !== nextValue) {
-      return false;
-    }
-  }
-
-  return true;
-};
 
 // Cache map for API requests
 
@@ -1977,5 +1928,110 @@ useEffect(() => {
 
 // Set displayName for better debugging
 ERPDataCombobox.displayName = "ERPDataCombobox";
+const propNames: string[] = [
+  "id",
+  "label",
+  "handleChange",
+  "handleChangeData",
+  "onChange",
+  "onChangeData",
+  "onSelectItem",
+  "onFocus",
+  "onBlur",
+  "onKeyDown",
+  "onKeyUp",
+  "onTextChange",
+  "disableEnterNavigation",
+  "options",
+  "field",
+  "defaultData",
+  "data",
+  "value",
+  "noLabel",
+  "noXMarkIcon",
+  "required",
+  "excludeOptions",
+  "includeOptions",
+  "isInModal",
+  "multiple",
+  "autoFocus",
+  "disabled",
+  "reload",
+  "changeReload",
+  "labelDirection",
+  "labelInfo",
+  "labelInfoProps",
+  "info",
+  "initialValue",
+  "initialInputValue",
+  "className",
+  "disabledApiCall",
+  "validation",
+  "skip",
+  "jumpTo",
+  "jumpTarget",
+  "enableClearOption",
+  "customSize",
+  "useMUI",
+  "variant",
+  "localInputBox",
+  "triggerEffect",
+  "addNewOption",
+  "addNewOptionCobonent"
+];
+const propsAreEqual = (
+  prevProps: ERPDataComboboxProps,
+  nextProps: ERPDataComboboxProps
+) => {
+  // Skip comparison for the data prop - we don't want to cause re-renders when only data changes
+  const prob = Object.keys(prevProps);
+  const nob = Object.keys(nextProps);
+  const dfd = new Set([...prob, ...nob])
+  const _arr = Array.from(
+    dfd
+  );
+  const keysToCompare = _arr.filter(key => !propNames.includes(key));
+debugger
+  for (const key of keysToCompare) {
+    const prevValue = prevProps[key as keyof ERPDataComboboxProps];
+    const nextValue = nextProps[key as keyof ERPDataComboboxProps];
 
-export default memo(ERPDataCombobox);
+    // Handle function comparisons
+    if (typeof prevValue === "function" && typeof nextValue === "function") {
+      if (prevValue !== nextValue) {
+        return false;
+      }
+      continue;
+    }
+
+    // Handle array comparisons
+    if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
+      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+        return false;
+      }
+      continue;
+    }
+
+    // Handle object comparisons
+    if (
+      typeof prevValue === "object" &&
+      prevValue !== null &&
+      typeof nextValue === "object" &&
+      nextValue !== null
+    ) {
+      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+        return false;
+      }
+      continue;
+    }
+
+    // Handle primitive comparisons
+    if (prevValue !== nextValue) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export default memo(ERPDataCombobox, propsAreEqual);

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 const searchOptions = [
   { id: "Product", name: "Product" },
@@ -20,6 +21,7 @@ const initialSearchData = {
 
 const SearchCommon: React.FC = () => {
   const { t } = useTranslation("inventory");
+       const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -110,7 +112,38 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true
+        showInPdf:true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.salesPrice == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.salesPrice),
+                    false,
+                    4
+                  );
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.salesPrice == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.salesPrice),
+                  false,
+                  4
+                );
+          }
+        },
       },
       {
         dataField: "purchasePrice",
@@ -120,7 +153,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true
+        showInPdf:true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.purchasePrice == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.purchasePrice),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "brandName",
@@ -150,7 +197,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true
+        showInPdf:true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.stock == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.stock),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "isActive",
@@ -170,7 +231,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false
+        visible:false,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.reOrderLevel == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.reOrderLevel),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "reOrderQty",
@@ -180,7 +255,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false
+        visible:false,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.reOrderQty == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.reOrderQty),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "canSell",
@@ -320,7 +409,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false
+        visible:false,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.stockMin == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.stockMin),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "stockMax",
@@ -330,7 +433,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false
+        visible:false,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.stockMax == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.stockMax),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "isRawMaterial",
@@ -420,7 +537,21 @@ const SearchCommon: React.FC = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false
+        visible:false,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any
+        ) => {
+          
+            return cellElement.data?.netWt == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.netWt),
+                  false,
+                  4
+                );
+          
+              }
       },
       {
         dataField: "unitName",

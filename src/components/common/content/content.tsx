@@ -589,7 +589,7 @@ const Content: FC<ContentProps> = () => {
 
         <Route path="/inventory/sales_transfer_summary_report" element={<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />} />
         <Route path="/inventory/sales_transfer_register_report" element={<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />} />
-        <Route path="/inventory/net_sales_transfer" element={<NetSalesReport dataUrl={urls.net_sales_transfer_report} gridHeader="net_sales_transfer_report" gridId="grd_net_sales_transfer_report" />} />
+        <Route path="/inventory/net_sales_transfer_report" element={<NetSalesReport dataUrl={urls.net_sales_transfer_report} gridHeader="net_sales_transfer_report" gridId="grd_net_sales_transfer_report" />} />
         <Route path="/inventory/sales_transfer_partyWise_sales" element={<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />} />
 
         {/* global */}

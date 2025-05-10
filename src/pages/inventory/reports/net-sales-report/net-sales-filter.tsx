@@ -37,7 +37,7 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("salesRouteID", data.value);
+                        handleFieldChange("salesRouteID", data.salesRouteID);
                     }}
                 />
 
@@ -51,7 +51,7 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("salesmanID", data.value);
+                        handleFieldChange("salesmanID", data.salesmanID);
                     }}
                 />
 
@@ -65,7 +65,7 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("partyID", data.value);
+                        handleFieldChange("partyID", data.partyID);
                     }}
                 />
 
@@ -79,7 +79,7 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("partyCategoryID", data.value);
+                        handleFieldChange("partyCategoryID", data.partyCategoryID);
                     }}
                 />
 
@@ -100,6 +100,6 @@ export const NetSalesReportFilterInitialState = {
     salesRouteID: 0,
     salesmanID: 0,
     partyID: 0,
-    groupByParty: 0,
+    groupByParty: false,
     partyCategoryID: 0,
 };

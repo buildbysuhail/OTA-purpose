@@ -293,7 +293,7 @@ export const ProductManageGcc: React.FC<{
                       const newBarcode = await api.getAsync(
                         `${Urls.products}SelectNextGeneratedSystemBarcode`
                       ); // Replace with actual API call
-                      _data.batch.manualBarcode = newBarcode;
+                      _data.batch.manualBarcode = newBarcode as string;
                     }
                     handleDataChange(_data);
                   }}
@@ -302,13 +302,13 @@ export const ProductManageGcc: React.FC<{
                   {...getFieldProps("batch.manualBarcode")}
                   label={t(" ")}
                   placeholder=""
-                  type="number"
+                  type="string"
                   required={false}
                   className="flex-1 min-w-[140px]"
-                  onChangeData={(data: any) =>
+                  onChange={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
-                      data.batch.manualBarcode
+                      data.target.value as string
                     )
                   }
                 />

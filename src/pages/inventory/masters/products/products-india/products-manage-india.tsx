@@ -441,7 +441,7 @@ useEffect(() => {
                   {...getFieldProps("batch.manualBarcode")}
                   label={t(" ")}
                   placeholder=""
-                  type="number"
+                  type="string"
                   required={false}
                   className="flex-1 min-w-[140px]"
                   onChangeData={(data: any) =>

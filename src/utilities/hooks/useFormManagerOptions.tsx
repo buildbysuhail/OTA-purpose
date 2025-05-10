@@ -37,6 +37,7 @@ export interface UseFormManagerOptions {
   loadInitialData?: boolean;
   useApiClient?: boolean;
   initialData?: any;
+  isMessages?:boolean
 }
 
 export function useFormManager<T>({
@@ -51,6 +52,7 @@ export function useFormManager<T>({
   loadInitialData = true,
   useApiClient = false,
   initialData,
+  isMessages=false,
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
@@ -114,7 +116,7 @@ export function useFormManager<T>({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if ((useApiClient || isEdit) && loadInitialData) {
+    if ((useApiClient || isEdit)) {
       loadFormData();
     }
   }, [useApiClient, isEdit]);
@@ -241,6 +243,15 @@ export function useFormManager<T>({
               error: null,
               loading: false,
             }));
+            if (isMessages && response.messages && response.messages.length > 0) {
+              ERPAlert.show({
+                title: t("Validation Error"),
+                icon: "warning",
+                text: response.messages.join("\n"),
+                confirmButtonText: t("Ok"),
+                showCancelButton:false
+              });
+            }
             onError?.(response);
           }
         );

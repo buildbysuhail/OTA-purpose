@@ -262,7 +262,7 @@ export const ReportsMenuItems = [
     children: [
       { id: 177, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_summary', icon: FaHandHoldingDollar },
       { id: 178, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_register_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_register', icon: GiReceiveMoney },
-      { id: 179, path: `${import.meta.env.BASE_URL}reports/_/inventory/transfer_net_sales`, type: 'link', active: false, selected: false, title: 'net_sales_transfer', icon: GiSwapBag },
+      { id: 179, path: `${import.meta.env.BASE_URL}reports/_/inventory/net_sales_transfer`, type: 'link', active: false, selected: false, title: 'net_sales_transfer', icon: GiSwapBag },
       { id: 180, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
     ]
   },

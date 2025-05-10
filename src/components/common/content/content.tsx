@@ -196,6 +196,7 @@ import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-indi
 import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
 import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
 import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
+import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -520,7 +521,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
         <Route path="/inventory/sales_summary_report" element={<SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />} />
         <Route path="/inventory/sales_register_report" element={<RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />} />
-        <Route path="/inventory/net_sales_report" element={<NetSales />} />
+        <Route path="/inventory/net_sales_report" element={<NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />} />
+
         <Route path="/inventory/partywise_sales_report" element={<PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />} />
         <Route path="/inventory/sales_tax_report_summary" element={<TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />} />
         <Route path="/inventory/sales_tax_report_detailed" element={<TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />} />
@@ -587,7 +589,7 @@ const Content: FC<ContentProps> = () => {
 
         <Route path="/inventory/sales_transfer_summary_report" element={<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />} />
         <Route path="/inventory/sales_transfer_register_report" element={<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />} />
-        <Route path="/inventory/transfer_net_sales" element={<NetSales />} />
+        <Route path="/inventory/net_sales_transfer" element={<NetSalesReport dataUrl={urls.net_sales_transfer_report} gridHeader="net_sales_transfer_report" gridId="grd_net_sales_transfer_report" />} />
         <Route path="/inventory/sales_transfer_partyWise_sales" element={<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />} />
 
         {/* global */}

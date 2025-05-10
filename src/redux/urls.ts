@@ -448,7 +448,7 @@ const Urls = {
 
   sales_transfer_summary:"/Inventory/RptSalesReport/SalesTransferSummary/",
   sales_transfer_register:"/Inventory/RptSalesReport/SalesTransferRegister/",
-  transfer_net_sales_report:"/Inventory/RptSalesReport/TransferNetSalesReport/",
+  net_sales_transfer_report:"/Inventory/RptSalesReport/TransferNetSalesReport/",
   sales_transfer_partyWise_sales:"/Inventory/RptSalesReport/SalesTransferPartywiseSales/",
 
   ksa_e_invoice_summary:

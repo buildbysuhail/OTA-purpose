@@ -761,5 +761,6 @@
   "price_category":"Price Category",
   "sales_transfer_summary":"Sales Transfer Summary",
   "sales_transfer_register":"Sales Transfer Register",
-  "sales_transfer_partyWise_sales":"Sales Transfer PartyWise"
+  "sales_transfer_partyWise_sales":"Sales Transfer PartyWise",
+  "net_sales_transfer":"Net Sales Transfer Report"
 }

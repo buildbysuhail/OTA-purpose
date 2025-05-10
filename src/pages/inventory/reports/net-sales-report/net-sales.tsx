@@ -3,14 +3,25 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import NetSalesReportFilter, { NetSalesReportFilterInitialState } from "./net-sales-filter";
 import Urls from "../../../../redux/urls";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
-const NetSales = () => {
-    const { t } = useTranslation('accountsReport');
-    const columns: DevGridColumn[] = [
+interface NetSalesProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
+const { t } = useTranslation('accountsReport');
+const [filter, setFilter] = useState<any>(NetSalesReportFilter);
+const clientSession = useSelector((state: RootState) => state.ClientSession);
+
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
         {
             dataField: "slNo",
             caption: t("sl_no"),
@@ -18,7 +29,7 @@ const NetSales = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 50,
+            width: 50
         },
         {
             dataField: "masterID",
@@ -82,6 +93,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.salesAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.salesAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.salesAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.salesAmt);
+                }
+            },
         },
         {
             dataField: "cashAmt",
@@ -91,6 +125,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.cashAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.cashAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.cashAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.cashAmt);
+                }
+            },
         },
         {
             dataField: "creditAmt",
@@ -100,6 +157,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.creditAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.creditAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.creditAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.creditAmt);
+                }
+            },
         },
         {
             dataField: "bankAmt",
@@ -109,6 +189,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.bankAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.bankAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.bankAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.bankAmt);
+                }
+            },
         },
         {
             dataField: "saleReturnAmt",
@@ -118,6 +221,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.saleReturnAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.saleReturnAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.saleReturnAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.saleReturnAmt);
+                }
+            },
         },
         {
             dataField: "balance",
@@ -127,6 +253,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.balance == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.balance);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.balance == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.balance);
+                }
+            },
         },
         {
             dataField: "couponAmt",
@@ -136,6 +285,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.couponAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.couponAmt);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.couponAmt == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.couponAmt);
+                }
+            },
         },
         {
             dataField: "createdDate",
@@ -154,6 +326,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.grossValue == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.grossValue);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.grossValue == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.grossValue);
+                }
+            },
         },
         {
             dataField: "vatAmount",
@@ -163,6 +358,29 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.vatAmount == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.vatAmount);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.vatAmount == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.vatAmount);
+                }
+            },
         },
         {
             dataField: "netSales",
@@ -172,8 +390,43 @@ const NetSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+            ) => {
+                if (exportCell != undefined) {
+                const value =
+                    cellElement.data?.netSales == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.netSales);
+                return {
+                    ...exportCell,
+                    text: value,
+                    alignment: "right",
+                    alignmentExcel: { horizontal: "right" },
+                };
+                } else {
+                return cellElement.data?.netSales == null
+                    ? 0
+                    : getFormattedValue(cellElement.data.netSales);
+                }
+            },
         },
     ];
+    // Filter columns based on the `visible` property
+    return baseColumns
+      .filter((column) => {
+        if (column.dataField == "slNo" || column.dataField == "vNo" || column.dataField == "transDate" || column.dataField == "createdDate"){
+          return filter.groupByParty == false;
+        }
+        if(column.dataField == "grossValue" || column.dataField == "vatAmount" || column.dataField == "netSales"){
+          return clientSession.isAppGlobal == false;
+        }
+        return true;
+      });
+  }, [t, filter]);
 
     const { getFormattedValue } = useNumberFormat();
     const customizeSummaryRow = useMemo(() => {
@@ -236,8 +489,8 @@ const NetSales = () => {
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
                                 moreOption={true}
-                                gridHeader={t("net_sales_report")}
-                                dataUrl={Urls.net_sales}
+                                gridHeader={t(gridHeader)}
+                                dataUrl={dataUrl}
                                 hideGridAddButton={true}
                                 enablefilter={true}
                                 showFilterInitially={true}
@@ -247,7 +500,7 @@ const NetSales = () => {
                                 filterHeight={270}
                                 filterInitialData={NetSalesReportFilterInitialState}
                                 reload={true}
-                                gridId="grd_net_sales"
+                                gridId={gridId}
                             />
                         </div>
                     </div>
@@ -257,4 +510,4 @@ const NetSales = () => {
     );
 };
 
-export default NetSales;
+export default NetSalesReport;

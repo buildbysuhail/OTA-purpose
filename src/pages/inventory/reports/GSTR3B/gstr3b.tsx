@@ -17,6 +17,17 @@ const GSTR3BReport = () => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
+
+      //eligible ITC
+         {
+        dataField: "details",
+        caption: t("details"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 180,
+      },
       //inout
       {
         dataField: "types",
@@ -73,54 +84,6 @@ const GSTR3BReport = () => {
         allowSorting: true,
         width: 100,
       },
-
-      //eligible ITC
-      {
-        dataField: "details",
-        caption: t("details"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 180,
-      },
-    //   {
-    //     dataField: "elintegratedTax",
-    //     caption: t("integrated_tax"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     width: 120,
-    //   },
-
-    //   {
-    //     dataField: "elcentralTax",
-    //     caption: t("central_tax"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     width: 120,
-    //   },
-    //   {
-    //     dataField: "elstateOrUTTax",
-    //     caption: t("state_ut_tax"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     width: 120,
-    //   },
-    //   {
-    //     dataField: "elcess",
-    //     caption: t("cess"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     width: 100,
-    //   },
       //exempt
       {
         dataField: "natureOfSupplies",
@@ -269,28 +232,6 @@ const GSTR3BReport = () => {
       }
       return false;
     });
-    //   .filter((column) => {
-    //     if (column.dataField == "types" ||column.dataField == "totalTaxableValue"||column.dataField == "integratedTax"||
-    //         column.dataField == "centralTax"||column.dataField == "stateOrUTTax"||column.dataField == "cess") {
-    //       return filter.supplyType=="inAndOutSupplies";
-    //     }
-    //     else
-    //       if (column.dataField == "details" ||column.dataField == "elintegratedTax"||
-    //         column.dataField == "elcentralTax"||column.dataField == "elstateOrUTTax"||column.dataField == "elcess") {
-    //       return filter.supplyType=="eligibleITC";
-    //     }else
-    //        if (column.dataField == "natureOfSupplies" ||column.dataField == "interStateSupplies"||
-    //         column.dataField == "intraStateSupplies") {
-    //       return filter.supplyType=="exemptNilRated";
-    //     }else
-    //      if (column.dataField == "placeOfSupply" ||column.dataField == "unregisteredTaxableValue"||
-    //         column.dataField == "unregisteredIntegratedTax"|| column.dataField == "taxableTaxableValue"||
-    //      column.dataField == "taxableIntegratedTax"|| column.dataField == "uinTaxableValue"
-    //     || column.dataField == "uinIntegratedTax") {
-    //       return filter.supplyType=="interStateSupplies";
-    //     }else
-    //     return false;
-    //   })
   }, [t, filter.supplyType]);
 
   const { getFormattedValue } = useNumberFormat();

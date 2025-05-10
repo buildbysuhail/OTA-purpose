@@ -46,6 +46,7 @@ const ProductPricesIndia: React.FC = React.memo(() => {
     const [gridData, setGridData] = useState<ProductPriceIndiaData[]>([]);
     const [priceCatOptions, setPriceCatOptions] = useState<OptionItem[]>([]);
     const [branchOptions, setBranchOptions] = useState<OptionItem[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
     const {
         isEdit,
         handleSubmit,
@@ -86,6 +87,56 @@ const ProductPricesIndia: React.FC = React.memo(() => {
         };
         fetchBranchOptions();
     }, []);
+
+    const clearAll = () => {
+        handleClear();
+        setGridData([]);
+    };
+
+    const saveProductPrices = async () => {
+        setIsSaving(true);
+        try {
+            const fieldNames = [
+                "vType",
+                "vPrefix",
+                "vNo",
+                "formType",
+                "brandValue",
+                "productCategoryValue",
+                "productNameValue",
+                "priceCatID",
+                "branchIds",
+                "branchValue",
+                "productGroupValue",
+                "priceUpdateType",
+                "priceUpdateValue",
+                "updateStdRate",
+            ];
+
+            const formData = fieldNames.reduce((acc, field) => {
+                acc[field] = getFieldProps(field).value;
+                return acc;
+            }, {} as { [key: string]: any });
+
+            const payload = {
+                ...formData,
+                products: gridData,
+            };
+
+            const response = await api.postAsync(Urls.productPrice, payload);
+
+            setIsSaving(false);
+            if (response.success) {
+                handleClear();
+                setGridData([]);
+            } else {
+                alert("Error saving product prices.");
+            }
+        } catch (error) {
+            alert("Error saving product prices.");
+            setIsSaving(false);
+        }
+    };
 
     const handleAddToGrid = () => {
         const newItem: ProductPriceIndiaData = {
@@ -230,7 +281,7 @@ const ProductPricesIndia: React.FC = React.memo(() => {
     );
 
     return (
-        <div className="p-4 bg-gray-100">
+        <div className="p-4 bg-gray-100 relative">
             <div className="bg-white border rounded-lg p-4 shadow-sm">
                 <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
                     <div className="flex flex-col gap-2 border border-[#ededed] p-4 rounded-md">
@@ -464,7 +515,30 @@ const ProductPricesIndia: React.FC = React.memo(() => {
                     hideDefaultExportButton={false}
                     hideGridAddButton={true}
                     gridHeader={t("product_prices_india")}
+                // heightToAdjustOnWindows={450}
                 />
+            </div>
+
+            <div className="fixed bottom-0 left-0 right-0 z-10 px-2 sm:px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+                style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
+                <div className="flex items-center justify-end">
+                    <ERPButton
+                        type="button"
+                        title={t("clear")}
+                        variant="secondary"
+                        className="mr-2"
+                        onClick={clearAll}
+                        disabled={isSaving}
+                    />
+
+                    <ERPButton
+                        type="button"
+                        variant="primary"
+                        title={t("Save")}
+                        onClick={saveProductPrices}
+                        disabled={isSaving}
+                    />
+                </div>
             </div>
         </div>
     );

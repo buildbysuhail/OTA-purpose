@@ -64,6 +64,7 @@ const ProductPricesGCC: React.FC = React.memo(() => {
     const [productPform, setproductPform] = useState<ProductPriceFormData>(initailProductPriceFormData)
     const [isLoading, setIsLoading] = useState(false)
     const [gridData, setGridData] = useState<ProductPriceGCCData[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
     // const handleAddToGrid = () => {
     //     // Add current form data to grid
     //     const newItem: ProductPriceGCCData = {
@@ -103,39 +104,26 @@ const ProductPricesGCC: React.FC = React.memo(() => {
             setIsLoading(false)
         }
     }
-    const handleSubmit = async () => {
-        //     setLoading(true)
-        //     try {
-        //       console.log("multibarcode",multiBarcode);
 
-        //       const response = await api.postAsync(Urls.productBarcode,multiBarcode);
-        //       handleResponse(response,()=>{
-        //         setMultiBarcode((prev)=>({
-        //           open:false,
-        //           data:[]
-        //         }))
-        //       })
+    const saveProductPrices = async () => {
+        setIsSaving(true);
+        try {
+            const response = await api.postAsync(Urls.productPrice, { products: gridData });
+            handleResponse(response, () => {
+                alert("Product prices updated successfully.");
+            });
+        } catch (error) {
+            console.error("Error saving product prices:", error);
+            alert("Error saving product prices.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
-        //     } catch (error) {
-        //       console.error("Error loading flavors:", error);
-        //     }
-        //   finally{
-        //     setLoading(false)
-        //   }
-    }
-
-    const handleClear = () => {
-        // setFormData({
-        //   unitID: 0,
-        //   unit: "",
-        //   barcodes: "",
-        // });
-
-        // setMultiBarcode((prev)=>({
-        //   ...prev,
-        //   data:[]
-        // }))
-    }
+    const clearAll = () => {
+        setproductPform(initailProductPriceFormData);
+        setGridData([]);
+    };
 
     const columns: DevGridColumn[] = useMemo(() => [
         {
@@ -402,20 +390,32 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                     hideDefaultExportButton={false}
                     hideGridAddButton={true}
                     gridHeader={t("product_prices_gcc")}
+                    allowUpdating={true}
+                    onRowUpdated={(e) => {
+                        const updatedData = gridData.map((row) =>
+                            row.slNo === e.key ? { ...row, ...e.data } : row
+                        );
+                        setGridData(updatedData);
+                    }}
                 />
-                <div className="flex items-center justify-end gap-4 mt-2">
+            </div>
+            <div className="fixed bottom-0 left-0 right-0 z-10 px-2 sm:px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+                style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
+                <div className="flex items-center justify-end">
                     <ERPButton
-                        title={t("save")}
-                        variant="primary"
-                        loading={isLoading}
-                        onClick={handleSubmit}
-                        disabled={isLoading}
-                    />
-                    <ERPButton
+                        type="button"
                         title={t("clear")}
                         variant="secondary"
-                        onClick={handleClear}
-                        disabled={isLoading}
+                        className="mr-2"
+                        onClick={clearAll}
+                    />
+
+                    <ERPButton
+                        type="button"
+                        variant="primary"
+                        title={t("Save")}
+                        onClick={saveProductPrices}
+                        disabled={isSaving}
                     />
                 </div>
             </div>

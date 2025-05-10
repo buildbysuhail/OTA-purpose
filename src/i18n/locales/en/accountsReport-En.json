@@ -755,5 +755,11 @@
   "category_wise_summary":"Category wise summary",
   "sales_tax_report":"Sales tax report",
   "title":"Title",
-  "adjustment":"Adjustment"
+  "adjustment":"Adjustment",
+
+  "transfer_voucher":"Transfer Voucher",
+  "price_category":"Price Category",
+  "sales_transfer_summary":"Sales Transfer Summary",
+  "sales_transfer_register":"Sales Transfer Register",
+  "sales_transfer_partyWise_sales":"Sales Transfer PartyWise"
 }

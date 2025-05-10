@@ -445,6 +445,12 @@ const Urls = {
   coupon_reports: "/Inventory/RptSalesReport/CouponReports/",
   scheme_wise_sales: "/Inventory/RptSalesReport/SchemewiseSalesReport/",
   sales_tax: "/Inventory/RptSalesReport/SalesTaxReport/",
+
+  sales_transfer_summary:"/Inventory/RptSalesReport/SalesTransferSummary/",
+  sales_transfer_register:"/Inventory/RptSalesReport/SalesTransferRegister/",
+  transfer_net_sales_report:"/Inventory/RptSalesReport/TransferNetSalesReport/",
+  sales_transfer_partyWise_sales:"/Inventory/RptSalesReport/SalesTransferPartywiseSales/",
+
   ksa_e_invoice_summary:
     "/Inventory/RptTAXReport/KSAEinvoiceStatusReportSummary/",
   ksa_e_invoice_detailed:

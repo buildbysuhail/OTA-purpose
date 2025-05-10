@@ -439,7 +439,8 @@ const clientSession = useSelector((state: RootState) => state.ClientSession);
         };
     }, [getFormattedValue]);
 
-    const summaryItems: SummaryConfig[] = [
+  const summaryItems: SummaryConfig[] = useMemo(() => {
+    const _summaryItems: SummaryConfig[] = [
         {
             column: "salesAmt",
             summaryType: "sum",
@@ -478,6 +479,13 @@ const clientSession = useSelector((state: RootState) => state.ClientSession);
         }
     ];
 
+    return _summaryItems.filter((column)=>{
+        if(column.column == "grossValue" || column.column == "vatAmount" || column.column == "netSales"){
+          return clientSession.isAppGlobal == false;
+        }
+        return true;
+    });
+  }, [clientSession]);
     return (
         <Fragment>
             <div className="grid grid-cols-12 gap-x-6">

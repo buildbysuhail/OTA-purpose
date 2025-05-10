@@ -195,8 +195,15 @@ export const ProductMaster: React.FC = React.memo(() => {
         ERPAlert.show(
           {title:"Validation Failed",
           text:"HSN Code missing, are you sure to continue?",
-          onConfirm:() => {handleSubmit()}
+          icon: "warning",
+          cancelButtonText:"cancel",
+          showCancelButton: true,
+          onConfirm:() => {handleSubmit()},
+          onCancel: () => {
+            console.log("User canceled HSN Code validation");
+          },
           })
+      
       }
       else{
         handleSubmit()

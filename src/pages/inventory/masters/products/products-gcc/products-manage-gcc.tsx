@@ -43,6 +43,7 @@ export const ProductManageGcc: React.FC<{
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
     const productCodeRef = useRef<HTMLInputElement>(null);
+      const gccProductSearchRef = useRef<HTMLInputElement>(null);
     const { getFormattedValue } = useNumberFormat();
     const userSession = useSelector((state: RootState) => state.UserSession);
     const clientSession = useSelector(
@@ -153,18 +154,23 @@ export const ProductManageGcc: React.FC<{
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 {/* {getFieldProps("product.productID")?.value} */}
                                <ERPProductSearch
+                               showCheckBox={false}
                                value={getFieldProps("product.productName").value}
-                                                  onChange={(e) =>  handleFieldChange({
-                                                    "product.productName": e.target.value 
-                                                  })}
-                                                  productDataUrl={Urls.load_product_details}
-                                                  onProductSelected={(data: any) => {
-                                                    debugger;
-                                                    handleFieldChange({
-                                                      "product.productName": data.productName 
-                                                    });
-                                                  }}
-                                                />
+                                onChange={(e) =>  handleFieldChange({
+                                  "product.productName": e.target.value 
+                                })}
+                                productDataUrl={Urls.load_product_details}
+                                onProductSelected={(data: any) => {
+                                  debugger;
+                                  handleFieldChange({
+                                    "product.productName": data.productName 
+                                  });
+                                  setTimeout(() => {
+                                    gccProductSearchRef.current?.focus();
+                                  }, 100);
+                                }}
+                                ref={gccProductSearchRef}
+                              />
                  {/* <ERPDataCombobox
                               ref={productNameRef}
                                 {...getFieldProps("product.productID")}

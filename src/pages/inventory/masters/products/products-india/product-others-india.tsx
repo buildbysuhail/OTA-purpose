@@ -140,17 +140,17 @@ const ProductOthersIndia: React.FC<{
                 }
                 className="min-w-[250px] flex-1"
               />
-              {/* <ERPCheckbox
-                {...getFieldProps("config.showOpeningStock")}
-                label={t("show_opening_stock")}
+             <ERPCheckbox
+                {...getFieldProps("config.capitalizationForProductName")}
+                label={t("capitalization_for_product_name")}
                 onChange={(e) =>
                   handleFieldChangeAndResetSettings(
-                    "showOpeningStock",
+                    "capitalizationForProductName",
                     e.target.checked
                   )
                 }
                 className="min-w-[250px] flex-1"
-              /> */}
+              />
             </div>
             <div className="flex flex-wrap gap-x-8 gap-y-2">
                <ERPCheckbox

@@ -17,7 +17,7 @@ interface NetSalesProps {
 }
 const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
 const { t } = useTranslation('accountsReport');
-const [filter, setFilter] = useState<any>(NetSalesReportFilter);
+const [filter, setFilter] = useState<any>(NetSalesReportFilterInitialState);
 const clientSession = useSelector((state: RootState) => state.ClientSession);
 
   const columns: DevGridColumn[] = useMemo(() => {

@@ -66,5 +66,6 @@ export default GSTR3BReportFilter;
 export const GSTR3BReportFilterInitialState = {
     fromDate: moment().local().startOf("day").toDate(),
     toDate: moment().local().endOf("day").toDate(),
-    supplyType: "inAndOutSupplies"
+    supplyType: "inAndOutSupplies",
+    showFilterInitially: true
 };

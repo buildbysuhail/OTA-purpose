@@ -774,6 +774,7 @@ useEffect(() => {
                       _data.product.stdSalesPrice = 0;
                       _data.product.manual = true;
                     }
+                    debugger;
                     handleDataChange(_data);
                   }}
                   label={t("product_type")}

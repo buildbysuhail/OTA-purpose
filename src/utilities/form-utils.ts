@@ -39,7 +39,7 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
     data: data?.data ? data?.data : data,
     value,
     validation,
-    checked,
+    // checked,
   };
   
   

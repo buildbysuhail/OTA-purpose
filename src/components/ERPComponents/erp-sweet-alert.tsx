@@ -18,6 +18,7 @@ interface ERPAlertProps {
   position?: 'center'|'center-end'|'center-start' | 'top' | 'top-start' | 'top-end' | 'bottom'   
   confirmButtonText?: string
   cancelButtonText?: string
+  showCancelButton?:boolean
   onConfirm?: (result?: any) => void
   onCancel?: () => void
 }
@@ -32,6 +33,7 @@ export default function ERPAlert({
   position='center',
   confirmButtonText = 'Ok',
   cancelButtonText = 'Cancel',
+  showCancelButton=true,
   onConfirm,
   onCancel
 }: ERPAlertProps) {
@@ -41,7 +43,7 @@ export default function ERPAlert({
       text: text,
       width:width,
       icon: icon,
-      showCancelButton: true,
+      showCancelButton: showCancelButton,
       allowOutsideClick: false ,
       returnFocus: false,
       // focusConfirm: false,
@@ -76,7 +78,7 @@ ERPAlert.show = (options: ERPAlertProps) => {
     text: options.text,
     width: options.width || 450,
     icon: options.icon || 'warning',
-    showCancelButton: true,
+    showCancelButton:options.showCancelButton,
     allowOutsideClick: false ,
     returnFocus: false,
     // focusConfirm: false,

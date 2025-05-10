@@ -5,6 +5,8 @@ export interface popupDataProps {
   data?: any | undefined;
   mode?: "add" | "edit" | "view";
   reload?: boolean;
+  id?:number;
+  name?:string;
 }
 interface popupData {
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
@@ -120,7 +122,7 @@ const initialState: popupData = {
   parties: { isOpen: false, key: null, mode: "edit", reload: true },
   eWayBillTaxPro: { isOpen: false, key: null, mode: "edit", reload: true },
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
-  productGroup: { isOpen: false, key: null, mode: "edit", reload: true },
+  productGroup: { isOpen: false, key: null, mode: "edit", reload: true,id:0 ,name:""},
   productCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   brands: { isOpen: false, key: null, mode: "edit", reload: true },
   priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },

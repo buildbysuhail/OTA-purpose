@@ -1056,11 +1056,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         currentY += 15;
       }
 
+      const pageWidth = doc.internal.pageSize.getWidth() - 80;
+const wrappedTitleLines = doc.splitTextToSize(pageTitle, pageWidth);
       doc.setFont("Amiri");
       doc.setFontSize(12);
       doc.text(pageTitle, 40, currentY, { align: "left" });
       doc.setFontSize(10);
 
+currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       const originalColumnVisibility = gridInstance
         .getVisibleColumns()
         .map((column: any) => ({
@@ -1074,7 +1077,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             .map((colPref) => colPref.dataField)
         : gridCols.filter((col) => col.showInPdf).map((col) => col.dataField);
 
-      const pageWidth = doc.internal.pageSize.getWidth() - 80;
       const columnsWithoutWidth = pdfVisibleColumns.filter(
         (colField) =>
           !preferences?.columnPreferences.find(
@@ -1343,7 +1345,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               };
               currentRow += 1;
             }
-
+debugger;
             const pageTitle = `${gridHeader} - ${header}`;
             mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
             worksheet.mergeCells(mergeRange);
@@ -1411,6 +1413,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     );
 
     const handlePrintPdf = async () => {
+      debugger;
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
         const doc = await generatePdf(gridInstance, true); // Generate the PDF with the print action flag

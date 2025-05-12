@@ -852,13 +852,12 @@ export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPe
       
       // Calculate markup percentage
       mu = (sp - pp) / pp * 100;
-      mu = Math.round(mu * 100000) / 100000; // Round to 5 decimal places
-      return getFormattedValue(mu);
+      return getFormattedValue(mu, false,4);
     }
-    return getFormattedValue(0);
+      return getFormattedValue(0, false,4);
   } catch (error) {
     console.error("Error calculating markup:", error);
-    return getFormattedValue(0);
+      return getFormattedValue(0, false,4);
   }
 }
 export const calculateSalesPrice = (purchasePriceInput: number,

@@ -66,6 +66,7 @@ export const ProductManageIndia: React.FC<{
     const salesPriceRef = useRef<HTMLInputElement>(null);
     const mrpRef = useRef<HTMLInputElement>(null);
     const productSearchRef = useRef<HTMLInputElement>(null);
+        const productCategoryRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");
@@ -250,12 +251,17 @@ useEffect(() => {
                       }, 100);
                     }}
                     ref={productSearchRef}
+                                onEnterKeyDown={() => {
+                                  debugger;
+                                  productCategoryRef?.current?.focus()
+                                }}
                   />
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <div className="flex flex-1 min-w-[240px] items-center gap-1">
                   <ERPDataCombobox
                     {...getFieldProps("product.productCategoryID")}
+                    ref={productCategoryRef}
                     field={{
                       id: "productCategoryID",
                       valueKey: "id",
@@ -432,7 +438,7 @@ useEffect(() => {
                       const newBarcode = await api.getAsync(
                         `${Urls.products}SelectNextGeneratedSystemBarcode`
                       ); // Replace with actual API call
-                      _data.batch.manualBarcode = newBarcode;
+                      _data.batch.manualBarcode = String(newBarcode);
                     }
                     handleDataChange(_data);
                   }}
@@ -447,7 +453,7 @@ useEffect(() => {
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
-                      data.batch.manualBarcode
+                      String(data.batch.manualBarcode)
                     )
                   }
                 />
@@ -602,14 +608,14 @@ useEffect(() => {
                   required={false}
                   onChangeData={(data: any) => {
                     debugger;
-                    const stdSalesPrice = calculateSalesPrice(
+                    const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                       parseFloat(
                         (data.product.stdPurchasePrice ?? 0).toString()
                       ),
                       parseFloat((data.markup ?? 0).toString()),
                       data.taxCategoryTaxPercentage,
                       appSettings.productsSettings.showRateBeforeTax
-                    );
+                    ), false, 4);
                     const prev = getFieldProps("*");
                     const _data = {
                       ...prev,

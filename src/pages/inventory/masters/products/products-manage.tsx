@@ -552,7 +552,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         />
       </div>,
       <div key="notes">
-        <ProductNotesGcc />
+        <ProductNotesGcc getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
       </div>,
     ];
   return (

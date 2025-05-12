@@ -45,8 +45,13 @@ export const useNumberFormat = () => {
     return parseFloat(val.toFixed(decimalPlaces));
   }
   
-  function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined): string {
+  function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
+  numberOfZero: number = 0): string {
     
+    if(cuttingPoint > 0) {
+      
+    debugger;
+    }
     
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))
     {
@@ -57,9 +62,25 @@ export const useNumberFormat = () => {
       minimumFractionDigits: _decimalPoint,
       maximumFractionDigits: _decimalPoint,
     });
-  
+    if(cuttingPoint > 0) {
+       formattedText =  formatDecimal(formattedText, cuttingPoint, numberOfZero);
+    }
     return formattedText;
   }
+  function formatDecimal(
+  input: string,
+  cuttingPoint: number,
+  numberOfZero: number
+): string {
+  const [integerPart, decimalPart = ""] = input.split(".");
+  
+  const cutDecimal = decimalPart.slice(0, cuttingPoint);
+  const zeros = "0".repeat(numberOfZero);
+  
+  const formattedDecimal = (cutDecimal + zeros).padEnd(cuttingPoint + numberOfZero, "0");
+  
+  return `${integerPart}.${formattedDecimal}`;
+}
   const belowTwenty: string[] = [
     "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
     "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"

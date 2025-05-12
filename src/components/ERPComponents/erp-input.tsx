@@ -871,12 +871,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     e.key === "NumpadEnter" || e.key === "Enter" || e.keyCode === 13 || e.which === 13;
                 
                   if (disableEnterNavigation === true) {
-                    if (onKeyDown) {
-                      onKeyDown(e);
-                    }
                     if (isEnter && onEnterKeyDown) {
                       onEnterKeyDown(e);
                     }
+                    if (onKeyDown) {
+                      onKeyDown(e);
+                    }
+                    
                   } else {
                     handleKeyDown(e);
                   }

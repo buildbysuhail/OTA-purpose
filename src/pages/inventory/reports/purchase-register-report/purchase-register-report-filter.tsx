@@ -191,9 +191,9 @@ const PurchaseRegisterFilter = ({
 
         <ERPDataCombobox
           label={t("voucher_form")}
-          {...getFieldProps("voucherForm")}
+          {...getFieldProps("voucherFormValue")}
           field={{
-            id: "voucherForm",
+            id: "voucherFormValue",
             getListUrl: clientSession.isAppGlobal
               ? Urls.data_FormTypeByPI
               : Urls.data_form_type,
@@ -201,7 +201,8 @@ const PurchaseRegisterFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("voucherForm", data.value.toString());
+            debugger;
+            handleFieldChange({voucherForm: data.label, voucherFormValue: data.value});
           }}
         />
 

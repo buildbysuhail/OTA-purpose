@@ -19,6 +19,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   keyId?: string;
   onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any) => void;
+  onEnterKeyDown?: () => void;
   checkboxLabel?: string;
   value?: string;
   clearAfterSelection?: boolean;
@@ -110,6 +111,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   keyId,
   onRowSelected,
   onProductSelected,
+  onEnterKeyDown,
   checkboxLabel,
   onChange,
   value,
@@ -289,6 +291,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           value={inputValue.searchValue}
           onChange={handleChange}
           onKeyDown={handleInputKeyDown}
+          onEnterKeyDown={onEnterKeyDown}
           disableEnterNavigation
           ref={ref} // Pass the ref to ERPInput
         />

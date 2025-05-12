@@ -199,6 +199,21 @@ const PurchaseOrderTransitReport = () => {
         return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
       };
     }, []);
+   const customizeSummaryRowFormatted = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+         ) {
+          return getFormattedValue(0, false,undefined, 1,1) || "0"; // Ensure "0" is displayed when value is missing
+        }
+       
+        return getFormattedValue(value, false,undefined, 1,1) || "0"; // Ensure formatted output or fallback to "0" 
+      };
+    }, []);
   
 const summaryItems: SummaryConfig[] = [
     {
@@ -217,7 +232,7 @@ const summaryItems: SummaryConfig[] = [
       column: "stockInTransit",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRowFormatted,
     },
     {
       column: "orderPending",

@@ -43,6 +43,7 @@ export const ProductManageGcc: React.FC<{
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
     const productCodeRef = useRef<HTMLInputElement>(null);
+    const productGroupRef = useRef<HTMLInputElement>(null);
       const gccProductSearchRef = useRef<HTMLInputElement>(null);
     const { getFormattedValue } = useNumberFormat();
     const userSession = useSelector((state: RootState) => state.UserSession);
@@ -170,6 +171,10 @@ export const ProductManageGcc: React.FC<{
                                   }, 100);
                                 }}
                                 ref={gccProductSearchRef}
+                                onEnterKeyDown={() => {
+                                  debugger;
+                                  productGroupRef?.current?.focus()
+                                }}
                               />
                  {/* <ERPDataCombobox
                               ref={productNameRef}
@@ -204,6 +209,7 @@ export const ProductManageGcc: React.FC<{
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                   <ERPDataCombobox
                     {...getFieldProps("product.productGroupID")}
+                    ref={productGroupRef}
                     id="productGroupID"
                     field={{
                       id: "productGroupID",
@@ -447,14 +453,14 @@ export const ProductManageGcc: React.FC<{
                     required={false}
                     onChangeData={(data: any) => {
                       debugger;
-                      const stdSalesPrice = calculateSalesPrice(
+                      const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                         parseFloat(
                           (data.product.stdPurchasePrice ?? 0).toString()
                         ),
                         parseFloat((data.markup ?? 0).toString()),
                         data.taxCategoryTaxPercentage,
                         appSettings.productsSettings.showRateBeforeTax
-                      );
+                      ), false, 4);
                       const prev = getFieldProps("*");
                       const _data = {
                         ...prev,

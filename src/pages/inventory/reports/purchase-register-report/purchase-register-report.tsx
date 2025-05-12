@@ -1616,10 +1616,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             caption: "QRPay",
           };
         }
-        if (column.dataField == "xRate" && filter.voucherForm != "Import") {
+        if (column.dataField == "xRate" ) {
           return {
             ...column,
-            visible: false,
+            visible: filter.voucherForm == "Import",
           };
         }
         return column;

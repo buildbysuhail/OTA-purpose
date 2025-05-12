@@ -19,6 +19,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            visible:false,
         },
         {
             dataField: "code",
@@ -37,6 +38,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "group",
@@ -46,6 +48,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "category",
@@ -55,6 +58,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "brand",
@@ -64,6 +68,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "stock",
@@ -73,6 +78,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "stdSPrice",
@@ -82,6 +88,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "stdPPrice",
@@ -91,6 +98,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "stockValue",
@@ -100,6 +108,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "mrp",
@@ -109,6 +118,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "batchNo",
@@ -118,6 +128,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "specification",
@@ -127,6 +138,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "modelNo",
@@ -136,6 +148,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "autoBarcode",
@@ -145,6 +158,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "mannualBarcode",
@@ -154,6 +168,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 130,
+            showInPdf:true,
         },
         {
             dataField: "expiryDate",
@@ -163,6 +178,7 @@ const ExpiryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
     ];
 

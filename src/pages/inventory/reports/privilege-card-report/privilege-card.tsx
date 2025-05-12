@@ -19,6 +19,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "billNo",
@@ -28,6 +29,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 60,
+            showInPdf:true,
         },
         {
             dataField: "date",
@@ -37,6 +39,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "billAmount",
@@ -46,6 +49,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "cardNumber",
@@ -55,6 +59,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 90,
+            showInPdf:true,
         },
         {
             dataField: "addAmt",
@@ -64,6 +69,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "redeem",
@@ -73,6 +79,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "balance",
@@ -82,6 +89,7 @@ const PrivilegeCardReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
     ];
 

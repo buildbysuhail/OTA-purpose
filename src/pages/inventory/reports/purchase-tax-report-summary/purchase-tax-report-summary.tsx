@@ -1,10 +1,14 @@
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
+import PurchaseTaxReportDetailedFilter, {
+  PurchaseTaxReportDetailedFilterInitialState,
+} from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
 import moment from "moment";
 
 interface TaxReportSummaryProps {
@@ -13,12 +17,20 @@ interface TaxReportSummaryProps {
   gridId: string;
 }
 
-const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
+const TaxReportSummary: FC<TaxReportSummaryProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(PurchaseTaxReportDetailedFilterInitialState);
+  const [filter, setFilter] = useState<any>(
+    PurchaseTaxReportDetailedFilterInitialState
+  );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+  }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -35,14 +47,16 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
         exportCell: any
       ) => {
-        return cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
+        return cellElement.data.date == null || cellElement.data.date == ""
+          ? ""
+          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
       },
     },
     {
@@ -52,7 +66,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -84,7 +98,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -116,7 +130,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -148,7 +162,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -180,7 +194,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -270,7 +284,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
                   filtering: true,
                   paging: true,
                   sorting: false,
-                  summary: true
+                  summary: true,
                 }}
                 columns={columns}
                 moreOption
@@ -285,7 +299,9 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
                 filterHeight={210}
                 filterWidth={330}
                 filterInitialData={PurchaseTaxReportDetailedFilterInitialState}
-                onFilterChanged={(f: any) => { setFilter(f); }}
+                onFilterChanged={(f: any) => {
+                  setFilter(f);
+                }}
                 reload={true}
                 gridId={gridId}
               />

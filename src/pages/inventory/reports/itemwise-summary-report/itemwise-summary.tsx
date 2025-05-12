@@ -1,12 +1,24 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState } from "./itemwise-summary-filter";
+import ItemWiseSummaryFilter, {
+  ItemWiseSummaryFilterInitialState,
+} from "./itemwise-summary-filter";
 import { useLocation } from "react-router-dom";
 
 interface ItemWiseSummaryReportProps {
@@ -15,12 +27,18 @@ interface ItemWiseSummaryReportProps {
   gridId: string;
 }
 
-const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
+const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(ItemWiseSummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       //iscategorywise  groupindex =0 for category
@@ -31,7 +49,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "productCode",
@@ -57,7 +75,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 200,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "totQty",
@@ -66,7 +84,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -137,7 +155,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -169,7 +187,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -201,7 +219,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -234,7 +252,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 85,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -266,7 +284,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 85,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -333,7 +351,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "category",
@@ -342,7 +360,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "brandName",
@@ -351,7 +369,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "totalTaxAmount",
@@ -360,13 +378,16 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
       },
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
       if (column.dataField == "totVat") {
-        return applicationSettings.branchSettings.maintainTaxes && !clientSession.isAppGlobal;
+        return (
+          applicationSettings.branchSettings.maintainTaxes &&
+          !clientSession.isAppGlobal
+        );
       }
       if (column.dataField == "branchName") {
         return userSession.currentBranchId == 0;
@@ -374,22 +395,25 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
       if (column.dataField == "siNo") {
         return filter.isCategoryWise == false;
       }
-      if (column.dataField == "totalTaxAmount" || column.dataField == "brandName" || column.dataField == "category") {
+      if (
+        column.dataField == "totalTaxAmount" ||
+        column.dataField == "brandName" ||
+        column.dataField == "category"
+      ) {
         return clientSession.isAppGlobal || filter.isCategoryWise == true;
       }
       return true;
-    })
-      // .map((column) => {
-      //   debugger;
-      //   if (column.dataField == "groupName") {
-      //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
-      //   }
-      //   if (column.dataField == "category") {
-      //     column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
-      //   }
-      //   return column;
-      // }) as DevGridColumn[]
-      ;
+    });
+    // .map((column) => {
+    //   debugger;
+    //   if (column.dataField == "groupName") {
+    //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
+    //   }
+    //   if (column.dataField == "category") {
+    //     column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
+    //   }
+    //   return column;
+    // }) as DevGridColumn[]
   }, [t, filter, filter.isCategoryWise, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -482,7 +506,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-    setKey((prev: any) => prev + 1)
+    setKey((prev: any) => prev + 1);
   }, [location]);
   return (
     <Fragment>

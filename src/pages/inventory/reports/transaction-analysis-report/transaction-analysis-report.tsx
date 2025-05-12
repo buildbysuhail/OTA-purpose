@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { useMemo } from "react";
@@ -8,7 +10,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 
 const TransactionAnalysis = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "branch",
@@ -17,7 +19,7 @@ const TransactionAnalysis = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      visible: false, 
+      visible: false,
       width: 100,
     },
     {
@@ -28,6 +30,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "month",
@@ -37,6 +40,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "sales",
@@ -46,6 +50,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 153,
+      showInPdf: true,
     },
     {
       dataField: "purchase",
@@ -55,6 +60,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "expense",
@@ -64,6 +70,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "income",
@@ -73,6 +80,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "accountsPayable",
@@ -82,6 +90,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "accountsReceivable",
@@ -91,6 +100,7 @@ const TransactionAnalysis = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "intMonth",
@@ -101,6 +111,7 @@ const TransactionAnalysis = () => {
       allowSorting: true,
       visible: false,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "branchID",
@@ -118,7 +129,12 @@ const TransactionAnalysis = () => {
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -172,7 +188,11 @@ const TransactionAnalysis = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={true}
                 gridHeader={t("transaction_analysis")}

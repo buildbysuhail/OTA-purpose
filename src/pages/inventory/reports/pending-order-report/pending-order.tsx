@@ -19,6 +19,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "financialYearID",
@@ -28,6 +29,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            visible:false
         },
         {
             dataField: "invTransactionMasterID",
@@ -37,6 +39,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            visible:false
         },
         {
             dataField: "branchID",
@@ -46,6 +49,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            visible:false
         },
         {
             dataField: "transactionDate",
@@ -55,6 +59,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "voucherType",
@@ -64,6 +69,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "voucherNumber",
@@ -73,6 +79,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "remarks",
@@ -82,6 +89,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "party",
@@ -91,6 +99,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 180,
+            showInPdf:true,
         },
         {
             dataField: "productCode",
@@ -109,6 +118,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 180,
+            showInPdf:true,
         },
         {
             dataField: "autoBarcode",
@@ -118,6 +128,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "mannualBarcode",
@@ -127,6 +138,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "productNameDuplicate",
@@ -136,6 +148,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "pendingQty",
@@ -145,6 +158,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "unitName",
@@ -154,6 +168,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "quantity",
@@ -163,6 +178,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "free",
@@ -181,6 +197,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "totalGross",
@@ -190,6 +207,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "totalVatAmount",
@@ -199,6 +217,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "netAmount",
@@ -208,6 +227,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "supplierRefCode",
@@ -217,6 +237,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "brandName",
@@ -226,6 +247,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "groupName",
@@ -235,6 +257,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "productCategory",
@@ -244,6 +267,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "groupCategory",
@@ -253,6 +277,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "section",
@@ -262,6 +287,7 @@ const PendingOrderReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
     ];
 

@@ -1,15 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import StockLedgerFilter, { StockLedgerFilterInitialState } from "./stock-ledger-report-filter";
+import StockLedgerFilter, {
+  StockLedgerFilterInitialState,
+} from "./stock-ledger-report-filter";
 
 const StockLedger = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
@@ -19,6 +23,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 40,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -28,6 +33,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -37,6 +43,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "voucherType",
@@ -46,6 +53,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -55,6 +63,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "voucherNo",
@@ -64,6 +73,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "inwardQty",
@@ -73,6 +83,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "outwardQty",
@@ -82,6 +93,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "balance",
@@ -91,6 +103,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "quantity",
@@ -100,6 +113,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "unit",
@@ -109,6 +123,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "prefix",
@@ -118,6 +133,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "financialYearID",
@@ -137,6 +153,7 @@ const StockLedger = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 65,
+      showInPdf: true,
     },
     {
       dataField: "createdDate",
@@ -154,7 +171,12 @@ const StockLedger = () => {
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -190,7 +212,11 @@ const StockLedger = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={true}
                 gridHeader={t("stock_ledger_report")}

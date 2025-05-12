@@ -30,6 +30,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 250,
+      showInPdf:true,
     },
     {
       dataField: "employeeName",
@@ -48,6 +49,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "transactionDate",
@@ -57,6 +59,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "warehouseName",
@@ -66,6 +69,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "totalGross",
@@ -75,6 +79,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "billDiscount",
@@ -84,6 +89,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "grandTotal",
@@ -93,6 +99,7 @@ const BranchTransferSummaryOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     }
   ];
 

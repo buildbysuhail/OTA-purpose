@@ -29,6 +29,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            visible:false,
         },
         {
             dataField: "transactionDate",
@@ -38,6 +39,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "voucherType",
@@ -47,6 +49,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "voucherNumber",
@@ -56,6 +59,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "partyName",
@@ -65,6 +69,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "productCode",
@@ -83,6 +88,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "autoBarcode",
@@ -92,6 +98,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "mannualBarcode",
@@ -101,6 +108,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "quantity",
@@ -110,6 +118,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "unitName",
@@ -119,6 +128,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "actualPrice",
@@ -128,6 +138,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "free",
@@ -146,6 +157,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "rateWithTax",
@@ -155,6 +167,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "grossValue",
@@ -164,6 +177,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "discount",
@@ -173,6 +187,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "netValue",
@@ -182,6 +197,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "vat",
@@ -191,6 +207,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "netAmount",
@@ -200,6 +217,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
     ];
 

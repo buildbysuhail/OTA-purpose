@@ -1,15 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import StockFlowReportFilter, { StockFlowReportFilterInitialState } from "./stock-flow-report-filter";
+import StockFlowReportFilter, {
+  StockFlowReportFilterInitialState,
+} from "./stock-flow-report-filter";
 import Urls from "../../../../redux/urls";
 
 const StockFlowReport = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "groupName",
@@ -19,6 +23,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 130,
+      showInPdf: true,
     },
     {
       dataField: "productCode",
@@ -37,6 +42,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 130,
+      showInPdf: true,
     },
     {
       dataField: "opStk",
@@ -46,6 +52,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "opVal",
@@ -55,6 +62,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "piStk",
@@ -64,6 +72,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "piVal",
@@ -73,6 +82,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "srStk",
@@ -82,6 +92,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "srVal",
@@ -91,6 +102,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "siStk",
@@ -100,6 +112,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "siVal",
@@ -109,6 +122,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "prStk",
@@ -118,6 +132,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "prVal",
@@ -127,6 +142,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "clStk",
@@ -136,6 +152,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "clVal",
@@ -145,6 +162,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "productID",
@@ -173,6 +191,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "stInStk",
@@ -182,6 +201,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "stInVal",
@@ -191,6 +211,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "stOutStk",
@@ -200,6 +221,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "stOutVal",
@@ -209,6 +231,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "unit",
@@ -218,6 +241,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "sectionName",
@@ -227,6 +251,7 @@ const StockFlowReport = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
   ];
 
@@ -234,7 +259,12 @@ const StockFlowReport = () => {
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -348,7 +378,11 @@ const StockFlowReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={true}
                 gridHeader={t("stock_flow_report")}

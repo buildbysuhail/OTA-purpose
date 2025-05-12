@@ -428,6 +428,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     useEffect(() => {
       set_reload(reload);
     }, [reload]);
+    
     useEffect(() => {
       const handleScroll = () => {
         if (isOpen && comboboxRef.current) {
@@ -441,14 +442,35 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           }
         }
       };
-
-      const scrollArea = document.querySelector(".content.main-index");
-      scrollArea?.addEventListener("scroll", handleScroll);
-
+    
+      
+      window.addEventListener("scroll", handleScroll, true);
+    
       return () => {
-        scrollArea?.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("scroll", handleScroll, true);
       };
     }, [isOpen]);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) {
+            setIsOpen(false);
+          }
+        },
+        { threshold: 0.1 }
+      );
+    
+      if (comboboxRef.current) {
+        observer.observe(comboboxRef.current);
+      }
+    
+      return () => {
+        if (comboboxRef.current) {
+          observer.unobserve(comboboxRef.current);
+        }
+      };
+    }, [comboboxRef]);
 
     useEffect(() => {
       if (isOpen && initial && listRef.current) {
@@ -456,7 +478,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           (item) => item.value === initial.value
         );
         if (index !== -1) {
-          // Scroll to the item after a slight delay to ensure list is rendered
+          
           setTimeout(() => {
             listRef.current?.scrollToItem(index, "center");
             setActiveIndex(index);

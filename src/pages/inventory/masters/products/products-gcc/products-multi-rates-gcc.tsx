@@ -109,7 +109,7 @@ const MultiRatesGcc: React.FC<{
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
+        visible: true,
         allowEditing: true,
         // width: 80,
       },

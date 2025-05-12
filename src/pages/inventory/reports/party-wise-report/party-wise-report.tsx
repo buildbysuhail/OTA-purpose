@@ -26,6 +26,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -42,6 +43,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -50,6 +52,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "party",
@@ -58,6 +61,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "address1",
@@ -66,6 +70,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "address2",
@@ -82,6 +87,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "netAmount",
@@ -90,6 +96,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -121,6 +128,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -152,6 +160,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "ref_Date",
@@ -160,6 +169,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "employeeName",

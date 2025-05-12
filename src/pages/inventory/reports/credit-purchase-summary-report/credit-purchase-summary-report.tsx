@@ -29,7 +29,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -49,7 +48,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -59,7 +57,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -69,7 +66,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 150,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -79,7 +75,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -89,7 +84,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -99,7 +93,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -142,7 +135,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -185,7 +177,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -271,7 +262,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -314,7 +304,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -400,7 +389,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -503,7 +491,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "mInvoiceNo",
@@ -512,7 +499,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
     },
     {
       dataField: "refNo",
@@ -521,7 +507,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "refDate",
@@ -530,7 +515,6 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,

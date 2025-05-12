@@ -35,6 +35,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "date",
@@ -43,6 +44,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -61,6 +63,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     
     {
@@ -70,6 +73,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "address2",
@@ -86,6 +90,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "taxCategory",
@@ -94,6 +99,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -125,6 +131,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "vatPercentage",
@@ -133,6 +140,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -164,6 +172,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -195,6 +204,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -226,6 +236,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -257,6 +268,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "refDate",
@@ -265,6 +277,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -294,6 +307,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "refNo2",

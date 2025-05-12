@@ -35,6 +35,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -51,6 +52,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -82,6 +84,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -113,6 +116,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -144,6 +148,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -175,6 +180,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, grid
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,

@@ -471,6 +471,7 @@ const Products = () => {
                   gridId="grd_products"
                   popupAction={toggleProducts}
                   gridAddButtonType="popup"
+                allowExport={true}
                   changeReload={(reload: any) => { dispatch(toggleProducts({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.products?.reload}
                   gridAddButtonIcon="ri-add-line"

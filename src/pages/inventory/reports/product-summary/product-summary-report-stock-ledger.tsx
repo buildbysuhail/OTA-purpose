@@ -17,6 +17,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 40,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -25,6 +26,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       format: "dd-MMM-yyyy"
     },
     {
@@ -34,6 +36,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "voucherType",
@@ -42,6 +45,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -50,6 +54,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 60,
+      showInPdf:true,
     },
     {
       dataField: "voucherNo",
@@ -58,6 +63,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "inwardQty",
@@ -66,6 +72,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -97,6 +104,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -128,6 +136,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -159,6 +168,7 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "prefix",

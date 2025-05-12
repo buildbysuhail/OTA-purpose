@@ -49,6 +49,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -67,6 +68,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        showInPdf:true,
       },
       {
         dataField: "form",
@@ -75,6 +77,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
       },
       {
         dataField: "party",
@@ -83,6 +86,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf:true,
       },
       {
         dataField: "address1",
@@ -91,6 +95,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "address2",
@@ -116,6 +121,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -159,6 +165,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+        visible:false,
       },
       {
         dataField: "product",
@@ -167,6 +174,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "productGroup",
@@ -191,6 +199,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        visible:false,
       },
       {
         dataField: "category",
@@ -207,6 +216,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -281,6 +291,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -312,6 +323,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -378,6 +390,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -444,6 +457,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -475,6 +489,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "counterName",
@@ -491,6 +506,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "financialYearID",
@@ -540,6 +556,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 90,
+        showInPdf:true,
       },
       {
         dataField: "additionalExpense",
@@ -548,6 +565,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -644,6 +662,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -691,6 +710,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -724,6 +744,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -788,6 +809,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -819,6 +841,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -850,6 +873,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -881,6 +905,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "manualBarcode",
@@ -889,6 +914,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "purchaseInvoiceNumber",
@@ -970,6 +996,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "cgstPerc",
@@ -1013,6 +1040,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1079,6 +1107,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1145,6 +1174,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1211,6 +1241,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1246,6 +1277,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "gstin",
@@ -1254,6 +1286,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "salesPrice",
@@ -1262,6 +1295,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1336,6 +1370,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1410,6 +1445,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1453,6 +1489,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       // {
       //   dataField: "sl",
@@ -1477,6 +1514,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       // {
       //   dataField: "totalProfitPercent",
@@ -1563,6 +1601,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,

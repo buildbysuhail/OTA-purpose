@@ -1173,7 +1173,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 // columnResizingMode={"widget"}
                 filterHeight={300}
                 filterWidth={790}
-                filterInitialData={SummaryFilterInitialState}
+                filterInitialData={ SummaryFilterInitialState }
                 onFilterChanged={(f: any) => {
                   setFilter(f);
                 }}

@@ -28,7 +28,7 @@ const initialProductData: productDto = {
     taxCategoryID: -2,
     batchCriteria: "",
     isRawMaterial: false,
-    isFinishedGood: true,
+    isFinishedGood: false,
     isWeighingScale: false,
     unitQty: 1,
     packingSlip: true,

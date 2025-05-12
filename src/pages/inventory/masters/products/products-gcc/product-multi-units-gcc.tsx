@@ -7,7 +7,12 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import Urls from "../../../../../redux/urls";
 import initialProductData from "../products-data";
 import { useTranslation } from "react-i18next";
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { FormField } from "../../../../../utilities/form-types";
 import {
   ProductFieldPath,
@@ -25,18 +30,25 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
 export interface ProductMultiUnitsGccRef {
-  loadMultiRateToGrid: (obj: productDto, units: any, mlRate: any) => Promise<ProductPriceInputDto[]>;
+  loadMultiRateToGrid: (
+    obj: productDto,
+    units: any,
+    mlRate: any
+  ) => Promise<ProductPriceInputDto[]>;
 }
 const api = new APIClient();
-const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
-  t: any;
-  handleFieldChange: <Path extends ProductFieldPath>(
-    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
-    value?: PathValue<productDto, Path>
-  ) => void;
+const ProductMultiUnitsGCC = forwardRef<
+  ProductMultiUnitsGccRef,
+  {
+    t: any;
+    handleFieldChange: <Path extends ProductFieldPath>(
+      fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+      value?: PathValue<productDto, Path>
+    ) => void;
 
-  getFieldProps: (fieldId: string, type?: string) => FormField;
-}>(({ t, handleFieldChange, getFieldProps }, ref) => {
+    getFieldProps: (fieldId: string, type?: string) => FormField;
+  }
+>(({ t, handleFieldChange, getFieldProps }, ref) => {
   const generateInitialUnit = (): ProductUnitInputDto => ({
     productUnitID: undefined,
     productBatchID: undefined,
@@ -56,157 +68,178 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
   const [multiUnits, setMultiUnits] = useState<{
     [key: string]: ProductUnitInputDto;
   }>({});
-  const [selectedUnits, setSelectedUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
-  const [units, setUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
-  const [unSelectedUnits, unSetSelectedUnits] = useState<{
-    id: number, name: string
-  }[]>([{id:0, name: ""}]);
+  const [selectedUnits, setSelectedUnits] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([{ id: 0, name: "" }]);
+  const [units, setUnits] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([{ id: 0, name: "" }]);
+  const [unSelectedUnits, unSetSelectedUnits] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([{ id: 0, name: "" }]);
 
-   useImperativeHandle(ref, () => ({
-        loadMultiRateToGrid: async (obj: productDto, units: any, mlRate: any) => {
-          return await loadMultiRateToGrid(obj, units, mlRate);
-        }
-      }));
-      
-  const clientSession = useSelector((state: RootState) => state.ClientSession)
+  useImperativeHandle(ref, () => ({
+    loadMultiRateToGrid: async (obj: productDto, units: any, mlRate: any) => {
+      return await loadMultiRateToGrid(obj, units, mlRate);
+    },
+  }));
+
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   const [barcode, setBarcode] = useState<boolean>(false);
-  const setMultiUnitsMaster = (multiUnits: any) => {
-    debugger
+  const setMultiUnitsMaster = (multiUnits: any, _units: any) => {
+    debugger;
     const fList = Object.entries(multiUnits).map(
       ([key, unit]) => unit
     ) as ProductUnitInputDto[];
     handleFieldChange("units", fList);
-    debugger
-    const selected = fList.filter(x => x.unitID??0 > 0).map((x: any) => ({
-      id: Number(x.unitID),       // Ensure type matches: number
-      name: String(x.unit),       // Ensure type matches: string
-    }))
-    const unSelected = units.filter(x => !selected.map(x => x.id).includes(x.id??0)).map((x: any) => ({
-      id: Number(x.id),       // Ensure type matches: number
-      name: String(x.name),       // Ensure type matches: string
-    }))
+    debugger;
+    const selected = fList
+      .filter((x) => x.unitID ?? 0 > 0)
+      .map((x: any) => ({
+        id: Number(x.unitID), // Ensure type matches: number
+        name: String(x.unit), // Ensure type matches: string
+      }));
+    const unSelected = _units
+      .filter((x: any) => !selected.map((x) => x.id).includes(x.id ?? 0))
+      .map((x: any) => ({
+        id: Number(x.id), // Ensure type matches: number
+        name: String(x.name), // Ensure type matches: string
+      }));
     debugger;
     setSelectedUnits(selected);
     unSetSelectedUnits(unSelected);
     // setMultiUnits(multiUnits);
   };
-      const unitDAta: ProductUnitInputDto = {
-        productUnitID: 0,
-        productBatchID: 0,
-        unitID: 0,
-        multiFactor: 0,
-        barCode: "",
-        description: "",
-        descriptionFL: "",
-        unitRemarks: "",
-        gatePass: true,
-        multiBarcodes: "",
-        salesPrice: 0,
-        mrp: 0,
-        msp: 0,
-      };
-      const loadMultiRateToGrid = async (
-            obj: productDto,
-            updateUnit: any,
-            mlRate: any
-          ): Promise<ProductPriceInputDto[]> => {
-            debugger;
-           
-      
-            const mUnits = updateUnit;
-            for (const row of mUnits) {
-              if  (row.unitID > 0 && row.multiFactor > 0 && mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
-                mlRate = await loadMultiRates(
-                  row.unitID ?? 0,
-                  row.unit ?? "",
-                  obj,
-                  mlRate
-                );
-              }
-            }
-            return mlRate;
-          };
-   const loadMultiRates = async (
-        unitId: number,
-        unit: string,
-        obj: productDto,
-        multiRates: Array<ProductPriceInputDto>
-      ): Promise<ProductPriceInputDto[]> => {
-        try {
-          const rates: ProductPriceInputDto[] = [...(multiRates || [])];
-          const priceCategories = await api.getAsync(Urls.data_pricectegory);
-  
-          if (!priceCategories || priceCategories.length === 0) {
-            return rates;
-          }
-          // Transform price categories into new rates using map
-          const newRates: ProductPriceInputDto[] = priceCategories.map(
-            (cat: any) => ({
-              priceCategory: cat.name,
-              unit: unit,
-              unitID: unitId,
-              priceCategoryID: cat.id,
-              purchaseRate:  clientSession.isAppGlobal ? parseFloat(
+  const unitDAta: ProductUnitInputDto = {
+    productUnitID: 0,
+    productBatchID: 0,
+    unitID: 0,
+    multiFactor: 0,
+    barCode: "",
+    description: "",
+    descriptionFL: "",
+    unitRemarks: "",
+    gatePass: true,
+    multiBarcodes: "",
+    salesPrice: 0,
+    mrp: 0,
+    msp: 0,
+  };
+  const loadMultiRateToGrid = async (
+    obj: productDto,
+    updateUnit: any,
+    mlRate: any
+  ): Promise<ProductPriceInputDto[]> => {
+    debugger;
+
+    const mUnits = updateUnit;
+    for (const row of mUnits) {
+      if (
+        row.unitID > 0 &&
+        row.multiFactor > 0 &&
+        mlRate.find((x: any) => x.unitID == row.unitID) == undefined
+      ) {
+        mlRate = await loadMultiRates(
+          row.unitID ?? 0,
+          row.unit ?? "",
+          obj,
+          mlRate
+        );
+      }
+    }
+    return mlRate;
+  };
+  const loadMultiRates = async (
+    unitId: number,
+    unit: string,
+    obj: productDto,
+    multiRates: Array<ProductPriceInputDto>
+  ): Promise<ProductPriceInputDto[]> => {
+    try {
+      const rates: ProductPriceInputDto[] = [...(multiRates || [])];
+      const priceCategories = await api.getAsync(Urls.data_pricectegory);
+
+      if (!priceCategories || priceCategories.length === 0) {
+        return rates;
+      }
+      // Transform price categories into new rates using map
+      const newRates: ProductPriceInputDto[] = priceCategories.map(
+        (cat: any) => ({
+          priceCategory: cat.name,
+          unit: unit,
+          unitID: unitId,
+          priceCategoryID: cat.id,
+          purchaseRate: clientSession.isAppGlobal
+            ? parseFloat(
                 getFormattedValue(
                   (obj?.product?.stdPurchasePrice ?? 0) *
                     (unitDAta.multiFactor || 1)
                 )
-              ): 0,
-              mrp: clientSession.isAppGlobal ?obj?.product?.mrp || 0 : 0,
-  
-              // Fill in all required fields below
-              productMultiPriceID: 0,
-              productBatchID: 0,
-              salesPrice: 0,
-              discountPerc: 0,
-              profitAmt: 0,
-              msp: 0,
-              purchasePrice: 0,
-            })
-          );
-  
-          return [...rates, ...newRates];
-        } catch (err) {
-          console.error("Error in loadMultiRates:", err);
-          return obj.prices || [];
-        }
-      };
+              )
+            : 0,
+          mrp: clientSession.isAppGlobal ? obj?.product?.mrp || 0 : 0,
+
+          // Fill in all required fields below
+          productMultiPriceID: 0,
+          productBatchID: 0,
+          salesPrice: 0,
+          discountPerc: 0,
+          profitAmt: 0,
+          msp: 0,
+          purchasePrice: 0,
+        })
+      );
+
+      return [...rates, ...newRates];
+    } catch (err) {
+      console.error("Error in loadMultiRates:", err);
+      return obj.prices || [];
+    }
+  };
   useEffect(() => {
     debugger;
-    const obj = getFieldProps("*") as unknown as productDto;
-    const responseData = obj.units;
-    const baseUnit = obj.product.basicUnitID;
-    const paddedData: ProductUnitInputDto[] = [...responseData];
-
-    for (let i = paddedData.length; i < 12; i++) {
-      paddedData.push(generateInitialUnit());
-    }
-    paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
-      ? baseUnit
-      : paddedData[0].unitID;
-      paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
-        ? obj.product.basicUnitName
-        : paddedData[0].unit;
-      paddedData[0].multiFactor = isNullOrUndefinedOrZero(paddedData[0].multiFactor)
-        ? 1
-        : paddedData[0].multiFactor;
-    const result: { [key: string]: ProductUnitInputDto } = {};
-    paddedData.forEach((unit, index) => {
-      result[`unit${index + 1}`] = unit;
-    });
-
-    setMultiUnits(result);
-    setMultiUnitsMaster(result)
   }, []);
   useEffect(() => {
     const fetchUnits = async () => {
       try {
         const response = await api.getAsync(Urls.data_units); // adjust API endpoint
         const fList = response;
+
+        const obj = getFieldProps("*") as unknown as productDto;
+        const responseData = obj.units;
+        const baseUnit = obj.product.basicUnitID == -2 ? fList[0].id : obj.product.basicUnitID;
+        const paddedData: ProductUnitInputDto[] = [...responseData];
+
+        for (let i = paddedData.length; i < 12; i++) {
+          paddedData.push(generateInitialUnit());
+        }
+        paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
+          ? baseUnit
+          : paddedData[0].unitID;
+        paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
+          ? obj.product.basicUnitName
+          : paddedData[0].unit;
+        paddedData[0].multiFactor = isNullOrUndefinedOrZero(
+          paddedData[0].multiFactor
+        )
+          ? 1
+          : paddedData[0].multiFactor;
+        const result: { [key: string]: ProductUnitInputDto } = {};
+        paddedData.forEach((unit, index) => {
+          result[`unit${index + 1}`] = unit;
+        });
+debugger;
+        setMultiUnits(result);
+        setMultiUnitsMaster(result, fList);
 
         setUnits(fList);
       } catch (error) {
@@ -257,7 +290,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                         unit: selected?.label ?? "",
                       },
                     };
-                    setMultiUnitsMaster(updated);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -271,7 +304,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
             <ERPInput
               id={`unit${unitNum}multiFactor`}
               noLabel={true}
-                type="number"
+              type="number"
               readOnly={unitNum === 1}
               value={unitData.multiFactor ?? (unitNum === 1 ? "1" : "0")}
               onChange={(e) => {
@@ -291,7 +324,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                       multiFactorValue: sd,
                     },
                   };
-                  setMultiUnitsMaster(updated);
+                  setMultiUnitsMaster(updated, units);
 
                   return updated;
                 });
@@ -334,7 +367,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                         multiFactorValue: e.target.value,
                       },
                     };
-                    setMultiUnitsMaster(updated);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -363,7 +396,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                         barCode: e.target.value,
                       },
                     };
-                    setMultiUnitsMaster(updated);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -385,12 +418,12 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                   setMultiUnits((prev) => {
                     const updated = {
                       ...prev,
-                    [key]: {
-                      ...prev[key],
-                      salesPrice: parseFloat(e.target.value) || 0,
-                    },
+                      [key]: {
+                        ...prev[key],
+                        salesPrice: parseFloat(e.target.value) || 0,
+                      },
                     };
-                    setMultiUnitsMaster(updated);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -414,7 +447,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                       unitRemarks: e.target.value,
                     },
                   };
-                  setMultiUnitsMaster(updated);
+                  setMultiUnitsMaster(updated, units);
 
                   return updated;
                 });
@@ -471,8 +504,8 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
                       }
 
                       setMultiUnits(updatedUnits);
-                      
-                      setMultiUnitsMaster(updatedUnits);
+
+                      setMultiUnitsMaster(updatedUnits, units);
                       setBarcode((prev: boolean) => !prev);
                     }}
                   />
@@ -499,7 +532,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
             options={selectedUnits}
             field={{
               valueKey: "id",
-              labelKey: "name", 
+              labelKey: "name",
             }}
             onChangeData={(data) =>
               handleFieldChange("batch.defSalesUnitID", data.defSalesUnitID)
@@ -508,7 +541,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
           />
           <ERPDataCombobox
             {...getFieldProps("batch.defPurchaseUnitID")}
-            label={t("purchase")}            
+            label={t("purchase")}
             options={selectedUnits}
             field={{
               valueKey: "id",
@@ -524,7 +557,7 @@ const ProductMultiUnitsGCC= forwardRef<ProductMultiUnitsGccRef, {
           />
           <ERPDataCombobox
             {...getFieldProps("batch.defReportUnitID")}
-            label={t("report")}            
+            label={t("report")}
             options={selectedUnits}
             field={{
               valueKey: "id",
@@ -545,4 +578,3 @@ export default ProductMultiUnitsGCC;
 function getFormattedValue(arg0: number): string {
   throw new Error("Function not implemented.");
 }
-

@@ -328,6 +328,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         )
           ? appSettings.productsSettings.batchCriteria
           : "NB";
+          data.product.isActive = true;
       }
 
       data.product.productCode = nextProductCode;

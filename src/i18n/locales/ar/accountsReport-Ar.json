@@ -675,6 +675,7 @@
 
   "transfer_voucher": "قسيمة التحويل",
   "price_category": "فئة السعر",
+  "sales_transfer": "تحويل المبيعات",
   "sales_transfer_summary": "ملخص تحويل المبيعات",
   "sales_transfer_register": "سجل تحويل المبيعات",
   "sales_transfer_partyWise_sales": "تحويل المبيعات حسب الطرف",

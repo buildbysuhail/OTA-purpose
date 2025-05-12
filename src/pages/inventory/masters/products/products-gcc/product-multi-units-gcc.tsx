@@ -378,10 +378,74 @@ debugger;
               />
             )}
           </td>
+  <td className="px-2">
+            {unitNum === 1 ? (
+              <div className="w-24">Gate Pass</div>
+            ) : (
+              <ERPCheckbox
+                id={`unit${unitNum}GatePass`}
+                noLabel={true}
+                checked={unitData.gatePass ?? false}
+                onChange={(e) => {
+                  setMultiUnits((prev: any) => {
+                    const updated = {
+                      ...prev,
+                      [key]: {
+                        ...prev[key],
+                        gatePass: e.target.value,
+                      },
+                    };
+                    setMultiUnitsMaster(updated, units);
 
+                    return updated;
+                  });
+                }}
+                className="w-32"
+              />
+            )}
+          </td>
           <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24"></div>
+              <div className="w-24">
+                <ERPCheckbox
+                    id="barcode"
+                    label={t("barcode")}
+                    onChange={async (data) => {
+                      const updatedUnits = { ...multiUnits };
+
+                      for (let i = 2; i <= 10; i++) {
+                        const key = `unit${i}`;
+                        const unit = updatedUnits[key];
+
+                        if (
+                          unit &&
+                          (unit?.unitID ?? 0) > 0 &&
+                          isNullOrUndefinedOrEmpty(unit.barCode)
+                        ) {
+                          try {
+                            const newBarcode = await api.getAsync(
+                              `${Urls.products}SelectNextGeneratedSystemBarcode`
+                            ); // Replace with actual API call
+                            updatedUnits[key] = {
+                              ...unit,
+                              barCode: newBarcode,
+                            };
+                          } catch (error) {
+                            console.error(
+                              `Failed to generate barcode for ${key}:`,
+                              error
+                            );
+                          }
+                        }
+                      }
+
+                      setMultiUnits(updatedUnits);
+
+                      setMultiUnitsMaster(updatedUnits, units);
+                      setBarcode((prev: boolean) => !prev);
+                    }}
+                  />
+              </div>
             ) : (
               <ERPInput
                 id={`unit${unitNum}Barcode`}
@@ -408,7 +472,9 @@ debugger;
 
           <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24"></div>
+              <div className="w-24">
+                 <span className="text-sm font-medium">{t("price")}</span>
+              </div>
             ) : (
               <ERPInput
                 id={`unit${unitNum}Price`}
@@ -471,48 +537,14 @@ debugger;
               <th className="text-left"></th>
               <th className="text-left">
                 <div className="flex items-center">
-                  <ERPCheckbox
-                    id="barcode"
-                    label={t("barcode")}
-                    onChange={async (data) => {
-                      const updatedUnits = { ...multiUnits };
-
-                      for (let i = 2; i <= 10; i++) {
-                        const key = `unit${i}`;
-                        const unit = updatedUnits[key];
-
-                        if (
-                          unit &&
-                          (unit?.unitID ?? 0) > 0 &&
-                          isNullOrUndefinedOrEmpty(unit.barCode)
-                        ) {
-                          try {
-                            const newBarcode = await api.getAsync(
-                              `${Urls.products}SelectNextGeneratedSystemBarcode`
-                            ); // Replace with actual API call
-                            updatedUnits[key] = {
-                              ...unit,
-                              barCode: newBarcode,
-                            };
-                          } catch (error) {
-                            console.error(
-                              `Failed to generate barcode for ${key}:`,
-                              error
-                            );
-                          }
-                        }
-                      }
-
-                      setMultiUnits(updatedUnits);
-
-                      setMultiUnitsMaster(updatedUnits, units);
-                      setBarcode((prev: boolean) => !prev);
-                    }}
-                  />
+                  
                 </div>
               </th>
               <th className="text-left">
-                <span className="text-sm font-medium">{t("price")}</span>
+                {/* <span className="text-sm font-medium">{t("price")}</span> */}
+              </th>
+              <th className="text-left">
+                {/* <span className="text-sm font-medium">{t("price")}</span> */}
               </th>
               <th className="text-left">
                 <span className="text-sm font-medium">{t("remarks")}</span>

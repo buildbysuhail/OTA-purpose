@@ -384,8 +384,9 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
 
     const summaryItems: SummaryConfig[] = [
       {
-        column: "saleMan",
-        summaryType: "max",
+        column: "salesMan",
+        summaryType: "custom",
+        valueFormat:"string",
         customizeText: customizeDate,
       },
       {
@@ -479,7 +480,7 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                 <ErpDevGrid
                   columns={columns}
                   summaryItems={summaryItems}
-                  filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
+                  filterText="of {voucherForm != ''&& , Voucher Form : [voucherForm]}
                   {salesRouteID > 0 && , Route Name : [routeName]} 
                   {counterID > 0 && , Counter : [counterName]} 
                   {salesmanID > 0 && , Sales Man : [salesMan]} 
@@ -490,8 +491,8 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                   gridId={gridId}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={400}
-                  filterHeight={230}
+                  filterWidth={500}
+                  filterHeight={290}
                   filterContent={<SalesTransferMonthWiseSummaryReportFilter />}
                   filterInitialData={SalesTransferMonthWiseSummaryReportFilterInitialState}
                   hideGridAddButton={true}

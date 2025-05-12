@@ -590,5 +590,12 @@
   "salesman_incentive_report":"Salesman Incentive Report",
   "privilege_card":"Privilege Card",
   "tcs_category":"TCS Category",
-  "product_price_settings":"Product Price Settings"
+  "product_price_settings":"Product Price Settings",
+
+  "sales_transfer_summary":"Sales Transfer Summary",
+  "sales_transfer_register":"Sales Transfer Register",
+  "sales_transfer_partyWise_sales":"Sales Transfer PartyWise",
+  "net_sales_transfer_report":"Net Sales Transfer Report",
+  "sales_transfer_monthWise_summary":"Sales Transfer MonthWise Summary Report",
+  "sales_transfer_partyWise_summary":"Sales Transfer PartyWise Summary Report"
 }

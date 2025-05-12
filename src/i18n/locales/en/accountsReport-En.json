@@ -759,8 +759,11 @@
 
   "transfer_voucher":"Transfer Voucher",
   "price_category":"Price Category",
+  "sales_transfer":"Sales Transfer",
   "sales_transfer_summary":"Sales Transfer Summary",
   "sales_transfer_register":"Sales Transfer Register",
   "sales_transfer_partyWise_sales":"Sales Transfer PartyWise",
-  "net_sales_transfer_report":"Net Sales Transfer Report"
+  "net_sales_transfer_report":"Net Sales Transfer Report",
+  "sales_transfer_monthWise_summary":"Sales Transfer MonthWise Summary Report",
+  "sales_transfer_partyWise_summary":"Sales Transfer PartyWise Summary Report"
 }

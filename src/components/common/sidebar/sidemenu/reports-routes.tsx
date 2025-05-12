@@ -264,6 +264,8 @@ export const ReportsMenuItems = [
       { id: 178, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_register_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_register', icon: GiReceiveMoney },
       { id: 179, path: `${import.meta.env.BASE_URL}reports/_/inventory/net_sales_transfer_report`, type: 'link', active: false, selected: false, title: 'net_sales_transfer_report', icon: GiSwapBag },
       { id: 180, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
+      { id: 181, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_monthWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_monthWise_summary', icon: FaSackDollar },
+      { id: 182, path: `${import.meta.env.BASE_URL}reports/_/inventory/sales_transfer_partyWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_summary', icon: FaSackDollar },
     ]
   },
   {

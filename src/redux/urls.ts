@@ -451,6 +451,8 @@ const Urls = {
   sales_transfer_register:"/Inventory/RptSalesReport/SalesTransferRegister/",
   net_sales_transfer_report:"/Inventory/RptSalesReport/TransferNetSalesReport/",
   sales_transfer_partyWise_sales:"/Inventory/RptSalesReport/SalesTransferPartywiseSales/",
+  sales_transfer_partyWise_summary:"/Inventory/RptSalesReport/TransferPartyWiseSummary",
+  sales_transfer_monthWise_summary:"/Inventory/RptSalesReport/TransferMonthwiseSummary",
 
   ksa_e_invoice_summary:
     "/Inventory/RptTAXReport/KSAEinvoiceStatusReportSummary/",

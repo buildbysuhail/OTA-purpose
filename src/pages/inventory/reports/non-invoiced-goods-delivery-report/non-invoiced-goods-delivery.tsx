@@ -19,7 +19,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "invTransactionMasterID",
@@ -39,7 +39,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "voucherForm",
@@ -49,7 +49,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "financialYearID",
@@ -69,7 +69,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "voucherNumber",
@@ -79,7 +79,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "partyName",
@@ -89,7 +89,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "address1",
@@ -99,7 +99,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "grandTotal",
@@ -110,7 +110,7 @@ const NonInvoicedGoodsDelivery = () => {
             allowSorting: true,
             width: 100,
             alignment: "right",
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "remarks",
@@ -120,7 +120,6 @@ const NonInvoicedGoodsDelivery = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            visible: true,
         },
     ];
 

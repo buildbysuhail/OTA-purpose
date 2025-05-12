@@ -1,12 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import OpeningStockFilter, { OpeningStockFilterInitialState } from "./opening-stock-filter";
+import OpeningStockFilter, {
+  OpeningStockFilterInitialState,
+} from "./opening-stock-filter";
 
 interface OpeningStock {
   date: string;
@@ -30,7 +34,7 @@ interface OpeningStock {
 }
 
 const OpeningStock = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -40,6 +44,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "voucherNumber",
@@ -49,6 +54,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "vType",
@@ -58,6 +64,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "barcode",
@@ -67,6 +74,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "productCode",
@@ -85,6 +93,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf: true,
     },
     {
       dataField: "groupName",
@@ -94,6 +103,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "brandName",
@@ -103,6 +113,7 @@ const OpeningStock = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
+      showInPdf: true,
     },
     {
       dataField: "unitName",
@@ -112,6 +123,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf: true,
     },
     {
       dataField: "qty",
@@ -121,6 +133,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "cost",
@@ -130,6 +143,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf: true,
     },
     {
       dataField: "total",
@@ -139,6 +153,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -148,6 +163,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "fromWarehouse",
@@ -157,6 +173,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "toWarehouse",
@@ -166,6 +183,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "salesPrice",
@@ -175,6 +193,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "totalSalesValue",
@@ -184,6 +203,7 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf: true,
     },
     {
       dataField: "si",
@@ -193,13 +213,19 @@ const OpeningStock = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-    }
+      showInPdf: true,
+    },
   ];
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -218,7 +244,7 @@ const OpeningStock = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
   ];
 
   return (
@@ -229,7 +255,11 @@ const OpeningStock = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={true}
                 gridHeader={t("opening_stock_report")}

@@ -40,6 +40,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf:true,
     },
     {
       dataField: "voucherNumber",
@@ -49,6 +50,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "vType",
@@ -58,6 +60,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf:true,
     },
     {
       dataField: "barcode",
@@ -67,6 +70,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "productCode",
@@ -85,6 +89,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "groupName",
@@ -94,6 +99,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "brandName",
@@ -103,6 +109,7 @@ const ShortageStock = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
+      showInPdf:true,
     },
     {
       dataField: "unitName",
@@ -112,6 +119,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "qty",
@@ -121,6 +129,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf:true,
     },
     {
       dataField: "cost",
@@ -130,6 +139,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
+      showInPdf:true,
     },
     {
       dataField: "total",
@@ -139,6 +149,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 70,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -157,6 +168,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "toWarehouse",
@@ -166,6 +178,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "salesPrice",
@@ -175,6 +188,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "totalSalesValue",
@@ -184,6 +198,7 @@ const ShortageStock = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "si",
@@ -193,6 +208,7 @@ const ShortageStock = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
+      showInPdf:true,
     }
   ];
   const { getFormattedValue } = useNumberFormat();

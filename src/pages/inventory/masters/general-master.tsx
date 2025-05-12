@@ -3,35 +3,42 @@ import DataGrid, { Column, KeyboardNavigation, Editing } from 'devextreme-react/
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from '../../../redux/urls';
 import axios from 'axios';
+import ERPButton from '../../../components/ERPComponents/erp-button';
 
 interface MasterItem {
   sino: number;
   description: string;
+  id?: string;
+  masterType?: string;
 }
 
 const GeneralMaster: React.FC = () => {
   const [masterType, setMasterType] = useState<string>("");
-  const [masterData, setMasterData] = useState<any[]>([{ sino: 1, description: '' }]);
+  const [masterData, setMasterData] = useState<MasterItem[]>([{ sino: 1, description: '' }]);
   const [focusCell, setFocusCell] = useState<{ rowIndex: number, colIndex: number } | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
 
-useEffect(() => {
-  debugger;
-  const fetchData = async () => {
-    await fetchMasterData(masterType);
-  };
-
-  fetchData();
-}, [masterType]);
   const fetchMasterData = async (type: string) => {
     try {
-      const response = await axios.get(`${Urls.generalMaster}/${type}`);
+      if (!type) {
+        setMasterData([{ sino: 1, description: '' }]);
+        return;
+      }
+
+      const response = await axios.get(`${Urls.generalMaster}?masterType=${type}`);
       const formattedData = response.data.map((item: any, index: number) => ({
         sino: index + 1,
-        masterType: type,
-        masterName: item.id
+        description: item.masterName || item.description,
+        id: item.id,
+        masterType: type
       }));
-      formattedData.push({ sino: formattedData.length + 1, description: '' });
+
+      formattedData.push({
+        sino: formattedData.length + 1,
+        description: ''
+      });
+
       setMasterData(formattedData);
     } catch (error) {
       console.error("Error fetching master data:", error);
@@ -39,21 +46,37 @@ useEffect(() => {
     }
   };
 
-  const handleSaveRow = async (e: any) => {
-    if (e.changes && e.changes.length > 0) {
-      const { type, data } = e.changes[0];
-      if ((type === 'insert' || type === 'update') && data.description && data.description.trim() !== '') {
-        try {
-          await axios.post(Urls.generalMaster, [{
-            masterType: masterType,
-            masterName: data.description
-          }]);
-        } catch (error) {
-          console.error("Error saving master data:", error);
-        }
+  useEffect(() => {
+    if (masterType) {
+      fetchMasterData(masterType);
+    }
+  }, [masterType]);
+
+  const handleSaveButtonClick = async () => {
+    if (!masterType) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const dataToSave = masterData
+        .filter(item => item.description && item.description.trim() !== '')
+        .map(item => ({
+          id: item.id,
+          masterType: masterType,
+          masterName: item.description
+        }));
+
+      if (dataToSave.length > 0) {
+        await axios.post(Urls.generalMaster, dataToSave);
+        await fetchMasterData(masterType);
       }
+    } catch (error) { }
+    finally {
+      setIsSaving(false);
     }
   };
+
 
   const onEditorPreparing = (e: any) => {
     if (e.parentType === 'dataRow' && e.dataField === 'description') {
@@ -106,17 +129,12 @@ useEffect(() => {
     }
   };
 
-  useEffect(() => {
-    if (masterData.length === 0) {
-      setMasterData([{ sino: 1, description: '' }]);
-    }
-  }, [masterData]);
-
   return (
     <div className='flex flex-col gap-4 p-4'>
       <div className='flex items-center'>
         <ERPDataCombobox
           id="masterType"
+          value={masterType}
           label="Master Type"
           field={{
             id: "masterType",
@@ -124,9 +142,8 @@ useEffect(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChange={(data: any) => {
-            debugger;
-            setMasterType(data.target.value)
+          onChange={({ value }) => {
+            setMasterType(value);
           }}
         />
       </div>
@@ -137,7 +154,6 @@ useEffect(() => {
         showBorders={true}
         columnAutoWidth={true}
         rowAlternationEnabled={true}
-        onSaved={handleSaveRow}
         onEditorPreparing={onEditorPreparing}
         onContentReady={onContentReady}
         repaintChangesOnly={true}
@@ -153,18 +169,27 @@ useEffect(() => {
           enterKeyAction={"moveFocus"}
           enterKeyDirection={"column"}
         />
-        <Column 
-          dataField="sino" 
-          caption="SI No" 
-          width={100} 
+        <Column
+          dataField="sino"
+          caption="SI No"
+          width={100}
           allowEditing={false}
         />
-        <Column 
-          dataField="description" 
-          caption="Description" 
+        <Column
+          dataField="description"
+          caption="Description"
           allowEditing={true}
         />
       </DataGrid>
+
+      <div className='flex items-center justify-end'>
+        <ERPButton
+          title='save'
+          variant='primary'
+          onClick={handleSaveButtonClick}
+          disabled={isSaving || !masterType}
+        />
+      </div>
     </div>
   );
 };

@@ -19,6 +19,7 @@ const InventorySummaryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 250,
+            showInPdf:true,
         },
         {
             dataField: "formType",
@@ -28,6 +29,7 @@ const InventorySummaryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "branchName",
@@ -38,6 +40,7 @@ const InventorySummaryReport = () => {
             allowSorting: true,
             visible: false,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "amount",
@@ -47,6 +50,7 @@ const InventorySummaryReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "branchID",

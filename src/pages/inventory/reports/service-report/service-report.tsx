@@ -19,6 +19,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "jobCardNo",
@@ -28,6 +29,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "orderDate",
@@ -37,6 +39,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "invoiceDate",
@@ -46,6 +49,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "customerName",
@@ -55,6 +59,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "address1",
@@ -64,6 +69,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "mobile",
@@ -73,6 +79,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "serviceName",
@@ -82,6 +89,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "isWarranty",
@@ -91,6 +99,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "serviceDoneDate",
@@ -100,6 +109,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "status",
@@ -109,6 +119,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "closingRemarks",
@@ -118,6 +129,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "billedRate",
@@ -127,6 +139,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "invSpareTotal",
@@ -136,6 +149,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "profit",
@@ -145,6 +159,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "branchName",
@@ -154,6 +169,7 @@ const ServiceReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
     ];
 

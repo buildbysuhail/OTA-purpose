@@ -19,6 +19,7 @@ const SalesmanIncentiveReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "billNo",
@@ -28,6 +29,7 @@ const SalesmanIncentiveReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 75,
+            showInPdf:true,
         },
         {
             dataField: "date",
@@ -37,6 +39,7 @@ const SalesmanIncentiveReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "billAmount",
@@ -46,6 +49,7 @@ const SalesmanIncentiveReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "smIncentive",
@@ -55,6 +59,7 @@ const SalesmanIncentiveReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         }
     ];
 

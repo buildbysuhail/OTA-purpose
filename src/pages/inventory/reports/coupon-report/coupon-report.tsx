@@ -19,6 +19,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "month",
@@ -28,6 +29,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "year",
@@ -37,6 +39,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 70,
+            showInPdf:true,
         },
         {
             dataField: "date",
@@ -46,6 +49,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "billNo",
@@ -55,6 +59,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "customerName",
@@ -64,6 +69,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "cardType",
@@ -73,6 +79,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "cardNumber",
@@ -82,6 +89,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "nameOnCard",
@@ -91,6 +99,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 140,
+            showInPdf:true,
         },
         {
             dataField: "address1",
@@ -100,6 +109,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "address2",
@@ -118,6 +128,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "billTotal",
@@ -127,6 +138,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "couponAmount",
@@ -136,6 +148,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
     ];
 

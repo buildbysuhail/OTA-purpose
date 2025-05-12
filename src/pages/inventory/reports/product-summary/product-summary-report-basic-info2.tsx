@@ -68,6 +68,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "sPrice",
@@ -76,6 +77,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "stockIn",
@@ -100,6 +102,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "wStock",
@@ -116,6 +119,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "brandName",
@@ -124,6 +128,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "batchNo",

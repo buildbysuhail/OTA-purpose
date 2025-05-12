@@ -46,7 +46,31 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalTaxableValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.totalTaxableValue,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalTaxableValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalTaxableValue,false,2);
+          }
+        },
       },
+
       {
         dataField: "integratedTax",
         caption: t("integrated_tax"),
@@ -55,8 +79,30 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.integratedTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.integratedTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.integratedTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.integratedTax,false,2);
+          }
+        },
       },
-
       {
         dataField: "centralTax",
         caption: t("central_tax"),
@@ -65,6 +111,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.centralTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.centralTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.centralTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.centralTax,false,2);
+          }
+        },
       },
       {
         dataField: "stateOrUTTax",
@@ -74,6 +143,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stateOrUTTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.stateOrUTTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stateOrUTTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.stateOrUTTax,false,2);
+          }
+        },
       },
       {
         dataField: "cess",
@@ -83,6 +175,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 100,
+   cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cess == null
+                ? 0
+                : getFormattedValue(cellElement.data.cess,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cess == null
+              ? 0
+              : getFormattedValue(cellElement.data.cess,false,2);
+          }
+        },
       },
       //exempt
       {
@@ -102,6 +217,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.interStateSupplies == null
+                ? 0
+                : getFormattedValue(cellElement.data.interStateSupplies,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.interStateSupplies == null
+              ? 0
+              : getFormattedValue(cellElement.data.interStateSupplies,false,2);
+          }
+        },
       },
       {
         dataField: "intraStateSupplies",
@@ -111,6 +249,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.intraStateSupplies == null
+                ? 0
+                : getFormattedValue(cellElement.data.intraStateSupplies,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.intraStateSupplies == null
+              ? 0
+              : getFormattedValue(cellElement.data.intraStateSupplies,false,2);
+          }
+        },
       },
       //interstate
 
@@ -131,6 +292,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+   cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.unregisteredTaxableValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.unregisteredTaxableValue,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.unregisteredTaxableValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.unregisteredTaxableValue,false,2);
+          }
+        },
       },
       {
         dataField: "unregisteredIntegratedTax",
@@ -140,6 +324,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.unregisteredIntegratedTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.unregisteredIntegratedTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.unregisteredIntegratedTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.unregisteredIntegratedTax,false,2);
+          }
+        },
       },
       {
         dataField: "taxableTaxableValue",
@@ -149,6 +356,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxableTaxableValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.taxableTaxableValue,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxableTaxableValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.taxableTaxableValue,false,2);
+          }
+        },
       },
       {
         dataField: "taxableIntegratedTax",
@@ -158,6 +388,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxableIntegratedTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.taxableIntegratedTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxableIntegratedTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.taxableIntegratedTax,false,2);
+          }
+        },
       },
       {
         dataField: "uinTaxableValue",
@@ -167,6 +420,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.uinTaxableValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.uinTaxableValue,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.uinTaxableValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.uinTaxableValue,false,2);
+          }
+        },
       },
       {
         dataField: "uinIntegratedTax",
@@ -176,6 +452,29 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.uinIntegratedTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.uinIntegratedTax,false,2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.uinIntegratedTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.uinIntegratedTax,false,2);
+          }
+        },
       },
     ];
     console.log(filter.supplyType );

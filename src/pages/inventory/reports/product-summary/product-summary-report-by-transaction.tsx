@@ -37,6 +37,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 60,
+      showInPdf:true,
       },
       {
         dataField: "vPrefix",
@@ -45,6 +46,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+      showInPdf:true,
       },
       {
         dataField: "date",
@@ -53,6 +55,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+      showInPdf:true,
         format: "dd-MMM-yyyy"
       },
       {
@@ -62,6 +65,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+      showInPdf:true,
       },
       {
         dataField: "partyName",
@@ -78,6 +82,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+      showInPdf:true,
       },
       {
         dataField: "voucherForm",
@@ -86,6 +91,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+      showInPdf:true,
       },
       {
         dataField: "quantity",
@@ -94,6 +100,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 48,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -125,6 +132,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+      showInPdf:true,
       },
       {
         dataField: "unitPrice",
@@ -133,6 +141,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 60,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -164,6 +173,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -195,6 +205,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -226,6 +237,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -257,6 +269,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -288,6 +301,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -352,6 +366,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       }];
     return baseColumns
       .filter((column) => {

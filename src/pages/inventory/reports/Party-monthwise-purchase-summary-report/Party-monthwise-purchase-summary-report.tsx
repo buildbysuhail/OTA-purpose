@@ -27,7 +27,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       format:'dd-MMM-yyyy'
     },
@@ -38,7 +37,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -48,7 +46,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
+      showInPdf: true,
     },
     {
       dataField: "partyCode",
@@ -57,7 +55,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "partyName",
@@ -66,7 +63,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       // width: 150,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -76,7 +72,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -86,7 +81,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -96,7 +90,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -106,7 +99,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -116,7 +108,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible: true,
       showInPdf: true,
     },
    
@@ -127,7 +118,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -137,7 +127,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "addressDistrict",
@@ -146,7 +135,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "route",
@@ -155,7 +143,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
    
@@ -168,7 +155,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -194,7 +180,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -204,7 +189,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",

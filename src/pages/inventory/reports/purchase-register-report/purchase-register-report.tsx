@@ -1,10 +1,14 @@
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseRegisterFilter, { PurchaseRegisterFilterInitialState, } from "./purchase-register-report-filter";
+import PurchaseRegisterFilter, {
+  PurchaseRegisterFilterInitialState,
+} from "./purchase-register-report-filter";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -22,7 +26,9 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+  }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -49,6 +55,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -67,6 +74,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        showInPdf: true,
       },
       {
         dataField: "form",
@@ -75,6 +83,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
       },
       {
         dataField: "party",
@@ -83,6 +92,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf: true,
       },
       {
         dataField: "address1",
@@ -91,6 +101,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "address2",
@@ -116,6 +127,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -137,10 +149,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.unitPrice),
-                false,
-                3
-              );
+                  parseFloat(cellElement.data.unitPrice),
+                  false,
+                  3
+                );
           }
         },
       },
@@ -159,6 +171,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+        visible: false,
       },
       {
         dataField: "product",
@@ -167,6 +180,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "productGroup",
@@ -191,6 +205,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        visible: false,
       },
       {
         dataField: "category",
@@ -207,6 +222,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -228,10 +244,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.quantity),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.quantity),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -281,6 +297,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -312,6 +329,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -364,10 +382,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.freeValue == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.freeValue),
-                false,
-                7
-              );
+                  parseFloat(cellElement.data.freeValue),
+                  false,
+                  7
+                );
           }
         },
       },
@@ -378,6 +396,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -430,10 +449,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.freeCost == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.freeCost),
-                false,
-                8
-              );
+                  parseFloat(cellElement.data.freeCost),
+                  false,
+                  8
+                );
           }
         },
       },
@@ -444,6 +463,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -475,6 +495,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "counterName",
@@ -491,6 +512,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "financialYearID",
@@ -540,6 +562,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 90,
+        showInPdf: true,
       },
       {
         dataField: "additionalExpense",
@@ -548,6 +571,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -569,8 +593,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.additionalExpense == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.additionalExpense)
-              );
+                  parseFloat(cellElement.data.additionalExpense)
+                );
           }
         },
       },
@@ -644,6 +668,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -691,6 +716,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -712,8 +738,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.stdPurchasePrice == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.stdPurchasePrice)
-              );
+                  parseFloat(cellElement.data.stdPurchasePrice)
+                );
           }
         },
       },
@@ -724,6 +750,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -764,7 +791,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-    
+
       {
         dataField: "warrantyPeriod",
         caption: t("warranty_period"),
@@ -788,6 +815,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -819,6 +847,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -850,6 +879,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -881,6 +911,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "manualBarcode",
@@ -889,6 +920,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "purchaseInvoiceNumber",
@@ -970,6 +1002,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "cgstPerc",
@@ -999,10 +1032,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.cgstPerc == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.cgstPerc),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.cgstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1013,6 +1046,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1065,10 +1099,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.sgstPerc == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.sgstPerc),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.sgstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1079,6 +1113,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1131,10 +1166,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.igstPerc == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.igstPerc),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.igstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1145,6 +1180,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1197,10 +1233,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.gstPercent == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.gstPercent),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.gstPercent),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1211,6 +1247,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1232,10 +1269,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.gstAmt == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.gstAmt),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.gstAmt),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1246,6 +1283,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "gstin",
@@ -1254,6 +1292,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       {
         dataField: "salesPrice",
@@ -1262,6 +1301,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1322,10 +1362,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.cessPerc == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.cessPerc),
-                false,
-                2
-              );
+                  parseFloat(cellElement.data.cessPerc),
+                  false,
+                  2
+                );
           }
         },
       },
@@ -1336,6 +1376,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1357,10 +1398,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.cessAmt == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.cessAmt),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.cessAmt),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1382,10 +1423,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
               cellElement.data?.additionalCessPerc == null
                 ? ""
                 : getFormattedValue(
-                  cellElement.data.additionalCessPerc,
-                  false,
-                  4
-                );
+                    cellElement.data.additionalCessPerc,
+                    false,
+                    4
+                  );
             return {
               ...exportCell,
               text: value,
@@ -1396,10 +1437,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.additionalCessPerc == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.additionalCessPerc),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.additionalCessPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1410,6 +1451,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1431,10 +1473,10 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.additionalCess == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.additionalCess),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.additionalCess),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1453,6 +1495,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
       },
       // {
       //   dataField: "sl",
@@ -1477,6 +1520,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible: false,
       },
       // {
       //   dataField: "totalProfitPercent",
@@ -1563,6 +1607,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1584,8 +1629,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             return cellElement.data?.baseUnitQuantity == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.baseUnitQuantity)
-              );
+                  parseFloat(cellElement.data.baseUnitQuantity)
+                );
           }
         },
       },
@@ -1602,9 +1647,29 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "vat") {
           return !clientSession.isAppGlobal;
         }
-        if (["cgstPerc", "cgst", "sgstPerc", "sgst", "igstPerc", "igst", "gstPercent", "gstAmt",
-          "hsnCode", "gstin", "vNUM", "remarks", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "gstNo", "priceCategoryID", "referenceNumber"].includes(column.dataField ?? "")) {
+        if (
+          [
+            "cgstPerc",
+            "cgst",
+            "sgstPerc",
+            "sgst",
+            "igstPerc",
+            "igst",
+            "gstPercent",
+            "gstAmt",
+            "hsnCode",
+            "gstin",
+            "vNUM",
+            "remarks",
+            "cessPerc",
+            "cessAmt",
+            "additionalCessPerc",
+            "additionalCess",
+            "gstNo",
+            "priceCategoryID",
+            "referenceNumber",
+          ].includes(column.dataField ?? "")
+        ) {
           return clientSession.isAppGlobal;
         }
         return true;
@@ -1636,9 +1701,9 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
   //     if (column.dataField == "vat") {
   //       return !clientSession.isAppGlobal;
   //     }
-  //     if (["CGSTPerc", "CGST", "SGSTPerc", "SGST", "IGSTPerc", "IGST", "GSTPercent", "GSTAmt", 
-  //       "HSNCode", "GSTIN", "SalesPrice", "Remarks", "CessPerc", "CessAmt", "AdditionalCessPerc", 
-  //       "AdditionalCess", "TaxNo", "GSTNo", "Sl", "UnitName", "PriceCategoryID", "TotalProfitPercent", 
+  //     if (["CGSTPerc", "CGST", "SGSTPerc", "SGST", "IGSTPerc", "IGST", "GSTPercent", "GSTAmt",
+  //       "HSNCode", "GSTIN", "SalesPrice", "Remarks", "CessPerc", "CessAmt", "AdditionalCessPerc",
+  //       "AdditionalCess", "TaxNo", "GSTNo", "Sl", "UnitName", "PriceCategoryID", "TotalProfitPercent",
   //       "AvgPrice", "ReferenceNumber", "BaseUnitQuantity"].includes(column.dataField??"")) {
   //      return false;
   //  }

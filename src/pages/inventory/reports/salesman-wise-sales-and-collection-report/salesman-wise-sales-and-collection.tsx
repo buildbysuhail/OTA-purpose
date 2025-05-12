@@ -29,6 +29,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "salesRouteID",
@@ -48,7 +49,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            visible: true,
+            showInPdf:true,
         },
         {
             dataField: "salesTarget",
@@ -58,6 +59,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -68,6 +70,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -78,6 +81,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -88,6 +92,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -98,6 +103,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -108,6 +114,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -118,6 +125,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -128,6 +136,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
         {
@@ -138,6 +147,7 @@ const SalesmanwiseSalesAndCollection = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             alignment: "right",
         },
     ];

@@ -19,6 +19,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "warehouse",
@@ -28,6 +29,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "brand",
@@ -37,6 +39,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "groupName",
@@ -46,6 +49,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "partyType",
@@ -55,6 +59,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "partyCode",
@@ -73,6 +78,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "route",
@@ -82,6 +88,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "date",
@@ -91,6 +98,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "month",
@@ -100,6 +108,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "year",
@@ -109,6 +118,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 70,
+            showInPdf:true,
         },
         {
             dataField: "voucherNumber",
@@ -118,6 +128,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "total",
@@ -127,6 +138,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "salesMan",
@@ -136,6 +148,7 @@ const GroupedBrandwiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
     ];
 

@@ -24,12 +24,22 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
+        dataField: "si",
+        caption: t("si"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf:true,
+      },
+      {
         dataField: "date",
         caption: t("date"),
         dataType: "date",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -46,6 +56,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        showInPdf:true,
       },
       {
         dataField: "form",
@@ -54,6 +65,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 75,
+        showInPdf:true,
       },
       {
         dataField: "party",
@@ -62,6 +74,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf:true,
       },
       {
         dataField: "address1",
@@ -70,6 +83,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "address2",
@@ -86,6 +100,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -117,6 +132,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -148,6 +164,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -179,6 +196,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -210,6 +228,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -241,6 +260,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -273,6 +293,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -304,6 +325,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -335,6 +357,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -366,6 +389,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -397,6 +421,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -429,6 +454,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -563,6 +589,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "refNo2",
@@ -604,6 +631,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -635,6 +663,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "taxOnDiscount",
@@ -643,6 +672,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -674,6 +704,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -699,14 +730,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
-        dataField: "si",
-        caption: t("si"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
         dataField: "createdDate",
         caption: t("created_date"),
         dataType: "date",
@@ -721,6 +744,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "routeName",
@@ -848,6 +872,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -1173,7 +1198,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 // columnResizingMode={"widget"}
                 filterHeight={300}
                 filterWidth={790}
-                filterInitialData={SummaryFilterInitialState}
+                filterInitialData={ SummaryFilterInitialState }
                 onFilterChanged={(f: any) => {
                   setFilter(f);
                 }}

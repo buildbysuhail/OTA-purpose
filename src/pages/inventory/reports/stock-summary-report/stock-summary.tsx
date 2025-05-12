@@ -19,6 +19,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "productName",
@@ -28,6 +29,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "stock",
@@ -37,6 +39,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 75,
+            showInPdf:true,
         },
         {
             dataField: "unit",
@@ -46,6 +49,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "stdPPrice",
@@ -55,6 +59,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 75,
+            showInPdf:true,
         },
         {
             dataField: "stockValue",
@@ -64,6 +69,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 75,
+            showInPdf:true,
         },
         {
             dataField: "stdSPrice",
@@ -73,6 +79,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 75,
+            showInPdf:true,
         },
         {
             dataField: "stockDetails",
@@ -82,6 +89,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "code",
@@ -100,6 +108,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "category",
@@ -118,6 +127,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "msp",
@@ -128,6 +138,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "mrp",
@@ -138,6 +149,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "modelNo",
@@ -158,6 +170,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "id",
@@ -186,6 +199,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "warranty",
@@ -216,6 +230,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 60,
+            showInPdf:true,
         },
         {
             dataField: "mannualBarcode",
@@ -226,6 +241,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "groupCategoryName",
@@ -236,6 +252,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "sectionName",
@@ -246,6 +263,7 @@ const StockSummary = () => {
             allowSorting: true,
             visible: false,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "unitQty",
@@ -255,6 +273,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 60,
+            showInPdf:true,
         },
         {
             dataField: "batchNo",
@@ -264,6 +283,7 @@ const StockSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
     ];
 

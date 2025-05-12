@@ -6,21 +6,24 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import DailyBalanceReportFilter, { DailyBalanceReportFilterInitialState } from "./daily-balance-report-filter";
+import DailyBalanceReportFilter, {
+  DailyBalanceReportFilterInitialState,
+} from "./daily-balance-report-filter";
 
 const DailyBalanceAmount = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "customerName",
-      caption: t('customerName'),
+      caption: t("customerName"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf: true,
     },
     {
       dataField: "openingBalance",
@@ -30,6 +33,7 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf: true,
     },
     {
       dataField: "billAmount",
@@ -39,6 +43,7 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf: true,
     },
     {
       dataField: "receivedAmount",
@@ -48,6 +53,7 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf: true,
     },
     {
       dataField: "balance",
@@ -57,6 +63,7 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf: true,
     },
   ];
   return (

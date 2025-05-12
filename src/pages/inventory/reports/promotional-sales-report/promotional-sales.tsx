@@ -20,6 +20,7 @@ const PromotionalSalesReport = () => {
             allowSorting: true,
             visible: false,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "date",
@@ -29,6 +30,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "vchNo",
@@ -38,6 +40,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 50,
+            showInPdf:true,
         },
         {
             dataField: "form",
@@ -47,6 +50,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "party",
@@ -56,6 +60,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "address1",
@@ -65,6 +70,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "address2",
@@ -83,6 +89,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            visible:false,
         },
         {
             dataField: "unitPrice",
@@ -92,6 +99,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "productCode",
@@ -110,6 +118,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "productGroup",
@@ -137,6 +146,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "unitCode",
@@ -155,6 +165,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "netAmount",
@@ -164,6 +175,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "grossValue",
@@ -200,6 +212,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            visible:false
         },
         {
             dataField: "autoBarcode",
@@ -209,6 +222,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 90,
+            showInPdf:true,
         },
         {
             dataField: "branchName",
@@ -254,6 +268,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "stdSalesPrice",
@@ -263,6 +278,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "stdGross",
@@ -272,6 +288,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "priceDiff",
@@ -281,6 +298,7 @@ const PromotionalSalesReport = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
     ];
 

@@ -100,7 +100,7 @@ const ProductMultiUnitsGCC = forwardRef<
     const fList = Object.entries(multiUnits).map(
       ([key, unit]) => unit
     ) as ProductUnitInputDto[];
-    handleFieldChange("units", fList.filter(x => x.unitID??0 > 0));
+    handleFieldChange("units", fList);
     debugger;
     const selected = fList
       .filter((x) => x.unitID ?? 0 > 0)
@@ -207,41 +207,41 @@ const ProductMultiUnitsGCC = forwardRef<
   };
   useEffect(() => {
     debugger;
-    
   }, []);
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const _units = await api.getAsync(Urls.data_units); // adjust API endpoint
+        const response = await api.getAsync(Urls.data_units); // adjust API endpoint
+        const fList = response;
 
-         const obj = getFieldProps("*") as unknown as productDto;
-    const responseData = obj.units;
-    const baseUnit = obj.product.basicUnitID;
-    const paddedData: ProductUnitInputDto[] = [...responseData];
+        const obj = getFieldProps("*") as unknown as productDto;
+        const responseData = obj.units;
+        const baseUnit = obj.product.basicUnitID == -2 ? fList[0].id : obj.product.basicUnitID;
+        const paddedData: ProductUnitInputDto[] = [...responseData];
 
-    for (let i = paddedData.length; i < 12; i++) {
-      paddedData.push(generateInitialUnit());
-    }
-    paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
-      ? baseUnit
-      : paddedData[0].unitID;
-    paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
-      ? obj.product.basicUnitName
-      : paddedData[0].unit;
-    paddedData[0].multiFactor = isNullOrUndefinedOrZero(
-      paddedData[0].multiFactor
-    )
-      ? 1
-      : paddedData[0].multiFactor;
-    const result: { [key: string]: ProductUnitInputDto } = {};
-    paddedData.forEach((unit, index) => {
-      result[`unit${index + 1}`] = unit;
-    });
+        for (let i = paddedData.length; i < 12; i++) {
+          paddedData.push(generateInitialUnit());
+        }
+        paddedData[0].unitID = isNullOrUndefinedOrZero(paddedData[0].unitID)
+          ? baseUnit
+          : paddedData[0].unitID;
+        paddedData[0].unit = isNullOrUndefinedOrEmpty(paddedData[0].unit)
+          ? obj.product.basicUnitName
+          : paddedData[0].unit;
+        paddedData[0].multiFactor = isNullOrUndefinedOrZero(
+          paddedData[0].multiFactor
+        )
+          ? 1
+          : paddedData[0].multiFactor;
+        const result: { [key: string]: ProductUnitInputDto } = {};
+        paddedData.forEach((unit, index) => {
+          result[`unit${index + 1}`] = unit;
+        });
+debugger;
+        setMultiUnits(result);
+        setMultiUnitsMaster(result, fList);
 
-    setMultiUnits(result);
-    setMultiUnitsMaster(result, _units);
-
-        setUnits(_units);
+        setUnits(fList);
       } catch (error) {
         console.error("Error fetching units:", error);
       }
@@ -290,7 +290,7 @@ const ProductMultiUnitsGCC = forwardRef<
                         unit: selected?.label ?? "",
                       },
                     };
-                    setMultiUnitsMaster(updated,units);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -324,7 +324,7 @@ const ProductMultiUnitsGCC = forwardRef<
                       multiFactorValue: sd,
                     },
                   };
-                  setMultiUnitsMaster(updated,units);
+                  setMultiUnitsMaster(updated, units);
 
                   return updated;
                 });
@@ -367,7 +367,7 @@ const ProductMultiUnitsGCC = forwardRef<
                         multiFactorValue: e.target.value,
                       },
                     };
-                    setMultiUnitsMaster(updated,units);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -396,7 +396,7 @@ const ProductMultiUnitsGCC = forwardRef<
                         barCode: e.target.value,
                       },
                     };
-                    setMultiUnitsMaster(updated,units);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -423,7 +423,7 @@ const ProductMultiUnitsGCC = forwardRef<
                         salesPrice: parseFloat(e.target.value) || 0,
                       },
                     };
-                    setMultiUnitsMaster(updated,units);
+                    setMultiUnitsMaster(updated, units);
 
                     return updated;
                   });
@@ -447,7 +447,7 @@ const ProductMultiUnitsGCC = forwardRef<
                       unitRemarks: e.target.value,
                     },
                   };
-                  setMultiUnitsMaster(updated,units);
+                  setMultiUnitsMaster(updated, units);
 
                   return updated;
                 });
@@ -505,7 +505,7 @@ const ProductMultiUnitsGCC = forwardRef<
 
                       setMultiUnits(updatedUnits);
 
-                      setMultiUnitsMaster(updatedUnits,units);
+                      setMultiUnitsMaster(updatedUnits, units);
                       setBarcode((prev: boolean) => !prev);
                     }}
                   />

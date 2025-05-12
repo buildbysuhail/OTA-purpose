@@ -350,21 +350,26 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
     const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
+      
+      const yearPattern = /^(\d{2})-(\d{2})-(\d{5,})$/;
+      if (yearPattern.test(inputValue)) {
+          return;
+      }
+      
       let newValue: string | null = null;
-
       if (inputValue !== "") {
-        const parsedDate = moment(inputValue).local();
-        newValue = parsedDate.isValid() ? parsedDate.format() : null;
+          const parsedDate = moment(inputValue, "DD-MM-YYYY", true);
+          newValue = parsedDate.isValid() ? parsedDate.format() : inputValue;
       }
-
+      
       if (onChange) {
-        onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
+          onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
       }
-
+      
       if (onChangeData && data) {
-        onChangeData({ ...data, [id]: newValue });
+          onChangeData({ ...data, [id]: newValue });
       }
-    };
+  };
 
     if (_useMUI === true) {
       return (

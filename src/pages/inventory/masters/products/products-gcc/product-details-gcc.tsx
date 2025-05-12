@@ -216,9 +216,9 @@ export const ProductDetailsGcc: React.FC<{
                         />
 
                         <ERPCheckbox
-                            {...getFieldProps("batch.isActive")}
+                            {...getFieldProps("product.isActive")}
                             label={t("is_active_batch")}
-                            onChange={(data) => handleFieldChange("batch.isActive", data.target.checked)}
+                            onChange={(data) => handleFieldChange("product.isActive", data.target.checked)}
                         />
                     </div>
 

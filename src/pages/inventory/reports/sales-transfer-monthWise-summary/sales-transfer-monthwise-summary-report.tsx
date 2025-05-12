@@ -24,7 +24,6 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -34,17 +33,15 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      visible: true,
       showInPdf: true,
     },
     {
       dataField: "january",
-      caption: t("january"),
+      caption: "January",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -65,12 +62,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
     {
       dataField: "february",
-      caption: t("february"),
+      caption: "February",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -91,12 +87,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "march",
-      caption: t("march"),
+      caption: "March",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -117,12 +112,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "april",
-      caption: t("april"),
+      caption: "April",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -143,12 +137,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "may",
-      caption: t("may"),
+      caption: "May",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -169,12 +162,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "june",
-      caption: t("june"),
+      caption: "June",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -195,12 +187,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "july",
-      caption: t("july"),
+      caption: "July",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -221,12 +212,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "august",
-      caption: t("august"),
+      caption: "August",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -247,12 +237,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "september",
-      caption: t("september"),
+      caption: "September",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -273,12 +262,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "october",
-      caption: t("october"),
+      caption: "October",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -299,12 +287,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "november",
-      caption: t("november"),
+      caption: "November",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -325,12 +312,11 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
         {
       dataField: "december",
-      caption: t("december"),
+      caption: "December",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -356,7 +342,6 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -377,6 +362,112 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
     },
   ];
   
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: any) => {
+      console.log('itemInfo');
+
+      console.log(itemInfo);
+
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return getFormattedValue(value) || "0";
+    };
+  }, []);
+  const customizeDate = (itemInfo: any) => `TOTAL`;
+
+    const summaryItems: SummaryConfig[] = [
+      {
+        column: "saleMan",
+        summaryType: "max",
+        customizeText: customizeDate,
+      },
+      {
+        column: "january",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "february",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "march",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "april",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "may",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "june",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "july",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "august",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "september",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+
+      {
+        column: "october",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "november",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "december",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "total",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      }
+    ];
 
   return (
     <Fragment>
@@ -387,12 +478,13 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
-                 {salesRouteID > 0 && , Route Name : [routeName]} 
-                {counterID > 0 && , Counter : [counterName]} 
-                {salesmanID > 0 && , Sales Man : [salesMan]} 
-                From Date : {fromDate} To Date : {toDate}"
-                 gridHeader={t(gridHeader)}
+                  summaryItems={summaryItems}
+                  filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
+                  {salesRouteID > 0 && , Route Name : [routeName]} 
+                  {counterID > 0 && , Counter : [counterName]} 
+                  {salesmanID > 0 && , Sales Man : [salesMan]} 
+                  From Date : {fromDate} To Date : {toDate}"
+                  gridHeader={t(gridHeader)}
                   dataUrl={dataUrl}
                   method={ActionType.POST}
                   gridId={gridId}
@@ -404,6 +496,12 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                   filterInitialData={SalesTransferMonthWiseSummaryReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
+                   remoteOperations={{
+                  filtering: true,
+                  paging: true,
+                  sorting: true,
+                  summary: true,
+                }}
                 />
               </div>
             </div>

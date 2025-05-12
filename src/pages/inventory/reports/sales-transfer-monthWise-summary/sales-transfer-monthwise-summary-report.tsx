@@ -384,8 +384,9 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
 
     const summaryItems: SummaryConfig[] = [
       {
-        column: "saleMan",
-        summaryType: "max",
+        column: "salesMan",
+        summaryType: "custom",
+        valueFormat:"string",
         customizeText: customizeDate,
       },
       {

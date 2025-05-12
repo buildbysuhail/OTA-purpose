@@ -31,6 +31,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       },
       {
         dataField: "productCode",
@@ -56,6 +57,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 200,
+      showInPdf:true,
       },
       {
         dataField: "totQty",
@@ -64,6 +66,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -134,6 +137,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -165,6 +169,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -196,6 +201,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 80,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -228,6 +234,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 85,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -259,6 +266,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 85,
+      showInPdf:true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -325,6 +333,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       },
       {
         dataField: "category",
@@ -333,6 +342,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       },
       {
         dataField: "brandName",
@@ -341,6 +351,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       },
       {
         dataField: "totalTaxAmount",
@@ -349,6 +360,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      showInPdf:true,
       },
     ];
     // Filter columns based on the `visible` property

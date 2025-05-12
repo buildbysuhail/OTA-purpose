@@ -35,6 +35,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "vNo",
@@ -44,6 +45,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 75,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -53,6 +55,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "fromBranch",
@@ -62,6 +65,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "toBranch",
@@ -71,6 +75,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "productCode",
@@ -89,6 +94,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "quantity",
@@ -98,6 +104,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 75,
+      showInPdf:true,
     },
     {
       dataField: "unitPrice",
@@ -107,6 +114,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "netAmount",
@@ -116,6 +124,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "invTransactionMasterID",
@@ -135,6 +144,7 @@ const BranchTransferIn = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "itemAlias",

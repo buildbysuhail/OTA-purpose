@@ -64,6 +64,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "productName",
@@ -72,6 +73,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "groupName",
@@ -80,6 +82,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "stockIn",
@@ -104,6 +107,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "productCategoryName",
@@ -112,6 +116,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "supplyMethod",
@@ -120,6 +125,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "hsnCode",
@@ -128,6 +134,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "commodityCode",
@@ -152,6 +159,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "unitName",
@@ -160,6 +168,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "marginPercentage",
@@ -168,6 +177,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "itemType",
@@ -176,6 +186,7 @@ const ProductSummaryReport1: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     }
   ];
 

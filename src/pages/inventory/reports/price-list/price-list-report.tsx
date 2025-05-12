@@ -25,6 +25,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 100,
+      showInPdf:true,
     },
     {
       dataField: "name",
@@ -34,6 +35,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
+      showInPdf:true,
     },
     {
       dataField: "group",
@@ -43,7 +45,8 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false
+      visible: false,
+      showInPdf:true,
     },
     {
       dataField: "groupCode",
@@ -63,7 +66,8 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false
+      visible: false,
+      showInPdf:true,
     },
     {
       dataField: "brand",
@@ -73,7 +77,8 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false
+      visible: false,
+      showInPdf:true,
     },
     {
       dataField: "brandNO",
@@ -93,7 +98,8 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false
+      visible: false,
+      showInPdf:true,
     },
     {
       dataField: "sVAT",
@@ -103,7 +109,8 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false
+      visible: false,
+      showInPdf:true,
     },
     {
       dataField: "pVAT",
@@ -113,6 +120,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "stdSprice",
@@ -122,6 +130,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "stdPprice",
@@ -131,6 +140,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "mrp",
@@ -140,6 +150,7 @@ const PriceList = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 150,
+      showInPdf:true,
     },
     // {
     //   dataField: "actions",

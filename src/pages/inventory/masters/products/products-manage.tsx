@@ -655,14 +655,14 @@ export const ProductMaster: React.FC = React.memo(() => {
         ].filter((x: any) => {
           const obj = getFieldProps("*") as any as productDto;
           if (x.title == "Flavors"){
-            if((!clientSession.isAppGlobal && !obj.elements.flavorVisible) || (formState.data.product.productID?? 0) == 0) {
+            if((!clientSession.isAppGlobal && !obj.elements?.flavorVisible) || (formState.data.product.productID?? 0) == 0) {
             return false
           }
         }
           debugger;
           if(x.title == "Multi Barcode") {
           if (((!clientSession.isAppGlobal)
-            || (clientSession.isAppGlobal && !obj.elements.mbVisible)) || (formState.data.product.productID?? 0) == 0) {
+            || (clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID?? 0) == 0) {
             return false
           }
         }

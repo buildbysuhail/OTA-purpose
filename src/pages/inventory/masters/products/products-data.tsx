@@ -5,7 +5,7 @@ const initialProductData: productDto = {
     productCode: "",
     productName: "",
     productGroupID: -2,
-    productCategoryID: 0,
+    productCategoryID: -2,
     supplyMethod: "",
     hsnCode: "",
     commodityCode: "",

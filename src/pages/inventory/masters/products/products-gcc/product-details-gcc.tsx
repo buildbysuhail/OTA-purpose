@@ -69,7 +69,7 @@ export const ProductDetailsGcc: React.FC<{
                                     valueKey: "id",
                                     labelKey: "name",
                                 }}
-                                onChangeData={(data) => handleFieldChange("batch.warehouseID", data.batch.warehouseID)}
+                                onSelectItem={(data) => handleFieldChange("batch.warehouseID", data.value)}
                                 className="w-full"
                                 label={t("warehouse")}
                             />
@@ -88,7 +88,7 @@ export const ProductDetailsGcc: React.FC<{
                                     labelKey: "name",
                                     getListUrl: Urls.data_brands,
                                 }}
-                                onChangeData={(data) => handleFieldChange("batch.brandID", data.batch.brandID)}
+                                onSelectItem={(data) => handleFieldChange("batch.brandID", data.value)}
                                 className="w-full"
                                 label={t("brand_mfg")}
                             // options={[]}
@@ -115,7 +115,7 @@ export const ProductDetailsGcc: React.FC<{
                                 labelKey: "name",
                                 getListUrl: Urls.data_productcategory,
                             }}
-                            onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
+                            onSelectItem={(data: any) => handleFieldChange("product.productCategoryID", data.value)}
                             label={t("product_category")}
                             className="w-full"
                         // options={[]}
@@ -150,6 +150,7 @@ export const ProductDetailsGcc: React.FC<{
                             label={t("auto_barcode")}
                             placeholder=""
                             required={false}
+                            disabled
                             onChangeData={(data) => handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)}
                         />
 
@@ -210,7 +211,7 @@ export const ProductDetailsGcc: React.FC<{
                                 labelKey: "name",
                                 getListUrl: Urls.data_locations
                             }}
-                            onChangeData={(data) => handleFieldChange("product.location", data.location)}
+                            onSelectItem={(data) => handleFieldChange("product.location", data.value)}
                             label={t("location")}
                         />
 

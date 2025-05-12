@@ -490,8 +490,8 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                   gridId={gridId}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={400}
-                  filterHeight={230}
+                  filterWidth={500}
+                  filterHeight={290}
                   filterContent={<SalesTransferMonthWiseSummaryReportFilter />}
                   filterInitialData={SalesTransferMonthWiseSummaryReportFilterInitialState}
                   hideGridAddButton={true}

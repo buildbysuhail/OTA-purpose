@@ -9,7 +9,7 @@ const PartyMonthwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldC
 
 
   return (
-    <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
+    <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4 overflow-y-hidden overflow-y-hidden">
       <ERPDateInput
         {...getFieldProps("fromDate")}
         label={t("date_from")}

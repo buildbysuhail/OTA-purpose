@@ -90,8 +90,8 @@ const SalesTransferMonthWiseSummaryReportFilter = ({ getFieldProps, handleFieldC
                 {...getFieldProps("voucherForm")}
                 field={{
                     id: "voucherForm",
-                    getListUrl: clientSession.isAppGlobal ? Urls.data_FormTypeByPI : Urls.data_form_type,
-                    valueKey: "id",
+                    getListUrl: Urls.data_form_type,
+                    valueKey: "name",
                     labelKey: "name",
                 }}
                 onSelectItem={(data) => {
@@ -127,5 +127,5 @@ export const SalesTransferMonthWiseSummaryReportFilterInitialState = {
     counterID: 0,
     salesManID: 0,
     voucherForm: "",
-    wareHouseID: 0
+    warehouseID: 0
 }

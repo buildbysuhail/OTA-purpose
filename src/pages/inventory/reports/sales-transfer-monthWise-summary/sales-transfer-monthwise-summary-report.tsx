@@ -480,7 +480,7 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                 <ErpDevGrid
                   columns={columns}
                   summaryItems={summaryItems}
-                  filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
+                  filterText="of {voucherForm != ''&& , Voucher Form : [voucherForm]}
                   {salesRouteID > 0 && , Route Name : [routeName]} 
                   {counterID > 0 && , Counter : [counterName]} 
                   {salesmanID > 0 && , Sales Man : [salesMan]} 

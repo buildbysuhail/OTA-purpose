@@ -42,6 +42,7 @@ import { DataGrid } from "devextreme-react";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
+import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 
 export interface MultiBarcodeState {
   open: boolean;
@@ -504,7 +505,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         />
       </div>,
       <div key="multi_rates">
-        <MultiRates
+        <MultiRatesGcc
           isGlobal={false}
           t={t}
           getFieldProps={getFieldProps}

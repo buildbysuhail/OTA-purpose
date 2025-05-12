@@ -4,6 +4,8 @@ import React from "react";
 import { FormField } from "../../../../../utilities/form-types";
 import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, } from "../products-type";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
 interface ColumnDefinition {
   dataField: string;
   caption: string;
@@ -33,13 +35,13 @@ const MultiRates: React.FC<{
   const allColumns = useMemo<ColumnDefinition[]>(
     () => [
       {
-        dataField: "siNo",
-        caption: t("SiNo"),
+        dataField: "slNo",
+        caption: "#",
         dataType: "string" as const,
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
         allowEditing: false,
       },
       {
@@ -158,7 +160,7 @@ const MultiRates: React.FC<{
       }, 100);
     }
   };
-
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
       <DataGrid
@@ -171,7 +173,7 @@ const MultiRates: React.FC<{
               if ("salesPrice" in changes.data) {
                 const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
                 const finalMrp = e.changes[0].data.mrp ?? 0;
-                if (finalSalesPrice > finalMrp) {
+                if (finalSalesPrice > finalMrp && clientSession.isAppGlobal) {
                   ERPAlert.show({
                     title: t("warning"),
                     text: `${t("sales_price")} (${finalSalesPrice}) > ${t(
@@ -195,7 +197,10 @@ const MultiRates: React.FC<{
                 ...changes.data,
               };
               // setUnits(updatedUnits);
-              handleFieldChange("prices", [...updatedUnits]);
+              handleFieldChange("prices", [...updatedUnits.map((item, index) => ({
+      ...item,
+      slNo: index + 1,
+    }))]);
               
             }
           }

@@ -428,7 +428,7 @@ debugger;
                             ); // Replace with actual API call
                             updatedUnits[key] = {
                               ...unit,
-                              barCode: newBarcode,
+                              barCode: String(newBarcode)
                             };
                           } catch (error) {
                             console.error(
@@ -457,7 +457,7 @@ debugger;
                       ...prev,
                       [key]: {
                         ...prev[key],
-                        barCode: e.target.value,
+                        barCode: String(e.target.value),
                       },
                     };
                     setMultiUnitsMaster(updated, units);
@@ -566,8 +566,8 @@ debugger;
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data) =>
-              handleFieldChange("batch.defSalesUnitID", data.defSalesUnitID)
+            onSelectItem={(data) =>
+              handleFieldChange("batch.defSalesUnitID", data.value)
             }
             className="w-full"
           />
@@ -579,10 +579,10 @@ debugger;
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data) =>
+            onSelectItem={(data) =>
               handleFieldChange(
                 "batch.defPurchaseUnitID",
-                data.defPurchaseUnitID
+                data.value
               )
             }
             className="w-full"
@@ -595,8 +595,8 @@ debugger;
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data) =>
-              handleFieldChange("batch.defReportUnitID", data.defReportUnitID)
+            onSelectItem={(data) =>
+              handleFieldChange("batch.defReportUnitID", data.value)
             }
             className="w-full"
           />

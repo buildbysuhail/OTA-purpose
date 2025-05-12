@@ -392,7 +392,7 @@ debugger;
                       ...prev,
                       [key]: {
                         ...prev[key],
-                        gatePass: e.target.value,
+                        gatePass: e.target.checked,
                       },
                     };
                     setMultiUnitsMaster(updated, units);

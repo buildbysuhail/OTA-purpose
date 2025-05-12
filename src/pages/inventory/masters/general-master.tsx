@@ -19,19 +19,14 @@ const GeneralMaster: React.FC = () => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
 
-  // Modify the API call to use the correct endpoint
   const fetchMasterData = async (type: string) => {
     try {
       if (!type) {
-        // If no master type is selected, reset to default
         setMasterData([{ sino: 1, description: '' }]);
         return;
       }
 
-      // Use the correct API endpoint - adjust this based on your actual API structure
       const response = await axios.get(`${Urls.generalMaster}?masterType=${type}`);
-      
-      // Map the response to our desired format
       const formattedData = response.data.map((item: any, index: number) => ({
         sino: index + 1,
         description: item.masterName || item.description,
@@ -39,23 +34,19 @@ const GeneralMaster: React.FC = () => {
         masterType: type
       }));
 
-      // Always add an empty row at the end for new entries
-      formattedData.push({ 
-        sino: formattedData.length + 1, 
-        description: '' 
+      formattedData.push({
+        sino: formattedData.length + 1,
+        description: ''
       });
 
       setMasterData(formattedData);
     } catch (error) {
       console.error("Error fetching master data:", error);
-      
-      // If there's an error (like 404), still show an empty row
       setMasterData([{ sino: 1, description: '' }]);
     }
   };
 
   useEffect(() => {
-    // Add a check to prevent unnecessary API calls
     if (masterType) {
       fetchMasterData(masterType);
     }
@@ -63,7 +54,6 @@ const GeneralMaster: React.FC = () => {
 
   const handleSaveButtonClick = async () => {
     if (!masterType) {
-      alert("Please select a Master Type");
       return;
     }
 
@@ -79,19 +69,14 @@ const GeneralMaster: React.FC = () => {
 
       if (dataToSave.length > 0) {
         await axios.post(Urls.generalMaster, dataToSave);
-        alert("Data saved successfully!");
-        // Refresh data after save
         await fetchMasterData(masterType);
-      } else {
-        alert("No data to save");
       }
-    } catch (error) {
-      console.error("Error saving data:", error);
-      alert("Error saving data. Please try again.");
-    } finally {
+    } catch (error) { }
+    finally {
       setIsSaving(false);
     }
   };
+
 
   const onEditorPreparing = (e: any) => {
     if (e.parentType === 'dataRow' && e.dataField === 'description') {

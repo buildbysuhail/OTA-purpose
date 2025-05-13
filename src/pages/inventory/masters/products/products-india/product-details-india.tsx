@@ -266,8 +266,8 @@ const ProductDetailsIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_locations
                 }}
-                onChangeData={(data: productDto) =>
-                  handleFieldChange("batch.location", data.batch.location)
+                onSelectItem={(data: any) =>
+                  handleFieldChange("batch.location", data.value)
                 }
                 label={t("location")}
                 // options={[]}

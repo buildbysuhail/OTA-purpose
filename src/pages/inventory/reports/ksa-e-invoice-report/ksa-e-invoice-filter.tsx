@@ -71,14 +71,14 @@ const KsaEInvoiceReportFilter = ({ getFieldProps, handleFieldChange, formState }
             <div className="flex items-center gap-4">
                 <a href="#">{t("show_xml")}</a>
 
-                <ERPButton
+                {/* <ERPButton
                     type="button"
                     title={t("save_template")}
                 />
                 <ERPButton
                     type="button"
                     title={t("fix_&_send_again")}
-                />
+                /> */}
             </div>
         </div>
     );

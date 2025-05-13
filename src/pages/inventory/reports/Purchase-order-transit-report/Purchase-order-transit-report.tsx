@@ -256,6 +256,7 @@ const summaryItems: SummaryConfig[] = [
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false }}
                   summaryItems={summaryItems}
                   filterText="from {dateFrom} to {dateTo} {partyID > 0 && , Party Name : [PartyName]}"
                   gridHeader={t("purchase_order_transit_report")}

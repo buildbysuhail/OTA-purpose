@@ -65,7 +65,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
-            width: 150,
+            minWidth: 150,
         },
         {
             dataField: "address1",
@@ -293,11 +293,18 @@ const KsaEInvoiceReportDetailed = () => {
         {
             dataField: "isReported",
             caption: t("is_reported"),
-            dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            dataType:"boolean"
+            
+            // cellRender: (
+            //     cellElement: any,
+            //     cellInfo: any,
+            //     filter: any,
+            //     exportCell: any
+            //   ) => <> {cellElement.data.isReported == true || cellElement.data.isReported == 1 ? 'Yes' : "No"}</>
         },
         {
             dataField: "clearanceReceived",
@@ -316,6 +323,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 200,
+            visible: false
         },
         {
             dataField: "eInvoiceTime",

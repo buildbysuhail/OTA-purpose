@@ -5,9 +5,25 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 import Urls from "../../../../redux/urls"
 import ERPInput from "../../../../components/ERPComponents/erp-input"
+import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select"
+import { useEffect, useState } from "react"
+import { APIClient } from "../../../../helpers/api-client"
 
+const api = new APIClient();
 const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation("inventory")
+      const [branchOptions, setBranchOptions] = useState<[]>([]);
+    useEffect(() => {
+        const fetchBranchOptions = async () => {
+            try {
+                const branchData = await api.getAsync(`${Urls.data_taxCategory}`);
+                setBranchOptions(branchData);
+            } catch (error) {
+                console.error("Error fetching branches:", error);
+            }
+        };
+        fetchBranchOptions();
+    }, []);
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="flex items-center gap-2">
@@ -45,8 +61,19 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
 
-        <ERPDataCombobox
-          {...getFieldProps("taxCategoryID")}
+ <ERPMultiSelect
+                                {...getFieldProps("taxCategoryID")}
+                                label={t("branches")}
+                                
+                                options={branchOptions}
+                                selectedValues={getFieldProps("taxCategoryID").value}
+                                onChange={(data) => handleFieldChange("taxCategoryID", data)}
+                                placeholder={t("select_branches")}
+                                searchPlaceholder={t("search_branches")}
+                                LoutputFormat="array"
+                            />
+        {/* <ERPDataCombobox
+          {...getFieldProps("taxCategoryID")} 
           label="taxCategory"
           field={{
             id: "taxCategoryID",
@@ -61,7 +88,7 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
               taxCategory: (data.value)?.toString(),
             });
           }}
-        />
+        /> */}
 
       <ERPDataCombobox
           {...getFieldProps("voucherFormId")}

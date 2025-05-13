@@ -19,6 +19,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf: true,
         },
         {
             dataField: "customerName",
@@ -28,6 +29,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf: true,
         },
         {
             dataField: "prefix",
@@ -37,6 +39,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf: true,
         },
         {
             dataField: "invoiceNumber",
@@ -46,6 +49,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
         {
             dataField: "taxableAmount",
@@ -55,6 +59,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
         {
             dataField: "vatPercentage",
@@ -64,6 +69,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf: true,
         },
         {
             dataField: "vatAmount",
@@ -73,6 +79,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf: true,
         },
         {
             dataField: "amount",
@@ -82,6 +89,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf: true,
         },
         {
             dataField: "taxNumber",
@@ -91,6 +99,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
         {
             dataField: "crNumber",
@@ -100,6 +109,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
         {
             dataField: "creditOrCash",
@@ -109,6 +119,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf: true,
         },
         {
             dataField: "branchName",
@@ -118,6 +129,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
         {
             dataField: "transactionType",
@@ -127,6 +139,7 @@ const SalesTax = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf: true,
         },
     ];
 

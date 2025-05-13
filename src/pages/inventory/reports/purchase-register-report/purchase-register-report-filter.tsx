@@ -38,24 +38,26 @@ const PurchaseRegisterFilter = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        
-        <ERPDataCombobox
-          label={t("transfer_voucher")}
-          {...getFieldProps("transferVoucher")}
-          options={[
-              { value: 'SI-BT', label: 'SI-BT' },
-              { value: 'SE-BT', label: 'SE-BT' }
-          ]}
-          field={{
+        {location.pathname.includes(
+          "inventory/sales_transfer_summary_report"
+        ) && (
+          <ERPDataCombobox
+            label={t("transfer_voucher")}
+            {...getFieldProps("transferVoucher")}
+            options={[
+              { value: "SI-BT", label: "SI-BT" },
+              { value: "SE-BT", label: "SE-BT" },
+            ]}
+            field={{
               id: "transferVoucher",
               valueKey: "value",
               labelKey: "label",
-          }}
-          onSelectItem={(data) => {
+            }}
+            onSelectItem={(data) => {
               handleFieldChange("voucherType", data.value);
-          }}
-      />
-      
+            }}
+          />
+        )}
 
         {clientSession.isAppGlobal && (
           <ERPDataCombobox
@@ -128,7 +130,9 @@ const PurchaseRegisterFilter = ({
           label={t("product_code")}
           {...getFieldProps("productCode")}
           className="w-full"
-          onChangeData={(data) => handleFieldChange("productCode", data.productCode)}
+          onChangeData={(data) =>
+            handleFieldChange("productCode", data.productCode)
+          }
         />
 
         <ERPDataCombobox
@@ -168,22 +172,22 @@ const PurchaseRegisterFilter = ({
         )}
 
         {/* {applicationSettings.inventorySettings?.maintainWarehouse == true && ( */}
-          <ERPDataCombobox
-            label={t("warehouse")}
-            {...getFieldProps("warehouseID")}
-            field={{
-              id: "warehouseID",
-              getListUrl: Urls.data_warehouse,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) => {
-              handleFieldChange({
-                warehouseID: data.value,
-                warehouse: data.label,
-              });
-            }}
-          />
+        <ERPDataCombobox
+          label={t("warehouse")}
+          {...getFieldProps("warehouseID")}
+          field={{
+            id: "warehouseID",
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              warehouseID: data.value,
+              warehouse: data.label,
+            });
+          }}
+        />
         {/* )} */}
 
         {/* SelectFromTypebyVoucherType -- global*/}
@@ -202,7 +206,10 @@ const PurchaseRegisterFilter = ({
           }}
           onSelectItem={(data) => {
             debugger;
-            handleFieldChange({voucherForm: data.label, voucherFormValue: data.value});
+            handleFieldChange({
+              voucherForm: data.label,
+              voucherFormValue: data.value,
+            });
           }}
         />
 
@@ -353,8 +360,8 @@ const PurchaseRegisterFilter = ({
           label={t("report_of")}
           {...getFieldProps("reportOf")}
           options={[
-            { value: 'All', label: 'All' },
-            { value: 'Below Cost', label: 'Below Cost' },
+            { value: "All", label: "All" },
+            { value: "Below Cost", label: "Below Cost" },
           ]}
           field={{
             id: "reportOf",
@@ -384,6 +391,29 @@ const PurchaseRegisterFilter = ({
             handleFieldChange("standardFormat", data.standardFormat)
           }
         /> */}
+
+        {location.pathname.includes(
+          "inventory/sales_transfer_summary_report"
+        ) && (
+          <ERPDataCombobox
+            label={t("report_of")}
+            {...getFieldProps("reportOf")}
+            options={[
+              { value: "All", label: "All" },
+              { value: "Credit", label: "Credit" },
+              { value: "Cash", label: "Cash" },
+              { value: "Card", label: "Card" },
+            ]}
+            field={{
+              id: "reportOf",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("reportOf", data.value);
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -413,8 +443,8 @@ export const PurchaseRegisterFilterInitialState = {
   // transferVoucher: "",
   productCategoryID: 0,
   priceCategory: 0,
-  reportOf: 'All',
-  // exportDataToExcel: false, 
+  reportOf: "All",
+  // exportDataToExcel: false,
   // transactionType: "",
   manufactureID: 0,
 };

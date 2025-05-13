@@ -7,242 +7,277 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import { LedgerType } from "../../../../enums/ledger-types";
+import { useLocation } from "react-router-dom";
 
 const SummaryFilter = ({
-    getFieldProps,
-    handleFieldChange,
-    formState,
+  getFieldProps,
+  handleFieldChange,
+  formState,
 }: any) => {
-    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
-    const usersession = useSelector((state: RootState) => state.UserSession);
-    const clientSession = useSelector((state: RootState) => state.ClientSession);
-    const { t } = useTranslation("accountsReport");
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+  const usersession = useSelector((state: RootState) => state.UserSession);
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
+  const { t } = useTranslation("accountsReport");
+  let location = useLocation();
 
-    return (
-        <div className="grid grid-cols-1 gap-2 md:gap-4 overflow-y-auto overflow-x-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                    <ERPDateInput
-                        label={t("from_date")}
-                        {...getFieldProps("fromDate")}
-                        className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
-                    />
-                    <ERPDateInput
-                        label={t("to_date")}
-                        {...getFieldProps("toDate")}
-                        className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
-                    />
-                </div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center border border-[#ccc] rounded-[10px] p-2 sm:border-none sm:rounded-none sm:p-0 gap-2">
-
-                    <ERPCheckbox
-                        {...getFieldProps("isTimeBased")}
-                        label={t("consider_time")}
-                        className="whitespace-nowrap"
-                        onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
-                    />
-                    <div className="w-full">
-                        <label>{t("time_from")}</label>
-                        <input
-                            type="time"
-                            className="form-control w-full border rounded px-2 py-1"
-                            value={formState.data.fromTime || moment().local().format("HH:mm")}
-                            onChange={(e) => handleFieldChange("fromTime", e.target.value)}
-                            disabled={!formState.data.isTimeBased}
-                        />
-                    </div>
-                    <div className="w-full">
-                        <label>{t("time_to")}</label>
-                        <input
-                            type="time"
-                            className="form-control w-full border rounded px-2 py-1"
-                            value={formState.data.toTime}
-                            // value={formState.toTime || moment().local().format("HH:mm")}
-                            onChange={(e) => handleFieldChange("toTime", e.target.value)}
-                            disabled={!formState.data.isTimeBased}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-                
-                <ERPDataCombobox
-                    label={t("transfer_voucher")}
-                    {...getFieldProps("transferVoucher")}
-                    options={[
-                        { value: 'SI-BT', label: 'SI-BT' },
-                        { value: 'SE-BT', label: 'SE-BT' }
-                    ]}
-                    field={{
-                        id: "transferVoucher",
-                        valueKey: "value",
-                        labelKey: "label",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("voucherType", data.value);
-                    }}
-                />
-                {
-                    applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-                        <ERPDataCombobox
-                            label={t("sales_route")}
-                            {...getFieldProps("salesRouteID")}
-                            field={{
-                                id: "salesRouteID",
-                                getListUrl: Urls.data_salesRoute,
-                                valueKey: "id",
-                                labelKey: "name",
-                            }}
-                            onSelectItem={(data) => {
-                                handleFieldChange({
-                                    salesRouteID: data.value,
-                                    routeName: data.label,
-                                });
-                            }}
-                        />)
-                }
-                <ERPDataCombobox
-                    label={t("sales_man")}
-                    {...getFieldProps("salesmanID")}
-                    field={{
-                        id: "salesmanID",
-                        getListUrl: Urls.data_employees,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            salesmanID: data.value,
-                            salesMan: data.label,
-                        });
-                    }}
-                />
-                {
-                    applicationSettings.accountsSettings?.allowSalesCounter == true && (
-                        <ERPDataCombobox
-                            label={t("counter")}
-                            {...getFieldProps("counterID")}
-                            field={{
-                                id: "counterID",
-                                getListUrl: Urls.data_counters,
-                                valueKey: "id",
-                                labelKey: "name",
-                            }}
-                            onSelectItem={(data) => {
-                                handleFieldChange({
-                                    counterID: data.value,
-                                    counterName: data.label,
-                                });
-                            }}
-                        />
-                    )
-                }
-                <ERPDataCombobox
-                    label={t("party")}
-                    {...getFieldProps("partyID")}
-                    field={{
-                        id: "partyID",
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerType=${LedgerType.All}`,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            partyID: data.value,
-                        });
-                    }}
-                />
-                <ERPDataCombobox
-                    label={t("party_category")}
-                    {...getFieldProps("partyCategoryID")}
-                    field={{
-                        id: "partyCategoryID",
-                        getListUrl: Urls.data_party_categories,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            partyCategoryID: data.value,
-                        });
-                    }}
-                />
-                <ERPDataCombobox
-                    label={t("voucher_form")}
-                    {...getFieldProps("voucherForm")}
-                    field={{
-                        id: "voucherForm",
-                        getListUrl: clientSession.isAppGlobal ? Urls.data_FormTypeByPI : Urls.data_form_type,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            voucherForm: data.value,
-                        });
-                    }}
-                />
-                <ERPDataCombobox
-                    label={t("warehouse")}
-                    {...getFieldProps("warehouseID")}
-                    field={{
-                        id: "warehouseID",
-                        getListUrl: Urls.data_warehouse,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            warehouseID: data.value,
-                        });
-                    }}
-                />
-                {
-                    usersession.dbIdValue == "489995732270" && (
-                        <ERPDataCombobox
-                            label={t("cost_center")}
-                            {...getFieldProps("costCenterID")}
-                            field={{
-                                id: "costCenterID",
-                                getListUrl: Urls.data_costcentres,
-                                valueKey: "id",
-                                labelKey: "name",
-                            }}
-                            onSelectItem={(data) => {
-                                handleFieldChange({
-                                    costCenterID: data.value,
-                                });
-                            }}
-                        />
-                    )
-                }
-            </div>
+  return (
+    <div className="grid grid-cols-1 gap-2 md:gap-4 overflow-y-auto overflow-x-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <ERPDateInput
+            label={t("from_date")}
+            {...getFieldProps("fromDate")}
+            className="w-full"
+            onChangeData={(data: any) =>
+              handleFieldChange("fromDate", data.fromDate)
+            }
+          />
+          <ERPDateInput
+            label={t("to_date")}
+            {...getFieldProps("toDate")}
+            className="w-full"
+            onChangeData={(data: any) =>
+              handleFieldChange("toDate", data.toDate)
+            }
+          />
         </div>
-    );
+        <div className="flex flex-col sm:flex-row items-start sm:items-center border border-[#ccc] rounded-[10px] p-2 sm:border-none sm:rounded-none sm:p-0 gap-2">
+          <ERPCheckbox
+            {...getFieldProps("isTimeBased")}
+            label={t("consider_time")}
+            className="whitespace-nowrap"
+            onChangeData={(data) =>
+              handleFieldChange("isTimeBased", data.isTimeBased)
+            }
+          />
+          <div className="w-full">
+            <label>{t("time_from")}</label>
+            <input
+              type="time"
+              className="form-control w-full border rounded px-2 py-1"
+              value={
+                formState.data.fromTime || moment().local().format("HH:mm")
+              }
+              onChange={(e) => handleFieldChange("fromTime", e.target.value)}
+              disabled={!formState.data.isTimeBased}
+            />
+          </div>
+          <div className="w-full">
+            <label>{t("time_to")}</label>
+            <input
+              type="time"
+              className="form-control w-full border rounded px-2 py-1"
+              value={formState.data.toTime}
+              // value={formState.toTime || moment().local().format("HH:mm")}
+              onChange={(e) => handleFieldChange("toTime", e.target.value)}
+              disabled={!formState.data.isTimeBased}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+        {location.pathname.includes(
+          "inventory/sales_transfer_summary_report"
+        ) && (
+          <ERPDataCombobox
+            label={t("transfer_voucher")}
+            {...getFieldProps("transferVoucher")}
+            options={[
+              { value: "SI-BT", label: "SI-BT" },
+              { value: "SE-BT", label: "SE-BT" },
+            ]}
+            field={{
+              id: "transferVoucher",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("voucherType", data.value);
+            }}
+          />
+        )}
+        {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+          <ERPDataCombobox
+            label={t("sales_route")}
+            {...getFieldProps("salesRouteID")}
+            field={{
+              id: "salesRouteID",
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange({
+                salesRouteID: data.value,
+                routeName: data.label,
+              });
+            }}
+          />
+        )}
+        <ERPDataCombobox
+          label={t("sales_man")}
+          {...getFieldProps("salesmanID")}
+          field={{
+            id: "salesmanID",
+            getListUrl: Urls.data_employees,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              salesmanID: data.value,
+              salesMan: data.label,
+            });
+          }}
+        />
+        {applicationSettings.accountsSettings?.allowSalesCounter == true && (
+          <ERPDataCombobox
+            label={t("counter")}
+            {...getFieldProps("counterID")}
+            field={{
+              id: "counterID",
+              getListUrl: Urls.data_counters,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange({
+                counterID: data.value,
+                counterName: data.label,
+              });
+            }}
+          />
+        )}
+        <ERPDataCombobox
+          label={t("party")}
+          {...getFieldProps("partyID")}
+          field={{
+            id: "partyID",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              partyID: data.value,
+            });
+          }}
+        />
+        <ERPDataCombobox
+          label={t("party_category")}
+          {...getFieldProps("partyCategoryID")}
+          field={{
+            id: "partyCategoryID",
+            getListUrl: Urls.data_party_categories,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              partyCategoryID: data.value,
+            });
+          }}
+        />
+        <ERPDataCombobox
+          label={t("voucher_form")}
+          {...getFieldProps("voucherForm")}
+          field={{
+            id: "voucherForm",
+            getListUrl: clientSession.isAppGlobal
+              ? Urls.data_FormTypeByPI
+              : Urls.data_form_type,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              voucherForm: data.value,
+            });
+          }}
+        />
+        <ERPDataCombobox
+          label={t("warehouse")}
+          {...getFieldProps("warehouseID")}
+          field={{
+            id: "warehouseID",
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              warehouseID: data.value,
+            });
+          }}
+        />
+        {usersession.dbIdValue == "489995732270" && (
+          <ERPDataCombobox
+            label={t("cost_center")}
+            {...getFieldProps("costCenterID")}
+            field={{
+              id: "costCenterID",
+              getListUrl: Urls.data_costcentres,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange({
+                costCenterID: data.value,
+              });
+            }}
+          />
+        )}
+        {(location.pathname.includes(
+          "inventory/sales_transfer_summary_report"
+        ) ||
+          location.pathname.includes("inventory/sales_summary_report") ||
+          location.pathname.includes("inventory/sales_return_summary")) && (
+          <ERPDataCombobox
+            label={t("report_of")}
+            {...getFieldProps("reportOf")}
+            options={[
+              { value: "All", label: "All" },
+              { value: "Credit", label: "Credit" },
+              { value: "Cash", label: "Cash" },
+              { value: "Card", label: "Card" },
+            ]}
+            field={{
+              id: "reportOf",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("reportOf", data.value);
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default SummaryFilter;
 
 export const SummaryFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),//software date as initial
-    toDate: moment().local().endOf("day").toDate(),
-    voucherType: "PI",
-    salesRouteID: 0,
-    counterID: 0,
-    salesmanID: 0,
-    productID: 0,
-    partyID: 0,
-    voucherForm: "@",
-    warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
-    partyCategoryID: 0,
-    isTimeBased: false,
-    fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
-    toTime: moment().local().format("hh:mm"),
-    transactionType: "",
-    reportOf: "",
-    IsInactive: false//true on in shortcut NPIR
+  fromDate: moment().local().startOf("day").toDate(), //software date as initial
+  toDate: moment().local().endOf("day").toDate(),
+  voucherType: "PI",
+  salesRouteID: 0,
+  counterID: 0,
+  salesmanID: 0,
+  productID: 0,
+  partyID: 0,
+  voucherForm: "@",
+  warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
+  partyCategoryID: 0,
+  isTimeBased: false,
+  fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
+  toTime: moment().local().format("hh:mm"),
+  transactionType: "",
+  reportOf: "",
+  IsInactive: false, //true on in shortcut NPIR
 };

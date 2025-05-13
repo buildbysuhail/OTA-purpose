@@ -21,6 +21,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "receiverName",
@@ -30,6 +31,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "invoiceNumber",
@@ -39,6 +41,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "invoiceDate",
@@ -49,6 +52,7 @@ const GSTR1B2B = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MM-yyyy",
+      showInPdf:true,
     },
     {
       dataField: "invoiceValue",
@@ -58,6 +62,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -94,6 +99,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "reverseCharge",
@@ -103,6 +109,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "applicableTaxRatePercentage",
@@ -112,6 +119,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -152,6 +160,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "eCommerceGSTIN",
@@ -161,6 +170,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "rate",
@@ -170,6 +180,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -202,6 +213,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -238,6 +250,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,

@@ -17,9 +17,8 @@ const GSTR3BReport = () => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-
       //eligible ITC
-         {
+      {
         dataField: "details",
         caption: t("details"),
         dataType: "string",
@@ -27,6 +26,7 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+        showInPdf: true,
       },
       //inout
       {
@@ -37,6 +37,7 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
+        showInPdf: true,
       },
       {
         dataField: "totalTaxableValue",
@@ -46,7 +47,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
-    cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -56,7 +58,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.totalTaxableValue == null
                 ? 0
-                : getFormattedValue(cellElement.data.totalTaxableValue,false,2);
+                : getFormattedValue(
+                    cellElement.data.totalTaxableValue,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -66,7 +72,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.totalTaxableValue == null
               ? 0
-              : getFormattedValue(cellElement.data.totalTaxableValue,false,2);
+              : getFormattedValue(cellElement.data.totalTaxableValue, false, 2);
           }
         },
       },
@@ -79,7 +85,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
-     cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -89,7 +96,7 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.integratedTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.integratedTax,false,2);
+                : getFormattedValue(cellElement.data.integratedTax, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -99,7 +106,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.integratedTax == null
               ? 0
-              : getFormattedValue(cellElement.data.integratedTax,false,2);
+              : getFormattedValue(cellElement.data.integratedTax, false, 2);
           }
         },
       },
@@ -111,7 +118,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
-    cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -121,7 +129,7 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.centralTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.centralTax,false,2);
+                : getFormattedValue(cellElement.data.centralTax, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -131,7 +139,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.centralTax == null
               ? 0
-              : getFormattedValue(cellElement.data.centralTax,false,2);
+              : getFormattedValue(cellElement.data.centralTax, false, 2);
           }
         },
       },
@@ -143,7 +151,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 120,
-     cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -153,7 +162,7 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.stateOrUTTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.stateOrUTTax,false,2);
+                : getFormattedValue(cellElement.data.stateOrUTTax, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -163,7 +172,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.stateOrUTTax == null
               ? 0
-              : getFormattedValue(cellElement.data.stateOrUTTax,false,2);
+              : getFormattedValue(cellElement.data.stateOrUTTax, false, 2);
           }
         },
       },
@@ -175,7 +184,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 100,
-   cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -185,7 +195,7 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.cess == null
                 ? 0
-                : getFormattedValue(cellElement.data.cess,false,2);
+                : getFormattedValue(cellElement.data.cess, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -195,7 +205,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.cess == null
               ? 0
-              : getFormattedValue(cellElement.data.cess,false,2);
+              : getFormattedValue(cellElement.data.cess, false, 2);
           }
         },
       },
@@ -208,6 +218,7 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+        showInPdf: true,
       },
       {
         dataField: "interStateSupplies",
@@ -217,7 +228,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
-     cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -227,7 +239,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.interStateSupplies == null
                 ? 0
-                : getFormattedValue(cellElement.data.interStateSupplies,false,2);
+                : getFormattedValue(
+                    cellElement.data.interStateSupplies,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -237,7 +253,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.interStateSupplies == null
               ? 0
-              : getFormattedValue(cellElement.data.interStateSupplies,false,2);
+              : getFormattedValue(
+                  cellElement.data.interStateSupplies,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -249,7 +269,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
-     cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -259,7 +280,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.intraStateSupplies == null
                 ? 0
-                : getFormattedValue(cellElement.data.intraStateSupplies,false,2);
+                : getFormattedValue(
+                    cellElement.data.intraStateSupplies,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -269,7 +294,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.intraStateSupplies == null
               ? 0
-              : getFormattedValue(cellElement.data.intraStateSupplies,false,2);
+              : getFormattedValue(
+                  cellElement.data.intraStateSupplies,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -283,6 +312,7 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
+        showInPdf: true,
       },
       {
         dataField: "unregisteredTaxableValue",
@@ -292,7 +322,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
-   cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -302,7 +333,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.unregisteredTaxableValue == null
                 ? 0
-                : getFormattedValue(cellElement.data.unregisteredTaxableValue,false,2);
+                : getFormattedValue(
+                    cellElement.data.unregisteredTaxableValue,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -312,7 +347,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.unregisteredTaxableValue == null
               ? 0
-              : getFormattedValue(cellElement.data.unregisteredTaxableValue,false,2);
+              : getFormattedValue(
+                  cellElement.data.unregisteredTaxableValue,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -324,7 +363,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
-    cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -334,7 +374,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.unregisteredIntegratedTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.unregisteredIntegratedTax,false,2);
+                : getFormattedValue(
+                    cellElement.data.unregisteredIntegratedTax,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -344,7 +388,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.unregisteredIntegratedTax == null
               ? 0
-              : getFormattedValue(cellElement.data.unregisteredIntegratedTax,false,2);
+              : getFormattedValue(
+                  cellElement.data.unregisteredIntegratedTax,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -356,7 +404,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
-      cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -366,7 +415,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.taxableTaxableValue == null
                 ? 0
-                : getFormattedValue(cellElement.data.taxableTaxableValue,false,2);
+                : getFormattedValue(
+                    cellElement.data.taxableTaxableValue,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -376,7 +429,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.taxableTaxableValue == null
               ? 0
-              : getFormattedValue(cellElement.data.taxableTaxableValue,false,2);
+              : getFormattedValue(
+                  cellElement.data.taxableTaxableValue,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -388,7 +445,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 180,
-     cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -398,7 +456,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.taxableIntegratedTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.taxableIntegratedTax,false,2);
+                : getFormattedValue(
+                    cellElement.data.taxableIntegratedTax,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -408,7 +470,11 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.taxableIntegratedTax == null
               ? 0
-              : getFormattedValue(cellElement.data.taxableIntegratedTax,false,2);
+              : getFormattedValue(
+                  cellElement.data.taxableIntegratedTax,
+                  false,
+                  2
+                );
           }
         },
       },
@@ -420,7 +486,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
-    cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -430,7 +497,7 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.uinTaxableValue == null
                 ? 0
-                : getFormattedValue(cellElement.data.uinTaxableValue,false,2);
+                : getFormattedValue(cellElement.data.uinTaxableValue, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -440,7 +507,7 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.uinTaxableValue == null
               ? 0
-              : getFormattedValue(cellElement.data.uinTaxableValue,false,2);
+              : getFormattedValue(cellElement.data.uinTaxableValue, false, 2);
           }
         },
       },
@@ -452,7 +519,8 @@ const GSTR3BReport = () => {
         allowFiltering: true,
         allowSorting: true,
         width: 150,
-       cellRender: (
+        showInPdf: true,
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -462,7 +530,11 @@ const GSTR3BReport = () => {
             const value =
               cellElement.data?.uinIntegratedTax == null
                 ? 0
-                : getFormattedValue(cellElement.data.uinIntegratedTax,false,2);
+                : getFormattedValue(
+                    cellElement.data.uinIntegratedTax,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -472,13 +544,13 @@ const GSTR3BReport = () => {
           } else {
             return cellElement.data?.uinIntegratedTax == null
               ? 0
-              : getFormattedValue(cellElement.data.uinIntegratedTax,false,2);
+              : getFormattedValue(cellElement.data.uinIntegratedTax, false, 2);
           }
         },
       },
     ];
-    console.log(filter.supplyType );
-    
+    console.log(filter.supplyType);
+
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
       if (filter.supplyType == "inAndOutSupplies") {
@@ -542,7 +614,7 @@ const GSTR3BReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              key={filter.supplyType}
+                key={filter.supplyType}
                 remoteOperations={{
                   filtering: false,
                   paging: false,
@@ -567,10 +639,10 @@ const GSTR3BReport = () => {
                 filterWidth={790}
                 filterHeight={370}
                 onFilterChanged={(f: any) => {
-                  setFilter({...f, showFilterInitially: false});
+                  setFilter({ ...f, showFilterInitially: false });
                 }}
                 filterInitialData={GSTR3BReportFilterInitialState}
-                filterData={{changed: true, data:filter}}
+                filterData={{ changed: true, data: filter }}
                 reload={true}
                 gridId="grd_gstr3b_report"
               />

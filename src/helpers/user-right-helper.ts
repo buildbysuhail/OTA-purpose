@@ -1,6 +1,7 @@
 import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 import { UserModel } from "../redux/slices/user-session/reducer";
 import { RootState } from "../redux/store";
+import { getUserSessionData } from "../session-data";
 import { useAppSelector } from "../utilities/hooks/useAppDispatch";
 export enum UserAction {
   Add = "A",
@@ -13,23 +14,46 @@ export enum UserAction {
   Show = "S",
 }
 export const useUserRights = () => {
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const userRights = useAppSelector((state: RootState) => state.UserRights);
-  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
+  const _userSession = useAppSelector((state: RootState) => state.UserSession);
+  const _userRights = useAppSelector((state: RootState) => state.UserRights);
+  const _clientSession = useAppSelector(
+    (state: RootState) => state.ClientSession
+  );
+  let __userSession = _userSession;
+    let __userRights = _userRights;
+    let __clientSession = _clientSession;
+debugger;
+    if (__userSession.userId == 0 ||__clientSession.planFormCodes == "" || __userRights ==  undefined || __userRights.length == 0) {
+      const {
+        token,
+        userThemes,
+        clientSession,
+        userProfileDetails,
+        userRights,
+        locale,
+      } = getUserSessionData();
+
+      __userSession = userProfileDetails;
+      __userRights = userRights;
+      __clientSession = clientSession;
+    }
+
   const hasRight = (formCode: string, action: UserAction): boolean => {
     let result = false;
 
-    const planRights = clientSession.planFormCodes?.split(",")
-    const userTypeCode = userSession.userTypeCode;
-    const branchId = userSession.currentBranchId;
-    const userId = userSession.userId;
+    
+
+    const planRights = __clientSession.planFormCodes?.split(",");
+    const userTypeCode = __userSession.userTypeCode;
+    const branchId = __userSession.currentBranchId;
+    const userId = __userSession.userId;
 
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return planRights?.includes(formCode)?? false
+      return planRights?.includes(formCode) ?? false;
     }
 
     try {
-      let dtUserRights: UserTypeRights[] = userRights;
+      let dtUserRights: UserTypeRights[] = __userRights;
 
       if (dtUserRights.length > 0) {
         // Filter dtUserRights for matching FormCode
@@ -39,7 +63,7 @@ export const useUserRights = () => {
 
         if (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.split('').includes("S")
+          filteredRows[0]?.userRights?.split("").includes("S")
         ) {
           result = true;
         }
@@ -52,54 +76,54 @@ export const useUserRights = () => {
   };
   const hasBlockedRight = (formCode: string): boolean => {
     let result = false;
-  
-    const userTypeCode = userSession.userTypeCode;
-    const branchId = userSession.currentBranchId;
-    const userId = userSession.userId;
-  
-       const planRights = clientSession.planFormCodes?.split(",")
+
+    const userTypeCode = __userSession.userTypeCode;
+    const branchId = __userSession.currentBranchId;
+    const userId = __userSession.userId;
+
+    const planRights = __clientSession.planFormCodes?.split(",");
 
     // Return false for "BA" or "CA" user types
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return !planRights?.includes(formCode)
+      return !planRights?.includes(formCode);
     }
-  
+
     try {
       // Check if userRights data exists
-      let dtUserRights: UserTypeRights[] = userRights;
-  
+      let dtUserRights: UserTypeRights[] = __userRights;
+
       if (dtUserRights.length > 0) {
         // Filter user rights for the given FormCode
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode
         );
-  
+
         if (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.split('').includes('B')
+          filteredRows[0]?.userRights?.split("").includes("B")
         ) {
           result = true;
         } else {
           result = false;
         }
       } else {
-        return false
+        return false;
       }
     } catch (error) {
       console.error("Error checking blocked rights:", error);
       result = false;
     }
-  
+
     return result;
   };
-  
+
   const getAllowedFormCodes = (
     formCodes: string[],
     action: UserAction
   ): string[] => {
-    const userTypeCode = userSession.userTypeCode;
+    const userTypeCode = __userSession.userTypeCode;
 
-    const planRights = clientSession.planFormCodes?.split(",")
+    const planRights = __clientSession.planFormCodes?.split(",");
 
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
@@ -109,16 +133,16 @@ export const useUserRights = () => {
     }
 
     try {
-      let dtUserRights: UserTypeRights[] = userRights;
+      let dtUserRights: UserTypeRights[] = __userRights;
 
       return formCodes.filter((formCode) => {
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode
         );
-      
+
         return (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.split('').includes(action)
+          filteredRows[0]?.userRights?.split("").includes(action)
         );
       });
     } catch (error) {

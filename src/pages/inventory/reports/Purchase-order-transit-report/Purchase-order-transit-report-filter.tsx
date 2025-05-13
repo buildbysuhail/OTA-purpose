@@ -21,7 +21,7 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
       const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van";
       handleFieldChange("WarehouseType", warehouseType);
     }
-  }, [warehouseTypeRadio, handleFieldChange]);
+  }, [warehouseTypeRadio]);
 
   return (
     <div className="grid grid-cols-1 gap-4">

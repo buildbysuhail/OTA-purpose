@@ -6,7 +6,6 @@ import Loader from "./components/common/loader/loader";
 import Switcher from "./components/common/switcher/switcher";
 import Layout from "./components/common/layout/layout";
 import Login from "./pages/auth/Login";
-import usFlag from "./assets/images/flags/us_flag.png";
 import { useAppDispatch, useAppSelector } from "./utilities/hooks/useAppDispatch";
 import "./i18n/config";
 import { APIClient } from "./helpers/api-client";
@@ -42,6 +41,7 @@ import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsa
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
 import { useAppState } from "./utilities/hooks/useAppState";
 import AcceptInvitation from "./pages/auth/accept-invitation";
+import { getUserSessionData } from "./session-data";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -104,44 +104,14 @@ function App() {
   const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    let upt = localStorage.getItem("up");
-    let urr = localStorage.getItem("ur");
-    let utt = localStorage.getItem("ut");
-    let css = localStorage.getItem("cs");
-
-    let userRights: UserTypeRights[] = [];
-    try {
-      if (urr != undefined && urr != null && urr != "") {
-        userRights = customJsonParse(atob(urr));
-      }
-    } catch (error) { }
-
-
-    let userProfileDetails: UserModel = initialUserSessionData;
-    try {
-      if (upt != undefined && upt != null && upt != "") {
-        userProfileDetails = customJsonParse(atob(upt));
-      }
-    } catch (error) { }
-
-    let userThemes: AppState = appInitialState;
-    try {
-      if (utt != undefined && utt != null && utt != "") {
-        userThemes = customJsonParse(atob(utt));
-      }
-    } catch (error) { };
-    let locale = languagesData.find(
-      (l) => l.code == userProfileDetails.language
-    ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-    let clientSession: ClientSessionModel = {
-      demoExpiryDate: moment().add(1, "years").toISOString(),
-      isAppGlobal: false, isDemoVersion: true, softwareDate: moment().local().toISOString(), counterShiftId: 0
-    };
-    if (css != undefined && css != null && css != "") {
-      clientSession =
-        customJsonParse(css);
-    }
+    const {
+  token,
+  userThemes,
+  clientSession,
+  userProfileDetails,
+  userRights,
+  locale,
+} = getUserSessionData();
     syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
     const language = userProfileDetails?.language;
 debugger;
@@ -298,3 +268,5 @@ debugger;
   );
 }
 export default App;
+
+

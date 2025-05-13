@@ -21,6 +21,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowSorting: true,
             format: "dd-MMM-yyyy",
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "voucherType",
@@ -30,6 +31,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "voucherForm",
@@ -57,6 +59,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "partyName",
@@ -66,6 +69,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "address1",
@@ -75,6 +79,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "counterName",
@@ -110,6 +115,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
+            showInPdf:true,
             cellRender: (
                 cellElement: any,
                 cellInfo: any,
@@ -142,6 +148,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             cellRender: (
                 cellElement: any,
                 cellInfo: any,
@@ -174,6 +181,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             cellRender: (
                 cellElement: any,
                 cellInfo: any,
@@ -206,6 +214,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
             cellRender: (
                 cellElement: any,
                 cellInfo: any,
@@ -238,6 +247,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
             cellRender: (
                 cellElement: any,
                 cellInfo: any,
@@ -271,6 +281,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowSorting: true,
             format: "dd-MMM-yyyy",
             width: 150,
+            showInPdf:true,
         },
         {
             dataField: "customerType",
@@ -280,6 +291,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "result",
@@ -289,15 +301,24 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
         },
         {
             dataField: "isReported",
             caption: t("is_reported"),
-            dataType: "number",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 80,
+            showInPdf:true,
+            dataType:"boolean"
+            
+            // cellRender: (
+            //     cellElement: any,
+            //     cellInfo: any,
+            //     filter: any,
+            //     exportCell: any
+            //   ) => <> {cellElement.data.isReported == true || cellElement.data.isReported == 1 ? 'Yes' : "No"}</>
         },
         {
             dataField: "clearanceReceived",
@@ -307,6 +328,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "responseMsg",
@@ -316,6 +338,8 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 200,
+            visible: false,
+            showInPdf:true,
         },
         {
             dataField: "eInvoiceTime",
@@ -326,6 +350,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowSorting: true,
             width: 150,
             format: "dd-MMM-yyyy",
+            showInPdf:true,
         },
         // {
         //     dataField: "sentCount",

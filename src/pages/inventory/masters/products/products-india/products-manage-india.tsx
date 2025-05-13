@@ -623,6 +623,10 @@ useEffect(() => {
                         ...prev.product,
                         stdSalesPrice: stdSalesPrice ?? 0,
                       },
+                      batch: {
+                        ...prev.batch,
+                        stdSalesPrice: stdSalesPrice ?? 0,
+                      },
                       markup: data.markup ?? 0,
                     };
 

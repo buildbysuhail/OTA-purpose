@@ -356,23 +356,6 @@ const PurchaseRegisterFilter = ({
           }}
       /> */}
 
-        <ERPDataCombobox
-          label={t("report_of")}
-          {...getFieldProps("reportOf")}
-          options={[
-            { value: "All", label: "All" },
-            { value: "Below Cost", label: "Below Cost" },
-          ]}
-          field={{
-            id: "reportOf",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          onSelectItem={(data) => {
-            handleFieldChange("reportOf", data.value);
-          }}
-        />
-
         {/* {clientSession.isAppGlobal == true && (
           <ERPCheckbox
             label={t("export_data_to_excel")}
@@ -399,11 +382,9 @@ const PurchaseRegisterFilter = ({
             label={t("report_of")}
             {...getFieldProps("reportOf")}
             options={[
-              { value: "All", label: "All" },
-              { value: "Credit", label: "Credit" },
-              { value: "Cash", label: "Cash" },
-              { value: "Card", label: "Card" },
-            ]}
+            { value: "All", label: "All" },
+            { value: "Below Cost", label: "Below Cost" },
+          ]}
             field={{
               id: "reportOf",
               valueKey: "value",

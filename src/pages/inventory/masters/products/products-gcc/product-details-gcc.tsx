@@ -203,26 +203,26 @@ export const ProductDetailsGcc: React.FC<{
               }
             />
             <ERPInput
-              {...getFieldProps("batch.netWt")}
+              {...getFieldProps("product.netWt")}
               label={t("net_weight_(in_grams)")}
               placeholder="0.00"
               type="number"
               required={false}
               onChangeData={(data: productDto) =>
-                handleFieldChange("batch.netWt", data.batch.netWt)
+                handleFieldChange("product.netWt", data.product.netWt)
               }
               className="truncate flex-1 min-w-[100px]"
             />
 
             <ERPInput
-              {...getFieldProps("batch.netWeightUnit")}
+              {...getFieldProps("product.netWeightUnit")}
               label={t("unit_name")}
               placeholder={t("eg:gm/ml")}
               required={false}
               onChangeData={(data: productDto) =>
                 handleFieldChange(
-                  "batch.netWeightUnit",
-                  data.batch.netWeightUnit
+                  "product.netWeightUnit",
+                  data.product.netWeightUnit
                 )
               }
               className="flex-1 min-w-[80px]"

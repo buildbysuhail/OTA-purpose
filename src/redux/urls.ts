@@ -354,6 +354,7 @@ const Urls = {
   inv_reports_stock_ledger: "",
   inv_reports_balance_report: "",
   inv_reports_stock_flow: "",
+
   purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",
   purchase_register_report: "/Inventory/RptPurchaseReport/PurchaseRegister/",
   party_wise_report: "/Inventory/RptPurchaseReport/PartywisePurchase/",
@@ -365,6 +366,7 @@ const Urls = {
     "/Inventory/RptPurchaseReport/PurchaseReturnSummary/",
   purchase_return_register:
     "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
+  summary_product_code:"/Inventory/RptInventoryReport/",
   purchase_estimate_summary:
     "/Inventory/RptPurchaseReport/PurchaseEstimateSummary/",
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",

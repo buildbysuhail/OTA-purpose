@@ -15,6 +15,7 @@ import ProductSummaryReportStockLedger from "./product-summary-report-stock-ledg
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import React from "react";
+import { APIClient } from "../../../../helpers/api-client";
 
 export interface ProductSummaryFilter {
   filter: {
@@ -32,7 +33,7 @@ export interface ProductSummaryFilter {
 export interface ProductSummaryRef {
   reloadData: () => void;
 }
-
+const api = new APIClient();
 const ProductSummaryMaster = ({
   getFieldProps,
   handleFieldChange,
@@ -149,6 +150,24 @@ const ProductSummaryMaster = ({
                       },
                     }))
                   }
+
+                  onEnterKeyDown={async (e: any) => {
+                    console.log("Enter key pressed",e.target.value);
+                    
+                   const val = await api.getAsync(`${Urls.summary_product_code}${e.target.value}`);
+                   if(val){
+                     setFilter((prev: any) => ({
+                      ...prev,
+                      filter: {
+                        ...prev.filter,
+                        productID:val.productID,
+                      },
+                    }))
+                   }
+                  }}
+                  disableEnterNavigation
+
+
                 />
                 <ERPDataCombobox
                   id="productID"

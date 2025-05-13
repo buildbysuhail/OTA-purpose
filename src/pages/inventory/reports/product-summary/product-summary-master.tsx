@@ -160,7 +160,7 @@ const ProductSummaryMaster = ({
                       ...prev,
                       filter: {
                         ...prev.filter,
-                        productID:val.productID,
+                        productID:val,
                       },
                     }))
                    }

@@ -23,6 +23,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "noteNumber",
@@ -32,6 +33,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "noteDate",
@@ -42,6 +44,7 @@ const GSTR1CDNUR = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MMM-yyyy",
+      showInPdf:true,
     },
     {
       dataField: "noteType",
@@ -51,6 +54,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "placeOfSupply",
@@ -60,6 +64,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "noteValue",
@@ -68,6 +73,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -104,6 +110,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -143,6 +150,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -174,6 +182,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -209,6 +218,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,

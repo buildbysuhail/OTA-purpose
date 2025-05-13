@@ -19,7 +19,8 @@ const KsaEInvoiceReportSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            format: "dd-MMM-yyyy"
+            format: "dd-MMM-yyyy",
+            showInPdf:true,
         },
         {
             dataField: "voucherType",
@@ -29,6 +30,7 @@ const KsaEInvoiceReportSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "customerType",
@@ -38,6 +40,7 @@ const KsaEInvoiceReportSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
+            showInPdf:true,
         },
         {
             dataField: "result",
@@ -47,6 +50,7 @@ const KsaEInvoiceReportSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
         {
             dataField: "totalCount",
@@ -56,6 +60,7 @@ const KsaEInvoiceReportSummary = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
+            showInPdf:true,
         },
     ];
     return (

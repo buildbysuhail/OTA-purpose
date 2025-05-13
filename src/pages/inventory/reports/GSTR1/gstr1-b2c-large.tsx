@@ -19,6 +19,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "invoiceDate",
@@ -29,6 +30,7 @@ const GSTR1B2CLarge = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MMM-yyyy",
+      showInPdf:true,
     },
     {
       dataField: "invoiceValue",
@@ -38,6 +40,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -74,6 +77,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "applicablePercentOfTaxRate",
@@ -83,6 +87,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -123,6 +128,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -155,6 +161,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -191,6 +198,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      showInPdf:true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -227,6 +235,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
+      showInPdf:true,
     },
   ];
 

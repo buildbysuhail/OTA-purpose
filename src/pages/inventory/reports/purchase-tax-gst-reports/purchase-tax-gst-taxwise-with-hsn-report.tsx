@@ -51,6 +51,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf: true,
 
       cellRender: (
         cellElement: any,

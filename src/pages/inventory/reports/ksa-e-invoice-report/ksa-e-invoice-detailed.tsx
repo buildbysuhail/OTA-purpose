@@ -338,7 +338,7 @@ const KsaEInvoiceReportDetailed = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 200,
-            visible: false
+            visible: false,
             showInPdf:true,
         },
         {

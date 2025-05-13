@@ -1967,13 +1967,21 @@ debugger;
             <Toolbar>
               {!hideGridHeader && (
                 <Item location="before">
-                  <div className="flex  flex-col">
-                    <div className={`box-title !text-xs !font-medium`}>
-                      <span className="text-sm dark:!text-dark-text">
-                        {gridHeader}
+                  <div className="flex flex-col">
+                    <div className="box-title !text-xs !font-medium">
+                      <span
+                        className="text-sm dark:!text-dark-text"
+                        title={gridHeader}
+                      >
+                        {gridHeader.length > 30 ? `${gridHeader.slice(0, 30)}...` : gridHeader}
                       </span>
-                      &nbsp;{""}
-                      {header}
+                      &nbsp;
+                      <span
+                        className="text-sm dark:!text-dark-text"
+                        title={header}
+                      >
+                        {header.length > 200 ? `${header.slice(0, 200)}...` : header}
+                      </span>
                     </div>
                   </div>
                 </Item>

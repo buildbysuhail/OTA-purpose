@@ -177,39 +177,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 
   const handleGridKeyDown = useCallback(
     async (e: any) => {
-      const grid: any = dataGridRef.current?.instance();
-
-      if (e.event.key === 'ArrowDown') {
-        e.event.preventDefault();
-        const rows = grid.getVisibleRows();
+      if (e.event.key === 'Enter' || e.event.key === 'NumpadEnter') {
+        const grid: any = dataGridRef.current?.instance();
         const selectedRowKeys = grid.getSelectedRowKeys();
-
-        if (rows.length > 0 && selectedRowKeys.length > 0) {
-          const currentIndex = rows.findIndex((row: any) => row.key === selectedRowKeys[0]);
-          const nextIndex = currentIndex < rows.length - 1 ? currentIndex + 1 : currentIndex;
-
-          grid.selectRowsByIndexes([nextIndex]);
-          grid.navigateToRow(grid.getKeyByRowIndex(nextIndex));
-        }
-        return;
-      }
-
-      if (e.event.key === 'ArrowUp') {
-        e.event.preventDefault();
-        const rows = grid.getVisibleRows();
-        const selectedRowKeys = grid.getSelectedRowKeys();
-
-        if (rows.length > 0 && selectedRowKeys.length > 0) {
-          const currentIndex = rows.findIndex((row: any) => row.key === selectedRowKeys[0]);
-          const prevIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-
-          grid.selectRowsByIndexes([prevIndex]);
-          grid.navigateToRow(grid.getKeyByRowIndex(prevIndex));
-        }
-        return;
-      }
-
-      if ((e.event.key === 'NumpadEnter' || e.event.key === 'Enter') && grid.getSelectedRowKeys().length > 0) {
+        if (selectedRowKeys.length > 0) {
         const selectedRow = grid.getSelectedRowsData()[0];
         if (onProductSelected) {
           onProductSelected(selectedRow);
@@ -225,8 +196,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           setShowBatchGrid(false);
         }
       }
-    },
-    [batchDataUrl, onProductSelected]
+    }
+    }, [batchDataUrl, onProductSelected]
   );
 
   const handleBatchGridKeyDown = useCallback(
@@ -293,7 +264,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           onKeyDown={handleInputKeyDown}
           onEnterKeyDown={onEnterKeyDown}
           disableEnterNavigation
-          ref={ref} // Pass the ref to ERPInput
+          ref={ref} 
         />
         {showProductGrid && (
           <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h เด400px] shadow-lg bg-white">

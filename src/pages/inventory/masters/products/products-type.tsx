@@ -111,6 +111,8 @@ export interface DetailsDto {
   active?:boolean; // newly added
   manual?:boolean; // newly added
   taxCategoryValue?: number; // readOnly
+  netWeightUnit?: string; // UnitName: string?
+  netWt?: number;
 }
 
 export interface ProductValidationDto {
@@ -208,8 +210,6 @@ export interface ProductBatchInputDto {
   baseUnitRemarks: string;
   aPC:number;
   stock:number;
-  netWeightUnit?: string; // UnitName: string?
-  netWt?: number;
 }
 
 export type ProductBatchValidationDto = {};

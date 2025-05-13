@@ -239,7 +239,9 @@ const payload = {
     };
 
     return (
-        <div className="w-full modal-content flex flex-col gap-4 p-4">
+          <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            <div className="px-4 pt-4 pb-2 ">
             {/* Top Section - Dropdowns */}
             <div className="grid grid-cols-6 gap-4">
                    <ERPDataCombobox
@@ -296,14 +298,15 @@ const payload = {
             <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
                 {/* Left Grid - Add to Scheme */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-end justify-between gap-2">
+                    {/* <div className="flex items-end justify-between gap-2">
                         <h6 className="text-xs font-medium bg-gray-200 p-2 rounded-sm shadow-sm">{t("add_to_scheme")}</h6>
-                    </div>
+                    </div> */}
 
                     <div>
    
                         <ERPDevGrid
-                           ref={leftGridRef}
+                            ref={leftGridRef}
+                            gridHeader={t("add_to_scheme")}
                             data={leftGridData}
                              columns={columns}
                              remoteOperations={false}
@@ -315,7 +318,7 @@ const payload = {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
-                            heightToAdjustOnWindows={450}
+                            heightToAdjustOnWindows={220}
                             selectionMode="multiple"
                             allowSelection={true}
                             allowSelectAll={true}
@@ -327,13 +330,14 @@ const payload = {
 
                 {/* Right Grid - Remove from Scheme */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-end justify-between gap-2">
+                    {/* <div className="flex items-end justify-between gap-2">
                         <h6 className="text-xs font-medium bg-gray-200 p-2 rounded-sm shadow-sm">{t("remove_from_scheme")}</h6>
-                    </div>
+                    </div> */}
 
                     <div>
                         <ERPDevGrid
                             ref={rightGridRef}
+                             gridHeader={t("remove_from_scheme")}
                             data={rightGridData}
                              remoteOperations={false}
                             showBorders={true}
@@ -344,7 +348,7 @@ const payload = {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
-                            heightToAdjustOnWindows={450}
+                            heightToAdjustOnWindows={220}
                             selectionMode="multiple"
                             allowSelection={true}
                             allowSelectAll={true}
@@ -356,7 +360,7 @@ const payload = {
             </div>
 
             {/* Bottom Buttons */}
-            <div className="flex justify-end gap-4 mt-4">
+            <div className="flex justify-end gap-4 mt-1">
                 <ERPButton
                     title={t("save")}
                     variant="primary"
@@ -376,6 +380,8 @@ const payload = {
                 />
             </div>
         </div>
+       </div>
+       </div>   
     );
 };
 

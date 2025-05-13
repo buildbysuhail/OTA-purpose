@@ -309,7 +309,7 @@ export const ProductManageGcc: React.FC<{
                   label={t(" ")}
                   placeholder=""
 
-                  type="string"
+                  // type="string"
                   required={false}
                   className="flex-1 min-w-[140px]"
                   onChange={(data: any) =>

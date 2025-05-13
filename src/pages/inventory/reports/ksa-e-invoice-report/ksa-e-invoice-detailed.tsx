@@ -323,7 +323,7 @@ const KsaEInvoiceReportDetailed = () => {
         {
             dataField: "clearanceReceived",
             caption: t("clearance_received"),
-            dataType: "number",
+            dataType:"boolean",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,

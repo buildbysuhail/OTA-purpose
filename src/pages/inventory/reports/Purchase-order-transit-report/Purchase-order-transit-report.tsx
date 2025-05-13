@@ -46,15 +46,13 @@ const PurchaseOrderTransitReport = () => {
       showInPdf: true,
     },
     {
-      dataField: "stockInWareHouse",
+      dataField: "stockInWarehouse",
       caption: t("stock_in_warehouse"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      alignment: "right",
-      format: "fixedPoint",
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
@@ -179,20 +177,20 @@ const PurchaseOrderTransitReport = () => {
       },
     },
   ]
-   const customizeSummaryRow = useMemo(() => {
-      return (itemInfo: { value: any }) => {
-        const value = itemInfo.value;
-        if (
-          value === null ||
-          value === undefined ||
-          value === "" ||
-          isNaN(value)
-        ) {
-          return "0"; // Ensure "0" is displayed when value is missing
-        }
-        return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
-      };
-    }, []);
+  //  const customizeSummaryRow = useMemo(() => {
+  //     return (itemInfo: { value: any }) => {
+  //       const value = itemInfo.value;
+  //       if (
+  //         value === null ||
+  //         value === undefined ||
+  //         value === "" ||
+  //         isNaN(value)
+  //       ) {
+  //         return "0"; // Ensure "0" is displayed when value is missing
+  //       }
+  //       return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
+  //     };
+  //   }, []);
    const customizeSummaryRowFormatted = useMemo(() => {
       return (itemInfo: { value: any }) => {
         const value = itemInfo.value;
@@ -208,19 +206,19 @@ const PurchaseOrderTransitReport = () => {
         return getFormattedValue(value, false,undefined, 1,1) || "0"; // Ensure formatted output or fallback to "0" 
       };
     }, []);
-  
+    const customizeDate = (itemInfo: any) => `TOTAL`;
 const summaryItems: SummaryConfig[] = [
+  
+      {
+        column: "productName",
+        summaryType: "max",
+        customizeText: customizeDate,
+      },
     {
-      column: "productName",
-      summaryType: "custom",
-      valueFormat: "string",
-      displayFormat:"TOTAL"
-    },
-    {
-      column: "stockInWareHouse",
+      column: "stockInWarehouse",
       summaryType: "sum",
-      valueFormat: "number",
-      customizeText: customizeSummaryRow,
+      valueFormat: "currency",
+      customizeText: customizeSummaryRowFormatted,
     },
     {
       column: "stockInTransit",
@@ -232,19 +230,19 @@ const summaryItems: SummaryConfig[] = [
       column: "orderPending",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRowFormatted,
     },
     {
       column: "total",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRowFormatted,
     },
     {
       column: "orderManual",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRowFormatted,
     }
   ];
   return (

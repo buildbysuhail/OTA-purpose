@@ -111,8 +111,8 @@ const ProductDetailsIndia: React.FC<{
                     getListUrl: Urls.data_brands,
                     labelKey: "name",
                   }}
-                  onChangeData={(data: productDto) =>
-                    handleFieldChange("batch.brandID", data.batch.brandID)
+                  onSelectItem={(data: any) =>
+                    handleFieldChange("batch.brandID", data.value)
                   }
                   className="flex-1"
                   label={t("brand_mfg")}

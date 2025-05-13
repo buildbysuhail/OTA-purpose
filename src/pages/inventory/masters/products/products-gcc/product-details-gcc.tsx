@@ -11,189 +11,241 @@ import ProductDetailsBatches from "../products-india/product-details-batches";
 import { productDto } from "../products-type";
 
 export const ProductDetailsGcc: React.FC<{
-    clientSession: any;
-    handleFieldChange: (
-        fields:
-            | string
-            | {
-                [fieldId: string]: any;
-            },
-        value?: any
-    ) => void;
+  clientSession: any;
+  handleFieldChange: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
 
-    getFieldProps: (fieldId: string, type?: string) => FormField;
+  getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ clientSession, handleFieldChange, getFieldProps }) => {
+  const { t } = useTranslation("inventory");
+  return (
+    <>
+      {getFieldProps("details").value == true && (
+        <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
+          <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
+            <div className="grid grid-cols-3 gap-1">
+              <ERPInput
+                {...getFieldProps("product.minimumStock")}
+                label={t("stock_min")}
+                placeholder="0.00"
+                type="number"
+                required={false}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "product.minimumStock",
+                    data.product.minimumStock
+                  )
+                }
+              />
 
-    const { t } = useTranslation("inventory");
-    return (
-        <>
-            {getFieldProps("details").value == true &&
-                <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-                    <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
-                        <div className="grid grid-cols-3 gap-1">
-                            <ERPInput
-                                {...getFieldProps("product.minimumStock")}
-                                label={t("stock_min")}
-                                placeholder="0.00"
-                                type="number"
-                                required={false}
-                                onChangeData={(data) => handleFieldChange("product.minimumStock", data.product.minimumStock)}
-                            />
+              <ERPInput
+                {...getFieldProps("product.maximumStock")}
+                label={t("stock_max")}
+                placeholder="0.00"
+                type="number"
+                required={false}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "product.maximumStock",
+                    data.product.maximumStock
+                  )
+                }
+              />
 
-                            <ERPInput
-                                {...getFieldProps("product.maximumStock")}
-                                label={t("stock_max")}
-                                placeholder="0.00"
-                                type="number"
-                                required={false}
-                                onChangeData={(data) => handleFieldChange("product.maximumStock", data.product.maximumStock)}
-                            />
+              <ERPInput
+                {...getFieldProps("product.reorderQty")}
+                label={t("re_order_qty")}
+                placeholder="0.00"
+                type="number"
+                required={false}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "product.reorderQty",
+                    data.product.reorderQty
+                  )
+                }
+              />
+            </div>
 
-                            <ERPInput
-                                {...getFieldProps("product.reorderQty")}
-                                label={t("re_order_qty")}
-                                placeholder="0.00"
-                                type="number"
-                                required={false}
-                                onChangeData={(data) => handleFieldChange("product.reorderQty", data.product.reorderQty)}
-                            />
-                        </div>
+            <div className="flex items-center gap-1">
+              <ERPDataCombobox
+                {...getFieldProps("batch.warehouseID")}
+                id="warehouseID"
+                field={{
+                  getListUrl: Urls.data_warehouse,
+                  id: "warehouseID",
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onSelectItem={(data) =>
+                  handleFieldChange("batch.warehouseID", data.value)
+                }
+                className="w-full"
+                label={t("warehouse")}
+              />
+              <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+                <Ellipsis className="w-4 h-4" />
+              </button>
+            </div>
 
-                        <div className="flex items-center gap-1">
-                            <ERPDataCombobox
-                                {...getFieldProps("batch.warehouseID")}
-                                id="warehouseID"
-                                field={{
-                                    getListUrl: Urls.data_warehouse,
-                                    id: "warehouseID",
-                                    valueKey: "id",
-                                    labelKey: "name",
-                                }}
-                                onSelectItem={(data) => handleFieldChange("batch.warehouseID", data.value)}
-                                className="w-full"
-                                label={t("warehouse")}
-                            />
-                            <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                                <Ellipsis className="w-4 h-4" />
-                            </button>
-                        </div>
+            <div className="flex items-center gap-1">
+              <ERPDataCombobox
+                {...getFieldProps("batch.brandID")}
+                id="brandID"
+                field={{
+                  id: "brandID",
+                  valueKey: "id",
+                  labelKey: "name",
+                  getListUrl: Urls.data_brands,
+                }}
+                onSelectItem={(data) =>
+                  handleFieldChange("batch.brandID", data.value)
+                }
+                className="w-full"
+                label={t("brand_mfg")}
+                // options={[]}
+              />
+              <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+                <Ellipsis className="w-4 h-4" />
+              </button>
+            </div>
 
-                        <div className="flex items-center gap-1">
-                            <ERPDataCombobox
-                                {...getFieldProps("batch.brandID")}
-                                id="brandID"
-                                field={{
-                                    id: "brandID",
-                                    valueKey: "id",
-                                    labelKey: "name",
-                                    getListUrl: Urls.data_brands,
-                                }}
-                                onSelectItem={(data) => handleFieldChange("batch.brandID", data.value)}
-                                className="w-full"
-                                label={t("brand_mfg")}
-                            // options={[]}
-                            />
-                            <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                                <Ellipsis className="w-4 h-4" />
-                            </button>
-                        </div>
+            <ERPInput
+              {...getFieldProps("product.commodityCode")}
+              label={t("commodity_plu")}
+              placeholder=""
+              required={false}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "product.commodityCode",
+                  data.product.commodityCode
+                )
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("product.commodityCode")}
-                            label={t("commodity_plu")}
-                            placeholder=""
-                            required={false}
-                            onChangeData={(data) => handleFieldChange("product.commodityCode", data.product.commodityCode)}
-                        />
+            <ERPDataCombobox
+              {...getFieldProps("product.productCategoryID")}
+              id="productCategoryID"
+              field={{
+                id: "productCategoryID",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_productcategory,
+              }}
+              onSelectItem={(data: any) =>
+                handleFieldChange("product.productCategoryID", data.value)
+              }
+              label={t("product_category")}
+              className="w-full"
+              // options={[]}
+            />
 
-                        <ERPDataCombobox
-                            {...getFieldProps("product.productCategoryID")}
-                            id="productCategoryID"
-                            field={{
-                                id: "productCategoryID",
-                                valueKey: "id",
-                                labelKey: "name",
-                                getListUrl: Urls.data_productcategory,
-                            }}
-                            onSelectItem={(data: any) => handleFieldChange("product.productCategoryID", data.value)}
-                            label={t("product_category")}
-                            className="w-full"
-                        // options={[]}
-                        />
+            <ERPInput
+              {...getFieldProps("batch.specification")}
+              label={t("specification")}
+              placeholder=""
+              required={false}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "batch.specification",
+                  data.batch.specification
+                )
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("batch.specification")}
-                            label={t("specification")}
-                            placeholder=""
-                            required={false}
-                            onChangeData={(data) => handleFieldChange("batch.specification", data.batch.specification)}
-                        />
+            <ERPInput
+              {...getFieldProps("product.hsnCode")}
+              label={t("hsn_code")}
+              placeholder=""
+              required={false}
+              onChangeData={(data) =>
+                handleFieldChange("product.hsnCode", data.product.hsnCode)
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("product.hsnCode")}
-                            label={t("hsn_code")}
-                            placeholder=""
-                            required={false}
-                            onChangeData={(data) => handleFieldChange("product.hsnCode", data.product.hsnCode)}
-                        />
+            <ERPInput
+              {...getFieldProps("product.aliasItemName")}
+              label={t("alias_name")}
+              placeholder=""
+              required={false}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "product.aliasItemName",
+                  data.product.aliasItemName
+                )
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("product.aliasItemName")}
-                            label={t("alias_name")}
-                            placeholder=""
-                            required={false}
-                            onChangeData={(data) => handleFieldChange("product.aliasItemName", data.product.aliasItemName)}
-                        />
+            <ERPInput
+              {...getFieldProps("batch.autoBarcode")}
+              label={t("auto_barcode")}
+              placeholder=""
+              required={false}
+              disabled
+              onChangeData={(data) =>
+                handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("batch.autoBarcode")}
-                            label={t("auto_barcode")}
-                            placeholder=""
-                            required={false}
-                            disabled
-                            onChangeData={(data) => handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)}
-                        />
+            <ERPInput
+              {...getFieldProps("batch.batchNo")}
+              label={t("batch_no")}
+              placeholder=""
+              required={false}
+              onChangeData={(data) =>
+                handleFieldChange("batch.batchNo", data.batch.batchNo)
+              }
+            />
+            <ERPInput
+              {...getFieldProps("batch.netWt")}
+              label={t("net_weight_(in_grams)")}
+              placeholder="0.00"
+              type="number"
+              required={false}
+              onChangeData={(data: productDto) =>
+                handleFieldChange("batch.netWt", data.batch.netWt)
+              }
+              className="truncate flex-1 min-w-[100px]"
+            />
 
-                        <ERPInput
-                            {...getFieldProps("batch.batchNo")}
-                            label={t("batch_no")}
-                            placeholder=""
-                            required={false}
-                            onChangeData={(data) => handleFieldChange("batch.batchNo", data.batch.batchNo)}
-                        />
-                        <ERPInput
-                            {...getFieldProps("batch.netWt")}
-                            label={t("net_weight_(in_grams)")}
-                            placeholder="0.00"
-                            type="number"
-                            required={false}
-                            onChangeData={(data: productDto) => handleFieldChange("batch.netWt", data.batch.netWt)}
-                            className="truncate flex-1 min-w-[100px]"
-                        />
+            <ERPInput
+              {...getFieldProps("batch.netWeightUnit")}
+              label={t("unit_name")}
+              placeholder={t("eg:gm/ml")}
+              required={false}
+              onChangeData={(data: productDto) =>
+                handleFieldChange(
+                  "batch.netWeightUnit",
+                  data.batch.netWeightUnit
+                )
+              }
+              className="flex-1 min-w-[80px]"
+            />
+            <ERPDateInput
+              {...getFieldProps("batch.expiryDate")}
+              label={t("exp_date")}
+              required={false}
+              onChange={(data) =>
+                handleFieldChange("batch.expiryDate", data.target.value)
+              }
+            />
 
-                        <ERPInput
-                            {...getFieldProps("batch.netWeightUnit")}
-                            label={t("unit_name")}
-                            placeholder={t("eg:gm/ml")}
-                            required={false}
-                            onChangeData={(data: productDto) => handleFieldChange("batch.netWeightUnit", data.batch.netWeightUnit)}
-                            className="flex-1 min-w-[80px]"
-                        />
-                        <ERPDateInput
-                            {...getFieldProps("batch.expiryDate")}
-                            label={t("exp_date")}
-                            required={false}
-                            onChange={(data) => handleFieldChange("batch.expiryDate", data.target.value)}
-                        />
+            <ERPDateInput
+              {...getFieldProps("batch.mfgDate")}
+              label={t("mfg_date")}
+              required={false}
+              onChange={(data) =>
+                handleFieldChange("batch.mfgDate", data.target.value)
+              }
+            />
 
-                        <ERPDateInput
-                            {...getFieldProps("batch.mfgDate")}
-                            label={t("mfg_date")}
-                            required={false}
-                            onChange={(data) => handleFieldChange("batch.mfgDate", data.target.value)}
-                        />
-
-                        {/* <ERPInput
+            {/* <ERPInput
                             {...getFieldProps("product.mrp")}
                             label={t("mrp")}
                             placeholder="0.00"
@@ -202,68 +254,102 @@ export const ProductDetailsGcc: React.FC<{
                             onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
                         /> */}
 
-                        <ERPDataCombobox
-                            {...getFieldProps("product.location")}
-                            id="location"
-                            field={{
-                                id: "location",
-                                valueKey: "id",
-                                labelKey: "name",
-                                getListUrl: Urls.data_locations
-                            }}
-                            onSelectItem={(data) => handleFieldChange("product.location", data.value)}
-                            label={t("location")}
-                        />
+            <ERPDataCombobox
+              {...getFieldProps("product.location")}
+              id="location"
+              field={{
+                id: "location",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_locations,
+              }}
+              onSelectItem={(data) =>
+                handleFieldChange("product.location", data.value)
+              }
+              label={t("location")}
+            />
 
-                        <ERPCheckbox
-                            {...getFieldProps("product.isActive")}
-                            label={t("is_active_batch")}
-                            onChange={(data) => handleFieldChange("product.isActive", data.target.checked)}
-                        />
-                    </div>
+            <ERPCheckbox
+              {...getFieldProps("product.isActive")}
+              label={t("is_active_batch")}
+              onChange={(data) =>
+                handleFieldChange("product.isActive", data.target.checked)
+              }
+            />
+          </div>
 
-                    <div className="border border-gray-200 rounded-md p-2 relative">
-                        <h6 className="absolute top-[-13px] rounded-md px-4 py-1">{t("list_in")}</h6>
-                        <div className="flex flex-wrap items-center gap-6 mt-5">
-                            <ERPCheckbox
-                                {...getFieldProps("product.canPurchase")}
-                                label={t("purchase")}
-                                onChange={(data) => handleFieldChange("product.canPurchase", data.target.checked)}
-                            />
+          <div className="border border-gray-200 rounded-md p-2 relative">
+            <h6 className="absolute top-[-13px] rounded-md px-4 py-1">
+              {t("list_in")}
+            </h6>
+            <div className="flex flex-wrap items-center gap-6 mt-5">
+              <ERPCheckbox
+                {...getFieldProps("product.canPurchase")}
+                label={t("purchase")}
+                onChange={(data) =>
+                  handleFieldChange("product.canPurchase", data.target.checked)
+                }
+              />
 
-                            <ERPCheckbox
-                                {...getFieldProps("product.canSale")}
-                                label={t("sales")}
-                                onChange={(data) => handleFieldChange("product.canSale", data.target.checked)}
-                            />
+              <ERPCheckbox
+                {...getFieldProps("product.canSale")}
+                label={t("sales")}
+                onChange={(data) =>
+                  handleFieldChange("product.canSale", data.target.checked)
+                }
+              />
 
-                            <ERPCheckbox
-                                {...getFieldProps("product.isFinishedGood")}
-                                label={t("finished_goods")}
-                                onChange={(data) => handleFieldChange("product.isFinishedGood", data.target.checked)}
-                            />
+              <ERPCheckbox
+                {...getFieldProps("product.isFinishedGood")}
+                label={t("finished_goods")}
+                onChange={(data) =>
+                  handleFieldChange(
+                    "product.isFinishedGood",
+                    data.target.checked
+                  )
+                }
+              />
 
-                            <ERPCheckbox
-                                {...getFieldProps("product.isRawMaterial")}
-                                label={t("raw_material")}
-                                onChange={(data) => handleFieldChange("product.isRawMaterial", data.target.checked)}
-                            />
-
-                            {
-                                clientSession.dbIdValue == "543140180640" &&
-                                <ERPCheckbox
-                                    {...getFieldProps("product.hold")}
-                                    label={t("hold")}
-                                    onChange={(data) => handleFieldChange("product.hold", data.target.checked)}
-                                />
-                            }
-                        </div>
-                    </div>
-                    <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches>
-                </div>
-            }
-        </>
-    );
+              <ERPCheckbox
+                {...getFieldProps("product.isRawMaterial")}
+                label={t("raw_material")}
+                onChange={(data) =>
+                  handleFieldChange(
+                    "product.isRawMaterial",
+                    data.target.checked
+                  )
+                }
+              />
+              <ERPCheckbox
+                {...getFieldProps("batch.gatePass")}
+                label={t("gate_pass")}
+                onChange={(e) =>
+                  handleFieldChange("batch.gatePass", e.target.checked)
+                }
+                // onChangeData={(data: productDto) =>
+                //   handleFieldChange("product.gatePass", data.gatePass)
+                // }
+              />
+              {clientSession.dbIdValue == "543140180640" && (
+                <ERPCheckbox
+                  {...getFieldProps("product.hold")}
+                  label={t("hold")}
+                  onChange={(data) =>
+                    handleFieldChange("product.hold", data.target.checked)
+                  }
+                />
+              )}
+            </div>
+          </div>
+          <ProductDetailsBatches
+            getFieldProps={getFieldProps}
+            handleFieldChange={handleFieldChange}
+            t={t}
+          ></ProductDetailsBatches>
+        </div>
+      )}
+    </>
+  );
 });
 
 export default ProductDetailsGcc;

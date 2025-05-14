@@ -1899,15 +1899,17 @@ const handleAddData = (newItem: any) => {
                     <ERPModal
                       isOpen={isModalOpen}
                       title="GrnNumber"
-                      width={500}
-                      height={300}
-                      closeModal={closeModal} // Close modal on close action
+                      width={600}
+                      height={200}
+                      closeModal={closeModal}
                       content={
                       <GrnNumber
                       dispatch={dispatch}
                       formState={formState}
                       t={t}
                       handleLoadByRefNo={handleLoadByRefNo}
+                      handleFieldChange={handleFieldChange}
+                      closeModal={closeModal}
 
                       />
                     }

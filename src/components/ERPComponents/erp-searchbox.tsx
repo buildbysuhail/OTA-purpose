@@ -395,8 +395,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       <ERPModal
         isOpen={ gridModal}
         title={t("privilege_card")}
-        width={800}
-        height={380}
+        width={1000}
+        height={800}
         isForm={true}
         closeModal={() => {setGridModal(false)}}
         content={

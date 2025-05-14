@@ -24,7 +24,7 @@ const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 150;
+    let gridHeightWindows = modalHeight - 80;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 

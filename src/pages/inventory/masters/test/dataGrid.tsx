@@ -165,6 +165,11 @@ export default function DataGridTest<T extends DataItem>({
           }}
         >
           <ERPProductSearch 
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          //     if (onCellChange) {
+          //       onCellChange(rowIndex, column.dataField!, e.target.value);
+          //     }
+          //   }}
             showCheckBox={false}
             value={value || ""}
            productDataUrl={Urls.load_product_details}
@@ -209,11 +214,11 @@ export default function DataGridTest<T extends DataItem>({
             value={displayValue}
             disabled={!column.allowEditing}
             noBorder
-            // onChange={(e) => {
-            //   if (onCellChange) {
-            //     onCellChange(rowIndex, column.dataField!, e.target.value);
-            //   }
-            // }}
+            onChange={(e) => {
+              if (onCellChange) {
+                onCellChange(rowIndex, column.dataField!, e.target.value);
+              }
+            }}
           />
         ) : (
           displayValue

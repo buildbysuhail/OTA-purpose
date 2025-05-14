@@ -173,6 +173,11 @@ export const SchemeSettingsDiscount: React.FC = () => {
     ) {
       handleLoadByProp(schemeDiscountForm);
     }
+    else
+    {
+       setLeftGridData([]);
+    setRightGridData([]);
+    }
   }, [schemeDiscountForm]);
 
    const handleClear =()=>{

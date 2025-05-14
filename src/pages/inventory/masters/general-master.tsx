@@ -4,6 +4,7 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import Urls from '../../../redux/urls';
 import axios from 'axios';
 import ERPButton from '../../../components/ERPComponents/erp-button';
+import { APIClient } from '../../../helpers/api-client';
 
 interface MasterItem {
   sino: number;
@@ -12,6 +13,7 @@ interface MasterItem {
   masterType?: string;
 }
 
+const api = new APIClient();
 const GeneralMaster: React.FC = () => {
   const [masterType, setMasterType] = useState<string>("");
   const [masterData, setMasterData] = useState<MasterItem[]>([{ sino: 1, description: '' }]);
@@ -26,8 +28,8 @@ const GeneralMaster: React.FC = () => {
         return;
       }
 
-      const response = await axios.get(`${Urls.generalMaster}?masterType=${type}`);
-      const formattedData = response.data.map((item: any, index: number) => ({
+      const response = await api.getAsync(`${Urls.generalMaster}?masterType=${type}`);
+      const formattedData = response?.map((item: any, index: number) => ({
         sino: index + 1,
         description: item.masterName || item.description,
         id: item.id,
@@ -68,8 +70,10 @@ const GeneralMaster: React.FC = () => {
         }));
 
       if (dataToSave.length > 0) {
-        await axios.post(Urls.generalMaster, dataToSave);
-        await fetchMasterData(masterType);
+        await api.postAsync(Urls.generalMaster, dataToSave);
+        // await fetchMasterData(masterType);
+        setMasterType("");
+        setMasterData([]);
       }
     } catch (error) { }
     finally {

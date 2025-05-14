@@ -575,7 +575,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_goods_receipt_return_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />} />
         <Route path="/inventory/itemwise_goods_request_summary_report" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />} />
         <Route path="/inventory/transaction_summary_report" element={<SummaryReport dataUrl={urls.transaction_summary} gridHeader="transaction_summary" gridId="grd_transaction_summary" />} />
-        <Route path="/inventory/inventory_transaction_register_report" element={<SummaryReport dataUrl={urls.inventory_transaction_register} gridHeader="inventory_transaction_register" gridId="grd_inventory_transaction_register" />} />
+        <Route path="/inventory/inventory_transaction_register_report" element={<RegisterReport dataUrl={urls.inventory_transaction_register} gridHeader="inventory_transaction_register" gridId="grd_inventory_transaction_register" />} />
         <Route path="/inventory/stock_summary_report" element={<StockSummary />} />
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/expiry_report" element={<ExpiryReport />} />

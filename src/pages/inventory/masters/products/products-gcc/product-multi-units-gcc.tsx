@@ -178,7 +178,7 @@ const ProductMultiUnitsGCC = forwardRef<
           unit: unit,
           unitID: unitId,
           priceCategoryID: cat.id,
-          purchaseRate: clientSession.isAppGlobal
+          purchasePrice: clientSession.isAppGlobal
             ? parseFloat(
                 getFormattedValue(
                   (obj?.product?.stdPurchasePrice ?? 0) *
@@ -195,7 +195,6 @@ const ProductMultiUnitsGCC = forwardRef<
           discountPerc: 0,
           profitAmt: 0,
           msp: 0,
-          purchasePrice: 0,
         })
       );
 

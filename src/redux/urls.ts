@@ -63,6 +63,7 @@ const Urls = {
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
+  data_FormTypeByVoucherType: "/Accounts/Data/FormTypeByVoucherType/",
   data_SelectAccGroupsUnderAccGroupIDForCombo:
     "/Accounts/Data/SelectAccGroupsUnderAccGroupIDForCombo/",
   data_SelectAccLedgersByAccGroupIDForCombo:

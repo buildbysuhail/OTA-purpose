@@ -2,16 +2,15 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { ResizableBox } from "react-resizable"
 
 interface BottomSidebarProps {
-  children: React.ReactNode 
-  isOpen: boolean 
-  setIsOpen: (isOpen: boolean) => void 
-  minHeight?: number 
-  maxHeight?: number 
-  initialHeight?: number 
-  className?: string 
+  children: React.ReactNode
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+  minHeight?: number
+  maxHeight?: number
+  initialHeight?: number
+  className?: string
 }
 
 const BottomSidebar: React.FC<BottomSidebarProps> = ({
@@ -23,9 +22,8 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
   initialHeight = 400,
   className,
 }) => {
-  const [sidebarHeight, setSidebarHeight] = useState(initialHeight)
+  const [sidebarHeight] = useState(initialHeight)
 
-  // Backdrop styles
   const backdropStyle: React.CSSProperties = {
     position: "fixed",
     inset: 0,
@@ -35,37 +33,35 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
     opacity: isOpen ? 1 : 0,
     pointerEvents: isOpen ? "auto" : "none",
   }
-  const [leftValue, setLeftValue] = useState("0px");
-  console.log({leftValue});
+
+  const [leftValue, setLeftValue] = useState("0px")
 
   useEffect(() => {
     const handleResize = () => {
-      setLeftValue(window.innerWidth >= 992 ? "241px" : "0px");
-    };
+      setLeftValue(window.innerWidth >= 992 ? "241px" : "0px")
+    }
 
-    handleResize(); // Set initially
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
-  // Sidebar container styles
   const sidebarContainerStyle: React.CSSProperties = {
     position: "fixed",
     bottom: 0,
-    // left: 0,
-    left: leftValue,
-    // left: "241px",
+    // left: leftValue,
+    left: 0,
     right: 0,
     zIndex: 50,
     backgroundColor: "white",
-    boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+    boxShadow:
+      "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
     transition: "transform 300ms ease-in-out",
     transform: isOpen ? "translateY(0)" : "translateY(100%)",
     borderTop: "1px solid #e5e7eb",
     height: sidebarHeight,
   }
 
-  // Handle styles
   const handleStyle: React.CSSProperties = {
     position: "absolute",
     top: 0,
@@ -86,13 +82,11 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
     transition: "background-color 150ms",
   }
 
-  // Content container styles
   const contentContainerStyle: React.CSSProperties = {
     paddingTop: "16px",
     height: "100%",
   }
 
-  // Scroll area styles
   const scrollAreaStyle: React.CSSProperties = {
     width: "100%",
     height: "100%",
@@ -104,43 +98,20 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
 
   return (
     <>
-      {/* Backdrop */}
       <div style={backdropStyle} onClick={() => setIsOpen(false)} />
 
-      {/* Resizable Sidebar */}
       <div
         style={{
           ...sidebarContainerStyle,
           ...(className ? { className } : {}),
         }}
       >
-        <ResizableBox
-          width={Number.POSITIVE_INFINITY}
-          height={sidebarHeight}
-          minConstraints={[Number.POSITIVE_INFINITY, minHeight]}
-          maxConstraints={[Number.POSITIVE_INFINITY, maxHeight]}
-          resizeHandles={["n"]}
-          handle={
-            <div style={handleStyle}>
-              <div
-                style={handleIndicatorStyle}
-                onMouseOver={(e) => {
-                  ;(e.target as HTMLDivElement).style.backgroundColor = "rgba(107, 114, 128, 0.5)"
-                }}
-                onMouseOut={(e) => {
-                  ;(e.target as HTMLDivElement).style.backgroundColor = "rgba(107, 114, 128, 0.3)"
-                }}
-              />
-            </div>
-          }
-          onResize={(e, { size }) => setSidebarHeight(size.height)}
-          axis="y"
-          style={{ width: "100%", height: "100%" }}
-        >
-          <div style={contentContainerStyle}>
-            <div style={scrollAreaStyle}>{children}</div>
-          </div>
-        </ResizableBox>
+        <div style={handleStyle}>
+          
+        </div>
+        <div style={contentContainerStyle}>
+          <div style={scrollAreaStyle}>{children}</div>
+        </div>
       </div>
     </>
   )

@@ -678,6 +678,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust', gridId = 'grd_cust' })
               <DataGrid
                 dataSource={store}
                 height={500}
+                className='custom-data-grid-dark-only'
                 showBorders={true}
                 showRowLines={true}
                 onCellPrepared={onCellPrepared}

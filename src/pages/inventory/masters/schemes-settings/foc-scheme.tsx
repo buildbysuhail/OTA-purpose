@@ -211,13 +211,13 @@ const FOCScheme: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-2 bg-gray-100">
-      <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
+    <div className="w-full p-2 dark:bg-dark-bg bg-gray-100">
+      <div className="dark:bg-dark-bg bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
         <div className="grid grid-cols-1 gap-3">
           <div className="space-y-2 sm:space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("scheme")}:</label>
+                <label className="dark:text-dark-label">{t("scheme")}:</label>
               </div>
               <div className="flex-1">
                 <ERPDataCombobox
@@ -251,7 +251,7 @@ const FOCScheme: React.FC = () => {
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("quantity")}:</label>
+                  <label className="dark:text-dark-label">{t("quantity")}:</label>
                 </div>
                 <div className="flex-1">
                   <ERPInput
@@ -270,7 +270,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("free_quantity")}:</label>
+                  <label className="dark:text-dark-label">{t("free_quantity")}:</label>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="w-full sm:w-32 mb-2 sm:mb-0">
@@ -292,7 +292,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("std_sales_price")}:</label>
+                  <label className="dark:text-dark-label">{t("std_sales_price")}:</label>
                 </div>
                 <div className="flex-1">
                   <span className="text-[#dc2626]">{focSchemeForm.data.stdSalesPrice}</span>
@@ -303,7 +303,7 @@ const FOCScheme: React.FC = () => {
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("item_barcode")}:</label>
+                  <label className="dark:text-dark-label">{t("item_barcode")}:</label>
                 </div>
                 <div className="flex-1">
                   <ERPInput
@@ -327,7 +327,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("item_unit")}:</label>
+                  <label className="dark:text-dark-label">{t("item_unit")}:</label>
                 </div>
                 <div className="flex-1">
                   <ERPInput
@@ -346,7 +346,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("std_purchase_price")}:</label>
+                  <label className="dark:text-dark-label">{t("std_purchase_price")}:</label>
                 </div>
                 <div className="flex-1">
                   <span className="text-[#dc2626]">{focSchemeForm.data.stdPurchasePrice}</span>
@@ -357,7 +357,7 @@ const FOCScheme: React.FC = () => {
               <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                    <label>{t("free_item_barcode")}:</label>
+                    <label className="dark:text-dark-label">{t("free_item_barcode")}:</label>
                   </div>
                   <div className="flex-1">
                     <ERPInput
@@ -383,7 +383,7 @@ const FOCScheme: React.FC = () => {
             <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("name_code")}:</label>
+                  <label className="dark:text-dark-label">{t("name_code")}:</label>
                 </div>
                 <div>
                   <ERPProductSearch
@@ -422,7 +422,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("remarks")}:</label>
+                  <label className="dark:text-dark-label">{t("remarks")}:</label>
                 </div>
                 <div className="flex-1">
                   <ERPInput
@@ -442,7 +442,7 @@ const FOCScheme: React.FC = () => {
             <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("item_name")}:</label>
+                  <label className="dark:text-dark-label">{t("item_name")}:</label>
                 </div>
                 <div className="flex-1">
                   <span className="text-[#dc2626]">{focSchemeForm.data?.productName}</span>
@@ -451,7 +451,7 @@ const FOCScheme: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("free_item_name")}:</label>
+                  <label className="dark:text-dark-label">{t("free_item_name")}:</label>
                 </div>
                 <div className="flex-1">
                   <span className="text-[#dc2626]">{focSchemeForm.data?.freeProductName}</span>
@@ -485,7 +485,7 @@ const FOCScheme: React.FC = () => {
           dataSource={gridData}
           showBorders={true}
           rowAlternationEnabled={true}
-          className="w-full"
+          className="w-full custom-data-grid-dark-only"
         >
           <Paging defaultPageSize={10} />
           <Editing

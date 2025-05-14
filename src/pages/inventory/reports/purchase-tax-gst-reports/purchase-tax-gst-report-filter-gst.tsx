@@ -70,7 +70,7 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
                                 onChange={(data) => handleFieldChange("taxCategoryID", data)}
                                 placeholder={t("select_branches")}
                                 searchPlaceholder={t("search_branches")}
-                                LoutputFormat="array"
+                                outputFormat="array"
                             />
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")} 

@@ -195,7 +195,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
   const summaryItems: SummaryConfig[] = [
     {
       column: "address2",
-      summaryType: "max",
+      summaryType: "custom",
       customizeText: customizeDate,
     },
     {
@@ -219,7 +219,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{ filtering: false, paging: false, sorting: false,summary:true }}
                 columns={columns}
                 moreOption
                 gridHeader={t(gridHeader)}

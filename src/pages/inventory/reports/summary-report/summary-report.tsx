@@ -36,6 +36,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataField: "date",
         caption: t("date"),
         dataType: "date",
+         format: "dd/MM/yyyy ",
         allowSearch: true,
         allowFiltering: true,
         width: 100,

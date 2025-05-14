@@ -65,6 +65,7 @@ export const ProductManageIndia: React.FC<{
     const productNameRef = useRef<HTMLInputElement>(null);
     const salesPriceRef = useRef<HTMLInputElement>(null);
     const mrpRef = useRef<HTMLInputElement>(null);
+    const markupRef = useRef<HTMLInputElement>(null);
     const productSearchRef = useRef<HTMLInputElement>(null);
         const productCategoryRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -108,14 +109,21 @@ export const ProductManageIndia: React.FC<{
         };
         if (
           showWarning === "WARN" &&
-          (obj.product.stdPurchasePrice ?? 0) > (obj.product.stdSalesPrice ?? 0)
+          +(obj.product.stdPurchasePrice ?? 0) > +(obj.product.stdSalesPrice ?? 0)
         ) {
           ERPAlert.show({
             text: "Sales Price is less than Purchase Price. Do you want to continue?",
             title: "Warning",
             type: "warn",
+            showCancelButton: true,
             onCancel: setFocus,
+            onConfirm: () => {
+              if(markupRef.current) {
+                markupRef.current.focus();
+              }
+            },
           });
+          return;
         } else if (
           showWarning === "BLOCK" &&
           (obj.product.stdPurchasePrice ?? 0) > (obj.product.stdSalesPrice ?? 0)
@@ -602,6 +610,7 @@ useEffect(() => {
 
                 <ERPInput
                   {...getFieldProps("markup")}
+                  ref={markupRef}
                   label={t("markup") + "%"}
                   placeholder="0.00"
                   type="number"

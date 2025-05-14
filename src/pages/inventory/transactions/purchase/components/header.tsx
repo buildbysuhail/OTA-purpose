@@ -113,7 +113,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         {/* Load Temp Rows */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
           <button
-            disabled={formState.formElements.pnlMasters.disabled}
+            disabled={formState.formElements.pnlMasters?.disabled}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
             onClick={loadTemporaryRows}
           >
@@ -124,7 +124,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         {/* Delete Button */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
           <button
-            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
+            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master?.invTransactionMasterId > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
             onClick={deleteTransVoucher}
           >
@@ -153,7 +153,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         </div>
 
         {/* Edit Button */}
-        {formState.formElements.lnkUnlockVoucher.visible !== true && (
+        {formState.formElements.lnkUnlockVoucher?.visible !== true && (
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
             <button
               disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
@@ -240,7 +240,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     </button>
                   </li>
 
-                  {formState.formElements.lnkUnlockVoucher.visible && (
+                  {formState.formElements.lnkUnlockVoucher?.visible && (
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
@@ -266,7 +266,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     </li>
                   )}
 
-                  {formState.formElements.foreignCurrency.visible && (
+                  {formState.formElements.foreignCurrency?.visible && (
                     <li>
                       <ERPCheckbox
                         id="foreignCurrency"
@@ -295,7 +295,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       {t("change_template")}
                     </button>
                   </li>
-                  {formState.formElements.printPreview.visible && (
+                  {formState.formElements.printPreview?.visible && (
                     <li>
                       <ERPCheckbox
                         localInputBox={formState?.userConfig?.inputBoxStyle}

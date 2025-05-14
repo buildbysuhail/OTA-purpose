@@ -209,7 +209,7 @@ const ProductMultiUnitsIndia = forwardRef<
             unit: unit,
             unitID: unitId,
             priceCategoryID: cat.id,
-            purchaseRate: parseFloat(
+            purchasePrice: parseFloat(
               getFormattedValue(
                 (obj?.product?.stdPurchasePrice ?? 0) *
                 (unitDAta.multiFactor || 1)
@@ -224,7 +224,6 @@ const ProductMultiUnitsIndia = forwardRef<
             discountPerc: 0,
             profitAmt: 0,
             msp: 0,
-            purchasePrice: 0,
           })
         );
 

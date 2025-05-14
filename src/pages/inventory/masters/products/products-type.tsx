@@ -184,6 +184,7 @@ export interface ProductBatchInputDto {
   defPurchaseUnitID?: number;
   defReportUnitID?: number;
   location: string;
+  locationId: number;
   displayCost?: number;
   modelNumber: string;
   upcCode: string;

@@ -736,6 +736,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "date",
         allowSearch: true,
         allowFiltering: true,
+        format: "dd-MMM-yyyy hh:mm a", 
         width: 100,
       },
       {
@@ -1138,14 +1139,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      if (column.column == "totalExciseTax") {
-        return (
-          clientSession.isAppGlobal
-        );
-      }
+   
       if (column.column == "srAmount") {
         return (
-          !clientSession.isAppGlobal &&
           userSession.dbIdValue !== "489995732270" &&
           userSession.dbIdValue !== "543140180640" &&
           !filter.IsInactive

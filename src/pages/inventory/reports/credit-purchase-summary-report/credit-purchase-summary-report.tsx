@@ -611,6 +611,7 @@ const CreditPurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   summaryItems={summaryItems}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false,summary:true }}
                   filterText="from {fromDate} to {toDate} {productID > 0 && , Product Name : [ProductName]} {salesRouteID > 0 && , Route Name : [SalesRouteName]} {counterID > 0 && , Counter : [CounterName]} {salemanID > 0 && , Sales Man : [SalemanName]} {partyID > 0 && , Party Name : [PartyName]}"
                   gridHeader={t("credit_purchase_summary")}
                   dataUrl={Urls.Credit_purchase_summary}

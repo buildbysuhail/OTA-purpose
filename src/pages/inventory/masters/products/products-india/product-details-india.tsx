@@ -258,16 +258,16 @@ const ProductDetailsIndia: React.FC<{
 
             <div className="flex flex-wrap gap-2 w-full">
               <ERPDataCombobox
-                {...getFieldProps("batch.location")}
-                id = "location"
+                {...getFieldProps("batch.locationId")}
+                id = "locationId"
                 field={{
-                  id: "location",
+                  id: "locationId",
                   valueKey: "id",
                   labelKey: "name",
                   getListUrl: Urls.data_locations
                 }}
                 onSelectItem={(data: any) =>
-                  handleFieldChange("batch.location", data.value)
+                  handleFieldChange({"batch.locationId": data.value, "batch.location": data.label})
                 }
                 label={t("location")}
                 // options={[]}

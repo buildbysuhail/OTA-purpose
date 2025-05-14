@@ -255,19 +255,21 @@ export const ProductDetailsGcc: React.FC<{
                         /> */}
 
             <ERPDataCombobox
-              {...getFieldProps("product.location")}
-              id="location"
-              field={{
-                id: "location",
-                valueKey: "id",
-                labelKey: "name",
-                getListUrl: Urls.data_locations,
-              }}
-              onSelectItem={(data) =>
-                handleFieldChange("product.location", data.value)
-              }
-              label={t("location")}
-            />
+                           {...getFieldProps("batch.locationId")}
+                           id = "locationId"
+                           field={{
+                             id: "locationId",
+                             valueKey: "id",
+                             labelKey: "name",
+                             getListUrl: Urls.data_locations
+                           }}
+                           onSelectItem={(data: any) =>
+                             handleFieldChange({"batch.locationId": data.value, "batch.location": data.label})
+                           }
+                           label={t("location")}
+                           // options={[]}
+                           className="flex-2 min-w-[200px]"
+                         />
 
             <ERPCheckbox
               {...getFieldProps("product.isActive")}

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -7,10 +7,9 @@ import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPCom
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income-report-filter";
+import { IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import IncomeReportFilter from "./income-report-filter";
-import moment from "moment";
 import AccTransactionForm from "../../transactions/acc-transaction";
 
 const IncomeReportDetailed = () => {
@@ -27,7 +26,7 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accGroupName",
@@ -80,7 +79,7 @@ const IncomeReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -89,7 +88,7 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       width: 80,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <DrillDownCellTemplate
@@ -106,8 +105,8 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       width: 100,
       allowFiltering: true,
-      showInPdf:true,
-      format:"dd-MMM-yyyy",
+      showInPdf: true,
+      format: "dd-MMM-yyyy",
     },
 
     {
@@ -116,7 +115,7 @@ const IncomeReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -124,7 +123,7 @@ const IncomeReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
 
     {
@@ -233,12 +232,12 @@ const IncomeReportDetailed = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000',
+            textColor: '#FF0000',
             font: {
               ...exportCell.font,
               color: { argb: 'FFFF0000' },
               size: 10,
-              style:  "bold" ,
+              style: "bold",
               bold: true,
             },
           };
@@ -291,7 +290,7 @@ const IncomeReportDetailed = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 remoteOperations={{ paging: false, filtering: false, sorting: false }}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   allowGrouping={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
@@ -299,7 +298,7 @@ const IncomeReportDetailed = () => {
                   dataUrl={Urls.acc_reports_income_expense_report_detailed}
                   method={ActionType.POST}
                   filterWidth={650}
-                  filterHeight={320}
+                  filterHeight={270}
                   gridId="grd_income_report_details"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
@@ -317,7 +316,7 @@ const IncomeReportDetailed = () => {
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
                   }}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

@@ -682,7 +682,11 @@
   "net_sales_transfer_report": "تقرير صافي تحويل المبيعات",
   "sales_transfer_monthWise_summary": "تقرير ملخص تحويل المبيعات حسب الشهر",
   "sales_transfer_partyWise_summary": "تقرير ملخص تحويل المبيعات حسب الطرف",
-  "report_of": "تقرير عن"
+  "report_of": "تقرير عن",
 
-
+  "party_wise_purchase_summary_report": "تقرير ملخص المشتريات حسب الطرف",
+  "purchase_estimate_summary_report": "تقرير ملخص تقدير المشتريات",
+  "warehouse_type": "نوع المستودع",
+  "van": "شاحنة",
+  "physical": "فعلي"
 }

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -7,7 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income-report-filter";
+import { IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import IncomeReportFilter from "./income-report-filter";
 
@@ -186,13 +186,13 @@ const IncomeReport = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000',
+            textColor: '#FF0000',
             font: {
               ...exportCell.font,
               color: { argb: 'FFFF0000' },
               size: 10,
               style: "bold",
-              bold:  true,
+              bold: true,
             },
           };
         }
@@ -244,7 +244,7 @@ const IncomeReport = () => {
                   method={ActionType.POST}
                   gridId="grd_income_report"
                   filterWidth={650}
-                  filterHeight={320}
+                  filterHeight={270}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
@@ -252,7 +252,7 @@ const IncomeReport = () => {
                   filterInitialData={IncomeReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

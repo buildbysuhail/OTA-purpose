@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 const DayBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport');
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       {/* Date Range Section */}
       <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
         <ERPDateInput

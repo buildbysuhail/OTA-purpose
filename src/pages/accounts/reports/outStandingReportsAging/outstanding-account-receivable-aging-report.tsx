@@ -11,7 +11,6 @@ import OutstandingAgingReportFilter, { OutstandingAgingReportFilterInitialState 
 import OutstandingAccountAgingAnalysis from "./outstanding-account-aging-analysis";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-
 const OutstandingAccountReceivableAgingReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -565,7 +564,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterHeight={510}
+                  filterHeight={430}
                   filterWidth={600}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   enablefilter={true}
@@ -583,7 +582,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                     enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
                   postData={{ ...filter, PartyType: "AR" }}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

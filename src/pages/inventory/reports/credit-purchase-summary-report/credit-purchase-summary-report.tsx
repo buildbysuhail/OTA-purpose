@@ -619,8 +619,8 @@ const CreditPurchaseSummaryReport = () => {
                   gridId={GridId.Credit_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={550}
-                  filterHeight={400}
+                  filterWidth={600}
+                  filterHeight={270}
                   filterContent={<CreditPurchaseSummaryReportFilter />}
                   filterInitialData={
                     {...CreditPurchaseSummaryReportFilterInitialState, fromDate: clientSession.softwareDate}

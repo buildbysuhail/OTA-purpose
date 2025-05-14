@@ -34,7 +34,7 @@ const PurchaseOrderTransitReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "productName",
@@ -58,7 +58,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.stockInWarehouse == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse),false,4)
+              : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -66,7 +66,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.stockInWarehouse == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse),false,4))
+          return (cellElement.data?.stockInWarehouse == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse), false, 4))
         }
       },
     },
@@ -85,7 +85,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.stockInTransit == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit),false,4)
+              : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -93,7 +93,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.stockInTransit == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit),false,4))
+          return (cellElement.data?.stockInTransit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit), false, 4))
         }
       },
     },
@@ -112,7 +112,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.orderPending == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderPending),false,4)
+              : getFormattedValue(Number.parseFloat(cellElement.data.orderPending), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -120,7 +120,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.orderPending == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderPending),false,4))
+          return (cellElement.data?.orderPending == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderPending), false, 4))
         }
       },
     },
@@ -137,7 +137,7 @@ const PurchaseOrderTransitReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,4)
+            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -145,7 +145,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total),false,4))
+          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total), false, 4))
         }
       },
     },
@@ -164,7 +164,7 @@ const PurchaseOrderTransitReport = () => {
           const value =
             cellElement.data?.orderManual == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderManual),false,4)
+              : getFormattedValue(Number.parseFloat(cellElement.data.orderManual), false, 4)
           return {
             ...exportCell,
             text: value,
@@ -172,7 +172,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return ( cellElement.data?.orderManual == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderManual),false,4))
+          return (cellElement.data?.orderManual == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderManual), false, 4))
         }
       },
     },
@@ -191,29 +191,29 @@ const PurchaseOrderTransitReport = () => {
   //       return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
   //     };
   //   }, []);
-   const customizeSummaryRowFormatted = useMemo(() => {
-      return (itemInfo: { value: any }) => {
-        const value = itemInfo.value;
-        if (
-          value === null ||
-          value === undefined ||
-          value === "" ||
-          isNaN(value)
-         ) {
-          return getFormattedValue(0, false,undefined, 1,1) || "0"; // Ensure "0" is displayed when value is missing
-        }
-       
-        return getFormattedValue(value, false,undefined, 1,1) || "0"; // Ensure formatted output or fallback to "0" 
-      };
-    }, []);
-    const customizeDate = (itemInfo: any) => `TOTAL`;
-const summaryItems: SummaryConfig[] = [
-  
-      {
-        column: "productName",
-        summaryType: "max",
-        customizeText: customizeDate,
-      },
+  const customizeSummaryRowFormatted = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return getFormattedValue(0, false, undefined, 1, 1) || "0"; // Ensure "0" is displayed when value is missing
+      }
+
+      return getFormattedValue(value, false, undefined, 1, 1) || "0"; // Ensure formatted output or fallback to "0" 
+    };
+  }, []);
+  const customizeDate = (itemInfo: any) => `TOTAL`;
+  const summaryItems: SummaryConfig[] = [
+
+    {
+      column: "productName",
+      summaryType: "max",
+      customizeText: customizeDate,
+    },
     {
       column: "stockInWarehouse",
       summaryType: "sum",
@@ -254,7 +254,7 @@ const summaryItems: SummaryConfig[] = [
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false }}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false }}
                   summaryItems={summaryItems}
                   filterText="from {dateFrom} to {dateTo} {partyID > 0 && , Party Name : [PartyName]}"
                   gridHeader={t("purchase_order_transit_report")}
@@ -264,7 +264,7 @@ const summaryItems: SummaryConfig[] = [
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={500}
-                  filterHeight={280}
+                  filterHeight={250}
                   filterContent={<PurchaseOrderTransitReportFilter />}
                   filterInitialData={PurchaseOrderTransitReportInitialState}
                   hideGridAddButton={true}

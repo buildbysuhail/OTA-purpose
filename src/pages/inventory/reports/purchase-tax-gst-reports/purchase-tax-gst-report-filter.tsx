@@ -9,8 +9,8 @@ import ERPInput from "../../../../components/ERPComponents/erp-input"
 const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation("inventory")
   return (
-    <div className="grid grid-cols-1 gap-4">
-      <div className="flex items-center gap-2">
+    <div className="grid grid-cols-1 gap-4 overflow-hidden">
+      <div className="flex items-end gap-2">
         <ERPDateInput
           label={t("from_date")}
           {...getFieldProps("fromDate")}
@@ -36,7 +36,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
         />
       </div>
 
-      <div className="grid grid-cols-4 items-end gap-4">
+      <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 items-end gap-4">
         <ERPInput
           {...getFieldProps("gSTPerc")}
           className="w-32"

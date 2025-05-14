@@ -227,8 +227,8 @@ const DayBookSummary = () => {
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
+                  filterHeight={210}
                   filterWidth={350}
-                  filterHeight={300}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}

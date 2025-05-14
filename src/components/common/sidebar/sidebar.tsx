@@ -141,7 +141,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       debugger;
       let st = menuitems;
       if (clientSession.isAppGlobal) {
-        const excluded = ["purchase_summary_report", ""];
+        const excluded = ["purchase_tax_report_detailed","purchase_tax_report_summary"];
         st = st
           .filter((parent: any) => !excluded.includes(parent.title))
           .map((parent: any) => {
@@ -155,7 +155,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           })
           .filter((parent: any) => parent.children?.length > 0);
       } else {
-        const excluded = ["purchase_summary_report", ""];
+        const excluded = ["purchase_estimate_register_report","purchase_return_estimate_register_report","purchase_return_estimate_summary_report"];
         st = st
           .filter((parent: any) => !excluded.includes(parent.title))
           .map((parent: any) => {

@@ -755,6 +755,46 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
+         {
+        dataField: "mobileNumber",
+        caption: t("mobile_number"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+{
+        dataField: "totalExciseTax",
+        caption: t("total_excise_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalExciseTax == null
+                ? 0
+                : getFormattedValue(cellElement.data.totalExciseTax);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalExciseTax == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalExciseTax);
+          }
+        },
+      },
+
       {
         dataField: "srAmount",
         caption: t("sr_amount"),
@@ -786,55 +826,17 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      // {
-      //   dataField: "mobileNumber",
-      //   caption: t("mobile_number"),
-      //   dataType: "string",
-      //   allowSearch: true,
-      //   allowFiltering: true,
-      //   width: 100,
-      // },
+   
       //in 1050 shown only on summary calculation
-      // {
-      //   dataField: "totalExciseTax",
-      //   caption: t("total_excise_tax"),
-      //   dataType: "number",
-      //   allowSearch: true,
-      //   allowFiltering: true,
-      //   width: 100,
-      //   cellRender: (
-      //     cellElement: any,
-      //     cellInfo: any,
-      //     filter: any,
-      //     exportCell: any
-      //   ) => {
-      //     if (exportCell != undefined) {
-      //       const value =
-      //         cellElement.data?.totalExciseTax == null
-      //           ? 0
-      //           : getFormattedValue(cellElement.data.totalExciseTax);
-      //       return {
-      //         ...exportCell,
-      //         text: value,
-      //         alignment: "right",
-      //         alignmentExcel: { horizontal: "right" },
-      //       };
-      //     } else {
-      //       return cellElement.data?.totalExciseTax == null
-      //         ? 0
-      //         : getFormattedValue(cellElement.data.totalExciseTax);
-      //     }
-      //   },
-      // },
-
-      // {
-      //   dataField: "toWarehouseName",
-      //   caption: t("to_warehouse_name"),
-      //   dataType: "string",
-      //   allowSearch: true,
-      //   allowFiltering: true,
-      //   width: 100,
-      // },
+      
+      {
+        dataField: "toWarehouseName",
+        caption: t("to_warehouse_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
       {
         dataField: "salesAmount",
         caption: t("sales_amount"),
@@ -966,7 +968,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "printCount") {
           return userSession.dbIdValue == "543140180640";
         }
-
+ if (column.dataField == "mobileNumber"||column.dataField == "totalExciseTax"||column.dataField == "toWarehouseName") {
+          return clientSession.isAppGlobal;
+        }
         return true;
       })
       .map((column) => {
@@ -1014,7 +1018,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         customizeText: customizeSummaryRow,
       },
       {
-        column: "vAT",
+        column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
@@ -1121,7 +1125,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
-      // //inventory summary only
+      // //inventory summary only+09
       // {
       //   column: "totalExciseTax",
       //   summaryType: "sum",
@@ -1134,16 +1138,12 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      // if (column.column == "totalExciseTax") {
-      //   return (
-      //     !clientSession.isAppGlobal &&
-      //     userSession.dbIdValue !== "489995732270" &&
-      //     userSession.dbIdValue !== "543140180640" &&
-      //     !applicationSettings.accountsSettings.allowMultiPayments &&
-      //     !filter.IsInactive
-      //   );
-      // }
-      if (column.column == "netValue" || column.column == "srAmount") {
+      if (column.column == "totalExciseTax") {
+        return (
+          clientSession.isAppGlobal
+        );
+      }
+      if (column.column == "srAmount") {
         return (
           !clientSession.isAppGlobal &&
           userSession.dbIdValue !== "489995732270" &&

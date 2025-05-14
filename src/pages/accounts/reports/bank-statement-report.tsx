@@ -73,7 +73,7 @@ const BankStatementReport = () => {
           <DrillDownCellTemplate
             data={cellElement}
             field="vchNo"
-          ></DrillDownCellTemplate>
+          />
         )
       },
     },
@@ -365,7 +365,7 @@ const BankStatementReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}
-                  filterHeight={230}
+                  filterHeight={210}
                   filterContent={<BankStatementReportFilter />}
                   filterInitialData={BankStatementReportFilterInitialState}
                   hideGridAddButton={true}
@@ -378,7 +378,7 @@ const BankStatementReport = () => {
                     width: 1000,
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
-                  }}
+                }}
                 />
               </div>
             </div>

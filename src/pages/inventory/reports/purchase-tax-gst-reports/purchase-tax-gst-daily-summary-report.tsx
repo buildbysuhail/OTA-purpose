@@ -1,21 +1,19 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
 import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
+
 interface PurchaseTaxGSTDailySummaryProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
 const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
-
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
@@ -336,7 +334,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilterGstCat />}
-                filterHeight={240}
+                filterHeight={220}
                 filterWidth={790}
                 filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

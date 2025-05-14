@@ -1,14 +1,10 @@
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseTaxReportDetailedFilter, {
-  PurchaseTaxReportDetailedFilterInitialState,
-} from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
+import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
 import moment from "moment";
 
 interface TaxReportSummaryProps {
@@ -297,11 +293,9 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
                 method={ActionType.POST}
                 filterContent={<PurchaseTaxReportDetailedFilter />}
                 filterHeight={210}
-                filterWidth={330}
+                filterWidth={350}
                 filterInitialData={PurchaseTaxReportDetailedFilterInitialState}
-                onFilterChanged={(f: any) => {
-                  setFilter(f);
-                }}
+                onFilterChanged={(f: any) => { setFilter(f); }}
                 reload={true}
                 gridId={gridId}
               />

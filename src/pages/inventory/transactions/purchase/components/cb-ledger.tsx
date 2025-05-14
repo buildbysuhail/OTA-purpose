@@ -95,7 +95,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 )
               }
             />
-            <ERPInput
+            {/* <ERPInput
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="partyName"
               label={t("name")}
@@ -181,7 +181,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               disabled={
                 formState.formElements.pnlMasters?.disabled
               }
-            />
+            /> */}
           </>
         )}
       </>

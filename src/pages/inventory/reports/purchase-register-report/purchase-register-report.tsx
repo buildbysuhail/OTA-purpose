@@ -1915,7 +1915,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseRegisterFilter />}
-                filterHeight={690}
+                filterHeight={460}
                 filterWidth={700}
                 filterInitialData={PurchaseRegisterFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

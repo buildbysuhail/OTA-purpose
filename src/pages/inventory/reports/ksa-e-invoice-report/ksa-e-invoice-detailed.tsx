@@ -321,7 +321,7 @@ const KsaEInvoiceReportDetailed = () => {
     {
       dataField: "clearanceReceived",
       caption: t("clearance_received"),
-       dataType: "boolean",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
@@ -338,7 +338,7 @@ const KsaEInvoiceReportDetailed = () => {
       width: 200,
       visible: false,
       showInPdf: true,
-    },
+    }, 
     {
       dataField: "eInvoiceTime",
       caption: t("e_invoice_time"),

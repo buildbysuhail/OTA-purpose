@@ -93,7 +93,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
         <div>
           <div className="flex items-center mb-4">
             {/* {data.icon} */}
-            <h2 className="ml-2 text-base font-medium text-gray-900">
+            <h2 className="ml-2 text-base font-medium dark:text-dark-label text-gray-900">
               {t(data.title)}
             </h2>
           </div>

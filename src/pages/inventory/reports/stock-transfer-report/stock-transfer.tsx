@@ -256,7 +256,7 @@ const StockTransfer = () => {
                 method={ActionType.POST}
                 filterContent={<StockTransferFilter />}
                 filterWidth={700}
-                filterHeight={410}
+                filterHeight={340}
                 filterInitialData={StockTransferFilterInitialState}
                 reload={true}
                 gridId="grd_stock_transfer"

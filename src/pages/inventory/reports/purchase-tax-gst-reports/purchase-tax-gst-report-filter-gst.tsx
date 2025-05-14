@@ -12,20 +12,20 @@ import { APIClient } from "../../../../helpers/api-client"
 const api = new APIClient();
 const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation("inventory")
-      const [branchOptions, setBranchOptions] = useState<[]>([]);
-    useEffect(() => {
-        const fetchBranchOptions = async () => {
-            try {
-                const branchData = await api.getAsync(`${Urls.data_taxCategory}`);
-                setBranchOptions(branchData);
-            } catch (error) {
-                console.error("Error fetching branches:", error);
-            }
-        };
-        fetchBranchOptions();
-    }, []);
+  const [branchOptions, setBranchOptions] = useState<[]>([]);
+  useEffect(() => {
+    const fetchBranchOptions = async () => {
+      try {
+        const branchData = await api.getAsync(`${Urls.data_taxCategory}`);
+        setBranchOptions(branchData);
+      } catch (error) {
+        console.error("Error fetching branches:", error);
+      }
+    };
+    fetchBranchOptions();
+  }, []);
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="flex items-center gap-2">
         <ERPDateInput
           label={t("from_date")}
@@ -61,17 +61,16 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
 
- <ERPMultiSelect
-                                {...getFieldProps("taxCategoryID")}
-                                label={t("branches")}
-                                
-                                options={branchOptions}
-                                selectedValues={getFieldProps("taxCategoryID").value}
-                                onChange={(data) => handleFieldChange("taxCategoryID", data)}
-                                placeholder={t("select_branches")}
-                                searchPlaceholder={t("search_branches")}
-                                outputFormat="array"
-                            />
+        <ERPMultiSelect
+          {...getFieldProps("taxCategoryID")}
+          label={t("branches")}
+          options={branchOptions}
+          selectedValues={getFieldProps("taxCategoryID").value}
+          onChange={(data) => handleFieldChange("taxCategoryID", data)}
+          placeholder={t("select_branches")}
+          searchPlaceholder={t("search_branches")}
+          outputFormat="array"
+        />
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")} 
           label="taxCategory"
@@ -90,7 +89,7 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
           }}
         /> */}
 
-      <ERPDataCombobox
+        <ERPDataCombobox
           {...getFieldProps("voucherFormId")}
           label="voucherForm"
           field={{

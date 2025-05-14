@@ -161,10 +161,10 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
   };
 
   return (
-    <div className="p-6 bg-white relative">
+    <div className="p-6 dark:bg-dark-bg  bg-white relative">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-          <Keyboard className="text-black" size={28} />
+        <h1 className="text-2xl font-bold dark:text-dark-label text-gray-800 flex items-center gap-3">
+          <Keyboard className="dark:text-dark-text text-black" size={28} />
           Keyboard Shortcuts
         </h1>
         {/* <button
@@ -176,9 +176,9 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
         </button> */}
       </div>
 
-      <div className="h-10 mb-4 fixed top-[15%] left-0 right-0">
+      <div className="h-10 mb-4  fixed top-[15%] left-0 right-0">
         {error && (
-          <div className="flex items-center justify-center w-fit mx-auto gap-3 bg-[#fef2f2] text-[#b91c1c] p-3 rounded-md border border-[#fecaca] animate-pulse">
+          <div className="flex items-center justify-center w-fit mx-auto gap-3  bg-[#fef2f2] text-[#b91c1c] p-3 rounded-md border border-[#fecaca] animate-pulse">
             <AlertTriangle size={20} />
             {error}
           </div>
@@ -201,7 +201,7 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
 
       <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
         <thead>
-          <tr className="bg-[#eff6ff] text-gray-700">
+          <tr className="dark:bg-dark-bg-header bg-[#eff6ff] dark:text-dark-label text-gray-700">
             <th className="px-4 py-3 text-left font-semibold border-b border-gray-200">
               SI.NO
             </th>
@@ -220,9 +220,9 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
           {shortcuts.map((shortcut, index) => (
             <tr
               key={shortcut.event}
-              className="hover:bg-[#eff6ff] transition-colors duration-200"
+              className="hover:dark:bg-dark-bg-header hover:bg-[#eff6ff] transition-colors duration-200"
             >
-              <td className="px-4 py-3 border-b border-gray-200 font-bold">
+              <td className="px-4 py-3 dark:text-dark-text border-b border-gray-200 font-bold">
                 {serialNumbers[index]}
               </td>
               <td className="px-4 py-3 border-b border-gray-200">
@@ -240,16 +240,16 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
                       onKeyDown={(e) => handleKeyDown(e, index)}
                       onBlur={() => setEditingKey(null)}
                       autoFocus
-                      className="absolute inset-0 w-full h-full px-3 py-2 text-center border border-[#93c5fd] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-300"
+                      className="absolute inset-0 w-full h-full px-3 py-2 text-center border dark:bg-dark-bg-header dark:text-dark-text  border-[#93c5fd] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-300"
                       placeholder="Press keys..."
                       readOnly
                     />
                   ) : (
                     <button
                       onClick={() => setEditingKey(shortcut.event)}
-                      className="absolute inset-0 w-full h-full flex items-center justify-center gap-2 px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:shadow-md transition-all duration-300 ease-in-out"
+                      className="absolute inset-0 w-full h-full flex items-center justify-center gap-2 px-3 py-2 dark:bg-dark-bg-header bg-white dark:text-dark-text text-gray-700 border border-gray-300 rounded-md hover:shadow-md transition-all duration-300 ease-in-out"
                     >
-                      <Edit2 size={16} className="text-gray-500" />
+                      <Edit2 size={16} className=" text-gray-500" />
                       {shortcut.key}
                     </button>
                   )}

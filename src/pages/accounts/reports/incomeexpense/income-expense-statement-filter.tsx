@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 const IncomeExpenseStatementFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 gap-2 md:gap-4">
+    <div className="grid grid-cols-1 gap-2 md:gap-4 overflow-x-hidden overflow-y-hidden">
       {/* Date Range Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-4">
         <ERPDateInput

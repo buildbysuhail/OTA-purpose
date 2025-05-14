@@ -10,7 +10,7 @@ const ExpenseReportFilter = ({
 }: any) => {
   const { t } = useTranslation("accountsReport");
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}

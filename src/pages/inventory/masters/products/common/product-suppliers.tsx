@@ -113,7 +113,7 @@ const SuppliersCommon: React.FC<{
             dataSource={getFieldProps("supplierProducts").value}
             showBorders={true}
             rowAlternationEnabled={true}
-            className="w-full"
+            className="w-full custom-data-grid-dark-only"
           >
 
             <Paging defaultPageSize={5} />

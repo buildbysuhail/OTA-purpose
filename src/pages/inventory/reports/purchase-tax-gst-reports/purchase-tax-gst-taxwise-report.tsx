@@ -1,11 +1,9 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
 import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
 interface PurchaseTaxGSTTaxwiseProps {
@@ -17,7 +15,6 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
-   
     {
       dataField: "date",
       caption: t("date"),
@@ -589,9 +586,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log('itemInfo');
-
       console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -604,6 +599,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       return getFormattedValue(value) || "0";
     };
   }, []);
+
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const customizeDateGroup = (itemInfo: any) => `Group Total`;
   const _summaryItems: SummaryConfig[] = [
@@ -762,7 +758,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilterGstCat />}
-                filterHeight={240}
+                filterHeight={220}
                 filterWidth={790}
                 filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

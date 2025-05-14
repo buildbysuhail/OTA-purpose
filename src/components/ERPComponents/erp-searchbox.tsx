@@ -347,6 +347,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             <DataGrid
               ref={batchGridRef}
               loadPanel={{ enabled: false }}
+              className='custom-data-grid-dark-only'
               dataSource={productDetailStore}
               height={300}
               keyExpr={"productBatchID"}

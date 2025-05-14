@@ -133,6 +133,7 @@ import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
 import GrnNumber from "./components/grn-Number";
+import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 
 interface BilledItem {
   id?: number;
@@ -1693,14 +1694,47 @@ const TransactionForm: React.FC<TransactionProps> = ({
     { label: "CESS", value: 0 },
     { label: "AddCESS", value: 0 },
   ];
+  const [isOpentwo, setIsOpentwo] = useState(false)
 
-  const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
-    setData((prevData) => {
-      const newData = [...prevData];
-      newData[rowIndex] = { ...newData[rowIndex], [dataField]: value };
-      return newData;
-    });
-  };
+  const buttonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    backgroundColor: "#3b82f6",
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    fontWeight: "medium",
+    cursor: "pointer",
+    border: "none",
+    marginTop: "16px",
+  }
+
+
+  const sidebarHeaderStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px",
+  }
+
+  const sidebarTitleStyle: React.CSSProperties = {
+    fontSize: "24px",
+    fontWeight: "bold",
+  }
+
+  const closeButtonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    color: "#374151",
+    border: "1px solid #e5e7eb",
+    padding: "6px 12px",
+    borderRadius: "4px",
+    fontSize: "14px",
+    cursor: "pointer",
+  }
+
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
   //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -2100,15 +2134,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               className="pb-14"
             ></ErpDevGrid> */}
 
-<DataGridTest
-  data={data}
-  columns={columns}
-  keyField={key}
-  height={gridHeight}
-  gridId={`${gridCode}-grid`}
-  onAddData={handleAddData}
-  // onCellChange={handleCellChange}
-/>
+
           </div>
           {formState.showSaveDialog && (
             <ERPAlert
@@ -2138,8 +2164,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         </div>
       )}
 
-      {/* <div
-        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+      <div
+        className="flex items-center justify-between  z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
@@ -2216,7 +2242,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   title={t("print_cheque")}
                   variant="secondary"
                   onClick={() => {
-                 
+                    /* Handle print cheque */
                   }}
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
                 />
@@ -2346,7 +2372,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
         </div>
 
-       
+        {/* </div> */}
         <div className="hidden md:block mr-2">
           <h6 className="font-semibold whitespace-nowrap text-[20px] ">
             {" "}
@@ -2355,7 +2381,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </h6>
         </div>
         <div className="flex items-center gap-2">
-
+          {/* <ERPButton
+            ref={btnSaveRef}
+            title={t("close")}
+            onClick={goToPreviousPage}
+            className="w-24"
+          // disabled={formState.formElements.pnlMasters?.disabled}
+          /> */}
 
           <ERPButton
             title={t("close")}
@@ -2378,7 +2410,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }
           />
         </div>
-      </div> */}
+      </div>
 
       {formState.transaction && formState.template && (
         <ERPModal

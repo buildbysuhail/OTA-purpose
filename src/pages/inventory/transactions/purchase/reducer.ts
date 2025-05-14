@@ -10,6 +10,7 @@ import {
   Attachments,
   TransactionMaster3,
   LoadData,
+  TransactionValidationsData,
 } from "./transaction-types";
 import { clearEntryControl } from "./functions";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
@@ -104,16 +105,30 @@ const InvTransactionSlice = createSlice({
       const { key, value } = action.payload;
       (state.transaction[key] as typeof value) = value;
     },
+    // formStateLoadDataUpdate: (
+    //   state,
+    //   action: PayloadAction<{
+    //     key: keyof LoadData;
+    //     value: TransactionData[keyof TransactionData];
+    //   }>
+    // ) => {
+    //   const { key, value } = action.payload;
+    //   (state.loadData[key] as typeof value) = value;
+    // },
     formStateLoadDataUpdate: (
       state,
       action: PayloadAction<{
-        key: keyof LoadData;
-        value: TransactionData[keyof TransactionData];
+          key: keyof LoadData;
+          value: any[] | TransactionMaster | TransactionValidationsData | TransactionDetail[] | string | undefined;
       }>
-    ) => {
+  ) => {
       const { key, value } = action.payload;
-      (state.loadData[key] as typeof value) = value;
-    },
+      if (typeof value === "string" || value === undefined) {
+        state.loadData[key] = value;
+      } else {
+        console.warn(`Invalid value type for key ${key}:`, value);
+      }
+  },
 
     // Update a specific field in the master object within the transaction
     // dispatch(formStateTransactionMasterHandleFieldChange({ fields: "voucherPrefix", value: "INV123" }));

@@ -72,6 +72,7 @@ interface popupData {
   testPopup: popupDataProps
   products: popupDataProps
   productSummaryReport: popupDataProps
+  GrnNumber: popupDataProps
 }
 const initialState: popupData = {
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
@@ -122,7 +123,7 @@ const initialState: popupData = {
   parties: { isOpen: false, key: null, mode: "edit", reload: true },
   eWayBillTaxPro: { isOpen: false, key: null, mode: "edit", reload: true },
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
-  productGroup: { isOpen: false, key: null, mode: "edit", reload: true,id:0 ,name:""},
+  productGroup: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   productCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   brands: { isOpen: false, key: null, mode: "edit", reload: true },
   priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -137,6 +138,7 @@ const initialState: popupData = {
   specialSchemes: { isOpen: false, key: null, mode: "edit", reload: true },
   products: { isOpen: false, key: null, mode: "edit", reload: true },
   productSummaryReport: { isOpen: false, key: null, mode: "edit", reload: true },
+  GrnNumber: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -218,6 +220,10 @@ const popupDataSlice = createSlice({
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
 
       state.accountGroup = action.payload;
+    },
+    toggleGrnNumber: (state, action: PayloadAction<popupDataProps>) => {
+
+      state.GrnNumber = action.payload;
     },
     toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.bankCard = action.payload;
@@ -419,7 +425,8 @@ export const {
   toggleSalesRoute,
   toggleSpecialSchemes,
   toggleProducts,
-  updateProductSummaryData
+  updateProductSummaryData,
+  toggleGrnNumber
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

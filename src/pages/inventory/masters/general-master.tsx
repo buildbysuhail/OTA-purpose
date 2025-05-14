@@ -151,6 +151,7 @@ const GeneralMaster: React.FC = () => {
       <DataGrid
         ref={dataGridRef}
         dataSource={masterData}
+        className='custom-data-grid-dark-only'
         showBorders={true}
         columnAutoWidth={true}
         rowAlternationEnabled={true}

@@ -224,8 +224,8 @@ export const SpecialPrice: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-2 bg-gray-100">
-      <div className="bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
+    <div className="w-full p-2 dark:bg-dark-bg bg-gray-100">
+      <div className="dark:bg-dark-bg bg-white p-2 max-w-[900px] rounded-md shadow-sm mb-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-3">
           {/* Left column */}
           <div className="space-y-2 sm:space-y-3">
@@ -285,7 +285,7 @@ export const SpecialPrice: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("scheme")}:</label>
+                <label className="dark:text-dark-label">{t("scheme")}:</label>
               </div>
               <div className="flex-1">
                 {/* <ERPDataCombobox
@@ -324,7 +324,7 @@ export const SpecialPrice: React.FC = () => {
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("barcode")}:</label>
+                  <label className="dark:text-dark-label">{t("barcode")}:</label>
                 </div>
                 <div className="flex-1">
                   {/* <ERPInput
@@ -355,7 +355,7 @@ export const SpecialPrice: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("price")}:</label>
+                  <label className="dark:text-dark-label">{t("price")}:</label>
                 </div>
                 <div className="flex-1">
                   {/* <ERPInput
@@ -383,7 +383,7 @@ export const SpecialPrice: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("unit")}:</label>
+                  <label className="dark:text-dark-label">{t("unit")}:</label>
                 </div>
                 <div className="flex-4">
                   {/* <ERPInput
@@ -411,7 +411,7 @@ export const SpecialPrice: React.FC = () => {
 
               <div className="flex items-center">
   <div className="w-full sm:w-16 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-    <label>{t("product")}:</label>
+    <label className="dark:text-dark-label">{t("product")}:</label>
   </div>
   <div className="flex-1">
     <span className="text-[#dc2626] max-w-full sm:max-w-[200px] truncate overflow-hidden whitespace-nowrap block">
@@ -428,7 +428,7 @@ export const SpecialPrice: React.FC = () => {
           <div className="space-y-2 sm:space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("group_price")}:</label>
+                <label className="dark:text-dark-label">{t("group_price")}:</label>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-full sm:w-32 mb-2 sm:mb-0">
@@ -462,7 +462,7 @@ export const SpecialPrice: React.FC = () => {
             <div className="mt-4">
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <div className="w-full sm:w-28 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                  <label>{t("name_code")}:</label>
+                  <label className="dark:text-dark-label">{t("name_code")}:</label>
                 </div>
                 <div className="flex-1">
                   <ERPProductSearch
@@ -523,7 +523,7 @@ export const SpecialPrice: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("std_sales_price")}:</label>
+                <label className="dark:text-dark-label">{t("std_sales_price")}:</label>
               </div>
               <div className="flex-1">
                 {/* <span className="text-[#dc2626]">{getFieldProps("stdSalesPrice").value}</span> */}
@@ -534,7 +534,7 @@ export const SpecialPrice: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-center">
               <div className="w-full sm:w-32 sm:text-right sm:pr-2 mb-1 sm:mb-0">
-                <label>{t("std_purchase_price")}:</label>
+                <label className="dark:text-dark-label">{t("std_purchase_price")}:</label>
               </div>
               <div className="flex-1">
                 {/* <span className="text-[#dc2626]">{getFieldProps("stdPurchasePrice").value}</span> */}
@@ -570,7 +570,7 @@ export const SpecialPrice: React.FC = () => {
           dataSource={gridData}
           showBorders={true}
           rowAlternationEnabled={true}
-          className="w-full"
+          className="w-full custom-data-grid-dark-only"
         >
           <Paging defaultPageSize={5} />
           <Editing

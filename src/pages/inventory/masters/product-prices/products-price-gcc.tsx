@@ -209,11 +209,11 @@ const ProductPricesGCC: React.FC = React.memo(() => {
         }], []);
 
     return (
-        <div className="p-4 bg-gray-100">
-            <div className="bg-white border rounded-lg p-4 shadow-sm">
+        <div className="p-4 dark:bg-dark-bg bg-gray-100">
+            <div className="dark:bg-dark-bg bg-white border dark:border-dark-border rounded-lg p-4 shadow-sm">
                 <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
                     <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 max-sm:grid-cols-1 items-start gap-2">
-                        <div className="flex flex-col w-full gap-2 border border-[#ededed] p-4 rounded-md">
+                        <div className="flex flex-col w-full gap-2 border dark:border-dark-border border-[#ededed] p-4 rounded-md">
                             <div className="flex sm:flex-row sm:items-center items-start flex-col gap-3">
                                 <ERPCheckbox
                                     label={t("brand")}
@@ -260,7 +260,7 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                                 onChangeData={(data: any) => { setproductPform((prev: any) => ({ ...prev, data: data, })); }}
                             />
                         </div>
-                        <div className="h-[11.4rem] w-full overflow-y-auto border border-gray-200 rounded-md">
+                        <div className="h-[11.4rem] w-full overflow-y-auto border dark:border-dark-border border-gray-200 rounded-md">
                             <div className="p-4">
                                 <div className="flex flex-col gap-2">
                                     {
@@ -341,7 +341,7 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 border border-[#ededed] p-4 rounded-md">
+                    <div className="flex flex-col gap-2 border dark:border-dark-border border-[#ededed] p-4 rounded-md">
                         <div className="flex sm:flex-row flex-col sm:items-end items-start gap-2">
                             <ERPCheckbox
                                 label={t("product_group")}
@@ -381,7 +381,7 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                 </div>
             </div>
 
-            <div className="mt-4 bg-white border rounded-lg shadow-sm p-2">
+            <div className="mt-4 dark:bg-dark-bg bg-white border dark:border-dark-border rounded-lg shadow-sm p-2">
                 <ErpDevGrid
                     heightToAdjustOnWindows={430}
                     columns={columns}

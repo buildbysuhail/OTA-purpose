@@ -10,7 +10,8 @@ import Input from "./test-input";
 import { Loader2, Plus, Search } from "lucide-react";
 import GridPreferenceChooser from "../../../../components/ERPComponents/erp-gridpreference";
 import type { DevGridColumn, GridPreference, ColumnPreference } from "../../../../components/types/dev-grid-column";
-
+import ERPProductSearch from "../../../../components/ERPComponents/erp-searchbox";
+import Urls from "../../../../redux/urls";
 type DataItem = Record<string, any>;
 interface DataGridProps<T extends DataItem> {
   data?: T[];
@@ -22,6 +23,7 @@ interface DataGridProps<T extends DataItem> {
   height?: number;
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
+  onCellChange?: (rowIndex: number, dataField: string, value: any) => void;
 }
 
 export default function DataGridTest<T extends DataItem>({
@@ -34,6 +36,7 @@ export default function DataGridTest<T extends DataItem>({
   height = 800,
   onAddData,
   isLoading,
+  onCellChange
 }: DataGridProps<T>) {
   const listRef = useRef<List>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -145,10 +148,33 @@ export default function DataGridTest<T extends DataItem>({
     }
   };
 
-  const renderCell = (item: T, column: DevGridColumn) => {
+  const renderCell = (item: T, column: DevGridColumn, rowIndex: number) => {
     const value = item[column.dataField!];
     let displayValue: ReactNode;
 
+    // Handle the "product" column with ERPProductSearch
+    if (column.dataField === "product" && column.allowEditing) {
+      return (
+        <td
+          className={column.cssClass || ""}
+          style={{
+            width: column.width ? `${column.width}px` : "150px",
+            minWidth: column.width ? `${column.width}px` : "150px",
+            textAlign: column.alignment || "left",
+            boxSizing: "border-box",
+          }}
+        >
+          <ERPProductSearch 
+            showCheckBox={false}
+            value={value || ""}
+           productDataUrl={Urls.load_product_details}
+           searchType="modal"
+          />
+        </td>
+      );
+    }
+
+    // Default rendering for other columns
     switch (column.dataType) {
       case "date":
       case "datetime":
@@ -171,7 +197,7 @@ export default function DataGridTest<T extends DataItem>({
           width: column.width ? `${column.width}px` : "150px",
           minWidth: column.width ? `${column.width}px` : "150px",
           textAlign: column.alignment || "left",
-          boxSizing: "border-box", // Ensure padding and borders are included in width
+          boxSizing: "border-box",
         }}
       >
         {typeof displayValue === "string" || typeof displayValue === "number" ? (
@@ -183,6 +209,11 @@ export default function DataGridTest<T extends DataItem>({
             value={displayValue}
             disabled={!column.allowEditing}
             noBorder
+            // onChange={(e) => {
+            //   if (onCellChange) {
+            //     onCellChange(rowIndex, column.dataField!, e.target.value);
+            //   }
+            // }}
           />
         ) : (
           displayValue
@@ -206,7 +237,7 @@ export default function DataGridTest<T extends DataItem>({
       >
         {visibleColumns.map((column) => (
           <React.Fragment key={column.dataField}>
-            {renderCell(item, column)}
+           {renderCell(item, column, index)}
           </React.Fragment>
         ))}
       </tr>
@@ -303,37 +334,6 @@ export default function DataGridTest<T extends DataItem>({
             </tbody>
           </table>
         </div>
-
-        {/* Body Container */}
-        {/* {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : filteredData.length === 0 ? (
-          <div className="flex justify-center items-center h-64 text-gray-500">
-            No data available
-          </div>
-        ) : (
-          <div
-            ref={outerRef}
-            className="overflow-x-auto"
-            onScroll={handleContainerScroll}
-            style={{ width: "100%", boxSizing: "border-box" }}
-          >
-            <List
-              ref={listRef}
-              height={height}
-              itemCount={filteredData.length}
-              itemSize={rowHeight}
-              width={tableWidth + 1} // Add a small buffer to ensure full visibility
-              outerRef={outerRef}
-              className="bg-white"
-              style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
-            >
-              {Row}
-            </List>
-          </div>
-        )} */}
       </div>
     </div>
   );

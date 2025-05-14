@@ -10,6 +10,9 @@ import {
   isNullOrUndefinedOrEmpty,
 } from "../../utilities/Utils";
 import ERPCheckbox from './erp-checkbox';
+import ERPModal from './erp-modal';
+import { set } from 'lodash';
+import ProductModalGrid from './erp-searchbox-modalContent';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputId?: string;
@@ -24,6 +27,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   clearAfterSelection?: boolean;
   showCheckBox?: boolean;
+  searchType?:"grid" | "normal"|"modal";
 }
 
 interface LoadResult {
@@ -103,6 +107,39 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
+const createModalStore = async (productDataUrl?: string) => {
+  return new CustomStore({
+    key: "productID",
+    async load(loadOptions: any) {
+      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const queryString = paramNames
+        .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
+        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+        .join("&");
+
+      const url = `${productDataUrl}?${queryString}`;
+
+      try {
+        const response = await api.getAsync(url);
+        const result = response;
+        return result !== undefined && result !== null
+          ? {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+      } catch (err) {
+        throw new Error("Data Loading Error");
+      }
+    },
+  });
+};
+
 const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   inputId,
   label,
@@ -117,10 +154,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   value,
   clearAfterSelection = true,
   showCheckBox = true,
+  searchType = "grid",
   ...rest
 }, ref) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
+  const [modalStore, setModalStore] = useState<any>(null);
   const [showProductGrid, setShowProductGrid] = useState(false);
   const [showBatchGrid, setShowBatchGrid] = useState(false);
   const [inputValue, setInputValue] = useState({
@@ -130,6 +169,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
   const { t } = useTranslation("inventory");
+  const [gridModal,setGridModal] = useState(false);
+
 
   useEffect(() => {
     setInputValue((prev) => ({
@@ -139,16 +180,24 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   }, [value]);
 
   const debouncedFetch = useMemo(
-    () =>
-      debounce(async (value: string) => {
-        let byCode = inputValue.searchByCode;
-        const result = await createStore(value, byCode, productDataUrl);
-        setStore(result);
-        const loadResult = await result.load() as LoadResult;
+  () =>
+    debounce(async (value: string) => {
+      let byCode = inputValue.searchByCode;
+      if (searchType === "modal") {
+      const store = await createModalStore(productDataUrl);
+        setModalStore(store);
+        setGridModal(true);
+      } else if (searchType === "grid") {
+        const store = await createStore(value, byCode, productDataUrl);
+        setStore(store);
+        const loadResult = await store.load() as LoadResult;
         setShowProductGrid(loadResult.totalCount > 0);
-      }, 200),
-    [productDataUrl, inputValue.searchByCode]
-  );
+      } else {
+        // Handle "normal" if needed
+      }
+    }, 200),
+  [productDataUrl, inputValue.searchByCode, searchType]
+);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -252,7 +301,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   );
 
   return (
-    <div className="flex items-center gap-4">
+    <>
+     <div className="flex items-center gap-4">
       <div className="relative">
         <ERPInput
           noLabel
@@ -266,7 +316,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           disableEnterNavigation
           ref={ref} 
         />
-        {showProductGrid && (
+        {searchType === "grid" && (
+          <>
+               {showProductGrid && (
           <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h เด400px] shadow-lg bg-white">
             <DataGrid
               ref={dataGridRef}
@@ -325,6 +377,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             </DataGrid>
           </div>
         )}
+          </>
+        )}
+   
       </div>
       {showCheckBox && (
         <ERPCheckbox
@@ -335,6 +390,22 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
         />
       )}
     </div>
+    {searchType === "modal" && (
+      <ERPModal
+        isOpen={ gridModal}
+        title={t("privilege_card")}
+        width={800}
+        height={380}
+        isForm={true}
+        closeModal={() => {setGridModal(false)}}
+        content={
+        <ProductModalGrid gridData={modalStore}
+        initialSearchValue={inputValue.searchValue}
+        />}
+      />
+    )}
+    </>
+   
   );
 });
 

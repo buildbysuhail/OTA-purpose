@@ -127,6 +127,7 @@ import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
 import GrnNumber from "./components/grn-Number";
+import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 
 interface BilledItem {
   id?: number;
@@ -1678,6 +1679,46 @@ const handleAddData = (newItem: any) => {
     { label: "CESS", value: 0 },
     { label: "AddCESS", value: 0 },
   ];
+  const [isOpentwo, setIsOpentwo] = useState(false)
+
+  const buttonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    backgroundColor: "#3b82f6",
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    fontWeight: "medium",
+    cursor: "pointer",
+    border: "none",
+    marginTop: "16px",
+  }
+
+
+  const sidebarHeaderStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px",
+  }
+
+  const sidebarTitleStyle: React.CSSProperties = {
+    fontSize: "24px",
+    fontWeight: "bold",
+  }
+
+  const closeButtonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    color: "#374151",
+    border: "1px solid #e5e7eb",
+    padding: "6px 12px",
+    borderRadius: "4px",
+    fontSize: "14px",
+    cursor: "pointer",
+  }
 
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
@@ -2058,13 +2099,36 @@ const handleAddData = (newItem: any) => {
       )}
 
       <div
-        className="flex items-center justify-between h-[500px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+        className="flex items-center justify-between  z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
         <div className="flex flex-col w-full">
+                    <ERPButton
+                      title={t("bottom sidebar")}
+                      // onClick={handleButtonClick}
+                      // onClick={() => goToPreviousPage()}
+                      onClick={() => setIsOpentwo(true)}
+                      className="w-[150px]"
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                    />
+                    {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
+                    <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+                      <div>
+                        <div style={sidebarHeaderStyle}>
+                          <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2>
+                          <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+                            Close
+                          </button>
+                        </div>
+
+                        <p className="mb-[24px] text-[#6b7280]">
+                          This sidebar for test.
+                        </p>
+                      </div>
+                    </BottomSidebar>
           <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox

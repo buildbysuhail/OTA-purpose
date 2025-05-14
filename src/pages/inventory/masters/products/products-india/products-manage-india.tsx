@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -29,10 +29,15 @@ import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
 import {
   popupDataProps,
   toggleProductGroup,
+  toggleTaxCategory,
+  toggleTaxCategoryIndia,
+  toggleUnitOfMeasure,
 } from "../../../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { ProductGroupManage } from "../../product-group/product-group-manage";
 import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
+import { UnitOfMeasureManage } from "../../unit-of-meassure/unit-of-measure-manage";
+import { TaxCategoryManageIndia } from "../../tax-category-india/tax-category-manage-india";
 const api = new APIClient();
 
 export const ProductManageIndia: React.FC<{
@@ -60,6 +65,7 @@ export const ProductManageIndia: React.FC<{
     const clientSession = useSelector(
       (state: RootState) => state.ClientSession
     );
+      const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManageIndia), []);
     const { getFormattedValue } = useNumberFormat();
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
@@ -397,14 +403,14 @@ useEffect(() => {
                     required={true}
                     addNewOption={true}
                     addNewOptionCobonent={{
-                      title: t("product_group"),
-                      popupAction: toggleProductGroup,
-                      isOpen: rootState.PopupData.productGroup.isOpen || false,
-                      id:rootState.PopupData.productGroup.id,
-                      name:rootState.PopupData.productGroup.name,
+                      title: t("base_unit"),
+                      popupAction: toggleUnitOfMeasure,
+                      isOpen: rootState.PopupData.unitOfMeasure.isOpen  || false,
+                      id:rootState.PopupData.unitOfMeasure.id,
+                      name:rootState.PopupData.unitOfMeasure.name,
                       closeModal: () =>
-                      dispatch(toggleProductGroup({ isOpen: false })),
-                      content: <ProductGroupManage />,
+                      dispatch(toggleUnitOfMeasure({ isOpen: false })),
+                      content: <UnitOfMeasureManage />,
                     }}
                   />
 {/* 
@@ -507,13 +513,13 @@ useEffect(() => {
                     addNewOption={true}
                     addNewOptionCobonent={{
                       title: t("product_group"),
-                      popupAction: toggleProductGroup,
-                      isOpen: rootState.PopupData.productGroup.isOpen || false,
-                      id:rootState.PopupData.productGroup.id,
-                      name:rootState.PopupData.productGroup.name,
+                      popupAction: toggleTaxCategoryIndia,
+                      isOpen: rootState.PopupData.taxCategoryIndia.isOpen || false,
+                      id:rootState.PopupData.taxCategoryIndia.id,
+                      name:rootState.PopupData.taxCategoryIndia.name,
                       closeModal: () =>
-                      dispatch(toggleProductGroup({ isOpen: false })),
-                      content: <ProductGroupManage />,
+                      dispatch(toggleTaxCategoryIndia({ isOpen: false })),
+                      content: <MemoizedTaxCategoryManage />,
                     }}
                   />
 

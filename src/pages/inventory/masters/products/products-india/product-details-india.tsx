@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
@@ -8,10 +8,12 @@ import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
 import ProductDetailsBatches from "./product-details-batches";
-import { toggleProductGroup } from "../../../../../redux/slices/popup-reducer";
+import { toggleBrands, toggleProductGroup, toggleWarehouse } from "../../../../../redux/slices/popup-reducer";
 import { ProductGroupManage } from "../../product-group/product-group-manage";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { useDispatch } from "react-redux";
+import { WarehouseManage } from "../../warehouse/warehouse-manage";
+import { BrandsManage } from "../../brands/brands-manage";
 
 const ProductDetailsIndia: React.FC<{
   clientSession: any,
@@ -25,7 +27,8 @@ const ProductDetailsIndia: React.FC<{
 }> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession }) => {
    const rootState = useRootState();
   const dispatch = useDispatch();
-
+  const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
+    const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
   return (
     <>
       {getFieldProps("details").value &&
@@ -84,15 +87,16 @@ const ProductDetailsIndia: React.FC<{
                   }
                   className="flex-1"
                   label={t("warehouse")}
+                  addNewOption={true}
                   addNewOptionCobonent={{
-                    title: t("product_group"),
-                    popupAction: toggleProductGroup,
-                    isOpen: rootState.PopupData.productGroup.isOpen || false,
-                    id:rootState.PopupData.productGroup.id,
-                    name:rootState.PopupData.productGroup.name,
+                    title: t("warehouse"),
+                    popupAction: toggleWarehouse,
+                    isOpen: rootState.PopupData.warehouse.isOpen || false,
+                    id:rootState.PopupData.warehouse.id,
+                    name:rootState.PopupData.warehouse.name,
                     closeModal: () =>
-                    dispatch(toggleProductGroup({ isOpen: false })),
-                    content: <ProductGroupManage />,
+                    dispatch(toggleWarehouse({ isOpen: false })),
+                    content: <MemoizedWarehouseManage />,
                   }}
                 />
 
@@ -119,13 +123,13 @@ const ProductDetailsIndia: React.FC<{
                   addNewOption={true}
                   addNewOptionCobonent={{
                     title: t("product_group"),
-                    popupAction: toggleProductGroup,
-                    isOpen: rootState.PopupData.productGroup.isOpen || false,
-                    id:rootState.PopupData.productGroup.id,
-                    name:rootState.PopupData.productGroup.name,
+                    popupAction: toggleBrands,
+                    isOpen: rootState.PopupData.brands.isOpen || false,
+                    id:rootState.PopupData.brands.id,
+                    name:rootState.PopupData.brands.name,
                     closeModal: () =>
-                    dispatch(toggleProductGroup({ isOpen: false })),
-                    content: <ProductGroupManage />,
+                    dispatch(toggleBrands({ isOpen: false })),
+                    content: <MemoizedBrandsManage />,
                   }}
                 />
 

@@ -182,15 +182,35 @@ const SummaryFilter = ({
             });
           }}
         />
-        {/* <ERPDataCombobox
+        <ERPDataCombobox
           label={t("voucher_form")}
           {...getFieldProps("voucherForm")}
           field={{
             id: "voucherForm",
             getListUrl: clientSession.isAppGlobal
-              ? Urls.data_FormTypeByVoucherType,
-              params: `voucherType=${'PI'}`,
-              : Urls.data_form_type,
+              ? Urls.data_FormTypeByVoucherType: Urls.data_form_type,
+              params: clientSession.isAppGlobal ? `voucherType=${
+                location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" :""
+              }`: undefined,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -199,7 +219,7 @@ const SummaryFilter = ({
               voucherForm: data.value,
             });
           }}
-        /> */}
+        />
         <ERPDataCombobox
           label={t("warehouse")}
           {...getFieldProps("warehouseID")}

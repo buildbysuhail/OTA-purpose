@@ -67,6 +67,12 @@ import {
   History,
   Search,
   AlignHorizontalSpaceBetween,
+  Menu,
+  Bookmark,
+  ChevronDown,
+  Heart,
+  Star,
+  Sun,
 } from "lucide-react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import ExcelImport from "./excel-Import";
@@ -127,6 +133,7 @@ import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
 import GrnNumber from "./components/grn-Number";
+import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 
 interface BilledItem {
   id?: number;
@@ -216,6 +223,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const contentRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setIsDropDownOpen(!isDropDownOpen);
+  };
+
+  const SIDEBAR_WIDTH = "196px";
 
   const handleButtonClick = () => {
     setIsModalOpen(true); // Open the modal
@@ -272,7 +288,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         if (!ledgerCodeExists) {
           try {
             const id = Number.parseInt(formState.partyId ?? "");
-          } catch (error) {}
+          } catch (error) { }
         } else {
           dispatch(
             formStateMasterHandleFieldChange({
@@ -707,13 +723,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <div
             className={
               cellData.data?.isValid != undefined &&
-              cellData.data?.isValid != true
+                cellData.data?.isValid != true
                 ? "grid-error-cell"
                 : ""
             }
             title={
               cellData.data?.isValid != undefined &&
-              (cellData.data?.isValid != true) != true
+                (cellData.data?.isValid != true) != true
                 ? t("validation_failed")
                 : ""
             } // Add validation message as tooltip
@@ -751,7 +767,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("product"),
         width: 150,
         visible: true,
-        allowEditing:true
+        allowEditing: true
       },
       {
         dataField: "hsnCode",
@@ -1444,7 +1460,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  
+
 
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
@@ -1469,101 +1485,101 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.error("Error fetching transaction history:", error);
     }
   };
-//for demo purpouse 
-// Define the structure of an empty row based on visible columns
-const getEmptyRow = useCallback(() => {
-  const emptyRow: any = {};
-  columns.forEach((col) => {
-    if (col.dataField) {
-      switch (col.dataField) {
-        case "slNo":
-          emptyRow[col.dataField] = 1; // Start with 1 for serial number
-          break;
-        case "qty":
-        case "free":
-        case "mrp":
-        case "unitPrice":
-        case "gross":
-        case "discPercent":
-        case "discount":
-        case "netValue":
-        case "total":
-        case "stock":
-        case "margin":
-        case "salesPrice":
-        case "lpr":
-        case "lpc":
-        case "profit":
-        case "size":
-        case "vatPercent":
-        case "vat":
-        case "cst":
-        case "cstPercent":
-        case "cost":
-        case "mr":
-        case "expDays":
-        case "bd":
-        case "pb":
-        case "nos":
-        case "unitPriceFC":
-        case "grossFC":
-        case "unit2Qty":
-        case "unit2SalesRate":
-        case "unit2MRP":
-        case "unit3Qty":
-        case "unit3SalesRate":
-        case "unit3MRP":
-        case "tagQty":
-        case "additionalExpenses":
-        case "totalAddExpenses":
-        case "grossConvert":
-        case "sq2":
-        case "sq3":
-        case "rowNumber":
-        case "cgstPercent":
-        case "cgst":
-        case "sgstPercent":
-        case "sgst":
-        case "igstPercent":
-        case "igst":
-        case "cessPercent":
-        case "cessAmt":
-        case "addnlCessPercent":
-        case "addnlCessAmt":
-        case "mrpFinal":
-          emptyRow[col.dataField] = 0; // Numeric fields default to 0
-          break;
-        case "barcodePrinted":
-        case "batchCreated":
-        case "barcodeTagPrint":
-        case "barcodeUnit2Print":
-        case "barcodeUnit3Print":
-          emptyRow[col.dataField] = false; // Boolean fields default to false
-          break;
-        default:
-          emptyRow[col.dataField] = ""; // String fields default to empty string
-          break;
+  //for demo purpouse 
+  // Define the structure of an empty row based on visible columns
+  const getEmptyRow = useCallback(() => {
+    const emptyRow: any = {};
+    columns.forEach((col) => {
+      if (col.dataField) {
+        switch (col.dataField) {
+          case "slNo":
+            emptyRow[col.dataField] = 1; // Start with 1 for serial number
+            break;
+          case "qty":
+          case "free":
+          case "mrp":
+          case "unitPrice":
+          case "gross":
+          case "discPercent":
+          case "discount":
+          case "netValue":
+          case "total":
+          case "stock":
+          case "margin":
+          case "salesPrice":
+          case "lpr":
+          case "lpc":
+          case "profit":
+          case "size":
+          case "vatPercent":
+          case "vat":
+          case "cst":
+          case "cstPercent":
+          case "cost":
+          case "mr":
+          case "expDays":
+          case "bd":
+          case "pb":
+          case "nos":
+          case "unitPriceFC":
+          case "grossFC":
+          case "unit2Qty":
+          case "unit2SalesRate":
+          case "unit2MRP":
+          case "unit3Qty":
+          case "unit3SalesRate":
+          case "unit3MRP":
+          case "tagQty":
+          case "additionalExpenses":
+          case "totalAddExpenses":
+          case "grossConvert":
+          case "sq2":
+          case "sq3":
+          case "rowNumber":
+          case "cgstPercent":
+          case "cgst":
+          case "sgstPercent":
+          case "sgst":
+          case "igstPercent":
+          case "igst":
+          case "cessPercent":
+          case "cessAmt":
+          case "addnlCessPercent":
+          case "addnlCessAmt":
+          case "mrpFinal":
+            emptyRow[col.dataField] = 0; // Numeric fields default to 0
+            break;
+          case "barcodePrinted":
+          case "batchCreated":
+          case "barcodeTagPrint":
+          case "barcodeUnit2Print":
+          case "barcodeUnit3Print":
+            emptyRow[col.dataField] = false; // Boolean fields default to false
+            break;
+          default:
+            emptyRow[col.dataField] = ""; // String fields default to empty string
+            break;
+        }
       }
-    }
-  });
-  return emptyRow;
-}, [columns]);
-const [data, setData] = useState<any[]>(() => {
-  return formState.transaction.details.length > 0
-    ? formState.transaction.details
-    : [getEmptyRow()];
-});
-useEffect(() => {
-  setData(
-    formState.transaction.details.length > 0
+    });
+    return emptyRow;
+  }, [columns]);
+  const [data, setData] = useState<any[]>(() => {
+    return formState.transaction.details.length > 0
       ? formState.transaction.details
-      : [getEmptyRow()]
-  );
-}, [formState.transaction.details, getEmptyRow]);
+      : [getEmptyRow()];
+  });
+  useEffect(() => {
+    setData(
+      formState.transaction.details.length > 0
+        ? formState.transaction.details
+        : [getEmptyRow()]
+    );
+  }, [formState.transaction.details, getEmptyRow]);
 
-const handleAddData = (newItem: any) => {
-  setData((prev) => [...prev, newItem]);
-};
+  const handleAddData = (newItem: any) => {
+    setData((prev) => [...prev, newItem]);
+  };
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1661,7 +1677,7 @@ const handleAddData = (newItem: any) => {
     ApplicationMainSettingsInitialState
   );
 
-  const handleChange = (selectedOption: { value: string; label: string }) => {};
+  const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -1678,7 +1694,53 @@ const handleAddData = (newItem: any) => {
     { label: "CESS", value: 0 },
     { label: "AddCESS", value: 0 },
   ];
+  const [isOpentwo, setIsOpentwo] = useState(false)
 
+  const buttonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    backgroundColor: "#3b82f6",
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    fontWeight: "medium",
+    cursor: "pointer",
+    border: "none",
+    marginTop: "16px",
+  }
+
+
+  const sidebarHeaderStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px",
+  }
+
+  const sidebarTitleStyle: React.CSSProperties = {
+    fontSize: "24px",
+    fontWeight: "bold",
+  }
+
+  const closeButtonStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    color: "#374151",
+    border: "1px solid #e5e7eb",
+    padding: "6px 12px",
+    borderRadius: "4px",
+    fontSize: "14px",
+    cursor: "pointer",
+  }
+const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[rowIndex] = { ...newData[rowIndex], [dataField]: value };
+      return newData;
+    });
+  };
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
   //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -1771,117 +1833,114 @@ const handleAddData = (newItem: any) => {
             </div>
           </div>
 
-          <div
-            style={{
-              maxWidth: formState.userConfig?.maxWidth
-                ? `${formState.userConfig?.maxWidth}px`
-                : "100%",
-              marginLeft:
-                formState.userConfig?.alignment === "left" ? "0" : "auto",
-              marginRight:
-                formState.userConfig?.alignment === "right" ? "0" : "auto",
-              textAlign: formState.userConfig?.alignment,
-              border:
-                formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
-                  ? "1px solid #ccc"
-                  : "none",
-              padding: formState.userConfig?.maxWidth ? "10px" : "0",
-              borderRadius:
-                formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
-                  ? "10px"
-                  : "none",
-              borderBottomLeftRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderBottomRightRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderBottom:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "none"
-                  : "1px solid #ccc",
-              marginTop: "2.5rem",
-            }}
-          >
-            <div
-              className={
-                formState.userConfig?.isExpanded
-                  ? "grid grid-rows-2 !mt-[35px]"
-                  : "grid grid-cols-2 gap-8 !mt-[35px]"
-              }
-            >
-              <>
-                {/* Expanded View - First Row */}
-                <div className="flex flex-wrap items-center gap-1">
-                  <AccVoucherPrefix
-                    ref={voucherNumberRef}
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    t={t}
-                  />
-                  <AccVoucherNo
-                    ref={voucherNumberRef}
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    t={t}
-                  />
-                  <ReferenceNumber
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleLoadByRefNo={handleLoadByRefNo}
-                    ref={refNoRef}
-                    t={t}
-                  />
-                  <ReferenceDate
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                  />
-                  <TransactionDate
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-                  <Employee
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                  <DebitAccount
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                  <Project
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                  <InvoiceValue
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                  />
+          <div className="mt-8 flex items-end gap-4">
+            <PartyLedger
+              ref={ledgerIdRef}
+              handleFieldKeyDown={handleFieldKeyDown}
+              triggerEffect={triggerEffect}
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              setIsPartyDetailsOpen={() => {
+                setIsPartyDetailsOpen((prev: any) => {
+                  debugger;
+                  return !prev;
+                });
+              }}
+            />
+            <AccVoucherPrefix
+              ref={voucherNumberRef}
+              formState={formState}
+              dispatch={dispatch}
+              handleKeyDown={handleKeyDown}
+              loadAndSetTransVoucher={loadAndSetTransVoucher}
+              t={t}
+            />
+            <AccVoucherNo
+              ref={voucherNumberRef}
+              formState={formState}
+              dispatch={dispatch}
+              handleKeyDown={handleKeyDown}
+              loadAndSetTransVoucher={loadAndSetTransVoucher}
+              t={t}
+            />
+            <TransactionDate
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+
+            <div className="relative w-auto">
+              <button
+                onClick={toggleDropdown}
+                className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
+                // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
+              >
+                <div className="flex items-center space-x-2">
+                  <EllipsisVertical size={16} className="text-black"/>
+                  {/* <Menu size={16} className="text-white" /> */}
+                  {/* <span>more</span> */}
                 </div>
-                <>
+                {/* <div className={`ml-2 transition-all duration-500 ${isDropDownOpen ? 'rotate-180 opacity-100' : 'opacity-80'}`}>
+                  <ChevronDown size={16} className="text-white" />
+                </div> */}
+              </button>
+
+              <div
+                ref={dropdownRef}
+                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-50 w-full ${isDropDownOpen ? 'max-h-96 opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
+                  }`}
+                style={{
+                  marginLeft: 0,
+                  width: `calc(96vw - ${SIDEBAR_WIDTH})`,
+                  maxWidth: "calc(100vw - 220px)"
+                }}
+              >
+                <div ref={contentRef} className="p-6">
+                  <div className="grid grid-cols-6 items-center gap-1">
+                    <ReferenceNumber
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleLoadByRefNo={handleLoadByRefNo}
+                      ref={refNoRef}
+                      t={t}
+                    />
+
+                    <ReferenceDate
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                    />
+
+                    <Employee
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                    <DebitAccount
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                    <Project
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                    <InvoiceValue
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                    />
+                  </div>
                   <div
                     className={
                       formState.userConfig?.isExpanded
@@ -1896,25 +1955,25 @@ const handleAddData = (newItem: any) => {
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                     />
                     {isModalOpen && (
-                    <ERPModal
-                      isOpen={isModalOpen}
-                      title="GrnNumber"
-                      width={600}
-                      height={200}
-                      closeModal={closeModal}
-                      content={
-                      <GrnNumber
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      handleFieldChange={handleFieldChange}
-                      closeModal={closeModal}
+                      <ERPModal
+                        isOpen={isModalOpen}
+                        title="GrnNumber"
+                        width={600}
+                        height={200}
+                        closeModal={closeModal}
+                        content={
+                          <GrnNumber
+                            dispatch={dispatch}
+                            formState={formState}
+                            t={t}
+                            handleLoadByRefNo={handleLoadByRefNo}
+                            handleFieldChange={handleFieldChange}
+                            closeModal={closeModal}
 
+                          />
+                        }
                       />
-                    }
-                    />
-                  )}
+                    )}
                     <LedgerCode
                       ref={ledgerCodeRef}
                       handleKeyDown={handleKeyDown}
@@ -1922,28 +1981,90 @@ const handleAddData = (newItem: any) => {
                       dispatch={dispatch}
                       t={t}
                     />
-                    <PartyLedger
-                      ref={ledgerIdRef}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                      triggerEffect={triggerEffect}
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      setIsPartyDetailsOpen={() => {
-                        setIsPartyDetailsOpen((prev: any) => {
-                          debugger;
-                          return !prev;
-                        });
-                      }}
-                    />
+
                     <div>
                       <span> more </span>
                     </div>
                   </div>
+
+                  <div className="flex justify-center mt-8 mb-2">
+                    <button
+                      onClick={toggleDropdown}
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FDBA74] hover:bg-[#FB923C] shadow-md transform transition-transform duration-300 hover:scale-110"
+                    >
+                      <ChevronUp size={20} className="text-white" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DataGridTest
+            data={data}
+            columns={columns}
+            keyField={key}
+            height={gridHeight}
+            gridId={`${gridCode}-grid`}
+            onAddData={handleAddData}
+            onCellChange={handleCellChange}
+          />
+
+          <div
+            style={{
+              maxWidth: formState.userConfig?.maxWidth
+                ? `${formState.userConfig?.maxWidth}px`
+                : "100%",
+              marginLeft:
+                formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight:
+                formState.userConfig?.alignment === "right" ? "0" : "auto",
+              textAlign: formState.userConfig?.alignment,
+              border:
+                formState.userConfig?.maxWidth &&
+                  formState.userConfig?.maxWidth !== "100%"
+                  ? "1px solid #ccc"
+                  : "none",
+              padding: formState.userConfig?.maxWidth ? "10px" : "0",
+              borderRadius:
+                formState.userConfig?.maxWidth &&
+                  formState.userConfig?.maxWidth !== "100%"
+                  ? "10px"
+                  : "none",
+              borderBottomLeftRadius:
+                formState.userConfig?.maxWidth ===
+                  formState.userConfig?.gridMaxWidth
+                  ? "0"
+                  : "10px",
+              borderBottomRightRadius:
+                formState.userConfig?.maxWidth ===
+                  formState.userConfig?.gridMaxWidth
+                  ? "0"
+                  : "10px",
+              borderBottom:
+                formState.userConfig?.maxWidth ===
+                  formState.userConfig?.gridMaxWidth
+                  ? "none"
+                  : "1px solid #ccc",
+              marginTop: "2.5rem",
+            }}
+          >
+            {/* <div
+              className={
+                formState.userConfig?.isExpanded
+                  ? "grid grid-rows-2 !mt-[35px]"
+                  : "grid grid-cols-2 gap-8 !mt-[35px]"
+              }
+            >
+              <>
+                Expanded View - First Row
+
+                <>
+                  
                 </>
               </>
-            </div>
+            </div> */}
+
           </div>
           <div
             className="relative"
@@ -1958,28 +2079,28 @@ const handleAddData = (newItem: any) => {
               textAlign: formState.userConfig?.alignment,
               border:
                 formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
+                  formState.userConfig?.gridMaxWidth !== "100%"
                   ? "1px solid #ccc"
                   : "none",
               padding: formState.userConfig?.gridMaxWidth ? "10px" : "0",
               borderRadius:
                 formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
+                  formState.userConfig?.gridMaxWidth !== "100%"
                   ? "10px"
                   : "none",
               borderTopLeftRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTopRightRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTop:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "0",
             }}
@@ -2020,14 +2141,7 @@ const handleAddData = (newItem: any) => {
               className="pb-14"
             ></ErpDevGrid> */}
 
-<DataGridTest
-  data={data}
-  columns={columns}
-  keyField={key}
-  height={gridHeight}
-  gridId={`${gridCode}-grid`}
-  onAddData={handleAddData}
-/>
+
           </div>
           {formState.showSaveDialog && (
             <ERPAlert
@@ -2058,13 +2172,36 @@ const handleAddData = (newItem: any) => {
       )}
 
       <div
-        className="flex items-center justify-between h-[500px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+        className="flex items-center justify-between  z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
         <div className="flex flex-col w-full">
+          <ERPButton
+            title={t("bottom sidebar")}
+            // onClick={handleButtonClick}
+            // onClick={() => goToPreviousPage()}
+            onClick={() => setIsOpentwo(true)}
+            className="w-[150px]"
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+          />
+          {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
+          <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+            <div>
+              <div style={sidebarHeaderStyle}>
+                <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2>
+                <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+                  Close
+                </button>
+              </div>
+
+              <p className="mb-[24px] text-[#6b7280]">
+                This sidebar for test.
+              </p>
+            </div>
+          </BottomSidebar>
           <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox

@@ -9,11 +9,11 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import moment from "moment";
 
 interface OutstandingAccountPayableReport {
   from: Date
 }
+
 const OutstandingAccountPayableReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -33,7 +33,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "party",
@@ -41,7 +41,7 @@ const OutstandingAccountPayableReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -60,24 +60,25 @@ const OutstandingAccountPayableReport = () => {
           return exportCell != undefined ? {
             ...exportCell,
             text: cellInfo.value,
-            bold:cellElement.data.party === "TOTAL" ? true:'',
+            bold: cellElement.data.party === "TOTAL" ? true : '',
             alignment: "right",
             textColor: cellElement.data.party === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
-               color:cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.party === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.party === "TOTAL" ?true:false,
+              style: cellElement.data.party === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.party === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-          return ( <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.party}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.party}
+          </span>)
+        }
+      }
     },
     {
       dataField: "address1",
@@ -86,7 +87,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "mobilePhone",
@@ -95,7 +96,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "debit",
@@ -105,13 +106,13 @@ const OutstandingAccountPayableReport = () => {
       allowFiltering: true,
       visible: false,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==''
+            balance == null || balance == ''
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * balance)
@@ -120,23 +121,23 @@ const OutstandingAccountPayableReport = () => {
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.party === "TOTAL" ?true:false,
+            bold: cellElement.data.party === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.party === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.party === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.party === "TOTAL" ?true:false,
+              style: cellElement.data.party === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.party === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>)
+          return (<span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
         }
       }
     },
@@ -148,13 +149,13 @@ const OutstandingAccountPayableReport = () => {
       allowFiltering: true,
       visible: false,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==''
+            balance == null || balance == ''
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * balance)
@@ -163,24 +164,25 @@ const OutstandingAccountPayableReport = () => {
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.party === "TOTAL" ?true:false,
+            bold: cellElement.data.party === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.party === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.party === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.party === "TOTAL" ?true:false,
+              style: cellElement.data.party === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.party === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balance",
@@ -189,37 +191,38 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==''
+            balance == null || balance == ''
               ? ""
               : getFormattedValue(balance);
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.party === "TOTAL" ?true:false,
+            bold: cellElement.data.party === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.party === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.party === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.party === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.party === "TOTAL" ?true:false,
+              style: cellElement.data.party === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.party === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${ cellElement.data?.balance == null ? '' :  getFormattedValue(cellElement.data.balance)}`}
-        </span>)
-        }}
+          return (<span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "ltDate",
@@ -228,8 +231,8 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-    format:"dd-MMM-yyyy"
-             },
+      format: "dd-MMM-yyyy"
+    },
   ];
   return (
     <Fragment>
@@ -239,7 +242,7 @@ const OutstandingAccountPayableReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText="as of {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_payable")}
@@ -251,7 +254,7 @@ const OutstandingAccountPayableReport = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterHeight={340}
+                  filterHeight={300}
                   filterWidth={390}
                   filterContent={<OutstandingPayableReportFilter />}
                   filterInitialData={OutstandingPayableReportFilterInitialState}>

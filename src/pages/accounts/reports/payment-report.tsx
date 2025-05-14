@@ -181,6 +181,7 @@ const PaymentReport = () => {
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
                   filterWidth={650}
+                  filterHeight={310}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}
                   gridId="grd_payment_report"
@@ -201,7 +202,7 @@ const PaymentReport = () => {
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
                   }}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

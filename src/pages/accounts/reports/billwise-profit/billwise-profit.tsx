@@ -9,6 +9,7 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import BillwiseProfitReportFilter, { BillwiseProfitReportFilterInitialState } from "./billwise-profit-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+
 const BillwiseProfit = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
@@ -22,7 +23,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 240,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.discount;
@@ -31,29 +32,30 @@ const BillwiseProfit = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
 
           return {
             ...exportCell,
             text: cellInfo.value,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: '#0000FF',
             font: {
               ...exportCell.font,
               color: { argb: 'FF0000FF' },
               size: 10,
-              style:'bold',
+              style: 'bold',
               bold: true,
             },
           };
         }
         else {
-          return (  <span className={'font-bold text-blue'}>
-          {cellElement.data.description}
-        </span>)
-        }}
+          return (<span className={'font-bold text-blue'}>
+            {cellElement.data.description}
+          </span>)
+        }
+      }
     },
     {
       dataField: "productName",
@@ -61,7 +63,7 @@ const BillwiseProfit = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.discount;
@@ -70,30 +72,31 @@ const BillwiseProfit = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
 
           return {
             ...exportCell,
             text: cellInfo.value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.productName}
-        </span>)
-        }}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.productName}
+          </span>)
+        }
+      }
     },
     {
       dataField: "qty",
@@ -102,7 +105,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.qty;
@@ -111,7 +114,7 @@ const BillwiseProfit = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
 
           return {
@@ -119,7 +122,7 @@ const BillwiseProfit = () => {
             text: value,
             // bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             // textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -131,11 +134,12 @@ const BillwiseProfit = () => {
           };
         }
         else {
-          return ( <span>
-          {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' :  getFormattedValue(cellElement.data.qty)}`}
-        </span>)
-       
-          }}
+          return (<span>
+            {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' : getFormattedValue(cellElement.data.qty)}`}
+          </span>)
+
+        }
+      }
     },
     {
       dataField: "free",
@@ -152,14 +156,14 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance,false,4) 
+              : getFormattedValue(balance, false, 4)
 
           return {
             ...exportCell,
             text: value,
             // bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             // textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -171,10 +175,11 @@ const BillwiseProfit = () => {
           };
         }
         else {
-          return ( <span>
-          {`${cellElement.data?.free == 0 || cellElement.data?.free == null ? '' :  getFormattedValue(cellElement.data.free,false,4)}`}
-        </span>)
-          }}
+          return (<span>
+            {`${cellElement.data?.free == 0 || cellElement.data?.free == null ? '' : getFormattedValue(cellElement.data.free, false, 4)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "unit",
@@ -192,7 +197,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "grossAmount",
@@ -208,14 +213,14 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
             // bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             // textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -227,10 +232,11 @@ const BillwiseProfit = () => {
           };
         }
         else {
-          return ( <span>
-          {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : getFormattedValue(cellElement.data.grossAmount)}`}
-        </span>)
-        }}
+          return (<span>
+            {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : getFormattedValue(cellElement.data.grossAmount)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "discAmt",
@@ -239,7 +245,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.discAmt;
@@ -247,14 +253,14 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance,false,2) 
+              : getFormattedValue(balance, false, 2)
 
           return {
             ...exportCell,
             text: value,
             // bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             // textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -266,10 +272,11 @@ const BillwiseProfit = () => {
           };
         }
         else {
-          return ( <span>
-          {`${cellElement.data?.discAmt == 0 || cellElement.data?.discAmt == null ? '' : getFormattedValue(cellElement.data.discAmt,false,2)}`}
-        </span>)
-        }}
+          return (<span>
+            {`${cellElement.data?.discAmt == 0 || cellElement.data?.discAmt == null ? '' : getFormattedValue(cellElement.data.discAmt, false, 2)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "salesPrice",
@@ -278,7 +285,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.salesPrice;
@@ -286,27 +293,27 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              :cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?getFormattedValue(balance): getFormattedValue(balance,false,3) 
+              : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(balance) : getFormattedValue(balance, false, 3)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${ cellElement.data?.salesPrice == null ? '0' :cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?  getFormattedValue(cellElement.data.salesPrice):getFormattedValue(cellElement.data.salesPrice,false,3)}`}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.salesPrice == null ? '0' : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(cellElement.data.salesPrice) : getFormattedValue(cellElement.data.salesPrice, false, 3)}`}
           </span>)
         }
         // const productName = cellElement.data?.productName;
@@ -346,29 +353,30 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.totCost == 0 || cellElement.data?.totCost == null ? '' :  getFormattedValue(cellElement.data.totCost)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.totCost == 0 || cellElement.data?.totCost == null ? '' : getFormattedValue(cellElement.data.totCost)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "netAmount",
@@ -384,29 +392,30 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.netAmount == 0 || cellElement.data?.netAmount == null ? '' :  getFormattedValue(cellElement.data.netAmount)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.netAmount == 0 || cellElement.data?.netAmount == null ? '' : getFormattedValue(cellElement.data.netAmount)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "profit",
@@ -415,7 +424,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 110,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.profit;
@@ -423,29 +432,30 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' :  getFormattedValue(cellElement.data.profit)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' : getFormattedValue(cellElement.data.profit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "markupPerc",
@@ -454,7 +464,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.markupPerc;
@@ -462,29 +472,30 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' :  getFormattedValue(cellElement.data.markupPerc)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' : getFormattedValue(cellElement.data.markupPerc)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "marginPerc",
@@ -493,7 +504,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.marginPerc;
@@ -501,29 +512,30 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return (   <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : getFormattedValue(cellElement.data.marginPerc)}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : getFormattedValue(cellElement.data.marginPerc)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "vat",
@@ -533,7 +545,7 @@ const BillwiseProfit = () => {
       visible: false,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.vat;
@@ -541,27 +553,27 @@ const BillwiseProfit = () => {
           const value =
             balance == null
               ? ""
-              :cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?getFormattedValue(balance): getFormattedValue(balance,false,3) 
+              : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(balance) : getFormattedValue(balance, false, 3)
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+            bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?'bold':'normal',
-              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
+              style: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'bold' : 'normal',
+              bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${ cellElement.data?.vat == null ? '0' :cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?  getFormattedValue(cellElement.data.vat):getFormattedValue(cellElement.data.vat,false,3)}`}
+          return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.vat == null ? '0' : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(cellElement.data.vat) : getFormattedValue(cellElement.data.vat, false, 3)}`}
           </span>)
         }
         // const productName = cellElement.data?.productName;
@@ -598,8 +610,8 @@ const BillwiseProfit = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                showTotalCount={false}
-                remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  showTotalCount={false}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText="from {fromDate} to {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
                   gridHeader={t("billwise_profit_report_sales")}
@@ -611,8 +623,8 @@ const BillwiseProfit = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterHeight={630}
-                  filterWidth={850}
+                  filterHeight={520}
+                  filterWidth={650}
                   filterContent={<BillwiseProfitReportFilter />}
                   filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>

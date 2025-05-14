@@ -1,7 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -33,7 +32,6 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-
     },
     {
       dataField: "hsnCode",
@@ -42,7 +40,6 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-
     },
     {
       dataField: "qty",
@@ -52,7 +49,6 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -494,9 +490,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log('itemInfo');
-
       console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -517,7 +511,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       summaryType: "custom",
       customizeText: customizeDate,
     },
-     {
+    {
       column: "qty",
       summaryType: "sum",
       valueFormat: "currency",
@@ -572,7 +566,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
       showInGroupFooter: true,
       customizeText: customizeDateGroup,
     },
-     {
+    {
       column: "qty",
       summaryType: "sum",
       isGroupItem: true,
@@ -640,8 +634,8 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1)
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -666,8 +660,8 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilter />}
-                filterHeight={240}
-                filterWidth={790}
+                filterHeight={220}
+                filterWidth={600}
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

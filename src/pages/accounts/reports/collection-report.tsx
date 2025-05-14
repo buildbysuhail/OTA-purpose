@@ -196,8 +196,8 @@ const CollectionReport = () => {
                   showFilterInitially={true}
                   filterContent={<CollectionReportFilter />}
                   filterInitialData={CollectionReportFilterInitialState}
-                  filterHeight={400}
                   filterWidth={650}
+                  filterHeight={310}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   hideGridAddButton={true}
                   reload={true}

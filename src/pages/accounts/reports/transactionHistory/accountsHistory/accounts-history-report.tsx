@@ -3,22 +3,17 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {  DrillDownCellTemplate,} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import TransactrionHistoryReportFilter, {
-  TransactrionHistoryReportFilterInitialState,
-} from "../transaction-history-report-filter";
+import TransactrionHistoryReportFilter, {  TransactrionHistoryReportFilterInitialState,} from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 
-
 const AccountsHistoryReport = () => {
   const dispatch = useAppDispatch();
-    const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("accountsReport");
   // const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
   const rootState = useRootState();
@@ -40,7 +35,7 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 130,
       showInPdf: true,
-       format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "modifiedDate",
@@ -50,7 +45,7 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
-        format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "timeStamp",
@@ -119,11 +114,11 @@ const AccountsHistoryReport = () => {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -143,8 +138,8 @@ const AccountsHistoryReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.debit == null 
-              ? '':getFormattedValue(cellElement.data.debit,false,4) }`}
+            {`${cellElement.data?.debit == null
+              ? '' : getFormattedValue(cellElement.data.debit, false, 4)}`}
           </span>)
         }
       }
@@ -162,11 +157,11 @@ const AccountsHistoryReport = () => {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -186,8 +181,8 @@ const AccountsHistoryReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.credit == null 
-              ? '':getFormattedValue(cellElement.data.credit,false,4) }`}
+            {`${cellElement.data?.credit == null
+              ? '' : getFormattedValue(cellElement.data.credit, false, 4)}`}
           </span>)
         }
       }
@@ -237,11 +232,9 @@ const AccountsHistoryReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactrionHistoryReportFilter />}
-                  filterInitialData={
-                    TransactrionHistoryReportFilterInitialState
-                  }
+                  filterInitialData={  TransactrionHistoryReportFilterInitialState}
                   filterWidth={335}
-                  filterHeight={270}
+                  filterHeight={250}
                   // gridAddButtonType="popup"
                   reload={true}
                   childPopupProps={{

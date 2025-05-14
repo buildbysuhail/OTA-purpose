@@ -1973,14 +1973,14 @@ debugger;
                         className="text-sm dark:!text-dark-text"
                         title={gridHeader}
                       >
-                        {gridHeader.length > 30 ? `${gridHeader.slice(0, 30)}...` : gridHeader}
+                        {gridHeader.length > 100 ? `${gridHeader.slice(0, 100)}...` : gridHeader}
                       </span>
                       &nbsp;
                       <span
                         className="text-sm dark:!text-dark-text"
                         title={header}
                       >
-                        {header.length > 200 ? `${header.slice(0, 200)}...` : header}
+                        {header.length > 72 ? `${header.slice(0, 72)}...` : header}
                       </span>
                     </div>
                   </div>

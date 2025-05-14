@@ -229,7 +229,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PartyWiseReportFilter />}
-                filterHeight={280}
+                filterHeight={220}
                 filterWidth={450}
                 filterInitialData={PartyWiseReportFilterInitialState}
                 onFilterChanged={(f: any) => { setFilter(f); }}

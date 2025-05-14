@@ -165,6 +165,7 @@ const MultiRatesGcc: React.FC<{
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
       <DataGrid
         dataSource={data}
+        className="custom-data-grid-dark-only"
         onSaving={async (e) => {
           const _unts = await fetchData();
           if (e.changes.length > 0) {

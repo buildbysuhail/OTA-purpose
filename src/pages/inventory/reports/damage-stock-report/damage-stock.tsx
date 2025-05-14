@@ -257,7 +257,7 @@ const DamageStock = () => {
                 method={ActionType.POST}
                 filterContent={<DamageStockFilter />}
                 filterWidth={700}
-                filterHeight={410}
+                filterHeight={340}
                 filterInitialData={DamageStockFilterInitialState}
                 reload={true}
                 gridId="grd_damage_stock"

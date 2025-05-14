@@ -53,8 +53,8 @@ const ERPTab = ({ tabs, activeTab = 0, onClickTabAt, children }: ERPTabProps) =>
               key={`tab-${index}`}
               onClick={() => onClickTabAt?.(index)}
               className={`flex-none px-6 py-3 text-md font-bold cursor-pointer whitespace-nowrap transition-all duration-300 transform hover:scale-105 ${activeTab === index
-                ? "bg-white text-[#2563eb] shadow-xl border-b-4 border-[#2563eb]"
-                : "bg-gray-100 text-gray-600 hover:text-gray-800 hover:bg-gray-200 hover:shadow-md"
+                ? "dark:bg-dark-bg-card bg-white text-[#2563eb] shadow-xl border-b-4 border-[#2563eb]"
+                : "dark:bg-dark-bg-card bg-gray-100 text-gray-600 hover:text-gray-800 hover:bg-gray-200 hover:shadow-md"
                 }`}
             >
               {tab}

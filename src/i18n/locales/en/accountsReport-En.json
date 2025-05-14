@@ -766,5 +766,11 @@
   "net_sales_transfer_report":"Net Sales Transfer Report",
   "sales_transfer_monthWise_summary":"Sales Transfer MonthWise Summary Report",
   "sales_transfer_partyWise_summary":"Sales Transfer PartyWise Summary Report",
-  "report_of":"Report Of"
+  "report_of":"Report Of",
+
+  "party_wise_purchase_summary_report":"Party wise purchase summary report",
+  "purchase_estimate_summary_report":"Purchase estimate summary report",
+  "warehouse_type":"Warehouse type",
+  "van":"Van",
+  "physical":"Physical"
 }

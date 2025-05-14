@@ -1,17 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import OpeningStockFilter, {
-  OpeningStockFilterInitialState,
-} from "./opening-stock-filter";
-
+import OpeningStockFilter, { OpeningStockFilterInitialState, } from "./opening-stock-filter";
 interface OpeningStock {
   date: string;
   voucherNumber: string;
@@ -270,7 +265,7 @@ const OpeningStock = () => {
                 method={ActionType.POST}
                 filterContent={<OpeningStockFilter />}
                 filterWidth={700}
-                filterHeight={410}
+                filterHeight={340}
                 filterInitialData={OpeningStockFilterInitialState}
                 reload={true}
                 gridId="grd_opening_stock"

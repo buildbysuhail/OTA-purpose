@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -7,9 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import CollectionReportFilter, {  IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import IncomeReportFilter from "./income-report-filter";
 import ExpenseReportFilter, { ExpenseReportFilterInitialState } from "./expense-report-filter";
 
 const ExpenseReport = () => {
@@ -26,7 +24,7 @@ const ExpenseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accGroupName",
@@ -80,7 +78,7 @@ const ExpenseReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "debit",
@@ -188,13 +186,13 @@ const ExpenseReport = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000',
+            textColor: '#FF0000',
             font: {
               ...exportCell.font,
               color: { argb: 'FFFF0000' },
               size: 10,
-              style:"bold",
-              bold: true ,
+              style: "bold",
+              bold: true,
             },
           };
         }
@@ -219,7 +217,7 @@ const ExpenseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "costCentreName",
@@ -228,7 +226,7 @@ const ExpenseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
   ];
   return (
@@ -239,16 +237,16 @@ const ExpenseReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 remoteOperations={{ paging: false, filtering: false, sorting: false }}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   allowGrouping={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
                   gridHeader={t("expense_report")}
-                  dataUrl={Urls.acc_reports_income_expense_report }
+                  dataUrl={Urls.acc_reports_income_expense_report}
                   method={ActionType.POST}
                   gridId="grd_expense_report"
                   filterWidth={650}
-                  filterHeight={320}
+                  filterHeight={270}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
@@ -256,7 +254,7 @@ const ExpenseReport = () => {
                   filterInitialData={ExpenseReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

@@ -28,21 +28,21 @@ import { ArrowBigLeftDash } from "lucide-react";
 
 interface SidebarProps {
   type:
-  | "erp"
-  | "account-settings"
-  | "workspace-settings"
-  | "settings"
-  | "reports";
+    | "erp"
+    | "account-settings"
+    | "workspace-settings"
+    | "settings"
+    | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
+  let clientSession = useAppSelector((state: RootState) => state.ClientSession);
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
-
     switch (type) {
       case "erp":
         return MENUITEMS;
@@ -64,6 +64,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (userSession.userTypeCode == "BA") {
         st = st.filter((x: any) => x.title != "branches");
       }
+
       if (userSession.userTypeCode == "BA") {
         st = st.filter((x: any) => x.title != "branch_info");
       }
@@ -128,13 +129,47 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
-                undefined
+                  undefined
             )
           ) {
             item.visible = false;
           }
         })
       );
+      setMenuitems(st);
+    } else if (type == "reports") {
+      debugger;
+      let st = menuitems;
+      if (clientSession.isAppGlobal) {
+        const excluded = ["purchase_summary_report", ""];
+        st = st
+          .filter((parent: any) => !excluded.includes(parent.title))
+          .map((parent: any) => {
+            const filteredChildren = parent.children?.filter(
+              (child: any) => !excluded.includes(child.title)
+            );
+            return {
+              ...parent,
+              children: filteredChildren,
+            };
+          })
+          .filter((parent: any) => parent.children?.length > 0);
+      } else {
+        const excluded = ["purchase_summary_report", ""];
+        st = st
+          .filter((parent: any) => !excluded.includes(parent.title))
+          .map((parent: any) => {
+            const filteredChildren = parent.children?.filter(
+              (child: any) => !excluded.includes(child.title)
+            );
+            return {
+              ...parent,
+              children: filteredChildren,
+            };
+          })
+          .filter((parent: any) => parent.children?.length > 0);
+      }
+
       setMenuitems(st);
     } else if (type == "erp") {
       let st: [] = [];
@@ -145,8 +180,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         menuitems.flatMap((item: any) =>
           item.children
             ? item.children
-              .filter((child: any) => child.rights !== undefined)
-              .map((child: any) => child.rights)
+                .filter((child: any) => child.rights !== undefined)
+                .map((child: any) => child.rights)
             : []
         ),
         UserAction.Show
@@ -165,7 +200,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
-                undefined
+                  undefined
             )
           ) {
             item.visible = false;
@@ -174,7 +209,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       );
       setMenuitems(st);
     }
-  }, [userSession.userTypeCode,MENUITEMS,SettingsMenuItems,]);
+  }, [userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();
@@ -193,23 +228,24 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
 
   useEffect(() => {
-    window.addEventListener('resize', menuResizeFn);
-		// window.addEventListener('resize', checkHoriMenu);
-		const mainContent = document.querySelector(".main-content");
-		if (window.innerWidth <= 992) {
-			if (mainContent) {
-				const theme = store.getState();
-				updateAppState({ ...theme.AppState.appState, toggled: "close" });
-			}
-			else if (document.documentElement.getAttribute('data-nav-layout') == 'horizontal') {
-				// closeMenu();
-			}
-		}
-		mainContent!.addEventListener('click', menuClose);
-		return () => {
-			window.removeEventListener("resize", menuResizeFn);
-			// window.removeEventListener('resize', checkHoriMenu);
-		};
+    window.addEventListener("resize", menuResizeFn);
+    // window.addEventListener('resize', checkHoriMenu);
+    const mainContent = document.querySelector(".main-content");
+    if (window.innerWidth <= 992) {
+      if (mainContent) {
+        const theme = store.getState();
+        updateAppState({ ...theme.AppState.appState, toggled: "close" });
+      } else if (
+        document.documentElement.getAttribute("data-nav-layout") == "horizontal"
+      ) {
+        // closeMenu();
+      }
+    }
+    mainContent!.addEventListener("click", menuClose);
+    return () => {
+      window.removeEventListener("resize", menuResizeFn);
+      // window.removeEventListener('resize', checkHoriMenu);
+    };
   }, []);
 
   // const location = useLocation();
@@ -231,7 +267,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     }
   }
 
-  function Outhover(){
+  function Outhover() {
     const theme = appState;
     if (
       (theme.toggled == "icon-overlay-close" ||
@@ -262,42 +298,46 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     }
   }
 
-	const WindowPreSize = typeof window !== 'undefined' ? [window.innerWidth] : [];
+  const WindowPreSize =
+    typeof window !== "undefined" ? [window.innerWidth] : [];
 
-  const menuResizeFn =()=> {
+  const menuResizeFn = () => {
     debugger;
-		if (typeof window === 'undefined') {
-			// Handle the case where window is not available (server-side rendering)
-			return;
-		}
+    if (typeof window === "undefined") {
+      // Handle the case where window is not available (server-side rendering)
+      return;
+    }
 
-		WindowPreSize.push(window.innerWidth);
-		if (WindowPreSize.length > 2) { WindowPreSize.shift() }
+    WindowPreSize.push(window.innerWidth);
+    if (WindowPreSize.length > 2) {
+      WindowPreSize.shift();
+    }
 
-		const theme = store.getState();
-		const currentWidth = WindowPreSize[WindowPreSize.length - 1];
-		const prevWidth = WindowPreSize[WindowPreSize.length - 2];
-debugger;
+    const theme = store.getState();
+    const currentWidth = WindowPreSize[WindowPreSize.length - 1];
+    const prevWidth = WindowPreSize[WindowPreSize.length - 2];
+    debugger;
 
-		if (WindowPreSize.length > 1) {
-			if (currentWidth < 992 && prevWidth >= 992) {
-				// less than 992;
+    if (WindowPreSize.length > 1) {
+      if (currentWidth < 992 && prevWidth >= 992) {
+        // less than 992;
         updateAppState({ ...theme.AppState.appState, toggled: "close" });
-				// ThemeChanger({ ...theme, dataToggled: "close" });
-			}
+        // ThemeChanger({ ...theme, dataToggled: "close" });
+      }
 
-			if (currentWidth >= 992 && prevWidth < 992) {
-				// greater than 992
-				// ThemeChanger({ ...theme, dataToggled: theme.dataVerticalStyle === "doublemenu" ? "double-menu-open" : "" });
+      if (currentWidth >= 992 && prevWidth < 992) {
+        // greater than 992
+        // ThemeChanger({ ...theme, dataToggled: theme.dataVerticalStyle === "doublemenu" ? "double-menu-open" : "" });
         updateAppState({
           ...theme.AppState.appState,
           toggled:
-          theme.AppState.appState.dataVerticalStyle == "doublemenu" ? "double-menu-open" : "",
+            theme.AppState.appState.dataVerticalStyle == "doublemenu"
+              ? "double-menu-open"
+              : "",
         });
-
-			}
-		}
-	}
+      }
+    }
+  };
 
   function switcherArrowFn(): void {
     // Used to remove is-expanded class and remove class on clicking arrow buttons
@@ -517,7 +557,6 @@ debugger;
       if (!event?.ctrlKey) {
         for (const item of MENUITEMS) {
           if (item === targetObject) {
-
             item.active = true;
             item.selected = true;
             // setMenuAncestorsActive(MENUITEMS,item);
@@ -603,7 +642,10 @@ debugger;
     const setSubmenuRecursively = (items: any) => {
       items?.forEach((item: any) => {
         if (item.path == "") {
-        } else if (currentPath.includes(item.path) || (`${currentPath}List`).includes(item.path)) {
+        } else if (
+          currentPath.includes(item.path) ||
+          `${currentPath}List`.includes(item.path)
+        ) {
           setSubmenu(null, item);
         }
         setSubmenuRecursively(item.children);
@@ -716,10 +758,10 @@ debugger;
             if (theme.dir == "rtl") {
               if (
                 siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
-                0 &&
+                  0 &&
                 outterUlWidth < window.innerWidth &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                window.innerWidth
+                  window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -728,10 +770,10 @@ debugger;
             } else {
               if (
                 outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
-                window.innerWidth &&
+                  window.innerWidth &&
                 siblingULRect.right >= 0 &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                window.innerWidth
+                  window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -875,29 +917,34 @@ debugger;
                         levelone.menutitle
                           ? "slide__category"
                           : levelone.menutitle_lg
-                            ? "slide__category slide__category__lg"
-                            : ""
-                        } ${
-                          levelone.hasTopBorder === true
+                          ? "slide__category slide__category__lg"
+                          : ""
+                      } ${
+                        levelone.hasTopBorder === true
                           ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
-                        } ${levelone.type === "link" ? "slide" : ""}
+                      } ${levelone.type === "link" ? "slide" : ""}
                          ${levelone.type === "sub" ? "slide has-sub" : ""} ${
-                          levelone?.active ? "open" : ""
-                        } ${levelone?.selected ? "active" : ""}`}
+                        levelone?.active ? "open" : ""
+                      } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
                         <span className="category-name flex">
                           {levelone.menutitle === "main" ? (
                             levelone.menutitle
-
                           ) : (
                             <div className="flex justify-between w-full">
                               <span className="category-name flex items-center space-x-1">
-                                 {levelone.menutitle}
+                                {levelone.menutitle}
                               </span>
-                              <Link to={import.meta.env.BASE_URL} className="ml-auto flex items-center space-x-1">
-                                <ArrowBigLeftDash size={15} className="text-[#ffffff]" />
+                              <Link
+                                to={import.meta.env.BASE_URL}
+                                className="ml-auto flex items-center space-x-1"
+                              >
+                                <ArrowBigLeftDash
+                                  size={15}
+                                  className="text-[#ffffff]"
+                                />
                                 <span className="text-[#ffffff]">Home</span>
                               </Link>
                             </div>
@@ -918,7 +965,7 @@ debugger;
                           to={levelone.path}
                           className={`side-menu__item ${
                             levelone.selected ? "active" : ""
-                            }`}
+                          }`}
                         >
                           {levelone.icon}
                           <span className="side-menu__label">
@@ -1042,7 +1089,7 @@ debugger;
         </aside>
       </Fragment>
     );
-  }, [menuitems,t,appState]);
+  }, [menuitems, t, appState]);
   return renderNavItems;
 });
 

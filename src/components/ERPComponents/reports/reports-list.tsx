@@ -194,9 +194,9 @@ const ReportList = () => {
 
   return (
     <Fragment>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen dark:bg-dark-bg bg-white">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <div className="px-6 py-4 border-b dark:bg-dark-bg dark:border-dark-border  border-gray-100 flex justify-between items-center">
           <div className="flex items-center gap-1">
             <ChartLine className="w-5 aspect-square" />
             <h3 className="text-base dark:!text-dark-text font-medium">
@@ -269,7 +269,7 @@ const ReportList = () => {
         </div>
 
         {/* My Favorites Section */}
-        <div className="px-6 py-4 border-b border-gray-100">
+        <div className="px-6 py-4 border-b dark:border-dark-border border-gray-100">
           <div className="flex items-center mb-4">
             <svg
               className="w-5 h-5 text-gray-600"
@@ -284,7 +284,7 @@ const ReportList = () => {
                 d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
               />
             </svg>
-            <h2 className="ml-2 text-base font-medium text-gray-900">
+            <h2 className="ml-2 text-base font-medium dark:text-dark-label text-gray-900">
               My Favorites
             </h2>
           </div>

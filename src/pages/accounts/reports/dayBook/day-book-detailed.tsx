@@ -287,7 +287,7 @@ const DayBookDetailed = () => {
                   gridId="grd_day_book_detailed"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterHeight={300}
+                  filterHeight={210}
                   filterWidth={350}
                   filterContent={<DayBookReportFilter />}
                   filterInitialData={DayBookReportFilterInitialState}

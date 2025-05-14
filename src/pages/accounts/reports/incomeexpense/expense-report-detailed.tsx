@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -7,11 +7,8 @@ import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPCom
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import IncomeReportFilter from "./income-report-filter";
 import ExpenseReportFilter, { ExpenseReportFilterInitialState } from "./expense-report-filter";
-import moment from "moment";
 import AccTransactionForm from "../../transactions/acc-transaction";
 
 const ExpenseReportDetailed = () => {
@@ -300,7 +297,7 @@ const ExpenseReportDetailed = () => {
                   method={ActionType.POST}
                   gridId="grd_expense_report_details"
                   filterWidth={650}
-                  filterHeight={320}
+                  filterHeight={270}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

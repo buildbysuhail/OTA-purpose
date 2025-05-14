@@ -528,6 +528,17 @@ export interface UserConfig {
   innerPageBg?: string;
   inputBoxStyle?: inputBox
   isExpanded?: boolean;
+  useBarcode?: boolean;
+  resizeGrid?: boolean;
+  showProductInfoPopup?: boolean;
+  showPurchaserOnly?: boolean;
+  useSupplierProductCode?: boolean;
+  enableItemCodeSearchInNameColumn?: boolean;
+  holdSameCode?: boolean;
+  printPreview?: boolean;
+  dummyProducts?: boolean;
+  duplicationMessage?: boolean;
+  setDefaultQuantity?: boolean;
 }
 export interface LoadData {
   formType?: string;
@@ -717,6 +728,17 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     maxWidth: "",
     outerPageBg: "",
     innerPageBg: "",
+    useBarcode: false,
+    resizeGrid: false,
+    showProductInfoPopup: false,
+    showPurchaserOnly: false,
+    useSupplierProductCode: false,
+    enableItemCodeSearchInNameColumn: false,
+    holdSameCode: false,
+    printPreview: false,
+    dummyProducts: false,
+    duplicationMessage: false,
+    setDefaultQuantity: false,
     inputBoxStyle: {
       inputStyle: "normal",
       inputSize: "sm",
@@ -743,7 +765,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       focusForeColor: "128, 128, 128",
       focusBgColor: "255, 255, 255",
       bold: true
-    }
+    },
+ 
   },
   unlocking: false,
   total: 0,

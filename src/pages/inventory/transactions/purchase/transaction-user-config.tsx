@@ -12,7 +12,7 @@ import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { Settings } from "lucide-react";
+import { RotateCcw, Settings } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { inputBox } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
@@ -144,38 +144,111 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             </div>
 
             <div className="grid grid-rows-3 gap-6 p-4">
+
+              <div className="grid grid-cols-3 gap-3">
               <ERPCheckbox
-                id="keepNarrationForJV"
-                label={t("keep_narration_for_jv")}
+                id="useBarcode"
+                label={t("use_barcode")}
                 data={formState.userConfig}
-                checked={formState?.userConfig?.keepNarrationForJV}
-                onChangeData={(e) => handleFieldChange("keepNarrationForJV", e.keepNarrationForJV)}
+                checked={formState?.userConfig?.useBarcode}
+                onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
               />
 
               <ERPCheckbox
-                id="clearDetailsAfterSaveAccounts"
-                label={t("clear_details_after_save_accounts")}
+                id="resizeGrid"
+                label={t("resize_grid")}
                 data={formState.userConfig}
-                checked={formState?.userConfig?.clearDetailsAfterSaveAccounts}
-                onChangeData={(e) => handleFieldChange("clearDetailsAfterSaveAccounts", e.clearDetailsAfterSaveAccounts)}
+                checked={formState?.userConfig?.resizeGrid}
+                onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
               />
 
               <ERPCheckbox
-                id="mnuShowConfirmationForEditOnAccounts"
-                label={t("show_confirmation_for_edit_on_accounts")}
+                id="showProductInfoPopup"
+                label={t("show_product_info_popup")}
                 data={formState.userConfig}
-                checked={formState?.userConfig?.mnuShowConfirmationForEditOnAccounts}
-                onChangeData={(e) => handleFieldChange("mnuShowConfirmationForEditOnAccounts", e.mnuShowConfirmationForEditOnAccounts)}
+                checked={formState?.userConfig?.showProductInfoPopup}
+                onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
               />
 
               <ERPCheckbox
-                id="maximizeBillwiseScreenInitially"
-                label={t("maximize_billwise_screen_initially")}
+                id="showPurchaserOnly"
+                label={t("show_purchaser_only")}
                 data={formState.userConfig}
-                checked={formState?.userConfig?.maximizeBillwiseScreenInitially}
-                onChangeData={(e) => handleFieldChange("maximizeBillwiseScreenInitially", e.maximizeBillwiseScreenInitially)}
+                checked={formState?.userConfig?.showPurchaserOnly}
+                onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
+              />
+                <ERPCheckbox
+                id="useSupplierProductCode"
+                label={t("use_supplier_product_code")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useSupplierProductCode}
+                onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
               />
 
+              <ERPCheckbox
+                id="enableItemCodeSearchInNameColumn"
+                label={t("enable_item_code_search_in_name_column")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
+                onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
+              />
+
+              <ERPCheckbox
+                id="holdSameCode"
+                label={t("hold_same_code")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.holdSameCode}
+                onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
+              />
+                <ERPCheckbox
+                id="printPreview"
+                label={t("print_preview")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.printPreview}
+                onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+              />
+
+              <ERPCheckbox
+                id="dummyProducts"
+                label={t("dummy_products")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.dummyProducts}
+                onChangeData={(e) => handleFieldChange("dummyProducts", e.dummyProducts)}
+              />
+
+              <ERPCheckbox
+                id="duplicationMessage"
+                label={t("duplication_message")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.duplicationMessage}
+                onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
+              />
+                 <ERPCheckbox
+                id="setDefaultQuantity"
+                label={t("set_default_quantity")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.setDefaultQuantity}
+                onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
+              /> 
+
+              <div className="flex items-center justify-end"> 
+                 <ERPButton
+                  // startIcon="ri-arrow-go-back-line"
+                  title="Undo Edit Mode"
+                  variant={"secondary"}
+                  className=" w-36 h-8"
+                  onClick={resetThemeChange}
+                />
+                 {/* <button
+                  // onClick={}
+                 className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
+                  <RotateCcw className="w-4 h-4" />  
+                </button> */}
+              </div>
+                
+
+              </div>
+            
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}

@@ -99,8 +99,8 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
           field={{
             id: "defaultSRFormTypeForPOS",
             getListUrl: Urls.data_FormTypeBySR,
-            valueKey: "FormType",
-            labelKey: "FormType",
+            valueKey: "name",
+            labelKey: "name",
           }}
           onChangeData={(data: any) =>
             handleFieldChange(

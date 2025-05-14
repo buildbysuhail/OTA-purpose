@@ -212,7 +212,7 @@ const SummaryFilter = ({
                 // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
                 :""
               }`: undefined,
-            valueKey: "id",
+            valueKey: "name",
             labelKey: "name",
           }}
           onSelectItem={(data) => {

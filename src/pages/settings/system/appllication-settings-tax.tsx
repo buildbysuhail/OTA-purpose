@@ -115,8 +115,8 @@ const TaxSettingsForm: React.FC = () => {
                   id: "purchaseFormType",
 
                   getListUrl: Urls.data_FormTypeByPI,
-                  valueKey: "FormType",
-                  labelKey: "FormType",
+                  valueKey: "name",
+                  labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
                   handleFieldChange("purchaseFormType", data.purchaseFormType)
@@ -131,8 +131,8 @@ const TaxSettingsForm: React.FC = () => {
                   id: "salesFormType",
 
                   getListUrl: Urls.data_FormTypeBySI,
-                  valueKey: "FormType",
-                  labelKey: "FormType",
+                  valueKey: "name",
+                  labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
                   handleFieldChange("salesFormType", data.salesFormType)

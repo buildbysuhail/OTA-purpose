@@ -47,8 +47,8 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           field={{
             id: "purchaseFormType",
             getListUrl: Urls.data_FormTypeByPI,
-            valueKey: "FormType",
-            labelKey: "FormType",
+            valueKey: "name",
+            labelKey: "name",
           }}
           onChangeData={(data: any) =>
             handleFieldChange("taxesSettings", "purchaseFormType", data.purchaseFormType)
@@ -67,8 +67,8 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           field={{
             id: "salesFormType",
             getListUrl: Urls.data_FormTypeBySI,
-            valueKey: "FormType",
-            labelKey: "FormType",
+            valueKey: "name",
+            labelKey: "name",
           }}
           onChangeData={(data: any) =>
             handleFieldChange("taxesSettings", "salesFormType", data.salesFormType)

@@ -36,7 +36,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataField: "date",
         caption: t("date"),
         dataType: "date",
-         format: "dd/MM/yyyy ",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -1127,19 +1126,23 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         customizeText: customizeSummaryRow,
       },
       // //inventory summary only+09
-      // {
-      //   column: "totalExciseTax",
-      //   summaryType: "sum",
-      //   valueFormat: "currency",
-      //   customizeText: customizeSummaryRow,
-      // },
+      {
+        column: "totalExciseTax",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
     ];
     // Filter columns based on the `visible` property
     return _summaryItems.filter((column) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-   
+      if (column.column == "totalExciseTax") {
+        return (
+          clientSession.isAppGlobal
+        );
+      }
       if (column.column == "srAmount") {
         return (
           userSession.dbIdValue !== "489995732270" &&

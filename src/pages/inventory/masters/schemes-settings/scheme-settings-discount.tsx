@@ -175,7 +175,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
     }
     else
     {
-       setLeftGridData([]);
+    setLeftGridData([]);
     setRightGridData([]);
     }
   }, [schemeDiscountForm]);
@@ -244,7 +244,7 @@ const payload = {
     };
 
     return (
-          <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
+          <div className="relative grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
             <div className="px-4 pt-4 pb-2 ">
             {/* Top Section - Dropdowns */}
@@ -257,7 +257,7 @@ const payload = {
                               labelKey: "name",
                               getListUrl: Urls.data_productgroup,
                             }}
-                            label={t("product_group")}
+                            label={t("product_group_id")}
                             data={schemeDiscountForm}
                             value={schemeDiscountForm.ProductGroupID}
                             className="w-full"
@@ -281,7 +281,7 @@ const payload = {
                               labelKey: "name",
                               getListUrl:`${Urls.scheme_discount}/forCombo`,
                             }}
-                            label={t("scheme_id")}
+                            label={t("scheme_name")}
                             data={schemeDiscountForm}
                             value={schemeDiscountForm.SchemeID}
                             className="w-full"
@@ -308,7 +308,7 @@ const payload = {
                     </div> */}
 
                     <div>
-   
+            
                         <ERPDevGrid
                             ref={leftGridRef}
                             gridHeader={t("add_to_scheme")}
@@ -386,6 +386,16 @@ const payload = {
             </div>
         </div>
        </div>
+       {isApiLoading &&
+         <div className="absolute  inset-0 flex items-center justify-center z-50 bg-white/20">
+      <div className="flex items-center  gap-4">
+        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping" />
+        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping animation-delay-200" />
+        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping animation-delay-400" />
+      </div>
+    </div>
+       }
+     
        </div>   
     );
 };

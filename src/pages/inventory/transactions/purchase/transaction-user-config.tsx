@@ -12,7 +12,7 @@ import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { RotateCcw, Settings } from "lucide-react";
+import { RotateCcw, Settings, UserCog } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { inputBox } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
@@ -111,7 +111,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     <>
       <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
         <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-1.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
-          <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+          <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>
       <ERPModal

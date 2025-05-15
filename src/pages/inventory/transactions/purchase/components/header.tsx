@@ -26,9 +26,13 @@ import {
   History,
   Search,
   AlignHorizontalSpaceBetween,
+  Boxes,
+  Group,
 } from "lucide-react";
 
 interface HeaderProps extends VoucherElementProps {
+  setIsProductSummaryOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPartywiseSummaryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   loadTemporaryRows: () => Promise<void>;
   deleteTransVoucher: () => void;
   handleRefresh: () => void;
@@ -49,7 +53,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  printPaymentReceiptAdvice: (voucher?: TransactionFormState, voucherType?: any) => Promise<void>
+  printPaymentReceiptAdvice: (voucher?: TransactionFormState, voucherType?: any) => Promise<void>;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -77,18 +81,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       selectTemplates,
       goToPreviousPage,
       isHistorySidebarOpen,
-      setIsPrintModalOpen,
+      setIsProductSummaryOpen,
+      setIsPartywiseSummaryOpen,
       phone = false,
+      setIsPrintModalOpen,
       printPaymentReceiptAdvice,
     },
     ref
   ) => {
-    debugger;
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    debugger;
-
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
         // Check if the click is outside the popup AND not on the button
@@ -183,6 +187,25 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
             onClick={handleClearControls}
           >
             <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+        </div>
+
+        {/* Product Summary */}
+        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product summary")}>
+          <button
+            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
+            onClick={() => setIsProductSummaryOpen(true)}
+          >
+            <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+        </div>
+        {/* partywise summary */}
+        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("partywise summar")}>
+          <button
+            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
+            onClick={() => setIsPartywiseSummaryOpen(true)}
+          >
+            <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         </div>
 

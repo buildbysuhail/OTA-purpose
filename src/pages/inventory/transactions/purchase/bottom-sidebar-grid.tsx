@@ -491,7 +491,7 @@ const payload = {
     return (
           <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg ">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="px-4 pt-0 pb-0 ">
             {/* Top Section - Dropdowns */}
             <div className="grid grid-cols-6 gap-4">
               <ERPCheckbox
@@ -527,6 +527,7 @@ const payload = {
                              columns={columnsleft}
                              remoteOperations={false}
                             showBorders={true}
+                            height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}
@@ -557,6 +558,7 @@ const payload = {
                             data={rightGridData}
                              remoteOperations={false}
                             showBorders={true}
+                            height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}

@@ -1724,7 +1724,7 @@ const buttonStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "end",
-    marginBottom: "3px",
+    marginBottom: "-5px",
   }
 
   const sidebarTitleStyle: React.CSSProperties = {
@@ -2503,6 +2503,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() =>  dispatch(formStateHandleFieldChange({fields:{isProductSummaryOpen: false}}))}
           content={
             <ProductSummaryMaster 
@@ -2517,6 +2518,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({fields:{isPartyWiseSummaryOpen: false}}))}
           content={
             <PartySummaryMaster/>
@@ -2538,11 +2540,6 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                      <X />
                   </button>
                 </div>
-
-                        {/* <p className="mb-[24px] text-[#6b7280]">
-                          This sidebar for test.
-                        </p> */}
-
               <BottomSidebarGrid/>
               </div>
         </BottomSidebar>

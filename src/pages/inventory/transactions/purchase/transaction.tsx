@@ -2192,22 +2192,6 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
             localInputBox={formState?.userConfig?.inputBoxStyle}
           />
           {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
-                    <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
-                      <div>
-                        <div style={sidebarHeaderStyle}>
-                          {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
-                          <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
-                           <X />
-                          </button>
-                        </div>
-
-                        {/* <p className="mb-[24px] text-[#6b7280]">
-                          This sidebar for test.
-                        </p> */}
-
-                        <BottomSidebarGrid/>
-                      </div>
-                    </BottomSidebar>
           <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -2489,6 +2473,22 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           setIsOpen={setIsPartyDetailsOpen}
         />
       )}
+        <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+            <div>
+              <div style={sidebarHeaderStyle}>
+                {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
+                  <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+                     <X />
+                  </button>
+                </div>
+
+                        {/* <p className="mb-[24px] text-[#6b7280]">
+                          This sidebar for test.
+                        </p> */}
+
+              <BottomSidebarGrid/>
+              </div>
+        </BottomSidebar>
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}

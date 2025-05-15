@@ -14,14 +14,26 @@ import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 const CreditPurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  
+
   const columns: DevGridColumn[] = [
+     {
+      sortIndex:0,
+      sortOrder:"asc",
+      dataField: "siNo",
+      caption: t("SINo"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
     {
       dataField: "date",
       caption: t("date"),
@@ -515,19 +527,7 @@ const CreditPurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.refDate == null ||
-          cellElement.data.refDate == ""
-          ? ""
-          : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
-              "DD-MMM-YYYY"
-            );
-      },
+     format:"dd-MMM-yyyy"
     },
   ];
   const customizeSummaryRow = useMemo(() => {
@@ -544,6 +544,7 @@ const CreditPurchaseSummaryReport = () => {
       return getFormattedValue(value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
+  
 
   const summaryItems: SummaryConfig[] = [
     {
@@ -556,49 +557,65 @@ const CreditPurchaseSummaryReport = () => {
       column: "gross",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+      customizeText: (itemInfo: { value: any })=>{
+             return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+           },
+         },
     {
       column: "disc",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+     customizeText: (itemInfo: { value: any })=>{
+            return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+          },
+        },
     {
       column: "vat",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+     customizeText: (itemInfo: { value: any })=>{
+            return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+          },
+        },
     {
       column: "grandTotal",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+       customizeText: (itemInfo: { value: any })=>{
+              return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+            },
+          },
     {
       column: "billDiscount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+    customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+      },
     },
     {
       column: "cashDiscount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+      },
     },
     {
       column: "cashReceived",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+    customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+      },
     },
     {
       column: "adjustmentAmount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+    customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+      },
     },
   ];
   return (
@@ -611,8 +628,17 @@ const CreditPurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false,summary:true }}
-                  filterText="from {fromDate} to {toDate} {productID > 0 && , Product Name : [ProductName]} {salesRouteID > 0 && , Route Name : [SalesRouteName]} {counterID > 0 && , Counter : [CounterName]} {salemanID > 0 && , Sales Man : [SalemanName]} {partyID > 0 && , Party Name : [PartyName]}"
+                  remoteOperations={{
+                    filtering: true,
+                    paging: true,
+                    sorting: true,
+                    summary: true,
+                  }}
+                  //{partyID > 0 && , Party Name : [PartyName]} not seened in 1050  {productID > 0 && , Product Name : [ProductName]} always visible false for combo so removed
+                  filterText="from {fromDate} to {toDate}
+                   {salesRouteID > 0 && , Route Name : [SalesRouteName]} 
+                   {counterID > 0 && , Counter : [CounterName]} 
+                   {salemanID > 0 && , Sales Man : [SalemanName]}"
                   gridHeader={t("credit_purchase_summary")}
                   dataUrl={Urls.Credit_purchase_summary}
                   method={ActionType.POST}
@@ -622,9 +648,13 @@ const CreditPurchaseSummaryReport = () => {
                   filterWidth={600}
                   filterHeight={270}
                   filterContent={<CreditPurchaseSummaryReportFilter />}
-                  filterInitialData={
-                    {...CreditPurchaseSummaryReportFilterInitialState, fromDate: clientSession.softwareDate}
-                  }
+                  filterInitialData={{
+                    ...CreditPurchaseSummaryReportFilterInitialState,
+                    fromDate: moment(
+                      clientSession.softwareDate,
+                      "DD/MM/YYYY"
+                    ).local(),
+                  }}
                   hideGridAddButton={true}
                   reload={true}
                   childPopupProps={{

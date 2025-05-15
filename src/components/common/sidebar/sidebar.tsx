@@ -155,7 +155,33 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           })
           .filter((parent: any) => parent.children?.length > 0);
       } else {
-        const excluded = ["purchase_estimate_register_report","purchase_return_estimate_register_report","purchase_return_estimate_summary_report"];
+        const excluded = ["purchase_estimate_register_report",
+          "purchase_return_estimate_register_report",
+          "purchase_return_estimate_summary_report",
+
+          "purchase_gst_daily_summary_report",
+           "purchase_gst_taxwise_report",
+          "purchase_gst_taxwise_with_hsn_report",
+          "purchase_gst_monthly_summary_report",
+          "purchase_gst_detailed_report",
+          "purchase_gst_register_format_report",
+          "purchase_gst_advance_register_format_report",
+          
+          "purchase_return_gst_daily_summary_report",
+          "purchase_return_gst_sales_and_return_report",
+          "purchase_return_gst_taxwise_report",
+          "purchase_return_gst_taxwise_with_hsn_report",
+          "purchase_return_gst_monthly_summary_report",
+          "purchase_return_gst_detailed_report",
+          "purchase_return_gst_register_format_report",
+          "purchase_return_gst_adv_register_format_report",
+
+     
+        
+        
+        
+        
+        ];
         st = st
           .filter((parent: any) => !excluded.includes(parent.title))
           .map((parent: any) => {

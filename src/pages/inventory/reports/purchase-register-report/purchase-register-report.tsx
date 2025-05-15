@@ -1,4 +1,4 @@
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
@@ -12,6 +12,7 @@ import PurchaseRegisterFilter, {
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { useLocation } from "react-router-dom";
 
 interface RegisterProps {
   gridHeader: string;
@@ -172,7 +173,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 70,
-        visible: false,
       },
       {
         dataField: "product",
@@ -206,7 +206,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        visible: false,
       },
       {
         dataField: "category",
@@ -905,7 +904,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-        {
+      {
         dataField: "gstin",
         caption: t("GSTIN"),
         dataType: "string",
@@ -923,7 +922,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
-        {
+      {
         dataField: "mannualBarcode",
         caption: t("manual_barcode"),
         dataType: "string",
@@ -932,8 +931,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
-      
-    
+
       {
         dataField: "purchaseInvoiceNumber",
         caption: t("purchase_invoice_number"),
@@ -943,14 +941,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         visible: false,
         width: 100,
       },
-       {
+      {
         dataField: "priceCategoryID",
         caption: t("PriceCategoryID"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible: false,
       },
       {
         dataField: "schemeDisc",
@@ -984,7 +981,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      
+
       {
         dataField: "exciseTax",
         caption: t("excise_tax"),
@@ -1307,7 +1304,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
-    
+
       {
         dataField: "salesPrice",
         caption: t("SalesPrice"),
@@ -1527,7 +1524,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       //   allowFiltering: true,
       //   width: 100,
       // },
-     
+
       // {
       //   dataField: "totalProfitPercent",
       //   caption: t("Total Profit%"),
@@ -1650,7 +1647,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "baseUnitQuantity") {
           return userSession.dbIdValue == "543140180640";
         }
-        if (column.dataField == "vat"||column.dataField == "baseUnitQuantity"||column.dataField == "referenceNumber"||column.dataField == "salesPrice"||column.dataField == "vatNumber"||column.dataField == "exciseTax" ) {
+        if (
+          column.dataField == "vat" ||
+          column.dataField == "baseUnitQuantity" ||
+          column.dataField == "referenceNumber" ||
+          column.dataField == "salesPrice" ||
+          column.dataField == "vatNumber" ||
+          column.dataField == "exciseTax"
+        ) {
           return !clientSession.isAppGlobal;
         }
         if (
@@ -1687,7 +1691,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             caption: "QRPay",
           };
         }
-        if (column.dataField == "xRate" ) {
+        if (column.dataField == "xRate") {
           return {
             ...column,
             visible: filter.voucherForm == "Import",
@@ -1890,7 +1894,11 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       return true;
     });
   }, [t, filter, userSession.dbIdValue]);
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -1898,6 +1906,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
                 filterText=" From : {fromDate} - {toDate} 
                   {productID > 0 && , Product Name : [productName]}
                   {productGroupID > 0 && , Group Name : [groupName]}
@@ -1913,7 +1922,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}
@@ -1923,7 +1931,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                 filterContent={<PurchaseRegisterFilter />}
                 filterHeight={460}
                 filterWidth={700}
-                filterInitialData={PurchaseRegisterFilterInitialState}
+                filterInitialData={{
+                  ...PurchaseRegisterFilterInitialState,
+                  fromDate: moment(
+                    clientSession.softwareDate,
+                    "DD/MM/YYYY"
+                  ).local(),
+                }}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}

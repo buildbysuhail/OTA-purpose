@@ -419,6 +419,7 @@ const PurchaseRegisterFilter = ({
 export default PurchaseRegisterFilter;
 
 export const PurchaseRegisterFilterInitialState = {
+  // fromDate: clientSession.softwareDate,
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
   voucherType: "PI",

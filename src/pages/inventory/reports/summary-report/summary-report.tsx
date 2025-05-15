@@ -1,14 +1,18 @@
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { SummaryFilterInitialState, } from "./summary-report-filter";
+import { SummaryFilterInitialState } from "./summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import SummaryFilter from "./summary-report-filter";
+import { useLocation } from "react-router-dom";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 interface SummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -20,7 +24,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -30,7 +36,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "date",
@@ -39,14 +45,16 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
           exportCell: any
         ) => {
-          return cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
+          return cellElement.data.date == null || cellElement.data.date == ""
+            ? ""
+            : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
         },
       },
       {
@@ -56,7 +64,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 50,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "form",
@@ -65,7 +73,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 75,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "party",
@@ -74,7 +82,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "address1",
@@ -83,7 +91,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "address2",
@@ -100,7 +108,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -132,7 +140,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -164,7 +172,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -196,7 +204,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -228,7 +236,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -260,7 +268,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -293,7 +301,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -325,7 +333,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -357,7 +365,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -389,7 +397,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -421,7 +429,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -454,7 +462,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -589,7 +597,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "refNo2",
@@ -631,7 +639,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -663,7 +671,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "taxOnDiscount",
@@ -672,7 +680,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -704,7 +712,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -735,7 +743,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "date",
         allowSearch: true,
         allowFiltering: true,
-        format: "dd-MMM-yyyy hh:mm a", 
+        format: "dd-MMM-yyyy hh:mm a",
         width: 100,
       },
       {
@@ -745,7 +753,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "routeName",
@@ -755,7 +763,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-         {
+      {
         dataField: "mobileNumber",
         caption: t("mobile_number"),
         dataType: "string",
@@ -763,7 +771,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-{
+      {
         dataField: "totalExciseTax",
         caption: t("total_excise_tax"),
         dataType: "number",
@@ -826,9 +834,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-   
+
       //in 1050 shown only on summary calculation
-      
+
       {
         dataField: "toWarehouseName",
         caption: t("to_warehouse_name"),
@@ -875,7 +883,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -941,7 +949,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       //   width: 100,
       // },
 
-
       //////// end
       // show when dbidvalue=543140180640
       {
@@ -959,7 +966,10 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "exchangeRate") {
           return filter.voucher_form !== "Import";
         }
-        if (column.dataField == "salesAmount" || column.dataField == "totalProfit") {
+        if (
+          column.dataField == "salesAmount" ||
+          column.dataField == "totalProfit"
+        ) {
           return userSession.dbIdValue == "489995732270";
         }
         if (column.dataField == "uPI" || column.dataField == "cardAmt") {
@@ -968,7 +978,11 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "printCount") {
           return userSession.dbIdValue == "543140180640";
         }
- if (column.dataField == "mobileNumber"||column.dataField == "totalExciseTax"||column.dataField == "toWarehouseName") {
+        if (
+          column.dataField == "mobileNumber" ||
+          column.dataField == "totalExciseTax" ||
+          column.dataField == "toWarehouseName"
+        ) {
           return clientSession.isAppGlobal;
         }
         return true;
@@ -987,7 +1001,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
 
       console.log(itemInfo);
 
@@ -1003,25 +1017,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(value) || "0";
     };
   }, []);
-  const customizeSummaryRow4 = useMemo(() => {
-    return (itemInfo: any) => {
-      console.log('itemInfo');
-
-      console.log(itemInfo);
-
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-       ) {
-        return getFormattedValue(0, false, undefined, 1, 3) || "0"; // Ensure "0" is displayed when value is missing
-      }
-
-      return getFormattedValue(value, false, undefined, 1, 3) || "0"; // Ensure formatted output or fallback to "0" 
-    };
-  }, []);
+ 
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
@@ -1040,8 +1036,10 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow4,
-      },
+        customizeText: (itemInfo: { value: any })=>{
+               return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
+             },
+           },
       {
         column: "disc",
         summaryType: "sum",
@@ -1158,9 +1156,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         return userSession.dbIdValue == "489995732270";
       }
       if (column.column == "totalExciseTax") {
-        return (
-          clientSession.isAppGlobal
-        );
+        return clientSession.isAppGlobal;
       }
       if (column.column == "srAmount") {
         return (
@@ -1179,7 +1175,11 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       return true;
     });
   }, [t, filter, userSession.dbIdValue]);
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -1187,6 +1187,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
                 groupPanelVisible={true}
                 // autoExpandAll={true}
                 summaryItems={summaryItems}
@@ -1198,8 +1199,8 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 }}
                 columns={columns}
                 // moreOption
-                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
-                 {productID > 0 && , Product Name : [productName]} 
+                // {productID > 0 && , Product Name : [productName]} removed always visible false in 1050
+                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} 
                  {salesRouteID > 0 && , Route Name : [routeName]} 
                 {counterID > 0 && , Counter : [counterName]} 
                 {salesmanID > 0 && , Sales Man : [salesMan]} 
@@ -1211,13 +1212,18 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
-                on
                 method={ActionType.POST}
                 filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
                 filterHeight={300}
                 filterWidth={790}
-                filterInitialData={ SummaryFilterInitialState }
+                filterInitialData={{
+                  ...SummaryFilterInitialState,
+                  fromDate: moment(
+                    clientSession.softwareDate,
+                    "DD/MM/YYYY"
+                  ).local(),
+                }}
                 onFilterChanged={(f: any) => {
                   setFilter(f);
                 }}

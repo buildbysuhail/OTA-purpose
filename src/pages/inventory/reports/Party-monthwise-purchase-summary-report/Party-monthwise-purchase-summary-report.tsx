@@ -253,6 +253,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 summaryItems={summaryItems}
+                   remoteOperations={{ filtering: true, paging: true, sorting: true,summary:true }}
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
                   gridHeader={t(gridHeader)}

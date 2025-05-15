@@ -357,7 +357,7 @@ export const ReportsMenuItems = [
     children: [
       {id: 75, path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
       {id: 76, path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
-      {id: 84, path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary_master`, type: 'link', active: false, selected: false, title: 'product_summary_master', icon: AiOutlineFileText },
+      {id: 84, path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary`, type: 'link', active: false, selected: false, title: 'product_summary', icon: AiOutlineFileText },
       { id: 163, path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_summary_report`, type: 'link', active: false, selected: false, title: 'transaction_summary', icon: PiPackageLight },
       { id: 164, path: `${import.meta.env.BASE_URL}reports/_/inventory/inventory_transaction_register_report`, type: 'link', active: false, selected: false, title: 'inventory_transaction_register', icon: PiPackageLight },
       { id: 165, path: `${import.meta.env.BASE_URL}reports/_/inventory/inventory_summary_report`, type: 'link', active: false, selected: false, title: 'inventory_summary_report', icon: PiPackageLight },

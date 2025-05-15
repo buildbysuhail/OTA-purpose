@@ -6,6 +6,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "./purchase-tax-report-detailed-filter";
 import moment from "moment";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 interface TaxReportDetailedProps {
   gridHeader: string;
@@ -357,23 +358,29 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       // customizeText: customizeDate,
     },
     {
-      column: "taxableValue",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow2,
-    },
-    {
-      column: "totalVAT",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "total",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+        column: "taxableValue",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: (itemInfo: { value: any })=>{
+          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+        },
+      },
+      {
+        column: "totalVAT",
+        summaryType: "sum",
+        valueFormat: "currency",
+          customizeText: (itemInfo: { value: any })=>{
+          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
+        },
+      },
+      {
+        column: "total",
+        summaryType: "sum",
+        valueFormat: "currency",
+      customizeText: (itemInfo: { value: any })=>{
+          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
+        },
+      },
   ];
 
   return (

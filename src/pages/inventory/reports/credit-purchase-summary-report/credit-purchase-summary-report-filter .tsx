@@ -20,7 +20,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
             label={t("date_from")}
             className="w-full"
             onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
-            autoFocus={true}
+            // autoFocus={true}
           />
           <ERPDateInput
             {...getFieldProps("toDate")}
@@ -123,14 +123,15 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
 }
 
 export default CreditPurchaseSummaryReportFilter
-
+// const clientSession = useSelector((state: RootState) => state.ClientSession);
 export const CreditPurchaseSummaryReportFilterInitialState = {
+  // fromDate: clientSession.softwareDate,
   fromDate: null,
   toDate: new Date(),
   salesRouteID: 0,
   counterID: 0,
   salemanID: 0,
-  productID: 0,
+  // productID: 0,
   partyID: 0,
   voucherForm: "",
   warehouseID: 0

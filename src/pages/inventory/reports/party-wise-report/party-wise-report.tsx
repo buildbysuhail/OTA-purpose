@@ -19,6 +19,17 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(PartyWiseReportFilterInitialState);
   const columns: DevGridColumn[] = [
+      {
+      sortIndex:0,
+      sortOrder:"asc",
+      dataField: "siNo",
+      caption: t("SINo"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
     {
       dataField: "date",
       caption: t("date"),
@@ -219,7 +230,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false,summary:true }}
+                remoteOperations={{ filtering: true, paging: true, sorting: true,summary:true }}
                 columns={columns}
                 moreOption
                 gridHeader={t(gridHeader)}

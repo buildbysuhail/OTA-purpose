@@ -533,8 +533,8 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{
-                  filtering: false,
-                  paging: false,
+                  filtering: true,
+                  paging: true,
                   sorting: false,
                   summary: true,
                 }}

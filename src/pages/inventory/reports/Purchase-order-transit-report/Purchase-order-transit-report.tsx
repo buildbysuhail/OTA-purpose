@@ -7,6 +7,7 @@ import GridId from "../../../../redux/gridId"
 import { ActionType } from "../../../../redux/types"
 import Urls from "../../../../redux/urls"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils"
 // import ProductInventoryReportFilter, {
 //   ProductInventoryReportFilterInitialState,
 // } from "./product-inventory-report-filter"
@@ -191,21 +192,7 @@ const PurchaseOrderTransitReport = () => {
   //       return getFormattedValue(value,false,2) || "0"; // Ensure formatted output or fallback to "0"
   //     };
   //   }, []);
-  const customizeSummaryRowFormatted = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return getFormattedValue(0, false, undefined, 1, 1) || "0"; // Ensure "0" is displayed when value is missing
-      }
-
-      return getFormattedValue(value, false, undefined, 1, 1) || "0"; // Ensure formatted output or fallback to "0" 
-    };
-  }, []);
+  
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
 
@@ -218,32 +205,42 @@ const PurchaseOrderTransitReport = () => {
       column: "stockInWarehouse",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRowFormatted,
-    },
+      customizeText: (itemInfo: { value: any })=>{
+             return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+           },
+         },
     {
       column: "stockInTransit",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRowFormatted,
-    },
+      customizeText: (itemInfo: { value: any })=>{
+             return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+           },
+         },
     {
       column: "orderPending",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRowFormatted,
-    },
+     customizeText: (itemInfo: { value: any })=>{
+            return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+          },
+        },
     {
       column: "total",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRowFormatted,
-    },
+     customizeText: (itemInfo: { value: any })=>{
+            return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+          },
+        },
     {
       column: "orderManual",
       summaryType: "sum",
       valueFormat: "number",
-      customizeText: customizeSummaryRowFormatted,
-    }
+      customizeText: (itemInfo: { value: any })=>{
+             return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+           },
+         },
   ];
   return (
     <Fragment>

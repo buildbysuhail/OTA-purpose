@@ -244,7 +244,38 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
           }
         },
       },
-
+  {
+        dataField: "totalTaxAmount",
+        caption: t("total_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalTaxAmount == null
+                ? 0
+                : getFormattedValue(cellElement.data.totalTaxAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalTaxAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalTaxAmount);
+          }
+        },
+      },
       {
         dataField: "totVat",
         caption: t("total_vat"),
@@ -371,15 +402,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         width: 100,
         showInPdf: true,
       },
-      {
-        dataField: "totalTaxAmount",
-        caption: t("total_tax"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        showInPdf: true,
-      },
+    
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
@@ -522,6 +545,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
                   filtering: false,
                   paging: false,
                   sorting: false,
+                  grouping:false,
+                  groupPaging:false,
+                  summary:false
                 }}
                 columns={columns}
                 // moreOption

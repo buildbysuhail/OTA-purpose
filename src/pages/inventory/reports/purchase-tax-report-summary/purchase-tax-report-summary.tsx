@@ -6,6 +6,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseTaxReportDetailedFilter, { PurchaseTaxReportDetailedFilterInitialState, } from "../purchase-tax-report-detailed/purchase-tax-report-detailed-filter";
 import moment from "moment";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 interface TaxReportSummaryProps {
   gridHeader: string;
@@ -36,6 +37,17 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
   }, [filterShowCount]);
 
   const columns: DevGridColumn[] = [
+       {
+      sortIndex:0,
+      sortOrder:"asc",
+      dataField: "siNo",
+      caption: t("SINo"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+    },
     {
       dataField: "date",
       caption: t("date"),
@@ -218,53 +230,45 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value, false, 4) || "0";
-    };
-  }, [getFormattedValue]);
-  const customizeSummaryRow2 = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value, false, 2) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //    ) {
+  //       return getFormattedValue(0, false, undefined, 3, 1) || "0"; // Ensure "0" is displayed when value is missing
+  //     }
 
+  //     return getFormattedValue(value, false, undefined, 3, 1) || "0"; // Ensure formatted output or fallback to "0" 
+  //   };
+  // }, []);
   const summaryItems: SummaryConfig[] = [
     {
       column: "taxableValue",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow2,
+      customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
+      },
     },
     {
       column: "totalVAT",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+        customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
+      },
     },
     {
       column: "total",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+    customizeText: (itemInfo: { value: any })=>{
+        return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
+      },
     },
   ];
 

@@ -118,8 +118,15 @@ export const ProductManageGcc: React.FC<{
                     }
                   />
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                    <Ellipsis className="w-4 h-4" />
+                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300" onClick={async() => {
+                      const nextProductCode = await api.getAsync(
+          `${Urls.products}SelectNextProductCode`
+        ); handleFieldChange(
+                        "product.productCode",
+                        nextProductCode
+                      )
+                    }}>
+                    <Ellipsis className="w-4 h-4"  />
                   </button>
                 </div>
 

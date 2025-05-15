@@ -178,7 +178,7 @@ const ProductSummaryReport2: React.FC<{
     <Fragment>
       <div className="grid grid-cols-12">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2">
+          <div className="px-4 pt-0 pb-0">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 key="grd_product_summary_batch_info"
@@ -204,6 +204,7 @@ const ProductSummaryReport2: React.FC<{
                   console.log('onReloadChange2');
                   onReloadChange2 && onReloadChange2();
                 }}
+                heightToAdjustOnWindows={800}
               />
             </div>
           </div>

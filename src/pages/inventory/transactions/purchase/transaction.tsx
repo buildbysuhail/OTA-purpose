@@ -134,6 +134,10 @@ import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
 import GrnNumber from "./components/grn-Number";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
+import BottomSidebarGrid from "./bottom-sidebar-grid";
+import ProductSummary from "./components/Product-summary";
+import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
+import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
 
 interface BilledItem {
   id?: number;
@@ -169,6 +173,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   financialYearID,
   isTeller = false,
 }) => {
+  const [isProductSummaryOpen, setIsProductSummaryOpen] = useState(false);
+  const [isPartywiseSummaryOpen, setIsPartywiseSummaryOpen] = useState(false);
   const [triggerEffect, setTriggerEffect] = useState(false);
 
   useEffect(() => {
@@ -1828,6 +1834,8 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                   isHistorySidebarOpen={isHistorySidebarOpen}
                   setIsPrintModalOpen={setIsPrintModalOpen}
                   printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+                  setIsProductSummaryOpen={setIsProductSummaryOpen}
+                  setIsPartywiseSummaryOpen={setIsPartywiseSummaryOpen}
                 />
               </div>
             </div>
@@ -2446,6 +2454,37 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                 userSession: userSession,
               })}
             </PDFViewer>
+          }
+        ></ERPModal>
+      )}
+      {isProductSummaryOpen && (
+        <ERPModal
+          isOpen={isProductSummaryOpen}
+          title={t("product_summary")}
+          width={1000}
+          height={700}
+          isForm={true}
+          closeModal={() => setIsProductSummaryOpen(false)}
+          content={
+            <ProductSummaryMaster 
+              productID={(formState.transaction.master as any).productID}
+              getFieldProps={undefined}
+              handleFieldChange={undefined}
+              formState={formState}
+            />
+          }
+        ></ERPModal>
+      )}
+      {isPartywiseSummaryOpen && (
+        <ERPModal
+          isOpen={isPartywiseSummaryOpen}
+          title={t("partywise_summary")}
+          width={1000}
+          height={700}
+          isForm={true}
+          closeModal={() => setIsPartywiseSummaryOpen(false)}
+          content={
+            <PartySummaryMaster/>
           }
         ></ERPModal>
       )}

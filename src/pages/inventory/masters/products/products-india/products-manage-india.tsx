@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { RefreshCcw, Plus } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
@@ -11,41 +11,25 @@ import { APIClient } from "../../../../../helpers/api-client";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
-import {
-  DetailsDto,
-  PathValue,
-  productDto,
-  ProductFieldPath,
-} from "../products-type";
-import {
-  calculateMarkup,
-  calculateSalesPrice,
-  isNullOrUndefinedOrEmpty,
-} from "../../../../../utilities/Utils";
+import { PathValue, productDto, ProductFieldPath, } from "../products-type";
+import { calculateMarkup, calculateSalesPrice, isNullOrUndefinedOrEmpty, } from "../../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { BusinessType } from "../../../../../enums/business-types";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
-import {
-  popupDataProps,
-  toggleProductCategory,
-  toggleProductGroup,
-  toggleTaxCategory,
-  toggleTaxCategoryIndia,
-  toggleUnitOfMeasure,
-} from "../../../../../redux/slices/popup-reducer";
+import { toggleProductCategory, toggleProductGroup, toggleTaxCategoryIndia, toggleUnitOfMeasure, } from "../../../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { ProductGroupManage } from "../../product-group/product-group-manage";
 import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
 import { UnitOfMeasureManage } from "../../unit-of-meassure/unit-of-measure-manage";
 import { TaxCategoryManageIndia } from "../../tax-category-india/tax-category-manage-india";
-import productCategory from "../../product-category/product-category";
 import { ProductCategoryManage } from "../../product-category/product-category-manage";
-const api = new APIClient();
 
+const api = new APIClient();
 export const ProductManageIndia: React.FC<{
   appSettings: ApplicationSettingsType;
   formState: any;
+  isMobile: boolean,
   handleDataChange: (value: any) => void;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -62,13 +46,12 @@ export const ProductManageIndia: React.FC<{
     appSettings,
     handleDataChange,
     productMultiUnitsIndiaRef,
+    isMobile
   }) => {
-      const rootState = useRootState();
-      const dispatch = useDispatch();
-    const clientSession = useSelector(
-      (state: RootState) => state.ClientSession
-    );
-      const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManageIndia), []);
+    const rootState = useRootState();
+    const dispatch = useDispatch();
+    const clientSession = useSelector(  (state: RootState) => state.ClientSession);
+    const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManageIndia), []);
     const { getFormattedValue } = useNumberFormat();
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
@@ -76,29 +59,27 @@ export const ProductManageIndia: React.FC<{
     const mrpRef = useRef<HTMLInputElement>(null);
     const markupRef = useRef<HTMLInputElement>(null);
     const productSearchRef = useRef<HTMLInputElement>(null);
-        const productCategoryRef = useRef<HTMLInputElement>(null);
+    const productCategoryRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");
         const _data = {
           ...prev
         };
-        if(formState.data.product.productGroupID > 0) {
-        const sds = await api.getAsync(`${Urls.group_category__}${formState.data.product.productGroupID}`);
-        
-         _data.product.groupCategoryID  = sds?.GroupCategoryID;
-         _data.product.sectionID = sds?.SectionID;
-      }
-      else {
-        
-        _data.product.groupCategoryID  = 0;
-        _data.product.sectionID = 0;
-      }
+        if (formState.data.product.productGroupID > 0) {
+          const sds = await api.getAsync(`${Urls.group_category__}${formState.data.product.productGroupID}`);
+          _data.product.groupCategoryID = sds?.GroupCategoryID;
+          _data.product.sectionID = sds?.SectionID;
+        }
+        else {
+          _data.product.groupCategoryID = 0;
+          _data.product.sectionID = 0;
+        }
         handleDataChange(_data);
       };
-    
       fetchData();
     }, [formState.data.product.productGroupID]);
+
     async function handlePriceValidation() {
       try {
         debugger;
@@ -110,7 +91,7 @@ export const ProductManageIndia: React.FC<{
             salesPriceRef.current.focus();
             // salesPriceRef.current.select();
           }
-        };const setFocusMRP = () => {
+        }; const setFocusMRP = () => {
           if (mrpRef.current) {
             mrpRef.current.focus();
             // salesPriceRef.current.select();
@@ -127,7 +108,7 @@ export const ProductManageIndia: React.FC<{
             showCancelButton: true,
             onCancel: setFocus,
             onConfirm: () => {
-              if(markupRef.current) {
+              if (markupRef.current) {
                 markupRef.current.focus();
               }
             },
@@ -191,44 +172,47 @@ export const ProductManageIndia: React.FC<{
       productNameRef?.current?.focus();
       productNameRef?.current?.select();
     }, [productNameRef]);
- 
-useEffect(() => {
+
+    useEffect(() => {
       const obj = getFieldProps("*") as any as productDto;
-      const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice??0, obj.product.stdSalesPrice??0,obj.taxCategoryTaxPercentage,appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
+      const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice ?? 0, obj.product.stdSalesPrice ?? 0, obj.taxCategoryTaxPercentage, appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
       handleFieldChange("markup", markupPercentage)
-    },[])
+    }, [])
+
     return (
       <div className="w-full modal-content">
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap gap-1">
             <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-3">
-              <div className="flex flex-wrap gap-4 mb-3">
+              <div className="flex flex-wrap gap-4">
                 <div className="flex flex-1 min-w-[240px] items-center gap-2">
                   <ERPInput
-                    {...getFieldProps("product.productCode")}
-                    label={t("product_code")}
-                    placeholder={t("enter_product_code")}
-                    required={false}
-                    className="w-full"
-                    disabled={!getFieldProps("product.manual").value}
-                    onChangeData={(data: any) =>
-                      handleFieldChange(
-                        "product.productCode",
-                        data.product.productCode ?? ""
-                      )
-                    }
-                  />
+                      {...getFieldProps("product.productCode")}
+                      label={t("product_code")}
+                      placeholder={t("enter_product_code")}
+                      required={false}
+                      className="w-full"
+                      readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
+                      labelDirection={isMobile ? "vertical" : "horizontal"}
+                      disabled={!getFieldProps("product.manual").value}
+                      onChangeData={(data: any) =>
+                        handleFieldChange(
+                          "product.productCode",
+                          data.product.productCode ?? ""
+                        )
+                      }
+                    />
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300" onClick={async() => {
-                      debugger;
-                      const nextProductCode = await api.getAsync(
-          `${Urls.products}SelectNextProductCode`
-        ); handleFieldChange(
-                        "product.productCode",
-                        nextProductCode
-                      )
-                    }}>
-                    <RefreshCcw className="w-4 h-4"  />
+                  <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300" onClick={async () => {
+                    debugger;
+                    const nextProductCode = await api.getAsync(
+                      `${Urls.products}SelectNextProductCode`
+                    ); handleFieldChange(
+                      "product.productCode",
+                      nextProductCode
+                    )
+                  }}>
+                    <RefreshCcw className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -259,30 +243,31 @@ useEffect(() => {
                 </div>
               </div>
               {/* {getFieldProps("product.productId").value} */}
-               <ERPProductSearch
-                   showCheckBox={false}
-                  value={getFieldProps("product.productName").value}
-                    onChange={(e) =>  handleFieldChange({
-                      "product.productName": e.target.value 
-                    })}
-                    productDataUrl={Urls.load_product_details}
-                    onProductSelected={(data: any) => {
-                      debugger;
-                      handleFieldChange({
-                        "product.productName": data.productName 
-                      });
-                      setTimeout(() => {
-                        productSearchRef.current?.focus();
-                      }, 100);
-                    }}
-                    ref={productSearchRef}
-                                onEnterKeyDown={() => {
-                                  debugger;
-                                  productCategoryRef?.current?.focus()
-                                }}
-                  />
+              
+              <ERPProductSearch
+                showCheckBox={false}
+                value={getFieldProps("product.productName").value}
+                onChange={(e) => handleFieldChange({
+                  "product.productName": e.target.value
+                })}
+                productDataUrl={Urls.load_product_details}
+                onProductSelected={(data: any) => {
+                  debugger;
+                  handleFieldChange({
+                    "product.productName": data.productName
+                  });
+                  setTimeout(() => {
+                    productSearchRef.current?.focus();
+                  }, 100);
+                }}
+                ref={productSearchRef}
+                onEnterKeyDown={() => {
+                  debugger;
+                  productCategoryRef?.current?.focus()
+                }}
+              />
 
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div className="flex flex-wrap gap-1">
                 <div className="flex flex-1 min-w-[240px] items-center gap-1">
                   <ERPDataCombobox
                     {...getFieldProps("product.productCategoryID")}
@@ -293,6 +278,7 @@ useEffect(() => {
                       labelKey: "name",
                       getListUrl: Urls.data_productcategory,
                     }}
+                    labelDirection={isMobile ? "vertical" : "horizontal"}
                     onChangeData={(data: any) => {
                       debugger;
                       handleFieldChange(
@@ -308,9 +294,9 @@ useEffect(() => {
                       title: t("product_category"),
                       popupAction: toggleProductCategory,
                       isOpen: rootState.PopupData.productCategory.isOpen || false,
-                      id:rootState.PopupData.productCategory.id,
-                      name:rootState.PopupData.productCategory.name,
-                      closeModal: () =>dispatch(toggleProductCategory({ isOpen: false })),
+                      id: rootState.PopupData.productCategory.id,
+                      name: rootState.PopupData.productCategory.name,
+                      closeModal: () => dispatch(toggleProductCategory({ isOpen: false })),
                       content: <ProductCategoryManage />,
                     }}
                   />
@@ -332,14 +318,15 @@ useEffect(() => {
                     onChange={async (data: any) => {
                       handleFieldChange("product.productGroupID", data.value);
                     }}
+                    labelDirection={isMobile ? "vertical" : "horizontal"}
                     addNewOption={true}
                     addNewOptionCobonent={{
                       title: t("product_group"),
                       popupAction: toggleProductGroup,
                       isOpen: rootState.PopupData.productGroup.isOpen || false,
-                      id:rootState.PopupData.productGroup.id,
-                      name:rootState.PopupData.productGroup.name,
-                      closeModal: () =>  dispatch(toggleProductGroup({ isOpen: false })),
+                      id: rootState.PopupData.productGroup.id,
+                      name: rootState.PopupData.productGroup.name,
+                      closeModal: () => dispatch(toggleProductGroup({ isOpen: false })),
                       content: <ProductGroupManage />,
                     }}
                     label={t("product_group")}
@@ -347,11 +334,11 @@ useEffect(() => {
                     required={true}
                   />
 
-          
+
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div className="flex flex-wrap gap-1">
                 <ERPDataCombobox
                   {...getFieldProps("product.groupCategoryID")}
                   disabled
@@ -389,7 +376,7 @@ useEffect(() => {
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-2">
                 <div className="flex flex-1 min-w-[240px] items-center gap-2">
                   <ERPDataCombobox
                     {...getFieldProps("product.basicUnitID")}
@@ -414,15 +401,15 @@ useEffect(() => {
                     addNewOptionCobonent={{
                       title: t("base_unit"),
                       popupAction: toggleUnitOfMeasure,
-                      isOpen: rootState.PopupData.unitOfMeasure.isOpen  || false,
-                      id:rootState.PopupData.unitOfMeasure.id,
-                      name:rootState.PopupData.unitOfMeasure.name,
+                      isOpen: rootState.PopupData.unitOfMeasure.isOpen || false,
+                      id: rootState.PopupData.unitOfMeasure.id,
+                      name: rootState.PopupData.unitOfMeasure.name,
                       closeModal: () =>
-                      dispatch(toggleUnitOfMeasure({ isOpen: false })),
+                        dispatch(toggleUnitOfMeasure({ isOpen: false })),
                       content: <UnitOfMeasureManage />,
                     }}
                   />
-{/* 
+                  {/* 
                   <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
                     <Plus className="w-4 h-4" />
                   </button> */}
@@ -441,7 +428,7 @@ useEffect(() => {
                 />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <ERPCheckbox
                   {...getFieldProps("upcBarcode")}
                   label={t("upc_barcode")}
@@ -512,8 +499,10 @@ useEffect(() => {
                     }}
                     onSelectItem={(data: any) =>
                       handleFieldChange(
-                        {"product.taxCategoryID":
-                        data.value, "taxCategoryTaxPercentage": data.name}
+                        {
+                          "product.taxCategoryID":
+                            data.value, "taxCategoryTaxPercentage": data.name
+                        }
                       )
                     }
                     label={t("tax_category")}
@@ -524,10 +513,10 @@ useEffect(() => {
                       title: t("tax_category"),
                       popupAction: toggleTaxCategoryIndia,
                       isOpen: rootState.PopupData.taxCategoryIndia.isOpen || false,
-                      id:rootState.PopupData.taxCategoryIndia.id,
-                      name:rootState.PopupData.taxCategoryIndia.name,
+                      id: rootState.PopupData.taxCategoryIndia.id,
+                      name: rootState.PopupData.taxCategoryIndia.name,
                       closeModal: () =>
-                      dispatch(toggleTaxCategoryIndia({ isOpen: false })),
+                        dispatch(toggleTaxCategoryIndia({ isOpen: false })),
                       content: <MemoizedTaxCategoryManage />,
                     }}
                   />
@@ -541,9 +530,9 @@ useEffect(() => {
                   {appSettings.mainSettings?.maintainBusinessType !=
                     BusinessType.Opticals &&
                     appSettings.mainSettings?.maintainBusinessType !=
-                      BusinessType.Distribution &&
+                    BusinessType.Distribution &&
                     appSettings.mainSettings?.maintainBusinessType !=
-                      BusinessType.Textiles && (
+                    BusinessType.Textiles && (
                       <ERPCheckbox
                         {...getFieldProps("product.isWeighingScale")}
                         label={t("is_weighing_scale_item")}
@@ -568,7 +557,7 @@ useEffect(() => {
             </div>
 
             <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-4">
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div className="flex flex-wrap gap-1">
                 <ERPInput
                   {...getFieldProps("product.stdPurchasePrice")}
                   label={t("purchase_price")}
@@ -721,7 +710,7 @@ useEffect(() => {
                     handleFieldChange("batch.msp", data.batch.msp)
                   }
                 />
-{/* 
+                {/* 
                 <ERPInput
                   {...getFieldProps("batch.stock")}
                   label={t("stock")}
@@ -735,7 +724,7 @@ useEffect(() => {
                 /> */}
               </div>
               {appSettings.mainSettings.maintainMultilanguage__ == true && (
-                <div className="mb-3">
+                <div>
                   <ERPInput
                     disabled
                     {...getFieldProps("product.secondLanguage")}
@@ -753,7 +742,7 @@ useEffect(() => {
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-1 mb-3">
+              <div className="flex flex-wrap items-center gap-1">
                 <div className="flex items-center">
                   <ERPCheckbox
                     {...getFieldProps("batchCriteria")}
@@ -833,7 +822,7 @@ useEffect(() => {
                     onChange={(e) =>
                       handleFieldChange("details", e.target.checked)
                     }
-                    // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
+                  // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
                   />
                 </div>
               </div>

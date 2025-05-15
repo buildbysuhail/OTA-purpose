@@ -156,6 +156,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
+      //repeat from procedure
       {
         dataField: "batchNo",
         caption: t("batch_no"),
@@ -904,6 +905,15 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
+        {
+        dataField: "gstin",
+        caption: t("GSTIN"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
       {
         dataField: "vatNumber",
         caption: t("vat_number"),
@@ -913,8 +923,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
-      {
-        dataField: "manualBarcode",
+        {
+        dataField: "mannualBarcode",
         caption: t("manual_barcode"),
         dataType: "string",
         allowSearch: true,
@@ -922,6 +932,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
+      
+    
       {
         dataField: "purchaseInvoiceNumber",
         caption: t("purchase_invoice_number"),
@@ -930,6 +942,15 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         visible: false,
         width: 100,
+      },
+       {
+        dataField: "priceCategoryID",
+        caption: t("PriceCategoryID"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        visible: false,
       },
       {
         dataField: "schemeDisc",
@@ -963,6 +984,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
+      
       {
         dataField: "exciseTax",
         caption: t("excise_tax"),
@@ -1285,15 +1307,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
         showInPdf: true,
       },
-      {
-        dataField: "gstin",
-        caption: t("GSTIN"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        showInPdf: true,
-      },
+    
       {
         dataField: "salesPrice",
         caption: t("SalesPrice"),
@@ -1513,15 +1527,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       //   allowFiltering: true,
       //   width: 100,
       // },
-      {
-        dataField: "priceCategoryID",
-        caption: t("PriceCategoryID"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        visible: false,
-      },
+     
       // {
       //   dataField: "totalProfitPercent",
       //   caption: t("Total Profit%"),
@@ -1644,7 +1650,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "baseUnitQuantity") {
           return userSession.dbIdValue == "543140180640";
         }
-        if (column.dataField == "vat") {
+        if (column.dataField == "vat"||column.dataField == "baseUnitQuantity"||column.dataField == "referenceNumber"||column.dataField == "salesPrice"||column.dataField == "vatNumber"||column.dataField == "exciseTax" ) {
           return !clientSession.isAppGlobal;
         }
         if (

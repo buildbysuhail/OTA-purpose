@@ -39,7 +39,7 @@ const PurchaseRegisterFilter = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {location.pathname.includes(
-          "inventory/sales_transfer_summary_report"
+          "inventory/sales_transfer_register_report"
         ) && (
           <ERPDataCombobox
             label={t("transfer_voucher")}
@@ -65,7 +65,7 @@ const PurchaseRegisterFilter = ({
             {...getFieldProps("productCategoryID")}
             field={{
               id: "productCategoryID",
-              getListUrl: Urls.productCategory,
+              getListUrl: Urls.data_productcategory,
               valueKey: "id",
               labelKey: "name",
             }}
@@ -194,24 +194,44 @@ const PurchaseRegisterFilter = ({
         {/* SelectFromTypebyVoucherType */}
 
         <ERPDataCombobox
-          label={t("voucher_form")}
-          {...getFieldProps("voucherFormValue")}
-          field={{
-            id: "voucherFormValue",
-            getListUrl: clientSession.isAppGlobal
-              ? Urls.data_FormTypeByPI
-              : Urls.data_form_type,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => {
-            debugger;
-            handleFieldChange({
-              voucherForm: data.label,
-              voucherFormValue: data.value,
-            });
-          }}
-        />
+               label={t("voucher_form")}
+               {...getFieldProps("voucherForm")}
+               field={{
+                 id: "voucherForm",
+                 getListUrl: clientSession.isAppGlobal
+                   ? Urls.data_FormTypeByVoucherType: Urls.data_form_type,
+                   params: clientSession.isAppGlobal ? `voucherType=${
+                     location.pathname.includes("inventory/purchase_register_report") ? "PI" 
+                     :location.pathname.includes("inventory/purchase_return_register") ? "PR" 
+                     :location.pathname.includes("inventory/purchase_estimate_register_report") ? "PE" 
+                    //  :location.pathname.includes("inventory/purchase_order_summary") ? "PO" 
+                     :location.pathname.includes("inventory/purchase_return_estimate_register_report") ? "PRE" 
+                     :location.pathname.includes("inventory/sales_register_report") ? "SI" 
+                     :location.pathname.includes("inventory/sales_return_register") ? "SR" 
+                    //  :location.pathname.includes("inventory/sales_order_summary_report") ? "SO" 
+                    //  :location.pathname.includes("inventory/sales_estimate_summary_report") ? "SE" 
+                    //  :location.pathname.includes("inventory/sales_quotation_summary_report") ? "SQ" 
+                    //  :location.pathname.includes("inventory/substitute_report") ? "SUB" 
+                    //  :location.pathname.includes("inventory/booking_summary_report") ? "SB" 
+                     :location.pathname.includes("inventory/inventory_transaction_register_report") ? "" 
+                     :location.pathname.includes("inventory/sales_transfer_register_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST" 
+                     :""
+                   }`: undefined,
+                 valueKey: "name",
+                 labelKey: "name",
+               }}
+               onSelectItem={(data) => {
+                 handleFieldChange({
+                   voucherForm: data.value,
+                 });
+               }}
+             />
 
         <ERPDataCombobox
           label={t("group_category")}
@@ -375,9 +395,6 @@ const PurchaseRegisterFilter = ({
           }
         /> */}
 
-        {location.pathname.includes(
-          "inventory/sales_transfer_summary_report"
-        ) && (
           <ERPDataCombobox
             label={t("report_of")}
             {...getFieldProps("reportOf")}
@@ -394,7 +411,6 @@ const PurchaseRegisterFilter = ({
               handleFieldChange("reportOf", data.value);
             }}
           />
-        )}
       </div>
     </div>
   );

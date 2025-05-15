@@ -23,6 +23,7 @@ import * as switcherdata from "../switcher/switcherdata/switcherdata";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import { Button } from "../../../dark/Button";
 import { Moon, Sun } from "lucide-react";
+import { menuClose, toggleSidebar } from "./toggle-sidebar";
 
 interface HeaderProps { }
 
@@ -194,163 +195,7 @@ const Header: FC<HeaderProps> = () => {
   //     window.removeEventListener("resize", handleResize);
   //   };
   // }, []);
-  function menuClose() {
-    const theme = appState;
-    if (window.innerWidth <= 992) {
-      
-      updateAppState({ ...theme, toggled: "close" });
-    }
-    if (window.innerWidth >= 992) {
-      
-      updateAppState({
-        ...theme,
-        toggled: appState?.toggled ? appState?.toggled : "",
-      });
-    }
-  }
-
-  const toggleSidebar = () => {
-    
-    const theme = appState;
-    let sidemenuType = theme.dataNavLayout;
-    if (window.innerWidth >= 992) {
-      if (sidemenuType === "vertical") {
-        let verticalStyle = theme.dataVerticalStyle;
-        const navStyle = theme.dataNavStyle;
-        
-        switch (verticalStyle) {
-          // closed
-          case "closed":
-            updateAppState({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "close-menu-close") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "close-menu-close" });
-            }
-            break;
-          // icon-overlay
-          case "overlay":
-            updateAppState({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "icon-overlay-close") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              if (window.innerWidth >= 992) {
-                updateAppState({ ...theme, toggled: "icon-overlay-close" });
-              }
-            }
-            break;
-          // icon-text
-          case "icontext":
-            updateAppState({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "icon-text-close") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "icon-text-close" });
-            }
-            break;
-          // doublemenu
-          case "doublemenu":
-            updateAppState({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "double-menu-open") {
-              updateAppState({ ...theme, toggled: "double-menu-close" });
-            } else {
-              let sidemenu = document.querySelector(".side-menu__item.active");
-              if (sidemenu) {
-                updateAppState({ ...theme, toggled: "double-menu-open" });
-                if (sidemenu.nextElementSibling) {
-                  sidemenu.nextElementSibling.classList.add(
-                    "double-menu-active"
-                  );
-                } else {
-                  updateAppState({ ...theme, toggled: "" });
-                }
-              }
-            }
-            // doublemenu(updateAppState);
-            break;
-          // detached
-          case "detached":
-            if (theme.toggled === "detached-close") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "detached-close" });
-            }
-            break;
-
-          // default
-          case "default":
-            updateAppState({ ...theme, toggled: "" });
-        }
-
-        switch (navStyle) {
-          case "menu-click":
-            if (theme.toggled === "menu-click-closed") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "menu-click-closed" });
-            }
-            break;
-          // icon-overlay
-          case "menu-hover":
-            if (theme.toggled === "menu-hover-closed") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "menu-hover-closed" });
-            }
-            break;
-          case "icon-click":
-            if (theme.toggled === "icon-click-closed") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "icon-click-closed" });
-            }
-            break;
-          case "icon-hover":
-            if (theme.toggled === "icon-hover-closed") {
-              updateAppState({ ...theme, toggled: "" });
-            } else {
-              updateAppState({ ...theme, toggled: "icon-hover-closed" });
-            }
-            break;
-        }
-      }
-    } else {
-      if (theme.toggled === "close") {
-        updateAppState({ ...theme, toggled: "open" });
-
-        setTimeout(() => {
-          
-          // if (theme.toggled == "open") {
-            const overlay = document.querySelector("#responsive-overlay");
-
-            if (overlay) {
-              overlay.classList.add("active");
-              overlay.addEventListener("click", () => {
-                const overlay = document.querySelector("#responsive-overlay");
-
-                if (overlay) {
-                  overlay.classList.remove("active");
-                  menuClose();
-                }
-              });
-            }
-          // }
-
-          window.addEventListener("resize", () => {
-            if (window.screen.width >= 992) {
-              const overlay = document.querySelector("#responsive-overlay");
-
-              if (overlay) {
-                overlay.classList.remove("active");
-              }
-            }
-          });
-        }, 100);
-      } else {
-        updateAppState({ ...theme, toggled: "close" });
-      }
-    }
-  };
+  
   const updateAppStateValues = (appState: AppState): AppState => {
     return {
       ...appState,
@@ -419,7 +264,7 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
+                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar(appState, updateAppState)}></i>
               </div>
             </div>
 

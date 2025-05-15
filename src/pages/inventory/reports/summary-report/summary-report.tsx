@@ -1003,6 +1003,25 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(value) || "0";
     };
   }, []);
+  const customizeSummaryRow4 = useMemo(() => {
+    return (itemInfo: any) => {
+      console.log('itemInfo');
+
+      console.log(itemInfo);
+
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+       ) {
+        return getFormattedValue(0, false, undefined, 1, 3) || "0"; // Ensure "0" is displayed when value is missing
+      }
+
+      return getFormattedValue(value, false, undefined, 1, 3) || "0"; // Ensure formatted output or fallback to "0" 
+    };
+  }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
@@ -1021,7 +1040,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRow4,
       },
       {
         column: "disc",

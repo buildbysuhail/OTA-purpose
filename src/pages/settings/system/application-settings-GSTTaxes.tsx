@@ -314,8 +314,8 @@ const ERPSettingsFormGSTTaxes = () => {
               field={{
                 id: "defaultFormTypeForPOS",
                 getListUrl: Urls.data_FormTypeBySI,
-                valueKey: "FormType",
-                labelKey: "FormType",
+                valueKey: "name",
+                labelKey: "name",
               }}
               data={formState}
               onChangeData={(data: any) => handleFieldChange("defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
@@ -344,8 +344,8 @@ const ERPSettingsFormGSTTaxes = () => {
                 id: "defaultSRFormTypeForPOS",
                 // required: true,
                 getListUrl: Urls.data_FormTypeBySR,
-                valueKey: "FormType",
-                labelKey: "FormType",
+                valueKey: "name",
+                labelKey: "name",
               }}
               onChangeData={(data: any) => handleFieldChange("defaultSRFormTypeForPOS", data.defaultSRFormTypeForPOS)}
             />

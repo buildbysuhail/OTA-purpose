@@ -117,7 +117,8 @@ const initialProductData: productDto = {
     supplierWiseBatchCreation: true,
     baseUnitRemarks: "",
     aPC: 0,
-    stock: 0
+    stock: 0,
+    locationId: 0
   },
   moreInfo: {
     id: 0,

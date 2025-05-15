@@ -34,11 +34,19 @@ export interface ProductSummaryRef {
   reloadData: () => void;
 }
 const api = new APIClient();
+interface ProductSummaryMasterProps {
+  productID?: number;
+  getFieldProps: any;
+  handleFieldChange: any;
+  formState: any;
+}
+
 const ProductSummaryMaster = ({
+  productID,
   getFieldProps,
   handleFieldChange,
   formState,
-}: any) => {
+}: ProductSummaryMasterProps) => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();

@@ -225,7 +225,7 @@ const ProductSummaryReport1: React.FC<{
     <Fragment>
       <div className="grid grid-cols-12">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2">
+          <div className="px-4 pt-0 pb-0">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 key="product_summary_basic_info"

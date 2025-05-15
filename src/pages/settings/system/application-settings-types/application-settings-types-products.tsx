@@ -45,6 +45,7 @@ export interface ApplicationProductsSettings {
     mRPLessThanSalesPrice: string;
     zeroMultiRateValidate: string;
     allowUpdateMultiRateinPurchase: boolean;
+    showLabelHorizontally:boolean;
   }
 
 export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettings = {
@@ -94,4 +95,5 @@ export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettin
     mRPLessThanSalesPrice: "Warn",
     zeroMultiRateValidate: "Warn",
     allowUpdateMultiRateinPurchase: false,
+    showLabelHorizontally:true,
   };

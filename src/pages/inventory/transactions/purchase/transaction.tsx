@@ -1702,7 +1702,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   ];
   const [isOpentwo, setIsOpentwo] = useState(false)
 
-  const buttonStyle: React.CSSProperties = {
+const buttonStyle: React.CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
     backgroundColor: "#3b82f6",
@@ -1719,8 +1719,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const sidebarHeaderStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "24px",
+    justifyContent: "end",
+    marginBottom: "3px",
   }
 
   const sidebarTitleStyle: React.CSSProperties = {
@@ -1735,7 +1735,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     backgroundColor: "transparent",
     color: "#374151",
     border: "1px solid #e5e7eb",
-    padding: "6px 12px",
+    // padding: "6px 12px",
     borderRadius: "4px",
     fontSize: "14px",
     cursor: "pointer",
@@ -2196,20 +2196,22 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
             localInputBox={formState?.userConfig?.inputBoxStyle}
           />
           {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
-          <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
-            <div>
-              <div style={sidebarHeaderStyle}>
-                <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2>
-                <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
-                  Close
-                </button>
-              </div>
+                    <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+                      <div>
+                        <div style={sidebarHeaderStyle}>
+                          {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
+                          <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+                           <X />
+                          </button>
+                        </div>
 
-              <p className="mb-[24px] text-[#6b7280]">
-                This sidebar for test.
-              </p>
-            </div>
-          </BottomSidebar>
+                        {/* <p className="mb-[24px] text-[#6b7280]">
+                          This sidebar for test.
+                        </p> */}
+
+                        <BottomSidebarGrid/>
+                      </div>
+                    </BottomSidebar>
           <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox

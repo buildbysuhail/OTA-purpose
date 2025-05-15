@@ -21,7 +21,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
   const dispatch = useAppDispatch();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-end gap-2">
       <ERPCheckbox
         localInputBox={formState?.userConfig?.inputBoxStyle}
         id="hasroundOff"
@@ -46,7 +46,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
         id="roundAmount"
-        className=""
+        className="max-w-[110px] min-w-[110px]"
         type="number"
         noLabel
         value={formState.transaction.master.roundAmount}

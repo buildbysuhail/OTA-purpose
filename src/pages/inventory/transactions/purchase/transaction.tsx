@@ -1706,7 +1706,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   ];
   const [isOpentwo, setIsOpentwo] = useState(false)
 
-const buttonStyle: React.CSSProperties = {
+  const buttonStyle: React.CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
     backgroundColor: "#3b82f6",
@@ -1724,7 +1724,7 @@ const buttonStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "end",
-    marginBottom: "-5px",
+    marginBottom: "3px",
   }
 
   const sidebarTitleStyle: React.CSSProperties = {
@@ -1744,7 +1744,7 @@ const buttonStyle: React.CSSProperties = {
     fontSize: "14px",
     cursor: "pointer",
   }
-const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
+  const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
     setData((prevData) => {
       const newData = [...prevData];
       newData[rowIndex] = { ...newData[rowIndex], [dataField]: value };
@@ -1885,10 +1885,10 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
               <button
                 onClick={toggleDropdown}
                 className="text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md mb-1"
-                // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
+              // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
               >
                 <div className="flex items-center space-x-2">
-                  <EllipsisVertical size={16} className="text-black"/>
+                  <EllipsisVertical size={16} className="text-black" />
                   {/* <Menu size={16} className="text-white" /> */}
                   {/* <span>more</span> */}
                 </div>
@@ -2184,7 +2184,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
 
 
       <div
-        className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+        className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
         style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
         <div
           className="w-full flex flex-col-reverse items-center absolute bottom-28 z-40 right-0 left-0"
@@ -2268,71 +2268,17 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex w-full">
-            <ERPButton
-              title={t("bottom sidebar")}
-              // onClick={handleButtonClick}
-              // onClick={() => goToPreviousPage()}
-              onClick={() => setIsOpentwo(true)}
-              className="w-[150px]"
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-            />
-          {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
-              {formState.formElements.printOnSave.visible && (
-                <ERPCheckbox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="printOnSave"
-                  label={t(formState.formElements.printOnSave.label)}
-                  checked={formState.printOnSave}
-                  onChange={(e) =>
-                    dispatch(
-                      formStateHandleFieldChange({
-                        fields: { printOnSave: e.target.checked },
-                      })
-                    )
-                  }
-                  disabled={formState.formElements.printOnSave?.disabled}
-                />
-              )}
-
-              {(voucherType == "BP" || voucherType == "CQP") &&
-                formState.formElements.printCheque.visible && (
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="p-rintCheque"
-                    label={t(formState.formElements.printCheque.label)}
-                    checked={formState.printCheque}
-                    onChange={(e) =>
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { printCheque: e.target.checked },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.printCheque?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                    className="text-sm xl:text-base"
-                  />
-                )}
-
-              {(voucherType == "BP" || voucherType == "CQP") && (
-                <div>
-                  <ERPButton
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    title={t("print_cheque")}
-                    variant="secondary"
-                    onClick={() => {
-                      /* Handle print cheque */
-                    }}
-                    className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
-                  />
-                </div>
-              )}
-
+        <div className="flex items-end justify-between">
+          <div className="flex items-end gap-1">
+            <div className="grid grid-cols-1">
+              <ERPButton
+                title={t("bottom sidebar")}
+                // onClick={handleButtonClick}
+                // onClick={() => goToPreviousPage()}
+                onClick={() => setIsOpentwo(true)}
+                className="w-[150px]"
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+              />
               <button className="text-blue-600">
                 <span
                   className="hover:underline text-[#0ea5e9] capitalize"
@@ -2341,6 +2287,173 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                   {t("attachment")}
                 </span>
               </button>
+            </div>
+
+            {formState.formElements.printOnSave.visible && (
+              <ERPCheckbox
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                id="printOnSave"
+                label={t(formState.formElements.printOnSave.label)}
+                checked={formState.printOnSave}
+                onChange={(e) =>
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: { printOnSave: e.target.checked },
+                    })
+                  )
+                }
+                disabled={formState.formElements.printOnSave?.disabled}
+              />
+            )}
+
+            {(voucherType == "BP" || voucherType == "CQP") &&
+              formState.formElements.printCheque.visible && (
+                <ERPCheckbox
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="p-rintCheque"
+                  label={t(formState.formElements.printCheque.label)}
+                  checked={formState.printCheque}
+                  onChange={(e) =>
+                    dispatch(
+                      formStateHandleFieldChange({
+                        fields: { printCheque: e.target.checked },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.printCheque?.disabled ||
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                  className="text-sm xl:text-base"
+                />
+              )}
+
+            {(voucherType == "BP" || voucherType == "CQP") && (
+              <div>
+                <ERPButton
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  title={t("print_cheque")}
+                  variant="secondary"
+                  onClick={() => {
+                    /* Handle print cheque */
+                  }}
+                  className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col xl:flex-row gap-1">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
+
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
+
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-end gap-1">
+            <div className="grid grid-cols-1 gap-1">
+              <NetAmountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+
+              <VatAmountLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                taxData={taxData}
+              />
+
+              <GrandTotalLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+
+              <NetTotalLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="hidden md:block mr-2">
+                <h6 className="font-semibold whitespace-nowrap text-[20px] ">
+                  {" "}
+                  <span className="!font-medium !text-gray-600">{t("total")}: </span>
+                  {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
+                </h6>
+              </div>
+              <div className="flex items-center gap-2">
+
+                {/* <ERPButton
+              ref={btnSaveRef}
+              title={t("close")}
+              onClick={goToPreviousPage}
+              className="w-24"
+              // disabled={formState.formElements.pnlMasters?.disabled}
+            /> */}
+
+                <ERPButton
+                  title={t("close")}
+                  onClick={() => goToPreviousPage()}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                />
+
+                <ERPButton
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  ref={btnSaveRef}
+                  title={t("save")}
+                  jumpTarget="save"
+                  variant="primary"
+                  onClick={save}
+                  className="w-24"
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled ||
+                    formState.transaction.details == null ||
+                    formState.transaction.details.length == 0
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex w-full">
+
+            {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
+
+
+
+
+
 
               {/* <IsLockedCheckbox
                 formState={formState}
@@ -2355,58 +2468,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
               /> */}
 
               <div className="flex flex-wrap justify-between items-center">
-                <CashPaidSection
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                />
 
-                <VatAmountLabel
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  taxData={taxData}
-                />
-
-                <RoundOffInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={() => {
-                    document.getElementById("discountID")?.focus();
-                  }}
-                  focusAmount={() => {
-                    document.getElementById("amountID")?.focus();
-                  }}
-                />
-                <NetAmountInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-
-                <BillDiscountInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-
-                <GrandTotalLabel
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-                <NetTotalLabel
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
               </div>
               {/* <TotalTCSInput
                 formState={formState}
@@ -2425,44 +2487,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           </div>
 
           {/* </div> */}
-          <div className="hidden md:block mr-2">
-            <h6 className="font-semibold whitespace-nowrap text-[20px] ">
-              {" "}
-              <span className="!font-medium !text-gray-600">{t("total")}: </span>
-              {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-            </h6>
-          </div>
-          <div className="flex items-center gap-2">
 
-            {/* <ERPButton
-              ref={btnSaveRef}
-              title={t("close")}
-              onClick={goToPreviousPage}
-              className="w-24"
-              // disabled={formState.formElements.pnlMasters?.disabled}
-            /> */}
-
-            <ERPButton
-              title={t("close")}
-              onClick={() => goToPreviousPage()}
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-            />
-
-            <ERPButton
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-              ref={btnSaveRef}
-              title={t("save")}
-              jumpTarget="save"
-              variant="primary"
-              onClick={save}
-              className="w-24"
-              disabled={
-                formState.formElements.pnlMasters?.disabled ||
-                formState.transaction.details == null ||
-                formState.transaction.details.length == 0
-              }
-            />
-          </div>
         </div>
       </div>
 
@@ -2503,10 +2528,9 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           width={1000}
           height={700}
           isForm={true}
-          initialMaximize={true}
-          closeModal={() =>  dispatch(formStateHandleFieldChange({fields:{isProductSummaryOpen: false}}))}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
           content={
-            <ProductSummaryMaster 
+            <ProductSummaryMaster
             />
           }
         ></ERPModal>
@@ -2518,10 +2542,9 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           width={1000}
           height={700}
           isForm={true}
-          initialMaximize={true}
-          closeModal={() => dispatch(formStateHandleFieldChange({fields:{isPartyWiseSummaryOpen: false}}))}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
           content={
-            <PartySummaryMaster/>
+            <PartySummaryMaster />
           }
         ></ERPModal>
       )}
@@ -2532,17 +2555,22 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           setIsOpen={setIsPartyDetailsOpen}
         />
       )}
-        <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
-            <div>
-              <div style={sidebarHeaderStyle}>
-                {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
-                  <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
-                     <X />
-                  </button>
-                </div>
-              <BottomSidebarGrid/>
-              </div>
-        </BottomSidebar>
+      <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+        <div>
+          <div style={sidebarHeaderStyle}>
+            {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
+            <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+              <X />
+            </button>
+          </div>
+
+          {/* <p className="mb-[24px] text-[#6b7280]">
+                          This sidebar for test.
+                        </p> */}
+
+          <BottomSidebarGrid />
+        </div>
+      </BottomSidebar>
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}

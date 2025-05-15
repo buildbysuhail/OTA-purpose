@@ -12,15 +12,16 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
   taxData,
 }) => {
   return (
-    <ERPLabel
-      id="vatAmount"
-      label={t(formState.formElements.totTax.label)}
-      localInputBox={formState?.userConfig?.inputBoxStyle}
-      value={formState.transaction.master.vatAmount}
-      boxed={true}
-      showDropdown={true}
-      dropdownData={taxData}
-    />
+    // <ERPLabel
+    //   id="vatAmount"
+    //   label={t(formState.formElements.totTax.label)}
+    //   localInputBox={formState?.userConfig?.inputBoxStyle}
+    //   value={formState.transaction.master.vatAmount}
+    //   boxed={true}
+    //   showDropdown={true}
+    //   dropdownData={taxData}
+    // />
+    <span>{t(formState.formElements.totTax.label)}:{formState.transaction.master.vatAmount}</span>
   );
 };
 

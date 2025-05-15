@@ -23,7 +23,13 @@ export const TaxCategoryManageIndia: React.FC = React.memo(() => {
   } = useFormManager<TaxCategory>({
     url: Urls.gstCategory,
     onClose: useCallback(() => dispatch(toggleTaxCategoryIndia({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleTaxCategoryIndia({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onSuccess: useCallback(
+        (resItem:TaxCategory) =>
+          dispatch(
+            toggleTaxCategoryIndia({ isOpen: false, key: null, reload: true , id: resItem.taxCategoryID, name:resItem.taxCategoryName })
+          ),
+        [dispatch]
+      ),
     key: rootState.PopupData.taxCategoryIndia.key,
     useApiClient: true,
     initialData: initialTaxCategoryData

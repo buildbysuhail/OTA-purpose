@@ -24,7 +24,7 @@ export const BrandsManage: React.FC = React.memo(() => {
   } = useFormManager<BrandsData>({
     url: Urls.brands,
     onClose: useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onSuccess: useCallback((res:BrandsData) => dispatch(toggleBrands({ isOpen: false, key: null, reload: true ,id:res.brandID,name:res.brandName})), [dispatch]),
     key: rootState.PopupData.brands.key,
     keyField: 'brandID',
     useApiClient: true,

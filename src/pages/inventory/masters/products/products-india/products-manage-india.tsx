@@ -28,6 +28,7 @@ import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
 import {
   popupDataProps,
+  toggleProductCategory,
   toggleProductGroup,
   toggleTaxCategory,
   toggleTaxCategoryIndia,
@@ -38,6 +39,8 @@ import { ProductGroupManage } from "../../product-group/product-group-manage";
 import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
 import { UnitOfMeasureManage } from "../../unit-of-meassure/unit-of-measure-manage";
 import { TaxCategoryManageIndia } from "../../tax-category-india/tax-category-manage-india";
+import productCategory from "../../product-category/product-category";
+import { ProductCategoryManage } from "../../product-category/product-category-manage";
 const api = new APIClient();
 
 export const ProductManageIndia: React.FC<{
@@ -294,14 +297,13 @@ useEffect(() => {
                     required={true}
                     addNewOption={true}
                     addNewOptionCobonent={{
-                      title: t("product_group"),
-                      popupAction: toggleProductGroup,
-                      isOpen: rootState.PopupData.productGroup.isOpen || false,
-                      id:rootState.PopupData.productGroup.id,
-                      name:rootState.PopupData.productGroup.name,
-                      closeModal: () =>
-                      dispatch(toggleProductGroup({ isOpen: false })),
-                      content: <ProductGroupManage />,
+                      title: t("product_category"),
+                      popupAction: toggleProductCategory,
+                      isOpen: rootState.PopupData.productCategory.isOpen || false,
+                      id:rootState.PopupData.productCategory.id,
+                      name:rootState.PopupData.productCategory.name,
+                      closeModal: () =>dispatch(toggleProductCategory({ isOpen: false })),
+                      content: <ProductCategoryManage />,
                     }}
                   />
 
@@ -329,8 +331,7 @@ useEffect(() => {
                       isOpen: rootState.PopupData.productGroup.isOpen || false,
                       id:rootState.PopupData.productGroup.id,
                       name:rootState.PopupData.productGroup.name,
-                      closeModal: () =>
-                      dispatch(toggleProductGroup({ isOpen: false })),
+                      closeModal: () =>  dispatch(toggleProductGroup({ isOpen: false })),
                       content: <ProductGroupManage />,
                     }}
                     label={t("product_group")}
@@ -512,7 +513,7 @@ useEffect(() => {
                     required={true}
                     addNewOption={true}
                     addNewOptionCobonent={{
-                      title: t("product_group"),
+                      title: t("tax_category"),
                       popupAction: toggleTaxCategoryIndia,
                       isOpen: rootState.PopupData.taxCategoryIndia.isOpen || false,
                       id:rootState.PopupData.taxCategoryIndia.id,

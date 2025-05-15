@@ -16,10 +16,14 @@ import {
   isNullOrUndefinedOrEmpty,
 } from "../../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { BusinessType } from "../../../../../enums/business-types";
 import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
+import { toggleProductGroup, toggleUnitOfMeasure } from "../../../../../redux/slices/popup-reducer";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { ProductGroupManage } from "../../product-group/product-group-manage";
+import { UnitOfMeasureManage } from "../../unit-of-meassure/unit-of-measure-manage";
 const api = new APIClient();
 export const ProductManageGcc: React.FC<{
   appSettings: ApplicationSettingsType;
@@ -50,6 +54,8 @@ export const ProductManageGcc: React.FC<{
     const clientSession = useSelector(
       (state: RootState) => state.ClientSession
     );
+      const rootState = useRootState();
+      const dispatch = useDispatch();
     useEffect(() => {
       if (getFieldProps("product.manual").value) {
         productCodeRef?.current?.focus();
@@ -201,9 +207,6 @@ export const ProductManageGcc: React.FC<{
                                 required={true}
                               /> */}
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                    <Ellipsis className="w-4 h-4" />
-                  </button>
                 </div>
 
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
@@ -217,23 +220,27 @@ export const ProductManageGcc: React.FC<{
                       labelKey: "name",
                       getListUrl: Urls.data_productgroup,
                     }}
-                    // onChangeData={(data: any) =>
-                    //   handleFieldChange(
-                    //     "product.productGroupID",
-                    //     data.productGroupID
-                    //   )
-                    // }
                     onChangeData={(data: any) =>
                       handleFieldChange("product.productGroupID", data.productGroupID)
                     }
                     label={t("product_group")}
                     className="w-full"
                     required={true}
+                    addNewOption={true}
+                    addNewOptionCobonent={{
+                      title: t("product_group"),
+                      popupAction: toggleProductGroup,
+                      isOpen: rootState.PopupData.productGroup.isOpen || false,
+                      id:rootState.PopupData.productGroup.id,
+                      name:rootState.PopupData.productGroup.name,
+                      closeModal: () =>  dispatch(toggleProductGroup({ isOpen: false })),
+                      content: <ProductGroupManage />,
+                    }}
                   />
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+                  {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <Ellipsis className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -257,11 +264,22 @@ export const ProductManageGcc: React.FC<{
                     label={t("base_unit")}
                     className="w-full"
                     required={true}
+                    addNewOption={true}
+                    addNewOptionCobonent={{
+                      title: t("base_unit"),
+                      popupAction: toggleUnitOfMeasure,
+                      isOpen: rootState.PopupData.unitOfMeasure.isOpen  || false,
+                      id:rootState.PopupData.unitOfMeasure.id,
+                      name:rootState.PopupData.unitOfMeasure.name,
+                      closeModal: () =>
+                      dispatch(toggleUnitOfMeasure({ isOpen: false })),
+                      content: <UnitOfMeasureManage />,
+                    }}
                   />
 
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+                  {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <Ellipsis className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="flex flex-1 min-w-[200px]">

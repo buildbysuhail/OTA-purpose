@@ -124,7 +124,7 @@ const initialState: popupData = {
   eWayBillTaxPro: { isOpen: false, key: null, mode: "edit", reload: true },
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
   productGroup: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
-  productCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  productCategory: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   brands: { isOpen: false, key: null, mode: "edit", reload: true ,id: 0, name: ""},
   priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   unitOfMeasure: { isOpen: false, key: null, mode: "edit", reload: true,id: 0, name: "" },

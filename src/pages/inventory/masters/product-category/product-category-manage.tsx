@@ -24,7 +24,13 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
   } = useFormManager<ProductCategoryManageData>({
     url: Urls.productCategory,
     onClose: useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })), [dispatch]),
+        onSuccess: useCallback(
+          (resItem:ProductCategoryManageData) =>
+            dispatch(
+              toggleProductCategory({ isOpen: false, key: null, reload: true , id: resItem.productCategoryID, name:resItem.productCategoryName })
+            ),
+          [dispatch]
+        ),
     key: rootState.PopupData.productCategory.key,
     useApiClient: true,
     initialData: initialProductCategoryManageData

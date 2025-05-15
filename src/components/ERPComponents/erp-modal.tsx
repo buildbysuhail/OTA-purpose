@@ -134,7 +134,6 @@ const ERPModal = React.memo(
         setModalHeight(height);
         setIsPositionCalculated(false);
       }
-      return
       }, [isOpen]);
 
         useEffect(() => {

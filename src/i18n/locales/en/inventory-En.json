@@ -21,7 +21,7 @@
     "item_alias": "Item Alias",
     "item_type": "Item Type",
     "commodity_code": "Commodity Code",
-    "product_group_id": "Product Group Id",
+    "product_group_id": "Product Group",
     "tax_category_id": "Tax Category Id",
     "basic_unit_id": "Basic Unit Id",
     "product_category_id": "Product Category Id",

@@ -31,8 +31,6 @@ import {
 } from "lucide-react";
 
 interface HeaderProps extends VoucherElementProps {
-  setIsProductSummaryOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsPartywiseSummaryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   loadTemporaryRows: () => Promise<void>;
   deleteTransVoucher: () => void;
   handleRefresh: () => void;
@@ -71,7 +69,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       printVoucher,
       handleClearControls,
       handleHistoryClick,
-      setIsHistorySidebarOpen,
       transactionType,
       voucherType,
       userSession,
@@ -80,9 +77,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       showValidation,
       selectTemplates,
       goToPreviousPage,
-      isHistorySidebarOpen,
-      setIsProductSummaryOpen,
-      setIsPartywiseSummaryOpen,
       phone = false,
       setIsPrintModalOpen,
       printPaymentReceiptAdvice,
@@ -191,19 +185,19 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         </div>
 
         {/* Product Summary */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product summary")}>
+        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product_summary")}>
           <button
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => setIsProductSummaryOpen(true)}
+            onClick={() => dispatch(formStateHandleFieldChange({fields:{isProductSummaryOpen: true}}))}
           >
             <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         </div>
         {/* partywise summary */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("partywise summar")}>
+        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("party_wise_summary")}>
           <button
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => setIsPartywiseSummaryOpen(true)}
+            onClick={() => dispatch(formStateHandleFieldChange({fields:{isPartyWiseSummaryOpen: true}}))}
           >
             <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>

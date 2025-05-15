@@ -34,30 +34,20 @@ export interface ProductSummaryRef {
   reloadData: () => void;
 }
 const api = new APIClient();
-interface ProductSummaryMasterProps {
-  productID?: number;
-  getFieldProps: any;
-  handleFieldChange: any;
-  formState: any;
-}
 
-const ProductSummaryMaster = ({
-  productID,
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: ProductSummaryMasterProps) => {
+const ProductSummaryMaster = (): any => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
   const [reload, setReload] = useState<boolean>(true);
   const [reload2, setReload2] = useState<boolean>(true);
   const { t } = useTranslation("accountsReport");
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [filter, setFilter] = useState<ProductSummaryFilter>({
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: 1,
+      productID: formState.selectedRow?.productID??0,
       productBatchID: 0,
       voucherType: "PI",
       productCode: "",
@@ -69,7 +59,7 @@ const ProductSummaryMaster = ({
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: 1,
+      productID: 0,
       productBatchID: 0,
       voucherType: "PI",
       productCode: "",

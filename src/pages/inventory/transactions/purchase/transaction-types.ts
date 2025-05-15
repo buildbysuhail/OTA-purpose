@@ -196,7 +196,7 @@ export interface TransactionDetail {
   invTransactionDetailId: number; 
   branchId: number; 
   invTransactionMasterId: number; 
-  productId: number; 
+  productID: number; 
   productBatchId: number; 
   productDescription: string; 
   quantity: number; 
@@ -283,7 +283,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   invTransactionDetailId: 0,
   branchId: 0,
   invTransactionMasterId: 0,
-  productId: 0,
+  productID: 0,
   productBatchId: 0,
   productDescription: "",
   quantity: 0,
@@ -592,7 +592,10 @@ export interface TransactionFormState {
   priceCategory: string;
   netTotal: number;
   netAmount: number;
-  loadData: LoadData
+  loadData: LoadData;
+  isProductSummaryOpen: boolean;
+  isPartyWiseSummaryOpen: boolean;
+  selectedRow?: TransactionDetail;
   
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
@@ -766,7 +769,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       focusBgColor: "255, 255, 255",
       bold: true
     },
- 
   },
   unlocking: false,
   total: 0,
@@ -795,7 +797,10 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     formType: undefined,
     vPrefix: undefined,
     vNumber: undefined
-  }
+  },
+  isProductSummaryOpen: false,
+  isPartyWiseSummaryOpen: false,
+  selectedRow: undefined
 }
 export interface PrintTransProps {
   masterAccount: string;

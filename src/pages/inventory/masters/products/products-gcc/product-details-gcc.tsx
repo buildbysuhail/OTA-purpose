@@ -16,8 +16,8 @@ export const ProductDetailsGcc: React.FC<{
     fields:
       | string
       | {
-          [fieldId: string]: any;
-        },
+        [fieldId: string]: any;
+      },
     value?: any
   ) => void;
 
@@ -109,7 +109,7 @@ export const ProductDetailsGcc: React.FC<{
                 }
                 className="w-full"
                 label={t("brand_mfg")}
-                // options={[]}
+              // options={[]}
               />
               <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                 <Ellipsis className="w-4 h-4" />
@@ -143,7 +143,7 @@ export const ProductDetailsGcc: React.FC<{
               }
               label={t("product_category")}
               className="w-full"
-              // options={[]}
+            // options={[]}
             />
 
             <ERPInput
@@ -246,30 +246,30 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             {/* <ERPInput
-                            {...getFieldProps("product.mrp")}
-                            label={t("mrp")}
-                            placeholder="0.00"
-                            type="number"
-                            required={false}
-                            onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
-                        /> */}
+              {...getFieldProps("product.mrp")}
+              label={t("mrp")}
+              placeholder="0.00"
+              type="number"
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
+            /> */}
 
             <ERPDataCombobox
-                           {...getFieldProps("batch.locationId")}
-                           id = "locationId"
-                           field={{
-                             id: "locationId",
-                             valueKey: "id",
-                             labelKey: "name",
-                             getListUrl: Urls.data_locations
-                           }}
-                           onSelectItem={(data: any) =>
-                             handleFieldChange({"batch.locationId": data.value, "batch.location": data.label})
-                           }
-                           label={t("location")}
-                           // options={[]}
-                           className="flex-2 min-w-[200px]"
-                         />
+              {...getFieldProps("batch.locationId")}
+              id="locationId"
+              field={{
+                id: "locationId",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_locations
+              }}
+              onSelectItem={(data: any) =>
+                handleFieldChange({ "batch.locationId": data.value, "batch.location": data.label })
+              }
+              label={t("location")}
+              // options={[]}
+              className="flex-2 min-w-[200px]"
+            />
 
             <ERPCheckbox
               {...getFieldProps("product.isActive")}
@@ -328,9 +328,9 @@ export const ProductDetailsGcc: React.FC<{
                 onChange={(e) =>
                   handleFieldChange("batch.gatePass", e.target.checked)
                 }
-                // onChangeData={(data: productDto) =>
-                //   handleFieldChange("product.gatePass", data.gatePass)
-                // }
+              // onChangeData={(data: productDto) =>
+              //   handleFieldChange("product.gatePass", data.gatePass)
+              // }
               />
               {clientSession.dbIdValue == "543140180640" && (
                 <ERPCheckbox

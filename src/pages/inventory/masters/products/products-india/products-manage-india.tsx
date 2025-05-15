@@ -50,7 +50,7 @@ export const ProductManageIndia: React.FC<{
   }) => {
     const rootState = useRootState();
     const dispatch = useDispatch();
-    const clientSession = useSelector(  (state: RootState) => state.ClientSession);
+    const clientSession = useSelector((state: RootState) => state.ClientSession);
     const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManageIndia), []);
     const { getFormattedValue } = useNumberFormat();
     const { t } = useTranslation("inventory");
@@ -187,21 +187,21 @@ export const ProductManageIndia: React.FC<{
               <div className="flex flex-wrap gap-4">
                 <div className="flex flex-1 min-w-[240px] items-center gap-2">
                   <ERPInput
-                      {...getFieldProps("product.productCode")}
-                      label={t("product_code")}
-                      placeholder={t("enter_product_code")}
-                      required={false}
-                      className="w-full"
-                      readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
-                      labelDirection={isMobile ? "vertical" : "horizontal"}
-                      disabled={!getFieldProps("product.manual").value}
-                      onChangeData={(data: any) =>
-                        handleFieldChange(
-                          "product.productCode",
-                          data.product.productCode ?? ""
-                        )
-                      }
-                    />
+                    {...getFieldProps("product.productCode")}
+                    label={t("product_code")}
+                    placeholder={t("enter_product_code")}
+                    required={false}
+                    className="w-full"
+                    readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
+                    labelDirection={isMobile ? "vertical" : "horizontal"}
+                    disabled={!getFieldProps("product.manual").value}
+                    onChangeData={(data: any) =>
+                      handleFieldChange(
+                        "product.productCode",
+                        data.product.productCode ?? ""
+                      )
+                    }
+                  />
 
                   <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300" onClick={async () => {
                     debugger;
@@ -243,8 +243,10 @@ export const ProductManageIndia: React.FC<{
                 </div>
               </div>
               {/* {getFieldProps("product.productId").value} */}
-              
+
               <ERPProductSearch
+                label="Product Name"
+                placeholder="Product Name"
                 showCheckBox={false}
                 value={getFieldProps("product.productName").value}
                 onChange={(e) => handleFieldChange({

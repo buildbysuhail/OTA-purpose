@@ -207,7 +207,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
     }));
     setShowBatchGrid(false);
     if (value.length >= 3) {
+      // Only trigger debouncedFetch for non-modal search types
+    if (searchType !== "modal") {
       debouncedFetch(value);
+    }
     } else {
       setStore({
         data: [],
@@ -282,24 +285,32 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
     }
   }, []);
 
-  const handleInputKeyDown = useCallback(
-    async (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'ArrowDown' && showProductGrid && dataGridRef.current) {
-        const grid: any = dataGridRef.current.instance();
-        const rows = grid.getVisibleRows();
-        if (rows.length > 0) {
-          grid.selectRowsByIndexes([0]);
-          grid.navigateToRow(grid.getKeyByRowIndex(0));
 
-          setTimeout(() => {
-            grid.focus();
-          }, 100);
-        }
+const handleInputKeyDown = useCallback(
+  async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown" && showProductGrid && dataGridRef.current) {
+      const grid: any = dataGridRef.current.instance();
+      const rows = grid.getVisibleRows();
+      if (rows.length > 0) {
+        grid.selectRowsByIndexes([0]);
+        grid.navigateToRow(grid.getKeyByRowIndex(0));
+
+        setTimeout(() => {
+          grid.focus();
+        }, 100);
       }
-    },
-    [showProductGrid]
-  );
-
+    } else if (
+      e.key === "Enter" &&
+      searchType === "modal" &&
+      inputValue.searchValue &&
+      inputValue.searchValue.length >= 3
+    ) {
+      // Trigger API call for modal search type when Enter is pressed and input length >= 3
+      debouncedFetch(inputValue.searchValue);
+    }
+  },
+  [showProductGrid, inputValue.searchValue, searchType, debouncedFetch]
+);
   return (
     <>
      <div className="flex items-center gap-4">

@@ -17,6 +17,7 @@ import { BrandsManage } from "../../brands/brands-manage";
 
 const ProductDetailsIndia: React.FC<{
   clientSession: any,
+  isMobile:boolean,
   formState: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -24,7 +25,7 @@ const ProductDetailsIndia: React.FC<{
   ) => void;
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession }) => {
+}> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession, isMobile }) => {
    const rootState = useRootState();
   const dispatch = useDispatch();
   const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);

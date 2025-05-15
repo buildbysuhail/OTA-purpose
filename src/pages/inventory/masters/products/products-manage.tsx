@@ -280,6 +280,7 @@ export const ProductMaster: React.FC = React.memo(() => {
 
   const userSession = rootState.UserSession;
   const clientSession = rootState.ClientSession;
+  const isMobile = rootState.DeviceInfo.isMobile;
   const isIndia = userSession.countryId === Countries.India;
   const isSaudi = userSession.countryId === Countries.Saudi;
   const { getFormattedValue } = useNumberFormat();
@@ -402,6 +403,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="details">
         {" "}
         <ProductDetailsIndia
+        isMobile={isMobile}
           clientSession={clientSession}
           formState={formState}
           getFieldProps={getFieldProps}

@@ -15,28 +15,30 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
   handleKeyDown,
 }) => {
   return (
-    <ERPInput
-      localInputBox={formState?.userConfig?.inputBoxStyle}
-      id="netAmount"
-      type="number"
-      label={t(formState.formElements.netAmount.label)}
-      value={formState.netAmount}
-      disableEnterNavigation={true}
-      onKeyDown={(e) => {
-        handleKeyDown && handleKeyDown(e, "netAmount");
-      }}
-      onChange={(e) =>
-        dispatch(
-          formStateHandleFieldChange({
-            fields: { netAmount: e.target?.value },
-          })
-        )
-      }
-      disabled={
-        formState.formElements.netAmount?.disabled ||
-        formState.formElements.pnlMasters?.disabled
-      }
-    />
+    // <ERPInput
+    //   localInputBox={formState?.userConfig?.inputBoxStyle}
+    //   id="netAmount"
+    //   type="number"
+    //   label={t(formState.formElements.netAmount.label)}
+    //   value={formState.netAmount}
+    //   disableEnterNavigation={true}
+    //   onKeyDown={(e) => {
+    //     handleKeyDown && handleKeyDown(e, "netAmount");
+    //   }}
+    //   onChange={(e) =>
+    //     dispatch(
+    //       formStateHandleFieldChange({
+    //         fields: { netAmount: e.target?.value },
+    //       })
+    //     )
+    //   }
+    //   className="max-w-[110px] min-w-[110px]"
+    //   disabled={
+    //     formState.formElements.netAmount?.disabled ||
+    //     formState.formElements.pnlMasters?.disabled
+    //   }
+    // />
+    <span>{t(formState.formElements.netAmount.label)}:{formState.netAmount}</span>
   );
 };
 

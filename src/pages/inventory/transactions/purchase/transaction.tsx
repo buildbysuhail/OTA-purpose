@@ -134,6 +134,10 @@ import NetTotalLabel from "./components/NetTotalLabel";
 import DataGridTest from "../../masters/test/dataGrid";
 import GrnNumber from "./components/grn-Number";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
+import BottomSidebarGrid from "./bottom-sidebar-grid";
+import ProductSummary from "./components/Product-summary";
+import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
+import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
 
 interface BilledItem {
   id?: number;
@@ -222,7 +226,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
@@ -232,6 +236,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const SIDEBAR_WIDTH = "196px";
+
+  const [isDropUpOpen, setIsDropUpOpen] = useState(false);
+
+  const toggleDropup = () => {
+    setIsDropUpOpen(!isDropUpOpen);
+  };
 
   const handleButtonClick = () => {
     setIsModalOpen(true); // Open the modal
@@ -1713,8 +1723,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const sidebarHeaderStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "24px",
+    justifyContent: "end",
+    marginBottom: "3px",
   }
 
   const sidebarTitleStyle: React.CSSProperties = {
@@ -1729,12 +1739,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
     backgroundColor: "transparent",
     color: "#374151",
     border: "1px solid #e5e7eb",
-    padding: "6px 12px",
+    // padding: "6px 12px",
     borderRadius: "4px",
     fontSize: "14px",
     cursor: "pointer",
   }
-const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
+  const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
     setData((prevData) => {
       const newData = [...prevData];
       newData[rowIndex] = { ...newData[rowIndex], [dataField]: value };
@@ -1874,11 +1884,11 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
             <div className="relative w-auto">
               <button
                 onClick={toggleDropdown}
-                className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
-                // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
+                className="text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md mb-1"
+              // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
               >
                 <div className="flex items-center space-x-2">
-                  <EllipsisVertical size={16} className="text-black"/>
+                  <EllipsisVertical size={16} className="text-black" />
                   {/* <Menu size={16} className="text-white" /> */}
                   {/* <span>more</span> */}
                 </div>
@@ -1889,7 +1899,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
 
               <div
                 ref={dropdownRef}
-                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-50 w-full ${isDropDownOpen ? 'max-h-96 opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
+                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'max-h-96 opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
                   }`}
                 style={{
                   marginLeft: 0,
@@ -1898,7 +1908,7 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                 }}
               >
                 <div ref={contentRef} className="p-6">
-                  <div className="grid grid-cols-6 items-center gap-1">
+                  <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-center gap-1">
                     <ReferenceNumber
                       formState={formState}
                       dispatch={dispatch}
@@ -1990,9 +2000,9 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
                   <div className="flex justify-center mt-8 mb-2">
                     <button
                       onClick={toggleDropdown}
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FDBA74] hover:bg-[#FB923C] shadow-md transform transition-transform duration-300 hover:scale-110"
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"
                     >
-                      <ChevronUp size={20} className="text-white" />
+                      <ChevronUp size={20} className="text-black" />
                     </button>
                   </div>
                 </div>
@@ -2171,38 +2181,114 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
         </div>
       )}
 
-      <div
-        className="flex items-center justify-between  z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
-        style={{
-          boxShadow:
-            "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
-        }}
-      >
-        <div className="flex flex-col w-full">
-          <ERPButton
-            title={t("bottom sidebar")}
-            // onClick={handleButtonClick}
-            // onClick={() => goToPreviousPage()}
-            onClick={() => setIsOpentwo(true)}
-            className="w-[150px]"
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-          />
-          {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
-          <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
-            <div>
-              <div style={sidebarHeaderStyle}>
-                <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2>
-                <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
-                  Close
-                </button>
-              </div>
 
-              <p className="mb-[24px] text-[#6b7280]">
-                This sidebar for test.
-              </p>
+
+      <div
+        className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
+        style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
+        <div
+          className="w-full flex flex-col-reverse items-center absolute bottom-28 z-40 right-0 left-0"
+        >
+          <div
+            className={`w-full p-4 md:p-6 overflow-y-auto transition-all duration-500 ease-in-out bg-white border border-gray-300 rounded-t-lg absolute bottom-10 left-0 right-0 ${isDropUpOpen ? 'max-h-[50vh] md:max-h-96 opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            style={{
+              boxShadow: isDropUpOpen ? '0 -4px 12px rgba(0, 0, 0, 0.1)' : 'none',
+              transform: isDropUpOpen ? 'translateY(0)' : 'translateY(20px)',
+              pointerEvents: isDropUpOpen ? 'auto' : 'none',
+            }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+              <div className="w-full">
+                <WarehouseID
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <RemarksInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <PriceCategoryCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <CostCentreCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <SupplyTypeCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <AdjustmentAmountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
             </div>
-          </BottomSidebar>
-          <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
+          </div>
+
+          <button
+            onClick={toggleDropup}
+            className={`flex items-center justify-center w-full py-2 border-t border-b border-gray-300 bg-white transition-all duration-300 ${isDropUpOpen ? 'bg-gray-100' : ''
+              }`}
+          >
+            <div className="w-12 md:w-24 h-px bg-gray-300"></div>
+            <ChevronUp
+              className={`mx-2 transition-transform duration-500 ${isDropUpOpen ? 'transform rotate-180' : 'animate-[bounce_2s_infinite]'}`}
+              size={24}
+            />
+            <div className="w-12 md:w-24 h-px bg-gray-300"></div>
+          </button>
+        </div>
+
+        <div className="flex items-end justify-between">
+          <div className="flex items-end gap-1">
+            <div className="grid grid-cols-1">
+              <ERPButton
+                title={t("bottom sidebar")}
+                // onClick={handleButtonClick}
+                // onClick={() => goToPreviousPage()}
+                onClick={() => setIsOpentwo(true)}
+                className="w-[150px]"
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+              />
+              <button className="text-blue-600">
+                <span
+                  className="hover:underline text-[#0ea5e9] capitalize"
+                  onClick={selectAttachment}
+                >
+                  {t("attachment")}
+                </span>
+              </button>
+            </div>
+
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2256,166 +2342,152 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
               </div>
             )}
 
-            <button className="text-blue-600">
-              <span
-                className="hover:underline text-[#0ea5e9] capitalize"
-                onClick={selectAttachment}
-              >
-                {t("attachment")}
-              </span>
-            </button>
+            <div className="flex flex-col xl:flex-row gap-1">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
 
-            <WarehouseID
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
 
-            <RemarksInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-            <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
-            <AutoCalculationCheckbox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-            />
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
 
-            <CashPaidSection
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              focusDiscount={focusDiscount}
-              focusAmount={focusAmount}
-            />
+          <div className="flex items-end gap-1">
+            <div className="grid grid-cols-1 gap-1">
+              <NetAmountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
 
-            <PriceCategoryCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleFieldKeyDown={handleFieldKeyDown}
-              handleKeyDown={handleKeyDown}
-            />
+              <VatAmountLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                taxData={taxData}
+              />
 
-            <CostCentreCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleFieldKeyDown={handleFieldKeyDown}
-              handleKeyDown={handleKeyDown}
-            />
+              <GrandTotalLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
 
-            <SupplyTypeCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
+              <NetTotalLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="hidden md:block mr-2">
+                <h6 className="font-semibold whitespace-nowrap text-[20px] ">
+                  {" "}
+                  <span className="!font-medium !text-gray-600">{t("total")}: </span>
+                  {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
+                </h6>
+              </div>
+              <div className="flex items-center gap-2">
 
-            <VatAmountLabel
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              taxData={taxData}
-            />
+                {/* <ERPButton
+              ref={btnSaveRef}
+              title={t("close")}
+              onClick={goToPreviousPage}
+              className="w-24"
+              // disabled={formState.formElements.pnlMasters?.disabled}
+            /> */}
 
-            <AdjustmentAmountInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
+                <ERPButton
+                  title={t("close")}
+                  onClick={() => goToPreviousPage()}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                />
 
-            <RoundOffInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              focusDiscount={() => {
-                document.getElementById("discountID")?.focus();
-              }}
-              focusAmount={() => {
-                document.getElementById("amountID")?.focus();
-              }}
-            />
-
-            <TotalTCSInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-
-            <GrandTotalFcInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-
-            <NetAmountInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-
-            <BillDiscountInput
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-
-            <GrandTotalLabel formState={formState} dispatch={dispatch} t={t} />
-
-            <NetTotalLabel formState={formState} dispatch={dispatch} t={t} />
+                <ERPButton
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  ref={btnSaveRef}
+                  title={t("save")}
+                  jumpTarget="save"
+                  variant="primary"
+                  onClick={save}
+                  className="w-24"
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled ||
+                    formState.transaction.details == null ||
+                    formState.transaction.details.length == 0
+                  }
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* </div> */}
-        <div className="hidden md:block mr-2">
-          <h6 className="font-semibold whitespace-nowrap text-[20px] ">
-            {" "}
-            <span className="!font-medium !text-gray-600">{t("total")}: </span>
-            {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-          </h6>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* <ERPButton
-            ref={btnSaveRef}
-            title={t("close")}
-            onClick={goToPreviousPage}
-            className="w-24"
-          // disabled={formState.formElements.pnlMasters?.disabled}
-          /> */}
+        <div className="flex items-center justify-between">
+          <div className="flex w-full">
 
-          <ERPButton
-            title={t("close")}
-            onClick={() => goToPreviousPage()}
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-          />
+            {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
 
-          <ERPButton
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-            ref={btnSaveRef}
-            title={t("save")}
-            jumpTarget="save"
-            variant="primary"
-            onClick={save}
-            className="w-24"
-            disabled={
-              formState.formElements.pnlMasters?.disabled ||
-              formState.transaction.details == null ||
-              formState.transaction.details.length == 0
-            }
-          />
+
+
+
+
+
+              {/* <IsLockedCheckbox
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+
+              <AutoCalculationCheckbox
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              /> */}
+
+              <div className="flex flex-wrap justify-between items-center">
+
+              </div>
+              {/* <TotalTCSInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+
+              <GrandTotalFcInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              /> */}
+            </div>
+          </div>
+
+          {/* </div> */}
+
         </div>
       </div>
 
@@ -2447,6 +2519,33 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
               })}
             </PDFViewer>
           }
+        />
+      )}
+      {formState.isProductSummaryOpen && (
+        <ERPModal
+          isOpen={formState.isProductSummaryOpen}
+          title={t("product_summary")}
+          width={1000}
+          height={700}
+          isForm={true}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
+          content={
+            <ProductSummaryMaster
+            />
+          }
+        ></ERPModal>
+      )}
+      {formState.isPartyWiseSummaryOpen && (
+        <ERPModal
+          isOpen={formState.isPartyWiseSummaryOpen}
+          title={t("party_wise_summary")}
+          width={1000}
+          height={700}
+          isForm={true}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
+          content={
+            <PartySummaryMaster />
+          }
         ></ERPModal>
       )}
       {isPartyDetailsOpen && (
@@ -2456,24 +2555,43 @@ const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
           setIsOpen={setIsPartyDetailsOpen}
         />
       )}
+      <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+        <div>
+          <div style={sidebarHeaderStyle}>
+            {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
+            <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+              <X />
+            </button>
+          </div>
+
+          {/* <p className="mb-[24px] text-[#6b7280]">
+                          This sidebar for test.
+                        </p> */}
+
+          <BottomSidebarGrid />
+        </div>
+      </BottomSidebar>
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
-      ></ERPResizableSidebar>
+      />
+
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isAttachmentOpen}
         setIsOpen={setIsAttachmentOpen}
         children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
-      ></ERPResizableSidebar>
+      />
+
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isHistoryOpen}
         setIsOpen={setIsHistoryOpen}
         children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
-      ></ERPResizableSidebar>
+      />
+
       {formState.openUnsavedPrompt == true && (
         <UnsavedChangesModal
           isOpen={formState.openUnsavedPrompt == true}

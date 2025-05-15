@@ -25,12 +25,11 @@ export const WarehouseManage: React.FC = React.memo(() => {
   } = useFormManager<WarehouseData>({
     url: Urls.Warehouse,
     onClose: useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onSuccess: useCallback((res:WarehouseData) => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true ,id:res.warehouseID,name:res.warehouseName})), [dispatch]),
     key: rootState.PopupData.warehouse.key,
     useApiClient: true,
     initialData: initialWarehouseData
   });
-
   const { t } = useTranslation('inventory');
 
   return (

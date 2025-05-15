@@ -87,6 +87,7 @@ const ERPModal = React.memo(
     customPosition = false,
     customStyle = {},
   }: ERPModalProps) => {
+
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
     const [modalWidth, setModalWidth] = useState(0);
@@ -126,7 +127,7 @@ const ERPModal = React.memo(
 
       useEffect(() => {
         if (!isOpen) {
-        setIsMaximized(false);
+        setIsMaximized(initialMaximize);
         setPosition({ x: 0, y: 0 });
         setInitPosition({ x: 0, y: 0 });
         setModalWidth(width);
@@ -135,13 +136,11 @@ const ERPModal = React.memo(
       }
       }, [isOpen]);
 
-      // Calculate dimensions and position when modal opens or props change
-      useEffect(() => {
-        if (isOpen) {
-        calculateDimensionsAndPosition();
-        }
-        }, [isOpen, isMaximized, width, height]);
-
+        useEffect(() => {
+          if (isOpen) {
+            calculateDimensionsAndPosition();
+          }
+        }, [isOpen, isMaximized, width, height])
 
   const handleClose = () => {
     closeModal(false);
@@ -275,7 +274,7 @@ const ERPModal = React.memo(
       minHeight={minHeight}
       dragGrid={[10, 10]}
       resizeGrid={[10, 10]}
-  dragHandleClassName="drag-handle" // Specify the drag handle class name
+     dragHandleClassName="drag-handle" // Specify the drag handle class name
        className="bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
     >
       <DialogPanel

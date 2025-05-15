@@ -77,7 +77,7 @@ const ProductSummaryReport: React.FC<{
       <Fragment>
         <div className="grid grid-cols-12">
           <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="px-4 pt-4 pb-2">
+            <div className="px-4 pt-0 pb-0">
               <div className="grid grid-cols-1 gap-3">
                 <ProductSummaryReport1
                   onReloadChange={onReloadChange}
@@ -88,7 +88,7 @@ const ProductSummaryReport: React.FC<{
             </div>
           </div>
           <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="px-4 pt-4 pb-2">
+            <div className="px-4 pt-0 pb-0">
               <div className="grid grid-cols-1 gap-3">
                 <ProductSummaryReport2
                   onReloadChange2={onReloadChange2}

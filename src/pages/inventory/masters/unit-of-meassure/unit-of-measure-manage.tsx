@@ -24,7 +24,13 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
   } = useFormManager<MeasureData>({
     url: Urls.unitOfMeasure,
     onClose: useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true })), [dispatch]),
+      onSuccess: useCallback(
+          (resItem:MeasureData) =>
+            dispatch(
+              toggleUnitOfMeasure({ isOpen: false, key: null, reload: true , id: resItem.unitID, name:resItem.unitName })
+            ),
+          [dispatch]
+        ),
     key: rootState.PopupData.unitOfMeasure.key,
     useApiClient: true,
     initialData: initialMeasureData

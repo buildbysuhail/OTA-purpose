@@ -12,6 +12,10 @@ import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../../redux/store";
+import { useDispatch } from "react-redux";
+import { formStateHandleFieldChange } from "./reducer";
 
 const api = new APIClient();
 
@@ -50,7 +54,7 @@ interface SchemeSettingsDiscountForm{
     SchemeID:number | null
 }
 
-export const SchemeSettingsDiscount: React.FC = () => {
+export const BottomSidebarGrid: React.FC = () => {
     const { t } = useTranslation('inventory');
     const [leftGridData, setLeftGridData] = useState<SchemeSettingsDiscountData[]>([]);
     const [rightGridData, setRightGridData] = useState<SchemeSettingsDiscountData[]>([]);
@@ -62,72 +66,313 @@ export const SchemeSettingsDiscount: React.FC = () => {
    const [isApiLoading, setIsApiLoading] = useState(false);
   const leftGridRef = useRef<any>(null);
   const rightGridRef = useRef<any>(null);
-    const columns: DevGridColumn[] = useMemo(() => [
+    const columnsleft: DevGridColumn[] = useMemo(() => [
       {
-        dataField: "sl",
-        caption: t("serial_no"),
-        dataType: "number",
-        width: 60,
+        dataField: "date",
+        caption: "Date",
+        dataType: "date",
+        width: 66,
+        alignment: "center", 
         showInPdf: true,
+        visible: true,
       },
       {
-        dataField: "productID",
-        caption: t("product_id"),
+        dataField: "refNo",
+        caption: "RefNo",
+        dataType: "string",
+        width: 48,
+        alignment: "center", 
+        showInPdf: true,
+        visible: true,
+      },
+      {
+        dataField: "party",
+        caption: "Party",
+        dataType: "string",
+        width: 194,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "qty",
+        caption: "Qty",
+        dataType: "number",
+        width: 64,
+        alignment: "right", 
+        showInPdf: true,
+        visible: true,
+      },
+      {
+        dataField: "cost",
+        caption: "Cost",
+        dataType: "number",
+        width: 59,
+        alignment: "right", 
+        showInPdf: true,
+        visible: true,
+      },
+      {
+        dataField: "description",
+        caption: "Description",
+        dataType: "string",
+        width: 73,
+        alignment: "center", 
+        showInPdf: true,
+        visible: true,
+      },
+      {
+        dataField: "beforeAddAmount",
+        caption: "BeforeAddAmount",
+        dataType: "number",
+        width: 114,
+        alignment: "center", 
+        showInPdf: true,
+        visible: true,
+      },
+      {
+        dataField: "xRate",
+        caption: "XRate",
         dataType: "number",
         width: 100,
-        visible: false,
-      },
-      {
-        dataField: "pCode",
-        caption: t("product_code"),
-        dataType: "string",
-        width: 120,
+        alignment: "left", 
         showInPdf: true,
-      },
-      {
-        dataField: "product",
-        caption: t("product_name"),
-        dataType: "string",
-        width: 200,
-        showInPdf: true,
-      },
-      {
-        dataField: "autoBarcode",
-        caption: t("auto_barcode"),
-        dataType: "string",
-        width: 120,
-        showInPdf: true,
-      },
-      {
-        dataField: "manualBarcode",
-        caption: t("manual_barcode"),
-        dataType: "string",
-        width: 120,
         visible: false,
       },
       {
-        dataField: "unit2Barcode",
-        caption: t("unit2_barcode"),
-        dataType: "string",
-        width: 120,
-        visible: false,
-      },
-      {
-        dataField: "unit3Barcode",
-        caption: t("unit3_barcode"),
-        dataType: "string",
-        width: 120,
-        visible: false,
-      },
-      {
-        dataField: "stdSalesPrice",
-        caption: t("standard_sales_price"),
+        dataField: "netItemCost",
+        caption: "NetItemCost",
         dataType: "number",
-        width: 150,
+        width: 100,
+        alignment: "left", 
         showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "unitName",
+        caption: "UnitName",
+        dataType: "string",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "rateWithTax",
+        caption: "RateWithTax",
+        dataType: "number",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "disc",
+        caption: "Disc",
+        dataType: "number",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "vat",
+        caption: "VAT",
+        dataType: "number",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "netRate",
+        caption: "NetRate",
+        dataType: "number",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
+      },
+      {
+        dataField: "refNo",
+        caption: "RefNo",
+        dataType: "string",
+        width: 100,
+        alignment: "left", 
+        showInPdf: true,
+        visible: false,
       },
     ], []);
-  
+
+    const columnsright: DevGridColumn[] = useMemo(() => [
+  {
+    dataField: "date",
+    caption: "Date",
+    dataType: "date",
+    width: 74,
+    alignment: "left", 
+    showInPdf: true,
+    visible: true,
+    readOnly: true,
+    fontBold: false,
+  },
+  {
+    dataField: "billNumber",
+    caption: "BillNumber",
+    dataType: "string",
+    width: 62,
+    alignment: "center", 
+    showInPdf: true,
+    visible: true,
+    readOnly: true,
+    fontBold: false,
+  },
+  {
+    dataField: "party",
+    caption: "Party",
+    dataType: "string",
+    width: 194,
+    alignment: "left", 
+    showInPdf: true,
+    visible: true,
+    readOnly: true,
+    fontBold: false,
+  },
+  {
+    dataField: "qty",
+    caption: "Qty",
+    dataType: "number",
+    width: 72,
+    alignment: "right", 
+    showInPdf: true,
+    visible: true,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "rate",
+    caption: "Rate",
+    dataType: "number",
+    width: 52,
+    alignment: "right", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "cost",
+    caption: "Cost",
+    dataType: "number",
+    width: 100,
+    alignment: "right", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "xRate",
+    caption: "XRate",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "netItemCost",
+    caption: "NetItemCost",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "unitName",
+    caption: "UnitName",
+    dataType: "string",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: true,
+    readOnly: false,
+    fontBold: true,
+  },
+  {
+    dataField: "rateWithTax",
+    caption: "RateWithTax",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "disc",
+    caption: "Disc",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "vat",
+    caption: "VAT",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "netRate",
+    caption: "NetRate",
+    dataType: "number",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: false,
+    readOnly: false,
+    fontBold: false,
+  },
+  {
+    dataField: "productDescription",
+    caption: "ProductDescription",
+    dataType: "string",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: true,
+    readOnly: false,
+    fontBold: true,
+  },
+  {
+    dataField: "refNo",
+    caption: "RefNo",
+    dataType: "string",
+    width: 100,
+    alignment: "left", 
+    showInPdf: true,
+    visible: true,
+    readOnly: true,
+    fontBold: false,
+  },
+], []);
+
+    
     const handleLoadByProp = useCallback(async (obj:SchemeSettingsDiscountForm) => {
           
   // Check if either ProductGroupID or SchemeID is invalid
@@ -172,11 +417,6 @@ export const SchemeSettingsDiscount: React.FC = () => {
       !isNullOrUndefinedOrZero(schemeDiscountForm.ProductGroupID)
     ) {
       handleLoadByProp(schemeDiscountForm);
-    }
-    else
-    {
-    setLeftGridData([]);
-    setRightGridData([]);
     }
   }, [schemeDiscountForm]);
 
@@ -243,60 +483,31 @@ const payload = {
                 }
     };
 
+     const formState = useAppSelector(
+        (state: RootState) => state.InventoryTransaction
+      );
+      const dispatch = useDispatch();
+
     return (
-          <div className="relative grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
+          <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg ">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="px-4 pt-0 pb-0 ">
             {/* Top Section - Dropdowns */}
             <div className="grid grid-cols-6 gap-4">
-                   <ERPDataCombobox
-                            id="ProductGroupID"
-                            field={{
-                              id: "ProductGroupID",
-                              valueKey: "id",
-                              labelKey: "name",
-                              getListUrl: Urls.data_productgroup,
-                            }}
-                            label={t("product_group_id")}
-                            data={schemeDiscountForm}
-                            value={schemeDiscountForm.ProductGroupID}
-                            className="w-full"
-                            onChangeData={(data: any) => {
-                              //       const obj = {
-                              //   ...schemeDiscountForm,
-                              //   ProductGroupID:  data.SchemeID,
-                              // };
-                              // handleLoadByProp(obj);
-                              setSchemeDiscountForm((prev) => ({
-                                ...prev,
-                               ProductGroupID: data.ProductGroupID ,
-                              }));
-                            }}
-                          />
-                    <ERPDataCombobox
-                            id="SchemeID"
-                            field={{
-                              id: "SchemeID",
-                              valueKey: "id",
-                              labelKey: "name",
-                              getListUrl:`${Urls.scheme_discount}/forCombo`,
-                            }}
-                            label={t("scheme_name")}
-                            data={schemeDiscountForm}
-                            value={schemeDiscountForm.SchemeID}
-                            className="w-full"
-                            onChangeData={(data: any) => {
-                            //  const obj = {
-                            //     ...schemeDiscountForm,
-                            //     ProductGroupID:  data.SchemeID,
-                            //   };
-                            //   handleLoadByProp(obj);
-                              setSchemeDiscountForm((prev) => ({
-                                ...prev,
-                               SchemeID: data.SchemeID ,
-                              }));
-                            }}
-                          />
+              <ERPCheckbox
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                id="printOnSave"
+                label={t("Show Selected Party Details only")}
+                checked={formState.printOnSave}
+                // onChange={(e) =>
+                //   dispatch(
+                //     formStateHandleFieldChange({
+                //       fields: { printOnSave: e.target.checked },
+                //     })
+                //   )
+                // }
+                // disabled={formState.formElements.printOnSave?.disabled}
+              />
             </div>
 
             {/* Main Grid Section */}
@@ -308,14 +519,15 @@ const payload = {
                     </div> */}
 
                     <div>
-            
+   
                         <ERPDevGrid
                             ref={leftGridRef}
-                            gridHeader={t("add_to_scheme")}
+                            gridHeader={t("purchase_details")}
                             data={leftGridData}
-                             columns={columns}
+                             columns={columnsleft}
                              remoteOperations={false}
                             showBorders={true}
+                            height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}
@@ -342,10 +554,11 @@ const payload = {
                     <div>
                         <ERPDevGrid
                             ref={rightGridRef}
-                             gridHeader={t("remove_from_scheme")}
+                             gridHeader={t("sales_details")}
                             data={rightGridData}
                              remoteOperations={false}
                             showBorders={true}
+                            height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}
@@ -357,7 +570,7 @@ const payload = {
                             selectionMode="multiple"
                             allowSelection={true}
                             allowSelectAll={true}
-                            columns={columns}
+                            columns={columnsright}
                             gridId={"discount_scheme_grid_right"}
                         />
                     </div>
@@ -365,7 +578,7 @@ const payload = {
             </div>
 
             {/* Bottom Buttons */}
-            <div className="flex justify-end gap-4 mt-1">
+            {/* <div className="flex justify-end gap-4 mt-1">
                 <ERPButton
                     title={t("save")}
                     variant="primary"
@@ -383,21 +596,11 @@ const payload = {
                     variant="secondary"
                     // onClick={handleClose}
                 />
-            </div>
+            </div> */}
         </div>
        </div>
-       {isApiLoading &&
-         <div className="absolute  inset-0 flex items-center justify-center z-50 bg-white/20">
-      <div className="flex items-center  gap-4">
-        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping" />
-        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping animation-delay-200" />
-        <div className="h-4 w-4 bg-sky-500/50 rounded-full animate-ping animation-delay-400" />
-      </div>
-    </div>
-       }
-     
        </div>   
     );
 };
 
-export default SchemeSettingsDiscount;
+export default BottomSidebarGrid;

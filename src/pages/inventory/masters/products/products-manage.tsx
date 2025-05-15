@@ -86,7 +86,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     key: rootState.PopupData.products?.key,
     useApiClient: true,
     keyField: "productsdsID",
-    isMessages:true,
+    isMessages: true,
     loadInitialData: false,
     initialData: {
       data: initialProductData,
@@ -182,37 +182,38 @@ export const ProductMaster: React.FC = React.memo(() => {
   };
 
 
-  const handleSubmitProductManage = async()=>{ 
-     const obj =   getFieldProps("*") as any as productDto
-     if(obj.config.showFlavourOnSave){
+  const handleSubmitProductManage = async () => {
+    const obj = getFieldProps("*") as any as productDto
+    if (obj.config.showFlavourOnSave) {
       await handleFlavorOpen()
     }
 
-     if(obj.config.showMultiBarcodeOnSave){
+    if (obj.config.showMultiBarcodeOnSave) {
       await handleMultibarcode()
-     }
-     if(clientSession.isAppGlobal) {
-      if(isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
+    }
+    if (clientSession.isAppGlobal) {
+      if (isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
         ERPAlert.show(
-          {title:"Validation Failed",
-          text:"HSN Code missing, are you sure to continue?",
-          icon: "warning",
-          cancelButtonText:"cancel",
-          showCancelButton: true,
-          onConfirm:() => {handleSubmit()},
-          onCancel: () => {
-            console.log("User canceled HSN Code validation");
-          },
+          {
+            title: "Validation Failed",
+            text: "HSN Code missing, are you sure to continue?",
+            icon: "warning",
+            cancelButtonText: "cancel",
+            showCancelButton: true,
+            onConfirm: () => { handleSubmit() },
+            onCancel: () => {
+              console.log("User canceled HSN Code validation");
+            },
           })
-      
+
       }
-      else{
+      else {
         handleSubmit()
       }
-     }
-     else{
-     handleSubmit();
-     }
+    }
+    else {
+      handleSubmit();
+    }
   }
   //multibarcode open
 
@@ -280,6 +281,7 @@ export const ProductMaster: React.FC = React.memo(() => {
 
   const userSession = rootState.UserSession;
   const clientSession = rootState.ClientSession;
+  const isMobile = rootState.DeviceInfo.isMobile;
   const isIndia = userSession.countryId === Countries.India;
   const isSaudi = userSession.countryId === Countries.Saudi;
   const { getFormattedValue } = useNumberFormat();
@@ -307,7 +309,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         )) as productDto;
         nextProductCode = data.product.productCode ?? "";
         data.details = true;
-        data.taxCategoryTaxPercentage = data?.product?.taxCategoryValue??0
+        data.taxCategoryTaxPercentage = data?.product?.taxCategoryValue ?? 0
       } else {
         data = initialProductData;
         nextProductCode = await api.getAsync(
@@ -329,7 +331,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         )
           ? appSettings.productsSettings.batchCriteria
           : "NB";
-          data.product.isActive = true;
+        data.product.isActive = true;
       }
 
       data.product.productCode = nextProductCode;
@@ -402,6 +404,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="details">
         {" "}
         <ProductDetailsIndia
+          isMobile={isMobile}
           clientSession={clientSession}
           formState={formState}
           getFieldProps={getFieldProps}
@@ -582,6 +585,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div className="flex flex-col gap-1">
         {isIndia ? (
           <ProductManageIndia
+            isMobile={isMobile}
             productMultiUnitsIndiaRef={productMultiUnitsIndiaRef}
             handleDataChange={handleDataChange}
             appSettings={appSettings}
@@ -655,18 +659,18 @@ export const ProductMaster: React.FC = React.memo(() => {
           },
         ].filter((x: any) => {
           const obj = getFieldProps("*") as any as productDto;
-          if (x.title == "Flavors"){
-            if((!clientSession.isAppGlobal && !obj.elements?.flavorVisible) || (formState.data.product.productID?? 0) == 0) {
-            return false
+          if (x.title == "Flavors") {
+            if ((!clientSession.isAppGlobal && !obj.elements?.flavorVisible) || (formState.data.product.productID ?? 0) == 0) {
+              return false
+            }
           }
-        }
           debugger;
-          if(x.title == "Multi Barcode") {
-          if (((!clientSession.isAppGlobal)
-            || (clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID?? 0) == 0) {
-            return false
+          if (x.title == "Multi Barcode") {
+            if (((!clientSession.isAppGlobal)
+              || (clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
+              return false
+            }
           }
-        }
 
           return true;
         }) as []
@@ -795,9 +799,6 @@ export const ProductMaster: React.FC = React.memo(() => {
       <ERPModal
         isOpen={multiBarcode.open}
         closeModal={multiBarcode.onClose ?? (() => { })}
-        // closeModal={(reload: boolean) =>
-        //   setMultiBarcode({ open: false, data: [] })
-        // }
         title={t("multi_barcode")}
         content={<ProductMultiBarcodeManage
           multiBarcode={multiBarcode}
@@ -805,33 +806,6 @@ export const ProductMaster: React.FC = React.memo(() => {
           units={units}
           productBatchID={getFieldProps("batch.productBatchID").value}
         />}
-
-        // footer={
-        //   <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
-        //     <ERPSubmitButton
-        //       type="reset"
-        //       onClick={() =>
-        //         setFlavorsOpen({
-        //           open: false,
-        //           productId: null,
-        //           data: [],
-        //         })
-        //       }
-        //       className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
-        //     >
-        //       {t("cancel")}
-        //     </ERPSubmitButton>
-
-        //     <ERPSubmitButton
-        //       type="button"
-        //       className="max-w-[115px]"
-        //       variant="primary"
-        //       onClick={handleSaveFlavor}
-        //     >
-        //       {t("save")}
-        //     </ERPSubmitButton>
-        //   </div>
-        // }
         width={780}
         height={570}
         disableOutsideClickClose={false}

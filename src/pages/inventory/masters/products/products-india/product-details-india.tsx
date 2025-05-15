@@ -3,13 +3,10 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import { Plus } from "lucide-react";
 import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
-import ProductDetailsBatches from "./product-details-batches";
-import { toggleBrands, toggleProductGroup, toggleWarehouse } from "../../../../../redux/slices/popup-reducer";
-import { ProductGroupManage } from "../../product-group/product-group-manage";
+import { toggleBrands, toggleWarehouse } from "../../../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { useDispatch } from "react-redux";
 import { WarehouseManage } from "../../warehouse/warehouse-manage";
@@ -17,7 +14,7 @@ import { BrandsManage } from "../../brands/brands-manage";
 
 const ProductDetailsIndia: React.FC<{
   clientSession: any,
-  isMobile:boolean,
+  isMobile: boolean,
   formState: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
@@ -26,10 +23,10 @@ const ProductDetailsIndia: React.FC<{
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
 }> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession, isMobile }) => {
-   const rootState = useRootState();
+  const rootState = useRootState();
   const dispatch = useDispatch();
   const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
-    const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
+  const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
   return (
     <>
       {getFieldProps("details").value &&
@@ -93,10 +90,10 @@ const ProductDetailsIndia: React.FC<{
                     title: t("warehouse"),
                     popupAction: toggleWarehouse,
                     isOpen: rootState.PopupData.warehouse.isOpen || false,
-                    id:rootState.PopupData.warehouse.id,
-                    name:rootState.PopupData.warehouse.name,
+                    id: rootState.PopupData.warehouse.id,
+                    name: rootState.PopupData.warehouse.name,
                     closeModal: () =>
-                    dispatch(toggleWarehouse({ isOpen: false })),
+                      dispatch(toggleWarehouse({ isOpen: false })),
                     content: <MemoizedWarehouseManage />,
                   }}
                 />
@@ -126,10 +123,10 @@ const ProductDetailsIndia: React.FC<{
                     title: t("product_group"),
                     popupAction: toggleBrands,
                     isOpen: rootState.PopupData.brands.isOpen || false,
-                    id:rootState.PopupData.brands.id,
-                    name:rootState.PopupData.brands.name,
+                    id: rootState.PopupData.brands.id,
+                    name: rootState.PopupData.brands.name,
                     closeModal: () =>
-                    dispatch(toggleBrands({ isOpen: false })),
+                      dispatch(toggleBrands({ isOpen: false })),
                     content: <MemoizedBrandsManage />,
                   }}
                 />
@@ -264,7 +261,7 @@ const ProductDetailsIndia: React.FC<{
             <div className="flex flex-wrap gap-2 w-full">
               <ERPDataCombobox
                 {...getFieldProps("batch.locationId")}
-                id = "locationId"
+                id="locationId"
                 field={{
                   id: "locationId",
                   valueKey: "id",
@@ -272,7 +269,7 @@ const ProductDetailsIndia: React.FC<{
                   getListUrl: Urls.data_locations
                 }}
                 onSelectItem={(data: any) =>
-                  handleFieldChange({"batch.locationId": data.value, "batch.location": data.label})
+                  handleFieldChange({ "batch.locationId": data.value, "batch.location": data.label })
                 }
                 label={t("location")}
                 // options={[]}
@@ -282,10 +279,10 @@ const ProductDetailsIndia: React.FC<{
           </div>
 
           <div className="border border-gray-200 rounded-md p-2 pt-6 relative">
-          <h6 className="absolute top-[-13px] left-4 text-[14px] font-semibold text-gray-700 bg-transparent px-0 py-0">
-            {t("list_in")}
-          </h6>
-            <div className="flex flex-wrap gap-x-6 gap-y-4 mt-2">
+            <h6 className="absolute top-[-13px] left-4 text-[14px] font-semibold text-gray-700 bg-transparent px-0 py-0">
+              {t("list_in")}
+            </h6>
+            <div className="flex flex-wrap gap-x-6 gap-y-4">
               <ERPCheckbox
                 {...getFieldProps("product.canPurchase")}
                 label={t("purchase")}
@@ -336,16 +333,16 @@ const ProductDetailsIndia: React.FC<{
               //   handleFieldChange("product.gatePass", data.gatePass)
               // }
               />
-{clientSession.dbIdValue == "543140180640" && 
-              <ERPCheckbox
-                {...getFieldProps("product.hold")}
-                label={t("hold")}
-                onChange={(e) => handleFieldChange('product.hold', e.target.checked)}
-              // onChangeData={(data: productDto) =>
-              //   handleFieldChange("product.hold", data.hold)
-              // }
-              />
-}
+              {clientSession.dbIdValue == "543140180640" &&
+                <ERPCheckbox
+                  {...getFieldProps("product.hold")}
+                  label={t("hold")}
+                  onChange={(e) => handleFieldChange('product.hold', e.target.checked)}
+                // onChangeData={(data: productDto) =>
+                //   handleFieldChange("product.hold", data.hold)
+                // }
+                />
+              }
             </div>
           </div>
           {/* <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches> */}

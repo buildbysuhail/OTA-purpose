@@ -246,7 +246,7 @@ export const ProductManageIndia: React.FC<{
 
               <ERPProductSearch
                 label="Product Name"
-                placeholder="Enter the product name here"
+                placeholder="Product Name"
                 showCheckBox={false}
                 value={getFieldProps("product.productName").value}
                 onChange={(e) => handleFieldChange({

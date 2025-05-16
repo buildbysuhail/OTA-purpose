@@ -2525,6 +2525,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
           content={
             <ProductSummaryMaster
@@ -2539,6 +2540,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
           content={
             <PartySummaryMaster />

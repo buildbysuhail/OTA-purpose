@@ -6,14 +6,12 @@ import React, {
   useState,
 } from "react";
 import {
+  TransactionProps,
+  TransactionDetail,
+} from "./transaction-types";
+import {
   TransactionData,
   TransactionFormState,
-  TransactionFormStateInitialData,
-  transactionInitialData,
-  TransactionMasterInitialData,
-  TransactionProps,
-  initialFormElements,
-  TransactionDetail,
 } from "./transaction-types";
 import {
   useAppDispatch,
@@ -138,6 +136,7 @@ import BottomSidebarGrid from "./bottom-sidebar-grid";
 import ProductSummary from "./components/Product-summary";
 import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
+import { transactionInitialData, TransactionFormStateInitialData, initialFormElements } from "./transaction-type-data";
 
 interface BilledItem {
   id?: number;
@@ -273,7 +272,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
     const selectedIndexes = e.component.getSelectedRowKeys();
     const row = formState?.transaction?.details.find(
-      (x) => x.slNo == selectedIndexes[0]
+      (x: any) => x.slNo == selectedIndexes[0]
     );
     if (selectedIndexes.length > 0 && row) {
       if (deviceInfo.isMobile) {
@@ -631,7 +630,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.templates = templates;
           _formState.templatesData = templatesData;
           const _template = templatesData?.find(
-            (x) => x.templateGroup == _formState.transaction.master.voucherType
+            (x: any) => x.templateGroup == _formState.transaction.master.voucherType
           );
           if (_template != undefined) {
             _formState.template = _template;

@@ -24,7 +24,8 @@ import { ApplicationSettingsType } from "../../../settings/system/application-se
 import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, loadTempRows } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
-import { UserConfig, TransactionFormState, transactionInitialData, TransactionData, Attachments, TransactionMaster, initialTransactionDetailData, TransactionDetail, TransactionFormStateInitialData } from "./transaction-types";
+import { UserConfig, TransactionFormState, TransactionData, Attachments, TransactionMaster,  TransactionDetail,  } from "./transaction-types";
+import { TransactionFormStateInitialData } from "./transaction-type-data";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;

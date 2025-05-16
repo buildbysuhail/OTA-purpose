@@ -56,7 +56,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
     },
     {
       dataField: "gstPercentage",
-      caption: t("gstperc"),
+      caption: t("gstpercentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

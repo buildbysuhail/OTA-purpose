@@ -471,5 +471,21 @@
     "search_price_categories":"Search price categories",
     "branches":"Branches",
     "select_branches":"Select branches",
-    "search_branches":"Search branches"
+    "search_branches":"Search branches",
+
+    "purchase_gst_daily_summary_report":"Purchase Gst Daily Summary Report",
+    "purchase_gst_monthly_summary_report":"Purchase Gst Monthly Summary Report",
+    "purchase_gst_register_format_report":"Purchase Gst Register Format Report",
+    "purchase_gst_advanced_register_format_report":"Purchase Gst Advanced Register Format Report",
+    "purchase_gst_detailed_report":"Purchase Gst Detailed Report",
+    "purchase_gst_taxwise_report":"Purchase Gst TaxWise Report",
+    "purchase_gst_taxwise_with_hsn_report":"Purchase GSt TaxWise Hsn Report",
+
+    "purchase_return_gst_daily_summary_report":"Purchase Return Gst Daily Summary Report",
+    "purchase_return_gst_monthly_summary_report":"Purchase Return Gst Monthly Summary Report",
+    "purchase_return_gst_register_format_report":"Purchase Return Gst Register Format Report",
+    "purchase_return_gst_advanced_register_format_report":"Purchase Return Gst Advanced Register Format Report",
+    "purchase_return_gst_detailed_report":"Purchase Return Gst Detailed Report",
+    "purchase_return_gst_taxwise_report":"Purchase Return Gst TaxWise Report",
+    "purchase_return_gst_taxwise_with_hsn_report":"Purchase Return GSt TaxWise Hsn Report"
 }

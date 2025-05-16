@@ -21,7 +21,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       format: "dd-MMM-yyyy"
     },
@@ -32,7 +31,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 200,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -42,7 +40,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
     },
     {
       dataField: "taxableAmount",
@@ -51,7 +48,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -85,7 +81,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -119,7 +114,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -151,7 +145,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -181,7 +174,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -191,8 +183,7 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
-      showInPdf: true,
+      visible: false,
     },
     {
       dataField: "creditOrCash",
@@ -201,7 +192,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -211,8 +201,7 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
-      showInPdf: true,
+      visible: false,
     },
     {
       dataField: "voucherType",
@@ -221,7 +210,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -231,7 +219,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -241,7 +228,6 @@ const PurchaseTaxReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
   ]
@@ -258,6 +244,20 @@ const PurchaseTaxReport = () => {
         return "0"; // Ensure "0" is displayed when value is missing
       }
       return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
+    const customizeSummaryRow1 = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value,false,4) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const summaryItems: SummaryConfig[] = [
@@ -277,7 +277,7 @@ const PurchaseTaxReport = () => {
       column: "vatAmount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRow1,
     },
     {
       column: "amount",

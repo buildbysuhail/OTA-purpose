@@ -488,7 +488,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
     },
     {
       dataField: "id",
-      caption: t("Master_id"),
+      caption: t("MasterId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

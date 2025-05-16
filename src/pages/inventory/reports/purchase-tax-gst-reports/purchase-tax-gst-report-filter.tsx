@@ -12,7 +12,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="flex items-end gap-2">
         <ERPDateInput
-          label={t("from_date")}
+          label={t("date_from")}
           {...getFieldProps("fromDate")}
           className="max-w-[150px]"
           datatype="date"
@@ -20,7 +20,7 @@ const PurchaseGstReportFilter = ({ getFieldProps, handleFieldChange, formState }
         />
 
         <ERPDateInput
-          label={t("to_date")}
+          label={t("date_to")}
           {...getFieldProps("toDate")}
           className="max-w-[150px]"
           datatype="date"

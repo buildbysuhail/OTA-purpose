@@ -468,5 +468,22 @@
     "search_price_categories": "ابحث في فئات الأسعار",
     "branches": "الفروع",
     "select_branches": "اختر الفروع",
-    "search_branches": "ابحث في الفروع"
+    "search_branches": "ابحث في الفروع",
+
+    "purchase_gst_daily_summary_report": "تقرير ملخص يومي لضريبة شراء السلع والخدمات",
+    "purchase_gst_monthly_summary_report": "تقرير ملخص شهري لضريبة شراء السلع والخدمات",
+    "purchase_gst_register_format_report": "تقرير سجل ضريبة شراء السلع والخدمات (تنسيق)",
+    "purchase_gst_advanced_register_format_report": "تقرير سجل متقدم لضريبة شراء السلع والخدمات (تنسيق)",
+    "purchase_gst_detailed_report": "تقرير مفصل لضريبة شراء السلع والخدمات",
+    "purchase_gst_taxwise_report": "تقرير ضريبة شراء السلع والخدمات حسب نوع الضريبة",
+    "purchase_gst_taxwise_with_hsn_report": "تقرير ضريبة شراء السلع والخدمات حسب نوع الضريبة مع HSN",
+
+    "purchase_return_gst_daily_summary_report": "تقرير ملخص يومي لضريبة مرتجعات الشراء",
+    "purchase_return_gst_monthly_summary_report": "تقرير ملخص شهري لضريبة مرتجعات الشراء",
+    "purchase_return_gst_register_format_report": "تقرير سجل ضريبة مرتجعات الشراء (تنسيق)",
+    "purchase_return_gst_advanced_register_format_report": "تقرير سجل متقدم لضريبة مرتجعات الشراء (تنسيق)",
+    "purchase_return_gst_detailed_report": "تقرير مفصل لضريبة مرتجعات الشراء",
+    "purchase_return_gst_taxwise_report": "تقرير ضريبة مرتجعات الشراء حسب نوع الضريبة",
+    "purchase_return_gst_taxwise_with_hsn_report": "تقرير ضريبة مرتجعات الشراء حسب نوع الضريبة مع HSN"
+
 }

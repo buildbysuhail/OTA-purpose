@@ -468,5 +468,15 @@
     "search_price_categories": "ابحث في فئات الأسعار",
     "branches": "الفروع",
     "select_branches": "اختر الفروع",
-    "search_branches": "ابحث في الفروع"
+    "search_branches": "ابحث في الفروع",
+
+    "product_(arabic)": "اسم المنتج (بالعربية)",
+    "show_multibacode_onsave": "إظهار الباركود المتعدد عند الحفظ",
+    "show_flavour_onsave": "إظهار النكهة عند الحفظ",
+    "warehouse_details": "تفاصيل المستودع",
+    "stock_details": "تفاصيل المخزون",
+    "warehouse_id": "رقم تعريف المستودع",
+    "unit_already_selected_please_change_it": "الوحدة محددة بالفعل، يرجى تغييرها!!",
+    "already_used": "مستخدم بالفعل",
+    "capitalization_for_product_name": "حالة الأحرف لاسم المنتج"
 }

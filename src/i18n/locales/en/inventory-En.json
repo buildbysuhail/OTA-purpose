@@ -471,5 +471,15 @@
     "search_price_categories":"Search price categories",
     "branches":"Branches",
     "select_branches":"Select branches",
-    "search_branches":"Search branches"
+    "search_branches":"Search branches",
+
+    "product_(arabic)":"Product (Arabic)",
+    "show_multibacode_onsave":"Show multibacode onsave",
+    "show_flavour_onsave":"Show flavour onsave",
+    "warehouse_details":"Warehouse details",
+    "stock_details":"Stock details",
+    "warehouse_id":"Warehouse ID",
+    "unit_already_selected_please_change_it":"Unit Already Selected ,Please Change it !!",
+    "already_used":"Already used",
+    "capitalization_for_product_name":"Capitalization for product name"
 }

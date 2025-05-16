@@ -32,7 +32,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
           })
         )
       }
-      className="max-w-[110px] min-w-[110px]"
+      className="max-w-[110px] min-w-[110px] !m-0"
       disabled={
         formState.formElements.billDiscount?.disabled ||
         formState.formElements.pnlMasters?.disabled

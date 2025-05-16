@@ -1899,7 +1899,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
               <div
                 ref={dropdownRef}
-                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'max-h-96 opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
+                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
                   }`}
                 style={{
                   marginLeft: 0,
@@ -1991,13 +1991,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       dispatch={dispatch}
                       t={t}
                     />
-
-                    <div>
-                      <span> more </span>
-                    </div>
                   </div>
 
-                  <div className="flex justify-center mt-8 mb-2">
+                  <div className="flex justify-center mt-4 mb-2">
                     <button
                       onClick={toggleDropdown}
                       className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"
@@ -2270,7 +2266,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-1">
-            <div className="grid grid-cols-1">
+            {/* <div className="grid grid-cols-1">
               <ERPButton
                 title={t("bottom sidebar")}
                 // onClick={handleButtonClick}
@@ -2279,15 +2275,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 className="w-[150px]"
                 localInputBox={formState?.userConfig?.inputBoxStyle}
               />
-              <button className="text-blue-600">
-                <span
-                  className="hover:underline text-[#0ea5e9] capitalize"
-                  onClick={selectAttachment}
-                >
-                  {t("attachment")}
-                </span>
-              </button>
-            </div>
+            </div> */}
 
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -2342,64 +2330,80 @@ const TransactionForm: React.FC<TransactionProps> = ({
               </div>
             )}
 
-            <div className="flex flex-col xl:flex-row gap-1">
-              <CashPaidSection
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                focusDiscount={focusDiscount}
-                focusAmount={focusAmount}
-              />
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
+                <button className="text-blue-600">
+                  <span
+                    className="hover:underline text-[#0ea5e9] capitalize"
+                    onClick={selectAttachment}
+                  >
+                    {t("attachment")}
+                  </span>
+                </button>
+                <CashPaidSection
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                />
+              </div>
 
-              <RoundOffInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-                focusDiscount={() => {
-                  document.getElementById("discountID")?.focus();
-                }}
-                focusAmount={() => {
-                  document.getElementById("amountID")?.focus();
-                }}
-              />
+              <div className="flex flex-col xl:flex-row items-end gap-1">
+                <RoundOffInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={() => {
+                    document.getElementById("discountID")?.focus();
+                  }}
+                  focusAmount={() => {
+                    document.getElementById("amountID")?.focus();
+                  }}
+                />
 
-              <BillDiscountInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
+                <BillDiscountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-end gap-1">
-            <div className="grid grid-cols-1 gap-1">
-              <NetAmountInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
+          <div className="flex items-end gap-4">
+            <div className="flex items-center flex-wrap gap-2">
+              <div>
+                <NetAmountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
 
-              <VatAmountLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                taxData={taxData}
-              />
+                <VatAmountLabel
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  taxData={taxData}
+                />
+              </div>
 
-              <GrandTotalLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
+              <div>
+                <GrandTotalLabel
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
 
-              <NetTotalLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
+                <NetTotalLabel
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="hidden md:block mr-2">
@@ -2412,12 +2416,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
               <div className="flex items-center gap-2">
 
                 {/* <ERPButton
-              ref={btnSaveRef}
-              title={t("close")}
-              onClick={goToPreviousPage}
-              className="w-24"
-              // disabled={formState.formElements.pnlMasters?.disabled}
-            /> */}
+                  ref={btnSaveRef}
+                  title={t("close")}
+                  onClick={goToPreviousPage}
+                  className="w-24"
+                // disabled={formState.formElements.pnlMasters?.disabled}
+                /> */}
 
                 <ERPButton
                   title={t("close")}
@@ -2449,12 +2453,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
             {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
             <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
-
-
-
-
-
-
               {/* <IsLockedCheckbox
                 formState={formState}
                 dispatch={dispatch}
@@ -2528,6 +2526,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
           content={
             <ProductSummaryMaster
@@ -2542,6 +2541,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
           content={
             <PartySummaryMaster />
@@ -2565,12 +2565,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
 
           {/* <p className="mb-[24px] text-[#6b7280]">
-                          This sidebar for test.
-                        </p> */}
+            This sidebar for test.
+          </p> */}
 
           <BottomSidebarGrid />
         </div>
       </BottomSidebar>
+
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}

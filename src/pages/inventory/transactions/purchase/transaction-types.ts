@@ -4,6 +4,7 @@ import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 
 // Transaction interface
 export interface TransactionProps {
@@ -387,6 +388,7 @@ export interface TransactionFormState {
   isProductSummaryOpen: boolean;
   isPartyWiseSummaryOpen: boolean;
   selectedRow?: TransactionDetail;
+  gridColumns?: DevGridColumn[];
   
 }
 export interface PrintTransProps {

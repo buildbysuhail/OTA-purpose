@@ -486,6 +486,7 @@ const Products = () => {
         title={t("products")}
         width={1200}
         isForm={true}
+        height={820}
         closeModal={() => { dispatch(toggleProducts({ isOpen: false })); }}
         content={<MemoizedProductsManage />}
       />

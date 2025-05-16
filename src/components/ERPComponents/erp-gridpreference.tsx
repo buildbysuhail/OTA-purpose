@@ -16,10 +16,11 @@ interface GridPreferenceChooserProps {
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
   GridPreferenceChooserAccTrance?: boolean
+  eclipseClass?: string
 }
 
 const api = new APIClient();
-const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences, GridPreferenceChooserAccTrance }) => {
+const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences, GridPreferenceChooserAccTrance,eclipseClass }) => {
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
   const [searchCols, setSearchCols] = useState<String>("");
@@ -152,7 +153,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
     <Fragment>
       {
         GridPreferenceChooserAccTrance ? (
-          <button onClick={() => setIsOpen(true)} onTouchEnd={() => setIsOpen(true)} className="mt-[15px]">
+          <button onClick={() => setIsOpen(true)} onTouchEnd={() => setIsOpen(true)} className= {`  ${eclipseClass?eclipseClass:"mt-[15px]"} `}>
             <Ellipsis className="text-[#0ea5e9]" />
           </button>
         ) : (

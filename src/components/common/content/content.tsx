@@ -158,7 +158,6 @@ import SummaryReport from "../../../pages/inventory/reports/summary-report/summa
 import RegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
 import NetSales from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import VatReturnFormArabic from "../../../pages/inventory/reports/vat-return-form/Vat-Return-Form-arabic";
-import TestSearch from "../../../pages/inventory/masters/test/test-search";
 import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 import SalesAndSalesReturn from "../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return";
@@ -665,8 +664,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
         {/* <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} /> */}
-        {/* <Route path="/inventory-masters/test-page" element={<TestInvMaster />} /> */}
-        <Route path="/inventory-masters/test-page" element={<TestSearch />} />
+
       </Routes>
     </Suspense>
   );

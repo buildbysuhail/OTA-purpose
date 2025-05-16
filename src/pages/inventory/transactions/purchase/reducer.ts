@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  TransactionFormStateInitialData,
   TransactionFormState,
   TransactionData,
   TransactionDetail,
   TransactionMaster,
-  initialTransactionDetailData,
   FormElementState,
   Attachments,
   TransactionMaster3,
@@ -18,6 +16,7 @@ import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
+import { initialTransactionDetailData, TransactionFormStateInitialData } from "./transaction-type-data";
 
 const InvTransactionSlice = createSlice({
   name: "invTransaction",

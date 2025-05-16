@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../../redux/store";
-import { dateTrimmer } from "../../../../utilities/Utils";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../redux/store";
+import { dateTrimmer } from "../../../utilities/Utils";
 import { type ReactNode } from "react";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPButton from "../erp-button";
 import Input from "./test-input";
 import { Loader2, Plus, Search } from "lucide-react";
-import GridPreferenceChooser from "../../../../components/ERPComponents/erp-gridpreference";
-import type { DevGridColumn, GridPreference, ColumnPreference } from "../../../../components/types/dev-grid-column";
-import ERPProductSearch from "../../../../components/ERPComponents/erp-searchbox";
-import Urls from "../../../../redux/urls";
+import GridPreferenceChooser from "../erp-gridpreference";
+import type { DevGridColumn, GridPreference, ColumnPreference } from "../../types/dev-grid-column";
+import ERPProductSearch from "../erp-searchbox";
+import Urls from "../../../redux/urls";
 type DataItem = Record<string, any>;
 interface DataGridProps<T extends DataItem> {
   data?: T[];
@@ -26,7 +26,7 @@ interface DataGridProps<T extends DataItem> {
   onCellChange?: (rowIndex: number, dataField: string, value: any) => void;
 }
 
-export default function DataGridTest<T extends DataItem>({
+export default function ErpPurchaseGrid<T extends DataItem>({
   data = [],
   columns = [],
   keyField,
@@ -165,15 +165,9 @@ export default function DataGridTest<T extends DataItem>({
           }}
         >
           <ERPProductSearch 
-          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          //     if (onCellChange) {
-          //       onCellChange(rowIndex, column.dataField!, e.target.value);
-          //     }
-          //   }}
             showCheckBox={false}
             value={value || ""}
            productDataUrl={Urls.load_product_details}
-           searchType="modal"
           />
         </td>
       );

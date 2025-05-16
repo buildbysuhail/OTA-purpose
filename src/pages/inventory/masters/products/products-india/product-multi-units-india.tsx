@@ -1,10 +1,10 @@
-import React, {  forwardRef,  useEffect,  useImperativeHandle,  useState,} from "react";
-import DataGrid, {  Column,  Editing,  KeyboardNavigation,  Paging,  RemoteOperations,  Scrolling,} from "devextreme-react/data-grid";
+import React, { forwardRef, useEffect, useImperativeHandle, useState, } from "react";
+import DataGrid, { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling, } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
-import {  PathValue,  productDto,  ProductFieldPath,  ProductPriceInputDto,  ProductUnitInputDto,} from "../products-type";
+import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, ProductUnitInputDto, } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
@@ -103,7 +103,7 @@ const ProductMultiUnitsIndia = forwardRef<
         return await loadMultiRateToGrid(obj, units);
       },
     }));
-    
+
     const handleAddUnit = async () => {
       debugger;
       const obj = getFieldProps("*");
@@ -394,8 +394,8 @@ const ProductMultiUnitsIndia = forwardRef<
                     obj?.product?.basicUnitID == e.value
                   ) {
                     ERPAlert.show({
-                      text: "Unit Already Selected ,Please Change it !!",
-                      title: "Already used",
+                      text: t("unit_already_selected_please_change_it"),
+                      title: t("already_used"),
                     });
                     setUnit((prev) => ({
                       ...prev,
@@ -556,7 +556,10 @@ const ProductMultiUnitsIndia = forwardRef<
             >
               <Paging defaultPageSize={5} />
 
-              <Editing mode="cell" allowUpdating={true} />
+              <Editing
+                mode="cell"
+                allowUpdating={true}
+              />
 
               <KeyboardNavigation
                 editOnKeyPress={true}
@@ -564,7 +567,10 @@ const ProductMultiUnitsIndia = forwardRef<
                 enterKeyDirection={"row"}
               />
 
-              <Column dataField="unit" caption={t("uom")} />
+              <Column
+                dataField="unit"
+                caption={t("uom")}
+              />
 
               <Column
                 dataField="multiFactor"
@@ -573,7 +579,11 @@ const ProductMultiUnitsIndia = forwardRef<
                 allowEditing
               />
 
-              <Column dataField="barCode" allowEditing caption={t("barcode")} />
+              <Column
+                dataField="barCode"
+                allowEditing
+                caption={t("barcode")}
+              />
 
               <Column
                 dataField="salesPrice"
@@ -660,6 +670,7 @@ const ProductMultiUnitsIndia = forwardRef<
                     )
                   }
                   className="w-full"
+                  label={t("sales")}
                 />
               </div>
               <div className="flex-1 px-1 mb-3 min-w-[200px] max-w-[200px]">
@@ -809,9 +820,7 @@ const ProductMultiUnitsIndia = forwardRef<
               <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
                 <ERPSubmitButton
                   type="reset"
-                  onClick={() =>
-                    setOpenMB({ index: 0, open: false, unit: "", data: [] })
-                  }
+                  onClick={() =>  setOpenMB({ index: 0, open: false, unit: "", data: [] })}
                   className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
                 >
                   {t("cancel")}

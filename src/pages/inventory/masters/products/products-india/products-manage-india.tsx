@@ -185,15 +185,15 @@ export const ProductManageIndia: React.FC<{
           <div className="flex flex-wrap gap-1">
             <div className="flex-1 min-w-[270px] border border-gray-300 rounded-md p-3">
               <div className="flex flex-wrap gap-4">
-                <div className="flex flex-1 min-w-[240px] items-center gap-2">
+                <div className="flex flex-1 min-w-[240px] items-end gap-2">
                   <ERPInput
                     {...getFieldProps("product.productCode")}
                     label={t("product_code")}
                     placeholder={t("enter_product_code")}
                     required={false}
                     className="w-full"
-                    readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
-                    labelDirection={isMobile ? "vertical" : "horizontal"}
+                    // readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
+                    // labelDirection={isMobile ? "vertical" : "horizontal"}
                     disabled={!getFieldProps("product.manual").value}
                     onChangeData={(data: any) =>
                       handleFieldChange(
@@ -216,7 +216,7 @@ export const ProductManageIndia: React.FC<{
                   </button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap items-end gap-4">
                   <ERPCheckbox
                     {...getFieldProps("product.manual")}
                     label={t("manual")}
@@ -228,10 +228,14 @@ export const ProductManageIndia: React.FC<{
                     title={t("create_new")}
                     variant="secondary"
                     className="mt-[15px]"
-                    onClick={() => {
+                    onClick={async () => {
+                      const nextProductCode = await api.getAsync(
+                        `${Urls.products}SelectNextProductCode`
+                      );
                       const data = { ...getFieldProps("*") };
                       if (data.product.productID > 0) {
                         data.product.productID = 0;
+                        data.product.productCode = nextProductCode
                         handleDataChange(data);
                       }
                     }}
@@ -245,8 +249,8 @@ export const ProductManageIndia: React.FC<{
               {/* {getFieldProps("product.productId").value} */}
 
               <ERPProductSearch
-                label="Product Name"
-                placeholder="Product Name"
+                label={t("product_name")}
+                placeholder={t("product_name")}
                 showCheckBox={false}
                 value={getFieldProps("product.productName").value}
                 onChange={(e) => handleFieldChange({
@@ -280,7 +284,7 @@ export const ProductManageIndia: React.FC<{
                       labelKey: "name",
                       getListUrl: Urls.data_productcategory,
                     }}
-                    labelDirection={isMobile ? "vertical" : "horizontal"}
+                    // labelDirection={isMobile ? "vertical" : "horizontal"}
                     onChangeData={(data: any) => {
                       debugger;
                       handleFieldChange(
@@ -320,7 +324,7 @@ export const ProductManageIndia: React.FC<{
                     onChange={async (data: any) => {
                       handleFieldChange("product.productGroupID", data.value);
                     }}
-                    labelDirection={isMobile ? "vertical" : "horizontal"}
+                    // labelDirection={isMobile ? "vertical" : "horizontal"}
                     addNewOption={true}
                     addNewOptionCobonent={{
                       title: t("product_group"),
@@ -379,7 +383,7 @@ export const ProductManageIndia: React.FC<{
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <div className="flex flex-1 min-w-[240px] items-center gap-2">
+                <div className="flex flex-1 min-w-[150px] max-w-[150px] items-center gap-2">
                   <ERPDataCombobox
                     {...getFieldProps("product.basicUnitID")}
                     field={{
@@ -423,52 +427,53 @@ export const ProductManageIndia: React.FC<{
                   placeholder=""
                   type="number"
                   required={false}
-                  className="flex-1 min-w-[140px]"
+                  className="flex-1 min-w-[150px] max-w-[150px]"
                   onChangeData={(data: any) =>
                     handleFieldChange("product.unitQty", data.product.unitQty)
                   }
                 />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <ERPCheckbox
-                  {...getFieldProps("upcBarcode")}
-                  label={t("upc_barcode")}
-                  // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
-                  onChange={async (e) => {
-                    const prev = getFieldProps("*");
-                    const _data = {
-                      ...prev,
-                    };
-                    _data.upcBarcode = e.target.checked;
-                    if (
-                      e.target.checked == true &&
-                      isNullOrUndefinedOrEmpty(
-                        getFieldProps("batch.manualBarcode").value
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-end gap-2">
+                  <ERPCheckbox
+                    {...getFieldProps("upcBarcode")}
+                    label={t("upc_barcode")}
+                    // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
+                    onChange={async (e) => {
+                      const prev = getFieldProps("*");
+                      const _data = {
+                        ...prev,
+                      };
+                      _data.upcBarcode = e.target.checked;
+                      if (
+                        e.target.checked == true &&
+                        isNullOrUndefinedOrEmpty(
+                          getFieldProps("batch.manualBarcode").value
+                        )
+                      ) {
+                        const newBarcode = await api.getAsync(
+                          `${Urls.products}SelectNextGeneratedSystemBarcode`
+                        ); // Replace with actual API call
+                        _data.batch.manualBarcode = String(newBarcode);
+                      }
+                      handleDataChange(_data);
+                    }}
+                  />
+                  <ERPInput
+                    {...getFieldProps("batch.manualBarcode")}
+                    label={t(" ")}
+                    placeholder=""
+                    required={false}
+                    className="flex-1 min-w-[140px]"
+                    onChangeData={(data: any) =>
+                      handleFieldChange(
+                        "batch.manualBarcode",
+                        String(data.batch.manualBarcode)
                       )
-                    ) {
-                      const newBarcode = await api.getAsync(
-                        `${Urls.products}SelectNextGeneratedSystemBarcode`
-                      ); // Replace with actual API call
-                      _data.batch.manualBarcode = String(newBarcode);
                     }
-                    handleDataChange(_data);
-                  }}
-                />
-                <ERPInput
-                  {...getFieldProps("batch.manualBarcode")}
-                  label={t(" ")}
-                  placeholder=""
-                  type="string"
-                  required={false}
-                  className="flex-1 min-w-[140px]"
-                  onChangeData={(data: any) =>
-                    handleFieldChange(
-                      "batch.manualBarcode",
-                      String(data.batch.manualBarcode)
-                    )
-                  }
-                />
+                  />
+                </div>
                 {appSettings.productsSettings.allowMultiUnits && (
                   <ERPCheckbox
                     {...getFieldProps("mu")}
@@ -488,8 +493,8 @@ export const ProductManageIndia: React.FC<{
               </div>
 
               {/* Tax Category and Weighing Scale */}
-              <div className="flex flex-wrap gap-1">
-                <div className="flex flex-1 min-w-[240px] items-center gap-2">
+              <div className="flex flex-wrap items-end gap-1">
+                <div className="flex flex-1 min-w-[200px] max-w-[200px] items-center gap-2">
                   <ERPDataCombobox
                     {...getFieldProps("product.taxCategoryID")}
                     field={{
@@ -567,7 +572,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   onChangeData={(data: any) => {
                     handleFieldChange({
                       "product.stdPurchasePrice": data.product.stdPurchasePrice,
@@ -579,6 +584,7 @@ export const ProductManageIndia: React.FC<{
                 <ERPInput
                   {...getFieldProps("product.stdSalesPrice")}
                   label={t("sales_price")}
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   disabled={getFieldProps("product.itemType").value === "Dummy"}
                   placeholder="0.00"
                   type="number"
@@ -617,6 +623,7 @@ export const ProductManageIndia: React.FC<{
                 <ERPInput
                   {...getFieldProps("markup")}
                   ref={markupRef}
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   label={t("markup") + "%"}
                   placeholder="0.00"
                   type="number"
@@ -657,7 +664,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "batch.displayCost",
@@ -674,7 +681,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   onChangeData={(data: any) =>
                     handleFieldChange({
                       "product.mrp": data.product.mrp,
@@ -707,7 +714,7 @@ export const ProductManageIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[120px] max-w-[140px]"
                   onChangeData={(data: any) =>
                     handleFieldChange("batch.msp", data.batch.msp)
                   }
@@ -803,7 +810,7 @@ export const ProductManageIndia: React.FC<{
                     handleDataChange(_data);
                   }}
                   label={t("product_type")}
-                  className="flex-1 min-w-[240px]"
+                  className="flex-1 min-w-[200px] max-w-[250px]"
                   options={[
                     { value: "Inventory", label: "Inventory" },
                     { value: "Dummy", label: "Dummy" },

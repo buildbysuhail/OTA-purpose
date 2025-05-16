@@ -28,8 +28,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   clearAfterSelection?: boolean;
   showCheckBox?: boolean;
   searchType?: "grid" | "normal" | "modal";
-  placeholder?:string;
+  placeholder?: string;
   labelDirection?: "horizontal" | "vertical";
+  noLabel?: boolean;
 }
 
 interface LoadResult {
@@ -155,7 +156,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   onChange,
   value,
   placeholder,
-  labelDirection="vertical",
+  noLabel,
+  labelDirection = "vertical",
   clearAfterSelection = true,
   showCheckBox = true,
   searchType = "grid",
@@ -320,6 +322,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       <div className="flex items-center gap-4">
         <div className="relative w-full">
           <ERPInput
+            noLabel={noLabel}
             label={label}
             type="text"
             id={inputId || "test"}

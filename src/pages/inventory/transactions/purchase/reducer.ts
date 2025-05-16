@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  TransactionFormStateInitialData,
   TransactionFormState,
   TransactionData,
   TransactionDetail,
   TransactionMaster,
-  initialTransactionDetailData,
   FormElementState,
   Attachments,
   TransactionMaster3,
@@ -18,16 +16,17 @@ import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
+import {
+  initialTransactionDetailData,
+  TransactionFormStateInitialData,
+} from "./transaction-type-data";
 
 const InvTransactionSlice = createSlice({
   name: "invTransaction",
   initialState: TransactionFormStateInitialData,
   reducers: {
     // Set entire form state
-    formStateSet: (
-      state,
-      action: PayloadAction<TransactionFormState>
-    ) => {
+    formStateSet: (state, action: PayloadAction<TransactionFormState>) => {
       return action.payload;
     },
     // clear entire for new voucher
@@ -52,11 +51,10 @@ const InvTransactionSlice = createSlice({
         counterwiseCashLedgerId,
         allowSalesCounter,
         voucherNo,
-        rowOnly = false
+        rowOnly = false,
       } = action.payload;
-      
     },
-    
+
     // Update a specific field in the form state
     formStateHandleFieldChange: (
       state,
@@ -64,7 +62,6 @@ const InvTransactionSlice = createSlice({
         fields: { [fieldId in keyof TransactionFormState]?: any };
       }>
     ) => {
-      
       const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       Object.keys(fields).forEach((key) => {
@@ -80,20 +77,21 @@ const InvTransactionSlice = createSlice({
       });
     },
 
- // Inside the createSlice, update the reducer
-      templatesData: (
-        state,
-        action: PayloadAction<TemplateState>
-      ) => {
-        if (!state.templatesData) {
-          state.templatesData = [];
-        }
-        
-        // Only add the template if it doesn't already exist
-        if (!state.templatesData.some(template => template.templateGroup === action.payload.templateGroup)) {
-          state.templatesData.push(action.payload);
-        }
-      },
+    // Inside the createSlice, update the reducer
+    templatesData: (state, action: PayloadAction<TemplateState>) => {
+      if (!state.templatesData) {
+        state.templatesData = [];
+      }
+
+      // Only add the template if it doesn't already exist
+      if (
+        !state.templatesData.some(
+          (template) => template.templateGroup === action.payload.templateGroup
+        )
+      ) {
+        state.templatesData.push(action.payload);
+      }
+    },
     // Update a specific field in the transaction object
     formStateTransactionUpdate: (
       state,
@@ -118,17 +116,23 @@ const InvTransactionSlice = createSlice({
     formStateLoadDataUpdate: (
       state,
       action: PayloadAction<{
-          key: keyof LoadData;
-          value: any[] | TransactionMaster | TransactionValidationsData | TransactionDetail[] | string | undefined;
+        key: keyof LoadData;
+        value:
+          | any[]
+          | TransactionMaster
+          | TransactionValidationsData
+          | TransactionDetail[]
+          | string
+          | undefined;
       }>
-  ) => {
+    ) => {
       const { key, value } = action.payload;
       if (typeof value === "string" || value === undefined) {
         state.loadData[key] = value;
       } else {
         console.warn(`Invalid value type for key ${key}:`, value);
       }
-  },
+    },
 
     // Update a specific field in the master object within the transaction
     // dispatch(formStateTransactionMasterHandleFieldChange({ fields: "voucherPrefix", value: "INV123" }));
@@ -187,10 +191,7 @@ const InvTransactionSlice = createSlice({
       });
     },
     // Add multiple rows to the transaction details
-    formStateTransactionDetailsSetSlNo: (
-      state,
-      action: PayloadAction<{}>
-    ) => {
+    formStateTransactionDetailsSetSlNo: (state, action: PayloadAction<{}>) => {
       if (state.transaction.details) {
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
@@ -228,7 +229,6 @@ const InvTransactionSlice = createSlice({
       const data = initialTransactionDetailData;
       const serializedRow: TransactionDetail = {
         ...data,
-       
       };
       if (state.isRowEdit === true) {
         const index = state.transaction.details.findIndex(
@@ -260,24 +260,60 @@ const InvTransactionSlice = createSlice({
       );
     },
 
-
     // Update a specific row in the transaction details
     formStateTransactionDetailsRowUpdate: (
       state,
-      action: PayloadAction<{
-        index: number;
-        key: keyof TransactionDetail;
-        value: TransactionDetail[keyof TransactionDetail];
-      }>
+      action: PayloadAction<
+        | {
+            index: number;
+            key: keyof TransactionDetail;
+            value: TransactionDetail[keyof TransactionDetail];
+          }
+        | Array<{
+            index: number;
+            key: keyof TransactionDetail;
+            value: TransactionDetail[keyof TransactionDetail];
+          }>
+      >
     ) => {
-      const { index, key, value } = action.payload;
-      const row = state.transaction.details[index];
+      const updates = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      for (const { index, key, value } of updates) {
+       const row = state.transaction.details[index];
       if (row) {
         (state.transaction.details[index][key] as typeof value) = value;
       }
+      }
     },
 
-    
+    formStateTransdactionDetailsRowUpdate: (
+      state,
+      action: PayloadAction<
+        | {
+            index: number;
+            key: keyof TransactionDetail;
+            value: TransactionDetail[keyof TransactionDetail];
+          }
+        | Array<{
+            index: number;
+            key: keyof TransactionDetail;
+            value: TransactionDetail[keyof TransactionDetail];
+          }>
+      >
+    ) => {
+      const updates = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      for (const { index, key, value } of updates) {
+        const row = state.transaction.details[index];
+        if (row) {
+          (row[key] as typeof value) = value;
+        }
+      }
+    },
     formStateClearDetails: (state) => {
       // Iterate over all rows in details
       state.transaction.details = [];
@@ -297,9 +333,9 @@ const InvTransactionSlice = createSlice({
           action.payload.applicationSettings?.accountsSettings
             ?.defaultCostCenterID ?? 0
         );
-        
+
         state.transaction.details.splice(index, 1);
-        
+
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
             ...x,
@@ -315,14 +351,14 @@ const InvTransactionSlice = createSlice({
     },
 
     // Remove a specific row from the transaction details by index
-    formStateClearRowForNew: (state,
+    formStateClearRowForNew: (
+      state,
       action: PayloadAction<{
         index: number;
       }>
     ) => {
       const { index } = action.payload;
       state.transaction.details[index] = initialTransactionDetailData;
-      
     },
 
     // Remove a specific row from the transaction details by index
@@ -349,13 +385,15 @@ const InvTransactionSlice = createSlice({
 
       (Object.keys(fields) as (keyof TransactionMaster)[]).forEach((key) => {
         const fieldValue = fields[key];
-    const isDateField =
-              (state.transaction.master[
-                key as keyof TransactionMaster
-              ] as typeof fieldValue) instanceof Date;
+        const isDateField =
+          (state.transaction.master[
+            key as keyof TransactionMaster
+          ] as typeof fieldValue) instanceof Date;
         // Explicit assertion to satisfy TypeScript
         (state.transaction.master[key] as TransactionMaster[typeof key]) =
-        isDateField ? new Date(fieldValue).toISOString() :fieldValue as TransactionMaster[typeof key];
+          isDateField
+            ? new Date(fieldValue).toISOString()
+            : (fieldValue as TransactionMaster[typeof key]);
       });
     },
 
@@ -381,7 +419,6 @@ const InvTransactionSlice = createSlice({
     //   });
     // },
 
-   
     // Clear the form state to initial values
     formStateReset: () => {
       return TransactionFormStateInitialData;
@@ -486,7 +523,6 @@ const InvTransactionSlice = createSlice({
       state.formElements.dxGrid.disabled = true;
     },
   },
- 
 });
 
 export const {
@@ -514,7 +550,7 @@ export const {
   formStateTransactionAttachmentsRowRemove,
   formStateMasterHandleFieldChange,
   formStateTransactionMaster3HandleFieldChange,
-  formStateLoadDataUpdate
+  formStateLoadDataUpdate,
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

@@ -13,7 +13,7 @@ export const calculateTotal = (state: TransactionFormState): number => {
   // state.transaction.master.voucherType !== "MJV"
   //   ? 
    return state.transaction.details.reduce(
-        (sum, detail) => sum + (Number(detail.netAmount) || 0),
+        (sum, detail) => sum + (Number(detail.netValue) || 0),
         // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
         0
       )
@@ -137,6 +137,115 @@ export const validateTransactionDate = (
 
   return { valid: isValid, message };
 };
+export function calculateRowAmount(formState: TransactionFormState, rowIndex: number = -1, currentEditedField: string): void {
+  try {
+    if(rowIndex === -1) {
+      return;
+    }
+    const row = formState.transaction.details[rowIndex];
+
+    if (!row.productID) return;
+
+    const {
+      qty,
+      free,
+      unitPrice,
+      additionalExpense,
+      vatPerc,
+      discount,
+      discPerc,
+      ratePlusTax,
+      cstPerc,
+      cst,
+      salesPrice,
+      actualSalesPrice,
+    } = row;
+
+    let qtyVal = qty;
+    let rate = unitPrice;
+    let gross = parseFloat((qtyVal * rate).toFixed(5));
+    let disc = discount;
+    let discPercVal = discPerc;
+    let vatPercVal = vatPerc;
+    let exciseTaxPer = cstPerc ?? 0;
+    let exciseTax = cst ?? 0;
+    let ratePlusTaxVal = ratePlusTax ?? 0;
+    let addAmt = additionalExpense ?? 0;
+
+    if (ratePlusTaxVal > 0 && currentEditedField === 'ratePlusTax') {
+      const divisor = (vatPercVal / 100) + 1;
+      const qty1 = qtyVal !== 0 ? qtyVal : 1;
+      rate = parseFloat(((ratePlusTaxVal * qty1) / divisor / qty1).toFixed(3));
+      row.unitPrice = rate;
+    }
+
+    if (rate === 0) {
+      rate = unitPrice;
+    }
+
+    if (discPercVal > 0 && currentEditedField !== 'discount') {
+      const expectedDisc = parseFloat(((discPercVal * gross) / 100).toFixed(5));
+      if (expectedDisc !== disc) {
+        disc = expectedDisc;
+      }
+    }
+
+    if (rate > 0 && currentEditedField === 'discount') {
+      discPercVal = parseFloat(((100 * disc) / gross).toFixed(5));
+    }
+
+    const netValueBeforeExcise = gross - disc;
+    exciseTax = (netValueBeforeExcise * exciseTaxPer) / 100;
+    const netValue = netValueBeforeExcise + exciseTax;
+
+    row.cst = parseFloat(exciseTax.toFixed(4));
+    row.netValue = parseFloat(netValue.toFixed(4));
+    row.discPerc = parseFloat(discPercVal.toFixed(4));
+    row.discount = parseFloat(disc.toFixed(2));
+    row.totalAddExpense = parseFloat((addAmt * qtyVal).toFixed(2));
+
+    const vat = parseFloat(((netValue * vatPercVal) / 100).toFixed(4));
+
+    let netVal = rate - (rate * discPercVal / 100);
+    let cost = Settings.InventorySettings.setProductCostWithVATAmount
+      ? parseFloat((netVal + (netVal * vatPercVal / 100)).toFixed(2))
+      : netVal;
+
+    row.cost = cost;
+
+    row.vatAmount = parseFloat(vat.toFixed(4));
+
+    const netAmount = parseFloat((netValue + vat).toFixed(4));
+    row.gross = gross;
+    row.total = parseFloat(netAmount.toFixed(2));
+
+    // Calculate margin
+    calculateMarginPerRow(rowIndex); // Ensure this function exists and handles TS logic
+
+    let sp = actualSalesPrice && actualSalesPrice > 0 ? actualSalesPrice : salesPrice;
+    if (Settings.InventorySettings.showRateBeforeTax) {
+      sp = sp / (1 + vatPercVal / 100);
+    }
+
+    if (sp > 0) {
+      const profit = qtyVal * (sp - netVal);
+      row.profit = parseFloat(profit.toFixed(2));
+
+      const profitPercentage = parseFloat((((sp - netVal) / netVal) * 100).toFixed(3));
+      row.profitPercentage = profitPercentage;
+    } else {
+      row.profit = 0;
+    }
+
+    if (chkAutoCalculation.checked || rowIndex < 15) {
+      // You must define how to handle auto summaries in your context
+      calculateTotal();
+    }
+
+  } catch (error) {
+    console.error('Error in calculateRowAmount:', error);
+  }
+}
 export const isDirtyTransaction = (
   prevState: any,
   currentState: any

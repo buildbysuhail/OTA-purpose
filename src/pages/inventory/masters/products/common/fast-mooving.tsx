@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../../../helpers/api-client";
 import Urls from "../../../../../redux/urls";
-import {
-  isNullOrUndefinedOrEmpty,
-  isNullOrUndefinedOrZero,
-} from "../../../../../utilities/Utils";
+import {  isNullOrUndefinedOrEmpty,  isNullOrUndefinedOrZero,} from "../../../../../utilities/Utils";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 
 interface ButtonData {
@@ -53,7 +49,7 @@ const POSFastMovingItems: React.FC = () => {
         const responseData: FastMovingProductsDto[] = response || [];
 
         const buttonData: FastMovingProductsDto[] = [];
-debugger;
+        debugger;
         for (let i = 1; i <= 12; i++) {
           if (Array.isArray(responseData)) {
             const match = responseData.find((item) => item.displayOrder === i);
@@ -196,9 +192,9 @@ debugger;
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 w-[350px] text-white">
           {buttons.map((button) => (
             <ERPButton
-            className={`${button.displayOrder === formData.displayOrder
-              ? "text-white"
-              : "text-black"}`}
+              className={`${button.displayOrder === formData.displayOrder
+                ? "text-white"
+                : "text-black"}`}
               backgroundColor={
                 button.displayOrder === formData.displayOrder
                   ? "bg-blue"
@@ -252,7 +248,7 @@ debugger;
           </div>
 
           <ERPInput
-            label={t("autoBarcode")}
+            label={t("auto_barcode")}
             className="min-w-[250px]"
             type="text"
             disabled
@@ -268,7 +264,7 @@ debugger;
             className="max-w-[250px]"
             value={formData.productName}
             onChange={handleInputChange}
-            label={t("productName")}
+            label={t("product_name")}
             id={""}
           />
 
@@ -285,13 +281,13 @@ debugger;
 
           <div className="flex items-end gap-2">
             <ERPInput
-            disabled
+              disabled
               type="number"
               name="stdSalesPrice"
               className="min-w-[250px]"
               value={formData.stdSalesPrice}
               onChange={handleInputChange}
-              label={t("stdSalesPrice")}
+              label={t("std_sales_price")}
               id={"stdSalesPrice"}
             />
             <ERPButton
@@ -311,7 +307,11 @@ debugger;
               label={t("short_name")}
               id={""}
             />
-            <ERPButton title={t("set")} onClick={handleSet} variant="primary" />
+            <ERPButton
+              title={t("set")}
+              onClick={handleSet}
+              variant="primary"
+            />
           </div>
         </div>
       </div>

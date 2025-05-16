@@ -28,7 +28,7 @@ const StockCommon: React.FC<{
   const { t } = useTranslation("inventory");
   const [showGrid, setShowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -49,7 +49,7 @@ const StockCommon: React.FC<{
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy"
       },
       {
         dataField: "partyName",
@@ -106,10 +106,10 @@ const StockCommon: React.FC<{
               cellElement.data?.inwardQty == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.inwardQty),
-                    false,
-                    4
-                  );
+                  Number.parseFloat(cellElement.data.inwardQty),
+                  false,
+                  4
+                );
             return {
               ...exportCell,
               text: value,
@@ -120,10 +120,10 @@ const StockCommon: React.FC<{
             return cellElement.data?.inwardQty == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.inwardQty),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.inwardQty),
+                false,
+                4
+              );
           }
         },
       },
@@ -146,10 +146,10 @@ const StockCommon: React.FC<{
               cellElement.data?.outwardQty == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.outwardQty),
-                    false,
-                    4
-                  );
+                  Number.parseFloat(cellElement.data.outwardQty),
+                  false,
+                  4
+                );
             return {
               ...exportCell,
               text: value,
@@ -160,10 +160,10 @@ const StockCommon: React.FC<{
             return cellElement.data?.outwardQty == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.outwardQty),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.outwardQty),
+                false,
+                4
+              );
           }
         },
       },
@@ -186,10 +186,10 @@ const StockCommon: React.FC<{
               cellElement.data?.balance == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.balance),
-                    false,
-                    4
-                  );
+                  Number.parseFloat(cellElement.data.balance),
+                  false,
+                  4
+                );
             return {
               ...exportCell,
               text: value,
@@ -200,10 +200,10 @@ const StockCommon: React.FC<{
             return cellElement.data?.balance == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.balance),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.balance),
+                false,
+                4
+              );
           }
         },
       },
@@ -241,7 +241,7 @@ const StockCommon: React.FC<{
       },
       {
         dataField: "stock",
-        caption: "stock",
+        caption: t("stock"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -250,7 +250,7 @@ const StockCommon: React.FC<{
       },
       {
         dataField: "stockDetails",
-        caption: "stock_details",
+        caption: t("stock_details"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -259,7 +259,7 @@ const StockCommon: React.FC<{
       },
       {
         dataField: "warehouseID",
-        caption: "warehouse_id",
+        caption: t("warehouse_id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
@@ -308,12 +308,12 @@ const StockCommon: React.FC<{
         </div>
         <div className="flex items-center gap-2">
           <ERPButton
-            title="show"
+            title={t("show")}
             variant="primary"
             onClick={handleShowClick}
           />
           <ERPButton
-            title="wh/w"
+            title={t("wh/w")}
             variant="secondary"
             onClick={handleWhWClick}
           />
@@ -342,13 +342,13 @@ const StockCommon: React.FC<{
       <ERPModal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title="Warehouse Details"
+        title={t("warehouse_details")}
         height={450}
         width={800}
         content={
           <ErpDevGrid
             columns={modalColumns}
-            gridHeader="Warehouse Details"
+            gridHeader={t("warehouse_details")}
             dataUrl={`${Urls.products}SelectWarehouseDetails`} // Adjust the URL as needed
             method={ActionType.POST}
             postData={{ productBatchID: getFieldProps("batch.productBatchID").value }}
@@ -358,11 +358,11 @@ const StockCommon: React.FC<{
             // hideDefaultSearchPanel={true}
             hideGridAddButton={true}
             hideGridHeader={true}
-            // enableScrollButton={false}
-            // ShowGridPreferenceChooser={false}
-            // showPrintButton={false}
-            // allowSearching={false}
-            // allowExport={false}
+          // enableScrollButton={false}
+          // ShowGridPreferenceChooser={false}
+          // showPrintButton={false}
+          // allowSearching={false}
+          // allowExport={false}
           />
         }
       />

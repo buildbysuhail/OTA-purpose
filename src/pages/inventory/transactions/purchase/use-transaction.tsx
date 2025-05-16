@@ -21,10 +21,11 @@ import { customJsonParse, modelToBase64Unicode } from "../../../../utilities/jso
 import { isNullOrUndefinedOrZero, isNullOrUndefinedOrEmpty, isEnterKey } from "../../../../utilities/Utils";
 import { BillwiseData } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, loadTempRows } from "./reducer";
+import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, loadTempRows, formStateTransactionDetailsRowUpdate } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
-import { UserConfig, TransactionFormState, transactionInitialData, TransactionData, Attachments, TransactionMaster, initialTransactionDetailData, TransactionDetail, TransactionFormStateInitialData } from "./transaction-types";
+import { UserConfig, TransactionFormState, TransactionData, Attachments, TransactionMaster,  TransactionDetail,  } from "./transaction-types";
+import { TransactionFormStateInitialData } from "./transaction-type-data";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -2355,6 +2356,160 @@ export const useTransaction = (
     }
   };
 
+const TransactionDetailsFieldChange =  async(
+  index: number,
+        columnName: keyof TransactionDetail,
+        value: TransactionDetail[keyof TransactionDetail],
+    ): Promise<void> => {
+  
+  switch (columnName) {
+    case "unitPriceFC":
+      if (formState.transaction.master.voucherForm === "Import") {
+        const detail = formState.transaction.details[index];
+        
+        const unitPrice = detail.unitPriceFC * formState.transaction.master.exchangeRate;
+        const grossFC = detail.unitPriceFC * detail.qty;
+        formStateTransactionDetailsRowUpdate([{index, key: "unitPrice",value: unitPrice}
+          , {index, key: "grossFC",value: grossFC}
+        ])
+      }
+      break;
+      
+    case "qty":
+    case "unitPrice":
+      formState.transaction.details[index][columnName as keyof Pick<TransactionDetail, 'Qty' | 'UnitPrice'>] = 
+        polosysFramework.general.val(value);
+      calculateRowAmount(index);
+      break;
+      
+    case "margin":
+      formState.transaction.details[index].Margin = polosysFramework.general.val(value);
+      break;
+      
+    case "salesPrice":
+      {
+        const detail = formState.transaction.details[index];
+        detail.SalesPrice = polosysFramework.general.val(value);
+        
+        const sp = detail.SalesPrice;
+        const netAmount = polosysFramework.general.val(detail.Total);
+        const qty = polosysFramework.general.val(detail.Qty) || 1;
+        
+        const cost = netAmount / qty;
+        let marginPerc = 0;
+        
+        if (cost !== 0) {
+          marginPerc = ((sp / cost) - 1) * 100;
+        }
+        
+        detail.Margin = marginPerc;
+      }
+      break;
+      
+    case "product":
+      {
+        if (settings.inventorySettings.usePopupWindowForItemSearch) return;
+        
+        if (value.trim() !== "") {
+          formState.transaction.details[index].Product = value;
+          
+          let searchText = "";
+          if (value.trim() === "%") return;
+          
+          if (chkInSearch.checked && value.length > 2) {
+            searchText = "%" + value;
+          } else {
+            searchText = value;
+          }
+          
+          if (settings.inventorySettings.advancedProductSearching) {
+            searchText = searchText.replace(/ /g, "%");
+          }
+          
+          const products = new polosysERPInventoryClass.masters.products();
+          let dt;
+          
+          if (chkCodeSearch.checked) {
+            dt = products.getProductsForPurchaseTransactionsView(searchText, true);
+          } else {
+            dt = products.getProductsForPurchaseTransactionsView(searchText);
+          }
+          
+          // Populate product grid
+          const currentCell = dgvInventory.getCurrentCellDetails();
+          const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
+          
+          pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
+          pnlProductBatches.left = cellRect.left;
+          
+          pnlProductBatches.visible = true;
+          dgvProduct.visible = true;
+          dgvProduct.width = pnlProductBatches.width;
+          dgvProductBatches.visible = false;
+          lblproductName.visible = false;
+          
+          dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
+          dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
+          
+          pnlProductBatches.bringToFront();
+          setProductPanelSize();
+          
+          dgvProduct.columns["ProductID"].visible = false;
+          dgvProduct.loadGridViewDesignSettings();
+        } else {
+          pnlProductBatches.visible = false;
+        }
+      }
+      break;
+      
+    case "pCode":
+      {
+        if (settings.inventorySettings.usePopupWindowForItemSearch) return;
+        
+        formState.transaction.details[index].PCode = value;
+        
+        if (value !== "" && value !== "%") {
+          let searchText = "";
+          
+          if (chkInSearch.checked) {
+            searchText = "%" + value;
+          } else {
+            searchText = value;
+          }
+          
+          const products = new polosysERPInventoryClass.masters.products();
+          const dt = products.getProductsForPurchaseTransactionsView(searchText, true);
+          
+          // Populate product grid
+          const currentCell = dgvInventory.getCurrentCellDetails();
+          const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
+          
+          pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
+          pnlProductBatches.left = cellRect.left;
+          
+          pnlProductBatches.visible = true;
+          dgvProduct.visible = true;
+          dgvProduct.width = pnlProductBatches.width;
+          dgvProductBatches.visible = false;
+          lblproductName.visible = false;
+          
+          setProductPanelSize();
+          
+          dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
+          dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
+          
+          dgvProduct.columns["ProductID"].visible = false;
+          dgvProduct.loadGridViewDesignSettings();
+        } else {
+          pnlProductBatches.visible = false;
+          dgvProduct.visible = false;
+        }
+      }
+      break;
+  }
+};
+
+
   return {
     undoEditMode,
     getNextVoucherNumber,
@@ -2391,5 +2546,6 @@ export const useTransaction = (
     // billWiseExcludedTransactions,
     getDrCr,
     clearRow
+  
   };
 };

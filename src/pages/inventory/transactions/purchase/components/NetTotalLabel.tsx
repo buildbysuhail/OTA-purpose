@@ -13,7 +13,10 @@ const NetTotalLabel: React.FC<VoucherElementProps> = ({ formState, t }) => {
     //   boxed
     //   textAlign="right"
     // />
-    <span>{t(formState.formElements.netTotal.label)}:{formState.netTotal}</span>
+    <div className="flex items-center justify-between">
+      <span>{t(formState.formElements.netTotal.label)}:</span>
+      <span>{formState.netTotal}</span>
+    </div>
   );
 };
 

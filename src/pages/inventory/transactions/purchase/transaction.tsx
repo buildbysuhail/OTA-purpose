@@ -6,14 +6,12 @@ import React, {
   useState,
 } from "react";
 import {
+  TransactionProps,
+  TransactionDetail,
+} from "./transaction-types";
+import {
   TransactionData,
   TransactionFormState,
-  TransactionFormStateInitialData,
-  transactionInitialData,
-  TransactionMasterInitialData,
-  TransactionProps,
-  initialFormElements,
-  TransactionDetail,
 } from "./transaction-types";
 import {
   useAppDispatch,
@@ -131,13 +129,16 @@ import NetAmountInput from "./components/NetAmountInput";
 import BillDiscountInput from "./components/BillDiscountInput";
 import GrandTotalLabel from "./components/GrandTotalLabel";
 import NetTotalLabel from "./components/NetTotalLabel";
-import DataGridTest from "../../masters/test/dataGrid";
+import DataGridTest from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import GrnNumber from "./components/grn-Number";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import BottomSidebarGrid from "./bottom-sidebar-grid";
 import ProductSummary from "./components/Product-summary";
 import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
+import { transactionInitialData, TransactionFormStateInitialData, initialFormElements } from "./transaction-type-data";
+import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+
 
 interface BilledItem {
   id?: number;
@@ -243,6 +244,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setIsDropUpOpen(!isDropUpOpen);
   };
 
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasAnimated(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleButtonClick = () => {
     setIsModalOpen(true); // Open the modal
   };
@@ -273,7 +284,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
     const selectedIndexes = e.component.getSelectedRowKeys();
     const row = formState?.transaction?.details.find(
-      (x) => x.slNo == selectedIndexes[0]
+      (x: any) => x.slNo == selectedIndexes[0]
     );
     if (selectedIndexes.length > 0 && row) {
       if (deviceInfo.isMobile) {
@@ -631,7 +642,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.templates = templates;
           _formState.templatesData = templatesData;
           const _template = templatesData?.find(
-            (x) => x.templateGroup == _formState.transaction.master.voucherType
+            (x: any) => x.templateGroup == _formState.transaction.master.voucherType
           );
           if (_template != undefined) {
             _formState.template = _template;
@@ -722,700 +733,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
   const [key, setKey] = useState<string>("key");
 
-  const columns: DevGridColumn[] = useMemo(() => {
-    const cols = [
-      {
-        visible: !deviceInfo.isMobile,
-        dataField: "slNo",
-        caption: t("si_no"),
-        width: 60,
-        cellRender: (cellData: any) => (
-          <div
-            className={
-              cellData.data?.isValid != undefined &&
-                cellData.data?.isValid != true
-                ? "grid-error-cell"
-                : ""
-            }
-            title={
-              cellData.data?.isValid != undefined &&
-                (cellData.data?.isValid != true) != true
-                ? t("validation_failed")
-                : ""
-            } // Add validation message as tooltip
-          >
-            {cellData.value}
-          </div>
-        ),
-      },
-      {
-        dataField: "code",
-        caption: t("code"),
-        width: 50,
-        visible: true,
-      },
-      {
-        dataField: "barCode",
-        caption: t("bar_code"),
-        width: 100,
-        visible: true,
-      },
-      {
-        dataField: "mBarcode",
-        caption: t("m_barcode"),
-        width: 70,
-        visible: true,
-      },
-      {
-        dataField: "itemBatchID",
-        caption: t("item_batch_id"),
-        width: 100,
-        visible: true,
-      },
-      {
-        dataField: "product",
-        caption: t("product"),
-        width: 150,
-        visible: true,
-        allowEditing: true
-      },
-      {
-        dataField: "hsnCode",
-        caption: t("hsn_code"),
-        width: 72,
-        visible: true,
-      },
-      {
-        dataField: "productID",
-        caption: t("product_id"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "brand",
-        caption: t("brand"),
-        width: 40,
-        visible: true,
-      },
-      {
-        dataField: "warranty",
-        caption: t("warranty"),
-        width: 70,
-        visible: true,
-      },
-      {
-        dataField: "brandID",
-        caption: t("brand_id"),
-        width: 100,
-        visible: true,
-      },
-      {
-        dataField: "qty",
-        caption: t("qty"),
-        width: 40,
-        visible: true,
-      },
-      {
-        dataField: "free",
-        caption: t("free"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit",
-        caption: t("unit"),
-        width: 40,
-        visible: true,
-      },
-      {
-        dataField: "unitID",
-        caption: t("unit_id"),
-        width: 100,
-        visible: true,
-      },
-      {
-        dataField: "mrp",
-        caption: t("mrp"),
-        width: 66,
-        visible: true,
-      },
-      {
-        dataField: "unitPrice",
-        caption: t("unit_price"),
-        width: 75,
-        visible: true,
-      },
-      {
-        dataField: "gross",
-        caption: t("gross"),
-        width: 75,
-        visible: true,
-      },
-      {
-        dataField: "discPercent",
-        caption: t("disc_percent"),
-        width: 40,
-        visible: true,
-      },
-      {
-        dataField: "discount",
-        caption: t("discount"),
-        width: 55,
-        visible: true,
-      },
-      {
-        dataField: "netValue",
-        caption: t("net_value"),
-        width: 75,
-        visible: true,
-      },
-      {
-        dataField: "total",
-        caption: t("total"),
-        width: 80,
-        visible: true,
-      },
-      {
-        dataField: "stock",
-        caption: t("stock"),
-        width: 75,
-        visible: true,
-      },
-      {
-        dataField: "stockDetails",
-        caption: t("stock_details"),
-        width: 100,
-        visible: true,
-      },
-      {
-        dataField: "margin",
-        caption: t("margin"),
-        width: 50,
-        visible: true,
-      },
-      {
-        dataField: "salesPrice",
-        caption: t("sales_price"),
-        width: 67,
-        visible: true,
-      },
-      {
-        dataField: "lpr",
-        caption: t("lpr"),
-        width: 70,
-        visible: false,
-      },
-      {
-        dataField: "lpc",
-        caption: t("lpc"),
-        width: 70,
-        visible: false,
-      },
-      {
-        dataField: "sticker",
-        caption: t("sticker"),
-        width: 20,
-        visible: false,
-      },
-      {
-        dataField: "profit",
-        caption: t("profit"),
-        width: 75,
-        visible: true,
-      },
-      {
-        dataField: "size",
-        caption: t("size"),
-        width: 30,
-        visible: false,
-      },
-      {
-        dataField: "vatPercent",
-        caption: t("vat_percent"),
-        width: 35,
-        visible: false,
-      },
-      {
-        dataField: "vat",
-        caption: t("vat"),
-        width: 55,
-        visible: false,
-      },
-      {
-        dataField: "cst",
-        caption: t("cst"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "cstPercent",
-        caption: t("cst_percent"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "cost",
-        caption: t("cost"),
-        width: 60,
-        visible: true,
-      },
-      {
-        dataField: "batchNo",
-        caption: t("batch_no"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "mr",
-        caption: t("mr"),
-        width: 30,
-        visible: false,
-      },
-      {
-        dataField: "mfdDate",
-        caption: t("mfd_date"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "expDate",
-        caption: t("exp_date"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "expDays",
-        caption: t("exp_days"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "bd",
-        caption: t("bd"),
-        width: 30,
-        visible: false,
-      },
-      {
-        dataField: "pb",
-        caption: t("pb"),
-        width: 30,
-        visible: false,
-      },
-      {
-        dataField: "barcodePrinted",
-        caption: t("barcode_printed"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "batchCreated",
-        caption: t("batch_created"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "x",
-        caption: t("x"),
-        width: 20,
-        visible: true,
-      },
-      {
-        dataField: "productDescription",
-        caption: t("product_description"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "sl",
-        caption: t("sl"),
-        width: 30,
-        visible: false,
-      },
-      {
-        dataField: "minSalePrice",
-        caption: t("min_sale_price"),
-        width: 70,
-        visible: false,
-      },
-      {
-        dataField: "additionalExpenses",
-        caption: t("additional_expenses"),
-        width: 60,
-        visible: false,
-      },
-      {
-        dataField: "unitPriceFC",
-        caption: t("unit_price_fc"),
-        width: 90,
-        visible: false,
-      },
-      {
-        dataField: "colour",
-        caption: t("colour"),
-        width: 70,
-        visible: false,
-      },
-      {
-        dataField: "nos",
-        caption: t("nos"),
-        width: 50,
-        visible: false,
-      },
-      {
-        dataField: "totalAddExpenses",
-        caption: t("total_add_expenses"),
-        width: 70,
-        visible: false,
-      },
-      {
-        dataField: "grossConvert",
-        caption: t("gross_convert"),
-        width: 50,
-        visible: false,
-      },
-      {
-        dataField: "grossFC",
-        caption: t("gross_fc"),
-        width: 75,
-        visible: false,
-      },
-      {
-        dataField: "unitD2",
-        caption: t("unit_d2"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit2Qty",
-        caption: t("unit2_qty"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit2SalesRate",
-        caption: t("unit2_sales_rate"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit2MRP",
-        caption: t("unit2_mrp"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit2MBarcode",
-        caption: t("unit2_m_barcode"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "sq2",
-        caption: t("sq2"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unitD3",
-        caption: t("unit_d3"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit3Qty",
-        caption: t("unit3_qty"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit3SalesRate",
-        caption: t("unit3_sales_rate"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit3MRP",
-        caption: t("unit3_mrp"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit3MBarcode",
-        caption: t("unit3_m_barcode"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "sq3",
-        caption: t("sq3"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "tagQty",
-        caption: t("tag_qty"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "barcodeTagPrint",
-        caption: t("barcode_tag_print"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "barcodeUnit2Print",
-        caption: t("barcode_unit2_print"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "barcodeUnit3Print",
-        caption: t("barcode_unit3_print"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "location",
-        caption: t("location"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "grTransDetails",
-        caption: t("gr_trans_details"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "arabicName",
-        caption: t("arabic_name"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "supplierPCode",
-        caption: t("supplier_p_code"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "poTransDetails",
-        caption: t("po_trans_details"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "rate",
-        caption: t("rate"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "warehouse",
-        caption: t("warehouse"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "sortOrder",
-        caption: t("sort_order"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "profitPercent",
-        caption: t("profit_percent"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "schemeDisc",
-        caption: t("scheme_disc"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "memo",
-        caption: t("memo"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "me",
-        caption: t("me"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "rowNumber",
-        caption: t("row_number"),
-        width: 55,
-        visible: true,
-      },
-      {
-        dataField: "actualSalesPrice",
-        caption: t("actual_sales_price"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit2",
-        caption: t("unit2"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "unit3",
-        caption: t("unit3"),
-        width: 100,
-        visible: false,
-      },
-      {
-        dataField: "cgstPercent",
-        caption: t("cgst_percent"),
-        width: 60,
-        visible: true,
-      },
-      {
-        dataField: "cgst",
-        caption: t("cgst"),
-        width: 65,
-        visible: true,
-      },
-      {
-        dataField: "sgstPercent",
-        caption: t("sgst_percent"),
-        width: 60,
-        visible: true,
-      },
-      {
-        dataField: "sgst",
-        caption: t("sgst"),
-        width: 65,
-        visible: true,
-      },
-      {
-        dataField: "igstPercent",
-        caption: t("igst_perc_percent"),
-        width: 60,
-        visible: false,
-      },
-      {
-        dataField: "igst",
-        caption: t("igst"),
-        width: 65,
-        visible: false,
-      },
-      {
-        dataField: "cessPercent",
-        caption: t("cess_percent"),
-        width: 60,
-        visible: true,
-      },
-      {
-        dataField: "cessAmt",
-        caption: t("cess_amt"),
-        width: 65,
-        visible: true,
-      },
-      {
-        dataField: "addnlCessPercent",
-        caption: t("addnl_cess_percent"),
-        width: 60,
-        visible: false,
-      },
-      {
-        dataField: "addnlCessAmt",
-        caption: t("addnl_cess_amt"),
-        width: 61,
-        visible: true,
-      },
-      {
-        dataField: "mrpFinal",
-        caption: t("mrp"),
-        width: 100,
-        visible: true,
-      },
-      // {
-      //   dataField: "action",
-      //   caption: t("action"),
-      //   visible: true,
-      //   cellRenderDynamicRootState: (
-      //     cellElement: any,
-      //     cellInfo: any,
-      //     state: RootState
-      //   ) =>
-      //     state.InventoryTransaction.formElements.pnlMasters?.disabled ==
-      //     true ? null : (
-      //       <button
-      //         onClick={(e) => {
-      //           e.preventDefault();
-      //           handleRemoveItem(cellElement.rowIndex);
-      //         }}
-      //         // disabled={
-      //         //   (formState.isRowEdit &&
-      //         //     cellElement.data.transactionDetailID ==
-      //         //       formState.row.transactionDetailID) ||
-      //         //   formState.formElements.pnlMasters?.disabled
-      //         // }
-      //         className="ti-btn-link"
-      //         type="button"
-      //       >
-      //         <i
-      //           className="ri-delete-bin-5-line delete-icon"
-      //           title={t("remove")}
-      //         ></i>
-      //       </button>
-      //     ),
-      // },
-    ].filter((column) => {
-      const { gridColumns } = formState.formElements;
-      if (
-        column.dataField === "amount" &&
-        gridColumns?.showAmountColumn === false
-      )
-        return false;
-      if (column.dataField === "drCr" && gridColumns?.showDrCr !== true)
-        return false;
-      if (column.dataField === "chequeNo" && gridColumns?.showChqNo !== true)
-        return false;
-      if (
-        column.dataField === "chequeDate" &&
-        gridColumns?.showChqDate !== true
-      )
-        return false;
-      if (column.dataField === "bankName" && gridColumns?.showBankName !== true)
-        return false;
-      if (
-        column.dataField === "nameOnCheque" &&
-        gridColumns?.showNameOnCheque !== true
-      )
-        return false;
-      if (
-        column.dataField === "chequeStatus" &&
-        gridColumns?.showChequeStatus !== true
-      )
-        return false;
-      if (
-        column.dataField === "paymentType" &&
-        gridColumns?.showPaymentType !== true
-      )
-        return false;
-      if (column.dataField === "debit" && gridColumns?.showDebitColumn !== true)
-        return false;
-      if (
-        column.dataField === "credit" &&
-        gridColumns?.showCreditColumn !== true
-      )
-        return false;
-      return true;
-    });
-    console.log(cols);
-    setKey(modelToBase64Unicode(cols));
-    return cols;
-  }, [formState.formElements.gridColumns]);
-
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -1497,99 +814,801 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
   //for demo purpouse 
   // Define the structure of an empty row based on visible columns
-  const getEmptyRow = useCallback(() => {
-    const emptyRow: any = {};
-    columns.forEach((col) => {
-      if (col.dataField) {
-        switch (col.dataField) {
-          case "slNo":
-            emptyRow[col.dataField] = 1; // Start with 1 for serial number
-            break;
-          case "qty":
-          case "free":
-          case "mrp":
-          case "unitPrice":
-          case "gross":
-          case "discPercent":
-          case "discount":
-          case "netValue":
-          case "total":
-          case "stock":
-          case "margin":
-          case "salesPrice":
-          case "lpr":
-          case "lpc":
-          case "profit":
-          case "size":
-          case "vatPercent":
-          case "vat":
-          case "cst":
-          case "cstPercent":
-          case "cost":
-          case "mr":
-          case "expDays":
-          case "bd":
-          case "pb":
-          case "nos":
-          case "unitPriceFC":
-          case "grossFC":
-          case "unit2Qty":
-          case "unit2SalesRate":
-          case "unit2MRP":
-          case "unit3Qty":
-          case "unit3SalesRate":
-          case "unit3MRP":
-          case "tagQty":
-          case "additionalExpenses":
-          case "totalAddExpenses":
-          case "grossConvert":
-          case "sq2":
-          case "sq3":
-          case "rowNumber":
-          case "cgstPercent":
-          case "cgst":
-          case "sgstPercent":
-          case "sgst":
-          case "igstPercent":
-          case "igst":
-          case "cessPercent":
-          case "cessAmt":
-          case "addnlCessPercent":
-          case "addnlCessAmt":
-          case "mrpFinal":
-            emptyRow[col.dataField] = 0; // Numeric fields default to 0
-            break;
-          case "barcodePrinted":
-          case "batchCreated":
-          case "barcodeTagPrint":
-          case "barcodeUnit2Print":
-          case "barcodeUnit3Print":
-            emptyRow[col.dataField] = false; // Boolean fields default to false
-            break;
-          default:
-            emptyRow[col.dataField] = ""; // String fields default to empty string
-            break;
-        }
-      }
-    });
-    return emptyRow;
-  }, [columns]);
-  const [data, setData] = useState<any[]>(() => {
-    return formState.transaction.details.length > 0
-      ? formState.transaction.details
-      : [getEmptyRow()];
-  });
-  useEffect(() => {
-    setData(
-      formState.transaction.details.length > 0
-        ? formState.transaction.details
-        : [getEmptyRow()]
-    );
-  }, [formState.transaction.details, getEmptyRow]);
 
+  const [data, setData] = useState<any[]>(formState.transaction.details);
   const handleAddData = (newItem: any) => {
     setData((prev) => [...prev, newItem]);
   };
+
+  const purchaseGridCol : DevGridColumn[] = useMemo(
+    () => [
+      {
+        dataField: "slNo",
+        caption: t("sl_no"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 70,
+        isLocked: true,
+      },
+      {
+        dataField: "pCode",
+        caption: t("p_code"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "mrp",
+        caption: t("mrp"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "barCode",
+        caption: t("bar_code"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "productBatchID",
+        caption: t("product_batch_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "product",
+        caption: t("product"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+      },
+      {
+        dataField: "productID",
+        caption: t("product_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "brand",
+        caption: t("brand"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "brandID",
+        caption: t("brand_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "qty",
+        caption: t("qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "free",
+        caption: t("free"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit",
+        caption: t("unit"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "unitID",
+        caption: t("unit_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unitPrice",
+        caption: t("unit_price"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "gross",
+        caption: t("gross"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "discPerc",
+        caption: t("disc_perc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "discount",
+        caption: t("discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "netValue",
+        caption: t("net_value"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "total",
+        caption: t("total"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "manualBarcode",
+        caption: t("manual_barcode"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "stockDetails",
+        caption: t("stock_details"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+      },
+      {
+        dataField: "margin",
+        caption: t("margin"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("sales_price"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "lpr",
+        caption: t("lpr"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "lpc",
+        caption: t("lpc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "stickerQty",
+        caption: t("sticker_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "profit",
+        caption: t("profit"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "size",
+        caption: t("size"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "vatPerc",
+        caption: t("vat_perc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "vatAmount",
+        caption: t("vat_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "cst",
+        caption: t("cst"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "cstPerc",
+        caption: t("cst_perc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "cost",
+        caption: t("cost"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "batchNo",
+        caption: t("batch_no"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "mfdDate",
+        caption: t("mfd_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "expDate",
+        caption: t("exp_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "expDays",
+        caption: t("exp_days"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "bd",
+        caption: t("bd"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "btnPrintBarcode",
+        caption: t("btn_print_barcode"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "barcodePrinted",
+        caption: t("barcode_printed"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "batchCreated",
+        caption: t("batch_created"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "removeCol",
+        caption: t("remove_col"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "productDescription",
+        caption: t("product_description"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+      },
+      {
+        dataField: "serial",
+        caption: t("serial"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "minSalePrice",
+        caption: t("min_sale_price"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "additionalExpense",
+        caption: t("additional_expense"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unitPriceFC",
+        caption: t("unit_price_fc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "colour",
+        caption: t("colour"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "warranty",
+        caption: t("warranty"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "nosQty",
+        caption: t("nos_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "totalAddExpense",
+        caption: t("total_add_expense"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "grossConvert",
+        caption: t("gross_convert"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "grossFC",
+        caption: t("gross_fc"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unitID2",
+        caption: t("unit_id_2"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit2Qty",
+        caption: t("unit_2_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit2SalesRate",
+        caption: t("unit_2_sales_rate"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit2MRP",
+        caption: t("unit_2_mrp"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit2MBarcode",
+        caption: t("unit_2_m_barcode"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "unit2StickerQty",
+        caption: t("unit_2_sticker_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unitID3",
+        caption: t("unit_id_3"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit3Qty",
+        caption: t("unit_3_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit3SalesRate",
+        caption: t("unit_3_sales_rate"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit3MRP",
+        caption: t("unit_3_mrp"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit3MBarcode",
+        caption: t("unit_3_m_barcode"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "unit3StickerQty",
+        caption: t("unit_3_sticker_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "tagQty",
+        caption: t("tag_qty"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "barcodeTagPrinted",
+        caption: t("barcode_tag_printed"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "barcodeUnit2Printed",
+        caption: t("barcode_unit_2_printed"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "barcodeUnit3Printed",
+        caption: t("barcode_unit_3_printed"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "location",
+        caption: t("location"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "grTransDetailsID",
+        caption: t("gr_trans_details_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "arabicName",
+        caption: t("arabic_name"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "supplierReferenceProductCode",
+        caption: t("supplier_reference_product_code"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "poTransDetailsID",
+        caption: t("po_trans_details_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "ratePlusTax",
+        caption: t("rate_plus_tax"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "warehouseID",
+        caption: t("warehouse_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "sortOrder",
+        caption: t("sort_order"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "profitPercentage",
+        caption: t("profit_percentage"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "schemeDiscount",
+        caption: t("scheme_discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "memo",
+        caption: t("memo"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+      },
+      {
+        dataField: "memoEditor",
+        caption: t("memo_editor"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "rowNumber",
+        caption: t("row_number"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "actualSalesPrice",
+        caption: t("actual_sales_price"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unit2",
+        caption: t("unit_2"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "unit3",
+        caption: t("unit_3"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "btnPrintBarcodeStd",
+        caption: t("btn_print_barcode_std"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+    ],
+    []
+);
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1899,7 +1918,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
               <div
                 ref={dropdownRef}
-                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'max-h-96 opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
+                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
                   }`}
                 style={{
                   marginLeft: 0,
@@ -1991,13 +2010,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       dispatch={dispatch}
                       t={t}
                     />
-
-                    <div>
-                      <span> more </span>
-                    </div>
                   </div>
 
-                  <div className="flex justify-center mt-8 mb-2">
+                  <div className="flex justify-center mt-4 mb-2">
                     <button
                       onClick={toggleDropdown}
                       className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"
@@ -2010,9 +2025,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
             </div>
           </div>
 
-          <DataGridTest
+          <ErpPurchaseGrid
             data={data}
-            columns={columns}
+            columns={purchaseGridCol}
             keyField={key}
             height={gridHeight}
             gridId={`${gridCode}-grid`}
@@ -2186,19 +2201,28 @@ const TransactionForm: React.FC<TransactionProps> = ({
       <div
         className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
         style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
-        <div
-          className="w-full flex flex-col-reverse items-center absolute bottom-28 z-40 right-0 left-0"
-        >
-          <div
-            className={`w-full p-4 md:p-6 overflow-y-auto transition-all duration-500 ease-in-out bg-white border border-gray-300 rounded-t-lg absolute bottom-10 left-0 right-0 ${isDropUpOpen ? 'max-h-[50vh] md:max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            style={{
-              boxShadow: isDropUpOpen ? '0 -4px 12px rgba(0, 0, 0, 0.1)' : 'none',
-              transform: isDropUpOpen ? 'translateY(0)' : 'translateY(20px)',
-              pointerEvents: isDropUpOpen ? 'auto' : 'none',
-            }}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+
+        <div className="relative w-full">
+          <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
+            <button
+              onClick={toggleDropup}
+              className={`group flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 bg-[#f8f8ff] shadow-md transition-all duration-300 
+              ${isDropUpOpen ? 'bg-gray-100' : ''} hover:bg-white hover:shadow-lg`}
+            >
+              <ChevronUp
+                className={`transition-transform duration-500 text-gray-700 
+                ${isDropUpOpen ? 'transform rotate-180' : hasAnimated ? '' : 'animate-[bounce_2s_1]'} 
+                group-hover:text-black`}
+                size={24}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Dropdown content */}
+        <div className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? 'max-h-[50vh] mb-6' : 'max-h-0'}`}>
+          <div className="p-4 md:p-6 bg-white border border-gray-300 rounded-t-lg shadow-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
               <div className="w-full">
                 <WarehouseID
                   formState={formState}
@@ -2253,24 +2277,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
               </div>
             </div>
           </div>
-
-          <button
-            onClick={toggleDropup}
-            className={`flex items-center justify-center w-full py-2 border-t border-b border-gray-300 bg-white transition-all duration-300 ${isDropUpOpen ? 'bg-gray-100' : ''
-              }`}
-          >
-            <div className="w-12 md:w-24 h-px bg-gray-300"></div>
-            <ChevronUp
-              className={`mx-2 transition-transform duration-500 ${isDropUpOpen ? 'transform rotate-180' : 'animate-[bounce_2s_infinite]'}`}
-              size={24}
-            />
-            <div className="w-12 md:w-24 h-px bg-gray-300"></div>
-          </button>
         </div>
 
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-1">
-            <div className="grid grid-cols-1">
+            {/* <div className="grid grid-cols-1">
               <ERPButton
                 title={t("bottom sidebar")}
                 // onClick={handleButtonClick}
@@ -2279,15 +2290,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 className="w-[150px]"
                 localInputBox={formState?.userConfig?.inputBoxStyle}
               />
-              <button className="text-blue-600">
-                <span
-                  className="hover:underline text-[#0ea5e9] capitalize"
-                  onClick={selectAttachment}
-                >
-                  {t("attachment")}
-                </span>
-              </button>
-            </div>
+            </div> */}
 
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -2342,38 +2345,43 @@ const TransactionForm: React.FC<TransactionProps> = ({
               </div>
             )}
 
-            <div className="flex flex-col xl:flex-row gap-1">
-              <CashPaidSection
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                focusDiscount={focusDiscount}
-                focusAmount={focusAmount}
-              />
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
+                <button className="text-blue-600">
+                  <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+                    {t("attachment")}
+                  </span>
+                </button>
+                <CashPaidSection
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                />
+              </div>
 
-              <RoundOffInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-                focusDiscount={() => {
-                  document.getElementById("discountID")?.focus();
-                }}
-                focusAmount={() => {
-                  document.getElementById("amountID")?.focus();
-                }}
-              />
+              <div className="flex flex-col xl:flex-row items-end gap-1">
+                <RoundOffInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={() => { document.getElementById("discountID")?.focus(); }}
+                  focusAmount={() => { document.getElementById("amountID")?.focus(); }}
+                />
 
-              <BillDiscountInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
+                <BillDiscountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-end gap-1">
+          <div className="flex items-end gap-4">
             <div className="grid grid-cols-1 gap-1">
               <NetAmountInput
                 formState={formState}
@@ -2401,6 +2409,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 t={t}
               />
             </div>
+
             <div className="flex items-center gap-2">
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">
@@ -2412,12 +2421,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
               <div className="flex items-center gap-2">
 
                 {/* <ERPButton
-              ref={btnSaveRef}
-              title={t("close")}
-              onClick={goToPreviousPage}
-              className="w-24"
-              // disabled={formState.formElements.pnlMasters?.disabled}
-            /> */}
+                  ref={btnSaveRef}
+                  title={t("close")}
+                  onClick={goToPreviousPage}
+                  className="w-24"
+                  disabled={formState.formElements.pnlMasters?.disabled}
+                /> */}
 
                 <ERPButton
                   title={t("close")}
@@ -2444,18 +2453,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="flex w-full">
 
-            {/* <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/> */}
+            <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/>
             <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
-
-
-
-
-
-
-              {/* <IsLockedCheckbox
+              <IsLockedCheckbox
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
@@ -2465,12 +2468,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
-              /> */}
+              />
 
               <div className="flex flex-wrap justify-between items-center">
 
               </div>
-              {/* <TotalTCSInput
+              <TotalTCSInput
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
@@ -2482,13 +2485,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 dispatch={dispatch}
                 t={t}
                 handleKeyDown={handleKeyDown}
-              /> */}
+              />
             </div>
           </div>
 
-          {/* </div> */}
+          </div>
 
-        </div>
+        </div> */}
       </div>
 
       {formState.transaction && formState.template && (
@@ -2521,6 +2524,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         />
       )}
+
       {formState.isProductSummaryOpen && (
         <ERPModal
           isOpen={formState.isProductSummaryOpen}
@@ -2528,13 +2532,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
           content={
             <ProductSummaryMaster
             />
           }
-        ></ERPModal>
+        />
       )}
+
       {formState.isPartyWiseSummaryOpen && (
         <ERPModal
           isOpen={formState.isPartyWiseSummaryOpen}
@@ -2542,12 +2548,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           width={1000}
           height={700}
           isForm={true}
+          initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
           content={
             <PartySummaryMaster />
           }
-        ></ERPModal>
+        />
       )}
+
       {isPartyDetailsOpen && (
         <CustomerDetailsSidebar
           displayType="none"
@@ -2555,6 +2563,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           setIsOpen={setIsPartyDetailsOpen}
         />
       )}
+
       <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
         <div>
           <div style={sidebarHeaderStyle}>
@@ -2565,12 +2574,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
 
           {/* <p className="mb-[24px] text-[#6b7280]">
-                          This sidebar for test.
-                        </p> */}
+            This sidebar for test.
+          </p> */}
 
           <BottomSidebarGrid />
         </div>
       </BottomSidebar>
+
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}

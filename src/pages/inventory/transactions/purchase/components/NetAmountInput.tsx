@@ -38,7 +38,10 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     //     formState.formElements.pnlMasters?.disabled
     //   }
     // />
-    <span>{t(formState.formElements.netAmount.label)}:{formState.netAmount}</span>
+    <div className="flex items-center justify-between">
+      <span>{t(formState.formElements.netAmount.label)}:</span>
+      <span>{formState.netAmount}</span>
+    </div>
   );
 };
 

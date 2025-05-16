@@ -145,10 +145,14 @@ export const ProductManageGcc: React.FC<{
                   <ERPButton
                     title={t("create_new")}
                     variant="secondary"
-                    onClick={() => {
+                    onClick={async () => {
+                      const nextProductCode = await api.getAsync(
+                        `${Urls.products}SelectNextProductCode`
+                      );
                       const data = { ...getFieldProps("*") };
                       if (data.product.productID > 0) {
                         data.product.productID = 0;
+                        data.product.productCode = nextProductCode
                         handleDataChange(data);
                       }
                     }}
@@ -183,29 +187,29 @@ export const ProductManageGcc: React.FC<{
                 }}
               />
               {/* <ERPDataCombobox
-                              ref={productNameRef}
-                                {...getFieldProps("product.productID")}
-                                id="productName"
-                                field={{
-                                  id: "productName",
-                                  valueKey: "id",
-                                  labelKey: "name",
-                                  getListUrl: Urls.data_products
-                                }}
-                                onTextChange={(data: any) => handleFieldChange("product.productName", data)}
-                                // initialInputValue={getFieldProps("product.productName").value}
-                                // onChValue={}
-                                onChangeData={(data: any) => {
-                                  handleFieldChange({
-                                    "product.tmpProductID": data.value,
-                                    "product.productName": data.label
-                                  });
-                                }}
-                                // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
-                                label={t("product_name")}
-                                className="w-full"
-                                required={true}
-                              /> */}
+                ref={productNameRef}
+                {...getFieldProps("product.productID")}
+                id="productName"
+                field={{
+                  id: "productName",
+                  valueKey: "id",
+                  labelKey: "name",
+                  getListUrl: Urls.data_products
+                }}
+                onTextChange={(data: any) => handleFieldChange("product.productName", data)}
+                // initialInputValue={getFieldProps("product.productName").value}
+                // onChValue={}
+                onChangeData={(data: any) => {
+                  handleFieldChange({
+                    "product.tmpProductID": data.value,
+                    "product.productName": data.label
+                  });
+                }}
+                // onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
+                label={t("product_name")}
+                className="w-full"
+                required={true}
+              /> */}
 
 
               <div className="flex flex-1 min-w-[200px] items-center gap-2">
@@ -243,7 +247,7 @@ export const ProductManageGcc: React.FC<{
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <div className="flex flex-1 min-w-[200px] items-center gap-2">
+                <div className="flex flex-1 min-w-[150px] lg:max-w-[150px] sm:max-w-full items-center gap-2">
                   <ERPDataCombobox
                     {...getFieldProps("product.basicUnitID")}
                     id="basicUnitID"
@@ -278,7 +282,7 @@ export const ProductManageGcc: React.FC<{
                   </button> */}
                 </div>
 
-                <div className="flex flex-1 min-w-[200px]">
+                <div className="flex flex-1 min-w-[150px] max-w-[150px]">
                   <ERPInput
                     {...getFieldProps("product.unitQty")}
                     label={t("unit_qty")}
@@ -293,7 +297,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-end gap-2">
                 <ERPCheckbox
                   {...getFieldProps("upcBarcode")}
                   label={t("upc_barcode")}
@@ -324,7 +328,7 @@ export const ProductManageGcc: React.FC<{
                   placeholder=""
                   // type="string"
                   required={false}
-                  className="flex-1 min-w-[140px]"
+                  className="flex-1 min-w-[140px] max-w-[140px]"
                   onChange={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
@@ -399,7 +403,7 @@ export const ProductManageGcc: React.FC<{
 
             <div className="flex-1 min-w-[300px] border border-[#ccc] rounded-md p-2">
               <div className="flex flex-wrap gap-2">
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("product.stdPurchasePrice")}
                     disabled={
@@ -416,7 +420,7 @@ export const ProductManageGcc: React.FC<{
                     }
                   />
                 </div>
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("product.stdSalesPrice")}
                     disabled={
@@ -453,7 +457,7 @@ export const ProductManageGcc: React.FC<{
                     }}
                   />
                 </div>
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("markup")}
                     label={t("markup") + "%"}
@@ -488,7 +492,7 @@ export const ProductManageGcc: React.FC<{
                     }}
                   />
                 </div>
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("batch.displayCost")}
                     label={t("display_cost")}
@@ -504,7 +508,7 @@ export const ProductManageGcc: React.FC<{
                   />
                 </div>
 
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("batch.msp")}
                     label={t("min_sale_price")}
@@ -517,7 +521,7 @@ export const ProductManageGcc: React.FC<{
                   />
                 </div>
 
-                <div className="flex-1 min-w-[120px]">
+                <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("batch.openingStock")}
                     disabled={getFieldProps("product.itemType").value === "Dummy"}
@@ -545,7 +549,7 @@ export const ProductManageGcc: React.FC<{
 
                 {userSession.dbIdValue == "SEMAKA" && (
                   <>
-                    <div className="flex-1 min-w-[120px]">
+                    <div className="flex-1 min-w-[120px] max-w-[120px]">
                       <ERPInput
                         {...getFieldProps("batch.aPC")}
                         label={t("avg_cost")}
@@ -557,7 +561,7 @@ export const ProductManageGcc: React.FC<{
                         }
                       />
                     </div>
-                    <div className="flex-1 min-w-[120px]">
+                    <div className="flex-1 min-w-[120px] max-w-[120px]">
                       <ERPInput
                         {...getFieldProps("batch.stock")}
                         label={t("stock")}
@@ -624,7 +628,7 @@ export const ProductManageGcc: React.FC<{
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <div className="flex-1 min-w-[200px]">
+                <div className="flex-1 min-w-[200px] max-w-[200px]">
                   <ERPDataCombobox
                     {...getFieldProps("product.itemType")}
                     id="itemType"
@@ -656,7 +660,7 @@ export const ProductManageGcc: React.FC<{
                     ]}
                   />
                 </div>
-                <div className="flex-1 min-w-[200px]">
+                <div className="flex-1 min-w-[200px] max-w-[200px]">
                   <ERPDataCombobox
                     {...getFieldProps("product.taxCategoryID")}
                     id="taxCategoryID"
@@ -679,21 +683,21 @@ export const ProductManageGcc: React.FC<{
                     className="w-full"
                   />
                 </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-4">
-                {getFieldProps("product.itemType").value == "KIT" && (
-                  <ERPButton
-                    title={t("kit")}
-                    variant="secondary"
+                <div className="flex flex-wrap items-end gap-4">
+                  {getFieldProps("product.itemType").value == "KIT" && (
+                    <ERPButton
+                      title={t("kit")}
+                      variant="secondary"
+                    />
+                  )}
+                  <ERPCheckbox
+                    {...getFieldProps("details")}
+                    label={t("details")}
+                    onChange={(data) =>
+                      handleFieldChange("details", data.target.checked)
+                    }
                   />
-                )}
-                <ERPCheckbox
-                  {...getFieldProps("details")}
-                  label={t("details")}
-                  onChange={(data) =>
-                    handleFieldChange("details", data.target.checked)
-                  }
-                />
+                </div>
               </div>
             </div>
           </div>

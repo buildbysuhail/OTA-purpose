@@ -48,12 +48,12 @@ const ProductOthersIndia: React.FC<{
             ...prev,
           };
           _data.config = userConfig;
-          handleDataChange(_data); 
+          handleDataChange(_data);
         } catch (error) {
           console.error("Failed to fetch product config", error);
         }
       };
-    
+
       fetchData();
     }, []);
     const [activePopup, setActivePopup] = useState<string | null>(null);
@@ -140,7 +140,7 @@ const ProductOthersIndia: React.FC<{
                 }
                 className="min-w-[250px] flex-1"
               />
-             <ERPCheckbox
+              <ERPCheckbox
                 {...getFieldProps("config.capitalizationForProductName")}
                 label={t("capitalization_for_product_name")}
                 onChange={(e) =>
@@ -153,18 +153,17 @@ const ProductOthersIndia: React.FC<{
               />
             </div>
             <div className="flex flex-wrap gap-x-8 gap-y-2">
-               <ERPCheckbox
-                    {...getFieldProps("config.showMultiBarcodeOnSave")}
-                    label={t("show_multibacode_onsave")}
-                    onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
-                />
-                  <ERPCheckbox
-                    {...getFieldProps("config.showFlavourOnSave")}
-                    label={t("show_flavour_onsave")}
-                    onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
-                />
+              <ERPCheckbox
+                {...getFieldProps("config.showMultiBarcodeOnSave")}
+                label={t("show_multibacode_onsave")}
+                onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
+              />
+              <ERPCheckbox
+                {...getFieldProps("config.showFlavourOnSave")}
+                label={t("show_flavour_onsave")}
+                onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
+              />
             </div>
-           
           </div>
         </div>
 

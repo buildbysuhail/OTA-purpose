@@ -2356,6 +2356,8 @@ export const useTransaction = (
     }
   };
 
+
+
   return {
     undoEditMode,
     getNextVoucherNumber,
@@ -2392,5 +2394,6 @@ export const useTransaction = (
     // billWiseExcludedTransactions,
     getDrCr,
     clearRow
+  
   };
 };

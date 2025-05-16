@@ -168,7 +168,6 @@ export default function ErpPurchaseGrid<T extends DataItem>({
             showCheckBox={false}
             value={value || ""}
            productDataUrl={Urls.load_product_details}
-           searchType="modal"
           />
         </td>
       );

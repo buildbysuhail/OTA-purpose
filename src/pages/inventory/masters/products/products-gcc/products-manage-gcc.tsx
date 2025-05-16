@@ -145,10 +145,14 @@ export const ProductManageGcc: React.FC<{
                   <ERPButton
                     title={t("create_new")}
                     variant="secondary"
-                    onClick={() => {
+                    onClick={async() => {
+                       const nextProductCode = await api.getAsync(
+          `${Urls.products}SelectNextProductCode`
+        );
                       const data = { ...getFieldProps("*") };
                       if (data.product.productID > 0) {
                         data.product.productID = 0;
+                        data.product.productCode = nextProductCode
                         handleDataChange(data);
                       }
                     }}

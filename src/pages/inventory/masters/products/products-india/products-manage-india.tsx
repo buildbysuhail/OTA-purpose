@@ -464,7 +464,6 @@ export const ProductManageIndia: React.FC<{
                     {...getFieldProps("batch.manualBarcode")}
                     label={t(" ")}
                     placeholder=""
-                    type="string"
                     required={false}
                     className="flex-1 min-w-[140px]"
                     onChangeData={(data: any) =>

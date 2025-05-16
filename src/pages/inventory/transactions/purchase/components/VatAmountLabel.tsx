@@ -21,7 +21,10 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     //   showDropdown={true}
     //   dropdownData={taxData}
     // />
-    <span>{t(formState.formElements.totTax.label)}:{formState.transaction.master.vatAmount}</span>
+    <div className="flex items-center justify-between">
+      <span>{t(formState.formElements.totTax.label)}:</span>
+      <span>{formState.transaction.master.vatAmount}</span>
+    </div>
   );
 };
 

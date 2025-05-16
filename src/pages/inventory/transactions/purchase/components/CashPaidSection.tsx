@@ -21,7 +21,7 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
       formState.formElements.pnlMasters?.disabled;
 
     return (
-      <div className="flex gap-2 items-end">
+      <div className="flex flex-col gap-0">
         <ERPCheckbox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="hasCashPaid"
@@ -47,7 +47,7 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
           min={0}
           noLabel
           value={formState.transaction.master.cashPaid}
-          className="max-w-[110px] min-w-[110px]"
+          className="max-w-[110px] min-w-[110px] !m-0"
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({

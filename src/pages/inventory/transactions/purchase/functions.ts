@@ -13,7 +13,7 @@ export const calculateTotal = (state: TransactionFormState): number => {
   // state.transaction.master.voucherType !== "MJV"
   //   ? 
    return state.transaction.details.reduce(
-        (sum, detail) => sum + (Number(detail.netAmount) || 0),
+        (sum, detail) => sum + (Number(detail.netValue) || 0),
         // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
         0
       )

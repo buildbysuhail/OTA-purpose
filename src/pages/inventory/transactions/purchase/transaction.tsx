@@ -1583,10 +1583,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     });
     return emptyRow;
   }, [columns]);
-  const [data, setData] = useState<any[]>(() => {
-    return formState.transaction.details.length > 0
-      ? formState.transaction.details
-      : [getEmptyRow()];
+ const [data, setData] = useState<any[]>(() => {
+    return formState.transaction.details;
   });
   useEffect(() => {
     setData(

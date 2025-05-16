@@ -11,7 +11,6 @@ import {
   XMarkIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { SettingsMenuItems } from "../../common/sidebar/sidemenu/settings";
 import ERPToast from "../erp-toast";
 import { ChartLine } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
@@ -131,9 +130,9 @@ const ReportList = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value.toLowerCase();
     setSearch(searchTerm);
-    let AllRoutes: MenuItem[] = [];
+    let AllRoutes: any[] = [];
 
-    const extractRoutes = (menuItems: MenuItem[]) => {
+    const extractRoutes = (menuItems: any[]) => {
       menuItems.forEach((item) => {
         if (item.children) {
           extractRoutes(item.children);
@@ -143,13 +142,14 @@ const ReportList = () => {
       });
     };
 
-    extractRoutes(SettingsMenuItems);
+    extractRoutes(ReportsMenuItems);
+
     let searchResult = AllRoutes.filter((item) =>
       item.title.toLowerCase().includes(searchTerm)
     );
 
     setSearchResults(searchResult);
-    setSelectedIndex(-1);
+    // setSelectedIndex(-1);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -223,11 +223,11 @@ const ReportList = () => {
                 <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
               </div>
               <input
-                ref={searchInputRef}
+                // ref={searchInputRef}
                 className={`dark:bg-dark-bg-card dark:border-dark-border custom-input`}
                 value={search}
                 onChange={handleSearch}
-                onKeyDown={handleKeyDown}
+                // onKeyDown={handleKeyDown}
               />
 
               <style>
@@ -259,12 +259,13 @@ const ReportList = () => {
                 />
               )}
             </div>
-            <SearchResultBar
+            {/* <SearchResultBar
               isOpen={open}
               searchResults={searchResults}
               selectedIndex={selectedIndex}
               onItemClick={handleItemClick}
-            />
+            /> */}
+              <SearchResultBar isOpen={open} searchResults={searchResults} />
           </div>
         </div>
 
@@ -357,43 +358,71 @@ const ReportList = () => {
 
 export default ReportList;
 
-export const SearchResultBar: React.FC<SearchResultBarProps> = ({
-  isOpen,
-  searchResults,
-  selectedIndex,
-  onItemClick,
-}) => {
-  const { t } = useTranslation("main");
+// export const SearchResultBar: React.FC<SearchResultBarProps> = ({
+//   isOpen,
+//   searchResults,
+//   selectedIndex,
+//   onItemClick,
+// }) => {
+//   const { t } = useTranslation("main");
 
+//   return (
+//     <div
+//       className={`${
+//         isOpen ? "max-h-[300px]" : "h-0"
+//       } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
+//     >
+//       <div className={`flex flex-col dark:bg-dark-bg-card `}>
+//         {searchResults.length > 0 ? (
+//           searchResults.map((item, idx) => (
+//             <div className={`w-full p-1 `} key={`SR_${idx}`}>
+//               <p
+//                 className={`text-[13px] rounded-lg p-2 cursor-pointer ${
+//                   idx === selectedIndex
+//                     ? "bg-primary text-white"
+//                     : "hover:bg-primary hover:text-white"
+//                 }`}
+//                 onClick={() => onItemClick(item)}
+//               >
+//                 {t(item.title as any)}
+//               </p>
+//             </div>
+//           ))
+//         ) : (
+//           <div className="w-full p-1">
+//             <p className="text-xs italic text-center p-2">
+//               {t("no_data_found")}
+//             </p>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+const SearchResultBar = ({ isOpen, searchResults }: any) => {
+  const { t } = useTranslation('main');
+  const navigate = useNavigate();
   return (
-    <div
-      className={`${
-        isOpen ? "max-h-[300px]" : "h-0"
-      } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
-    >
-      <div className={`flex flex-col dark:bg-dark-bg-card `}>
-        {searchResults.length > 0 ? (
-          searchResults.map((item, idx) => (
-            <div className={`w-full p-1 `} key={`SR_${idx}`}>
-              <p
-                className={`text-[13px] rounded-lg p-2 cursor-pointer ${
-                  idx === selectedIndex
-                    ? "bg-primary text-white"
-                    : "hover:bg-primary hover:text-white"
-                }`}
-                onClick={() => onItemClick(item)}
-              >
-                {t(item.title as any)}
-              </p>
+    <div className={`${isOpen ? "max-h-[300px]" : "h-0"} absolute w-full overflow-y-auto  bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}>
+      <div className="dark:bg-dark-bg flex flex-col">
+        {
+          searchResults?.length > 0 ? (
+            searchResults?.map((item: any, idx: number) => {
+              return (
+                <div className="w-full p-1" key={`SR_${idx}`}>
+                  <p className="text-[13px] hover:bg-accent hover:text-white rounded-lg p-2 cursor-pointer"
+                    onClick={() => { item?.path ? navigate(item?.path) : ERPToast.showWith(t("feature_under_development_message"), t("warning")); }}>
+                    {t(item?.title)}
+                  </p>
+                </div>
+              );
+            })
+          ) : (
+            <div className="w-full p-1">
+              <p className="text-xs italic text-center p-2">{t("no_data_found")}</p>
             </div>
-          ))
-        ) : (
-          <div className="w-full p-1">
-            <p className="text-xs italic text-center p-2">
-              {t("no_data_found")}
-            </p>
-          </div>
-        )}
+          )
+        }
       </div>
     </div>
   );

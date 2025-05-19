@@ -440,7 +440,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
             const value =
               cellElement.data?.cardAmt == null
                 ? 0
-                : getFormattedValue(cellElement.data.cardAmt);
+                : getFormattedValue(cellElement.data.cardAmt,false,4);
             return {
               ...exportCell,
               text: value,
@@ -450,13 +450,13 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           } else {
             return cellElement.data?.cardAmt == null
               ? 0
-              : getFormattedValue(cellElement.data.cardAmt);
+              : getFormattedValue(cellElement.data.cardAmt,false,4);
           }
         },
       },
       //if AccountsSettings.AllowMultiPayments start
       {
-        dataField: "uPI",
+        dataField: "upi",
         caption: t("upi"),
         dataType: "number",
         allowSearch: true,
@@ -471,9 +471,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         ) => {
           if (exportCell != undefined) {
             const value =
-              cellElement.data?.uPI == null
+              cellElement.data?.upi == null
                 ? 0
-                : getFormattedValue(cellElement.data.uPI);
+                : getFormattedValue(cellElement.data.upi,false,4);
             return {
               ...exportCell,
               text: value,
@@ -481,9 +481,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
               alignmentExcel: { horizontal: "right" },
             };
           } else {
-            return cellElement.data?.uPI == null
+            return cellElement.data?.upi == null
               ? 0
-              : getFormattedValue(cellElement.data.uPI);
+              : getFormattedValue(cellElement.data.upi,false,4);
           }
         },
       },
@@ -507,7 +507,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
         width: 100,
         cellRender: (
           cellElement: any,
@@ -963,16 +962,14 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
     // Filter columns based on the `visible` property
     return baseColumns
       .filter((column) => {
-        if (column.dataField == "exchangeRate") {
-          return filter.voucher_form !== "Import";
-        }
+       
         if (
           column.dataField == "salesAmount" ||
           column.dataField == "totalProfit"
         ) {
           return userSession.dbIdValue == "489995732270";
         }
-        if (column.dataField == "uPI" || column.dataField == "cardAmt") {
+        if (column.dataField == "upi" || column.dataField == "cardAmt") {
           return applicationSettings.accountsSettings.allowMultiPayments;
         }
         if (column.dataField == "printCount") {
@@ -983,16 +980,23 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           column.dataField == "totalExciseTax" ||
           column.dataField == "toWarehouseName"
         ) {
-          return clientSession.isAppGlobal;
+          return clientSession.isAppGlobal && !applicationSettings.accountsSettings.allowMultiPayments;
         }
         return true;
       })
       .map((column) => {
-        if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
+        if (column.dataField == "upi" && !clientSession.isAppGlobal) {
           return {
             ...column,
             caption: "QRPay",
           };
+        }
+         if (column.dataField == "exchangeRate") {
+              return {
+            ...column,
+            visible: filter.voucher_form == "Import",
+          };
+          // return filter.voucher_form !== "Import";
         }
         return column;
       });
@@ -1200,6 +1204,27 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 columns={columns}
                 // moreOption
                 // {productID > 0 && , Product Name : [productName]} removed always visible false in 1050
+                //condition in case of sales
+                //  case "SI":
+                //     this.Text = lblReportTitle.Text = "Sales Summary Report";
+                //     if (CashSales)
+                //     {
+                //         lblReportTitle.Text = lblReportTitle.Text + " of Cash:";
+                //         this.Text = this.Text + lblReportTitle.Text;
+                //     }
+                //     else if(CreditSales)
+
+                //     {
+                //         lblReportTitle.Text = lblReportTitle.Text + " of Credit:";
+                //         this.Text = this.Text + lblReportTitle.Text;
+
+                //     }
+                //     else if (CardSales)
+
+                //     {
+                //         lblReportTitle.Text = lblReportTitle.Text + " of Card/Bank:";
+                //         this.Text = this.Text + lblReportTitle.Text;
+                //     }
                 filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} 
                  {salesRouteID > 0 && , Route Name : [routeName]} 
                 {counterID > 0 && , Counter : [counterName]} 

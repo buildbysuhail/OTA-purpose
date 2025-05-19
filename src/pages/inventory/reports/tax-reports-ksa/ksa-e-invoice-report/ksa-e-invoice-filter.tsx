@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
 
 const KsaEInvoiceReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {

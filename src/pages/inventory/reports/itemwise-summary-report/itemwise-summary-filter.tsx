@@ -256,7 +256,7 @@ const ItemWiseSummaryFilter = ({
                     field={{
                         id: "location",
                         getListUrl: Urls.data_locations,
-                        valueKey: "id",
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {

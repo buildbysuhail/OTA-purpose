@@ -448,7 +448,7 @@ const Urls = {
     "/Inventory/RptSalesReport/GroupedBrandwiseSalesReport/",
   coupon_reports: "/Inventory/RptSalesReport/CouponReports/",
   scheme_wise_sales: "/Inventory/RptSalesReport/SchemewiseSalesReport/",
-  sales_tax: "/Inventory/RptSalesReport/SalesTaxReport/",
+  sales_tax: "/Inventory/RptTAXReport/SalesTaxReport/",
 
   sales_transfer_summary:"/Inventory/RptSalesReport/SalesTransferSummary/",
   sales_transfer_register:"/Inventory/RptSalesReport/SalesTransferRegister/",

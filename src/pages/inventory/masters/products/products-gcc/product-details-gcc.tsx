@@ -89,9 +89,9 @@ export const ProductDetailsGcc: React.FC<{
                 className="w-full"
                 label={t("warehouse")}
               />
-              <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+              {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                 <Ellipsis className="w-4 h-4" />
-              </button>
+              </button> */}
             </div>
 
             <div className="flex items-center gap-1">
@@ -111,9 +111,9 @@ export const ProductDetailsGcc: React.FC<{
                 label={t("brand_mfg")}
               // options={[]}
               />
-              <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
+              {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                 <Ellipsis className="w-4 h-4" />
-              </button>
+              </button> */}
             </div>
 
             <ERPInput
@@ -343,11 +343,13 @@ export const ProductDetailsGcc: React.FC<{
               )}
             </div>
           </div>
+          {getFieldProps("product.productID").value > 0 &&
           <ProductDetailsBatches
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}
             t={t}
           ></ProductDetailsBatches>
+          }
         </div>
       )}
     </>

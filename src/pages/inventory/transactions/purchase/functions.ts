@@ -7,6 +7,7 @@ import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import { TransactionFormState } from "./transaction-types";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 export const calculateTotal = (state: TransactionFormState): number => {
   // return 
@@ -139,6 +140,8 @@ export const validateTransactionDate = (
 };
 export function calculateRowAmount(formState: TransactionFormState, rowIndex: number = -1, currentEditedField: string): void {
   try {
+    
+      const { getFormattedValue } = useNumberFormat()
     if(rowIndex === -1) {
       return;
     }
@@ -166,16 +169,16 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
     let gross = parseFloat((qtyVal * rate).toFixed(5));
     let disc = discount;
     let discPercVal = discPerc;
-    let vatPercVal = vatPerc;
     let exciseTaxPer = cstPerc ?? 0;
     let exciseTax = cst ?? 0;
-    let ratePlusTaxVal = ratePlusTax ?? 0;
+    let ratePlusTaxVal = formState.gridColumns?.find(x => x.dataField == "ratePlusTax")?.visible == true ? (ratePlusTax ?? 0) : 0;
     let addAmt = additionalExpense ?? 0;
 
     if (ratePlusTaxVal > 0 && currentEditedField === 'ratePlusTax') {
-      const divisor = (vatPercVal / 100) + 1;
+      const divisor = (vatPerc / 100) + 1;
       const qty1 = qtyVal !== 0 ? qtyVal : 1;
-      rate = parseFloat(((ratePlusTaxVal * qty1) / divisor / qty1).toFixed(3));
+      rate = parseFloat(((ratePlusTaxVal * qty1) / divisor ).toFixed(3));
+      rate = rate / qty1;
       row.unitPrice = rate;
     }
 
@@ -198,49 +201,49 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
     exciseTax = (netValueBeforeExcise * exciseTaxPer) / 100;
     const netValue = netValueBeforeExcise + exciseTax;
 
-    row.cst = parseFloat(exciseTax.toFixed(4));
-    row.netValue = parseFloat(netValue.toFixed(4));
-    row.discPerc = parseFloat(discPercVal.toFixed(4));
-    row.discount = parseFloat(disc.toFixed(2));
+    row.cst =  parseFloat(getFormattedValue(exciseTax));
+    row.netValue = parseFloat(getFormattedValue(netValue));
+    row.discPerc = parseFloat(getFormattedValue(discPercVal));
+    row.discount = parseFloat(getFormattedValue(disc));
     row.totalAddExpense = parseFloat((addAmt * qtyVal).toFixed(2));
 
-    const vat = parseFloat(((netValue * vatPercVal) / 100).toFixed(4));
+    // const vat = parseFloat(((netValue * vatPercVal) / 100).toFixed(4));
 
-    let netVal = rate - (rate * discPercVal / 100);
-    let cost = Settings.InventorySettings.setProductCostWithVATAmount
-      ? parseFloat((netVal + (netVal * vatPercVal / 100)).toFixed(2))
-      : netVal;
+    // let netVal = rate - (rate * discPercVal / 100);
+    // let cost = Settings.InventorySettings.setProductCostWithVATAmount
+    //   ? parseFloat((netVal + (netVal * vatPercVal / 100)).toFixed(2))
+    //   : netVal;
 
-    row.cost = cost;
+    // row.cost = cost;
 
-    row.vatAmount = parseFloat(vat.toFixed(4));
+    // row.vatAmount = parseFloat(vat.toFixed(4));
 
-    const netAmount = parseFloat((netValue + vat).toFixed(4));
-    row.gross = gross;
-    row.total = parseFloat(netAmount.toFixed(2));
+    // const netAmount = parseFloat((netValue + vat).toFixed(4));
+    // row.gross = gross;
+    // row.total = parseFloat(netAmount.toFixed(2));
 
-    // Calculate margin
-    calculateMarginPerRow(rowIndex); // Ensure this function exists and handles TS logic
+    // // Calculate margin
+    // calculateMarginPerRow(rowIndex); // Ensure this function exists and handles TS logic
 
-    let sp = actualSalesPrice && actualSalesPrice > 0 ? actualSalesPrice : salesPrice;
-    if (Settings.InventorySettings.showRateBeforeTax) {
-      sp = sp / (1 + vatPercVal / 100);
-    }
+    // let sp = actualSalesPrice && actualSalesPrice > 0 ? actualSalesPrice : salesPrice;
+    // if (Settings.InventorySettings.showRateBeforeTax) {
+    //   sp = sp / (1 + vatPercVal / 100);
+    // }
 
-    if (sp > 0) {
-      const profit = qtyVal * (sp - netVal);
-      row.profit = parseFloat(profit.toFixed(2));
+    // if (sp > 0) {
+    //   const profit = qtyVal * (sp - netVal);
+    //   row.profit = parseFloat(profit.toFixed(2));
 
-      const profitPercentage = parseFloat((((sp - netVal) / netVal) * 100).toFixed(3));
-      row.profitPercentage = profitPercentage;
-    } else {
-      row.profit = 0;
-    }
+    //   const profitPercentage = parseFloat((((sp - netVal) / netVal) * 100).toFixed(3));
+    //   row.profitPercentage = profitPercentage;
+    // } else {
+    //   row.profit = 0;
+    // }
 
-    if (chkAutoCalculation.checked || rowIndex < 15) {
-      // You must define how to handle auto summaries in your context
-      calculateTotal();
-    }
+    // if (chkAutoCalculation.checked || rowIndex < 15) {
+    //   // You must define how to handle auto summaries in your context
+    //   calculateTotal();
+    // }
 
   } catch (error) {
     console.error('Error in calculateRowAmount:', error);

@@ -263,6 +263,20 @@ const SalesTax = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+    const customizeSummaryRow4 = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return value || "0";
+    };
+  }, []);
 
   const summaryItems: SummaryConfig[] = [
 
@@ -282,7 +296,7 @@ const SalesTax = () => {
       column: "vatAmount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRow4,
     },
     {
       column: "amount",
@@ -314,7 +328,8 @@ const SalesTax = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                gridHeader={t("sales_tax_report")}
+                  filterText=":{fromDate} - {toDate}"
+                gridHeader={t("monthly_vat_sales_statement_report")}
                 dataUrl={Urls.sales_tax}
                 hideGridAddButton={true}
                 enablefilter={true}

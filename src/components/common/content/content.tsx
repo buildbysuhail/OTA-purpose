@@ -137,9 +137,8 @@ import TransactionFormContainer from "../../../pages/inventory/transactions/purc
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary";
 import CreditPurchaseSummaryReport from "../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
-import DailyStatementAllReport from "../../../pages/inventory/reports/daily-statement-all-report/daily-statement-all-report ";
-import DailyStatementPurchaseReport from "../../../pages/inventory/reports/daily-statement-purchase-report/daily-statement-purchase-report";
-import DailySalesStatementReport from "../../../pages/inventory/reports/daily-statement-sales-report/daily-statement-sales-report";
+import DailyStatementAllReport from "../../../pages/inventory/reports/daily-statement-report/daily-statement-all-report ";
+import DailyStatementPurchaseReport from "../../../pages/inventory/reports/daily-statement-report/daily-statement-report";
 import PurchaseOrderTransitReport from "../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/inventory/reports/tax-reports-ksa/Purchase-Tax-report";
 import PurchaseTaxGSTDailySummary from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report";
@@ -198,6 +197,8 @@ import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/pr
 import NetSalesReport from "../../../pages/inventory/reports/net-sales-report/net-sales";
 import GeneralMaster from "../../../pages/inventory/masters/general-master";
 import SalesTransferMonthWiseSummaryReport from "../../../pages/inventory/reports/sales-transfer-monthWise-summary/sales-transfer-monthwise-summary-report";
+import DailyStatementReport from "../../../pages/inventory/reports/daily-statement-report/daily-statement-report";
+import GridId from "../../../redux/gridId";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -646,8 +647,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
         <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
         <Route path="/inventory-masters/brands" element={<Brands />} />
-        <Route path="/inventory/daily_statement_sales" element={<DailySalesStatementReport />} />
-        <Route path="/inventory/daily_statement_purchase" element={<DailyStatementPurchaseReport />} />
+        <Route path="/inventory/daily_statement_sales" element={<DailyStatementReport dataUrl={urls.daily_statement_sales} gridHeader="daily_statement_report_of_sales" gridId={GridId.daily_statement_sales}/>} />
+        <Route path="/inventory/daily_statement_purchase" element={<DailyStatementReport dataUrl={urls.daily_statement_purchase} gridHeader="daily_statement_report_of_purchase" gridId={GridId.daily_statement_purchase}/>} />
         <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />

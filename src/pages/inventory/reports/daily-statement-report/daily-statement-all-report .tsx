@@ -1,34 +1,47 @@
 import { useTranslation } from "react-i18next"
 import { Fragment, useMemo } from "react"
-import DailyStatementPurchaseReportFilter, { DailyStatementPurchaseReportFilterInitialState } from "./daily-statement-purchase-report-filter"
+import  {  DailyStatementReportInitialState } from "./daily-statement-report -filter"
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
+import GridId from "../../../../redux/gridId"
+import { ActionType } from "../../../../redux/types"
+import Urls from "../../../../redux/urls"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import Urls from "../../../../redux/urls"
-import { ActionType } from "../../../../redux/types"
-import GridId from "../../../../redux/gridId"
+import DailyStatementReportFilter from "./daily-statement-report -filter"
 
-const DailyStatementPurchaseReport = () => {
+const DailyStatementAllReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
+    {
+      dataField: "iD",
+      caption: t("id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+      visible: false,
+      showInPdf: true,
+    },
     {
       dataField: "form",
       caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 70,
+      width: 100,
+      visible: true,
       groupIndex: 0,
       showInPdf: true,
     },
     {
       dataField: "vchNo",
-      caption: t("voucher_no"),
+      caption: t("voucherNo"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 70,
+      visible: true,
       showInPdf: true,
     },
     {
@@ -38,6 +51,7 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 90,
+      visible: true,
       showInPdf: true,
     },
     {
@@ -47,6 +61,7 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 130,
+      visible: true,
       showInPdf: true,
     },
     {
@@ -56,6 +71,7 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: true,
       showInPdf: true,
     },
     {
@@ -65,13 +81,14 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))
+            cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)
           return {
             ...exportCell,
             text: value,
@@ -81,36 +98,7 @@ const DailyStatementPurchaseReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))}
-            </span>
-          )
-        }
-      },
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      showInPdf: true,
-      alignment: "right",
-      format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          }
-        } else {
-          return (
-            <span>
-              {cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))}
+              {cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)}
             </span>
           )
         }
@@ -123,13 +111,14 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))
+            cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)
           return {
             ...exportCell,
             text: value,
@@ -139,7 +128,37 @@ const DailyStatementPurchaseReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))}
+              {cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)}
+            </span>
+          )
+        }
+      },
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+      visible: true,
+      showInPdf: true,
+      alignment: "right",
+      format: "fixedPoint",
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          }
+        } else {
+          return (
+            <span>
+              {cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)}
             </span>
           )
         }
@@ -152,13 +171,14 @@ const DailyStatementPurchaseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)
           return {
             ...exportCell,
             text: value,
@@ -168,7 +188,7 @@ const DailyStatementPurchaseReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
+              {cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)}
             </span>
           )
         }
@@ -201,6 +221,7 @@ const DailyStatementPurchaseReport = () => {
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeGroup = (itemInfo: any) => `Group Total`;
   const summaryItems: SummaryConfig[] = [
     {
       column: "party",
@@ -231,8 +252,46 @@ const DailyStatementPurchaseReport = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
+    {
+      column: "party",
+      summaryType: "max",
+      isGroupItem: true,
+      showInGroupFooter: true,
+      customizeText: customizeGroup,
+    },
+    {
+      column: "cash",
+      summaryType: "sum",
+      isGroupItem: true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      isGroupItem: true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "bank",
+      summaryType: "sum",
+      isGroupItem: true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      isGroupItem: true,
+      valueFormat: "currency",
+      showInGroupFooter: true,
+      customizeText: customizeSummaryRow,
+    },
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -243,21 +302,21 @@ const DailyStatementPurchaseReport = () => {
                 <ErpDevGrid
                   autoExpandAll={true}
                   columns={columns}
-                  gridHeader={t("daily_statement_report_of_purchase")}
                   filterText=" From {fromDate} To {toDate}"
-                  dataUrl={Urls.daily_statement_purchase}
+                  gridHeader={t("daily_statement_report_of_all")}
+                  dataUrl={Urls.daily_statement_all}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
-                  gridId={GridId.daily_statement_purchase}
+                  gridId={GridId.daily_statement_all}
                   enablefilter={true}
                   showFilterInitially={false}
                   filterWidth={360}
-                  filterHeight={250}
-                  filterContent={<DailyStatementPurchaseReportFilter />}
-                  filterInitialData={DailyStatementPurchaseReportFilterInitialState}
+                  filterHeight={150}
+                  filterContent={<DailyStatementReportFilter />}
+                  filterInitialData={DailyStatementReportInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />
@@ -270,5 +329,4 @@ const DailyStatementPurchaseReport = () => {
   )
 }
 
-export default DailyStatementPurchaseReport
-
+export default DailyStatementAllReport;

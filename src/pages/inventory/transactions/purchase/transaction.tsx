@@ -2313,7 +2313,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-1">
-            {/* <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1">
               <ERPButton
                 title={t("bottom sidebar")}
                 // onClick={handleButtonClick}
@@ -2322,7 +2322,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 className="w-[150px]"
                 localInputBox={formState?.userConfig?.inputBoxStyle}
               />
-            </div> */}
+            </div>
 
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -2609,7 +2609,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
             This sidebar for test.
           </p> */}
 
-          <BottomSidebarGrid />
+          {/* <BottomSidebarGrid /> */}
+          {/* <BottomSidebarGrid sidebarHeight={sidebarHeight} /> */}
         </div>
       </BottomSidebar>
 

@@ -1,7 +1,11 @@
+// ===
 "use client"
 
 import type React from "react"
 import { useEffect, useState } from "react"
+import { ResizableBox } from "react-resizable"
+import "react-resizable/css/styles.css"
+import BottomSidebarGrid from "../../pages/inventory/transactions/purchase/bottom-sidebar-grid"
 
 interface BottomSidebarProps {
   children: React.ReactNode
@@ -22,17 +26,7 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
   initialHeight = 400,
   className,
 }) => {
-  const [sidebarHeight] = useState(initialHeight)
-
-  const backdropStyle: React.CSSProperties = {
-    position: "fixed",
-    inset: 0,
-    zIndex: 40,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    transition: "opacity 300ms",
-    opacity: isOpen ? 1 : 0,
-    pointerEvents: isOpen ? "auto" : "none",
-  }
+  const [sidebarHeight, setSidebarHeight] = useState(initialHeight)
 
   const [leftValue, setLeftValue] = useState("0px")
 
@@ -49,7 +43,6 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
   const sidebarContainerStyle: React.CSSProperties = {
     position: "fixed",
     bottom: 0,
-    // left: leftValue,
     left: 0,
     right: 0,
     zIndex: 51,
@@ -98,20 +91,42 @@ const BottomSidebar: React.FC<BottomSidebarProps> = ({
 
   return (
     <>
-      <div style={backdropStyle} onClick={() => setIsOpen(false)} />
-
       <div
         style={{
           ...sidebarContainerStyle,
           ...(className ? { className } : {}),
         }}
       >
-        <div style={handleStyle}>
-          
-        </div>
-        <div style={contentContainerStyle}>
-          <div style={scrollAreaStyle}>{children}</div>
-        </div>
+        <ResizableBox
+          width={Number.POSITIVE_INFINITY}
+          height={sidebarHeight}
+          minConstraints={[Number.POSITIVE_INFINITY, minHeight]}
+          maxConstraints={[Number.POSITIVE_INFINITY, maxHeight]}
+          resizeHandles={["n"]}
+          handle={
+            <div style={handleStyle}>
+              <div
+                style={handleIndicatorStyle}
+                onMouseOver={(e) => {
+                  (e.target as HTMLDivElement).style.backgroundColor = "rgba(107, 114, 128, 0.5)"
+                }}
+                onMouseOut={(e) => {
+                  (e.target as HTMLDivElement).style.backgroundColor = "rgba(107, 114, 128, 0.3)"
+                }}
+              />
+            </div>
+          }
+          onResize={(e, { size }) => setSidebarHeight(size.height)}
+          axis="y"
+          style={{ width: "100%", height: "100%" }}
+        >
+          <div style={contentContainerStyle}>
+            <div style={scrollAreaStyle}>
+              {children}
+              <BottomSidebarGrid sidebarHeight={sidebarHeight} />
+            </div>
+          </div>
+        </ResizableBox>
       </div>
     </>
   )

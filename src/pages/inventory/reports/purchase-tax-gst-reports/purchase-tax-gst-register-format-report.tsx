@@ -1130,7 +1130,7 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf: true,
+      visible:false
     },
   ];
 
@@ -1196,6 +1196,30 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
     },
     {
       column: "igsT3",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "taxable6",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cgsT3",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "sgsT3",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "igsT6",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,

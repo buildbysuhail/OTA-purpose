@@ -46,7 +46,7 @@ import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 
 export interface MultiBarcodeState {
   open: boolean;
-  data: { unitCode: string; barcodes: string; unitID: number }[];
+  data: { unitCode: string; barcode: string; unitID: number }[];
   onClose?: (reload: boolean) => void;// Add onClose to the interface
 }
 
@@ -147,13 +147,14 @@ export const ProductMaster: React.FC = React.memo(() => {
   const handleFlavorOpen = () => {
     return new Promise<void>((resolve) => {
       const obj = getFieldProps("*") as productDto;
+      // if()
       const productId = obj.product?.productID ?? 0;
       if (isNullOrUndefinedOrZero(productId)) {
-        ERPAlert.show({
-          text: "Product not found. Please select a product.",
-          title: "Warning",
-          type: "warn",
-        });
+        // ERPAlert.show({
+        //   text: "Product not found. Please select a product.",
+        //   title: "Warning",
+        //   type: "warn",
+        // });
         resolve(); // Resolve immediately if no product ID
         return;
       }
@@ -259,7 +260,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     try {
       const response = await api.post(`${Urls.products}AddFlavours`, {
         productID: productId,
-        flavours: flavorsOpen.data.map((item: any) => item.flavor),
+        flavours: flavorsOpen.data.filter((x: any) => !isNullOrUndefinedOrEmpty(x.flavor)).map((item: any) => item.flavor),
       });
       handleResponse(response, () => {
         flavorsOpen.onClose?.(false);
@@ -312,6 +313,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         data.taxCategoryTaxPercentage = data?.product?.taxCategoryValue ?? 0
       } else {
         data = initialProductData;
+        data.details = true;
         nextProductCode = await api.getAsync(
           `${Urls.products}SelectNextProductCode`
         );
@@ -660,14 +662,13 @@ export const ProductMaster: React.FC = React.memo(() => {
         ].filter((x: any) => {
           const obj = getFieldProps("*") as any as productDto;
           if (x.title == "Flavors") {
-            if ((!clientSession.isAppGlobal && !obj.elements?.flavorVisible) || (formState.data.product.productID ?? 0) == 0) {
+            if ((formState.data.product.productID ?? 0) == 0) {
               return false
             }
           }
           debugger;
           if (x.title == "Multi Barcode") {
-            if (((!clientSession.isAppGlobal)
-              || (clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
+            if (((clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
               return false
             }
           }

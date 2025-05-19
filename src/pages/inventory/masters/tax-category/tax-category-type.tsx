@@ -11,10 +11,10 @@ export const initialTaxCategoryData = {
   data: {
     taxCategoryID: 0,
     taxCategoryName: "",
-    sVatPerc: "",
-    pVatPerc: "",
-    scstPerc: "",
-    pcstPerc: ""
+    sVatPerc: 0,
+    pVatPerc: 0,
+    scstPerc: 0,
+    pcstPerc: 0,
   },
   validations: {
     taxCategoryName: ""

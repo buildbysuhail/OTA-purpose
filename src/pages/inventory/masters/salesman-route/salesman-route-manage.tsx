@@ -36,6 +36,7 @@ const api = new APIClient();
 export const SalesmanRoute: React.FC = React.memo(() => {
   const { t } = useTranslation("inventory");
   const [formState, setFormState] = useState<SalesManRouteData>(initialSalesManRouteData);
+  const [formStateValidation, setFormStateValidation] = useState<any>({});
   const [prevformState, setPrevFormState] = useState<Partial<SalesManRouteData>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -92,11 +93,15 @@ export const SalesmanRoute: React.FC = React.memo(() => {
 
   const handleSubmit = async () => {
     setIsSaving(true);
+    setFormStateValidation({});
     try {
       const apiMethod = isEdit ? api.put : api.post;
       const response: any = await apiMethod(`${Urls.sales_man_route}`, formState);
       handleResponse(response, () =>
+      {
         dispatch(toggleSalesManRoute({ isOpen: false, key: null, reload: true }))
+      }, () =>{
+        setFormStateValidation(response.validations)}
       );
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -146,6 +151,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("salesman")}
+          validation={formStateValidation?.salesManID}
           onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
         />
 
@@ -161,6 +167,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("sales_route")}
+          validation={formStateValidation?.salesRouteID}
           onChangeData={(data: any) => handleFieldChange("salesRouteID", data.salesRouteID)}
         />
 
@@ -189,6 +196,9 @@ export const SalesmanRoute: React.FC = React.memo(() => {
             />
           ))}
         </div>
+         {formStateValidation?.salesDay && (
+            <div className="mt-1 text-xs text-[#ef4444]">{formStateValidation?.salesDay}</div>
+          )}
       </div>
 
       <div className="flex gap-4 justify-end items-center mt-3">

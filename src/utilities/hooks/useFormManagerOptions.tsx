@@ -210,21 +210,37 @@ export function useFormManager<T>({
     initialData,
     onError,
   ]);
+const sanitizeData = (data: any, initialState: any): any => {
+  const sanitized: any = { ...data };
 
+  for (const key in sanitized) {
+    if (
+      sanitized[key] === "" &&
+      typeof initialState?.[key] === "number"
+    ) {
+      sanitized[key] = 0;
+    }
+  }
+
+  return sanitized;
+};
   const handleSubmit = useCallback(async () => {
     setIsLoading(true);
     if (useApiClient) {
       try {
         let response;
+        let rawData = (useApiClient ? localFormState : reduxFormState)?.data
+        debugger
+         const sanitizedData = sanitizeData(rawData, initialData.data);
         if (isEdit) {
           response = await apiClient.put(
             `${url}`,
-            (useApiClient ? localFormState : reduxFormState)?.data
+            sanitizedData
           );
         } else {
           response = await apiClient.post(
             url,
-            (useApiClient ? localFormState : reduxFormState)?.data
+            sanitizedData
           );
         }
         handleResponse(

@@ -66,7 +66,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           type='number'
           label={t("purchase_excise_tax_%")}
           placeholder={t("purchase_excise_tax_%")}
-          onChangeData={(data: any) => handleFieldChange("pcstPerc", data.pcstPerc)}
+          onChangeData={(data: any) => handleFieldChange("pCstPerc", data.pCstPerc)}
         />
 
         <ERPInput
@@ -74,7 +74,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           type='number'
           label={t("sales_excise_tax_%")}
           placeholder={t("sales_excise_tax_%")}
-          onChangeData={(data: any) => handleFieldChange("scstPerc", data.scstPerc)}
+          onChangeData={(data: any) => handleFieldChange("sCstPerc", data.sCstPerc)}
         />
       </div>
       <ERPFormButtons

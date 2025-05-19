@@ -60,6 +60,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
 
         <ERPInput
           {...getFieldProps("discountPerc")}
+          type="number"
           label={t("discount_%")}
           placeholder={t("discount_%")}
           onChangeData={(data: any) => handleFieldChange("discountPerc", data.discountPerc)}
@@ -67,6 +68,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
 
         <ERPInput
           {...getFieldProps("marginPerc")}
+          type="number"
           label={t("margin_%")}
           placeholder={t("margin_%")}
           onChangeData={(data: any) => handleFieldChange("marginPerc", data.marginPerc)}

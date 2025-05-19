@@ -294,7 +294,7 @@ debugger;
                     return updated;
                   });
                 }}
-                className="w-48"
+                className="w-32"
               />
             </div>
           </td>
@@ -328,7 +328,7 @@ debugger;
                   return updated;
                 });
               }}
-              className={`w-24 text-center ${
+              className={`w-20 text-center ${
                 unitData.unitID ? "bg-[#fef9c3]" : ""
               }`}
             />
@@ -336,7 +336,7 @@ debugger;
 
           <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24"></div>
+              <div className="w-20"></div>
             ) : (
               <ERPInput
                 id={`unit${unitNum}multiFactorValue`}
@@ -371,7 +371,7 @@ debugger;
                     return updated;
                   });
                 }}
-                className={`w-24 text-center ${
+                className={`w-20 text-center ${
                   unitData.unitID ? "bg-[#fef9c3]" : ""
                 }`}
               />
@@ -379,7 +379,7 @@ debugger;
           </td>
   <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24">Gate Pass</div>
+              <div className="w-20">Gate Pass</div>
             ) : (
               <ERPCheckbox
                 id={`unit${unitNum}GatePass`}
@@ -399,13 +399,13 @@ debugger;
                     return updated;
                   });
                 }}
-                className="w-32"
+                className="w-20"
               />
             )}
           </td>
           <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24">
+              <div className="w-32">
                 <ERPCheckbox
                     id="barcode"
                     label={t("barcode")}
@@ -471,7 +471,7 @@ debugger;
 
           <td className="px-2">
             {unitNum === 1 ? (
-              <div className="w-24">
+              <div className="w-20">
                  <span className="text-sm font-medium">{t("price")}</span>
               </div>
             ) : (
@@ -493,7 +493,7 @@ debugger;
                     return updated;
                   });
                 }}
-                className="w-32 text-right"
+                className="w-20 text-right"
               />
             )}
           </td>
@@ -517,7 +517,7 @@ debugger;
                   return updated;
                 });
               }}
-              className="w-40"
+              
             />
           </td>
         </tr>

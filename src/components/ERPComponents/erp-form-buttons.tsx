@@ -103,6 +103,20 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   </div>
 
       <div className="flex justify-end  space-x-2 py-[4px] basis-1/2 ">
+      
+      {onSubmit && (
+          <ERPButton
+          title={t("submit")}
+          onClick={handleSubmit}
+          loading={isLoading || isSubmitClicked}
+          disabled={submitDisabled || isSubmitClicked}
+          skip={skipSubmit}
+          jumpTo={jumpToSubmit}
+          jumpTarget={jumpTargetSubmit}
+          onEnterPress={onSubmitEnterPress}
+          variant="primary"
+        />
+      )}
       {onClear && (
         <ERPButton
           title={t("clear")}
@@ -127,19 +141,6 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
         />
       )}
      
-      {onSubmit && (
-          <ERPButton
-          title={t("submit")}
-          onClick={handleSubmit}
-          loading={isLoading || isSubmitClicked}
-          disabled={submitDisabled || isSubmitClicked}
-          skip={skipSubmit}
-          jumpTo={jumpToSubmit}
-          jumpTarget={jumpTargetSubmit}
-          onEnterPress={onSubmitEnterPress}
-          variant="primary"
-        />
-      )}
       </div>
       
     </div>

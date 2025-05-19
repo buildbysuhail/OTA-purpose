@@ -36,12 +36,12 @@ const MultiRatesGcc: React.FC<{
     () => [
       {
         dataField: "slNo",
-        caption: "slNo",
+         caption: t("si_no"),
         dataType: "string" as const,
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 80,
         allowEditing: false,
       },
       {

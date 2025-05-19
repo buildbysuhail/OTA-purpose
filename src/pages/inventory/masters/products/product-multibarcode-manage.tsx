@@ -11,6 +11,7 @@ import { ProductUnitInputDto } from "./products-type";
 import ERPFormButtons from "../../../../components/ERPComponents/erp-form-buttons";
 import { APIClient } from "../../../../helpers/api-client";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 
 interface ProductMultiBarcodeManageProps {
@@ -26,10 +27,10 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
   const [formData,setFormData] = useState({
     unitID: 0,
     unit:"",
-    barcodes:""
+    barcode:""
   })
   const handleAdd = () => {
-    if (!formData.unit || !formData.barcodes) {
+    if (!formData.unit || !formData.barcode) {
       alert(t("Please fill all required fields."));
       return;
     }
@@ -39,7 +40,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
         ...prev.data,
         {
           unitCode: formData.unit,
-          barcodes: formData.barcodes,
+          barcode: formData.barcode,
           unitID:formData.unitID
         },
       ],
@@ -48,7 +49,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
     setFormData({
       unitID: 0,
       unit: "",
-      barcodes: "",
+      barcode: "",
     });
   };
 
@@ -59,9 +60,9 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
       
       const response = await api.postAsync(
         Urls.productBarcode,
-        multiBarcode.data.map((x: any) => ({
+        multiBarcode.data.filter(x => !isNullOrUndefinedOrEmpty(x.barcode)).map((x: any) => ({
           ...x,
-          barcode:x.barcodes,
+          barcode:x.barcode,
           productBatchID
         }))
       );
@@ -85,7 +86,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
     setFormData({
       unitID: 0,
       unit: "",
-      barcodes: "",
+      barcode: "",
     });
 
     setMultiBarcode((prev)=>({
@@ -135,13 +136,13 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
             className="w-full"
           />
         <ErpInput
-          id="unitID"
-          value={formData.barcodes}
-          label="barcodes"
+          id="barcode"
+          value={formData.barcode}
+          label="barcode"
           onChange={(e)=>{
             setFormData((prev)=>({
               ...prev,
-              barcodes:e.target.value
+              barcode:e.target.value
             }))
           }}
           required={true} 
@@ -203,8 +204,8 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
           />
 
           <Column
-            dataField="barcodes"
-            caption={t("barcodes")}
+            dataField="barcode"
+            caption={t("barcode")}
             allowEditing={true}
             dataType="string"
           

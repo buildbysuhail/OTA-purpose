@@ -54,7 +54,11 @@ interface SchemeSettingsDiscountForm{
     SchemeID:number | null
 }
 
-export const BottomSidebarGrid: React.FC = () => {
+interface BottomSidebarGridProps {
+  sidebarHeight: number;
+}
+
+export const BottomSidebarGrid: React.FC<BottomSidebarGridProps> = ({ sidebarHeight }) => {
     const { t } = useTranslation('inventory');
     const [leftGridData, setLeftGridData] = useState<SchemeSettingsDiscountData[]>([]);
     const [rightGridData, setRightGridData] = useState<SchemeSettingsDiscountData[]>([]);
@@ -488,6 +492,17 @@ const payload = {
       );
       const dispatch = useDispatch();
 
+      const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+    useEffect(() => {
+      let gridHeightMobile = sidebarHeight - 50;
+      let gridHeightWindows = sidebarHeight - 135;
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [sidebarHeight]); 
+
     return (
           <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg ">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
@@ -527,7 +542,7 @@ const payload = {
                              columns={columnsleft}
                              remoteOperations={false}
                             showBorders={true}
-                            height={300}
+                            // height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}
@@ -535,11 +550,14 @@ const payload = {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
-                            heightToAdjustOnWindows={220}
+                            // heightToAdjustOnWindows={500}
                             selectionMode="multiple"
                             allowSelection={true}
                             allowSelectAll={true}
                             gridId={"discount_scheme_grid_left"}
+                            heightToAdjustOnWindowsInModal={gridHeight.windows}
+                            
+                           
                         />
                         
                     </div>
@@ -558,7 +576,7 @@ const payload = {
                             data={rightGridData}
                              remoteOperations={false}
                             showBorders={true}
-                            height={300}
+                            // height={300}
                             rowAlternationEnabled={true}
                             enableScrollButton={false}
                             hideDefaultExportButton={true}
@@ -566,12 +584,13 @@ const payload = {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
-                            heightToAdjustOnWindows={220}
+                            // heightToAdjustOnWindows={500}
                             selectionMode="multiple"
                             allowSelection={true}
                             allowSelectAll={true}
                             columns={columnsright}
                             gridId={"discount_scheme_grid_right"}
+                            heightToAdjustOnWindowsInModal={gridHeight.windows}
                         />
                     </div>
                 </div>

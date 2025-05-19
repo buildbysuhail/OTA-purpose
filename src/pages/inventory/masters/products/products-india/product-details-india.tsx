@@ -345,7 +345,7 @@ const ProductDetailsIndia: React.FC<{
               }
             </div>
           </div>
-          {/* <ProductDetailsBatches getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t}></ProductDetailsBatches> */}
+          
         </div>
       }
     </>

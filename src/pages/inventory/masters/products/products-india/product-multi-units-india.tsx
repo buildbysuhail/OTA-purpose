@@ -339,12 +339,11 @@ const ProductMultiUnitsIndia = forwardRef<
       {
         dataField: "mb",
         caption: t("mb"),
-        dataType: "boolean",
-        alignment: "center",
+         fixed: true,
+  fixedPosition: "right",
         allowEditing: false,
-        allowFiltering: false,
-        allowSorting: false,
         allowSearch: false,
+        allowFiltering: false,
         width: 80,
         cellRender: (cellData, cellInfo) => {
        
@@ -354,7 +353,8 @@ const ProductMultiUnitsIndia = forwardRef<
           return null;
         }
         return (
-          <div className="flex items-center justify-center p-2 cursor-pointer">
+        
+          <div className="flex items-center justify-center hover:shadow-md p-2 cursor-pointer rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
             <button
               type="button"
               className="text-[#e53e3e] hover:text-[#c53030] font-semibold"
@@ -368,29 +368,33 @@ const ProductMultiUnitsIndia = forwardRef<
       
       },
       
-      // {
-      //   dataField: "delete",
-      //   caption: "X",
-      //   width: 70,
-      //   alignment: "center",
-      //   cellRender: (cellData, cellInfo) => (
-      //     <div className="flex items-center justify-center p-2 cursor-pointer">
-      //       <a
-      //         className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-      //         onClick={() => handleRemoveUnit(cellInfo.rowIndex)}
-      //       >
-      //         <X className="w-4 h-4" />
-      //       </a>
-      //     </div>
-      //   ),
-      //   buttons: [
-      //     {
-      //       name: "delete",
-      //       text: "x",
-      //       onClick: (e) => handleRemoveUnit(e.row.rowIndex),
-      //     },
-      //   ],
-      // },
+      {
+        dataField: "actions",
+        caption: "X",
+        alignment: "center",
+        isLocked: true,
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        width: 50,
+         fixedPosition: "right",
+        // alignment: "center",
+        cellRender: (cellElement: any, cellInfo: any) => {
+          return(
+         <div className="flex items-center justify-center p-2 cursor-pointer">
+            <a
+              className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
+              onClick={() => handleRemoveUnit(cellElement?.data?.rowIndex)}
+            >
+              <X className="w-4 h-4" />
+            </a>
+          </div>
+          )
+        }
+         
+        
+   
+      },
         ], []);
 
     function setMultiRatesDefaultMRP(
@@ -688,124 +692,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
 
           {/* DataGrid Section */}
           <div className="p-4 rounded-md shadow w-full overflow-x-auto">
-            {/* <DataGrid
-              dataSource={getFieldProps("units").value}
-              showBorders={true}
-              rowAlternationEnabled={true}
-              className="w-full"
-              onSaving={(e) => {
-                const _unts = getFieldProps("units").value;
-                if (e.changes.length > 0) {
-                  const changes = e.changes[0];
-                  if (changes.type === "update") {
-                    const updatedUnits = [..._unts];
-                    const index = _unts.findIndex(
-                      (u: any) => u.unitID === changes.key?.unitID
-                    );
-                    updatedUnits[index] = {
-                      ...updatedUnits[index],
-                      ...changes.data,
-                    };
-                    handleFieldChange("units", [...updatedUnits]);
-                  }
-                }
-              }}
-            >
-              <Paging defaultPageSize={5} />
-
-              <Editing mode="cell" allowUpdating={true} />
-
-              <KeyboardNavigation
-                editOnKeyPress={true}
-                enterKeyAction={"startEdit"}
-                enterKeyDirection={"row"}
-              />
-
-              <Column dataField="unit" caption={t("uom")} />
-
-              <Column
-                dataField="multiFactor"
-                caption={t("multi_factor")}
-                dataType="number"
-                allowEditing
-              />
-
-              <Column dataField="barCode" allowEditing caption={t("barcode")} />
-
-              <Column
-                dataField="salesPrice"
-                allowEditing
-                caption={t("sale_price")}
-                dataType="number"
-              />
-
-              <Column
-                dataField="mrp"
-                caption={t("mrp")}
-                dataType="number"
-                allowEditing
-              />
-
-              <Column
-                dataField="msp"
-                allowEditing
-                caption={t("msp")}
-                dataType="number"
-              />
-
-              <Column
-                dataField="description"
-                allowEditing
-                caption={t("description")}
-              />
-
-              <Column
-                dataField="descriptionFL"
-                allowEditing
-                caption={t("description_fl")}
-              />
-
-              <Column
-                dataField="mb"
-                caption={t("mb")}
-                dataType="boolean"
-                alignment="center"
-                cellRender={(cellData) => (
-                  <div className="flex items-center justify-center inline-flex hover:shadow-md p-2 rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
-                    <a
-                      className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-                      onClick={() => setMultiBarcode(cellData.rowIndex)}
-                    >
-                      <Barcode className="w-4 h-4" />
-                    </a>
-                  </div>
-                )}
-              />
-
-              <Column
-                type="buttons"
-                caption="X"
-                width={70}
-                alignment="center"
-                cellRender={(cellData) => (
-                  <div
-                    className="flex items-center justify-center p-2 cursor-pointer"
-                    onClick={() => {
-                      const gridInstance = cellData.component;
-                      const rowKey = cellData.row?.key;
-
-                      if (rowKey !== undefined) {
-                        gridInstance.deleteRow(cellData.rowIndex);
-                      }
-                    }}
-                  >
-                    <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
-                      <X className="w-4 h-4" />
-                    </a>
-                  </div>
-                )}
-              />
-            </DataGrid> */}
+            
                <ErpDevGrid
                     ref={multiUnitRef}
                     gridHeader={t("multi_units")}
@@ -824,7 +711,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
 
                       keyboardNavigation={{
                         editOnKeyPress: true,
-                        enterKeyAction: "startEdit",
+                        enterKeyAction: "moveFocus",
                         enterKeyDirection: "row",
                         enabled: true,
                       }}

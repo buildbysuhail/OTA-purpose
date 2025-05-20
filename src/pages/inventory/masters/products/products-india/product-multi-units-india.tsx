@@ -95,7 +95,11 @@ const ProductMultiUnitsIndia = forwardRef<
       }
 
       const mUnits = updateUnit;
+      try {
+        
       for (const row of mUnits) {
+        
+       debugger; 
         if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
           mlRate = await loadMultiRates(
             row.unitID ?? 0,
@@ -104,6 +108,11 @@ const ProductMultiUnitsIndia = forwardRef<
             mlRate
           );
         }
+      } 
+      } catch (error) {
+       debugger; console.log('safvam');
+
+       
       }
       debugger;
       return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
@@ -149,10 +158,11 @@ const ProductMultiUnitsIndia = forwardRef<
       setSelectedUnits(selected);
       unSetSelectedUnits(unSelected);
 
+      let rates = obj.prices;
       if (appSettings?.productsSettings?.allowMultirate) {
-        const rates = await loadMultiRateToGrid(obj, updated);
-        handleDataChange({ ...obj, prices: rates, units: updated });
+        rates = await loadMultiRateToGrid(obj, updated);
       }
+        handleDataChange({ ...obj, prices: rates, units: updated });
 
       setUnit(unitDAta);
     };
@@ -348,7 +358,7 @@ const ProductMultiUnitsIndia = forwardRef<
             <button
               type="button"
               className="text-[#e53e3e] hover:text-[#c53030] font-semibold"
-              onClick={() => setMultiBarcode(rowIndex)}
+              onClick={() => setMultiBarcode(cellData.data.multiBarcodes, cellData.data.unit,rowIndex)}
             >
               <Barcode className="w-4 h-4" />
             </button>
@@ -453,11 +463,8 @@ const ProductMultiUnitsIndia = forwardRef<
       return updatedRates;
     }
 
-const setMultiBarcode = (rowId: number) => {
-  const units = getFieldProps("units").value ;
-  console.log("setMultiBarcode called with rowId:", rowId, "Units:", units);
-  const unitData = units[rowId];
-  const barcodesString = unitData?.multiBarcodes ?? "";
+const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
+  debugger;
   const barcodeArray = barcodesString
     .split(",")
     .map((barcode:any) => barcode.trim())
@@ -467,19 +474,18 @@ const setMultiBarcode = (rowId: number) => {
         barcodeArray == undefined ||
         barcodeArray == null ||
         barcodeArray.length == 0
-          ? [{ unit: units[rowId]?.unit ?? "", barcode: "" }]
+          ? [{ unit: unitName, barcode: "" }]
           : barcodeArray.map((barcode: any) => ({
-              unit: units[rowId]?.unit ?? "",
+              unit: unitName,
               barcode,
             }));
       setOpenMB({
         index: rowId,
         open: true,
-        unit: units[rowId]?.unit ?? "",
+        unit: unitName,
         data: data,
       });
     };
-
     const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
       e.isHighlighted = true;
     };

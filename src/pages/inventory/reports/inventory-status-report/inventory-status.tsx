@@ -414,7 +414,7 @@ const InventoryStatusReport = () => {
                 method={ActionType.POST}
                 filterContent={<InventoryStatusFilter />}
                 filterWidth={500}
-                filterHeight={220}
+                filterHeight={250}
                 filterInitialData={InventoryStatusFilterInitialState}
                 reload={true}
                 gridId="grd_inventory_status"

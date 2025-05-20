@@ -26,29 +26,28 @@ const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: 
           />
         </div>
       </div>
-      <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4">
-        <ERPDataCombobox
-          label={t("transaction_type")}
-          {...getFieldProps("voucherType")}
-          options={[
-            { value: "SI", label: "Sales Invoice" },
-            { value: "SR", label: "Sales Return" },
-            { value: "PI", label: "Purchase Invoice" },
-            { value: "PR", label: "Purchase Return" },
-            { value: "SO", label: "Sales Order" },
-            { value: "SQ", label: "Sales Quotation" },
-            { value: "GD", label: "Goods Delivery" },
-            { value: "DR", label: "Goods Delivery Return" },
-            { value: "GRN", label: "Goods Receipt" },
-            { value: "GRR", label: "Goods Receipt Return" },
-            { value: "PO", label: "Purchase Order" },
-            { value: "ILR", label: "Item Load Request" }
-          ]}
-          onSelectItem={(data) => {
-            handleFieldChange("voucherType", data.voucherType);
-          }}
-        />
-      </div>
+      <ERPDataCombobox
+        label={t("transaction_type")}
+        {...getFieldProps("voucherType")}
+        options={[
+          { value: "SI", label: "Sales Invoice" },
+          { value: "SR", label: "Sales Return" },
+          { value: "PI", label: "Purchase Invoice" },
+          { value: "PR", label: "Purchase Return" },
+          { value: "SO", label: "Sales Order" },
+          { value: "SQ", label: "Sales Quotation" },
+          { value: "GD", label: "Goods Delivery" },
+          { value: "DR", label: "Goods Delivery Return" },
+          { value: "GRN", label: "Goods Receipt" },
+          { value: "GRR", label: "Goods Receipt Return" },
+          { value: "PO", label: "Purchase Order" },
+          { value: "ILR", label: "Item Load Request" }
+        ]}
+        className="max-w-[297px]"
+        onSelectItem={(data) => {
+          handleFieldChange("voucherType", data.voucherType);
+        }}
+      />
     </div>
   );
 }

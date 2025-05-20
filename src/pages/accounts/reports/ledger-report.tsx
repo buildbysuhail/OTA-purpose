@@ -167,7 +167,6 @@ const LedgerReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
-          const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""

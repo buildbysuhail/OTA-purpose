@@ -4,9 +4,12 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const DaywiseSummaryWithProfitFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport')
+      const userSession = useSelector((state: RootState) => state.UserSession);
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
@@ -67,12 +70,13 @@ const DaywiseSummaryWithProfitFilter = ({ getFieldProps, handleFieldChange, form
                     label={t("show_sales_return")}
                     onChangeData={(data) => handleFieldChange("showSalesReturn", data.showSalesReturn)}
                 />
-
+  {userSession.dbIdValue == "489995732270" && (
                 <ERPCheckbox
-                    {...getFieldProps("showWithLastPurchaseCost")}
+                    {...getFieldProps("showBatchCost")}
                     label={t("show_with_last_purchase_cost")}
-                    onChangeData={(data) => handleFieldChange("showWithLastPurchaseCost", data.showWithLastPurchaseCost)}
+                    onChangeData={(data) => handleFieldChange("showBatchCost", data.showBatchCost)}
                 />
+                   )}
             </div>
         </div>
     );
@@ -82,9 +86,9 @@ export default DaywiseSummaryWithProfitFilter;
 export const DaywiseSummaryWithProfitFilterInitialState = {
     fromDate: moment().local().startOf("day").toDate(),
     toDate: moment().local().endOf("day").toDate(),
-    salesRouteID: 0,
-    costCenterID: 0,
-    showTransactionTimeProfit: 0,
-    showSalesReturn: 0,
-    showWithLastPurchaseCost: 0
+    salesRouteID: -1,
+    costCenterID: -1,
+    showTransactionTimeProfit: false,
+    showSalesReturn: false,
+    showBatchCost: false
 };

@@ -17,7 +17,7 @@ const SummaryFilter = ({
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const usersession = useSelector((state: RootState) => state.UserSession);
+  const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const { t } = useTranslation("accountsReport");
   let location = useLocation();
@@ -279,7 +279,7 @@ const SummaryFilter = ({
             });
           }}
         />
-        {usersession.dbIdValue == "489995732270" && (
+        {userSession.dbIdValue == "489995732270" && (
           <ERPDataCombobox
             label={t("cost_center")}
             {...getFieldProps("costCenterID")}

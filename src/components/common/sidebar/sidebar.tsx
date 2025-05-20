@@ -208,10 +208,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           "sales_transfer_monthWise_summary",
           "sales_transfer_partyWise_summary",
      
-        
-        
-        
-        
         ];
         st = st
           .filter((parent: any) => !excluded.includes(parent.title))

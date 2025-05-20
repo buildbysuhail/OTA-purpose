@@ -11,6 +11,7 @@ import Urls from "../../../../redux/urls";
 import DaywiseSummaryWithProfitFilter, {
   DaywiseSummaryWithProfitFilterInitialState,
 } from "./daywise-summary-with-profit-filter";
+import moment from "moment";
 
 const DaywiseSummaryWithProfit = () => {
   const { t } = useTranslation("accountsReport");
@@ -24,6 +25,70 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          return {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "left",
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM" ||
+              cellElement.data.date === "SALES" ||
+              cellElement.data.date === "SALES RETURN"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM" ||
+                cellElement.data.date === "SALES" ||
+                cellElement.data.date === "SALES RETURN"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM" ||
+                cellElement.data.date === "SALES" ||
+                cellElement.data.date === "SALES RETURN"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM" ||
+                cellElement.data.date === "SALES" ||
+                cellElement.data.date === "SALES RETURN"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM" ||
+                cellElement.data.date === "SALES" ||
+                cellElement.data.date === "SALES RETURN"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+             {moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
+                         ? moment(cellElement.data.date, "DD/MM/YYYY").format("DD-MMM-YYYY")
+                         : cellElement.data.date}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "totalGross",
@@ -34,6 +99,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.totalGross;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.totalGross == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.totalGross)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "totalVAT",
@@ -44,6 +168,66 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.totalVAT;
+          const value =
+            balance == null ? "" : getFormattedValue(balance, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.totalVAT == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.totalVAT, false, 4)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "totalDiscount",
@@ -54,6 +238,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.totalDiscount;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.totalDiscount == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.totalDiscount)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "billDiscount",
@@ -64,6 +307,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.billDiscount;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.billDiscount == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.billDiscount)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "grandTotal",
@@ -74,6 +376,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.grandTotal;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.grandTotal == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.grandTotal)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "cost",
@@ -84,6 +445,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cost;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.cost == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.cost)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "profit",
@@ -94,6 +514,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.profit;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.profit == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.profit)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "gpPercentage",
@@ -104,6 +583,65 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.gpPercentage;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.gpPercentage == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.gpPercentage)
+              }`}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "markupPercentage",
@@ -114,69 +652,128 @@ const DaywiseSummaryWithProfit = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.markupPercentage;
+          const value = balance == null ? "" : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.date === "TOTAL" ||
+              cellElement.data.date === "SUM"
+                ? "#FF0000"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? { argb: "FFFF0000" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.date === "TOTAL" ||
+                cellElement.data.date === "SUM"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.markupPercentage == null
+                  ? ""
+                  : getFormattedValue(cellElement.data.markupPercentage)
+              }`}
+            </span>
+          );
+        }
+      },
     },
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0";
+  //     }
+  //     return getFormattedValue(value) || "0";
+  //   };
+  // }, [getFormattedValue]);
 
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "totalGross",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "totalVAT",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "totalDiscount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "billDiscount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "grandTotal",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "cost",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "profit",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-  ];
+  // const summaryItems: SummaryConfig[] = [
+  //   {
+  //     column: "totalGross",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "totalVAT",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "totalDiscount",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "billDiscount",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "grandTotal",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "cost",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "profit",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  // ];
 
   return (
     <Fragment>
@@ -185,11 +782,12 @@ const DaywiseSummaryWithProfit = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
+                // summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
                   paging: false,
                   sorting: false,
+                  summary: false,
                 }}
                 columns={columns}
                 moreOption={true}

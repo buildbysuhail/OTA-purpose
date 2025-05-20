@@ -189,7 +189,6 @@ const DayBookDetailed = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
-          const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""
@@ -234,7 +233,6 @@ const DayBookDetailed = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
-          const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""

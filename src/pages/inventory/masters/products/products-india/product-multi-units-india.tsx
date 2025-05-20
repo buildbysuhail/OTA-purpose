@@ -340,7 +340,7 @@ const ProductMultiUnitsIndia = forwardRef<
         dataField: "mb",
         caption: t("mb"),
          fixed: true,
-  fixedPosition: "right",
+       fixedPosition: "right",
         allowEditing: false,
         allowSearch: false,
         allowFiltering: false,
@@ -695,7 +695,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
             
                <ErpDevGrid
                     ref={multiUnitRef}
-                    gridHeader={t("multi_units")}
+                    hideGridHeader={true}
                     data={getFieldProps("units").value}
                     columns={columns}
                     editMode="cell"
@@ -708,7 +708,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                       delete: false,
                       },
                     }}
-
+                     scrollingMode="virtual"
                       keyboardNavigation={{
                         editOnKeyPress: true,
                         enterKeyAction: "moveFocus",

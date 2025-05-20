@@ -467,15 +467,15 @@ const setMultiBarcode = (rowId: number) => {
         barcodeArray == undefined ||
         barcodeArray == null ||
         barcodeArray.length == 0
-          ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
+          ? [{ unit: units[rowId]?.unit ?? "", barcode: "" }]
           : barcodeArray.map((barcode: any) => ({
-              unit: units[rowId].unit ?? "",
+              unit: units[rowId]?.unit ?? "",
               barcode,
             }));
       setOpenMB({
         index: rowId,
         open: true,
-        unit: units[rowId].unit ?? "",
+        unit: units[rowId]?.unit ?? "",
         data: data,
       });
     };

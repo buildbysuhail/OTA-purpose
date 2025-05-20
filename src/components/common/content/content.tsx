@@ -202,6 +202,14 @@ import DiagnosisReport from "../../../pages/inventory/reports/diagnosis-report/d
 import InventoryStatusReport from "../../../pages/inventory/reports/inventory-status-report/inventory-status";
 import PrintDetails from "../../../pages/inventory/reports/print-details-report/print-details";
 import RouteWiseSalesAndCollection from "../../../pages/inventory/reports/routewise-sales-and-collection-report/routewise-sales-and-collection";
+import VoidReport from "../../../pages/inventory/reports/void-report/void-report";
+import CounterReport from "../../../pages/inventory/reports/counter-report/counter-report";
+import DiagnosisReportZeroRateProductlist from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-zero-rate-productlist";
+import DiagnosisReportPostDatedTransactions from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-post-dated-transactions";
+import DiagnosisReportSalesPriceLessThanLPCost from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-lp-cost";
+import DiagnosisReportSalesPriceLessthanPurchasePrice from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price";
+import DiagnosisReportSalesPriceLessthanMSP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp";
+import DiagnosisReportSalesPriceGreaterthanMRP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -540,6 +548,15 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/branch_inventory_request_pending_order_report" element={<BranchInventoryRequestPendingOrder />} />
         <Route path="/inventory/print_details_report" element={<PrintDetails />} />
         <Route path="/inventory/inventory_status_report" element={<InventoryStatusReport />} />
+        <Route path="/inventory/void_report" element={<VoidReport />} />
+        <Route path="/inventory/counter_report" element={<CounterReport />} />
+        <Route path="/inventory/sales_return_estimate_register_report" element={<RegisterReport dataUrl={urls.sales_return_estimate_register} gridHeader="sales_return_estimate_register" gridId="grd_sales_return_estimate_register" />} />
+        <Route path="/inventory/diagnosis_report_zero_rate_productlist" element={<DiagnosisReportZeroRateProductlist />} />
+        <Route path="/inventory/diagnosis_report_post_dated_transactions" element={<DiagnosisReportPostDatedTransactions />} />
+        <Route path="/inventory/diagnosis_report_sales_price_less_than_lp_cost" element={<DiagnosisReportSalesPriceLessThanLPCost />} />
+        <Route path="/inventory/diagnosis_report_sales_price_less_than_purchase_price" element={<DiagnosisReportSalesPriceLessthanPurchasePrice />} />
+        <Route path="/inventory/diagnosis_report_sales_price_less_than_msp" element={<DiagnosisReportSalesPriceLessthanMSP />} />
+        <Route path="/inventory/diagnosis_report_sales_price_greater_than_mrp" element={<DiagnosisReportSalesPriceGreaterthanMRP />} />
         {/* global */}
         <Route path="/inventory/sales_estimate_summary_report" element={<SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />} />
         {/* --- */}

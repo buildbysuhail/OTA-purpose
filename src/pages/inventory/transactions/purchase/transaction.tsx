@@ -1796,13 +1796,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     fontSize: "14px",
     cursor: "pointer",
   }
-  const handleCellChange = (rowIndex: number, dataField: string, value: any) => {
-    setData((prevData) => {
-      const newData = [...prevData];
-      newData[rowIndex] = { ...newData[rowIndex], [dataField]: value };
-      return newData;
-    });
-  };
+
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
   //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -2064,7 +2058,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
             height={gridHeight}
             gridId={`${gridCode}-grid`}
             onAddData={handleAddData}
-            onCellChange={handleCellChange}
           />
 
           <div

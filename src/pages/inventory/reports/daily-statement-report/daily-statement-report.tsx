@@ -1,37 +1,31 @@
 import { useTranslation } from "react-i18next"
-import { Fragment, useMemo } from "react"
-import DailySalesStatementReportFilter, { DailySalesStatementReportFilterInitialState } from "./daily-statement-sales-report -filter"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import GridId from "../../../../redux/gridId"
-import { ActionType } from "../../../../redux/types"
-import Urls from "../../../../redux/urls"
+import { FC, Fragment, useEffect, useMemo, useState } from "react"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-
-
-const DailySalesStatementReport = () => {
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
+import Urls from "../../../../redux/urls"
+import { ActionType } from "../../../../redux/types"
+import GridId from "../../../../redux/gridId"
+import DailyStatementReportFilter, { DailyStatementReportInitialState } from "./daily-statement-report -filter"
+import { useLocation } from "react-router-dom"
+interface DailyStatementReportProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+// const DailyStatementReport = () => {
+  const DailyStatementReport: FC<DailyStatementReportProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
     {
       dataField: "form",
       caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 70,
       groupIndex: 0,
-      width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -41,7 +35,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 70,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -51,7 +44,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 90,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -61,7 +53,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 130,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -71,7 +62,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: true,
       showInPdf: true,
     },
     {
@@ -81,7 +71,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -111,7 +100,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -141,7 +129,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -171,7 +158,6 @@ const DailySalesStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible: true,
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
@@ -252,7 +238,11 @@ const DailySalesStatementReport = () => {
       customizeText: customizeSummaryRow,
     },
   ];
-
+ const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -261,23 +251,24 @@ const DailySalesStatementReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 key={key}
                   autoExpandAll={true}
                   columns={columns}
-                  gridHeader={t("daily_statement_report_of_sales")}
+                  gridHeader={t(gridHeader)}
                   filterText=" From {fromDate} To {toDate}"
-                  dataUrl={Urls.daily_statement_sales}
+                  dataUrl={dataUrl}
                   summaryItems={summaryItems}
                   remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
-                  gridId={GridId.daily_statement_sales}
+                  gridId={gridId}
                   enablefilter={true}
                   showFilterInitially={false}
                   filterWidth={360}
                   filterHeight={250}
-                  filterContent={<DailySalesStatementReportFilter />}
-                  filterInitialData={DailySalesStatementReportFilterInitialState}
+                  filterContent={<DailyStatementReportFilter />}
+                  filterInitialData={DailyStatementReportInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />
@@ -290,5 +281,5 @@ const DailySalesStatementReport = () => {
   )
 }
 
-export default DailySalesStatementReport
+export default DailyStatementReport
 

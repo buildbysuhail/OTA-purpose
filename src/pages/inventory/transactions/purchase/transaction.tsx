@@ -820,7 +820,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setData((prev) => [...prev, newItem]);
   };
 
-  const purchaseGridCol : DevGridColumn[] = useMemo(
+  const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
       {
         dataField: "slNo",
@@ -831,7 +831,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 70,
         isLocked: true,
-        
+
       },
       {
         dataField: "pCode",
@@ -857,7 +857,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("bar_code"),
         dataType: "string",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
@@ -878,7 +878,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        allowEditing:true,
+        allowEditing: true,
         minWidth: 200,
       },
       {
@@ -895,7 +895,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("brand"),
         dataType: "string",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
@@ -914,7 +914,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("qty"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -925,7 +925,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -934,7 +934,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("unit"),
         dataType: "string",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
@@ -944,7 +944,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("unit_id"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -955,7 +955,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 130,
       },
@@ -965,7 +965,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -984,7 +984,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -994,7 +994,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1004,7 +1004,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1013,7 +1013,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("stock"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -1024,7 +1024,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 200,
       },
@@ -1034,7 +1034,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         minWidth: 200,
       },
@@ -1052,7 +1052,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("sales_price"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 200,
@@ -1063,7 +1063,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1081,7 +1081,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("sticker_qty"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 130,
@@ -1092,7 +1092,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1102,7 +1102,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 150,
       },
@@ -1112,7 +1112,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1122,7 +1122,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1149,7 +1149,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("cost"),
         dataType: "number",
         allowSorting: true,
-        allowEditing:true,
+        allowEditing: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -1160,7 +1160,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 150,
       },
@@ -1170,7 +1170,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
-        allowEditing:true,
+        allowEditing: true,
         allowFiltering: true,
         width: 100,
       },
@@ -1641,7 +1641,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       },
     ],
     []
-);
+  );
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -2238,13 +2238,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
             <button
               onClick={toggleDropup}
-              className={`group flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 bg-[#f8f8ff] shadow-md transition-all duration-300 
-              ${isDropUpOpen ? 'bg-gray-100' : ''} hover:bg-white hover:shadow-lg`}
+              className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? 'bg-gray-100' : ''}`}
+              style={{ boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.1)' }}
             >
               <ChevronUp
-                className={`transition-transform duration-500 text-gray-700 
-                ${isDropUpOpen ? 'transform rotate-180' : hasAnimated ? '' : 'animate-[bounce_2s_1]'} 
-                group-hover:text-black`}
+                className={`mx-2 transition-transform duration-500 ${isDropUpOpen ? 'transform rotate-180' : hasAnimated ? '' : 'animate-[bounce_2s_1]'}`}
                 size={24}
               />
             </button>
@@ -2313,7 +2311,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-1">
-            {/* <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1">
               <ERPButton
                 title={t("bottom sidebar")}
                 // onClick={handleButtonClick}
@@ -2322,7 +2320,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 className="w-[150px]"
                 localInputBox={formState?.userConfig?.inputBoxStyle}
               />
-            </div> */}
+            </div>
 
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -2609,7 +2607,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
             This sidebar for test.
           </p> */}
 
-          <BottomSidebarGrid />
+          {/* <BottomSidebarGrid /> */}
+          {/* <BottomSidebarGrid sidebarHeight={sidebarHeight} /> */}
         </div>
       </BottomSidebar>
 

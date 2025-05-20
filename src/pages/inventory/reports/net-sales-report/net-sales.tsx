@@ -1,16 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {  SummaryConfig,} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import NetSalesReportFilter, {
-  NetSalesReportFilterInitialState,
-} from "./net-sales-filter";
-import Urls from "../../../../redux/urls";
+import NetSalesReportFilter, {  NetSalesReportFilterInitialState,} from "./net-sales-filter";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 
@@ -23,7 +18,6 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(NetSalesReportFilterInitialState);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {

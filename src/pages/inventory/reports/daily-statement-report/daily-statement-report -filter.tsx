@@ -7,7 +7,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
 //   handleFieldChange: (field: string | object, value?: any) => void
 // }
 
-const DailyStatementAllReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+const DailyStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport")
 
   return (
@@ -45,10 +45,10 @@ const DailyStatementAllReportFilter = ({ getFieldProps, handleFieldChange }: any
   )
 }
 
-export default DailyStatementAllReportFilter
+export default DailyStatementReportFilter
 
 // Updated initial state to match C# property names
-export const DailyStatementAllReportInitialState = {
+export const DailyStatementReportInitialState = {
   // fromDate: moment().local().subtract(45, "days").toDate(),
   fromDate: new Date(),
   toDate: new Date(), // Default empty string

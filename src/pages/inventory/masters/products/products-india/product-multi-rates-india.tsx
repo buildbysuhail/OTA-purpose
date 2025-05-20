@@ -196,6 +196,7 @@ const handleRowSaving = async (e: any) => {
       }
     }
   };
+
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">

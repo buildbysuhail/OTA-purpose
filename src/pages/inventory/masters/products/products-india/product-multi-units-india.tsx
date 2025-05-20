@@ -21,6 +21,7 @@ import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { Barcode, X } from "lucide-react";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import { loadMultiRateToGrid } from "../helper";
 
 export interface ProductMultiUnitsIndiaRef {
   loadMultiRateToGrid: (
@@ -74,52 +75,10 @@ const ProductMultiUnitsIndia = forwardRef<
     }>({ index: 0, open: false, unit: "", data: [] });
     const multiUnitRef = useRef<any>(null);
 
-    const loadMultiRateToGrid = async (
-      obj: productDto,
-      updateUnit: any
-    ): Promise<ProductPriceInputDto[]> => {
-      debugger;
-      let mlRate = getFieldProps("prices").value;
-      if ((obj.product.basicUnitID ?? 0) > 0) {
-        if (
-          mlRate.find((x: any) => x.unitID == obj.product.basicUnitID) ==
-          undefined
-        ) {
-          mlRate = await loadMultiRates(
-            obj.product.basicUnitID ?? 0,
-            obj.product.basicUnitName ?? "",
-            obj,
-            mlRate
-          );
-        }
-      }
-
-      const mUnits = updateUnit;
-      try {
-        
-      for (const row of mUnits) {
-        
-       debugger; 
-        if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
-          mlRate = await loadMultiRates(
-            row.unitID ?? 0,
-            row.unit ?? "",
-            obj,
-            mlRate
-          );
-        }
-      } 
-      } catch (error) {
-       debugger; console.log('safvam');
-
-       
-      }
-      debugger;
-      return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
-    };
+    
     useImperativeHandle(ref, () => ({
       loadMultiRateToGrid: async (obj: productDto, units: any) => {
-        return await loadMultiRateToGrid(obj, units);
+        return await loadMultiRateToGrid(obj, units,api, getFormattedValue);  
       },
     }));
 
@@ -160,7 +119,7 @@ const ProductMultiUnitsIndia = forwardRef<
 
       let rates = obj.prices;
       if (appSettings?.productsSettings?.allowMultirate) {
-        rates = await loadMultiRateToGrid(obj, updated);
+        rates = await loadMultiRateToGrid(obj, updated,api,  getFormattedValue);
       }
         handleDataChange({ ...obj, prices: rates, units: updated });
 
@@ -217,50 +176,6 @@ const ProductMultiUnitsIndia = forwardRef<
 
       fetchUnits();
     }, []);
-    const loadMultiRates = async (
-      unitId: number,
-      unit: string,
-      obj: productDto,
-      multiRates: Array<ProductPriceInputDto>
-    ): Promise<ProductPriceInputDto[]> => {
-      try {
-        const rates: ProductPriceInputDto[] = [...(multiRates || [])];
-        const priceCategories = await api.getAsync(Urls.data_pricectegory);
-
-        if (!priceCategories || priceCategories.length === 0) {
-          return rates;
-        }
-        // Transform price categories into new rates using map
-        const newRates: ProductPriceInputDto[] = priceCategories.map(
-          (cat: any) => ({
-            priceCategory: cat.name,
-            unit: unit,
-            unitID: unitId,
-            priceCategoryID: cat.id,
-            purchasePrice: parseFloat(
-              getFormattedValue(
-                (obj?.product?.stdPurchasePrice ?? 0) *
-                  (unitDAta.multiFactor || 1)
-              )
-            ),
-            mrp: obj?.product?.mrp || 0,
-
-            // Fill in all required fields below
-            productMultiPriceID: 0,
-            productBatchID: 0,
-            salesPrice: 0,
-            discountPerc: 0,
-            profitAmt: 0,
-            msp: 0,
-          })
-        );
-
-        return [...rates, ...newRates];
-      } catch (err) {
-        console.error("Error in loadMultiRates:", err);
-        return obj.prices || [];
-      }
-    };
 
         const columns: DevGridColumn[] = useMemo(() => [
        {
@@ -379,12 +294,12 @@ const ProductMultiUnitsIndia = forwardRef<
         width: 50,
          fixedPosition: "right",
         // alignment: "center",
-        cellRender: (cellElement: any, cellInfo: any) => {
+        cellRender: (cellData) => {
           return(
          <div className="flex items-center justify-center p-2 cursor-pointer">
             <a
               className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-              onClick={() => handleRemoveUnit(cellElement?.data?.rowIndex)}
+             onClick={() => handleRemoveUnit(cellData.data.unitID)}
             >
               <X className="w-4 h-4" />
             </a>
@@ -395,77 +310,17 @@ const ProductMultiUnitsIndia = forwardRef<
         
    
       },
-        ], []);
+        ], [t]);
 
-    function setMultiRatesDefaultMRP(
-      multiUnits: ProductUnitInputDto[],
-      multiRates: ProductPriceInputDto[],
-      obj: productDto
-    ): ProductPriceInputDto[] {
-      debugger;
-      let updatedRates = [...multiRates];
-
-      if (obj.product.basicUnitID && (obj.product?.mrp ?? 0) > 0) {
-        updatedRates = setMRP(
-          multiRates,
-          (obj.product?.productID ?? 0) > 0,
-          obj.product?.basicUnitID,
-          obj?.product?.mrp ?? 0,
-          obj?.product?.stdPurchasePrice ?? 0
-        );
-      }
-
-      for (const row of multiUnits) {
-        if (row.unitID != null && row.mrp > 0) {
-          updatedRates = setMRP(
-            multiRates,
-            (obj.product?.productID ?? 0) > 0,
-            row?.unitID,
-            row?.mrp ?? 0,
-            obj?.product?.stdPurchasePrice ?? 0,
-            row?.multiFactor
-          );
-        }
-      }
-
-      return updatedRates;
-    }
-    const handleRemoveUnit = (rowId: number) => {
-      handleFieldChange("units", [
-        ...getFieldProps("units").value?.filter(
-          (_: any, index: any) => index !== rowId
-        ),
-      ]);
+   
+   const handleRemoveUnit = (unitID: number) => {
+      console.log("Removing unit with unitID:", unitID);
+      const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
+      const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
+      handleFieldChange("units", updatedUnits);
     };
-    function setMRP(
-      multiRates: ProductPriceInputDto[],
-      isEdit: boolean,
-      unitId: number,
-      MRPVal: number,
-      PR: number = 0,
-      MF: number = 0
-    ): ProductPriceInputDto[] {
-      const updatedRates: ProductPriceInputDto[] = multiRates.map(
-        (rate, index) => {
-          if (rate.unitID === unitId) {
-            return {
-              ...rate,
-              mrp: MRPVal,
-              purchasePrice: MF > 0 ? MF * PR : PR, // 👈
-            };
-          }
 
-          // In edit mode, skip further changes after non-matching unit
-          if (isEdit && rate.unitID !== unitId && index > 0) {
-            return rate;
-          }
-
-          return rate;
-        }
-      );
-
-      return updatedRates;
-    }
+   
 
 const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
   debugger;
@@ -696,6 +551,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                <ErpDevGrid
                     ref={multiUnitRef}
                     hideGridHeader={true}
+                    keyExpr="unitID"
                     data={getFieldProps("units").value}
                     columns={columns}
                     editMode="cell"

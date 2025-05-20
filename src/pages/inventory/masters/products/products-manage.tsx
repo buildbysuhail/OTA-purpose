@@ -43,6 +43,7 @@ import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrollin
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
 import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
+import { loadMultiRateToGrid } from "./helper";
 
 export interface MultiBarcodeState {
   open: boolean;
@@ -95,7 +96,7 @@ export const ProductMaster: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = React.useState(0);
   const productMultiUnitsIndiaRef = useRef<ProductMultiUnitsIndiaRef>(null);
   const productMultiUnitsGccRef = useRef<ProductMultiUnitsGccRef>(null);
-  const handleTabChange = async (index: number) => {
+  const handleTabChange = async (index: number,obj:productDto) => {
     setActiveTab(index);
     debugger;
     const tabs = getTabs();
@@ -105,25 +106,21 @@ export const ProductMaster: React.FC = React.memo(() => {
       multiRatesIndex !== -1 &&
       multiRatesIndex == index
     ) {
-      const obj = getFieldProps("*") as productDto;
       debugger;
       if (
         appSettings?.productsSettings?.allowMultirate &&
         obj.prices &&
         ((obj.prices.length == 0 && (obj.product.productID ?? 0) > 0) || ((obj.product.productID ?? 0) <= 0))
       ) {
-        if (productMultiUnitsIndiaRef.current) {
-          const rates =
-            await productMultiUnitsIndiaRef.current.loadMultiRateToGrid(
+           const rates =
+            await loadMultiRateToGrid(
               obj,
-              obj.units
-            );
+              obj.units,api, getFormattedValue);
           handleDataChange({ ...obj, prices: rates });
-        }
-        if (productMultiUnitsGccRef.current) {
-          const rates = await productMultiUnitsGccRef.current.loadMultiRateToGrid(obj, obj.units, (obj.product.productID ?? 0) > 0 ? getFieldProps("prices").value : []);
-          handleDataChange({ ...obj, prices: rates });
-        }
+        // if (productMultiUnitsGccRef.current) {
+        //   const rates = await productMultiUnitsGccRef.current.loadMultiRateToGrid(obj, obj.units, (obj.product.productID ?? 0) > 0 ? getFieldProps("prices").value : []);
+        //   handleDataChange({ ...obj, prices: rates });
+        // }
       }
     }
   };
@@ -615,7 +612,11 @@ export const ProductMaster: React.FC = React.memo(() => {
             return true;
           })}
           activeTab={activeTab}
-          onClickTabAt={handleTabChange}
+          onClickTabAt={(ta)=>{
+            debugger;
+            const obj = getFieldProps("*") as productDto;
+            handleTabChange(ta,obj);
+          }}
           className="overflow-x-auto whitespace-nowrap scrollbar-hide"
         >
           {tabContents.filter((tab) => {

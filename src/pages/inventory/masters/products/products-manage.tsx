@@ -502,8 +502,10 @@ export const ProductMaster: React.FC = React.memo(() => {
         />
       </div>,
       <div key="multi_units">
-        <ProductMultiUnitsGCC
-          ref={productMultiUnitsGccRef}
+        <ProductMultiUnitsIndia
+          ref={productMultiUnitsIndiaRef}
+          handleDataChange={handleDataChange}
+          appSettings={appSettings}
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}

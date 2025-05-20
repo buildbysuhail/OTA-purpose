@@ -379,12 +379,12 @@ const ProductMultiUnitsIndia = forwardRef<
         width: 50,
          fixedPosition: "right",
         // alignment: "center",
-        cellRender: (cellElement: any, cellInfo: any) => {
+        cellRender: (cellData) => {
           return(
          <div className="flex items-center justify-center p-2 cursor-pointer">
             <a
               className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-              onClick={() => handleRemoveUnit(cellElement?.data?.rowIndex)}
+             onClick={() => handleRemoveUnit(cellData.data.unitID)}
             >
               <X className="w-4 h-4" />
             </a>
@@ -395,7 +395,7 @@ const ProductMultiUnitsIndia = forwardRef<
         
    
       },
-        ], []);
+        ], [t]);
 
     function setMultiRatesDefaultMRP(
       multiUnits: ProductUnitInputDto[],
@@ -430,13 +430,13 @@ const ProductMultiUnitsIndia = forwardRef<
 
       return updatedRates;
     }
-    const handleRemoveUnit = (rowId: number) => {
-      handleFieldChange("units", [
-        ...getFieldProps("units").value?.filter(
-          (_: any, index: any) => index !== rowId
-        ),
-      ]);
+   const handleRemoveUnit = (unitID: number) => {
+      console.log("Removing unit with unitID:", unitID);
+      const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
+      const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
+      handleFieldChange("units", updatedUnits);
     };
+
     function setMRP(
       multiRates: ProductPriceInputDto[],
       isEdit: boolean,
@@ -696,6 +696,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                <ErpDevGrid
                     ref={multiUnitRef}
                     hideGridHeader={true}
+                    keyExpr="unitID"
                     data={getFieldProps("units").value}
                     columns={columns}
                     editMode="cell"

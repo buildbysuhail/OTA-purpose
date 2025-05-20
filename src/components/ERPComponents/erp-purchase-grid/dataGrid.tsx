@@ -4,19 +4,19 @@ import { FixedSizeList as List, type ListChildComponentProps } from "react-windo
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { dateTrimmer } from "../../../utilities/Utils";
-import { type ReactNode } from "react";
 import ERPButton from "../erp-button";
 import Input from "./test-input";
 import { Loader2, Plus, Search } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
-import type { DevGridColumn, GridPreference, ColumnPreference } from "../../types/dev-grid-column";
+import type { DevGridColumn, GridPreference } from "../../types/dev-grid-column";
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
-import { TransactionDetail, TransactionDetails2 } from "../../../pages/inventory/transactions/purchase/transaction-types";
-import { data } from "react-router-dom";
-import { formStateHandleFieldChange } from "../../../pages/inventory/transactions/purchase/reducer";
+import type { TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
+import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
+
 type DataItem = Record<string, any>;
+
 interface DataGridProps<T extends DataItem> {
   columns?: DevGridColumn[];
   keyField: keyof TransactionDetail;
@@ -26,8 +26,151 @@ interface DataGridProps<T extends DataItem> {
   height?: number;
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
-  onCellChange?: (rowIndex: number, dataField: string, value: any) => void;
 }
+
+// EditableCell: local edit state, commit on blur
+interface EditableCellProps {
+  rowIndex: number;
+  column: DevGridColumn;
+  value: string | number;
+}
+const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
+  const dispatch = useAppDispatch();
+  const [localValue, setLocalValue] = useState<string | number>(value);
+
+  // Resync when external value changes
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // Commit to Redux on blur
+  const handleBlur = () => {
+    const typed = column.dataType === "number"
+      ? parseFloat(localValue as string) || 0
+      : localValue;
+    dispatch(
+      formStateTransactionDetailsRowUpdate({
+        index: rowIndex,
+        key: column.dataField as keyof TransactionDetail,
+        value: typed,
+      })
+    );
+  };
+
+  return (
+    <Input
+      id={`${column.dataField}_${rowIndex}`}
+      noLabel
+      type={column.dataType === "number" ? "number" : "text"}
+      className="w-full h-full"
+      value={localValue}
+      noBorder
+      onChange={e => (e.target.value)}
+      onBlur={handleBlur}
+    />
+  );
+};
+
+// Memoized Row component
+interface RowData {
+  details: TransactionDetail[];
+  columns: DevGridColumn[];
+  tableWidth: number;
+}
+
+const Row = React.memo(
+  ({ index, style, data }: ListChildComponentProps<RowData>) => {
+    const item = data.details[index];
+    const columns = data.columns;
+    const tableWidth = data.tableWidth;
+
+    return (
+      <tr
+        style={{
+          ...style,
+          display: "flex",
+          width: `${tableWidth}px`,
+          boxSizing: "border-box",
+        }}
+        className="py-1"
+        key={`inv_transaction_grid_${index}`}
+      >
+        {columns
+          .filter(col => col.visible)
+          .map(column => {
+            const fieldKey = column.dataField as keyof TransactionDetail;
+            const cellValue = item[fieldKey];
+
+            // Product column
+            if (column.dataField === "product" && column.allowEditing) {
+              return (
+                <td
+                  key={column.dataField}
+                  className={column.cssClass || ""}
+                  style={{
+                    width: column.width ? `${column.width}px` : "150px",
+                    minWidth: column.width ? `${column.width}px` : "150px",
+                    textAlign: column.alignment || "left",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <ERPProductSearch
+                    noLabel
+                    showCheckBox={false}
+                    value={cellValue as string || ""}
+                    productDataUrl={Urls.load_product_details}
+                  />
+                </td>
+              );
+            }
+
+            // Editable string/number
+            if (
+              column.allowEditing &&
+              (column.dataType === "string" || column.dataType === "number")
+            ) {
+              return (
+                <td
+                  key={column.dataField}
+                  className={column.cssClass || ""}
+                  style={{
+                    width: column.width ? `${column.width}px` : "150px",
+                    minWidth: column.width ? `${column.width}px` : "150px",
+                    textAlign: column.dataType === "number" ? "right" : "left",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <EditableCell
+                    rowIndex={index}
+                    column={column}
+                    value={cellValue as string | number}
+                  />
+                </td>
+              );
+            }
+
+            // Read-only
+            return (
+              <td
+                key={column.dataField}
+                className={column.cssClass || ""}
+                style={{
+                  width: column.width ? `${column.width}px` : "150px",
+                  minWidth: column.width ? `${column.width}px` : "150px",
+                  textAlign: column.alignment || "left",
+                  boxSizing: "border-box",
+                }}
+              >
+                {cellValue}
+              </td>
+            );
+          })}
+      </tr>
+    );
+  },
+  // only re-render if this row's data object changed
+  (prev, next) => prev.data.details[prev.index] === next.data.details[next.index]
+);
 
 export default function ErpPurchaseGrid<T extends DataItem>({
   columns = [],
@@ -38,7 +181,6 @@ export default function ErpPurchaseGrid<T extends DataItem>({
   height = 800,
   onAddData,
   isLoading,
-  onCellChange
 }: DataGridProps<T>) {
   const listRef = useRef<List>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -46,200 +188,88 @@ export default function ErpPurchaseGrid<T extends DataItem>({
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useAppDispatch();
-  const [searchTerm, setSearchTerm] = useState("");
-      // const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
-     const [preferences, setPreferences] = useState<GridPreference>();
-
+  const [preferences, setPreferences] = useState<GridPreference>();
 
   const calculateTotalWidth = () => {
-    const visibleColumns = formState.gridColumns?.filter((column) => column.visible !== false)??[]; 
-    return visibleColumns.reduce((total, column) => {
-      const width = column.width || 150; // Default width of 150px if not specified
-      return total + width;
-    }, 0);
+    const visibleColumns = formState.gridColumns?.filter(c => c.visible) ?? [];
+    return visibleColumns.reduce((sum, col) => sum + (col.width || 150), 0);
   };
 
   const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
 
   useEffect(() => {
-    const totalWidth = calculateTotalWidth();
-    const maxWidth = window.innerWidth;
-    setTableWidth(totalWidth); // Use the exact total width, no capping to maxWidth for now
+    setTableWidth(calculateTotalWidth());
   }, [columns, formState.gridColumns]);
 
-  
-   useEffect(() => {
-      // setGridCols(columns);
-  dispatch(formStateHandleFieldChange({fields: {gridColumns: columns}}));
-  
-    }, []);
+  useEffect(() => {
+    dispatch(formStateHandleFieldChange({ fields: { gridColumns: columns } }));
+  }, []);
 
-   useEffect(() => {
-      if (gridId != "" && columns != undefined && columns != null) {
-        onApplyPreferences(getInitialPreference(gridId, columns));
-      }
-    }, [gridId]);
-
-    const onApplyPreferences = useCallback(
-   
-      (pref: GridPreference) => {
-           debugger;
-        setPreferences(pref);
-        const updatedColumns = applyGridColumnPreferences(columns, pref);
-        dispatch(formStateHandleFieldChange({fields: {gridColumns: updatedColumns}}));
-      },
-      [columns]
-    ); 
-
-  const renderCell = (item: TransactionDetail, column: DevGridColumn, rowIndex: number, fieldKey: keyof(TransactionDetail)) => {
-    const value = item[fieldKey];
-    // Handle the "product" column with ERPProductSearch
-    if (column.dataField === "product" && column.allowEditing) {
-      return (
-        <td
-          className={column.cssClass || ""}
-          style={{
-            width: column.width ? `${column.width}px` : "150px",
-            minWidth: column.width ? `${column.width}px` : "150px",
-            textAlign: column.alignment || "left",
-            boxSizing: "border-box",
-          }}
-        >
-          <ERPProductSearch 
-            noLabel
-            showCheckBox={false}
-            value={value as string || ""}
-            productDataUrl={Urls.load_product_details}
-            // searchType="modal"
-          />
-        </td>
-      );
+  useEffect(() => {
+    if (gridId && columns) {
+      onApplyPreferences(getInitialPreference(gridId, columns));
     }
+  }, [gridId]);
 
-  
-
-    return (
-      <td
-        className={column.cssClass || ""}
-        style={{
-          width: column.width ? `${column.width}px` : "150px",
-          minWidth: column.width ? `${column.width}px` : "150px",
-          textAlign: column.dataField === "number" ? "right":"left",
-          boxSizing: "border-box",
-        }}
-      >
-        { (column.dataField === "string" ||  column.dataField === "number") && column.allowEditing == true? (
-          <Input
-            id={`${column.dataField}_${rowIndex}`}
-            noLabel
-            type={column.dataType === "number" ? "number" : "text"}
-            className="w-full h-full"
-            value={value}
-            disabled={!column.allowEditing}
-            noBorder
-            onChange={(e) => {
-              if (onCellChange) {
-                onCellChange(rowIndex, column.dataField!, e.target.value);
-              }
-            }}
-          />
-        ) : (
-          value
-        )}
-      </td>
-    );
-  };
-
-  const Row = ({index, style }: ListChildComponentProps<TransactionDetail>) => {
-    return (
-      <tr
-        style={{
-          ...style,
-          display: "flex",
-          width: `${tableWidth}px`,
-          boxSizing: "border-box", // Ensure total width includes padding/borders
-        }}
-        className="py-1"
-        key={"inv_transaction_grid" + index}
-      >
-        {formState.gridColumns?.filter((x: any) => x.visible)?.map((column) => (
-          <React.Fragment key={column.dataField}>
-           {renderCell(formState.transaction?.details[index], column, index, column.dataField as keyof TransactionDetail)}
-          </React.Fragment>
-        ))}
-      </tr>
-    );
-  };
+  const onApplyPreferences = useCallback((pref: GridPreference) => {
+    setPreferences(pref);
+    const updated = applyGridColumnPreferences(columns, pref);
+    dispatch(formStateHandleFieldChange({ fields: { gridColumns: updated } }));
+  }, [columns]);
 
   return (
     <div
-      style={{
-        width: `${tableWidth}px`, 
-        maxWidth:"100%",
-        overflow: "hidden",
-        boxSizing: "border-box",
-        marginTop: "10px",
-      }}
+      style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box", marginTop: 10 }}
     >
-
-      
-       <GridPreferenceChooser
-            gridId={gridId}
-            columns={columns}
-            onApplyPreferences={onApplyPreferences}
-            GridPreferenceChooserAccTrance={true}
-           eclipseClass="my-0 ml-2"
+      <GridPreferenceChooser
+        gridId={gridId}
+        columns={columns}
+        onApplyPreferences={onApplyPreferences}
+        GridPreferenceChooserAccTrance
+        eclipseClass="my-0 ml-2"
       />
+
       <div className={`border border-gray-100 rounded-md ${className} w-full overflow-hidden`}>
-       
-        {/* Header Container */}
+        {/* Header */}
         <div
           ref={headerRef}
-          className="w-full overflow-x-auto shadow-md rounded-lg"
-          style={{
-            width: "100%",
-            position: "sticky",
-            top: 0,
-            zIndex: 10,
-            boxSizing: "border-box",
-          }}
+          className="w-full overflow-x-auto shadow-md rounded-lg sticky top-0 z-10"
+          style={{ boxSizing: "border-box" }}
         >
           <table className="min-w-full table-auto">
             <thead>
-              <tr
-                className="flex bg-[#f9f9fa]"
-                style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}
-              >
-                {formState.gridColumns?.filter((x: any) => x.visible)?.map((column) => (
+              <tr className="flex bg-[#f9f9fa]" style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}>
+                {formState.gridColumns?.filter(c => c.visible).map(col => (
                   <th
-                    key={column.dataField}
+                    key={col.dataField}
                     className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-100 text-sm whitespace-nowrap"
-                    style={{
-                      width: column.width ? `${column.width}px` : "150px",
-                      minWidth: column.width ? `${column.width}px` : "150px",
-                      textAlign: column.alignment || "left",
-                      boxSizing: "border-box", // Include padding/borders in width
-                    }}
+                    style={{ width: col.width ? `${col.width}px` : "150px", minWidth: col.width ? `${col.width}px` : "150px", textAlign: col.alignment || "left", boxSizing: "border-box" }}
                   >
-                    {column.caption}
+                    {col.caption}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-            <List
-            key={keyField}
-              ref={listRef}
-              height={height}
-              itemCount={formState.transaction?.details?.length}
-              itemSize={rowHeight}
-              width={tableWidth + 1} // Add a small buffer to ensure full visibility
-              outerRef={outerRef}
-              className="bg-white"
-              style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
-            >
-              {Row}
-            </List>
+              <List
+                key={String(keyField)}
+                ref={listRef}
+                height={height}
+                itemCount={formState.transaction?.details?.length || 0}
+                itemSize={rowHeight}
+                width={tableWidth + 1}
+                outerRef={outerRef}
+                itemData={{
+                  details: formState.transaction?.details || [],
+                  columns: formState.gridColumns || [],
+                  tableWidth,
+                }}
+                itemKey={index => `${gridId}-${index}`}
+                className="bg-white"
+                style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
+              >
+                {Row}
+              </List>
             </tbody>
           </table>
         </div>

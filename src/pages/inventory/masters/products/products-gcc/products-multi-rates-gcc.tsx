@@ -1,8 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
-import DataGrid, { Column, FilterRow, HeaderFilter, Scrolling, KeyboardNavigation, Editing, } from "devextreme-react/data-grid";
+import DataGrid, {
+  Column,
+  FilterRow,
+  HeaderFilter,
+  Scrolling,
+  KeyboardNavigation,
+  Editing,
+} from "devextreme-react/data-grid";
 import React from "react";
 import { FormField } from "../../../../../utilities/form-types";
-import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, } from "../products-type";
+import {
+  PathValue,
+  productDto,
+  ProductFieldPath,
+  ProductPriceInputDto,
+} from "../products-type";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
@@ -36,7 +48,7 @@ const MultiRatesGcc: React.FC<{
     () => [
       {
         dataField: "slNo",
-         caption: t("si_no"),
+        caption: t("si_no"),
         dataType: "string" as const,
         allowSorting: true,
         allowSearch: true,
@@ -124,7 +136,8 @@ const MultiRatesGcc: React.FC<{
         allowEditing: true,
         // width: 80,
       },
-    ], [t]
+    ],
+    [t]
   );
 
   // Filter columns based on isGlobal
@@ -191,18 +204,21 @@ const MultiRatesGcc: React.FC<{
               debugger;
               const updatedUnits = [..._unts];
               const index = _unts.findIndex(
-                (u: any) => u.unitID === changes.key?.unitID && u.priceCategoryID === changes.key?.priceCategoryID
+                (u: any) =>
+                  u.unitID === changes.key?.unitID &&
+                  u.priceCategoryID === changes.key?.priceCategoryID
               );
               updatedUnits[index] = {
                 ...updatedUnits[index],
                 ...changes.data,
               };
               // setUnits(updatedUnits);
-              handleFieldChange("prices", [...updatedUnits.map((item, index) => ({
-      ...item,
-      slNo: index + 1,
-    }))]);
-              
+              handleFieldChange("prices", [
+                ...updatedUnits.map((item, index) => ({
+                  ...item,
+                  slNo: index + 1,
+                })),
+              ]);
             }
           }
         }}
@@ -252,8 +268,7 @@ const MultiRatesGcc: React.FC<{
 
           <Column dataField="salesPrice" allowEditing={true} />
           <Editing allowUpdating={true} mode="cell" />
-          </DataGrid> */
-      }
+          </DataGrid> */}
     </div>
   );
 });

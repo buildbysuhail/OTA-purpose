@@ -82,8 +82,10 @@ const DaywiseSummaryWithProfit = () => {
                   : ""
               }`}
             >
-             {moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
+              {filter.showSalesReturn==true?moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
                          ? moment(cellElement.data.date, "DD/MM/YYYY").format("DD-MMM-YYYY")
+                         : cellElement.data.date:moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss", true).isValid()
+                         ? moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss").format("DD-MMM-YYYY")
                          : cellElement.data.date}
             </span>
           );
@@ -791,7 +793,11 @@ const DaywiseSummaryWithProfit = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                gridHeader={t("daywise_summary_with_profit")}
+                  filterText="{showSalesReturn == true ? ,Sales and Return  Summary with Profit Between 
+                  :Sales Summary with Profit Between :} 
+                 {salesRouteID > 0 && ,: of Route : [routeName]} 
+                {costCenterID > 0 && , : of costcenterName : [costCenterName]}"
+                gridHeader={t("day_wise")}
                 dataUrl={Urls.daywise_summary_with_profit}
                 hideGridAddButton={true}
                 enablefilter={true}

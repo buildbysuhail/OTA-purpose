@@ -330,7 +330,9 @@ const LedgerReport = () => {
                   columns={columns}
                   moreOption
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
-                  filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="of {showAll == true && All} {showAll == false && [ledgerName]
+                   ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && ,
+                    Cost Center: [CostCenterName]}"
                   gridHeader={t("ledger_report")}
                   dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}

@@ -6,17 +6,9 @@ import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, } from "
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-interface ColumnDefinition {
-  dataField: string;
-  caption: string;
-  dataType?: "string" | "number" | "boolean" | "object" | "date" | "datetime";
-  allowSorting?: boolean;
-  allowSearch?: boolean;
-  allowFiltering?: boolean;
-  width?: number;
-  allowEditing?: boolean;
-  visible?: boolean;
-}
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+
 
 const MultiRates: React.FC<{
   t: any;
@@ -32,12 +24,11 @@ const MultiRates: React.FC<{
   const dataGridRef = React.useRef<any>(null);
   const initialFocusDone = React.useRef(false);
   const [data, setData] = useState<ProductPriceInputDto[]>([]);
-  const allColumns = useMemo<ColumnDefinition[]>(
-    () => [
+ const allColumns: DevGridColumn[] = useMemo(() => [
       {
         dataField: "slNo",
         caption: "#",
-        dataType: "string" as const,
+        dataType: "string" ,
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -47,6 +38,7 @@ const MultiRates: React.FC<{
       {
         dataField: "priceCategory",
         caption: t("price_category"),
+        dataType: "string" ,
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -81,7 +73,7 @@ const MultiRates: React.FC<{
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        allowEditing: false,
+        allowEditing: true,
       },
       {
         dataField: "msp",
@@ -130,10 +122,9 @@ const MultiRates: React.FC<{
   // Filter columns based on isGlobal
   const columns = useMemo(() => {
     if (!isGlobal) {
-      // When isGlobal is true, only show siNo, categoryName, unitID, and mrp columns
-      return allColumns.filter((column) => !["mrp"].includes(column.dataField));
+     return allColumns.filter((column) => !["mrp"].includes(column.dataField!));
     }
-    return allColumns; // Show all columns when isGlobal is false
+    return allColumns;
   }, [allColumns, isGlobal]);
 
   const fetchData = async () => {
@@ -152,107 +143,98 @@ const MultiRates: React.FC<{
     fetchData();
   }, [getFieldProps("prices").value]);
 
-  const handleContentReady = (e: any) => {
-    if (!initialFocusDone.current) {
-      initialFocusDone.current = true;
-      setTimeout(() => {
-        e.component.editCell(0, "salesPrice");
-      }, 100);
+
+  const handleInitialized = (e: any) => {
+  if (!initialFocusDone.current) {
+    initialFocusDone.current = true;
+    setTimeout(() => {
+      e.component.editCell(0, "salesPrice");
+      e.component.focus(e.component.getCellElement(0, "salesPrice"));
+    }, 300);
+  }
+};
+
+const handleRowSaving = async (e: any) => {
+    const units = await fetchData();
+    if (e.changes.length > 0) {
+      const changes = e.changes[0];
+      if (changes.type === "update") {
+        if ("salesPrice" in changes.data) {
+          const finalSalesPrice = changes.data.salesPrice ?? 0;
+          const finalMrp = changes.data.mrp ?? 0;
+          if (finalSalesPrice > finalMrp && clientSession.isAppGlobal) {
+            ERPAlert.show({
+              title: t("warning"),
+              text: `${t("sales_price")} (${finalSalesPrice}) > ${t("mrp")} (${finalMrp}). ${t(
+                "mrp_must_be_greater_or_equal"
+              )}`,
+              icon: "warning",
+              onConfirm: () => {
+                return;
+              },
+            });
+            return; // Stop further processing
+          }
+        }
+        const updatedUnits = [...units];
+        const index = units.findIndex(
+          (u: any) => u.unitID === changes.key?.unitID && u.priceCategoryID === changes.key?.priceCategoryID
+        );
+        if (index >= 0) {
+          updatedUnits[index] = {
+            ...updatedUnits[index],
+            ...changes.data,
+          };
+          handleFieldChange(
+            "prices",
+            updatedUnits.map((item, index) => ({
+              ...item,
+              slNo: index + 1,
+            }))
+          );
+        }
+      }
     }
   };
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
-      <DataGrid
-        dataSource={data}
-        onSaving={async (e) => {
-          const _unts = await fetchData();
-          if (e.changes.length > 0) {
-            const changes = e.changes[0];
-            if (changes.type === "update") {
-              if ("salesPrice" in changes.data) {
-                const finalSalesPrice = e.changes[0].data.salesPrice ?? 0;
-                const finalMrp = e.changes[0].data.mrp ?? 0;
-                if (finalSalesPrice > finalMrp && clientSession.isAppGlobal) {
-                  ERPAlert.show({
-                    title: t("warning"),
-                    text: `${t("sales_price")} (${finalSalesPrice}) > ${t(
-                      "mrp"
-                    )} (${finalMrp}). ${t("mrp_must_be_greater_or_equal")}`,
-                    icon: "warning",
-                    onConfirm: () => {
-                      return;
-                    },
-                  });
-                  return; // Stop further processing
-                }
-              }
-              debugger;
-              const updatedUnits = [..._unts];
-              const index = _unts.findIndex(
-                (u: any) => u.unitID === changes.key?.unitID && u.priceCategoryID === changes.key?.priceCategoryID
-              );
-              updatedUnits[index] = {
-                ...updatedUnits[index],
-                ...changes.data,
-              };
-              // setUnits(updatedUnits);
-              handleFieldChange("prices", [...updatedUnits.map((item, index) => ({
-      ...item,
-      slNo: index + 1,
-    }))]);
-              
-            }
-          }
-        }}
-        onContentReady={handleContentReady}
-        // onRowUpdating={handleRowUpdating}
-        columnAutoWidth={true}
-        height={800}
-        showBorders={true}
-      >
-        <FilterRow visible={true} />
-        <HeaderFilter visible={true} />
-        <Scrolling mode="virtual" />
-        <KeyboardNavigation
-          editOnKeyPress={true}
-          enterKeyAction={"moveFocus"}
-          enterKeyDirection={"column"}
-        />
-        {columns.map((col, index) => (
-          <Column
-            key={index}
-            dataField={col.dataField}
-            caption={col.caption}
-            dataType={col.dataType}
-            width={col.width}
-            visible={col.visible}
-            allowSorting={true}
-            allowEditing={col.allowEditing}
-            allowFiltering={true}
-          />
-        ))}
-        <Editing
-          allowUpdating={true}
-          allowAdding={false}
-          allowDeleting={false}
-          mode="cell"
-        />
-      </DataGrid>
+               <ErpDevGrid
+                hideGridHeader={true}
+                onInitialized={handleInitialized}
+                onSaving={handleRowSaving}
+                scrollingMode="virtual"
+                    data={data}
+                    columns={columns}
+                    editMode="cell"
+                    remoteOperations={false}
+                    allowEditing={{
+                      allow: true,
+                      config: {
+                      edit: true,
+                      add: false,
+                      delete: false,
+                      },
+                    }}
 
-      {/* <DataGrid
-            ref={dataGridRef}
-            dataSource={[{ id: 1, salesPrice: 100 }]}
-            onContentReady={(e) => {
-              setTimeout(() => {
-              e.component.editCell(0, "salesPrice");
-            }, 100);
-          }}>
+                      keyboardNavigation={{
+                        editOnKeyPress: true,
+                        enterKeyAction: "moveFocus",
+                        enterKeyDirection: "column",
+                        enabled: true,
+                      }}
 
-          <Column dataField="salesPrice" allowEditing={true} />
-          <Editing allowUpdating={true} mode="cell" />
-          </DataGrid> */
-      }
+                    showBorders={true}
+                    rowAlternationEnabled={true}
+                    enableScrollButton={false}
+                    hideDefaultExportButton={true}
+                    hideGridAddButton={true}
+                    ShowGridPreferenceChooser={false}
+                    showPrintButton={false}
+                    pageSize={100}
+                    heightToAdjustOnWindows={400}
+                    gridId="product_multi_rates_grid"
+                />
     </div>
   );
 });

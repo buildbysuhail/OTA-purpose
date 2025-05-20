@@ -1,17 +1,5 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
-import DataGrid, {
-  Column,
-  Editing,
-  KeyboardNavigation,
-  Paging,
-  RemoteOperations,
-  Scrolling,
-} from "devextreme-react/data-grid";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import DataGrid, { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling, } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
@@ -31,6 +19,8 @@ import { ApplicationSettingsType } from "../../../../settings/system/application
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { Barcode, X } from "lucide-react";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 
 export interface ProductMultiUnitsIndiaRef {
   loadMultiRateToGrid: (
@@ -61,6 +51,7 @@ const ProductMultiUnitsIndia = forwardRef<
       productUnitID: 0,
       productBatchID: 0,
       unitID: 0,
+      unit: "",
       multiFactor: 0,
       barCode: "",
       description: "",
@@ -81,6 +72,7 @@ const ProductMultiUnitsIndia = forwardRef<
       unit: string;
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
+    const multiUnitRef = useRef<any>(null);
 
     const loadMultiRateToGrid = async (
       obj: productDto,
@@ -103,7 +95,11 @@ const ProductMultiUnitsIndia = forwardRef<
       }
 
       const mUnits = updateUnit;
+      try {
+        
       for (const row of mUnits) {
+        
+       debugger; 
         if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
           mlRate = await loadMultiRates(
             row.unitID ?? 0,
@@ -112,6 +108,11 @@ const ProductMultiUnitsIndia = forwardRef<
             mlRate
           );
         }
+      } 
+      } catch (error) {
+       debugger; console.log('safvam');
+
+       
       }
       debugger;
       return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
@@ -157,10 +158,11 @@ const ProductMultiUnitsIndia = forwardRef<
       setSelectedUnits(selected);
       unSetSelectedUnits(unSelected);
 
+      let rates = obj.prices;
       if (appSettings?.productsSettings?.allowMultirate) {
-        const rates = await loadMultiRateToGrid(obj, updated);
-        handleDataChange({ ...obj, prices: rates, units: updated });
+        rates = await loadMultiRateToGrid(obj, updated);
       }
+        handleDataChange({ ...obj, prices: rates, units: updated });
 
       setUnit(unitDAta);
     };
@@ -260,6 +262,141 @@ const ProductMultiUnitsIndia = forwardRef<
       }
     };
 
+        const columns: DevGridColumn[] = useMemo(() => [
+       {
+        dataField: "unit",
+        caption: t("uom"),
+        dataType: "string",
+        allowEditing: false,
+        allowSorting: true,
+       allowSearch: true,
+       allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "multiFactor",
+        caption: t("multi_factor"),
+        dataType: "number",
+        allowEditing: true,
+         allowSearch: true,
+        allowFiltering: true,
+         width: 150,
+      },
+      {
+        dataField: "barCode",
+        caption: t("barcode"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowEditing: true,
+    
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("sale_price"),
+        dataType: "number",
+        allowEditing: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "mrp",
+        caption: t("mrp"),
+        dataType: "number",
+         allowSearch: true,
+        allowFiltering: true,
+        allowEditing: true,
+        width: 100,
+      },
+      {
+        dataField: "msp",
+        caption: t("msp"),
+        dataType: "number",
+      allowSearch: true,
+        allowFiltering: true,
+        allowEditing: true,
+
+        width: 100,
+      },
+      {
+        dataField: "description",
+        caption: t("description"),
+        dataType: "string",
+         allowSearch: true,
+        allowFiltering: true,
+        allowEditing: true,width: 250,
+      },
+      {
+        dataField: "descriptionFL",
+        caption: t("description_fl"),
+        dataType: "string",
+        allowEditing: true,
+       allowSearch: true,
+        allowFiltering: true,
+        width: 250,
+      },
+      {
+        dataField: "mb",
+        caption: t("mb"),
+         fixed: true,
+       fixedPosition: "right",
+        allowEditing: false,
+        allowSearch: false,
+        allowFiltering: false,
+        width: 80,
+        cellRender: (cellData, cellInfo) => {
+       
+        const rowIndex = cellData.rowIndex  ?? -1;
+        if (rowIndex === -1) {
+          console.error("Row index not found in cellInfo:", cellInfo);
+          return null;
+        }
+        return (
+        
+          <div className="flex items-center justify-center hover:shadow-md p-2 cursor-pointer rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
+            <button
+              type="button"
+              className="text-[#e53e3e] hover:text-[#c53030] font-semibold"
+              onClick={() => setMultiBarcode(cellData.data.multiBarcodes, cellData.data.unit,rowIndex)}
+            >
+              <Barcode className="w-4 h-4" />
+            </button>
+          </div>
+        );
+      },
+      
+      },
+      
+      {
+        dataField: "actions",
+        caption: "X",
+        alignment: "center",
+        isLocked: true,
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        width: 50,
+         fixedPosition: "right",
+        // alignment: "center",
+        cellRender: (cellElement: any, cellInfo: any) => {
+          return(
+         <div className="flex items-center justify-center p-2 cursor-pointer">
+            <a
+              className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
+              onClick={() => handleRemoveUnit(cellElement?.data?.rowIndex)}
+            >
+              <X className="w-4 h-4" />
+            </a>
+          </div>
+          )
+        }
+         
+        
+   
+      },
+        ], []);
+
     function setMultiRatesDefaultMRP(
       multiUnits: ProductUnitInputDto[],
       multiRates: ProductPriceInputDto[],
@@ -330,31 +467,29 @@ const ProductMultiUnitsIndia = forwardRef<
       return updatedRates;
     }
 
-    const setMultiBarcode = (rowId: number) => {
-      const units = getFieldProps("units").value;
-      const barcodesString = units[rowId].multiBarcodes ?? "";
-      let barcodeArray = barcodesString
-        .split(",")
-        .map((barcode: any) => barcode.trim())
-        .filter((barcode: any) => barcode.length > 0);
+const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
+  debugger;
+  const barcodeArray = barcodesString
+    .split(",")
+    .map((barcode:any) => barcode.trim())
+    .filter((barcode:any) => barcode.length > 0);
 
       const data =
         barcodeArray == undefined ||
         barcodeArray == null ||
         barcodeArray.length == 0
-          ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
+          ? [{ unit: unitName, barcode: "" }]
           : barcodeArray.map((barcode: any) => ({
-              unit: units[rowId].unit ?? "",
+              unit: unitName,
               barcode,
             }));
       setOpenMB({
         index: rowId,
         open: true,
-        unit: units[rowId].unit ?? "",
+        unit: unitName,
         data: data,
       });
     };
-
     const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
       e.isHighlighted = true;
     };
@@ -557,124 +692,43 @@ const ProductMultiUnitsIndia = forwardRef<
 
           {/* DataGrid Section */}
           <div className="p-4 rounded-md shadow w-full overflow-x-auto">
-            <DataGrid
-              dataSource={getFieldProps("units").value}
-              showBorders={true}
-              rowAlternationEnabled={true}
-              className="w-full"
-              onSaving={(e) => {
-                const _unts = getFieldProps("units").value;
-                if (e.changes.length > 0) {
-                  const changes = e.changes[0];
-                  if (changes.type === "update") {
-                    const updatedUnits = [..._unts];
-                    const index = _unts.findIndex(
-                      (u: any) => u.unitID === changes.key?.unitID
-                    );
-                    updatedUnits[index] = {
-                      ...updatedUnits[index],
-                      ...changes.data,
-                    };
-                    handleFieldChange("units", [...updatedUnits]);
-                  }
-                }
-              }}
-            >
-              <Paging defaultPageSize={5} />
-
-              <Editing mode="cell" allowUpdating={true} />
-
-              <KeyboardNavigation
-                editOnKeyPress={true}
-                enterKeyAction={"startEdit"}
-                enterKeyDirection={"row"}
-              />
-
-              <Column dataField="unit" caption={t("uom")} />
-
-              <Column
-                dataField="multiFactor"
-                caption={t("multi_factor")}
-                dataType="number"
-                allowEditing
-              />
-
-              <Column dataField="barCode" allowEditing caption={t("barcode")} />
-
-              <Column
-                dataField="salesPrice"
-                allowEditing
-                caption={t("sale_price")}
-                dataType="number"
-              />
-
-              <Column
-                dataField="mrp"
-                caption={t("mrp")}
-                dataType="number"
-                allowEditing
-              />
-
-              <Column
-                dataField="msp"
-                allowEditing
-                caption={t("msp")}
-                dataType="number"
-              />
-
-              <Column
-                dataField="description"
-                allowEditing
-                caption={t("description")}
-              />
-
-              <Column
-                dataField="descriptionFL"
-                allowEditing
-                caption={t("description_fl")}
-              />
-
-              <Column
-                dataField="mb"
-                caption={t("mb")}
-                dataType="boolean"
-                alignment="center"
-                cellRender={(cellData) => (
-                  <div className="flex items-center justify-center inline-flex hover:shadow-md p-2 rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
-                    <a
-                      className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-                      onClick={() => setMultiBarcode(cellData.rowIndex)}
-                    >
-                      <Barcode className="w-4 h-4" />
-                    </a>
-                  </div>
-                )}
-              />
-
-              <Column
-                type="buttons"
-                caption="X"
-                width={70}
-                alignment="center"
-                cellRender={(cellData) => (
-                  <div
-                    className="flex items-center justify-center p-2 cursor-pointer"
-                    onClick={() => {
-                      const gridInstance = cellData.component;
-                      const rowKey = cellData.row?.key;
-
-                      if (rowKey !== undefined) {
-                        gridInstance.deleteRow(cellData.rowIndex);
-                      }
+            
+               <ErpDevGrid
+                    ref={multiUnitRef}
+                    hideGridHeader={true}
+                    data={getFieldProps("units").value}
+                    columns={columns}
+                    editMode="cell"
+                    remoteOperations={false}
+                    allowEditing={{
+                      allow: true,
+                      config: {
+                      edit: true,
+                      add: false,
+                      delete: false,
+                      },
                     }}
-                  >
-                    <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
-                      <X className="w-4 h-4" />
-                    </a>
-                  </div>
-                )}
-              />
-            </DataGrid>
+                     scrollingMode="virtual"
+                      keyboardNavigation={{
+                        editOnKeyPress: true,
+                        enterKeyAction: "moveFocus",
+                        enterKeyDirection: "row",
+                        enabled: true,
+                      }}
+
+                    showBorders={true}
+                    rowAlternationEnabled={true}
+                    enableScrollButton={false}
+                    hideDefaultExportButton={true}
+                    hideGridAddButton={true}
+                    ShowGridPreferenceChooser={false}
+                    showPrintButton={false}
+                    pageSize={100}
+                    heightToAdjustOnWindows={400}
+                
+                    gridId="product_multi_units_grid"
+                />
+               
           </div>
 
           {/* Default Units Section */}

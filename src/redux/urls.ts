@@ -34,7 +34,7 @@ const Urls = {
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
   data_cashLedger: "/Accounts/Data/CashLedgers",
-  data_branches:"/Data/Branches/",
+  data_branches: "/Data/Branches/",
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
@@ -367,7 +367,7 @@ const Urls = {
     "/Inventory/RptPurchaseReport/PurchaseReturnSummary/",
   purchase_return_register:
     "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
-  summary_product_code:"/Inventory/RptInventoryReport/",
+  summary_product_code: "/Inventory/RptInventoryReport/",
   purchase_estimate_summary:
     "/Inventory/RptPurchaseReport/PurchaseEstimateSummary/",
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
@@ -450,12 +450,12 @@ const Urls = {
   scheme_wise_sales: "/Inventory/RptSalesReport/SchemewiseSalesReport/",
   sales_tax: "/Inventory/RptTAXReport/SalesTaxReport/",
 
-  sales_transfer_summary:"/Inventory/RptSalesReport/SalesTransferSummary/",
-  sales_transfer_register:"/Inventory/RptSalesReport/SalesTransferRegister/",
-  net_sales_transfer_report:"/Inventory/RptSalesReport/TransferNetSalesReport/",
-  sales_transfer_partyWise_sales:"/Inventory/RptSalesReport/SalesTransferPartywiseSales/",
-  sales_transfer_partyWise_summary:"/Inventory/RptSalesReport/TransferPartyWiseSummary",
-  sales_transfer_monthWise_summary:"/Inventory/RptSalesReport/TransferMonthwiseSummary",
+  sales_transfer_summary: "/Inventory/RptSalesReport/SalesTransferSummary/",
+  sales_transfer_register: "/Inventory/RptSalesReport/SalesTransferRegister/",
+  net_sales_transfer_report: "/Inventory/RptSalesReport/TransferNetSalesReport/",
+  sales_transfer_partyWise_sales: "/Inventory/RptSalesReport/SalesTransferPartywiseSales/",
+  sales_transfer_partyWise_summary: "/Inventory/RptSalesReport/TransferPartyWiseSummary",
+  sales_transfer_monthWise_summary: "/Inventory/RptSalesReport/TransferMonthwiseSummary",
 
   ksa_e_invoice_summary:
     "/Inventory/RptTAXReport/KSAEinvoiceStatusReportSummary/",
@@ -549,6 +549,16 @@ const Urls = {
   branch_inventory_request_pending_order: "/Inventory/RptAdvancedReport/BranchInventoryRequestPendingOrder/",
   print_details: "/Inventory/RptAdvancedReport/PrintDetails/",
   inventory_status: "/Inventory/RptAdvancedReport/InventoryStatusReport/",
+  void_report: "/Inventory/RptAdvancedReport/VoidReport/",
+  counter_report: "/Inventory/RptAdvancedReport/CounterReport/",
+  sales_return_estimate_register: "/Inventory/RptSalesReport/SalesReturnEstimateRegister/",
+  diagnosis_report_zero_rate_productlist: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",
+  diagnosis_report_post_dated_transactions: "/Inventory/RptAdvancedReport/DiagnosisReportPostDatedTransactions/",
+  diagnosis_report_sales_price_less_than_lp_cost: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessThanLPCost/",
+  diagnosis_report_sales_price_less_than_purchase_price: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessthanPurchasePrice/",
+  diagnosis_report_sales_price_less_than_msp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessthanMSP/",
+  diagnosis_report_sales_price_greater_than_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceGreaterthanMRP/",
+  diagnosis_report_sales_price_equal_to_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceGreaterthanMRP/",
 
   gstr1b2b: "/Inventory/RptGSTR1Report/SelectGSTR1B2B/",
   gstr1b2cLarge: "/Inventory/RptGSTR1Report/SelectGSTR1B2CL/",
@@ -616,7 +626,7 @@ const Urls = {
   Warehouse: "/Inventory/Warehouse/",
   taxCategory: "/Inventory/TaxCategory/",
   gstCategory: "/Inventory/GSTCategory/",
-  tcsCategory:"/Inventory/TCSCategory/",
+  tcsCategory: "/Inventory/TCSCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
   daily_statement_sales:
@@ -628,7 +638,7 @@ const Urls = {
   group_category: "/Inventory/GroupCategory/",
   payment_receipt_billwise_advice_for_print:
     "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
-  product_flavours:"/Inventory/Product/GetFlavours/",
+  product_flavours: "/Inventory/Product/GetFlavours/",
   // URLs for SpecialPriceController (Inventory Module)
   special_price_scheme: "/Inventory/SpecialPrice/", // POST
   special_price_scheme_by_group_id: "/Inventory/SpecialPrice/", // POST

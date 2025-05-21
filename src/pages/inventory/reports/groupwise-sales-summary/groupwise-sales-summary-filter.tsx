@@ -45,7 +45,10 @@ const GroupwiseSalesSummaryFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productGroupID", data.value);
+            handleFieldChange({
+            productGroupID: data.value,
+            productGroup: data.label,
+          })
           }}
         />
         <ERPDataCombobox
@@ -58,7 +61,10 @@ const GroupwiseSalesSummaryFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("groupCategoryID", data.value);
+            handleFieldChange({
+            groupCategoryID: data.value,
+            groupCategory: data.label,
+          })
           }}
         />
         <ERPDataCombobox
@@ -71,7 +77,10 @@ const GroupwiseSalesSummaryFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("sectionID", data.value);
+             handleFieldChange({
+            sectionID: data.value,
+            section: data.label,
+          })
           }}
         />
       </div>

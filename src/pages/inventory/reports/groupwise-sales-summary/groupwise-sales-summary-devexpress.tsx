@@ -454,9 +454,10 @@ const GroupwiseSalesSummaryDevexpress = () => {
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{
-                  filtering: false,
-                  paging: false,
-                  sorting: false,
+                  filtering: true,
+                  paging: true,
+                  sorting: true,
+                  summary: true,
                 }}
                 columns={columns}
                 moreOption={true}

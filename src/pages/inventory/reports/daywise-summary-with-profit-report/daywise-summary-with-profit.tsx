@@ -15,6 +15,7 @@ import moment from "moment";
 
 const DaywiseSummaryWithProfit = () => {
   const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -82,11 +83,21 @@ const DaywiseSummaryWithProfit = () => {
                   : ""
               }`}
             >
-              {filter.showSalesReturn==true?moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
-                         ? moment(cellElement.data.date, "DD/MM/YYYY").format("DD-MMM-YYYY")
-                         : cellElement.data.date:moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss", true).isValid()
-                         ? moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss").format("DD-MMM-YYYY")
-                         : cellElement.data.date}
+              {filter.showSalesReturn == true
+                ? moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
+                  ? moment(cellElement.data.date, "DD/MM/YYYY").format(
+                      "DD-MMM-YYYY"
+                    )
+                  : cellElement.data.date
+                : moment(
+                    cellElement.data.date,
+                    "MM/DD/YYYY HH:mm:ss",
+                    true
+                  ).isValid()
+                ? moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss").format(
+                    "DD-MMM-YYYY"
+                  )
+                : cellElement.data.date}
             </span>
           );
         }
@@ -715,68 +726,6 @@ const DaywiseSummaryWithProfit = () => {
       },
     },
   ];
-
-  const { getFormattedValue } = useNumberFormat();
-  // const customizeSummaryRow = useMemo(() => {
-  //   return (itemInfo: { value: any }) => {
-  //     const value = itemInfo.value;
-  //     if (
-  //       value === null ||
-  //       value === undefined ||
-  //       value === "" ||
-  //       isNaN(value)
-  //     ) {
-  //       return "0";
-  //     }
-  //     return getFormattedValue(value) || "0";
-  //   };
-  // }, [getFormattedValue]);
-
-  // const summaryItems: SummaryConfig[] = [
-  //   {
-  //     column: "totalGross",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "totalVAT",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "totalDiscount",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "billDiscount",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "grandTotal",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "cost",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  //   {
-  //     column: "profit",
-  //     summaryType: "sum",
-  //     valueFormat: "currency",
-  //     customizeText: customizeSummaryRow,
-  //   },
-  // ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -793,8 +742,9 @@ const DaywiseSummaryWithProfit = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                  filterText="{showSalesReturn == true ? ,Sales and Return  Summary with Profit Between 
-                  :Sales Summary with Profit Between :} 
+                filterText="{showSalesReturn == true && ,Sales and Return  Summary with Profit Between} 
+                 {showSalesReturn == false && , :Sales Summary with Profit Between :} 
+                  {fromDate} - {toDate}
                  {salesRouteID > 0 && ,: of Route : [routeName]} 
                 {costCenterID > 0 && , : of costcenterName : [costCenterName]}"
                 gridHeader={t("day_wise")}

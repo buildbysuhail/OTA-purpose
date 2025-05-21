@@ -679,12 +679,10 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       customizeText: customizeSummaryRow,
     },
   ];
-
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -692,7 +690,15 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                filterText="From: {fromDate} - {toDate}"
+                filterText="{isCategorywise == true && , Categorywise Sales Report From:} 
+                 {isSectionwise == true && , Sectionwise Sales Report From:} 
+                 {isProductCatwise == true && , ProductCategorywise Sales Report From:} 
+                 {isBrandwise == true && , Brandwise Sales Report From:} 
+                 {isProductCatwise == false & isCategorywise == false & isSectionwise == false & isBrandwise==false && ,Groupwise Sales Report From:}
+                 {fromDate} - {toDate}
+                 {productGroupID > 0 && , Group : [productGroup]} 
+                 {groupCategoryID > 0 && , Category :  [groupCategory]}
+                 {sectionID > 0 && , Section :  [section]}"
                 key={key}
                 summaryItems={summaryItems}
                 remoteOperations={{

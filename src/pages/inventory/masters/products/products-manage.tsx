@@ -480,6 +480,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+           isMaximized={isMaximized}
+        modalHeight={modalHeight}
         />
       </div>,
       // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
@@ -501,6 +503,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+        isMaximized={isMaximized}
+        modalHeight={modalHeight}
         />
       </div>,
     ]

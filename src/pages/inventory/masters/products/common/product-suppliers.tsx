@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -15,7 +15,9 @@ const SuppliersCommon: React.FC<{
     value?: PathValue<productDto, Path>
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+   isMaximized?: boolean;
+  modalHeight?: any
+}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight }) => {
   const supplierProducts =
   {
     ledgerID: 0,
@@ -35,7 +37,12 @@ const SuppliersCommon: React.FC<{
   };
 
   const { t } = useTranslation('inventory')
-
+ const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+        useEffect(() => {
+          let gridHeightMobile = modalHeight - 500;
+          let gridHeightWindows = modalHeight - 600;
+          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+        }, [isMaximized, modalHeight]);
   return (
     <div className="border border-[#ccc] rounded-md p-4 w-full">
       <div className="flex flex-col gap-4">
@@ -114,6 +121,7 @@ const SuppliersCommon: React.FC<{
             showBorders={true}
             rowAlternationEnabled={true}
             className="w-full custom-data-grid-dark-only"
+            height={gridHeight.windows}
           >
 
             <Paging defaultPageSize={5} />

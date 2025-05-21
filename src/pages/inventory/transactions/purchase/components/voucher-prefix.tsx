@@ -30,7 +30,7 @@ const AccVoucherPrefix = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps
           id="master_voucherPrefix"
           label={t(formState.formElements.voucherPrefix.label)}
           value={formState.transaction.master.voucherPrefix}
-          className={`max-w-[100px] ${phone? "!w-[90px]" : ""}`}
+          className={`max-w-[90px] ${phone? "!w-[90px]" : ""}`}
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({

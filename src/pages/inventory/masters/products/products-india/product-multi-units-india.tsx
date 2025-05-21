@@ -42,10 +42,12 @@ const ProductMultiUnitsIndia = forwardRef<
     ) => void;
     getFieldProps: (fieldId: string, type?: string) => FormField | any;
     handleDataChange: (value?: any) => void;
+    isMaximized?: boolean;
+    modalHeight?: any
   }
 >(
   (
-    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings },
+    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings ,isMaximized, modalHeight},
     ref
   ) => {
     const unitDAta: ProductUnitInputDto = {
@@ -74,8 +76,13 @@ const ProductMultiUnitsIndia = forwardRef<
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
     const multiUnitRef = useRef<any>(null);
+   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+      useEffect(() => {
+        let gridHeightMobile = modalHeight - 500;
+        let gridHeightWindows = modalHeight - 500;
+        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+      }, [isMaximized, modalHeight]);
 
-    
     useImperativeHandle(ref, () => ({
       loadMultiRateToGrid: async (obj: productDto, units: any) => {
         return await loadMultiRateToGrid(obj, units,api, getFormattedValue);  
@@ -328,21 +335,8 @@ const ProductMultiUnitsIndia = forwardRef<
       },
         ], [t]);
 
-   
-//  const handleRemoveUnit = (unitID: number) => {
-//   console.log("Removing unit with unitID:", unitID);
-//   const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
-//   console.log("Current units:", currentUnits);
-//   const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
-//   console.log("Updated units:", updatedUnits);
-//   handleFieldChange("units", updatedUnits);
-// };
-
   const handleRemoveUnit = (unitID: number, gridData: ProductUnitInputDto[]) => {
-  console.log("Removing unit with unitID:", unitID);
-  console.log("Grid data:", gridData);
   const updatedUnits = gridData.filter((unit) => Number(unit.unitID) !== Number(unitID));
-  console.log("Updated units:", updatedUnits);
   handleFieldChange("units", updatedUnits);
 }; 
 
@@ -570,11 +564,12 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
           </div>
 
           {/* DataGrid Section */}
-          <div className="p-4 rounded-md shadow w-full overflow-x-auto">
+          <div className="p-4 rounded-md shadow grid grid-cols-1 gap-3 ">
             
                <ErpDevGrid
                     ref={multiUnitRef}
                     hideGridHeader={true}
+                    // hideDefaultSearchPanel={true}
                     keyExpr="unitID"
                     data={getFieldProps("units").value}
                     columns={columns}
@@ -604,8 +599,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                     ShowGridPreferenceChooser={false}
                     showPrintButton={false}
                     pageSize={100}
-                    heightToAdjustOnWindows={400}
-                
+                    heightToAdjustOnWindowsInModal={gridHeight.windows}
                     gridId="product_multi_units_grid"
                 />
                

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
@@ -13,6 +13,8 @@ import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 const StockCommon: React.FC<{
+  isMaximized?: boolean;
+    modalHeight?: any
   formState: any;
   handleFieldChange: (
     fields:
@@ -24,12 +26,17 @@ const StockCommon: React.FC<{
   ) => void;
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight }) => {
   const { t } = useTranslation("inventory");
   const [showGrid, setShowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { getFormattedValue } = useNumberFormat();
-
+    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+        useEffect(() => {
+          let gridHeightMobile = modalHeight - 500;
+          let gridHeightWindows = modalHeight - 500;
+          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+        }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -327,7 +334,7 @@ const StockCommon: React.FC<{
           method={ActionType.POST}
           postData={{ productBatchID: getFieldProps("batch.productBatchID").value }}
           gridId="grd_stock"
-          heightToAdjustOnWindows={800}
+          heightToAdjustOnWindowsInModal={gridHeight.windows}
           hideDefaultExportButton={true}
           hideDefaultSearchPanel={true}
           hideGridAddButton={true}

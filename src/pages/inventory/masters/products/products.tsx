@@ -484,7 +484,7 @@ const Products = () => {
       <ERPModal
         isOpen={rootState.PopupData.products.isOpen || false}
         title={t("products")}
-        width={1200}
+        width={1310}
         isForm={true}
         height={820}
         closeModal={() => { dispatch(toggleProducts({ isOpen: false })); }}

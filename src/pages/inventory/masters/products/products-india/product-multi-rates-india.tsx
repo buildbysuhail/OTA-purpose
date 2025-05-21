@@ -19,11 +19,20 @@ const MultiRates: React.FC<{
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
   isGlobal: boolean;
-}> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal }) => {
+   isMaximized?: boolean;
+    modalHeight?: any
+}> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal,isMaximized,modalHeight }) => {
   // Add a ref to access DataGrid instance
   const dataGridRef = React.useRef<any>(null);
   const initialFocusDone = React.useRef(false);
   const [data, setData] = useState<ProductPriceInputDto[]>([]);
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 500;
+      let gridHeightWindows = modalHeight - 500;
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized, modalHeight]);
+
  const allColumns: DevGridColumn[] = useMemo(() => [
       {
         dataField: "slNo",
@@ -202,6 +211,7 @@ const handleRowSaving = async (e: any) => {
     <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
                <ErpDevGrid
                 hideGridHeader={true}
+                // hideDefaultSearchPanel={true}
                 onInitialized={handleInitialized}
                 onSaving={handleRowSaving}
                 scrollingMode="virtual"
@@ -233,7 +243,7 @@ const handleRowSaving = async (e: any) => {
                     ShowGridPreferenceChooser={false}
                     showPrintButton={false}
                     pageSize={100}
-                    heightToAdjustOnWindows={400}
+                     heightToAdjustOnWindowsInModal={gridHeight.windows}
                     gridId="product_multi_rates_grid"
                 />
     </div>

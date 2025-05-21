@@ -50,9 +50,12 @@ export interface MultiBarcodeState {
   data: { unitCode: string; barcode: string; unitID: number }[];
   onClose?: (reload: boolean) => void;// Add onClose to the interface
 }
-
+export interface ProductManageProps {
+  isMaximized?: boolean;
+  modalHeight?: any
+}
 const api = new APIClient();
-export const ProductMaster: React.FC = React.memo(() => {
+export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaximized, modalHeight }) => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("inventory");
@@ -68,7 +71,7 @@ export const ProductMaster: React.FC = React.memo(() => {
     open: false,
     data: [],
     onClose: undefined // Add onClose to the state
-  });
+  }); 
 
   const {
     isEdit,
@@ -420,6 +423,8 @@ export const ProductMaster: React.FC = React.memo(() => {
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
         />
       </div>,
       <div key="multi_rates">
@@ -428,6 +433,8 @@ export const ProductMaster: React.FC = React.memo(() => {
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+           isMaximized={isMaximized}
+          modalHeight={modalHeight}
         />
       </div>,
       <div key="image">
@@ -447,16 +454,25 @@ export const ProductMaster: React.FC = React.memo(() => {
         />
       </div>,
       <div key="sales">
-        <SalesCommon getFieldProps={getFieldProps} />
+        <SalesCommon 
+         getFieldProps={getFieldProps} 
+           isMaximized={isMaximized}
+          modalHeight={modalHeight}
+         />
       </div>,
       <div key="purchase">
-        <PurchaseCommon getFieldProps={getFieldProps} />
+        <PurchaseCommon getFieldProps={getFieldProps} 
+           isMaximized={isMaximized}
+          modalHeight={modalHeight}
+         />
       </div>,
       <div key="stock">
         <StockCommon
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
         />
       </div>,
       <div key="suppliers">
@@ -468,10 +484,17 @@ export const ProductMaster: React.FC = React.memo(() => {
       </div>,
       // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="promotion_details">
-        <PromotionCommon getFieldProps={getFieldProps}></PromotionCommon>
+        <PromotionCommon 
+        getFieldProps={getFieldProps}
+        isMaximized={isMaximized}
+        modalHeight={modalHeight}
+        />
       </div>,
       <div key="search">
-        <SearchCommon />
+        <SearchCommon 
+        isMaximized={isMaximized}
+        modalHeight={modalHeight}  
+        />
       </div>,
       <div key="nutrition_facts">
         <NutritionFactsIndia

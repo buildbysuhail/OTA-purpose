@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
@@ -9,9 +9,17 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 
 const PurchaseCommon: React.FC<{
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ getFieldProps }) => {
+  isMaximized?: boolean;
+    modalHeight?: any
+}> = React.memo(({ getFieldProps,isMaximized,modalHeight }) => {
   const { t } = useTranslation("inventory");
   const { getFormattedValue } = useNumberFormat();
+    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+        useEffect(() => {
+          let gridHeightMobile = modalHeight - 500;
+          let gridHeightWindows = modalHeight - 500;
+          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+        }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -234,7 +242,7 @@ const PurchaseCommon: React.FC<{
         method={ActionType.POST}
         postData={{ productID: getFieldProps("batch.productID").value }}
         gridId="grd_purchaseGcc"
-        heightToAdjustOnWindows={800}
+         heightToAdjustOnWindowsInModal={gridHeight.windows}
         hideDefaultExportButton={true}
         hideDefaultSearchPanel={true}
         hideGridAddButton={true}

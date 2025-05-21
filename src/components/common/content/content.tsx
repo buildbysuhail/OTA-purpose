@@ -211,6 +211,13 @@ import DiagnosisReportSalesPriceLessthanPurchasePrice from "../../../pages/inven
 import DiagnosisReportSalesPriceLessthanMSP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp";
 import DiagnosisReportSalesPriceGreaterthanMRP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp";
 import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-container copy";
+import CustomerVisitLastVisit from "../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report";
+import CustomerVisitTotalVisit from "../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report";
+import DiscountReportCollection from "../../../pages/inventory/reports/discount_report_collection-report/discount_report_collection-report";
+import DiscountReportInventory from "../../../pages/inventory/reports/discount_report_inventory-report/discount_report_inventory-report";
+import FOCRegisterReport from "../../../pages/inventory/reports/foc-register-report/foc-register-report";
+import ItemUsedForService from "../../../pages/inventory/reports/item_used_for_service-report/item_used_for_service-report";
+import LPOReport from "../../../pages/inventory/reports/lpo_report/lpo_report";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -557,6 +564,13 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />} />
+        <Route path="/inventory/customer_visit_total_visit" element={<CustomerVisitTotalVisit />} />
+        <Route path="/inventory/customer_visit_last_visit" element={<CustomerVisitLastVisit />} />
+        <Route path="/inventory/foc_register_report" element={<FOCRegisterReport />} />
+        <Route path="/inventory/discount_report_inventory" element={<DiscountReportInventory />} />
+        <Route path="/inventory/discount_report_collection" element={<DiscountReportCollection />} />
+        <Route path="/inventory/item_used_for_service" element={<ItemUsedForService />} />
+        <Route path="/inventory/lpo_report" element={<LPOReport />} />
         {/* global */}
         <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />} />
         {/* global end */}

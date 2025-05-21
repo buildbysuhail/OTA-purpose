@@ -64,6 +64,7 @@ export interface TransactionMaster {
   employeeID: number;
   createdUserId: number;
   inventoryLedgerID: number; // cbDebitLedger
+  vatLedgerID:number;
   ledgerID: number;
   partyName: string;
   referalAgentId: number;
@@ -103,6 +104,7 @@ export interface TransactionMaster {
   totalGross: number;
   totalDiscount: number;
   billDiscount: number;
+  exRate:string;
   grandTotal: number;
   grandTotalFc: number;
   totalProfit: number;
@@ -140,6 +142,7 @@ export interface TransactionMaster {
   cashrOrCredit: string;
   couponAmt: number;
   projectID: number;
+  currencyID:number;
   customerType: string;
   taxOnDiscount: number;
   draftTransactionMasterId: number;
@@ -375,6 +378,7 @@ export interface TransactionFormState {
   openUnsavedPrompt?: boolean
   foreignCurrency: boolean
   enableDebitAccount: boolean
+  enableVat:boolean;
   enableTaxNumber: boolean
   tmpVoucherNo?: number
   dummyCode?: any

@@ -210,6 +210,7 @@ import DiagnosisReportSalesPriceLessThanLPCost from "../../../pages/inventory/re
 import DiagnosisReportSalesPriceLessthanPurchasePrice from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price";
 import DiagnosisReportSalesPriceLessthanMSP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp";
 import DiagnosisReportSalesPriceGreaterthanMRP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp";
+import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-container copy";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -366,6 +367,24 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionFormContainerView
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
                       <AccTransactionFormContainer
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
@@ -418,6 +437,24 @@ const Content: FC<ContentProps> = () => {
                 <Route
                   key={index}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <TransactionFormContainer ///abc
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <TransactionFormContainer

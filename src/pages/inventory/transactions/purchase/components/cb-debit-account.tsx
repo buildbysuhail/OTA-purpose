@@ -14,7 +14,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
   dispatch,
   t,
 }, ref) => {
-  
+
 
 
   return (
@@ -32,7 +32,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
                 fields: { enableDebitAccount: e.target.checked },
               })
             );
-            
+
           }}
           disabled={
             formState.formElements.pnlMasters?.disabled
@@ -42,39 +42,39 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
 
       {formState.formElements.cbDebitAccount.visible && (
         <ERPDataCombobox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  enableClearOption={false}
-                  ref={ref}
-                  id="inventoryLedgerID"
-                  // nameField="costCentreName"
-                  noLabel
-                  className="min-w-[180px]"
-                  label={t(formState.formElements.cbDebitAccount.label)}
-                  data={formState.transaction.master}
-                  onSelectItem={(e) => {
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: {
-                          inventoryLedgerID: e.value,
-                        },
-                      })
-                    );
-                  }}
-                  value={formState.transaction.master.inventoryLedgerID}
-                  field={{
-                    id: "inventoryLedgerID",
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_employees,
-                    params: `ledgerType=${formState.formElements?.cbDebitAccount?.accLedgerType || LedgerType.All}`,
-                  }}
-                  disabled={
-                    formState.formElements.cbDebitAccount.disabled ||
-                    formState.enableDebitAccount == false ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                  // disableEnterNavigation
-                />
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          enableClearOption={false}
+          ref={ref}
+          id="inventoryLedgerID"
+          // nameField="costCentreName"
+          noLabel
+          className="min-w-[180px]"
+          label={t(formState.formElements.cbDebitAccount.label)}
+          data={formState.transaction.master}
+          onSelectItem={(e) => {
+            dispatch(
+              formStateMasterHandleFieldChange({
+                fields: {
+                  inventoryLedgerID: e.value,
+                },
+              })
+            );
+          }}
+          value={formState.transaction.master.inventoryLedgerID}
+          field={{
+            id: "inventoryLedgerID",
+            valueKey: "id",
+            labelKey: "name",
+            getListUrl: Urls.data_employees,
+            params: `ledgerType=${formState.formElements?.cbDebitAccount?.accLedgerType || LedgerType.All}`,
+          }}
+          disabled={
+            formState.formElements.cbDebitAccount.disabled ||
+            formState.enableDebitAccount == false ||
+            formState.formElements.pnlMasters?.disabled
+          }
+        // disableEnterNavigation
+        />
       )}
     </div>
   );

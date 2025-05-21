@@ -44,10 +44,11 @@ const ProductMultiUnitsIndia = forwardRef<
     handleDataChange: (value?: any) => void;
     isMaximized?: boolean;
     modalHeight?: any
+    isGlobal?: boolean;
   }
 >(
   (
-    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings ,isMaximized, modalHeight},
+    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings ,isMaximized, modalHeight,isGlobal},
     ref
   ) => {
     const unitDAta: ProductUnitInputDto = {
@@ -79,7 +80,7 @@ const ProductMultiUnitsIndia = forwardRef<
    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
       useEffect(() => {
         let gridHeightMobile = modalHeight - 500;
-        let gridHeightWindows = modalHeight - 500;
+        let gridHeightWindows = modalHeight - (isGlobal ?500: 450);
         setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
       }, [isMaximized, modalHeight]);
 
@@ -564,7 +565,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
           </div>
 
           {/* DataGrid Section */}
-          <div className="p-4 rounded-md shadow grid grid-cols-1 gap-3 ">
+          <div className="px-4 pb-4 pt-1 rounded-md shadow grid grid-cols-1 gap-3 ">
             
                <ErpDevGrid
                     ref={multiUnitRef}

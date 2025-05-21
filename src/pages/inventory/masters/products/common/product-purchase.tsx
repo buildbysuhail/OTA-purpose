@@ -11,13 +11,14 @@ const PurchaseCommon: React.FC<{
   getFieldProps: (fieldId: string, type?: string) => FormField;
   isMaximized?: boolean;
     modalHeight?: any
-}> = React.memo(({ getFieldProps,isMaximized,modalHeight }) => {
+    isGlobal?: boolean
+}> = React.memo(({ getFieldProps,isMaximized,modalHeight,isGlobal }) => {
   const { t } = useTranslation("inventory");
   const { getFormattedValue } = useNumberFormat();
     const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
         useEffect(() => {
           let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight - 500;
+          let gridHeightWindows = modalHeight -(isGlobal?500:300) ;
           setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
         }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = useMemo(

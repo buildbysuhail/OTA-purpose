@@ -425,6 +425,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           handleFieldChange={handleFieldChange}
           isMaximized={isMaximized}
           modalHeight={modalHeight}
+         isGlobal={true}
         />
       </div>,
       <div key="multi_rates">
@@ -458,12 +459,14 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
          getFieldProps={getFieldProps} 
            isMaximized={isMaximized}
           modalHeight={modalHeight}
+          isGlobal={true}
          />
       </div>,
       <div key="purchase">
         <PurchaseCommon getFieldProps={getFieldProps} 
            isMaximized={isMaximized}
           modalHeight={modalHeight}
+          isGlobal={true}
          />
       </div>,
       <div key="stock">
@@ -473,6 +476,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           handleFieldChange={handleFieldChange}
           isMaximized={isMaximized}
           modalHeight={modalHeight}
+          isGlobal={true}
         />
       </div>,
       <div key="suppliers">
@@ -482,6 +486,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           handleFieldChange={handleFieldChange}
            isMaximized={isMaximized}
         modalHeight={modalHeight}
+        isGlobal={true}
         />
       </div>,
       // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
@@ -494,6 +499,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       </div>,
       <div key="search">
         <SearchCommon 
+        isGlobal={true}
         isMaximized={isMaximized}
         modalHeight={modalHeight}  
         />
@@ -533,6 +539,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}
         />
       </div>,
       <div key="multi_rates">
@@ -541,10 +550,16 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+           isMaximized={isMaximized}
+          modalHeight={modalHeight}
         />
       </div>,
       <div key="search">
-        <SearchCommon />
+        <SearchCommon 
+         isGlobal={false}
+         isMaximized={isMaximized}
+         modalHeight={modalHeight}
+        />
       </div>,
       <div key="image">
         <ImageCommon
@@ -563,16 +578,28 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         />
       </div>,
       <div key="sales">
-        <SalesCommon getFieldProps={getFieldProps} />
+        <SalesCommon 
+        getFieldProps={getFieldProps}    
+         isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}/>
       </div>,
       <div key="purchase">
-        <PurchaseCommon getFieldProps={getFieldProps} />
+        <PurchaseCommon 
+        getFieldProps={getFieldProps} 
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}
+        />
       </div>,
       <div key="stock">
         <StockCommon
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}
         />
       </div>,
       <div key="suppliers">
@@ -580,6 +607,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}
         />
       </div>,
       <div key="notes">

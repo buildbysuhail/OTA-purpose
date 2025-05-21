@@ -16,8 +16,9 @@ const SuppliersCommon: React.FC<{
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField;
    isMaximized?: boolean;
-  modalHeight?: any
-}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight }) => {
+  modalHeight?: any;
+  isGlobal?: boolean;
+}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight,isGlobal }) => {
   const supplierProducts =
   {
     ledgerID: 0,
@@ -40,7 +41,7 @@ const SuppliersCommon: React.FC<{
  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
         useEffect(() => {
           let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight - 600;
+          let gridHeightWindows = modalHeight - (isGlobal ? 600 : 350);
           setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
         }, [isMaximized, modalHeight]);
   return (

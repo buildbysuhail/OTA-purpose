@@ -14,7 +14,8 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 
 const StockCommon: React.FC<{
   isMaximized?: boolean;
-    modalHeight?: any
+    modalHeight?: any;
+  isGlobal?: boolean;
   formState: any;
   handleFieldChange: (
     fields:
@@ -26,7 +27,7 @@ const StockCommon: React.FC<{
   ) => void;
 
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight }) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight,isGlobal }) => {
   const { t } = useTranslation("inventory");
   const [showGrid, setShowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +35,7 @@ const StockCommon: React.FC<{
     const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
         useEffect(() => {
           let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight - 500;
+          let gridHeightWindows = modalHeight - (isGlobal?500:350);
           setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
         }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = useMemo(

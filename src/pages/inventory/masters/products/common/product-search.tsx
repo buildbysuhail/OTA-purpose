@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
@@ -19,9 +19,15 @@ const initialSearchData = {
   searchInactive: false,
 };
 
-const SearchCommon: React.FC = () => {
+const SearchCommon: React.FC<{  isMaximized?: boolean;modalHeight?: any,isGlobal?:boolean}> =React.memo(({ isMaximized,modalHeight,isGlobal }) => {
   const { t } = useTranslation("inventory");
        const { getFormattedValue } = useNumberFormat();
+           const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+               useEffect(() => {
+                 let gridHeightMobile = modalHeight - 500;
+                 let gridHeightWindows = modalHeight -(isGlobal?500:330) ;
+                 setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+               }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -568,7 +574,7 @@ const SearchCommon: React.FC = () => {
   );
 
   return (
-    <div className="border border-gray-200 rounded-md p-4">
+    <div className="border border-gray-200 rounded-md px-4 pb-4 pt-1">
       <ErpDevGrid
         columns={columns}
         gridHeader={t("products")}
@@ -578,9 +584,10 @@ const SearchCommon: React.FC = () => {
         hideGridAddButton
         gridAddButtonType="popup"
         gridAddButtonIcon="ri-add-line"
+        heightToAdjustOnWindowsInModal={gridHeight.windows}
       />
     </div>
   );
-};
+});
 
 export default SearchCommon;

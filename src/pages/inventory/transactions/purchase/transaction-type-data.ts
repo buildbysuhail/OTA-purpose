@@ -127,6 +127,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   cashrOrCredit: "",
   couponAmt: 0.0,
   projectID: 0,
+  // currencyID:0,
+  labelDesignID:0,
   customerType: "",
   taxOnDiscount: 0.0,
   draftTransactionMasterId: 0,
@@ -290,6 +292,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   chkDebitAccount: { visible: true, disabled: false, label: "debit_account" },
   chkTaxNumber: { visible: true, disabled: false, label: "" },
   cbProject: { visible: true, disabled: false, label: "project" },
+  cbCurrency: { visible: true, disabled: false, label: "currency" },
   cbWarehouse: { visible: false, disabled: false, label: "warehouse" },
   cbWarranty: { visible: false, disabled: false, label: "warranty" },
   chkDummyBillWithInventory: { visible: false, disabled: false, label: "dummy_bill_with_inventory" },
@@ -339,6 +342,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   grandTotalFc: { visible: true, disabled: false, label: "grand_total_fc" },
   netAmount: { visible: true, disabled: false, label: "net_amount" },
   billDiscount: { visible: true, disabled: false, label: "bill_discount" },
+  exchangeRate: { visible: true, disabled: false, label: "exchange_rate" },
   hasCashPaid: { visible: true, disabled: false, label: "cash_paid" },
   isLocked: { visible: true, disabled: false, label: "lb" },
   autoCalculation: { visible: true, disabled: false, label: "auto_calculation" },
@@ -346,6 +350,10 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   totTax: { visible: true, disabled: false, label: "tot_tax" },
   grandTotal: { visible: true, disabled: false, label: "grand_total" },
   netTotal: { visible: true, disabled: false, label: "net_total" },
+  chkVat: { visible: true, disabled: false, label: "#_vat" },
+  cbVatAccount: { visible: true, disabled: false, label: "" },
+  inSearch: { visible: true, disabled: false, label: "in_search" },
+  cbLabelDesign: { visible: true, disabled: false, label: "label_design" },
 
 };
 export const TransactionFormStateInitialData: TransactionFormState = {
@@ -437,6 +445,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   partyId: "",
   foreignCurrency: false,
   enableDebitAccount: false,
+  inSearch:false,
   enableTaxNumber: false,
   netTotal: 0,
   netAmount: 0,

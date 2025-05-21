@@ -42,10 +42,13 @@ const ProductMultiUnitsIndia = forwardRef<
     ) => void;
     getFieldProps: (fieldId: string, type?: string) => FormField | any;
     handleDataChange: (value?: any) => void;
+    isMaximized?: boolean;
+    modalHeight?: any
+    isGlobal?: boolean;
   }
 >(
   (
-    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings },
+    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings ,isMaximized, modalHeight,isGlobal},
     ref
   ) => {
     const unitDAta: ProductUnitInputDto = {
@@ -74,8 +77,13 @@ const ProductMultiUnitsIndia = forwardRef<
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
     const multiUnitRef = useRef<any>(null);
+   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+      useEffect(() => {
+        let gridHeightMobile = modalHeight - 500;
+        let gridHeightWindows = modalHeight - (isGlobal ?500: 450);
+        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+      }, [isMaximized, modalHeight]);
 
-    
     useImperativeHandle(ref, () => ({
       loadMultiRateToGrid: async (obj: productDto, units: any) => {
         return await loadMultiRateToGrid(obj, units,api, getFormattedValue);  
@@ -182,6 +190,17 @@ const ProductMultiUnitsIndia = forwardRef<
         dataField: "unit",
         caption: t("uom"),
         dataType: "string",
+        allowEditing: false,
+        allowSorting: true,
+       allowSearch: true,
+       allowFiltering: true,
+        width: 100,
+      },
+          {
+        dataField: "unitID",
+        caption: t("unit_id"),
+        dataType: "number",
+         visible: false,
         allowEditing: false,
         allowSorting: true,
        allowSearch: true,
@@ -299,8 +318,13 @@ const ProductMultiUnitsIndia = forwardRef<
          <div className="flex items-center justify-center p-2 cursor-pointer">
             <a
               className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-             onClick={() => handleRemoveUnit(cellData.data.unitID)}
-            >
+            onClick={() => {
+            // Access the grid's data via the ref
+            const gridData = multiUnitRef.current?.instance()?.option("dataSource") || getFieldProps("units").value;
+            handleRemoveUnit(cellData.data.unitID, gridData);
+          }}
+        >
+            
               <X className="w-4 h-4" />
             </a>
           </div>
@@ -312,15 +336,10 @@ const ProductMultiUnitsIndia = forwardRef<
       },
         ], [t]);
 
-   
-   const handleRemoveUnit = (unitID: number) => {
-      console.log("Removing unit with unitID:", unitID);
-      const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
-      const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
-      handleFieldChange("units", updatedUnits);
-    };
-
-   
+  const handleRemoveUnit = (unitID: number, gridData: ProductUnitInputDto[]) => {
+  const updatedUnits = gridData.filter((unit) => Number(unit.unitID) !== Number(unitID));
+  handleFieldChange("units", updatedUnits);
+}; 
 
 const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
   debugger;
@@ -546,11 +565,12 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
           </div>
 
           {/* DataGrid Section */}
-          <div className="p-4 rounded-md shadow w-full overflow-x-auto">
+          <div className="px-4 pb-4 pt-1 rounded-md shadow grid grid-cols-1 gap-3 ">
             
                <ErpDevGrid
                     ref={multiUnitRef}
                     hideGridHeader={true}
+                    // hideDefaultSearchPanel={true}
                     keyExpr="unitID"
                     data={getFieldProps("units").value}
                     columns={columns}
@@ -580,8 +600,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                     ShowGridPreferenceChooser={false}
                     showPrintButton={false}
                     pageSize={100}
-                    heightToAdjustOnWindows={400}
-                
+                    heightToAdjustOnWindowsInModal={gridHeight.windows}
                     gridId="product_multi_units_grid"
                 />
                

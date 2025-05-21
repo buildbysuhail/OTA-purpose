@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
@@ -24,11 +24,20 @@ const NutritionFactsIndia: React.FC<{
         fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
         value?: PathValue<productDto, Path>
     ) => void;
+    isMaximized?: boolean;
+  modalHeight?: any
     getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight }) => {
 
     const { t } = useTranslation('inventory');
     const [nutrition, setNutrition] = useState<ProductNutrientsInputDto>(initialNutrientData);
+    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+
+      useEffect(() => {
+        let gridHeightMobile = modalHeight - 500;
+        let gridHeightWindows = modalHeight - 600;
+        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+      }, [isMaximized, modalHeight]);
 
     const handleAddNutrient = () => {
         let nutritionData = getFieldProps("nutrients").value as ProductNutrientsInputDto[];
@@ -91,7 +100,8 @@ const NutritionFactsIndia: React.FC<{
                     showBorders={true}
                     columnAutoWidth={true}
                     rowAlternationEnabled={true}
-                    height="300">
+                    height={gridHeight.windows}
+                    >
                     <Column
                         dataField="nutrients"
                         dataType="string"

@@ -7,9 +7,16 @@ import { APIClient } from "../../../../../helpers/api-client";
 import { FormField } from "../../../../../utilities/form-types";
 
 const api = new APIClient()
-const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string) => FormField; }> = React.memo(({ getFieldProps }) => {
+const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string) => FormField;  isMaximized?: boolean;
+    modalHeight?: any }> = React.memo(({ getFieldProps,isMaximized,modalHeight }) => {
   const { t } = useTranslation("inventory");
   const [data, setData] = useState([]);
+      const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+          useEffect(() => {
+            let gridHeightMobile = modalHeight - 500;
+            let gridHeightWindows = modalHeight - 500;
+            setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+          }, [isMaximized, modalHeight]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,6 +82,7 @@ const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string
         hideGridAddButton
         gridAddButtonType="popup"
         gridAddButtonIcon="ri-add-line"
+         heightToAdjustOnWindowsInModal={gridHeight.windows}
       />
     </div>
   );

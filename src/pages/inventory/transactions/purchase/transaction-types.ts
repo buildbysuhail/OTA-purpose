@@ -164,6 +164,7 @@ export interface TransactionMaster {
   cashPaid: number;//new
   supplyType: string;//new
   other: TransactionMaster3;
+  labelDesignID:number;
 }
 export interface TransactionMaster3 {
   invTransactionMasterId: number; 
@@ -321,6 +322,8 @@ export interface UserConfig {
   showProductInfoPopup?: boolean;
   showPurchaserOnly?: boolean;
   useSupplierProductCode?: boolean;
+  presetWarehouseId?: number;
+  counterWiseWarehouseId?: number;
   enableItemCodeSearchInNameColumn?: boolean;
   holdSameCode?: boolean;
   printPreview?: boolean;
@@ -375,6 +378,7 @@ export interface TransactionFormState {
   openUnsavedPrompt?: boolean
   foreignCurrency: boolean
   enableDebitAccount: boolean
+  inSearch:boolean;
   enableTaxNumber: boolean
   tmpVoucherNo?: number
   dummyCode?: any

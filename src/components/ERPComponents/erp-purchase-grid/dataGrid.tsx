@@ -14,6 +14,7 @@ import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
 import type { TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
+import ErpInput from "../erp-input";
 
 type DataItem = Record<string, any>;
 
@@ -34,16 +35,11 @@ interface EditableCellProps {
   column: DevGridColumn;
   value: string | number;
 }
+
 const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
   const dispatch = useAppDispatch();
   const [localValue, setLocalValue] = useState<string | number>(value);
 
-  // Resync when external value changes
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  // Commit to Redux on blur
   const handleBlur = () => {
     const typed = column.dataType === "number"
       ? parseFloat(localValue as string) || 0
@@ -55,19 +51,24 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
         value: typed,
       })
     );
+    console.log("Row updated:", rowIndex, column.dataField, typed);
+    
   };
 
   return (
-    <Input
+    <>
+     <Input
       id={`${column.dataField}_${rowIndex}`}
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
       className="w-full h-full"
       value={localValue}
       noBorder
-      onChange={e => (e.target.value)}
+      onChange={e => setLocalValue(e.target.value)} 
       onBlur={handleBlur}
     />
+    </>
+   
   );
 };
 
@@ -169,7 +170,7 @@ const Row = React.memo(
     );
   },
   // only re-render if this row's data object changed
-  (prev, next) => prev.data.details[prev.index] === next.data.details[next.index]
+  (prev, next) => prev.index === next.index && prev.data.tableWidth === next.data.tableWidth
 );
 
 export default function ErpPurchaseGrid<T extends DataItem>({

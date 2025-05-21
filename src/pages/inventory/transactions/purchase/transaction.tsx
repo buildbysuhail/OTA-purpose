@@ -1,144 +1,44 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  TransactionProps,
-  TransactionDetail,
-} from "./transaction-types";
-import {
-  TransactionData,
-  TransactionFormState,
-} from "./transaction-types";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../utilities/hooks/useAppDispatch";
+import React, { useCallback, useEffect, useMemo, useRef, useState, } from "react";
+import { TransactionProps, } from "./transaction-types";
+import { TransactionData, TransactionFormState, } from "./transaction-types";
+import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
-import {
-  formStateHandleFieldChange,
-  // formStateMaster3HandleFieldChange,
-  formStateMasterHandleFieldChange,
-  formStateTransactionMaster3HandleFieldChange,
-  formStateTransactionMasterHandleFieldChange,
-  setUserRight,
-  updateFormElement,
-} from "./reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateSet, setUserRight, updateFormElement, } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
-import {
-  ApplicationMainSettings,
-  ApplicationMainSettingsInitialState,
-} from "../../../settings/system/application-settings-types/application-settings-types-main";
-import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
+import { ApplicationMainSettings, ApplicationMainSettingsInitialState, } from "../../../settings/system/application-settings-types/application-settings-types-main";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { TransactionUserConfig } from "./transaction-user-config";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
 import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../../helpers/user-right-helper";
-import { Link } from "react-router-dom";
-import {
-  Ellipsis,
-  EllipsisVertical,
-  KeyRound,
-  Pencil,
-  Printer,
-  RefreshCw,
-  Trash2,
-  ChevronUp,
-  BadgePlusIcon,
-  Eraser,
-  X,
-  FileUp,
-  History,
-  Search,
-  AlignHorizontalSpaceBetween,
-  Menu,
-  Bookmark,
-  ChevronDown,
-  Heart,
-  Star,
-  Sun,
-} from "lucide-react";
-import { LedgerType } from "../../../../enums/ledger-types";
-import ExcelImport from "./excel-Import";
+import { X, } from "lucide-react";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./renderSelected-template";
 import moment from "moment";
 import ERPAttachment from "../../../../components/ERPComponents/erp-attachment";
-import VoucherType from "../../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
-import {
-  customJsonParse,
-  modelToBase64,
-  modelToBase64Unicode,
-} from "../../../../utilities/jsonConverter";
-import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-number-details";
 import UnsavedChangesModal from "./unsavedChangesModal";
-import PartySelectionModal from "./party-selection-modal";
 import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
-import ReferenceNumber from "./components/reference-number";
-import TransactionDate from "./components/transaction-Date";
-import ReferenceDate from "./components/reference-Date";
-import LedgerCode from "./components/ledger-code";
-import Employee from "./components/cb-employee";
-import DebitAccount from "./components/cb-debit-account";
-import InvoiceValue from "./components/invoice-value";
-import Project from "./components/cb-project";
-import PartyLedger from "./components/cb-ledger";
-import AccVoucherPrefix from "./components/voucher-prefix";
-import AccVoucherNo from "./components/voucher-no";
-import BtnAdd from "./components/btn-add";
 import AccHeader from "./components/header";
 import Urls from "../../../../redux/urls";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import ERPLabel from "../../../../components/ERPComponents/erp-label";
-import WarehouseID from "./components/warehouse-id ";
-import RemarksInput from "./components/RemarksInput.";
-import IsLockedCheckbox from "./components/IsLockedCheckbox";
-import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
-import CashPaidSection from "./components/CashPaidSection";
-import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
-import CostCentreCombobox from "./components/CostCentreCombobox";
-import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
-import VatAmountLabel from "./components/VatAmountLabel";
-import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
-import RoundOffInput from "./components/RoundOffInput";
-import TotalTCSInput from "./components/TotalTCSInput";
-import GrandTotalFcInput from "./components/GrandTotalFcInput";
-import NetAmountInput from "./components/NetAmountInput";
-import BillDiscountInput from "./components/BillDiscountInput";
-import GrandTotalLabel from "./components/GrandTotalLabel";
-import NetTotalLabel from "./components/NetTotalLabel";
-import DataGridTest from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
-import GrnNumber from "./components/grn-Number";
+import { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
-import BottomSidebarGrid from "./bottom-sidebar-grid";
-import ProductSummary from "./components/Product-summary";
 import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
 import { transactionInitialData, TransactionFormStateInitialData, initialFormElements } from "./transaction-type-data";
 import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
-
+import TransactionFooter from "./transaction-footer";
+import TransactionHeader from "./transaction-header";
+import { LedgerType } from "../../../../enums/ledger-types";
 
 interface BilledItem {
   id?: number;
@@ -160,7 +60,6 @@ interface FormData {
 }
 
 const api = new APIClient();
-
 const TransactionForm: React.FC<TransactionProps> = ({
   voucherType,
   voucherPrefix,
@@ -492,29 +391,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      console.log("initializeFormElements");
-
-      const isForeignCurrencyVisible =
-        applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
-      const isProjectIdVisible =
-        applicationSettings.accountsSettings?.maintainProjectSite ||
-        userSession.dbIdValue == "543140180640";
-
-      // Prepare the fields to update based on conditions
-
-      // dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      // // Dispatch the update action
-
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      if (isInvoker) {
+      if (isInvoker && formType ==  "IMPORT") {
+        dispatch(formStateHandleFieldChange({fields:{formCode: "PIIMPORT"}}))
       }
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-
-      console.log("masterAccountID = -2;");
 
       let employeeID = 0;
       let _voucherNo = 0;
@@ -537,7 +422,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...TransactionFormStateInitialData,
           transaction: {
             ...voucher,
-            master: {
+            master: {                                                 
               ...voucher.master,
               voucherType: voucherType ?? "",
               voucherPrefix: voucherPrefix ?? "",
@@ -582,110 +467,43 @@ const TransactionForm: React.FC<TransactionProps> = ({
             : t(title) + "[" + formType + "]") ?? "",
       };
 
-      let fieldsToUpdate = {
+      let _formElements = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
+        cbWarehouse: { ...initialFormElements.cbWarehouse, visible: applicationSettings.inventorySettings.maintainWarehouse },
+        ledgerID: { ...initialFormElements.ledgerID, accLedgerType: !applicationSettings.inventorySettings.showAccountReceivableInPurchase? LedgerType.Cash_Bank_Suppliers: LedgerType.Cash_Bank_Suppliers_Customers },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
-      switch (voucherType) {
-        case "PI":
-          {
-            fieldsToUpdate = {
-              ...fieldsToUpdate,
+       if (applicationSettings.inventorySettings.maintainWarehouse) {
+       _formElements.cbWarehouse.visible = true;
 
-              gridColumns: {
-                ...fieldsToUpdate.gridColumns,
-                showChqNo: !clientSession.isAppGlobal,
-                showChqDate: !clientSession.isAppGlobal,
-                showNameOnCheque: !clientSession.isAppGlobal,
-                showBankName: !clientSession.isAppGlobal,
-              },
-            };
-            break;
-          }
-
-          let fnlFormElmns = { ...fieldsToUpdate };
-          if (
-            (_formState.transaction.master.voucherType == "BP" ||
-              _formState.transaction.master.voucherType == "BR") &&
-            userSession.countryId == Countries.India
-          ) {
-            // fnlFormElmns =
-            // {
-            //   ...fieldsToUpdate,
-            //   bankName: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            //   nameOnCheque: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            //   chequeNumber: {
-            //     ...fieldsToUpdate.chequeNumber,
-            //     visible: false,
-            //   },
-            //   bankDate: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            // }
-          }
-
-          _formState.formElements = fnlFormElmns;
-
-          // focusLedgerCode();
-
-          _formState.templates = templates;
-          _formState.templatesData = templatesData;
-          const _template = templatesData?.find(
-            (x: any) => x.templateGroup == _formState.transaction.master.voucherType
-          );
-          if (_template != undefined) {
-            _formState.template = _template;
-          } else {
-            _formState.template = null;
-          }
-          setTransVoucher(_formState, true);
-        // Fetch templates asynchronously
+      if (formState.userConfig?.presetWarehouseId??0 > 0) {
+        formState.transaction.master.fromWarehouseID = formState.userConfig?.presetWarehouseId??0
+       _formElements.cbWarehouse.disabled = true;
+      } else {
+        if (
+          applicationSettings.accountsSettings.allowSalesCounter &&
+          (formState.userConfig?.counterWiseWarehouseId??0) > 0
+        ) {
+          
+        formState.transaction.master.fromWarehouseID = formState.userConfig?.counterWiseWarehouseId??0
+         
+        } else {
+          formState.transaction.master.fromWarehouseID = applicationSettings.inventorySettings.defaultWareHouse;
+        }
       }
-    };
-    initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
+    }
+     dispatch(formStateSet(_formState))
+     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
+    };
+    initializeFormElements();
+    
   }, [voucherType, voucherPrefix]);
-
-  // useEffect(() => {
-  //   if (!voucherType) return;
-  //   const updateFormElementsBasedOnVoucherType = () => {
-
-  //     // Dispatch the update action with all the required fields
-  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
-  //     focusLedgerCode();
-  //   };
-  //   updateFormElementsBasedOnVoucherType();
-  // }, [voucherType]);
-  // const fetchVoucherNumber = useCallback(async () => {
-  //   const nextVoucherNumber = await getNextVoucherNumber(
-  //     formType ?? "",
-  //     voucherType ?? "",
-  //     voucherPrefix ?? "",
-  //     false
-  //   );
-
-  // //   dispatch(
-  // //     formStateTransactionMasterHandleFieldChange({
-  // //       fields: {
-  // //         voucherNumber: nextVoucherNumber,
-  // //       },
-  // //     })
-  // //   );
-  // // }, [formType, voucherType, voucherPrefix]);
-
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
     setIsTemplateOpen(true);
@@ -1817,7 +1635,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // };
 
   return (
-    <div className="relative">
+    <div className="relative h-screen">
       {/* <h1>SAFVAN{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
         <div
@@ -1889,168 +1707,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
             </div>
           </div>
 
-          <div className="mt-8 flex items-end gap-4">
-            <PartyLedger
-              ref={ledgerIdRef}
-              handleFieldKeyDown={handleFieldKeyDown}
-              triggerEffect={triggerEffect}
-              handleKeyDown={handleKeyDown}
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              setIsPartyDetailsOpen={() => {
-                setIsPartyDetailsOpen((prev: any) => {
-                  debugger;
-                  return !prev;
-                });
-              }}
-            />
-            <AccVoucherPrefix
-              ref={voucherNumberRef}
-              formState={formState}
-              dispatch={dispatch}
-              handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
-              t={t}
-            />
-            <AccVoucherNo
-              ref={voucherNumberRef}
-              formState={formState}
-              dispatch={dispatch}
-              handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
-              t={t}
-            />
-            <TransactionDate
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-            />
-
-            <div className="relative w-auto">
-              <button
-                onClick={toggleDropdown}
-                className="text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md mb-1"
-              // className="bg-[#FDBA74] hover:bg-[#FB923C] text-white font-bold py-2 px-4 rounded-lg w-auto inline-flex justify-between items-center shadow-md"
-              >
-                <div className="flex items-center space-x-2">
-                  <EllipsisVertical size={16} className="text-black" />
-                  {/* <Menu size={16} className="text-white" /> */}
-                  {/* <span>more</span> */}
-                </div>
-                {/* <div className={`ml-2 transition-all duration-500 ${isDropDownOpen ? 'rotate-180 opacity-100' : 'opacity-80'}`}>
-                  <ChevronDown size={16} className="text-white" />
-                </div> */}
-              </button>
-
-              <div
-                ref={dropdownRef}
-                className={`mt-2 bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-500 ease-in-out border border-gray-200 absolute right-0 z-40 w-full ${isDropDownOpen ? 'opacity-100 transform translate-y-0' : 'max-h-0 opacity-0 transform -translate-y-4'
-                  }`}
-                style={{
-                  marginLeft: 0,
-                  width: `calc(96vw - ${SIDEBAR_WIDTH})`,
-                  maxWidth: "calc(100vw - 220px)"
-                }}
-              >
-                <div ref={contentRef} className="p-6">
-                  <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-center gap-1">
-                    <ReferenceNumber
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      ref={refNoRef}
-                      t={t}
-                    />
-
-                    <ReferenceDate
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                    />
-
-                    <Employee
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <DebitAccount
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <Project
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <InvoiceValue
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <div
-                    className={
-                      formState.userConfig?.isExpanded
-                        ? "flex flex-wrap gap-1 leading-none"
-                        : "flex flex-wrap items-center gap-4 leading-none"
-                    }
-                  >
-                    <ERPButton
-                      title={t("Grn_Number")}
-                      onClick={handleButtonClick}
-                      // onClick={() => goToPreviousPage()}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                    />
-                    {isModalOpen && (
-                      <ERPModal
-                        isOpen={isModalOpen}
-                        title="GrnNumber"
-                        width={600}
-                        height={200}
-                        closeModal={closeModal}
-                        content={
-                          <GrnNumber
-                            dispatch={dispatch}
-                            formState={formState}
-                            t={t}
-                            handleLoadByRefNo={handleLoadByRefNo}
-                            handleFieldChange={handleFieldChange}
-                            closeModal={closeModal}
-
-                          />
-                        }
-                      />
-                    )}
-                    <LedgerCode
-                      ref={ledgerCodeRef}
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-
-                  <div className="flex justify-center mt-4 mb-2">
-                    <button
-                      onClick={toggleDropdown}
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"
-                    >
-                      <ChevronUp size={20} className="text-black" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* header starts here */}
+          <TransactionHeader
+            formState={formState}
+            dispatch={dispatch}
+            handleKeyDown={handleKeyDown}
+            loadAndSetTransVoucher={loadAndSetTransVoucher}
+            t={t}
+            handleLoadByRefNo={handleLoadByRefNo}
+            handleFieldChange={handleFieldChange}
+            setIsPartyDetailsOpen={setIsPartyDetailsOpen}
+            triggerEffect={triggerEffect}
+            handleFieldKeyDown={handleFieldKeyDown}
+            ledgerCodeRef={ledgerCodeRef}
+            voucherNumberRef={voucherNumberRef}
+            refNoRef={refNoRef}
+          />
+          {/* header ends here */}
 
           <ErpPurchaseGrid
             columns={purchaseGridCol}
@@ -2222,300 +1895,20 @@ const TransactionForm: React.FC<TransactionProps> = ({
       )}
 
 
-
-      <div
-        className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
-        style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
-
-        <div className="relative w-full">
-          <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
-            <button
-              onClick={toggleDropup}
-              className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? 'bg-gray-100' : ''}`}
-              style={{ boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.1)' }}
-            >
-              <ChevronUp
-                className={`mx-2 transition-transform duration-500 ${isDropUpOpen ? 'transform rotate-180' : hasAnimated ? '' : 'animate-[bounce_2s_1]'}`}
-                size={24}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Dropdown content */}
-        <div className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? 'max-h-[50vh] mb-6' : 'max-h-0'}`}>
-          <div className="p-4 md:p-6 bg-white border border-gray-300 rounded-t-lg shadow-lg">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
-              <div className="w-full">
-                <WarehouseID
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <RemarksInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <PriceCategoryCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <CostCentreCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <SupplyTypeCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <AdjustmentAmountInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-end justify-between">
-          <div className="flex items-end gap-1">
-            <div className="grid grid-cols-1">
-              <ERPButton
-                title={t("bottom sidebar")}
-                // onClick={handleButtonClick}
-                // onClick={() => goToPreviousPage()}
-                onClick={() => setIsOpentwo(true)}
-                className="w-[150px]"
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-              />
-            </div>
-
-            {formState.formElements.printOnSave.visible && (
-              <ERPCheckbox
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                id="printOnSave"
-                label={t(formState.formElements.printOnSave.label)}
-                checked={formState.printOnSave}
-                onChange={(e) =>
-                  dispatch(
-                    formStateHandleFieldChange({
-                      fields: { printOnSave: e.target.checked },
-                    })
-                  )
-                }
-                disabled={formState.formElements.printOnSave?.disabled}
-              />
-            )}
-
-            {(voucherType == "BP" || voucherType == "CQP") &&
-              formState.formElements.printCheque.visible && (
-                <ERPCheckbox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="p-rintCheque"
-                  label={t(formState.formElements.printCheque.label)}
-                  checked={formState.printCheque}
-                  onChange={(e) =>
-                    dispatch(
-                      formStateHandleFieldChange({
-                        fields: { printCheque: e.target.checked },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.printCheque?.disabled ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                  className="text-sm xl:text-base"
-                />
-              )}
-
-            {(voucherType == "BP" || voucherType == "CQP") && (
-              <div>
-                <ERPButton
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  title={t("print_cheque")}
-                  variant="secondary"
-                  onClick={() => {
-                    /* Handle print cheque */
-                  }}
-                  className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
-                />
-              </div>
-            )}
-
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
-                <button className="text-blue-600">
-                  <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
-                    {t("attachment")}
-                  </span>
-                </button>
-                <CashPaidSection
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                />
-              </div>
-
-              <div className="flex flex-col xl:flex-row items-end gap-1">
-                <RoundOffInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={() => { document.getElementById("discountID")?.focus(); }}
-                  focusAmount={() => { document.getElementById("amountID")?.focus(); }}
-                />
-
-                <BillDiscountInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-end gap-4">
-            <div className="grid grid-cols-1 gap-1">
-              <NetAmountInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
-
-              <VatAmountLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                taxData={taxData}
-              />
-
-              <GrandTotalLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-
-              <NetTotalLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="hidden md:block mr-2">
-                <h6 className="font-semibold whitespace-nowrap text-[20px] ">
-                  {" "}
-                  <span className="!font-medium !text-gray-600">{t("total")}: </span>
-                  {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-                </h6>
-              </div>
-              <div className="flex items-center gap-2">
-
-                {/* <ERPButton
-                  ref={btnSaveRef}
-                  title={t("close")}
-                  onClick={goToPreviousPage}
-                  className="w-24"
-                  disabled={formState.formElements.pnlMasters?.disabled}
-                /> */}
-
-                <ERPButton
-                  title={t("close")}
-                  onClick={() => goToPreviousPage()}
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                />
-
-                <ERPButton
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  ref={btnSaveRef}
-                  title={t("save")}
-                  jumpTarget="save"
-                  variant="primary"
-                  onClick={save}
-                  className="w-24"
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled ||
-                    formState.transaction.details == null ||
-                    formState.transaction.details.length == 0
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* <div className="flex items-center justify-between">
-          <div className="flex w-full">
-
-            <BottomSidebar isOpen={isOpen} setIsOpen={setIsOpen} minHeight={200} maxHeight={600} initialHeight={400} children={undefined}/>
-            <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
-              <IsLockedCheckbox
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-
-              <AutoCalculationCheckbox
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-
-              <div className="flex flex-wrap justify-between items-center">
-
-              </div>
-              <TotalTCSInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
-
-              <GrandTotalFcInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
-            </div>
-          </div>
-
-          </div>
-
-        </div> */}
-      </div>
+      {/* footer starts here */}
+      <TransactionFooter
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+        handleKeyDown={handleKeyDown}
+        handleFieldKeyDown={handleFieldKeyDown}
+        focusDiscount={focusDiscount}
+        focusAmount={focusAmount}
+        goToPreviousPage={goToPreviousPage}
+        save={save}
+        selectAttachment={selectAttachment}
+      />
+      {/* footer ends here */}
 
       {formState.transaction && formState.template && (
         <ERPModal
@@ -2558,8 +1951,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           initialMaximize={true}
           closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
           content={
-            <ProductSummaryMaster
-            />
+            <ProductSummaryMaster />
           }
         />
       )}

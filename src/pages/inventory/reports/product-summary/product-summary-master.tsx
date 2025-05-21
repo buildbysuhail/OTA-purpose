@@ -30,11 +30,8 @@ export interface ProductSummaryFilter {
   };
 }
 
-export interface ProductSummaryRef {
-  reloadData: () => void;
-}
+export interface ProductSummaryRef { reloadData: () => void; }
 const api = new APIClient();
-
 const ProductSummaryMaster = (): any => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
@@ -47,7 +44,7 @@ const ProductSummaryMaster = (): any => {
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: formState.selectedRow?.productID??0,
+      productID: formState.selectedRow?.productID ?? 0,
       productBatchID: 0,
       voucherType: "PI",
       productCode: "",
@@ -97,7 +94,7 @@ const ProductSummaryMaster = (): any => {
         <div className="col-span-1">
           <div className="">
             <div className="p-2 md:p-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-2 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-2 md:gap-4 items-end">
                 <ERPDateInput
                   id="dateFrom"
                   value={filter.filter.dateFrom}
@@ -150,22 +147,20 @@ const ProductSummaryMaster = (): any => {
                   }
 
                   onEnterKeyDown={async (e: any) => {
-                    console.log("Enter key pressed",e.target.value);
-                    
-                   const val = await api.getAsync(`${Urls.summary_product_code}${e.target.value}`);
-                   if(val){
-                     setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        productID:val,
-                      },
-                    }))
-                   }
+                    console.log("Enter key pressed", e.target.value);
+
+                    const val = await api.getAsync(`${Urls.summary_product_code}${e.target.value}`);
+                    if (val) {
+                      setFilter((prev: any) => ({
+                        ...prev,
+                        filter: {
+                          ...prev.filter,
+                          productID: val,
+                        },
+                      }))
+                    }
                   }}
                   disableEnterNavigation
-
-
                 />
                 <ERPDataCombobox
                   id="productID"

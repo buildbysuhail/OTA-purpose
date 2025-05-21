@@ -559,6 +559,13 @@ const Urls = {
   diagnosis_report_sales_price_less_than_msp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessthanMSP/",
   diagnosis_report_sales_price_greater_than_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceGreaterthanMRP/",
   diagnosis_report_sales_price_equal_to_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceGreaterthanMRP/",
+  customer_visit_total_visit: "/Inventory/RptCustomerVisitReport/CustomerVisitTotalVisit",
+  customer_visit_last_visit: "/Inventory/RptCustomerVisitReport/CustomerVisitLastVisit",
+  foc_register_report: "/Inventory/RptInventoryReport/FOCRegisterReport",
+  discount_report_inventory: "/Inventory/RptDiscountReport/DiscountReportInventory",
+  discount_report_collection: "/Inventory/RptDiscountReport/DiscountReportCollection",
+  item_used_for_service: "/Inventory/RptInventoryReport/ItemUsedForServiceReport",
+  lpo_report: "/Inventory/RptAdvancedReport/LPOReport",
 
   gstr1b2b: "/Inventory/RptGSTR1Report/SelectGSTR1B2B/",
   gstr1b2cLarge: "/Inventory/RptGSTR1Report/SelectGSTR1B2CL/",

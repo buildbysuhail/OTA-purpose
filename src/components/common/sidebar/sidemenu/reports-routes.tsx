@@ -257,6 +257,14 @@ export const ReportsMenuItems = [
       { id: 169, path: `${import.meta.env.BASE_URL}reports/_/inventory/diagnosis_report_sales_price_less_than_purchase_price`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_purchase_price', icon: PiPackageLight },
       { id: 170, path: `${import.meta.env.BASE_URL}reports/_/inventory/diagnosis_report_sales_price_less_than_msp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_msp', icon: PiPackageLight },
       { id: 171, path: `${import.meta.env.BASE_URL}reports/_/inventory/diagnosis_report_sales_price_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_greater_than_mrp', icon: PiPackageLight },
+      { id: 172, path: `${import.meta.env.BASE_URL}reports/_/inventory/customer_visit_total_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_total_visit', icon: PiPackageLight },
+      { id: 173, path: `${import.meta.env.BASE_URL}reports/_/inventory/customer_visit_last_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_last_visit', icon: PiPackageLight },
+      { id: 174, path: `${import.meta.env.BASE_URL}reports/_/inventory/foc_register_report`, type: 'link', active: false, selected: false, title: 'foc_register_report', icon: PiPackageLight },
+      { id: 175, path: `${import.meta.env.BASE_URL}reports/_/inventory/discount_report_inventory`, type: 'link', active: false, selected: false, title: 'discount_report_inventory', icon: PiPackageLight },
+      { id: 176, path: `${import.meta.env.BASE_URL}reports/_/inventory/discount_report_collection`, type: 'link', active: false, selected: false, title: 'discount_report_collection', icon: PiPackageLight },
+      { id: 177, path: `${import.meta.env.BASE_URL}reports/_/inventory/item_used_for_service`, type: 'link', active: false, selected: false, title: 'item_used_for_service', icon: PiPackageLight },
+      { id: 178, path: `${import.meta.env.BASE_URL}reports/_/inventory/lpo_report`, type: 'link', active: false, selected: false, title: 'lpo_report', icon: PiPackageLight },
+
     ]
   },
   {

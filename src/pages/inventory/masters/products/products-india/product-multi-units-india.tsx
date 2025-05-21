@@ -188,6 +188,17 @@ const ProductMultiUnitsIndia = forwardRef<
        allowFiltering: true,
         width: 100,
       },
+          {
+        dataField: "unitID",
+        caption: t("unit_id"),
+        dataType: "number",
+         visible: false,
+        allowEditing: false,
+        allowSorting: true,
+       allowSearch: true,
+       allowFiltering: true,
+        width: 100,
+      },
       {
         dataField: "multiFactor",
         caption: t("multi_factor"),
@@ -299,8 +310,13 @@ const ProductMultiUnitsIndia = forwardRef<
          <div className="flex items-center justify-center p-2 cursor-pointer">
             <a
               className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-             onClick={() => handleRemoveUnit(cellData.data.unitID)}
-            >
+            onClick={() => {
+            // Access the grid's data via the ref
+            const gridData = multiUnitRef.current?.instance()?.option("dataSource") || getFieldProps("units").value;
+            handleRemoveUnit(cellData.data.unitID, gridData);
+          }}
+        >
+            
               <X className="w-4 h-4" />
             </a>
           </div>
@@ -313,14 +329,22 @@ const ProductMultiUnitsIndia = forwardRef<
         ], [t]);
 
    
-   const handleRemoveUnit = (unitID: number) => {
-      console.log("Removing unit with unitID:", unitID);
-      const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
-      const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
-      handleFieldChange("units", updatedUnits);
-    };
+//  const handleRemoveUnit = (unitID: number) => {
+//   console.log("Removing unit with unitID:", unitID);
+//   const currentUnits = getFieldProps("units").value as ProductUnitInputDto[];
+//   console.log("Current units:", currentUnits);
+//   const updatedUnits = currentUnits.filter((unit) => unit.unitID !== unitID);
+//   console.log("Updated units:", updatedUnits);
+//   handleFieldChange("units", updatedUnits);
+// };
 
-   
+  const handleRemoveUnit = (unitID: number, gridData: ProductUnitInputDto[]) => {
+  console.log("Removing unit with unitID:", unitID);
+  console.log("Grid data:", gridData);
+  const updatedUnits = gridData.filter((unit) => Number(unit.unitID) !== Number(unitID));
+  console.log("Updated units:", updatedUnits);
+  handleFieldChange("units", updatedUnits);
+}; 
 
 const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
   debugger;

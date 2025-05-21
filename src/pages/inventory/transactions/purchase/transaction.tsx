@@ -4,7 +4,7 @@ import { TransactionData, TransactionFormState, } from "./transaction-types";
 import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, setUserRight, updateFormElement, } from "./reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateSet, setUserRight, updateFormElement, } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
@@ -38,6 +38,7 @@ import { transactionInitialData, TransactionFormStateInitialData, initialFormEle
 import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
+import { LedgerType } from "../../../../enums/ledger-types";
 
 interface BilledItem {
   id?: number;
@@ -390,29 +391,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      console.log("initializeFormElements");
-
-      const isForeignCurrencyVisible =
-        applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
-      const isProjectIdVisible =
-        applicationSettings.accountsSettings?.maintainProjectSite ||
-        userSession.dbIdValue == "543140180640";
-
-      // Prepare the fields to update based on conditions
-
-      // dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      // // Dispatch the update action
-
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      if (isInvoker) {
+      if (isInvoker && formType ==  "IMPORT") {
+        dispatch(formStateHandleFieldChange({fields:{formCode: "PIIMPORT"}}))
       }
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-
-      console.log("masterAccountID = -2;");
 
       let employeeID = 0;
       let _voucherNo = 0;
@@ -435,7 +422,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...TransactionFormStateInitialData,
           transaction: {
             ...voucher,
-            master: {
+            master: {                                                 
               ...voucher.master,
               voucherType: voucherType ?? "",
               voucherPrefix: voucherPrefix ?? "",
@@ -480,110 +467,43 @@ const TransactionForm: React.FC<TransactionProps> = ({
             : t(title) + "[" + formType + "]") ?? "",
       };
 
-      let fieldsToUpdate = {
+      let _formElements = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
+        cbWarehouse: { ...initialFormElements.cbWarehouse, visible: applicationSettings.inventorySettings.maintainWarehouse },
+        ledgerID: { ...initialFormElements.ledgerID, accLedgerType: !applicationSettings.inventorySettings.showAccountReceivableInPurchase? LedgerType.Cash_Bank_Suppliers: LedgerType.Cash_Bank_Suppliers_Customers },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
-      switch (voucherType) {
-        case "PI":
-          {
-            fieldsToUpdate = {
-              ...fieldsToUpdate,
+       if (applicationSettings.inventorySettings.maintainWarehouse) {
+       _formElements.cbWarehouse.visible = true;
 
-              gridColumns: {
-                ...fieldsToUpdate.gridColumns,
-                showChqNo: !clientSession.isAppGlobal,
-                showChqDate: !clientSession.isAppGlobal,
-                showNameOnCheque: !clientSession.isAppGlobal,
-                showBankName: !clientSession.isAppGlobal,
-              },
-            };
-            break;
-          }
-
-          let fnlFormElmns = { ...fieldsToUpdate };
-          if (
-            (_formState.transaction.master.voucherType == "BP" ||
-              _formState.transaction.master.voucherType == "BR") &&
-            userSession.countryId == Countries.India
-          ) {
-            // fnlFormElmns =
-            // {
-            //   ...fieldsToUpdate,
-            //   bankName: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            //   nameOnCheque: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            //   chequeNumber: {
-            //     ...fieldsToUpdate.chequeNumber,
-            //     visible: false,
-            //   },
-            //   bankDate: {
-            //     ...fieldsToUpdate.bankDate,
-            //     visible: false,
-            //   },
-            // }
-          }
-
-          _formState.formElements = fnlFormElmns;
-
-          // focusLedgerCode();
-
-          _formState.templates = templates;
-          _formState.templatesData = templatesData;
-          const _template = templatesData?.find(
-            (x: any) => x.templateGroup == _formState.transaction.master.voucherType
-          );
-          if (_template != undefined) {
-            _formState.template = _template;
-          } else {
-            _formState.template = null;
-          }
-          setTransVoucher(_formState, true);
-        // Fetch templates asynchronously
+      if (formState.userConfig?.presetWarehouseId??0 > 0) {
+        formState.transaction.master.fromWarehouseID = formState.userConfig?.presetWarehouseId??0
+       _formElements.cbWarehouse.disabled = true;
+      } else {
+        if (
+          applicationSettings.accountsSettings.allowSalesCounter &&
+          (formState.userConfig?.counterWiseWarehouseId??0) > 0
+        ) {
+          
+        formState.transaction.master.fromWarehouseID = formState.userConfig?.counterWiseWarehouseId??0
+         
+        } else {
+          formState.transaction.master.fromWarehouseID = applicationSettings.inventorySettings.defaultWareHouse;
+        }
       }
-    };
-    initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
+    }
+     dispatch(formStateSet(_formState))
+     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
+    };
+    initializeFormElements();
+    
   }, [voucherType, voucherPrefix]);
-
-  // useEffect(() => {
-  //   if (!voucherType) return;
-  //   const updateFormElementsBasedOnVoucherType = () => {
-
-  //     // Dispatch the update action with all the required fields
-  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
-  //     focusLedgerCode();
-  //   };
-  //   updateFormElementsBasedOnVoucherType();
-  // }, [voucherType]);
-  // const fetchVoucherNumber = useCallback(async () => {
-  //   const nextVoucherNumber = await getNextVoucherNumber(
-  //     formType ?? "",
-  //     voucherType ?? "",
-  //     voucherPrefix ?? "",
-  //     false
-  //   );
-
-  // //   dispatch(
-  // //     formStateTransactionMasterHandleFieldChange({
-  // //       fields: {
-  // //         voucherNumber: nextVoucherNumber,
-  // //       },
-  // //     })
-  // //   );
-  // // }, [formType, voucherType, voucherPrefix]);
-
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
     setIsTemplateOpen(true);

@@ -142,7 +142,8 @@ export interface TransactionMaster {
   cashrOrCredit: string;
   couponAmt: number;
   projectID: number;
-  currencyID:number;
+  // currencyID:number;
+  labelDesignID:number;
   customerType: string;
   taxOnDiscount: number;
   draftTransactionMasterId: number;
@@ -379,6 +380,7 @@ export interface TransactionFormState {
   foreignCurrency: boolean
   enableDebitAccount: boolean
   enableVat:boolean;
+  inSearch:boolean;
   enableTaxNumber: boolean
   tmpVoucherNo?: number
   dummyCode?: any

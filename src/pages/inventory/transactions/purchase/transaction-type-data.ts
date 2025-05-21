@@ -129,7 +129,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   cashrOrCredit: "",
   couponAmt: 0.0,
   projectID: 0,
-  currencyID:0,
+  // currencyID:0,
+  labelDesignID:0,
   customerType: "",
   taxOnDiscount: 0.0,
   draftTransactionMasterId: 0,
@@ -351,6 +352,10 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   totTax: { visible: true, disabled: false, label: "tot_tax" },
   grandTotal: { visible: true, disabled: false, label: "grand_total" },
   netTotal: { visible: true, disabled: false, label: "net_total" },
+  chkVat: { visible: true, disabled: false, label: "#_vat" },
+  cbVatAccount: { visible: true, disabled: false, label: "" },
+  inSearch: { visible: true, disabled: false, label: "in_search" },
+  cbLabelDesign: { visible: true, disabled: false, label: "label_design" },
 
 };
 export const TransactionFormStateInitialData: TransactionFormState = {
@@ -443,6 +448,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   foreignCurrency: false,
   enableDebitAccount: false,
   enableVat:false,
+  inSearch:false,
   enableTaxNumber: false,
   netTotal: 0,
   netAmount: 0,

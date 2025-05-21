@@ -200,14 +200,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.formElements.chkVat?.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="enableVat"
+                    id="enableTaxNumber"
                     className="text-left"
                     label={t(formState.formElements.chkVat.label)}
-                    checked={formState.enableVat}
+                    checked={formState.enableTaxNumber}
                     onChange={(e) => {
                       dispatch(
                         formStateHandleFieldChange({
-                          fields: { enableVat: e.target.checked },
+                          fields: { enableTaxNumber: e.target.checked },
                         })
                       );
                     }}
@@ -219,7 +219,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
-                    id="vatLedgerID"
+                    id="tokenNumber"
                     className="min-w-[180px]"
                     // label={t(formState.formElements.cbVatAccount.label)}
                     noLabel={true}
@@ -228,16 +228,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch(
                         formStateMasterHandleFieldChange({
                           fields: {
-                            vatLedgerID: e.value,
+                            tokenNumber: e.value,
                           },
                         })
                       );
                       handleFieldKeyDown &&
-                        handleFieldKeyDown("vatLedgerID", "Enter");
+                        handleFieldKeyDown("tokenNumber", "Enter");
                     }}
-                    value={formState.transaction.master.vatLedgerID}
+                    value={formState.transaction.master.tokenNumber}
                     field={{
-                      id: "vatLedgerID",
+                      id: "tokenNumber",
                       valueKey: "id",
                       labelKey: "name",
                       getListUrl: Urls.data_employees,
@@ -247,12 +247,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }}
                     disabled={
                       formState.formElements.cbVatAccount.disabled ||
-                      formState.enableVat === false ||
+                      formState.enableTaxNumber === false ||
                       formState.formElements.pnlMasters?.disabled
                     }
                     disableEnterNavigation
                     onKeyDown={(e: any) => {
-                      handleKeyDown && handleKeyDown(e, "vatLedgerID");
+                      handleKeyDown && handleKeyDown(e, "tokenNumber");
                     }}
                   />
                 )}
@@ -350,23 +350,23 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               )}
               <ERPInput
                 localInputBox={formState?.userConfig?.inputBoxStyle}
-                id="exRate"
-                label={t(formState.formElements.exRate.label)}
-                value={formState.transaction.master.exRate}
+                id="exchangeRate"
+                label={t(formState.formElements.exchangeRate.label)}
+                value={formState.transaction.master.exchangeRate}
                 disableEnterNavigation={true}
                 onKeyDown={(e) => {
-                  handleKeyDown && handleKeyDown(e, "exRate");
+                  handleKeyDown && handleKeyDown(e, "exchangeRate");
                 }}
                 onChange={(e) =>
                   dispatch(
                     formStateMasterHandleFieldChange({
-                      fields: { exRate: e.target?.value },
+                      fields: { exchangeRate: e.target?.value },
                     })
                   )
                 }
                 className="min-w-[180px]"
                 disabled={
-                  formState.formElements.exRate?.disabled ||
+                  formState.formElements.exchangeRate?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
               />

@@ -292,6 +292,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <GrandTotalLabel formState={formState} dispatch={dispatch} t={t} />
 
             <NetTotalLabel formState={formState} dispatch={dispatch} t={t} />
+
+            <div>
+              <div className="flex items-center justify-between">
+                <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                <span>{formState.transaction.master.grandTotalFc}</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

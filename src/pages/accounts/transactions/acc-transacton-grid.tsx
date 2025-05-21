@@ -9,7 +9,7 @@ import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp
 import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -114,7 +114,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "center",
         showInPdf: true,
         cssClass: "centered-header",
-        cellRender: (data) => <div style={{ textAlign: "center" }}>{data.value}</div>
+        cellRender: (data) => <div style={{ textAlign: "center" }}> <Link to={`/accounts/transactions/CashPayment/${data.value}`} >{data.value}</Link> </div>
       },
       {
         dataField: "referenceNumber",

@@ -793,8 +793,8 @@ const DaywiseSummaryWithProfit = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                  filterText="{showSalesReturn == true ? ,Sales and Return  Summary with Profit Between 
-                  :Sales Summary with Profit Between :} 
+                  filterText="{showSalesReturn == true  && ,Sales and Return  Summary with Profit Between 
+                  : Sales Summary with Profit Between :} 
                  {salesRouteID > 0 && ,: of Route : [routeName]} 
                 {costCenterID > 0 && , : of costcenterName : [costCenterName]}"
                 gridHeader={t("day_wise")}

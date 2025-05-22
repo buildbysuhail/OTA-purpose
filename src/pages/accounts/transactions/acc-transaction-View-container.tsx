@@ -243,9 +243,10 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
       const columns: DevGridColumn[] = useMemo(
         () => [
           {
-            dataField: "actions",
+            dataField: "accTransactionMasterID",
             caption: t("Actions"),
             allowSearch: true,
+            allowSorting: false,
             allowFiltering: false,
             fixed: true,
             fixedPosition: "right",
@@ -353,7 +354,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
                          // postData={{voucherType: voucherType, transactionType: transactionType}}
                          gridHeader={t("transactions")}
                          gridId="transaction-grid"
-                         remoteOperations={{ paging: true, filtering: true, sorting: true }}
+                         remoteOperations={{ paging: true, filtering: true, sorting: false}}
                          gridAddButtonIcon="ri-add-line"
                          pageSize={40}
                          allowExport={true}

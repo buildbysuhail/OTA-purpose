@@ -37,6 +37,42 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSorting: true,
         width: 120,
       },
+         {
+      dataField: "category",
+      caption: t("category"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+  },
+  {
+      dataField: "sectionName",
+      caption: t("section"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+  },
+  {
+      dataField: "productCategory",
+      caption: t("product_category"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 120,
+  },
+  {
+      dataField: "brandName",
+      caption: t("brand"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+  },
       {
         dataField: "quantity",
         caption: t("quantity"),
@@ -473,54 +509,54 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
     return baseColumns
       .filter((column) => {
         if (column.dataField == "productGroup") {
-          return filterInitialData.isGroupItem;
+          return filterInitialData.isGroupWise;
         }
         if (column.dataField == "category") {
-          return !filterInitialData.isCategorywise;
+          return filterInitialData.isCategoryWise;
         }
-        if (column.dataField == "product_category") {
-          return !filterInitialData.isProductCatwise;
+        if (column.dataField == "productCategory") {
+          return filterInitialData.isProductCatWise;
         }
         if (column.dataField == "sectionName") {
-          return !filterInitialData.IsSectionwise;
+          return filterInitialData.isSectionWise;
         }
         if (column.dataField == "brandName") {
-          return !filterInitialData.isBrandwise;
+          return filterInitialData.isBrandWise;
         }
         return true;
       })
-      .map((column) => {
-        if (column.dataField !== "productGroup") return column;
+      // .map((column) => {
+      //   if (column.dataField !== "productGroup") return column;
 
-        switch (true) {
-          case filterInitialData.isCategoryWise:
-            return {
-              ...column,
-              caption: "category",
-              dataField: "category",
-            };
-          case filterInitialData.isProductCatwise:
-            return {
-              ...column,
-              caption: "product_category",
-              dataField: "productCategory",
-            };
-          case filterInitialData.IsSectionwise:
-            return {
-              ...column,
-              caption: "section",
-              dataField: "sectionName",
-            };
-          case filterInitialData.isBrandwise:
-            return {
-              ...column,
-              caption: "brand_name",
-              dataField: "brandName",
-            };
-          default:
-            return column;
-        }
-      });
+      //   switch (true) {
+      //     case filterInitialData.isCategoryWise:
+      //       return {
+      //         ...column,
+      //         caption: "category",
+      //         dataField: "category",
+      //       };
+      //     case filterInitialData.isProductCatwise:
+      //       return {
+      //         ...column,
+      //         caption: "product_category",
+      //         dataField: "productCategory",
+      //       };
+      //     case filterInitialData.IsSectionwise:
+      //       return {
+      //         ...column,
+      //         caption: "section",
+      //         dataField: "sectionName",
+      //       };
+      //     case filterInitialData.isBrandwise:
+      //       return {
+      //         ...column,
+      //         caption: "brand_name",
+      //         dataField: "brandName",
+      //       };
+      //     default:
+      //       return column;
+      //   }
+      // });
 
     //   .map((column) => {
     //       if (column.dataField == "productGroup" && filterInitialData.isCategoryWise) {
@@ -610,6 +646,20 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+  const customizeSummaryRowCalc = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return getFormattedValue(value) || "0";
+    };
+  }, [getFormattedValue]);
   const customizeSummaryRow100 = (itemInfo: any) => `100.00`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -647,7 +697,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       column: "marginPerc",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRowCalc,
     },
     {
       column: "margin",

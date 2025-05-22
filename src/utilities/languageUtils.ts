@@ -2,7 +2,7 @@ import { i18n } from "i18next";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setLocale } from "../redux/slices/app/reducer";
 import { setLanguage } from "../pages/auth/syncSettings";
-import { customJsonParse, modelToBase64 } from "./jsonConverter";
+import { customJsonParse, modelToBase64, modelToBase64Unicode } from "./jsonConverter";
 import { initialUserSessionData, UserModel } from "../redux/slices/user-session/reducer";
 import { initialThemeData, Locale, Theme, languagesData } from "../redux/slices/app/types";
 import usFlag from "../assets/images/flags/us_flag.png";
@@ -55,6 +55,6 @@ export const setLocaleInStorage = (locale: Locale) => {
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
 
-  localStorage.setItem("up", modelToBase64(userProfileDetails));
-  localStorage.setItem("ut", modelToBase64(userThemes));
+  localStorage.setItem("up", modelToBase64Unicode(userProfileDetails));
+  localStorage.setItem("ut", modelToBase64Unicode(userThemes));
 };

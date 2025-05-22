@@ -121,6 +121,7 @@ interface ERPDevGridProps {
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
+  handleCalculateSummary?: (e: any) => void;
   columns: DevGridColumn[];
   showSerialNo?: boolean;
   gridId: string;
@@ -483,6 +484,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
+      handleCalculateSummary = undefined,
       columns,
       showSerialNo,
       gridId,
@@ -1672,7 +1674,11 @@ debugger;
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
       return (
-        <Summary recalculateWhileEditing={true} skipEmptyValues={false}>
+        <Summary recalculateWhileEditing={true} skipEmptyValues={false}
+        calculateCustomSummary={(e: any) => {
+          debugger;
+          handleCalculateSummary ? handleCalculateSummary(e): undefined
+        }}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {
             return config.isGroupItem == true ? (
               <GroupItem
@@ -1691,6 +1697,7 @@ debugger;
               <TotalItem
                 key={`summaryItem_${index}`}
                 column={config.column}
+                name={config.column}
                 summaryType={config.summaryType}
                 valueFormat={config.valueFormat}
                 showInColumn={config.showInColumn}

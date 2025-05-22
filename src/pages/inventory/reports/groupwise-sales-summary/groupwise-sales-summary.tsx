@@ -26,6 +26,27 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
 }) => {
   const location = useLocation();
   const { t } = useTranslation("accountsReport");
+ const handleCalculateSummary = (e: any) => {
+  debugger
+    if (e.name === 'marginPerc') {
+      if (e.summaryProcess === 'start') {
+        e.totalMargin = 0;
+        e.totalNetValue = 0;
+      }
+      if (e.summaryProcess === 'calculate') {
+        e.totalMargin += e.value.margin;
+        e.totalNetValue += e.value.netValue;
+      }
+      if (e.summaryProcess === 'finalize') {
+        if (e.totalNetValue !== 0) {
+          e.totalValue = (e.totalMargin / e.totalNetValue) * 100;
+        } else {
+          e.totalValue = 0;
+        }
+      }
+    }
+  };
+
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -695,9 +716,10 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
     //total margin/ netvalue *100 as margin%
     {
       column: "marginPerc",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
-      customizeText: customizeSummaryRowCalc,
+      showInColumn:"marginPerc"
+      
     },
     {
       column: "margin",
@@ -756,6 +778,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                   paging: false,
                   sorting: false,
                 }}
+                handleCalculateSummary={handleCalculateSummary}
                 columns={columns}
                 moreOption={true}
                 gridHeader={gridHeader}

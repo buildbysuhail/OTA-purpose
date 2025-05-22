@@ -30,7 +30,7 @@ export function modelToBase64<T>(model: T): string {
     // Encode the JSON string to base64
     const base64String = btoa(jsonString);
 
-    return base64String;
+    return modelToBase64Unicode(model);
   } catch (error) {
     console.log(error);
     

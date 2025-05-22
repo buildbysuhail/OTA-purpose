@@ -391,6 +391,7 @@ export interface TransactionFormState {
   loadData: LoadData;
   isProductSummaryOpen: boolean;
   isPartyWiseSummaryOpen: boolean;
+  isFormStateDetailOpen?: boolean;
   selectedRow?: TransactionDetail;
   gridColumns?: DevGridColumn[];
   

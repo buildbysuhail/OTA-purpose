@@ -456,5 +456,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   },
   isProductSummaryOpen: false,
   isPartyWiseSummaryOpen: false,
+  isFormStateDetailOpen: false,
   selectedRow: undefined
 }

@@ -6,13 +6,11 @@ import ErpDevGrid, {
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseRegisterFilter, {
-  PurchaseRegisterFilterInitialState,
-} from "./purchase-register-report-filter";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useLocation } from "react-router-dom";
+import RegisterFilter, { RegisterFilterInitialState } from "./register-report-filter";
 
 interface RegisterProps {
   gridHeader: string;
@@ -23,7 +21,7 @@ interface RegisterProps {
 const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(PurchaseRegisterFilterInitialState);
+  const [filter, setFilter] = useState<any>(RegisterFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
@@ -1928,11 +1926,11 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseRegisterFilter />}
+                filterContent={<RegisterFilter />}
                 filterHeight={460}
                 filterWidth={700}
                 filterInitialData={{
-                  ...PurchaseRegisterFilterInitialState,
+                  ...RegisterFilterInitialState,
                   fromDate: moment(
                     clientSession.softwareDate,
                     "DD/MM/YYYY"

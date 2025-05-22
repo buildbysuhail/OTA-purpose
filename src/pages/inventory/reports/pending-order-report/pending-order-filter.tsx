@@ -26,16 +26,7 @@ const PendingOrderReportFilter = ({ getFieldProps, handleFieldChange, formState 
                 <ERPDataCombobox
                     label={t("transaction_type")}
                     {...getFieldProps("voucherType")}
-                    field={{
-                        id: "voucherType",
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("voucherType", data.id);
-                    }}
-                    className="w-full"
-                    options={[
+                      options={[
                         { id: "SI", name: "Sales Invoice" },
                         { id: "SR", name: "Sales Return" },
                         { id: "PI", name: "Purchase Invoice" },
@@ -50,6 +41,14 @@ const PendingOrderReportFilter = ({ getFieldProps, handleFieldChange, formState 
                         { id: "PO", name: "Purchase Order" },
                         { id: "ILR", name: "Item Load Request" },
                     ]}
+                    field={{
+                        id: "voucherType",
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onSelectItem={(data) => {
+                        handleFieldChange("voucherType", data.value);
+                    }}    
                 />
             </div>
         </div>

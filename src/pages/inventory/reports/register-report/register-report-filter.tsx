@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { LedgerType } from "../../../../enums/ledger-types";
 
-const PurchaseRegisterFilter = ({
+const RegisterFilter = ({
   getFieldProps,
   handleFieldChange,
   formState,
@@ -416,9 +416,9 @@ const PurchaseRegisterFilter = ({
   );
 };
 
-export default PurchaseRegisterFilter;
+export default RegisterFilter;
 
-export const PurchaseRegisterFilterInitialState = {
+export const RegisterFilterInitialState = {
   // fromDate: clientSession.softwareDate,
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),

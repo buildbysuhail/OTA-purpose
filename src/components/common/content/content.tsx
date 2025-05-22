@@ -153,7 +153,7 @@ import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-i
 import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
 import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
 import SummaryReport from "../../../pages/inventory/reports/summary-report/summary-report";
-import RegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
+import RegisterReport from "../../../pages/inventory/reports/register-report/register-report";
 import VatReturnFormArabic from "../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic";
 import TaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import TaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";

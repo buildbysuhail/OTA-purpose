@@ -32,7 +32,7 @@ const NonInvoicedGoodsDeliveryFilter = ({ getFieldProps, handleFieldChange, form
                 />
             </div>
 
-            <div className="flex items-center gap-4 mb-2">
+            {/* <div className="flex items-center gap-4 mb-2">
                 <ERPRadio
                     id="contains"
                     name="searchType"
@@ -49,13 +49,13 @@ const NonInvoicedGoodsDeliveryFilter = ({ getFieldProps, handleFieldChange, form
                     checked={searchType === "exactMatch"}
                     onChange={() => handleSearchTypeChange("exactMatch")}
                 />
-            </div>
+            </div> */}
         </div>
     );
 }
 
 export default NonInvoicedGoodsDeliveryFilter;
 export const NonInvoicedGoodsDeliveryFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
+    fromDate: null,
     toDate: moment().local().endOf("day").toDate(),
 };

@@ -445,7 +445,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   partyId: "",
   foreignCurrency: false,
   enableDebitAccount: false,
-  inSearch:false,
+  inSearch: false,
   enableTaxNumber: false,
   netTotal: 0,
   netAmount: 0,
@@ -456,5 +456,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   },
   isProductSummaryOpen: false,
   isPartyWiseSummaryOpen: false,
-  selectedRow: undefined
+  isFormStateDetailOpen: false,
+  selectedRow: undefined,
+  userRightsFormCode: ""
 }

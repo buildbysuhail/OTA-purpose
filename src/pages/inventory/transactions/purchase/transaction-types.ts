@@ -342,6 +342,7 @@ export interface LoadData {
 export interface TransactionFormState {
   store: any;
   formCode: string; 
+  userRightsFormCode: string; 
   isEntryControl: boolean; 
   isEdit: boolean; 
   isRowEdit: boolean; 
@@ -391,6 +392,7 @@ export interface TransactionFormState {
   loadData: LoadData;
   isProductSummaryOpen: boolean;
   isPartyWiseSummaryOpen: boolean;
+  isFormStateDetailOpen?: boolean;
   selectedRow?: TransactionDetail;
   gridColumns?: DevGridColumn[];
   

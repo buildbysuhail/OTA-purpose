@@ -39,6 +39,7 @@ import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-g
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
+import ObjectViewer from "./components/fomstate-view";
 
 interface BilledItem {
   id?: number;
@@ -286,7 +287,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightWindows = wh - 800;
+    let gridHeightWindows = wh - 470;
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
 
@@ -393,9 +394,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     const initializeFormElements = async () => {
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      if (isInvoker && formType ==  "IMPORT") {
-        dispatch(formStateHandleFieldChange({fields:{formCode: "PIIMPORT"}}))
-      }
+      dispatch(formStateHandleFieldChange({fields:{userRightsFormCode: isInvoker && formType ==  "IMPORT" ? "PIIMPORT" : formCode}}))
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -413,6 +412,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         employeeID = userSession.employeeId ?? -2;
       }
+      debugger;
       const templates = formState.templates;
       const templatesData = formState.templatesData;
       const template = formState.template;
@@ -1940,7 +1940,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         />
       )}
-
+   {formState.isFormStateDetailOpen && (
+        <ERPModal
+          isOpen={formState.isFormStateDetailOpen}
+          title={t("formState_summary")}
+          width={1000}
+          height={700}
+          isForm={true}
+          initialMaximize={true}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isFormStateDetailOpen: false } }))}
+          content={<ObjectViewer value={formState} label="formState" expandByDefault={true} />}
+        />
+      )}
       {formState.isProductSummaryOpen && (
         <ERPModal
           isOpen={formState.isProductSummaryOpen}

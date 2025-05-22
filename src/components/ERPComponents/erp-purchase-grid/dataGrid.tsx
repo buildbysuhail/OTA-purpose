@@ -15,6 +15,7 @@ import { applyGridColumnPreferences, getInitialPreference } from "../../../utili
 import type { TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
 import ErpInput from "../erp-input";
+import { useDispatch, useSelector } from "react-redux";
 
 type DataItem = Record<string, any>;
 
@@ -37,23 +38,23 @@ interface EditableCellProps {
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
-  const dispatch = useAppDispatch();
-  const [localValue, setLocalValue] = useState<string | number>(value);
+  const dispatch = useDispatch();
+  // const [localValue, setLocalValue] = useState<string | number>(value);
 
-  const handleBlur = () => {
-    const typed = column.dataType === "number"
-      ? parseFloat(localValue as string) || 0
-      : localValue;
-    dispatch(
-      formStateTransactionDetailsRowUpdate({
-        index: rowIndex,
-        key: column.dataField as keyof TransactionDetail,
-        value: typed,
-      })
-    );
-    console.log("Row updated:", rowIndex, column.dataField, typed);
+  // const handleBlur = () => {
+  //   const typed = column.dataType === "number"
+  //     ? parseFloat(localValue as string) || 0
+  //     : localValue;
+  //   dispatch(
+  //     formStateTransactionDetailsRowUpdate({
+  //       index: rowIndex,
+  //       key: column.dataField as keyof TransactionDetail,
+  //       value: typed,
+  //     })
+  //   );
+  //   console.log("Row updated:", rowIndex, column.dataField, typed);
     
-  };
+  // };
 
   return (
     <>
@@ -62,10 +63,18 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
       className="w-full h-full"
-      value={localValue}
+      value={value}
       noBorder
-      onChange={e => setLocalValue(e.target.value)} 
-      onBlur={handleBlur}
+      onChange={e => {
+         dispatch(
+      formStateTransactionDetailsRowUpdate({
+        index: rowIndex,
+        key: column.dataField as keyof TransactionDetail,
+        value: e.target.value,
+      })
+    );
+      }} 
+      // onBlur={handleBlur}
     />
     </>
    

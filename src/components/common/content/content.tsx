@@ -210,7 +210,6 @@ import DiagnosisReportSalesPriceLessThanLPCost from "../../../pages/inventory/re
 import DiagnosisReportSalesPriceLessthanPurchasePrice from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price";
 import DiagnosisReportSalesPriceLessthanMSP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp";
 import DiagnosisReportSalesPriceGreaterthanMRP from "../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp";
-import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-container copy";
 import CustomerVisitLastVisit from "../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report";
 import CustomerVisitTotalVisit from "../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report";
 import DiscountReportCollection from "../../../pages/inventory/reports/discount_report_collection-report/discount_report_collection-report";
@@ -218,6 +217,7 @@ import DiscountReportInventory from "../../../pages/inventory/reports/discount_r
 import FOCRegisterReport from "../../../pages/inventory/reports/foc-register-report/foc-register-report";
 import ItemUsedForService from "../../../pages/inventory/reports/item_used_for_service-report/item_used_for_service-report";
 import LPOReport from "../../../pages/inventory/reports/lpo_report/lpo_report";
+import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));

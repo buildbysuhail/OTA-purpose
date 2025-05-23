@@ -48,6 +48,7 @@ type ERPModalProps = {
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
   disableOutsideClickClose?: boolean;
+  disableParentInteraction?: boolean;
   customPosition?: boolean;
   customStyle?: React.CSSProperties;
 };
@@ -81,9 +82,9 @@ const ERPModal = React.memo(
     height=600,
     minHeight = 300,
     minWidth=300,
-
     closeOnSubmit = true,
     disableOutsideClickClose = true,
+     disableParentInteraction = true,
     customPosition = false,
     customStyle = {},
   }: ERPModalProps) => {
@@ -195,12 +196,13 @@ const ERPModal = React.memo(
       <>
       <Transition appear show={isOpen} as={Fragment} >
        <Dialog
-       
+          static={!disableParentInteraction}
             as="div"
-            className={` erp-modal  fixed inset-0`}
+            className={` erp-modal  fixed inset-0 ${!disableParentInteraction ? "pointer-events-none" : ""}`}
             onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
+         {disableParentInteraction && (
           <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
@@ -211,7 +213,8 @@ const ERPModal = React.memo(
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-black/30 " />
-        </TransitionChild>   
+        </TransitionChild> 
+        )}  
         
             <div className={`fixed inset-0`}>
             <TransitionChild
@@ -275,7 +278,7 @@ const ERPModal = React.memo(
       dragGrid={[10, 10]}
       resizeGrid={[10, 10]}
      dragHandleClassName="drag-handle" // Specify the drag handle class name
-       className="bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
+       className="pointer-events-auto bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
     >
       <DialogPanel
         className={`erp-modal w-full h-full flex flex-col overflow-hidden pb-10`}

@@ -1,14 +1,29 @@
 import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
-import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
+import {
+  Countries,
+  UserModel,
+} from "../../../redux/slices/user-session/reducer";
 import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
-import { Wallet, CreditCard, FileText, Receipt, Scale, NotebookPen, TextSelect, HandCoins, TrendingUp, TrendingDown } from "lucide-react"; // Import icons from lucide-react
+import {
+  Wallet,
+  CreditCard,
+  FileText,
+  Receipt,
+  Scale,
+  NotebookPen,
+  TextSelect,
+  HandCoins,
+  TrendingUp,
+  TrendingDown,
+} from "lucide-react"; // Import icons from lucide-react
 import { TbReceipt2 } from "react-icons/tb";
 import { TbReceipt } from "react-icons/tb";
 
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
   Purchase = "/purchase/transactions",
+  Sales = "/sales/transactions",
 }
 
 export interface TransactionRoute {
@@ -39,7 +54,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.CashPayment,
     drCr: "Dr",
     shortKey: "ctrl+alt+c",
-    icon: Wallet
+    icon: Wallet,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -52,7 +67,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.CashReceipt,
     drCr: "Cr",
     shortKey: "ctrl+alt+r",
-    icon: CreditCard
+    icon: CreditCard,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -65,7 +80,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.BankPayment,
     drCr: "Dr",
     shortKey: "ctrl+alt+b",
-    icon: FileText
+    icon: FileText,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -90,8 +105,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ChequePayment,
     listTitle: TransactionListTitles.ChequePayment,
     drCr: "Dr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-    icon: TbReceipt2
+    visibleFn: (userSession: UserModel) =>
+      userSession.countryId == Countries.India,
+    icon: TbReceipt2,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -103,8 +119,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ChequeReceipt,
     listTitle: TransactionListTitles.ChequeReceipt,
     drCr: "Cr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-    icon: TbReceipt
+    visibleFn: (userSession: UserModel) =>
+      userSession.countryId == Countries.India,
+    icon: TbReceipt,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -143,7 +160,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.MultiJournalEntry,
     drCr: "",
     shortKey: "ctrl+alt+m",
-    icon: TextSelect
+    icon: TextSelect,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -156,7 +173,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.DebitNote,
     drCr: "Dr",
     shortKey: "ctrl+alt+d",
-    icon: TrendingDown
+    icon: TrendingDown,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -169,7 +186,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.CreditNote,
     drCr: "Cr",
     shortKey: "ctrl+alt+n",
-    icon: TrendingUp
+    icon: TrendingUp,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -181,9 +198,97 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.TaxOnExpensePayment,
     drCr: "Dr",
     listTitle: TransactionListTitles.TaxOnExpensePayment,
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
+    visibleFn: (userSession: UserModel) =>
+      userSession.countryId == Countries.Saudi,
     icon: HandCoins,
   },
+  //#region inventory
+//   {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SI",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesInvoice,
+//     transactionType: "SalesInvoice",
+//     formType: "",
+//     title: TransactionTitles.SalesInvoice,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesInvoices,
+//     icon: HandCoins,
+//   },
+//   {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SI",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesInvoice,
+//     transactionType: "SalesInvoiceVAT",
+//     formType: "VAT",
+//     title: TransactionTitles.SalesInvoiceVAT,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesInvoicesVAT,
+//      visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
+//     icon: HandCoins,
+//   },
+//    {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SR",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesReturn,
+//     transactionType: "SalesReturn",
+//     formType: "",
+//     title: TransactionTitles.SalesReturn,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesReturns,
+//     icon: HandCoins,
+//   },
+//    {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SR",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesReturn,
+//     transactionType: "SalesReturnVAT",
+//     formType: "VAT",
+//     title: TransactionTitles.SalesReturnVAT,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesReturnsVAT,
+//      visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
+//     icon: HandCoins,
+//   },
+//    {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SQ",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesQuotation,
+//     transactionType: "SalesQuotation",
+//     formType: "",
+//     title: TransactionTitles.SalesQuotation,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesQuotations,
+//     icon: HandCoins,
+//   },
+//    {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "SO",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.SalesOrder,
+//     transactionType: "SalesOrder",
+//     formType: "",
+//     title: TransactionTitles.SalesOrder,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.SalesOrders,
+//     icon: HandCoins,
+//   },
+// {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "GR",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.GoodRequest,
+//     transactionType: "GoodsRequest",
+//     formType: "",
+//     title: TransactionTitles.GoodsRequest,
+//     drCr: "Dr",
+//     listTitle: TransactionListTitles.GoodsRequests,
+//     icon: HandCoins,
+//   },
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PI",
@@ -194,26 +299,218 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.PurchaseInvoice,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseInvoices,
-    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
+    // visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: HandCoins,
   },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PI",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseInvoice,
+    transactionType: "PurchaseInvoiceVAT",
+    formType: "VAT",
+    title: TransactionTitles.PurchaseInvoiceVAT,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseInvoicesVAT,
+    visibleFn: (userSession: UserModel) =>
+      userSession.countryId !== Countries.Saudi,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PE",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseEstimate,
+    transactionType: "PurchaseEstimate",
+    formType: "",
+    title: TransactionTitles.PurchaseEstimate,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseEstimates,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PI",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseInvoice,
+    transactionType: "PurchaseImport",
+    formType: "Import",
+    title: TransactionTitles.PurchaseImport,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseImports,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PR",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseReturn,
+    transactionType: "PurchaseReturn",
+    formType: "",
+    title: TransactionTitles.PurchaseReturn,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseReturns,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PR",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseReturn,
+    transactionType: "PurchaseReturnVAT",
+    formType: "VAT",
+    title: TransactionTitles.PurchaseReturnVAT,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseReturnsVAT,
+    visibleFn: (userSession: UserModel) =>
+      userSession.countryId !== Countries.Saudi,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PO",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseOrder,
+    transactionType: "PurchaseOrder",
+    formType: "",
+    title: TransactionTitles.PurchaseOrder,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseOrders,
+    icon: HandCoins,
+  },
+  //request for sales
+  // {
+  //   transactionBase: TransactionBase.Sales,
+  //   formCode: "RFQ",
+  //   action: UserAction.Show,
+  //   voucherType: VoucherType.RequestForQuotation,
+  //   transactionType: "RequestForQuotation",
+  //   formType: "",
+  //   title: TransactionTitles.RequestForSalesQuotation,
+  //   drCr: "Cr",
+  //   listTitle: TransactionListTitles.RequestForSalesQuotations,
+  //   icon: HandCoins,
+  // },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PQ",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseQuotation,
+    transactionType: "PurchaseQuotation",
+    formType: "",
+    title: TransactionTitles.PurchaseQuotation,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseQuotations,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "POT",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseOrderTransist,
+    transactionType: "PurchaseOrderTransist",
+    formType: "",
+    title: TransactionTitles.PurchaseReturn,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseReturns,
+    icon: HandCoins,
+  },
+
+
+// {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "GD",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.GoodsDeliveryNote,
+//     transactionType: "GoodsDelivery",
+//     formType: "",
+//     title: TransactionTitles.GoodsDelivery,
+//     drCr: "Cr",
+//     listTitle: TransactionListTitles.GoodsDeliveries,
+//     icon: HandCoins,
+//   },
+//   {
+//     transactionBase: TransactionBase.Sales,
+//     formCode: "DR",
+//     action: UserAction.Show,
+//     voucherType: VoucherType.GoodsDeliveryReturn,
+//     transactionType: "GoodsDeliveryReturn",
+//     formType: "",
+//     title: TransactionTitles.GoodsDeliveryReturn,
+//     drCr: "Cr",
+//     listTitle: TransactionListTitles.GoodsDeliveryReturns,
+//     icon: HandCoins,
+//   },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "GRN",
+    action: UserAction.Show,
+    voucherType: VoucherType.GoodsReceiptNote,
+    transactionType: "GoodsReceipt",
+    formType: "",
+    title: TransactionTitles.GoodsReceipt,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.GoodsReceipts,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "GRR",
+    action: UserAction.Show,
+    voucherType: VoucherType.GoodsReceiptReturn,
+    transactionType: "GoodsReceiptReturn",
+    formType: "",
+    title: TransactionTitles.GoodsReceiptReturn,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.GoodsReceiptReturns,
+    icon: HandCoins,
+  },
+
+  //  {
+  //   transactionBase: TransactionBase.Sales,
+  //   formCode: "SRV",
+  //   action: UserAction.Show,
+  //   voucherType: VoucherType.ServiceInventory,
+  //   transactionType: "ServiceInventory",
+  //   formType: "",
+  //   title: TransactionTitles.Service,
+  //   drCr: "Dr",
+  //   listTitle: TransactionListTitles.Services,
+  //   icon: HandCoins,
+  // },
+//#endregion Inventory
+
+
 ];
 
 export const exludedRoutes = [
   { title: TransactionTitles.ChequePayment, countries: [Countries.Saudi] },
   { title: TransactionTitles.ChequeReceipt, countries: [Countries.Saudi] },
-  { title: TransactionTitles.TaxOnExpensePayment, countries: [Countries.India] },
+  {
+    title: TransactionTitles.TaxOnExpensePayment,
+    countries: [Countries.India],
+  },
 ];
 
-export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [
-  { title: TransactionTitles.CashPayment, countries: [Countries.Saudi] },
-  { title: TransactionTitles.CashReceipt, countries: [Countries.Saudi] },
-  { title: TransactionTitles.BankPayment, countries: [Countries.Saudi] },
-  { title: TransactionTitles.BankReceipt, countries: [Countries.Saudi] },
-  { title: TransactionTitles.OpeningBalance, countries: [Countries.Saudi] },
-  { title: TransactionTitles.JournalEntry, countries: [Countries.Saudi] },
-  { title: TransactionTitles.DebitNote, countries: [Countries.Saudi] },
-  { title: TransactionTitles.CreditNote, countries: [Countries.Saudi] },
-  { title: TransactionTitles.MultiJournalEntry, countries: [Countries.Saudi] },
-].find(x => userSession.countryId != undefined && x.title == title &&
-  (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId) != undefined)));
+export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
+  [
+    { title: TransactionTitles.CashPayment, countries: [Countries.Saudi] },
+    { title: TransactionTitles.CashReceipt, countries: [Countries.Saudi] },
+    { title: TransactionTitles.BankPayment, countries: [Countries.Saudi] },
+    { title: TransactionTitles.BankReceipt, countries: [Countries.Saudi] },
+    { title: TransactionTitles.OpeningBalance, countries: [Countries.Saudi] },
+    { title: TransactionTitles.JournalEntry, countries: [Countries.Saudi] },
+    { title: TransactionTitles.DebitNote, countries: [Countries.Saudi] },
+    { title: TransactionTitles.CreditNote, countries: [Countries.Saudi] },
+    {
+      title: TransactionTitles.MultiJournalEntry,
+      countries: [Countries.Saudi],
+    },
+  ].find(
+    (x) =>
+      userSession.countryId != undefined &&
+      x.title == title &&
+      (x.countries == undefined ||
+        (x.countries != undefined &&
+          x.countries.find((x) => x == userSession.countryId) != undefined))
+  );

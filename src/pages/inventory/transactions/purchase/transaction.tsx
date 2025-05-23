@@ -110,7 +110,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleClearControls = () => {
     clearControls(
       formState.isEdit,
-      formState.transaction.master.invTransactionMasterId
+      formState.transaction.master.invTransactionMasterID
     );
     // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
     // setTriggerEffect(true);

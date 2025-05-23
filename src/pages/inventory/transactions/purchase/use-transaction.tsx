@@ -25,7 +25,7 @@ import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
 import { UserConfig, TransactionFormState, TransactionData, Attachments, TransactionMaster,  TransactionDetail,  } from "./transaction-types";
-import { TransactionFormStateInitialData } from "./transaction-type-data";
+import { initialTransactionDetailData, TransactionFormStateInitialData, transactionInitialData } from "./transaction-type-data";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -324,140 +324,95 @@ export const useTransaction = (
     manualInvoiceNumber?: string,
     transactionMasterID?: number
   ) => {
-    // let voucher: TransactionFormState = JSON.parse(
-    //   JSON.stringify({
-    //     ...formState,
-    //     openUnsavedPrompt: false,
-    //   })
-    // );
-    // const _voucherNumber =
-    //   voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-    // if (_voucherNumber == undefined || _voucherNumber <= 0) {
-    //   return voucher;
-    // }
-    // const params: Record<any, any> = {
-    //   VoucherNumber: _voucherNumber, // Ensuring it's always a string
-    //   voucherPrefix:
-    //     voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
-    //   voucherType:
-    //     voucherType ?? (formState.transaction?.master?.voucherType || ""),
-    //   formType: formType ?? (formState.transaction?.master?.formType || ""),
-    //   MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
-    //   SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
-    // };
-    // let vch = await api.getAsync(
-    //   `${Urls.acc_transaction_base}${transactionType}`,
-    //   new URLSearchParams(params).toString()
-    // );
+    let voucher: TransactionFormState = JSON.parse(
+      JSON.stringify({
+        ...formState,
+        openUnsavedPrompt: false,
+      })
+    );
+    const _voucherNumber =
+      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+    if (_voucherNumber == undefined || _voucherNumber <= 0) {
+      return voucher;
+    }
+    const params: Record<any, any> = {
+      VoucherNumber: _voucherNumber, // Ensuring it's always a string
+      voucherPrefix:
+        voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+      voucherType:
+        voucherType ?? (formState.transaction?.master?.voucherType || ""),
+      formType: formType ?? (formState.transaction?.master?.voucherForm || ""),
+      MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
+      SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
+    };
+    let vch = await api.getAsync(
+      `${Urls.acc_transaction_base}${transactionType}`,
+      new URLSearchParams(params).toString()
+    );
 
-    // if (vch == null || vch?.master == null) {
-    //   // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
-    //   vch = {
-    //     ...transactionInitialData,
-    //     master: {
-    //       ...transactionInitialData.master,
-    //       voucherNumber: _voucherNumber,
-    //       voucherType: voucherType ?? formState.transaction.master.voucherType,
-    //       voucherPrefix:
-    //         voucherPrefix ?? formState.transaction.master.voucherPrefix,
-    //       formType: formType ?? formState.transaction.master.formType,
-    //     },
-    //   };
-    // }
+    if (vch == null || vch?.master == null) {
+      // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
+      vch = {
+        ...transactionInitialData,
+        master: {
+          ...transactionInitialData.master,
+          voucherNumber: _voucherNumber,
+          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix:
+            voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          formType: formType ?? formState.transaction.master.voucherForm,
+        },
+      };
+    }
 
-    // // clearControlForNew();
-    // await undoEditMode(
-    //   formState.isEdit,
-    //   transactionMasterID ??
-    //     formState.transaction.master.transactionMasterID
-    // );
+    // clearControlForNew();
+    await undoEditMode(
+      formState.isEdit,
+      transactionMasterID ??
+        formState.transaction.master.invTransactionMasterID
+    );
 
     
-    // voucher.transaction = {
-    //   ...(vch || {}),
-    //   attachments: [...(vch.transaction?.attachments || [])],
-    // };
-    // voucher.transaction.details.push(initialTransactionDetailData);
-    // // Handle master data
+    voucher.transaction = {
+      ...(vch || {}),
+      attachments: [...(vch.transaction?.attachments || [])],
+    };
+    voucher.transaction.master.prevTransDate =
+          master.transactionDate == ""
+            ? moment().local().toISOString()
+            : master.prevTransDate;
+    const addData = Array.from({ length: 40300 }, (_, index) => ({
+  ...initialTransactionDetailData,
+  slNo: index + 1
+})) as TransactionDetail[];
+    voucher.transaction.details = [...voucher.transaction.details, ...addData];
+    // Handle master data
 
-    // voucher.transaction = vch;
-    // if (vch?.master) {
-    //   const updatedMaster: TransactionMaster = {
-    //     ...voucher.transaction.master,
+    voucher.transaction = vch;
+    if (vch?.master) {
+      const updatedMaster: TransactionMaster = {
+        ...voucher.transaction.master,
         
-    //   };
-    //   voucher.transaction.master = updatedMaster;
-    // }
-    // // if (voucher.transaction.master.isLocked === true) {
-    // //   voucher.formElements.lnkUnlockVoucher.visible = true;
-    // // }
-    // if (vch?.details) {
-    //   if (voucher.transaction.details?.length > 0) {
-    //     voucher.total = voucher.transaction.details.reduce((total, detail) => {
-    //       const amount =
-    //         voucher.transaction.master.voucherType !== VoucherType.MultiJournal
-    //           ? detail.amount
-    //           : detail.debit;
-    //       return total + (amount || 0);
-    //     }, 0);
+      };
+      voucher.transaction.master = updatedMaster;
+    }
+    if (vch?.details) {
+      
+      voucher.transaction.details = refactorDetails(voucher.transaction);
+      voucher.transaction.attachments = refactorAttachments(
+        voucher.transaction
+      );
+    }
+    if (voucher.transaction.attachments) {
+      voucher.transaction.attachments = refactorAttachments(
+        voucher.transaction
+      );
+    }
 
-    //     // Set master account ID based on voucher type
-    //     const firstDetail = voucher.transaction.details[0];
+    voucher.transactionLoading = false;
 
-    //     switch (voucher.transaction.master.voucherType) {
-    //       case "CP":
-    //       case "BP":
-    //       case "CN":
-    //       case "CQP":
-    //       case "SV":
-    //       case "PBP":
-    //       case "CPE":
-    //         voucher.masterAccountID = firstDetail.relatedLedgerID;
-    //         break;
 
-    //       case "CR":
-    //       case "BR":
-    //       case "DN":
-    //       case "CQR":
-    //       case "PV":
-    //       case "PBR":
-    //       case "CRE":
-    //         voucher.masterAccountID = firstDetail.ledgerID ?? 0;
-    //         break;
-
-    //       case "JV":
-    //       case "JVSP":
-    //         voucher.masterAccountID =
-    //           voucher.transaction.master.drCr === "Dr"
-    //             ? firstDetail.ledgerID ?? 0
-    //             : firstDetail.relatedLedgerID;
-    //         // voucher.transaction.master.drCr =
-    //         // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
-    //         break;
-    //     }
-    //   }
-
-    //   voucher.transaction.details = refactorDetails(voucher.transaction);
-    //   voucher.transaction.attachments = refactorAttachments(
-    //     voucher.transaction
-    //   );
-    // }
-    // if (voucher.transaction.attachments) {
-    //   voucher.transaction.attachments = refactorAttachments(
-    //     voucher.transaction
-    //   );
-    // }
-
-    // // Handle attachments
-
-    // // Calculate total amount
-
-    // voucher.transactionLoading = false;
-
-    // voucher.transaction.master.totalAmount = calculateTotal(voucher);
-
-    // return voucher;
-    return {...TransactionFormStateInitialData}
+    return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
     return transaction.attachments.map((att, index) => {
@@ -471,87 +426,13 @@ export const useTransaction = (
     });
   };
   const refactorDetails = (transaction: TransactionData) => {
-    // return transaction.details.map((detail, index) => {
-    //   const baseDetail = {
-    //     ...detail,
-    //     slNo: index + 1,
-    //     amountFC: detail.amount,
-    //     bankDate: detail.bankDate
-    //       ? new Date(detail.bankDate).toISOString()
-    //       : moment.utc("2000-01-01").startOf("day").toISOString(),
-    //     chqDate: detail.chqDate
-    //       ? new Date(detail.chqDate).toISOString()
-    //       : moment.utc("2000-01-01").startOf("day").toISOString(),
-    //     checkBouncedDate: detail.checkBouncedDate
-    //       ? new Date(detail.checkBouncedDate).toISOString()
-    //       : moment.utc("2000-01-01").startOf("day").toISOString(),
-    //   };
-
-    //   // Handle voucher type specific logic
-    //   switch (transaction.master.voucherType) {
-    //     case "CP":
-    //     case "BP":
-    //     case "CN":
-    //     case "CQP":
-    //     case "SV":
-    //     case "PBP":
-    //     case "CPE":
-    //       return {
-    //         ...baseDetail,
-    //         ledgerCode: detail.ledgerCode,
-    //         ledgerName: detail.ledgerName,
-    //         ledgerID: detail.ledgerID,
-    //       };
-
-    //     case "CR":
-    //     case "BR":
-    //     case "DN":
-    //     case "CQR":
-    //     case "PV":
-    //     case "PBR":
-    //     case "CRE":
-    //       return {
-    //         ...baseDetail,
-    //         ledgerCode: detail.relatedLedgerCode,
-    //         ledgerName: detail.particulars,
-    //         ledgerID: detail.relatedLedgerID,
-    //       };
-
-    //     case "JV":
-    //     case "SP":
-    //       if (
-    //         transaction.master.drCr === "Dr" ||
-    //         transaction.master.drCr === "Debit"
-    //       ) {
-    //         return {
-    //           ...baseDetail,
-    //           ledgerCode: detail.relatedLedgerCode,
-    //           ledgerName: detail.particulars,
-    //           ledgerID: detail.relatedLedgerID,
-    //         };
-    //       } else {
-    //         return {
-    //           ...baseDetail,
-    //           ledgerCode: detail.ledgerCode,
-    //           ledgerName: detail.ledgerName,
-    //           ledgerID: detail.ledgerID,
-    //         };
-    //       }
-
-    //     case "OB":
-    //     case "MJV":
-    //       return {
-    //         ...baseDetail,
-    //         ledgerCode: detail.ledgerCode,
-    //         ledgerName: detail.ledgerName,
-    //         ledgerID: detail.ledgerID,
-    //         drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
-    //       };
-
-    //     default:
-    //       return baseDetail;
-    //   }
-    // });
+    return transaction.details.map((detail, index) => {
+      const baseDetail = {
+        ...detail,
+        slNo: index + 1,
+      }
+      return baseDetail;
+    });
   };
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   async function undoEditMode(

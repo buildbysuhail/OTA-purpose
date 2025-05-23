@@ -57,20 +57,20 @@ export interface FormElementState {
 }
 
 export interface TransactionMaster {
-  invTransactionMasterId: number;
-  branchId: number;
-  financialYearId: number;
-  counterId: number;
+  invTransactionMasterID: number;
+  branchID: number;
+  financialYearID: number;
+  counterID: number;
   employeeID: number;
-  createdUserId: number;
+  createdUserID: number;
   inventoryLedgerID: number; // cbDebitLedger
   ledgerID: number;
   partyName: string;
-  referalAgentId: number;
+  referalAgentID: number;
   tableId: number;
   seatNumber: string;
   tokenNumber: string;
-  kotMasterId: number;
+  kotMasterID: number;
   noOfGuests: number;
   deviceCode: string;
   address1: string;
@@ -82,7 +82,7 @@ export interface TransactionMaster {
   transactionDate: string;
   remarks: string;
   fromWarehouseID: number;
-  toWarehouseId: number;
+  toWarehouseID: number;
   voucherType: string;
   voucherForm: string;
   orderNumber: number;
@@ -96,10 +96,10 @@ export interface TransactionMaster {
   purchaseInvoiceDate: string;
   despatchDocumentNumber: string;
   despatchDate: string;
-  vehicleId: number;
-  driverId: number;
-  salesManId: number;
-  deliveryManId: number;
+  vehicleID: number;
+  driverID: number;
+  salesManID: number;
+  deliveryManID: number;
   totalGross: number;
   totalDiscount: number;
   billDiscount: number;
@@ -119,12 +119,12 @@ export interface TransactionMaster {
   gatePassNo: string;
   vatAmount: number;
   isLocked: boolean;
-  counterShiftId: number;
+  counterShiftID: number;
   priceCategoryID: number;
-  refBranchId: number;
-  refInvTransactionMasterId: number;
+  refBranchID: number;
+  refInvTransactionMasterID: number;
   isPosted: boolean;
-  privCardId: number;
+  privCardID: number;
   privAddAmount: number;
   privRedeem: number;
   orderCardNo: number;
@@ -134,7 +134,7 @@ export interface TransactionMaster {
   cashAmt: number;
   bankAmt: number;
   creditAmt: number;
-  currencyId: number;
+  currencyID: number;
   exchangeRate: number;
   costCentreID: number;
   cashrOrCredit: string;
@@ -142,7 +142,7 @@ export interface TransactionMaster {
   projectID: number;
   customerType: string;
   taxOnDiscount: number;
-  draftTransactionMasterId: number;
+  draftTransactionMasterID: number;
   randomKey: number;
   tableNo: string;
   employeeName: string;
@@ -167,8 +167,8 @@ export interface TransactionMaster {
   labelDesignID:number;
 }
 export interface TransactionMaster3 {
-  invTransactionMasterId: number; 
-  branchId: number; 
+  invTransactionMasterID: number; 
+  branchID: number; 
   totSchemeDiscount: number; 
   totSGST: number; 
   totCGST: number; 
@@ -285,8 +285,8 @@ export interface TransactionDetail {
 
 }
 export interface TransactionDetails2 {
-  invTransactionDetailId: number;
-  branchId: number;
+  invTransactionDetailID: number;
+  branchID: number;
   cessPerc: number;
   cessAmt: number; 
   sgstPerc: number; 

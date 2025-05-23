@@ -1,14 +1,32 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, } from "react";
-import { TransactionProps, } from "./transaction-types";
-import { TransactionData, TransactionFormState, } from "./transaction-types";
-import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { TransactionProps } from "./transaction-types";
+import { TransactionData, TransactionFormState } from "./transaction-types";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateSet, setUserRight, updateFormElement, } from "./reducer";
+import {
+  formStateHandleFieldChange,
+  formStateMasterHandleFieldChange,
+  formStateSet,
+  setUserRight,
+  updateFormElement,
+} from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
-import { ApplicationMainSettings, ApplicationMainSettingsInitialState, } from "../../../settings/system/application-settings-types/application-settings-types-main";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "../../../settings/system/application-settings-types/application-settings-types-main";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -19,7 +37,7 @@ import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resiza
 import TemplatesView from "./templates";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useUserRights } from "../../../../helpers/user-right-helper";
-import { X, } from "lucide-react";
+import { X } from "lucide-react";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./renderSelected-template";
@@ -30,11 +48,15 @@ import UnsavedChangesModal from "./unsavedChangesModal";
 import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 import AccHeader from "./components/header";
 import Urls from "../../../../redux/urls";
-import { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
+import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
-import { transactionInitialData, TransactionFormStateInitialData, initialFormElements } from "./transaction-type-data";
+import {
+  transactionInitialData,
+  TransactionFormStateInitialData,
+  initialFormElements,
+} from "./transaction-type-data";
 import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
@@ -209,7 +231,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         if (!ledgerCodeExists) {
           try {
             const id = Number.parseInt(formState.partyId ?? "");
-          } catch (error) { }
+          } catch (error) {}
         } else {
           dispatch(
             formStateMasterHandleFieldChange({
@@ -394,7 +416,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
     const initializeFormElements = async () => {
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      dispatch(formStateHandleFieldChange({fields:{userRightsFormCode: isInvoker && formType ==  "IMPORT" ? "PIIMPORT" : formCode}}))
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            userRightsFormCode:
+              isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode,
+          },
+        })
+      );
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -422,7 +451,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...TransactionFormStateInitialData,
           transaction: {
             ...voucher,
-            master: {                                                 
+            master: {
               ...voucher.master,
               voucherType: voucherType ?? "",
               voucherPrefix: voucherPrefix ?? "",
@@ -431,6 +460,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
               referenceDate: moment().local().toISOString(),
               employeeID: employeeID,
               voucherNumber: _voucherNo,
+              inventoryLedgerID:
+                applicationSettings.inventorySettings.defaultPurchaseAcc,
             },
           },
           formElements: {
@@ -459,50 +490,81 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       _formState = {
         ..._formState,
+        transaction: {..._formState.transaction,
+          master: {..._formState.transaction.master,
+            hasroundOff: formType != "Import"
+          }
+        },
+        userConfig: {...formState.userConfig,dummyProducts:  applicationSettings.productsSettings.loadDummyProducts},
         transactionType: transactionType ?? "",
+
         formCode: formCode ?? "",
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
             : t(title) + "[" + formType + "]") ?? "",
       };
+      _formState.gridColumns?.forEach((x: any) => {
+        if (x.dataFiled === "unitPriceFC" || x.dataFiled === "grossFC") {
+          x.visible = true;
+        }
+      });
 
       let _formElements = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
-        cbWarehouse: { ...initialFormElements.cbWarehouse, visible: applicationSettings.inventorySettings.maintainWarehouse },
-        ledgerID: { ...initialFormElements.ledgerID, accLedgerType: !applicationSettings.inventorySettings.showAccountReceivableInPurchase? LedgerType.Cash_Bank_Suppliers: LedgerType.Cash_Bank_Suppliers_Customers },
+        pnlImport: {
+          ...initialFormElements.pnlImport,
+          visible: formType == "Import",
+        },
+        grandTotalFc: {
+          ...initialFormElements.grandTotalFc,
+          visible: formType == "Import",
+        },
+        cbWarehouse: {
+          ...initialFormElements.cbWarehouse,
+          visible: applicationSettings.inventorySettings.maintainWarehouse,
+        },
+        ledgerID: {
+          ...initialFormElements.ledgerID,
+          accLedgerType: !applicationSettings.inventorySettings
+            .showAccountReceivableInPurchase
+            ? LedgerType.Cash_Bank_Suppliers
+            : LedgerType.Cash_Bank_Suppliers_Customers,
+        },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
-       if (applicationSettings.inventorySettings.maintainWarehouse) {
-       _formElements.cbWarehouse.visible = true;
+      if (applicationSettings.inventorySettings.maintainWarehouse) {
+        _formElements.cbWarehouse.visible = true;
 
-      if (formState.userConfig?.presetWarehouseId??0 > 0) {
-        formState.transaction.master.fromWarehouseID = formState.userConfig?.presetWarehouseId??0
-       _formElements.cbWarehouse.disabled = true;
-      } else {
-        if (
-          applicationSettings.accountsSettings.allowSalesCounter &&
-          (formState.userConfig?.counterWiseWarehouseId??0) > 0
-        ) {
-          
-        formState.transaction.master.fromWarehouseID = formState.userConfig?.counterWiseWarehouseId??0
-         
+        if (formState.userConfig?.presetWarehouseId ?? 0 > 0) {
+          formState.transaction.master.fromWarehouseID =
+            formState.userConfig?.presetWarehouseId ?? 0;
+          _formElements.cbWarehouse.disabled = true;
         } else {
-          formState.transaction.master.fromWarehouseID = applicationSettings.inventorySettings.defaultWareHouse;
+          if (
+            applicationSettings.accountsSettings.allowSalesCounter &&
+            (formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
+          ) {
+            formState.transaction.master.fromWarehouseID =
+              formState.userConfig?.counterWiseWarehouseId ?? 0;
+          } else {
+            formState.transaction.master.fromWarehouseID =
+              applicationSettings.inventorySettings.defaultWareHouse;
+          }
         }
       }
-    }
-     dispatch(formStateSet(_formState))
-     if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    }
+      dispatch(formStateSet(_formState));
+      if (voucherNo != undefined && voucherNo > 0) {
+        dispatch(
+          setUserRight({ userSession: userSession, hasRight: hasRight })
+        );
+      }
     };
     initializeFormElements();
-    
   }, [voucherType, voucherPrefix]);
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
@@ -605,8 +667,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-
-
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -630,7 +690,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.error("Error fetching transaction history:", error);
     }
   };
-  //for demo purpouse 
+  //for demo purpouse
   // Define the structure of an empty row based on visible columns
 
   const [data, setData] = useState<any[]>(formState.transaction.details);
@@ -649,7 +709,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 70,
         isLocked: true,
-
       },
       {
         dataField: "pCode",
@@ -1557,7 +1616,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ApplicationMainSettingsInitialState
   );
 
-  const handleChange = (selectedOption: { value: string; label: string }) => { };
+  const handleChange = (selectedOption: { value: string; label: string }) => {};
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -1574,7 +1633,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     { label: "CESS", value: 0 },
     { label: "AddCESS", value: 0 },
   ];
-  const [isOpentwo, setIsOpentwo] = useState(false)
+  const [isOpentwo, setIsOpentwo] = useState(false);
 
   const buttonStyle: React.CSSProperties = {
     display: "inline-flex",
@@ -1587,20 +1646,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
     cursor: "pointer",
     border: "none",
     marginTop: "16px",
-  }
-
+  };
 
   const sidebarHeaderStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "end",
     marginBottom: "3px",
-  }
+  };
 
   const sidebarTitleStyle: React.CSSProperties = {
     fontSize: "24px",
     fontWeight: "bold",
-  }
+  };
 
   const closeButtonStyle: React.CSSProperties = {
     display: "inline-flex",
@@ -1613,7 +1671,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     borderRadius: "4px",
     fontSize: "14px",
     cursor: "pointer",
-  }
+  };
 
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
@@ -1745,28 +1803,28 @@ const TransactionForm: React.FC<TransactionProps> = ({
               textAlign: formState.userConfig?.alignment,
               border:
                 formState.userConfig?.maxWidth &&
-                  formState.userConfig?.maxWidth !== "100%"
+                formState.userConfig?.maxWidth !== "100%"
                   ? "1px solid #ccc"
                   : "none",
               padding: formState.userConfig?.maxWidth ? "10px" : "0",
               borderRadius:
                 formState.userConfig?.maxWidth &&
-                  formState.userConfig?.maxWidth !== "100%"
+                formState.userConfig?.maxWidth !== "100%"
                   ? "10px"
                   : "none",
               borderBottomLeftRadius:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderBottomRightRadius:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderBottom:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "1px solid #ccc",
               marginTop: "2.5rem",
@@ -1787,7 +1845,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 </>
               </>
             </div> */}
-
           </div>
           <div
             className="relative"
@@ -1802,28 +1859,28 @@ const TransactionForm: React.FC<TransactionProps> = ({
               textAlign: formState.userConfig?.alignment,
               border:
                 formState.userConfig?.gridMaxWidth &&
-                  formState.userConfig?.gridMaxWidth !== "100%"
+                formState.userConfig?.gridMaxWidth !== "100%"
                   ? "1px solid #ccc"
                   : "none",
               padding: formState.userConfig?.gridMaxWidth ? "10px" : "0",
               borderRadius:
                 formState.userConfig?.gridMaxWidth &&
-                  formState.userConfig?.gridMaxWidth !== "100%"
+                formState.userConfig?.gridMaxWidth !== "100%"
                   ? "10px"
                   : "none",
               borderTopLeftRadius:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTopRightRadius:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTop:
                 formState.userConfig?.maxWidth ===
-                  formState.userConfig?.gridMaxWidth
+                formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "0",
             }}
@@ -1863,8 +1920,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
               showPrintButton={false}
               className="pb-14"
             ></ErpDevGrid> */}
-
-
           </div>
           {formState.showSaveDialog && (
             <ERPAlert
@@ -1893,7 +1948,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           )}
         </div>
       )}
-
 
       {/* footer starts here */}
       <TransactionFooter
@@ -1940,7 +1994,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         />
       )}
-   {formState.isFormStateDetailOpen && (
+      {formState.isFormStateDetailOpen && (
         <ERPModal
           isOpen={formState.isFormStateDetailOpen}
           title={t("formState_summary")}
@@ -1948,8 +2002,20 @@ const TransactionForm: React.FC<TransactionProps> = ({
           height={700}
           isForm={true}
           initialMaximize={true}
-          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isFormStateDetailOpen: false } }))}
-          content={<ObjectViewer value={formState} label="formState" expandByDefault={true} />}
+          closeModal={() =>
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { isFormStateDetailOpen: false },
+              })
+            )
+          }
+          content={
+            <ObjectViewer
+              value={formState}
+              label="formState"
+              expandByDefault={true}
+            />
+          }
         />
       )}
       {formState.isProductSummaryOpen && (
@@ -1960,10 +2026,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           height={700}
           isForm={true}
           initialMaximize={true}
-          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: false } }))}
-          content={
-            <ProductSummaryMaster />
+          closeModal={() =>
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { isProductSummaryOpen: false },
+              })
+            )
           }
+          content={<ProductSummaryMaster />}
         />
       )}
 
@@ -1975,10 +2045,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           height={700}
           isForm={true}
           initialMaximize={true}
-          closeModal={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: false } }))}
-          content={
-            <PartySummaryMaster />
+          closeModal={() =>
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { isPartyWiseSummaryOpen: false },
+              })
+            )
           }
+          content={<PartySummaryMaster />}
         />
       )}
 
@@ -1990,11 +2064,20 @@ const TransactionForm: React.FC<TransactionProps> = ({
         />
       )}
 
-      <BottomSidebar isOpen={isOpentwo} setIsOpen={setIsOpentwo} minHeight={200} maxHeight={600} initialHeight={400}>
+      <BottomSidebar
+        isOpen={isOpentwo}
+        setIsOpen={setIsOpentwo}
+        minHeight={200}
+        maxHeight={600}
+        initialHeight={400}
+      >
         <div>
           <div style={sidebarHeaderStyle}>
             {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
-            <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>
+            <button
+              style={closeButtonStyle}
+              onClick={() => setIsOpentwo(false)}
+            >
               <X />
             </button>
           </div>

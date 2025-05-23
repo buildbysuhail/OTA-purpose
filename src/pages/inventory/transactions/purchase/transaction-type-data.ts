@@ -244,8 +244,10 @@ export const initialTransactionDetailData: TransactionDetail = {
   btnPrintBarcodeStd: ''
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData,
-  details: [initialTransactionDetailData],
+  master: TransactionMasterInitialData,details: Array.from({ length: 40300 }, (_, index) => ({
+  ...initialTransactionDetailData,
+  slNo: index + 1
+})),
   attachments: [],
   masterValidations: initialTransactionMasterValidations
 };

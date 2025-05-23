@@ -51,6 +51,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [isOpentwo, setIsOpentwo] = useState(false);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
+  const dropUpRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isDropUpOpen &&
+        dropUpRef.current &&
+        !dropUpRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest("button")
+      ) {
+        setIsDropUpOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropUpOpen]);
 
   const toggleDropup = () => {
     setIsDropUpOpen(!isDropUpOpen);
@@ -111,23 +129,28 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   return (
     <div
       className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
-      style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}
+      style={{
+        boxShadow:
+          "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+      }}
     >
       <div className="relative w-full">
         <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
           <button
             onClick={toggleDropup}
-            className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "bg-gray-100" : ""
-              }`}
+            className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${
+              isDropUpOpen ? "bg-gray-100" : ""
+            }`}
             style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}
           >
             <ChevronUp
-              className={`mx-2 transition-transform duration-500 ${isDropUpOpen
-                ? "transform rotate-180"
-                : hasAnimated
+              className={`mx-2 transition-transform duration-500 ${
+                isDropUpOpen
+                  ? "transform rotate-180"
+                  : hasAnimated
                   ? ""
                   : "animate-[bounce_2s_1]"
-                }`}
+              }`}
               size={24}
             />
           </button>
@@ -136,8 +159,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
       {/* Dropdown content */}
       <div
-        className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
-          }`}
+        ref={dropUpRef}
+        className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
+          isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
+        }`}
       >
         <div className="p-4 md:p-2 bg-white border border-gray-300 rounded-t-lg shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end">
@@ -222,10 +247,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               />
             </div>
             <div className="w-full">
-              <ERPButton
-                title={t("grn_print")}
-                variant="secondary"
-              />
+              <ERPButton title={t("grn_print")} variant="secondary" />
             </div>
           </div>
         </div>
@@ -236,7 +258,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div className="flex items-center gap-1">
             <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
               <button className="text-blue-600">
-                <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+                <span
+                  className="hover:underline text-[#0ea5e9] capitalize"
+                  onClick={selectAttachment}
+                >
                   {t("attachment")}
                 </span>
               </button>
@@ -305,7 +330,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <div className="hidden md:block mr-2">
               <h6 className="font-semibold whitespace-nowrap text-[20px] ">
                 {" "}
-                <span className="!font-medium !text-gray-600">{t("total")}:{" "}</span>
+                <span className="!font-medium !text-gray-600">
+                  {t("total")}:{" "}
+                </span>
                 {getFormattedValue(
                   formState.transaction.master?.roundAmount ?? 0
                 )}

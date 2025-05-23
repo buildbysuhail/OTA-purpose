@@ -378,9 +378,10 @@ export const useTransaction = (
       attachments: [...(vch.transaction?.attachments || [])],
     };
     voucher.transaction.master.prevTransDate =
-          master.transactionDate == ""
+          voucher.transaction.master.transactionDate == ""
             ? moment().local().toISOString()
-            : master.prevTransDate;
+            : voucher.transaction.master.prevTransDate;
+    voucher.transaction.master.oldLedgerID = voucher.transaction.master.ledgerID ;
     const addData = Array.from({ length: 40300 }, (_, index) => ({
   ...initialTransactionDetailData,
   slNo: index + 1

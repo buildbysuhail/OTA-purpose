@@ -2386,7 +2386,7 @@ debugger;
                 groupIndex={column.groupIndex}
                 cssClass={column.cssClass}
                 format={column.format}
-                dataType={column.dataType}
+                dataType={column.dataType??"string"}
                 allowSorting={column.allowSorting}
                 allowSearch={column.allowSearch}
                 // allowResizing={column.allowResizing}

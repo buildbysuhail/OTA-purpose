@@ -165,6 +165,8 @@ export interface TransactionMaster {
   supplyType: string;//new
   other: TransactionMaster3;
   labelDesignID:number;
+  prevTransDate:string;
+  oldLedgerID:number;
 }
 export interface TransactionMaster3 {
   invTransactionMasterID: number; 

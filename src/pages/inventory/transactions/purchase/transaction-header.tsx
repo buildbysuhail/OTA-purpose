@@ -339,7 +339,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   dispatch(
                     formStateMasterHandleFieldChange({
                       fields: {
-                        currencyId: e.value,
+                        currencyID: e.value,
                       },
                     })
                   );

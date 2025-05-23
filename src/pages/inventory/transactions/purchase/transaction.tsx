@@ -37,7 +37,7 @@ import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resiza
 import TemplatesView from "./templates";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useUserRights } from "../../../../helpers/user-right-helper";
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./renderSelected-template";
@@ -490,12 +490,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       _formState = {
         ..._formState,
-        transaction: {..._formState.transaction,
-          master: {..._formState.transaction.master,
-            hasroundOff: formType != "Import"
-          }
+        transaction: {
+          ..._formState.transaction,
+          master: {
+            ..._formState.transaction.master,
+            hasroundOff: formType != "Import",
+          },
         },
-        userConfig: {...formState.userConfig,dummyProducts:  applicationSettings.productsSettings.loadDummyProducts},
+        userConfig: {
+          ...formState.userConfig,
+          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
+        },
         transactionType: transactionType ?? "",
 
         formCode: formCode ?? "",
@@ -1729,9 +1734,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
               {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
+                  <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px] flex items-center gap-2">
+                    {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                     {t(formState.title)}
-                    {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(formState.formElements.masterAccount.visible.toString())} */}
+                    {!formState.formElements.lblPosted.visible && (
+                      <div title={t("posted_transaction")}>
+                        <Info className="text-[#ef4444] w-4 h-4"/>
+                      </div>
+                    )}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>

@@ -23,6 +23,7 @@ import {
   formStateHandleFieldChange,
   formStateMasterHandleFieldChange,
 } from "./reducer";
+import MoreOptionsModalContent from "./transaction-more";
 
 interface TransactionHeaderProps {
   formState: any;
@@ -56,6 +57,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   refNoRef,
 }) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef(null);
@@ -71,6 +73,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleMoreButtonClick = () => {
+    setIsMoreModalOpen(true);
+  };
+
+  const closeMoreModal = () => {
+    setIsMoreModalOpen(false);
   };
 
   useEffect(() => {
@@ -102,7 +112,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         t={t}
         setIsPartyDetailsOpen={() => {
           setIsPartyDetailsOpen((prev: any) => {
-            debugger;
             return !prev;
           });
         }}
@@ -323,6 +332,32 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 onKeyDown={(e: any) => {
                   handleKeyDown && handleKeyDown(e, "labelDesign");
                 }}
+              />
+            )}
+
+            <div>
+              <ERPButton
+                title={"more"}
+                variant="secondary"
+                onClick={handleMoreButtonClick}
+              />
+            </div>
+
+            {isMoreModalOpen && (
+              <ERPModal
+                isOpen={isMoreModalOpen}
+                title="More Options"
+                width={800}
+                height={600}
+                closeModal={closeMoreModal}
+                content={
+                  <MoreOptionsModalContent
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleFieldChange={handleFieldChange}
+                    t={t}
+                  />
+                }
               />
             )}
           </div>

@@ -167,6 +167,7 @@ export interface TransactionMaster {
   labelDesignID:number;
   prevTransDate:string;
   oldLedgerID:number;
+  dueDays:number;
 }
 export interface TransactionMaster3 {
   invTransactionMasterID: number; 

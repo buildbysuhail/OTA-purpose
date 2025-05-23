@@ -218,6 +218,7 @@ import FOCRegisterReport from "../../../pages/inventory/reports/foc-register-rep
 import ItemUsedForService from "../../../pages/inventory/reports/item_used_for_service-report/item_used_for_service-report";
 import LPOReport from "../../../pages/inventory/reports/lpo_report/lpo_report";
 import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
+import { SearchProvider } from "../../../pages/accounts/transactions/search-context.tsx";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -360,12 +361,14 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}List`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
+                       <SearchProvider>
                       <AccTransactionGrid
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         title={route.listTitle}
                         addTitle={route.title}
                       />
+                      </SearchProvider>
                     </RouteGuard>
                   }
                 />
@@ -374,6 +377,7 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
+                       <SearchProvider>
                       <AccTransactionFormContainerView
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
@@ -384,6 +388,7 @@ const Content: FC<ContentProps> = () => {
                         drCr={route.drCr}
                         voucherNo={0}
                       />
+                      </SearchProvider>
                     </RouteGuard>
                   }
                 />

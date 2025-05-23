@@ -134,7 +134,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         {/* Delete Button */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
           <button
-            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master?.invTransactionMasterId > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
+            disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
             onClick={deleteTransVoucher}
           >
@@ -166,7 +166,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         {formState.formElements.lnkUnlockVoucher?.visible !== true && (
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
             <button
-              disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
+              disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
               onClick={handleEdit}
             >
@@ -178,7 +178,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         {/* Print Button */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("print")}>
           <button
-            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
+            disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
             onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
           >

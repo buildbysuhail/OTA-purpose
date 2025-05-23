@@ -280,7 +280,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnError: { visible: false, disabled: false, label: "error" },
   btnGRNPrint: { visible: true, disabled: false, label: "grn_print" },
   btnPrint: { visible: true, disabled: false, label: "print" },
-  btnProductSumary: { visible: true, disabled: false, label: "product_sumary" },
+  btnProductSummary: { visible: true, disabled: false, label: "product_sumary" },
   btnSave: { visible: true, disabled: true, label: "save" },
   btnSet: { visible: false, disabled: false, label: "set" },
   btnSize: { visible: false, disabled: false, label: "size" },

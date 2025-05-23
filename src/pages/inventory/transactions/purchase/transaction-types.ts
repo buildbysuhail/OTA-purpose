@@ -397,6 +397,7 @@ export interface TransactionFormState {
   isFormStateDetailOpen?: boolean;
   selectedRow?: TransactionDetail;
   gridColumns?: DevGridColumn[];
+  isPostedTransaction: boolean;
   
 }
 export interface PrintTransProps {

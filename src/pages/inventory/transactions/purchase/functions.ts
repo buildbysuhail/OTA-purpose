@@ -10,24 +10,51 @@ import { TransactionFormState } from "./transaction-types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 export const calculateTotal = (state: TransactionFormState): number => {
-  // return 
+  // return
   // state.transaction.master.voucherType !== "MJV"
-  //   ? 
-   return state.transaction.details.reduce(
-        (sum, detail) => sum + (Number(detail.netValue) || 0),
-        // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
-        0
-      )
-    // : state.transaction.details.reduce(
-    //     (sum, detail) => sum + (Number(detail.debit) || 0),
-    //     0
-    //   );
+  //   ?
+  return state.transaction.details.reduce(
+    (sum, detail) => sum + (Number(detail.netValue) || 0),
+    // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
+    0
+  );
+  // : state.transaction.details.reduce(
+  //     (sum, detail) => sum + (Number(detail.debit) || 0),
+  //     0
+  //   );
 };
 export const clearEntryControl = (
   state: TransactionFormState,
   defaultCostCenterID: number
 ): TransactionFormState => {
-  
+  return state;
+};
+export const setUserRights = (
+  state: TransactionFormState,
+  userSession: UserModel,
+  hasRight: (formCode: string, action: UserAction) => boolean
+): TransactionFormState => {
+  const isClosed = userSession.financialYearStatus === "Closed";
+  state.formElements.btnSave.disabled = !isClosed
+    ? hasRight(state.formCode, UserAction.Add) &&
+      (state?.transaction?.details?.length ?? 0) > 0
+    : false;
+
+  state.formElements.btnEdit.disabled = !isClosed
+    ? hasRight(state.formCode, UserAction.Edit)
+    : false;
+
+  state.formElements.btnProductSummary.disabled = !isClosed
+    ? hasRight("PSUMRPT", UserAction.Show)
+    : false;
+
+  state.formElements.btnDelete.disabled = !isClosed
+    ? hasRight(state.formCode, UserAction.Delete)
+    : false;
+
+  state.formElements.btnPrint.disabled = !isClosed
+    ? hasRight(state.formCode, UserAction.Print)
+    : false;
   return state;
 };
 export const validateTransactionDate = (
@@ -110,7 +137,6 @@ export const validateTransactionDate = (
         hasBlockedRight == undefined ||
         (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
       ) {
-        
         const minPreDate = new Date();
         minPreDate.setHours(0, 0, 0, 0); // Removes time part
         minPreDate.setDate(
@@ -132,17 +158,21 @@ export const validateTransactionDate = (
           valid: false,
           message: "User privilege not assigned. Please contact admin.",
         };
-      }1
+      }
+      1;
     }
   }
 
   return { valid: isValid, message };
 };
-export function calculateRowAmount(formState: TransactionFormState, rowIndex: number = -1, currentEditedField: string): void {
+export function calculateRowAmount(
+  formState: TransactionFormState,
+  rowIndex: number = -1,
+  currentEditedField: string
+): void {
   try {
-    
-      const { getFormattedValue } = useNumberFormat()
-    if(rowIndex === -1) {
+    const { getFormattedValue } = useNumberFormat();
+    if (rowIndex === -1) {
       return;
     }
     const row = formState.transaction.details[rowIndex];
@@ -171,13 +201,17 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
     let discPercVal = discPerc;
     let exciseTaxPer = cstPerc ?? 0;
     let exciseTax = cst ?? 0;
-    let ratePlusTaxVal = formState.gridColumns?.find(x => x.dataField == "ratePlusTax")?.visible == true ? (ratePlusTax ?? 0) : 0;
+    let ratePlusTaxVal =
+      formState.gridColumns?.find((x) => x.dataField == "ratePlusTax")
+        ?.visible == true
+        ? ratePlusTax ?? 0
+        : 0;
     let addAmt = additionalExpense ?? 0;
 
-    if (ratePlusTaxVal > 0 && currentEditedField === 'ratePlusTax') {
-      const divisor = (vatPerc / 100) + 1;
+    if (ratePlusTaxVal > 0 && currentEditedField === "ratePlusTax") {
+      const divisor = vatPerc / 100 + 1;
       const qty1 = qtyVal !== 0 ? qtyVal : 1;
-      rate = parseFloat(((ratePlusTaxVal * qty1) / divisor ).toFixed(3));
+      rate = parseFloat(((ratePlusTaxVal * qty1) / divisor).toFixed(3));
       rate = rate / qty1;
       row.unitPrice = rate;
     }
@@ -186,14 +220,14 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
       rate = unitPrice;
     }
 
-    if (discPercVal > 0 && currentEditedField !== 'discount') {
+    if (discPercVal > 0 && currentEditedField !== "discount") {
       const expectedDisc = parseFloat(((discPercVal * gross) / 100).toFixed(5));
       if (expectedDisc !== disc) {
         disc = expectedDisc;
       }
     }
 
-    if (rate > 0 && currentEditedField === 'discount') {
+    if (rate > 0 && currentEditedField === "discount") {
       discPercVal = parseFloat(((100 * disc) / gross).toFixed(5));
     }
 
@@ -201,7 +235,7 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
     exciseTax = (netValueBeforeExcise * exciseTaxPer) / 100;
     const netValue = netValueBeforeExcise + exciseTax;
 
-    row.cst =  parseFloat(getFormattedValue(exciseTax));
+    row.cst = parseFloat(getFormattedValue(exciseTax));
     row.netValue = parseFloat(getFormattedValue(netValue));
     row.discPerc = parseFloat(getFormattedValue(discPercVal));
     row.discount = parseFloat(getFormattedValue(disc));
@@ -244,9 +278,8 @@ export function calculateRowAmount(formState: TransactionFormState, rowIndex: nu
     //   // You must define how to handle auto summaries in your context
     //   calculateTotal();
     // }
-
   } catch (error) {
-    console.error('Error in calculateRowAmount:', error);
+    console.error("Error in calculateRowAmount:", error);
   }
 }
 export const isDirtyTransaction = (
@@ -255,30 +288,42 @@ export const isDirtyTransaction = (
 ): boolean => {
   // // const _prevState = customJsonParse(atob(prevState))
   // const keys = Object.keys(_prevState ?? {}).length;
-  const _current = modelToBase64Unicode(setTransactionForHistory({
-    transaction: { ...currentState.transaction },
-    row: { ...currentState.row },
-  }));
+  const _current = modelToBase64Unicode(
+    setTransactionForHistory({
+      transaction: { ...currentState.transaction },
+      row: { ...currentState.row },
+    })
+  );
   const _isEqual = prevState === _current;
   return _isEqual === false && prevState !== undefined && prevState !== "";
 };
 
-export const setTransactionForHistory = (
-  _formState: any
-): any => {
-  
+export const setTransactionForHistory = (_formState: any): any => {
   return {
-    transaction: { ..._formState.transaction,
-      master:{
+    transaction: {
+      ..._formState.transaction,
+      master: {
         ..._formState.transaction.master,
         // employeeID: _formState.transaction.master.employeeID == null ? "" : _formState.transaction.master.employeeID,
         // currencyID: _formState.transaction.master.currencyID == null ? "" : _formState.transaction.master.currencyID,
-      }
-     },
-    row: { ..._formState.row,
-      ledgerID: _formState.row.ledgerID == null || _formState.row.ledgerID == ""  || _formState.row.ledgerID == 0 ? "" : _formState.row.ledgerID,
+      },
+    },
+    row: {
+      ..._formState.row,
+      ledgerID:
+        _formState.row.ledgerID == null ||
+        _formState.row.ledgerID == "" ||
+        _formState.row.ledgerID == 0
+          ? ""
+          : _formState.row.ledgerID,
       //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
       //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
-       projectId: _formState.row.projectId == null || _formState.row.projectId == "" || _formState.row.projectId == 0 ? "" : _formState.row.projectId },
-  }
+      projectId:
+        _formState.row.projectId == null ||
+        _formState.row.projectId == "" ||
+        _formState.row.projectId == 0
+          ? ""
+          : _formState.row.projectId,
+    },
+  };
 };

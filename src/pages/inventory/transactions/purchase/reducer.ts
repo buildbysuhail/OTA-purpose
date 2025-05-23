@@ -10,7 +10,7 @@ import {
   LoadData,
   TransactionValidationsData,
 } from "./transaction-types";
-import { clearEntryControl } from "./functions";
+import { clearEntryControl, setUserRights } from "./functions";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
@@ -431,25 +431,7 @@ const InvTransactionSlice = createSlice({
       }>
     ) => {
       const { userSession, hasRight } = action.payload;
-
-      const isClosed = userSession.financialYearStatus === "Closed";
-
-      state.formElements.btnSave.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Add) &&
-          (state?.transaction?.details?.length ?? 0) > 0
-        : false;
-
-      state.formElements.btnEdit.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Edit)
-        : false;
-
-      state.formElements.btnDelete.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Delete)
-        : false;
-
-      state.formElements.btnPrint.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Print)
-        : false;
+      state = setUserRights(state, userSession, hasRight);      
     },
     updateFormElement: (
       state,

@@ -4,6 +4,7 @@ import {
   calculateTotal,
   isDirtyTransaction,
   setTransactionForHistory,
+  setUserRights,
   validateTransactionDate,
 } from "./functions";
 import { useAccPrint } from "./use-print";
@@ -382,6 +383,8 @@ export const useTransaction = (
             ? moment().local().toISOString()
             : voucher.transaction.master.prevTransDate;
     voucher.transaction.master.oldLedgerID = voucher.transaction.master.ledgerID ;
+    voucher.isPostedTransaction =  voucher.transaction.master.isPosted;
+    voucher = setUserRights(voucher, userSession, hasRight);
     const addData = Array.from({ length: 40300 }, (_, index) => ({
   ...initialTransactionDetailData,
   slNo: index + 1

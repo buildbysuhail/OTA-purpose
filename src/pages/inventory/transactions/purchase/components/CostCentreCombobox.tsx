@@ -18,7 +18,7 @@ const CostCentreCombobox = React.forwardRef<
       localInputBox={formState?.userConfig?.inputBoxStyle}
       enableClearOption={false}
       id="costCentreID"
-      className="min-w-[180px]"
+      className="min-w-[180px] !m-0"
       label={t(formState.formElements.costCentreID.label)}
       data={formState.transaction.master}
       onSelectItem={(e) => {

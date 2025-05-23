@@ -15,7 +15,7 @@ const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
         localInputBox={formState?.userConfig?.inputBoxStyle}
         enableClearOption={false}
         id="warehouseID"
-        className="min-w-[180px]"
+        className="min-w-[180px] !m-0"
         label={t(formState.formElements.cbWarehouseID.label)}
         data={formState.transaction.master}
         onSelectItem={(e: { label: string; value: string | number }) => {

@@ -23,7 +23,7 @@ const Project = React.forwardRef<HTMLInputElement, ProjectProps>(({
           enableClearOption={false}
           ref={ref}
           id="projectID"
-          className="min-w-[180px]"
+          className="min-w-[180px] !m-0"
           label={t(formState.formElements.cbProject.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {

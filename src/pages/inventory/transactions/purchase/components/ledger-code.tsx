@@ -15,30 +15,30 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   return (
     <>
       {formState.formElements.partyCode.visible && (
-         <ERPInput
-         localInputBox={formState?.userConfig?.inputBoxStyle}
-         id="partyId"
-         className=""
-         required={true}
-         label={t(formState.formElements.partyCode.label)}
-         value={formState.partyId}
-         ref={ref}
-         disableEnterNavigation={true}
-         onKeyDown={(e) => {
-           handleKeyDown && handleKeyDown(e, "partyId");
-         }}
-         onChange={(e) =>
-           dispatch(
-             formStateHandleFieldChange({
-               fields: { partyId: e.target?.value },
-             })
-           )
-         }
-         disabled={
-           formState.formElements.partyCode?.disabled ||
-           formState.formElements.pnlMasters?.disabled
-         }
-       />
+        <ERPInput
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          id="partyId"
+          className="!m-0"
+          required={true}
+          label={t(formState.formElements.partyCode.label)}
+          value={formState.partyId}
+          ref={ref}
+          disableEnterNavigation={true}
+          onKeyDown={(e) => {
+            handleKeyDown && handleKeyDown(e, "partyId");
+          }}
+          onChange={(e) =>
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { partyId: e.target?.value },
+              })
+            )
+          }
+          disabled={
+            formState.formElements.partyCode?.disabled ||
+            formState.formElements.pnlMasters?.disabled
+          }
+        />
       )}
     </>
   );

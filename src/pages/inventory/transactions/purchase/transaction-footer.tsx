@@ -139,8 +139,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
           }`}
       >
-        <div className="p-4 md:p-4 bg-white border border-gray-300 rounded-t-lg shadow-lg">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 items-end">
+        <div className="p-4 md:p-2 bg-white border border-gray-300 rounded-t-lg shadow-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end">
             <div className="w-full">
               <WarehouseID
                 formState={formState}
@@ -233,7 +233,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
       <div className="flex items-end justify-between">
         <div className="flex items-end gap-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
               <button className="text-blue-600">
                 <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>

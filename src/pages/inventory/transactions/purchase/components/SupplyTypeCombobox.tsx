@@ -20,7 +20,7 @@ const SupplyTypeCombobox: React.FC<SupplyTypeComboboxProps> = ({
       localInputBox={formState?.userConfig?.inputBoxStyle}
       enableClearOption={false}
       id="supplyType"
-      className="min-w-[180px]"
+      className="min-w-[180px] !m-0"
       label={t(formState.formElements.supplyType.label)}
       data={formState.transaction.master}
       onSelectItem={(e) => {

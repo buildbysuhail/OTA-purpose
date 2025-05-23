@@ -18,7 +18,7 @@ const PriceCategoryCombobox = React.forwardRef<
       localInputBox={formState?.userConfig?.inputBoxStyle}
       enableClearOption={false}
       id="priceCategoryID"
-      className="min-w-[180px]"
+      className="min-w-[180px] !m-0"
       label={t(formState.formElements.priceCategory.label)}
       data={formState.transaction.master}
       onSelectItem={(e) => {

@@ -20,6 +20,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
       localInputBox={formState?.userConfig?.inputBoxStyle}
       id="adjustmentAmount"
       type="number"
+      className="!m-0"
       label={t(formState.formElements.adjustmentAmount.label)}
       value={formState.transaction.master.adjustmentAmount}
       disableEnterNavigation={true}

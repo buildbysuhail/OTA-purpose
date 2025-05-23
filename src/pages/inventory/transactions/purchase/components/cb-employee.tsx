@@ -25,7 +25,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
           ref={ref}
           id="employeeID"
           // nameField="costCentreName"
-          className="min-w-[180px]"
+          className="min-w-[180px] !m-0"
           label={t(formState.formElements.cbEmployee.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {

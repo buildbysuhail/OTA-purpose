@@ -48,7 +48,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
           id="inventoryLedgerID"
           // nameField="costCentreName"
           noLabel
-          className="min-w-[180px]"
+          className="min-w-[180px] !m-0"
           label={t(formState.formElements.cbDebitAccount.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {

@@ -72,7 +72,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   };
 
   return (
-    <div className="mt-8 flex items-end gap-4">
+    <div className="mt-8 flex items-end gap-1">
       <PartyLedger
         ref={ledgerIdRef}
         handleFieldKeyDown={handleFieldKeyDown}
@@ -134,7 +134,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             maxWidth: "calc(100vw - 220px)",
           }}
         >
-          <div ref={contentRef} className="p-6 transition-opacity duration-500 ease-in-out">
+          <div ref={contentRef} className="p-2 transition-opacity duration-500 ease-in-out">
             <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
               <Employee
                 dispatch={dispatch}
@@ -168,6 +168,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   title={t("Grn_Number")}
                   onClick={handleButtonClick}
                   localInputBox={formState?.userConfig?.inputBoxStyle}
+                  className="!m-0"
                 />
               </div>
               {isModalOpen && (
@@ -220,7 +221,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
                     id="tokenNumber"
-                    className="min-w-[180px]"
+                    className="min-w-[180px] !m-0"
                     // label={t(formState.formElements.cbVatAccount.label)}
                     noLabel={true}
                     data={formState.transaction.master}
@@ -261,7 +262,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 <ERPCheckbox
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="inSearch"
-                  className="text-left"
+                  className="text-left !m-0"
                   label={t(formState.formElements.inSearch.label)}
                   checked={formState.inSearch}
                   onChange={(e) => {
@@ -279,7 +280,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   enableClearOption={false}
                   id="labelDesignID"
-                  className="min-w-[180px]"
+                  className="min-w-[180px] !m-0"
                   label={t(formState.formElements.cbLabelDesign.label)}
                   data={formState.transaction.master}
                   onSelectItem={(e) => {
@@ -312,13 +313,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
             </div>
 
-            <div className="flex items-end gap-4 border border-dashed border-gray-400 p-2 rounded-md inline-flex">
+            <div className="flex items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md inline-flex mt-2">
               {formState.formElements.cbCurrency?.visible && (
                 <ERPDataCombobox
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   enableClearOption={false}
                   id="currencyId"
-                  className="min-w-[180px]"
+                  className="min-w-[180px] !m-0"
                   label={t(formState.formElements.cbCurrency.label)}
                   data={formState.transaction.master}
                   onSelectItem={(e) => {
@@ -364,16 +365,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     })
                   )
                 }
-                className="min-w-[180px]"
+                className="min-w-[180px] !m-0"
                 disabled={
                   formState.formElements.exchangeRate?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
               />
-              <ERPButton title={t("set")} variant="secondary" />
+              <ERPButton title={t("set")} variant="secondary" className="!m-0" />
             </div>
 
-            <div className="flex justify-center mt-4 mb-2">
+            <div className="flex justify-center mt-2 mb-2">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"

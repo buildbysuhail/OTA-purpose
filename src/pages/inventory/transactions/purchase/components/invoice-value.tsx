@@ -27,7 +27,7 @@ const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({
           required={true}
           min={0}
           value={formState.transaction.master.address4}
-          
+          className="!m-0"
           disableEnterNavigation={true}
           onChange={(e: any) =>
             dispatch(

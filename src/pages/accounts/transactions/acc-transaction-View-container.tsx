@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Urls from "../../../redux/urls";
 import { useSearchParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
@@ -20,12 +20,13 @@ import { Box, Button, Typography, List, ListItem, ListItemText, Divider, Paper, 
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
-import { BadgePlusIcon, Boxes, CalendarDays, ChevronUp, CopyPlus, EllipsisVertical, Eraser, FileText, Group, Mail, Pencil, Printer, RefreshCw, Share2, Trash2 } from "lucide-react";
+import { BadgePlusIcon, Boxes, CalendarDays, ChevronUp, CopyPlus, EllipsisVertical, Eraser, FileText, Group, Mail, MessageCircle, MessageSquare, Pencil, Printer, RefreshCw, Share2, Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import StandardPreviewWrapper from "../../InvoiceDesigner/DesignPreview/StandardPreview";
 import { PDFViewer } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
+import { useSearch } from "./search-context.tsx";
 
 const invoices = [
   { id: 1, customer: "xcvcxc", number: "INV-000003", date: "20/01/2025", amount: 255, status: "DRAFT" },
@@ -35,8 +36,13 @@ const invoices = [
 
 const api = new APIClient();
 const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) => {
+  // const [searchQuery, setSearchQuery] = useState<string>('');
+  //   const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+  // };
   
   const [searchParams] = useSearchParams();
+   const { searchQuery } = useSearch();
     const getParamOrProp = <T extends string | number >(
       key: keyof AccTransactionProps,
       isNumber: boolean = false
@@ -207,8 +213,11 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
   }
   }, [searchParams, props]);
 
+const [selectedRow, setSelectedRow] = useState<any>(null);
+
   const onRowDblClick = useCallback(async (event: any) => {
-    const _event = event.data != undefined ? event : event?.event
+    const _event = event.data != undefined ? event : event?.event;
+    setSelectedRow(_event.data); // Set the selected row data
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,
@@ -227,10 +236,12 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
       transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
       financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
     };
-    const asf = {formType: _event.data.formType,
+    const asf = {
+      formType: _event.data.formType,
       voucherNo: _event.data.lastVNo,
-      voucherPrefix: _event.data.lastPrefix?.toUpperCase()}
-    await initializeVoucher(asd,asf); // Call initializeVoucher here
+      voucherPrefix: _event.data.lastPrefix?.toUpperCase()
+    };
+    await initializeVoucher(asd, asf);
     setOpenVoucherSelector(false);
   }, [searchParams, props]);
 
@@ -239,6 +250,11 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
 
     //  const { t } = useTranslation("transaction");
       // const formState = useAppSelector((state: RootState) => state.AccTransaction);
+
+            // useEffect(() => {
+            //       console.log("searchQuery acc v t" );
+            //       console.log({ searchQuery });
+            //   }, []);
     
       const columns: DevGridColumn[] = useMemo(
         () => [
@@ -269,6 +285,26 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
                       </p>
                     </div>
                     <div className="w-1/2  flex items-center justify-end ">
+                      {/* <p className="text-gray-800 font-medium">
+                        {cellElement.data?.amount}
+                      </p> */}
+                      {/* <p className="text-gray-800 font-medium">
+                        =and=
+                      </p> */}
+                      <p className="text-gray-800 font-medium">
+                        {cellElement.data?.voucherNumber}
+                      </p>
+                    </div>
+                  </div>
+                  {/* <div className="w-full flex flex-row">
+                    <div className="  flex items-center justify-end ">
+                      <p className="text-gray-800 font-medium !text-right" >
+                        {cellElement.data?.amount}
+                      </p>
+                    </div>
+                  </div> */}
+                  <div className="w-full flex justify-end">
+                    <div className="text-right">
                       <p className="text-gray-800 font-medium">
                         {cellElement.data?.amount}
                       </p>
@@ -286,87 +322,156 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
         ],
         [t] // Dependency for columns
       );
+
+      const columnstwo: DevGridColumn[] = [
+        {
+          dataField: "accTransactionMasterID",
+          caption: t("Actions"),
+          allowSearch: true,
+          allowSorting: false,
+          allowFiltering: false, // Disable filtering on ID since it’s not relevant
+          fixed: true,
+          fixedPosition: "right",
+          width: 100,
+          cellRender: (cellElement: any) => {
+            return (
+              <div className="bg-white p-4 hover:bg-[#0f0f0f83] shadow-md transition-transform transform duration-300 ease-in-out hover:scale-105 hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300">
+                <div className="w-full flex flex-row">
+                  <div className="w-1/2 flex items-center">
+                    <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
+                    <p className="text-gray-600 font-medium !text-[12px]">
+                      {new Date(cellElement.data?.transactionDate).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                  <div className="w-1/2 flex items-center justify-end">
+                    <p className="text-gray-800 font-medium">{cellElement.data?.voucherNumber}</p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-end">
+                  <div className="text-right">
+                    <p className="text-gray-800 font-medium">{cellElement.data?.amount}</p>
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <p className="text-gray-600 font-normal overflow-hidden text-ellipsis whitespace-nowrap">
+                    {cellElement.data?.particulars}
+                  </p>
+                </div>
+              </div>
+            );
+          },
+        },
+        {
+          dataField: "transactionDate",
+          visible: false,
+          allowFiltering: true,
+          dataType: "date", // Ensures proper date filtering
+        },
+        {
+          dataField: "voucherNumber",
+          visible: false,
+          allowFiltering: true,
+          dataType: "string",
+        },
+        {
+          dataField: "amount",
+          visible: false,
+          allowFiltering: true,
+          dataType: "number", // Ensures proper numeric filtering
+        },
+        {
+          dataField: "particulars",
+          visible: false,
+          allowFiltering: true,
+          dataType: "string",
+        },
+      ];
       const phone = window.innerWidth <= 600;
       const currentBranch = useCurrentBranch();
+      const buttonRef = useRef<HTMLButtonElement | null>(null);
+      const [isPopupVisible, setIsPopupVisible] = useState(false);
+      const popupRef = useRef<HTMLDivElement | null>(null);
 
+          useEffect(() => {
+            function handleClickOutside(event: MouseEvent) {
+              // Check if the click is outside the popup AND not on the button
+              if (
+                popupRef.current &&
+                !popupRef.current.contains(event.target as Node) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target as Node)
+              ) {
+                setIsPopupVisible(false);
+              }
+            }
+      
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+              document.removeEventListener("mousedown", handleClickOutside);
+            };
+          }, []);
 
+        
+          
+          // console.log("searchQuery acc v t" );
+          // console.log({ searchQuery });
+          
 
   return (
     <>
      {/* <InvoiceView/> */}
          <Box display="flex" height="100vh">
            {/* Sidebar */}
-           <Box width={300} bgcolor="#fafbfc" borderRight="1px solid #eee" p={2}>
-             {/* <Typography variant="h6" gutterBottom>
-               All Invoices
-             </Typography>
-             <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }}>
-               +
-             </Button>
-             <List>
-               {invoices.map((inv) => (
-                 <ListItem key={inv.id} selected={inv.id === selectedInvoice.id} button>
-                   <ListItemText
-                     primary={
-                       <Box display="flex" justifyContent="space-between">
-                         <span>{inv.customer}</span>
-                         <span>₹{inv.amount.toFixed(2)}</span>
-                       </Box>
-                     }
-                     secondary={
-                       <Box display="flex" justifyContent="space-between">
-                         <span>{inv.number} • {inv.date}</span>
-                         <span style={{ color: inv.status === "PAID" ? "green" : "#aaa" }}>{inv.status}</span>
-                       </Box>
-                     }
-                   />
-                 </ListItem>
-               ))}
-             </List> */}
-             {/* <HistorySidebar/> */}
-                          {/* <Button variant="outlined" fullWidth onClick={() => setIsHistoryOpen(true)}>
-               Show Transaction History
-             </Button>
-             <HistorySidebar
-               isOpen={isHistoryOpen}
-               onClose={() => setIsHistoryOpen(false)}
-               transactionType={input.transactionType ?? ""}
-             /> */}
-             <div className="py-3 bg-gray-50 h-[94vh] ">
+           <Box width={350} bgcolor="#fafbfc" borderRight="1px solid #eee" p={2} 
+             sx={{
+              display: {
+                xs: "none",    // visible on extra-small
+                sm: "none",    // visible on small
+                md: "none",    // visible on medium
+                lg: "block",    // visible on large (<1280px)
+                xl: "block",     // hidden on extra-large (>=1280px)
+              },
+            }}
+           >
+             <div className="py-0 bg-gray-50 h-[94vh] ">
                      {/* Header */}
                      <div className="flex justify-between items-center mb-1 px-4">
                        <h6 className=" font-semibold text-[15px] text-gray-800">All invoices</h6>
-                       {/* <button
-                         onClick={onClose}
-                         className="text-gray-500 hover:text-gray-700 transition-colors"
-                       >
-                         <X className="w-[22px] h-[22px] p-1 rounded-full text-[12px] hover:shadow-lg transition-all duration-300 ease-in-out" />
-                       </button> */}
                      </div>
              
                      {/* Content */}
                      <div className="space-y-4">
                        {/* {isOpen && */}
                        <ERPDevGrid 
-                         columns={columns}
+                        //  columns={columns}
+                         columns={columnstwo}
                          dataUrl={`${urls.acc_transaction_base}${input.transactionType}/List/`}
                          method={ActionType.GET}
+                         postData={{ searchQuery }}
                          // postData={{voucherType: voucherType, transactionType: transactionType}}
                          gridHeader={t("transactions")}
                          gridId="transaction-grid"
-                         remoteOperations={{ paging: true, filtering: true, sorting: false}}
+                         remoteOperations={{ paging: true, filtering: true, sorting: true }}
                          gridAddButtonIcon="ri-add-line"
                          pageSize={40}
+                        // onSearch={handleSearch}
+                        // postData={{ searchQuery }}
                          allowExport={true}
+                         allowSearching={true}
                          hideDefaultExportButton={true}
                          // showFilterRow ={false}
                          hideDefaultSearchPanel={false}
-                         allowSearching={false}
+                        //  allowSearching={false}
                          hideGridAddButton={true}
                          hideGridHeader={true}
                          showColumnHeaders={false}
                          className="HistorySidebarcustom "
                          ShowGridPreferenceChooser={false}
+                         onRowDblClick={onRowDblClick} // Add this line
                        />
              {/* } */}
                        {/* Transaction Date */}
@@ -378,12 +483,10 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
            {/* Main Content */}
            <Box flex={1} p={3} bgcolor="#fff">
              <Box display="flex" alignItems="center" justifyContent="space-between">
-               <Typography variant="h5">{selectedInvoice.number}</Typography>
+               <Typography variant="h5">
+  {selectedRow?.voucherNumber ?? selectedInvoice.number}
+</Typography>
                <Box>
-                 {/* <Button variant="outlined" sx={{ mr: 1 }}>Edit</Button>
-                 <Button variant="outlined" sx={{ mr: 1 }}>Send</Button>
-                 <Button variant="outlined" sx={{ mr: 1 }}>PDF/Print</Button>
-                 <Button variant="outlined">Record Payment</Button> */}
                  <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
                          
                  
@@ -398,15 +501,65 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
                              </button>
                            </div>
                          {/* send Button */}
-                           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
-                             <button
-                              //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-                              //  onClick={handleEdit}
-                             >
-                               <Mail  className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                             </button>
-                           </div>
+                         
+                           <div className="relative">
+                                     <button
+                                       ref={buttonRef}
+                                       onClick={() => setIsPopupVisible((prev: any) => !prev)}
+                                       className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
+                                       title={t("previous_page")}
+                                     >
+                                       <Mail className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                                     </button>
+                           
+                                     {isPopupVisible && (
+                                       <div
+                                         ref={popupRef}
+                                         className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+                                         style={{
+                                           top: "100%",
+                                           left: "-180px",
+                                           width: "251px",
+                                           marginTop: "8px",
+                                         }}
+                                       >
+                                         <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
+                                           <ul className="space-y-1">
+                                             {/* <p>test23</p> */}
+                                                <li>
+                                                  <button
+                                                    className="flex items-center w-full px-3 py-2 rounded-md   hover:bg-[#bfdbfe] transition text-gray-700"
+                                                    style={{ gap: 8 }}
+                                                  >
+                                                    <Mail className="w-4 h-4 mr-2" />
+                                                    Email
+                                                  </button>
+                                                </li>
+                                                <li>
+                                                  <button
+                                                    className="flex items-center w-full px-3 py-2 rounded-md hover:bg-[#bfdbfe] transition text-gray-700"
+                                                    style={{ gap: 8 }}
+                                                  >
+                                                    {/* You can use another icon here, e.g., MessageCircle */}
+                                                     <MessageSquare  className="w-4 h-4 mr-2" />
+                                                    SMS
+                                                  </button>
+                                                </li>
+                                                <li>
+                                                  <button
+                                                    className="flex items-center w-full px-3 py-2 rounded-md hover:bg-[#bfdbfe] transition text-gray-700"
+                                                    style={{ gap: 8 }}
+                                                  >
+                                                    <MessageCircle  className="w-4 h-4 mr-2" />  
+                                                  whatsapp
+                                                  </button>
+                                                </li>
+                                           </ul>
+                                         </nav>
+                                       </div>
+                                     )}
+                                     
+                                   </div>
                          {/* share Button */}
                            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
                              <button
@@ -417,6 +570,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (props) =
                                <Share2   className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                              </button>
                            </div>
+
                          {/* pdf Button */}
                            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
                              <button

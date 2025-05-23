@@ -10,6 +10,7 @@ import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
 import { Link, useLocation } from "react-router-dom";
+import { useSearch } from "./search-context.tsx";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -21,17 +22,36 @@ const toggleTransactionPopup = (payload: {
 });
 
 
+// interface AccTransactionGridProps {
+//   voucherType?: string;
+//   transactionType?: string;
+//   title?: string;
+//   addTitle?: string;
+//   onSearch?: (query: string) => void; 
+// }
+
 const AccTransactionGrid: React.FC<{voucherType?: string
   , transactionType?: string
   ,title?: string ,addTitle?: string}> = ({
+
+// const AccTransactionGrid: React.FC<AccTransactionGridProps> = ({
   voucherType,
   transactionType,
   title,
   addTitle,
+  // onSearch,
 }) => {
   const dispatch = useAppDispatch();
     const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('transaction');
+    const { setSearchQuery } = useSearch();
+
+
+  //   const handleSearch = (query: string) => {
+  //   if (onSearch) {
+  //     onSearch(query);
+  //   }
+  // };
 
   const [reload, setReload] = useState<boolean>(true)
   const columns: DevGridColumn[] = useMemo(
@@ -113,8 +133,15 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         allowSearch: true,
         alignment: "center",
         showInPdf: true,
+        bold: true,
         cssClass: "centered-header",
-        cellRender: (data) => <div style={{ textAlign: "center" }}> <Link to={`/accounts/transactions/CashPayment/${data.value}`} >{data.value}</Link> </div>
+        cellRender: (data) => (
+          <div style={{ textAlign: "center" }}>
+            <Link to={`/accounts/transactions/CashPayment/${data.value}`} style={{ color: "#1b6de0", textDecoration: "underline" }}>
+              {data.value}
+            </Link>
+          </div>
+        )
       },
       {
         dataField: "referenceNumber",
@@ -221,6 +248,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         allowSearch: false,
         allowFiltering: false,
         fixed: true,
+        dataType:"string",
         fixedPosition: "right",
         width: 100,
         
@@ -341,6 +369,18 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         customizeText: customizeSummaryRow,
       }
     ];
+
+      const handleSearch = (query: string) => {
+        setSearchQuery(query);
+      };
+
+    // useEffect(() => {
+    //   console.log("searchQuery acc t g" );
+    //   console.log({ handleSearch });
+    // }, []);
+
+          // console.log("searchQuery acc t g" );
+          // console.log({ handleSearch });
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -358,6 +398,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 columns={columns}
                 dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
+                // onSearch={handleSearch}
                 // postData={{voucherType: voucherType, transactionType: transactionType}} 
                 gridHeader={t(`${title}`)}
                 gridId={`${addTitle??"transactions"} Transactions`}
@@ -366,6 +407,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 allowExport={true}
                 reload={reload}
                 changeReload={() => {setReload(false)}}
+                onSearch={handleSearch} 
                 
               />
             </div>

@@ -1,7 +1,13 @@
 import { APIClient } from "../../../../../helpers/api-client";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { TransactionFormState, VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../../purchase/reducer";
+import {
+  TransactionFormState,
+  VoucherElementProps,
+} from "../../purchase/transaction-types";
+import {
+  formStateHandleFieldChange,
+  formStateTransactionMasterHandleFieldChange,
+} from "../../purchase/reducer";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
@@ -37,7 +43,10 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>, voucherType: string) => void;
+  printVoucher: (
+    setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    voucherType: string
+  ) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,7 +61,10 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  printPaymentReceiptAdvice: (voucher?: TransactionFormState, voucherType?: any) => Promise<void>;
+  printPaymentReceiptAdvice: (
+    voucher?: TransactionFormState,
+    voucherType?: any
+  ) => Promise<void>;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -109,276 +121,378 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
     return (
       <>
-        <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
-             {/* formState details */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Form State Details">
-          <button
-         
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => dispatch(formStateHandleFieldChange({fields:{isFormStateDetailOpen: true}}))}
+        <div
+          className={`!overflow-visible flex items-center ${
+            phone ? "justify-evenly" : "justify-end"
+          }  space-x-2 p-1 w-full overflow-x-auto ${
+            phone ? "bg-[#f9fafb]" : ""
+          } ${phone ? "" : ""} ${phone ? "" : ""}`}
+        >
+          {/* formState details */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title="Form State Details"
           >
-            <ListPlus  className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-        {/* Load Temp Rows */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
-          <button
-            disabled={formState.formElements.pnlMasters?.disabled}
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={loadTemporaryRows}
-          >
-            <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Delete Button */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
-          <button
-            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master?.invTransactionMasterId > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={deleteTransVoucher}
-          >
-            <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Refresh Button */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("refresh")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={handleRefresh}
-          >
-            <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Create New Voucher */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clone")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={createNewVoucher}
-          >
-            <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Edit Button */}
-        {formState.formElements.lnkUnlockVoucher?.visible !== true && (
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
             <button
-              disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={handleEdit}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={() =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { isFormStateDetailOpen: true },
+                  })
+                )
+              }
             >
-              <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              <ListPlus className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
-        )}
-
-        {/* Print Button */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("print")}>
-          <button
-            disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
+          {/* Load Temp Rows */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title="Load Details"
           >
-            <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Clear Button */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clear")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={handleClearControls}
-          >
-            <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* Product Summary */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product_summary")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => dispatch(formStateHandleFieldChange({fields:{isProductSummaryOpen: true}}))}
-          >
-            <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-        {/* partywise summary */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("party_wise_summary")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => dispatch(formStateHandleFieldChange({fields:{isPartyWiseSummaryOpen: true}}))}
-          >
-            <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* History Button */}
-        <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("history")}>
-          <button
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={handleHistoryClick}
-          >
-            <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
-
-        {/* History Sidebar */}
-       
-
-        {/* Settings Button */}
-        <div>
-          {phone ? <TransactionUserConfig phone={true} /> : <TransactionUserConfig />}
-        </div>
-
-        {/* Popup Menu */}
-        <div className="relative">
-          <button
-            ref={buttonRef}
-            onClick={() => setIsPopupVisible((prev: any) => !prev)}
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
-            title={t("previous_page")}
-          >
-            <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-
-          {isPopupVisible && (
-            <div
-              ref={popupRef}
-              className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-              style={{
-                top: "100%",
-                left: "-180px",
-                width: "251px",
-                marginTop: "8px",
-              }}
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={loadTemporaryRows}
             >
-              <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
-                <ul className="space-y-1">
-                  <li>
-                    <button
-                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                      onClick={(e) => {
-                        printPaymentReceiptAdvice(formState, voucherType);
-                      }}
-                    >
-                      <Printer className="h-4 w-4" />
-                      <span>{t("print_payment_advise")}</span>
-                    </button>
-                  </li>
+              <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
 
-                  {formState.formElements.lnkUnlockVoucher?.visible && (
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        onClick={(e) => {
-                          unlockVoucher();
-                        }}
-                      >
-                        <KeyRound className="h-4 w-4" />
-                        <span>{t("unlock_voucher")}</span>
-                      </button>
-                    </li>
-                  )}
+          {/* Delete Button */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("delete")}
+          >
+            <button
+              disabled={
+                formState.transaction.master.invTransactionMasterID < 1 ||
+                (formState.transaction.master?.invTransactionMasterID > 0 &&
+                  formState.formElements?.pnlMasters?.disabled !== true)
+              }
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={deleteTransVoucher}
+            >
+              <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
 
-                  {formState.transaction.master.voucherType === "MJV" && userSession.dbIdValue === "ABCO" && (
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        onClick={() => setShowValidation(true)}
-                      >
-                        <FileUp className="h-4 w-4" />
-                        <span>{t("MJV_excel_import")}</span>
-                      </button>
-                    </li>
-                  )}
+          {/* Refresh Button */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("refresh")}
+          >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleRefresh}
+            >
+              <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
 
-                  {formState.formElements.foreignCurrency?.visible && (
-                    <li>
-                      <ERPCheckbox
-                        id="foreignCurrency"
-                        label={formState.formElements.foreignCurrency.label}
-                        className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        checked={formState.foreignCurrency}
-                        onChange={(e) =>
-                          dispatch(
-                            formStateHandleFieldChange({
-                              fields: {
-                                foreignCurrency: e.target.checked,
-                              },
-                            })
-                          )
-                        }
-                        disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
-                      />
-                    </li>
-                  )}
-                  <li>
-                    <button
-                      onClick={selectTemplates}
-                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                    >
-                      <AlignHorizontalSpaceBetween className="h-4 w-4" />
-                      {t("change_template")}
-                    </button>
-                  </li>
-                  {formState.formElements.printPreview?.visible && (
-                    <li>
-                      <ERPCheckbox
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="printPreview"
-                        className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        label={t(formState.formElements.printPreview.label)}
-                        checked={formState.printPreview}
-                        onChange={(e) =>
-                          dispatch(
-                            formStateHandleFieldChange({
-                              fields: {
-                                printPreview: e.target.checked,
-                              },
-                            })
-                          )
-                        }
-                        disabled={formState.formElements.printPreview?.disabled}
-                      />
-                    </li>
-                  )}
-                </ul>
-              </nav>
+          {/* Create New Voucher */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("clone")}
+          >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={createNewVoucher}
+            >
+              <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          {/* Edit Button */}
+          {formState.formElements.lnkUnlockVoucher?.visible !== true && (
+            <div
+              className="group relative inline-flex flex-col items-center ps-[5px]"
+              title={t("edit")}
+            >
+              <button
+                disabled={
+                  formState.transaction.master.invTransactionMasterID < 1 ||
+                  (formState.transaction.master.invTransactionMasterID > 0 &&
+                    formState.formElements.pnlMasters.disabled !== true)
+                }
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                  phone ? "p-0.5" : "p-3"
+                } rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={handleEdit}
+              >
+                <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
             </div>
           )}
-          {showValidation && (
-            <ERPModal
-              isForm={true}
-              isOpen={showValidation}
-              closeButton="LeftArrow"
-              hasSubmit={false}
-              closeTitle={t("close")}
-              title={t("MJV_excel_import")}
-              width={1000}
-              height={800}
-              isFullHeight={true}
-              closeModal={() => setShowValidation(false)}
-              content={<ExcelImport />}
-            ></ERPModal>
+
+          {/* Print Button */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("print")}
+          >
+            <button
+              disabled={
+                formState.transaction.master.invTransactionMasterID < 1 ||
+                (formState.transaction.master.invTransactionMasterID > 0 &&
+                  formState.formElements.pnlMasters.disabled !== true)
+              }
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
+            >
+              <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          {/* Clear Button */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("clear")}
+          >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleClearControls}
+            >
+              <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          {/* Product Summary */}
+          {formState.formElements.btnProductSummary.visible == true && (
+            <div
+              className="group relative inline-flex flex-col items-center ps-[5px]"
+              title={t("product_summary")}
+            >
+              <button
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                  phone ? "p-0.5" : "p-3"
+                } rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={() =>
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: { isProductSummaryOpen: true },
+                    })
+                  )
+                }
+              >
+                <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
+            </div>
+          )}
+          {/* partywise summary */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("party_wise_summary")}
+          >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={() =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { isPartyWiseSummaryOpen: true },
+                  })
+                )
+              }
+            >
+              <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          {/* History Button */}
+          <div
+            className="group relative inline-flex flex-col items-center ps-[5px]"
+            title={t("history")}
+          >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              } rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleHistoryClick}
+            >
+              <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          {/* History Sidebar */}
+
+          {/* Settings Button */}
+          <div>
+            {phone ? (
+              <TransactionUserConfig phone={true} />
+            ) : (
+              <TransactionUserConfig />
+            )}
+          </div>
+
+          {/* Popup Menu */}
+          <div className="relative">
+            <button
+              ref={buttonRef}
+              onClick={() => setIsPopupVisible((prev: any) => !prev)}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
+                phone ? "p-0.5" : "p-3"
+              }  rounded-md hover:bg-gray-200 transition-colors`}
+              title={t("previous_page")}
+            >
+              <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+
+            {isPopupVisible && (
+              <div
+                ref={popupRef}
+                className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+                style={{
+                  top: "100%",
+                  left: "-180px",
+                  width: "251px",
+                  marginTop: "8px",
+                }}
+              >
+                <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
+                  <ul className="space-y-1">
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
+                        onClick={(e) => {
+                          printPaymentReceiptAdvice(formState, voucherType);
+                        }}
+                      >
+                        <Printer className="h-4 w-4" />
+                        <span>{t("print_payment_advise")}</span>
+                      </button>
+                    </li>
+
+                    {formState.formElements.lnkUnlockVoucher?.visible && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          onClick={(e) => {
+                            unlockVoucher();
+                          }}
+                        >
+                          <KeyRound className="h-4 w-4" />
+                          <span>{t("unlock_voucher")}</span>
+                        </button>
+                      </li>
+                    )}
+
+                    {formState.transaction.master.voucherType === "MJV" &&
+                      userSession.dbIdValue === "ABCO" && (
+                        <li>
+                          <button
+                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                            onClick={() => setShowValidation(true)}
+                          >
+                            <FileUp className="h-4 w-4" />
+                            <span>{t("MJV_excel_import")}</span>
+                          </button>
+                        </li>
+                      )}
+
+                    {formState.formElements.foreignCurrency?.visible && (
+                      <li>
+                        <ERPCheckbox
+                          id="foreignCurrency"
+                          label={formState.formElements.foreignCurrency.label}
+                          className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          checked={formState.foreignCurrency}
+                          onChange={(e) =>
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  foreignCurrency: e.target.checked,
+                                },
+                              })
+                            )
+                          }
+                          disabled={
+                            formState.formElements.foreignCurrency?.disabled ||
+                            formState.formElements.pnlMasters?.disabled
+                          }
+                        />
+                      </li>
+                    )}
+                    <li>
+                      <button
+                        onClick={selectTemplates}
+                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      >
+                        <AlignHorizontalSpaceBetween className="h-4 w-4" />
+                        {t("change_template")}
+                      </button>
+                    </li>
+                    {formState.formElements.printPreview?.visible && (
+                      <li>
+                        <ERPCheckbox
+                          localInputBox={formState?.userConfig?.inputBoxStyle}
+                          id="printPreview"
+                          className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          label={t(formState.formElements.printPreview.label)}
+                          checked={formState.printPreview}
+                          onChange={(e) =>
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  printPreview: e.target.checked,
+                                },
+                              })
+                            )
+                          }
+                          disabled={
+                            formState.formElements.printPreview?.disabled
+                          }
+                        />
+                      </li>
+                    )}
+                  </ul>
+                </nav>
+              </div>
+            )}
+            {showValidation && (
+              <ERPModal
+                isForm={true}
+                isOpen={showValidation}
+                closeButton="LeftArrow"
+                hasSubmit={false}
+                closeTitle={t("close")}
+                title={t("MJV_excel_import")}
+                width={1000}
+                height={800}
+                isFullHeight={true}
+                closeModal={() => setShowValidation(false)}
+                content={<ExcelImport />}
+              ></ERPModal>
+            )}
+          </div>
+
+          {/* Previous Page Button */}
+          {!phone && (
+            <button
+              onClick={goToPreviousPage}
+              className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+              title={t("previous_page")}
+            >
+              <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
           )}
         </div>
-
-        {/* Previous Page Button */}
-        {!phone && (
-          <button
-            onClick={goToPreviousPage}
-            className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-            title={t("previous_page")}
-          >
-            <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        )}
-      </div>
       </>
- 
     );
   }
 );

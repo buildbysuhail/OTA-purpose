@@ -9,9 +9,11 @@ import Urls from "../../../../redux/urls";
 import DailyBalanceReportFilter, {
   DailyBalanceReportFilterInitialState,
 } from "./daily-balance-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const DailyBalanceAmount = () => {
   const dispatch = useAppDispatch();
+    const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -34,7 +36,32 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.openingBalance == null
+                ? ""
+                : getFormattedValue(cellElement.data.openingBalance);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.openingBalance == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.openingBalance)
+                );
+          }
+        },
+      },
     {
       dataField: "billAmount",
       caption: t("billAmount"),
@@ -44,7 +71,32 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.billAmount == null
+                ? ""
+                : getFormattedValue(cellElement.data.billAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.billAmount == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.billAmount)
+                );
+          }
+        },
+      },
     {
       dataField: "receivedAmount",
       caption: t("receivedAmount"),
@@ -54,7 +106,32 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.receivedAmount == null
+                ? ""
+                : getFormattedValue(cellElement.data.receivedAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.receivedAmount == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.receivedAmount)
+                );
+          }
+        },
+      },
     {
       dataField: "balance",
       caption: t("balance"),
@@ -64,7 +141,32 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    },
+   cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.balance == null
+                ? ""
+                : getFormattedValue(cellElement.data.balance);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.balance)
+                );
+          }
+        },
+      },
   ];
   return (
     <Fragment>

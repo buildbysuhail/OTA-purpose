@@ -79,7 +79,32 @@ const ExpiryReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stock == null
+                ? ""
+                : getFormattedValue(cellElement.data.stock);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stock == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stock)
+                );
+          }
         },
+      },
         {
             dataField: "stdSPrice",
             caption: t("std_s_price"),
@@ -89,7 +114,32 @@ const ExpiryReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdSPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdSPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdSPrice == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stdSPrice)
+                );
+          }
         },
+      },
         {
             dataField: "stdPPrice",
             caption: t("std_p_price"),
@@ -99,7 +149,32 @@ const ExpiryReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdPPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdPPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdPPrice == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stdPPrice)
+                );
+          }
         },
+      },
         {
             dataField: "stockValue",
             caption: t("stock_value"),
@@ -109,7 +184,32 @@ const ExpiryReport = () => {
             allowSorting: true,
             width: 100,
             showInPdf:true,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stockValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.stockValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stockValue == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stockValue)
+                );
+          }
         },
+      },
         {
             dataField: "mrp",
             caption: t("mrp"),
@@ -119,7 +219,32 @@ const ExpiryReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.mrp == null
+                ? ""
+                : getFormattedValue(cellElement.data.mrp);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.mrp == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.mrp)
+                );
+          }
         },
+      },
         {
             dataField: "batchNo",
             caption: t("batch_no"),

@@ -44,7 +44,7 @@ export const setUserRights = (
     ? hasRight(state.formCode, UserAction.Edit)
     : false;
 
-  state.formElements.btnProductSummary.disabled = !isClosed
+  state.formElements.btnProductSummary.visible = !isClosed
     ? hasRight("PSUMRPT", UserAction.Show)
     : false;
 

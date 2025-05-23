@@ -1998,10 +1998,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         <ERPModal
           isOpen={formState.isFormStateDetailOpen}
           title={t("formState_summary")}
-          width={1000}
-          height={700}
+          width={2500}
+          height={2500}
           isForm={true}
-          initialMaximize={true}
+          disableParentInteraction={false}
           closeModal={() =>
             dispatch(
               formStateHandleFieldChange({

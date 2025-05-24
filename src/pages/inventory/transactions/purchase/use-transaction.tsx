@@ -348,7 +348,7 @@ export const useTransaction = (
       SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
     };
     let vch = await api.getAsync(
-      `${Urls.acc_transaction_base}${transactionType}`,
+      `${Urls.inv_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
 

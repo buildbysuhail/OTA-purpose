@@ -414,17 +414,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      
+      debugger;
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            userRightsFormCode:
-              isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode,
-          },
-        })
-      );
+     
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -488,6 +481,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
+       _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
 
       _formState = {
         ..._formState,

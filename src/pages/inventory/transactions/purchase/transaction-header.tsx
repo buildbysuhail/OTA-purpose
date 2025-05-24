@@ -348,7 +348,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 isOpen={isMoreModalOpen}
                 title="More Options"
                 width={800}
-                height={600}
+                height={620}
                 closeModal={closeMoreModal}
                 content={
                   <MoreOptionsModalContent

@@ -118,7 +118,7 @@
   "form_background_color": "لون خلفية النموذج",
   "input_box_style": "نمط مربع الإدخال",
   "save_changes": "حفظ التغييرات",
-  
+
   "details": "التفاصيل",
   "activity_log": "سجل النشاط",
   "receivables": "المبالغ المستحقة",
@@ -303,7 +303,7 @@
 
   "excel": "إكسل",
   "status": "الحالة",
-  
+
   "tax_no": "رقم الضريبة",
   "tax_invoice_no": "رقم فاتورة الضريبة",
   "invoice_date": "تاريخ الفاتورة",
@@ -318,6 +318,33 @@
 
   "payment_type": "نوع الدفع",
   "cash_bank_account": "حساب النقد والبنك",
-  "reset":"إعادة ضبط",
-  "focus_button_color": "لون زر التركيز"
+  "reset": "إعادة ضبط",
+  "focus_button_color": "لون زر التركيز",
+
+  "despatch_info": "معلومات الإرسال",
+  "despatch_doc_no": "رقم مستند الإرسال",
+  "despatch_date": "تاريخ الإرسال",
+  "driver": "السائق",
+  "order_info": "معلومات الطلب",
+  "order_no": "رقم الطلب",
+  "order_date": "تاريخ الطلب",
+  "quotation_info": "معلومات عرض الأسعار",
+  "quotation_no": "رقم عرض الأسعار",
+  "quotation_date": "تاريخ عرض الأسعار",
+  "purchase_info": "معلومات الشراء",
+  "pi_inv_no": "رقم فاتورة الشراء",
+  "pi_inv_date": "تاريخ فاتورة الشراء",
+  "delivery_info": "معلومات التسليم",
+  "delivery_note_no": "رقم إشعار التسليم",
+  "delivery_date": "تاريخ التسليم",
+  "delivery_man": "عامل التوصيل",
+  "other": "أخرى",
+  "gate_pass_no": "رقم تصريح البوابة",
+  "due_days": "أيام الاستحقاق",
+  "due_date": "تاريخ الاستحقاق",
+  "vehicle": "المركبة",
+  "salesman_incentive": "حافز مندوب المبيعات",
+  "notes_1": "ملاحظات 1",
+  "notes_2": "ملاحظات 2",
+  "sch_disc_posting_a/c": "حساب ترحيل الخصم المقرر"
 }

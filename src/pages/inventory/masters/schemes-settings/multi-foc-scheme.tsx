@@ -358,7 +358,7 @@ const MultiFOCScheme: React.FC = () => {
                   placeholder="Search Here"
                   productDataUrl={Urls.load_product_details_multi_foc}
                   onRowSelected={(data: any) => {
-                    debugger;
+                    
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {
@@ -371,7 +371,7 @@ const MultiFOCScheme: React.FC = () => {
                     }));
                   }}
                   onProductSelected={(data: any) => {
-                    debugger;
+                    
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {

@@ -94,7 +94,7 @@ export const loadMultiRateToGrid = async (
       api: APIClient,
       getFormattedValue: any
     ): Promise<ProductPriceInputDto[]> => {
-      debugger;
+      
       let mlRate = obj.prices ?? [];
       if ((obj.product.basicUnitID ?? 0) > 0) {
         if (
@@ -118,7 +118,7 @@ export const loadMultiRateToGrid = async (
         
       for (const row of mUnits) {
         
-       debugger; 
+        
         if (mlRate.find((x: any) => x.unitID == row.unitID) == undefined) {
           mlRate = await loadMultiRates(
             row.unitID ?? 0,
@@ -132,11 +132,11 @@ export const loadMultiRateToGrid = async (
         }
       } 
       } catch (error) {
-       debugger; console.log('safvam');
+        console.log('safvam');
 
        
       }
-      debugger;
+      
       return setMultiRatesDefaultMRP(mUnits, mlRate, obj);
     };
      function setMultiRatesDefaultMRP(
@@ -144,7 +144,7 @@ export const loadMultiRateToGrid = async (
           multiRates: ProductPriceInputDto[],
           obj: productDto
         ): ProductPriceInputDto[] {
-          debugger;
+          
           let updatedRates = [...multiRates];
     
           if (obj.product.basicUnitID && (obj.product?.mrp ?? 0) > 0) {

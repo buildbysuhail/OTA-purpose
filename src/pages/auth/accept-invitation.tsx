@@ -38,7 +38,7 @@ const AcceptInvitation: React.FC = () => {
     hasToChooseBranch: false
   });
   useEffect(() => {
-    debugger;
+    
     if (loginState.succeeded) {
       // if (loginState.isLoggedToBranch) {
         navigate("/");
@@ -58,7 +58,7 @@ const AcceptInvitation: React.FC = () => {
           email: email,
           token: token,
         });
-        debugger;
+        
         if (response.isOk == true) {
           await handleLoginSuccess(
             response,

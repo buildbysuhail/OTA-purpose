@@ -138,7 +138,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       );
       setMenuitems(st);
     } else if (type == "reports") {
-      debugger;
+      
       let st = menuitems;
       if (clientSession.isAppGlobal) {
         const excluded = [
@@ -355,7 +355,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     typeof window !== "undefined" ? [window.innerWidth] : [];
 
   const menuResizeFn = () => {
-    debugger;
+    
     if (typeof window === "undefined") {
       // Handle the case where window is not available (server-side rendering)
       return;
@@ -369,7 +369,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     const theme = store.getState();
     const currentWidth = WindowPreSize[WindowPreSize.length - 1];
     const prevWidth = WindowPreSize[WindowPreSize.length - 2];
-    debugger;
+    
 
     if (WindowPreSize.length > 1) {
       if (currentWidth < 992 && prevWidth >= 992) {

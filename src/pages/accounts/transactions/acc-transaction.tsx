@@ -218,7 +218,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string) => {
-    debugger;
+    
     handleFieldKeyDown(
       field,
       e?.key ?? e?.event?.originalEvent?.key,
@@ -325,7 +325,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [financialYearID]);
 
   useEffect(() => {
-    debugger;
+    
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
@@ -514,7 +514,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       console.log("initializeFormElements");
-debugger;
+
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -1922,7 +1922,7 @@ debugger;
                       t={t}
                       setIsPartyDetailsOpen={() => {
                         setIsPartyDetailsOpen((prev: any) => {
-                          debugger;
+                          
                           return !prev;
                         });
                       }}
@@ -2008,7 +2008,7 @@ debugger;
                         t={t}
                         setIsPartyDetailsOpen={() => {
                           setIsPartyDetailsOpen((prev: any) => {
-                            debugger;
+                            
                             return !prev;
                           });
                         }}
@@ -2200,7 +2200,7 @@ debugger;
                           t={t}
                           setIsPartyDetailsOpen={() => {
                             setIsPartyDetailsOpen((prev: any) => {
-                              debugger;
+                              
                               return !prev;
                             });
                           }}
@@ -2310,7 +2310,7 @@ debugger;
                       t={t}
                       setIsPartyDetailsOpen={() => {
                         setIsPartyDetailsOpen((prev: any) => {
-                          debugger;
+                          
                           return !prev;
                         });
                       }}
@@ -2657,7 +2657,7 @@ debugger;
                   t={t}
                   setIsPartyDetailsOpen={() => {
                     setIsPartyDetailsOpen((prev: any) => {
-                      debugger;
+                      
                       return !prev;
                     });
                   }}
@@ -3011,7 +3011,7 @@ debugger;
                         t={t}
                         setIsPartyDetailsOpen={() => {
                           setIsPartyDetailsOpen((prev: any) => {
-                            debugger;
+                            
                             return !prev;
                           });
                         }}

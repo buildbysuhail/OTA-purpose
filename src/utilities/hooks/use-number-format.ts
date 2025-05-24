@@ -50,7 +50,7 @@ export const useNumberFormat = () => {
     
     if(cuttingPoint > 0) {
       
-    debugger;
+    
     }
     
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))

@@ -22,7 +22,7 @@ export const useUserRights = () => {
   let __userSession = _userSession;
     let __userRights = _userRights;
     let __clientSession = _clientSession;
-debugger;
+
     if (__userSession.userId == 0 ||__clientSession.planFormCodes == "" || __userRights ==  undefined || __userRights.length == 0) {
       const {
         token,

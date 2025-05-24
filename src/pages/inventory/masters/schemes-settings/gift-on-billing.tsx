@@ -219,14 +219,14 @@ export const GiftOnBilling: React.FC = () => {
             )
           );
         }
-        debugger;
+        
         if (rowsToDeleteViaApi.length > 0) {
           const response = await api.delete(`${Urls.gift_on_billing}`, {
             data: payload,
           });
           handleResponse(response, () => {
             const removed = payload.map((x) => x.giftOnBillingID);
-            debugger;
+            
             setGridData((prev: any[]) =>
               prev.filter((x: any) => !removed.includes(x.giftOnBillingID))
             );
@@ -353,7 +353,7 @@ export const GiftOnBilling: React.FC = () => {
       setIsDataLoading(true);
       const url = `${Urls.gift_on_billing}${obj.giftProductId}`; //change url it for demo
       const response = await api.get(url);
-      debugger;
+      
       const updatedData: Partial<GiftOnBillingData> = {
         giftProductBatchId: response.productBatchID,
         giftBarcode: response.autoBarcode,

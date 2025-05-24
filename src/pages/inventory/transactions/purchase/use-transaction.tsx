@@ -2,9 +2,10 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   calculateTotal,
+  disableControlsFn,
   isDirtyTransaction,
   setTransactionForHistory,
-  setUserRights,
+  setUserRightsFn,
   validateTransactionDate,
 } from "./functions";
 import { useAccPrint } from "./use-print";
@@ -342,12 +343,12 @@ export const useTransaction = (
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
         voucherType ?? (formState.transaction?.master?.voucherType || ""),
-      formType: formType ?? (formState.transaction?.master?.voucherForm || ""),
-      MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
-      SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
+      voucherForm: formType ?? (formState.transaction?.master?.voucherForm || ""),
+      manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
+      isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
     let vch = await api.getAsync(
-      `${Urls.acc_transaction_base}${transactionType}`,
+      `${Urls.inv_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
 
@@ -384,14 +385,15 @@ export const useTransaction = (
             : voucher.transaction.master.prevTransDate;
     voucher.transaction.master.oldLedgerID = voucher.transaction.master.ledgerID ;
     voucher.isPostedTransaction =  voucher.transaction.master.isPosted;
-    voucher = setUserRights(voucher, userSession, hasRight);
+    voucher = setUserRightsFn(voucher, userSession, hasRight);
+    voucher = disableControlsFn(voucher);
     const addData = Array.from({ length: 40300 }, (_, index) => ({
   ...initialTransactionDetailData,
   slNo: index + 1
 })) as TransactionDetail[];
     voucher.transaction.details = [...voucher.transaction.details, ...addData];
     // Handle master data
-
+    voucher.formElements.lblPosted.visible = voucher.isPostedTransaction
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster: TransactionMaster = {

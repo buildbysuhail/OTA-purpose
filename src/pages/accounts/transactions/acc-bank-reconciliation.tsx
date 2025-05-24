@@ -156,7 +156,7 @@ const BankReconciliation = () => {
     try {
       const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
       // Step 1: Items with bankDate changes (for update)
-      debugger;
+      
       const forUpdate = gridData
         .filter((item: any) => {
           const prevItem = prevData.find(
@@ -202,7 +202,7 @@ const BankReconciliation = () => {
     // Get all data from the store instead of using dataSource.load()
     const store = dataSource.store();
     const gridData = await store.load();
-      debugger;
+      
       const changeToPending = gridData
         .filter((item: any) => item.clicked === true)
         .map((item: any) => ({
@@ -518,13 +518,13 @@ const BankReconciliation = () => {
     [t, getFormattedValue]
   );
   const onRowUpdating = async (e: any) => {
-    debugger;
+    
     const keys = Object.keys(e.newData);
     const key = keys && keys.length > 0 ? keys[0] : "";
     // if (key === "clicked") {
     //   try {
     //     try {
-    //       debugger;
+    //       
     //       e.newData.checkStatus = "p";
           
     //     } catch (error) {

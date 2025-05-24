@@ -49,7 +49,7 @@ const POSFastMovingItems: React.FC = () => {
         const responseData: FastMovingProductsDto[] = response || [];
 
         const buttonData: FastMovingProductsDto[] = [];
-        debugger;
+        
         for (let i = 1; i <= 12; i++) {
           if (Array.isArray(responseData)) {
             const match = responseData.find((item) => item.displayOrder === i);
@@ -121,7 +121,7 @@ const POSFastMovingItems: React.FC = () => {
       const response = await api.getAsync(
         `${Urls.fast_moving_products}ByBarcode/${formData?.barcode}`
       );
-      debugger;
+      
       if (response) {
         setFormData((prev) => ({
           ...response,
@@ -148,7 +148,7 @@ const POSFastMovingItems: React.FC = () => {
   };
 
   const handleSet = async () => {
-    debugger;
+    
     if (
       !isNullOrUndefinedOrZero(formData.displayOrder) &&
       !isNullOrUndefinedOrZero(formData.keypadGroup)
@@ -217,7 +217,7 @@ const POSFastMovingItems: React.FC = () => {
               className="min-w-[250px]"
               value={formData.keypadGroup}
               onChange={(e: any) => {
-                debugger;
+                
                 handleInputChange({
                   ...e,
                   target: { ...e.target, value: e.value, name: "keypadGroup" },

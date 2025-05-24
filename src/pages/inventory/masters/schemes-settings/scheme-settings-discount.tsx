@@ -190,7 +190,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
   }
 
       const handleSave = async() => {
-        debugger;
+        
       if (isNullOrUndefinedOrZero(schemeDiscountForm.SchemeID) || isNullOrUndefinedOrZero(schemeDiscountForm.ProductGroupID)) {
         ERPAlert.show({
           title: "Warning",

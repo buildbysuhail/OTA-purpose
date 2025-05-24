@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EllipsisVertical, ChevronUp } from "lucide-react";
+import { EllipsisVertical, ChevronDown } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -59,6 +59,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef(null);
   const ledgerIdRef = useRef<any>(null);
@@ -100,65 +101,67 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     };
   }, [isDropDownOpen]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasAnimated(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="mt-8 flex items-end gap-1 relative">
-      <PartyLedger
-        ref={ledgerIdRef}
-        handleFieldKeyDown={handleFieldKeyDown}
-        triggerEffect={triggerEffect}
-        handleKeyDown={handleKeyDown}
-        formState={formState}
-        dispatch={dispatch}
-        t={t}
-        setIsPartyDetailsOpen={() => {
-          setIsPartyDetailsOpen((prev: any) => {
-            return !prev;
-          });
-        }}
-      />
-      <AccVoucherPrefix
-        ref={voucherNumberRef}
-        formState={formState}
-        dispatch={dispatch}
-        handleKeyDown={handleKeyDown}
-        loadAndSetTransVoucher={loadAndSetTransVoucher}
-        t={t}
-      />
-      <AccVoucherNo
-        ref={voucherNumberRef}
-        formState={formState}
-        dispatch={dispatch}
-        handleKeyDown={handleKeyDown}
-        loadAndSetTransVoucher={loadAndSetTransVoucher}
-        t={t}
-      />
-      <ReferenceNumber
-        formState={formState}
-        dispatch={dispatch}
-        handleLoadByRefNo={handleLoadByRefNo}
-        ref={refNoRef}
-        t={t}
-      />
-      <ReferenceDate dispatch={dispatch} formState={formState} t={t} />
-      <TransactionDate formState={formState} dispatch={dispatch} t={t} />
-      <div>
-        <button
-          onClick={toggleDropdown}
-          className="text-white font-bold p-2 rounded-lg w-auto inline-flex justify-between items-center shadow-md mb-1"
-        >
-          <EllipsisVertical size={16} className="text-black" />
-        </button>
+    <div
+      className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}
+    >
+      <div className="flex items-end gap-1 relative px-4">
+        <PartyLedger
+          ref={ledgerIdRef}
+          handleFieldKeyDown={handleFieldKeyDown}
+          triggerEffect={triggerEffect}
+          handleKeyDown={handleKeyDown}
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+          setIsPartyDetailsOpen={() => {
+            setIsPartyDetailsOpen((prev: any) => {
+              return !prev;
+            });
+          }}
+        />
+        <AccVoucherPrefix
+          ref={voucherNumberRef}
+          formState={formState}
+          dispatch={dispatch}
+          handleKeyDown={handleKeyDown}
+          loadAndSetTransVoucher={loadAndSetTransVoucher}
+          t={t}
+        />
+        <AccVoucherNo
+          ref={voucherNumberRef}
+          formState={formState}
+          dispatch={dispatch}
+          handleKeyDown={handleKeyDown}
+          loadAndSetTransVoucher={loadAndSetTransVoucher}
+          t={t}
+        />
+        <ReferenceNumber
+          formState={formState}
+          dispatch={dispatch}
+          handleLoadByRefNo={handleLoadByRefNo}
+          ref={refNoRef}
+          t={t}
+        />
+        <ReferenceDate dispatch={dispatch} formState={formState} t={t} />
+        <TransactionDate formState={formState} dispatch={dispatch} t={t} />
       </div>
+
+      {/* Dropdown content */}
       <div
         ref={dropdownRef}
-        className={`absolute left-0 right-0 z-40 bg-white rounded-b-xl shadow-[0_2px_4px_rgba(0,0,0,0.1)] overflow-hidden transition-all duration-500 ease-in-out ${
-          isDropDownOpen
-            ? "max-h-[50vh] overflow-y-auto"
-            : "max-h-0 overflow-hidden"
+        className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
+          isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
         }`}
-        style={{ top: "100%" }}
       >
-        <div ref={contentRef} className="p-2">
+        <div className="p-4 md:p-2 bg-white border border-gray-300 shadow-lg">
           <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
             <Employee
               dispatch={dispatch}
@@ -347,8 +350,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               <ERPModal
                 isOpen={isMoreModalOpen}
                 title="More Options"
-                width={800}
-                height={600}
+                width={630}
+                height={620}
                 closeModal={closeMoreModal}
                 content={
                   <MoreOptionsModalContent
@@ -421,14 +424,34 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             />
             <ERPButton title={t("set")} variant="secondary" className="!m-0" />
           </div>
-          <div className="flex justify-center mt-2 mb-2">
-            <button
-              onClick={toggleDropdown}
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-[#FEFEFE] shadow-md transform transition-transform duration-300 hover:scale-110"
-            >
-              <ChevronUp size={20} className="text-black" />
-            </button>
-          </div>
+        </div>
+      </div>
+
+      {/* Chevron button - moves with dropdown content */}
+      <div className="relative w-full">
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
+          <button
+            onClick={toggleDropdown}
+            className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${
+              isDropDownOpen ? "bg-gray-100" : ""
+            }`}
+            style={{ 
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              transform: isDropDownOpen ? 'translateY(0)' : 'translateY(0)',
+              transition: 'transform 0.5s ease-in-out'
+            }}
+          >
+            <ChevronDown
+              className={`mx-2 transition-transform duration-500 ${
+                isDropDownOpen
+                  ? "transform rotate-180"
+                  : hasAnimated
+                  ? ""
+                  : "animate-[bounce_2s_1]"
+              }`}
+              size={24}
+            />
+          </button>
         </div>
       </div>
     </div>

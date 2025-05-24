@@ -233,14 +233,14 @@ export const QuantityLimit: React.FC = () => {
           )
         );
       }
-      debugger;
+      
       if (rowsToDeleteViaApi.length > 0) {
         const response = await api.delete(`${Urls.quantity_limit}`, {
           data: payload,
         });
         handleResponse(response, () => {
             const removed = payload.map(x => x.itemQtyLimitID);
-            debugger;
+            
             setGridData((prev: any[]) => prev.filter((x: any) => !removed.includes(x.itemQtyLimitID)));
         });
       }

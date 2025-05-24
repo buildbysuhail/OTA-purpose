@@ -26,7 +26,7 @@ const ProductOthersIndia: React.FC<{
       fieldId: string,
       value: any
     ) => {
-      debugger;
+      
       const prev = getFieldProps("*");
       const pay = { ...prev.config, [fieldId]: value };
       const res = await api.postAsync(Urls.update_product_config, pay);

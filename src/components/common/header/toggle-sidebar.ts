@@ -4,7 +4,7 @@ export const toggleSidebar = (
   appState: any,
   updateAppState: (state: any) => void,
 ) => {
-  debugger;
+  
   const theme = appState;
   let sidemenuType = theme.dataNavLayout;
 

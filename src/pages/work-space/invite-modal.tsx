@@ -132,7 +132,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 
 
     const handleClear = () => {
-        debugger;
+        
         if (mode === 'new') {
             setNewUserForm(initialNewUserForm);
         } else {

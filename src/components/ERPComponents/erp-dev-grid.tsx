@@ -381,7 +381,7 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated = formatDateFields(filterData);
-      debugger;
+      
       const postDataModified = formatDateFields(postData);
       try {
         setFilterValidations(undefined);
@@ -1347,7 +1347,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
               };
               currentRow += 1;
             }
-debugger;
+
             const pageTitle = `${gridHeader} - ${header}`;
             mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
             worksheet.mergeCells(mergeRange);
@@ -1415,7 +1415,7 @@ debugger;
     );
 
     const handlePrintPdf = async () => {
-      debugger;
+      
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
         const doc = await generatePdf(gridInstance, true); // Generate the PDF with the print action flag
@@ -1676,7 +1676,7 @@ debugger;
       return (
         <Summary recalculateWhileEditing={true} skipEmptyValues={false}
         calculateCustomSummary={(e: any) => {
-          debugger;
+          
           handleCalculateSummary ? handleCalculateSummary(e): undefined
         }}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {

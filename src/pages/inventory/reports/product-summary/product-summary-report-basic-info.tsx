@@ -67,7 +67,7 @@ const ProductSummaryReport: React.FC<{
         productBatchID &&
         productBatchID !== popupData.productSummaryReport.key
       ) {
-        debugger;
+        
         // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: productBatchID} ));
         onKeyChange(productBatchID);
       }
@@ -105,7 +105,7 @@ const ProductSummaryReport: React.FC<{
   };
 
 export default React.memo(ProductSummaryReport, (prevProps, nextProps) => {
-  debugger;
+  
   const pf = modelToBase64(prevProps.filter)
   const nf = modelToBase64(nextProps.filter)
   return (

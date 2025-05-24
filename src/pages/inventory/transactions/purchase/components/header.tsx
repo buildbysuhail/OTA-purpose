@@ -1,23 +1,15 @@
-import { APIClient } from "../../../../../helpers/api-client";
-import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import {
   TransactionFormState,
   VoucherElementProps,
 } from "../../purchase/transaction-types";
-import {
-  formStateHandleFieldChange,
-  formStateTransactionMasterHandleFieldChange,
-} from "../../purchase/reducer";
+import { formStateHandleFieldChange } from "../../purchase/reducer";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { userSession } from "../../../../../redux/slices/user-session/thunk";
 import ExcelImport from "../../purchase/excel-Import";
 import { TransactionUserConfig } from "../../purchase/transaction-user-config";
-import HistorySidebar from "../../purchase/historySidebar";
 import {
-  Ellipsis,
   EllipsisVertical,
   KeyRound,
   Pencil,
@@ -30,7 +22,6 @@ import {
   X,
   FileUp,
   History,
-  Search,
   AlignHorizontalSpaceBetween,
   Boxes,
   Group,

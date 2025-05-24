@@ -10,7 +10,7 @@ import {
   LoadData,
   TransactionValidationsData,
 } from "./transaction-types";
-import { clearEntryControl, setUserRights } from "./functions";
+import { clearEntryControl, disableControlsFn, setUserRightsFn } from "./functions";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
@@ -431,7 +431,7 @@ const InvTransactionSlice = createSlice({
       }>
     ) => {
       const { userSession, hasRight } = action.payload;
-      state = setUserRights(state, userSession, hasRight);      
+      state = setUserRightsFn(state, userSession, hasRight);      
     },
     updateFormElement: (
       state,
@@ -501,8 +501,7 @@ const InvTransactionSlice = createSlice({
       state.formElements.dxGrid.disabled = false;
     },
     disableControls: (state) => {
-      state.formElements.pnlMasters.disabled = true;
-      state.formElements.dxGrid.disabled = true;
+     state = disableControlsFn(state);
     },
   },
 });

@@ -35,7 +35,7 @@ const ProductOthersGcc: React.FC<{
       fieldId: string,
       value: any
     ) => {
-      debugger;
+      
       const prev = getFieldProps("*");
       const pay = {
         ...prev.config
@@ -51,7 +51,7 @@ const ProductOthersGcc: React.FC<{
     useEffect(() => {
       const fetchData = async () => {
         try {
-          debugger;
+          
           const prev = getFieldProps("*");
           const base64 = await api.getAsync(Urls.get_product_config);
           const _userConfig = atob(base64);

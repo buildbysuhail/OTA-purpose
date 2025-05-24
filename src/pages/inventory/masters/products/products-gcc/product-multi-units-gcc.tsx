@@ -96,12 +96,12 @@ const ProductMultiUnitsGCC = forwardRef<
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const [barcode, setBarcode] = useState<boolean>(false);
   const setMultiUnitsMaster = (multiUnits: any, _units: any) => {
-    debugger;
+    
     const fList = Object.entries(multiUnits).map(
       ([key, unit]) => unit
     ) as ProductUnitInputDto[];
     handleFieldChange("units", fList);
-    debugger;
+    
     const selected = fList
       .filter((x) => x.unitID ?? 0 > 0)
       .map((x: any) => ({
@@ -114,7 +114,7 @@ const ProductMultiUnitsGCC = forwardRef<
         id: Number(x.id), // Ensure type matches: number
         name: String(x.name), // Ensure type matches: string
       }));
-    debugger;
+    
     setSelectedUnits(selected);
     unSetSelectedUnits(unSelected);
     // setMultiUnits(multiUnits);
@@ -139,7 +139,7 @@ const ProductMultiUnitsGCC = forwardRef<
     updateUnit: any,
     mlRate: any
   ): Promise<ProductPriceInputDto[]> => {
-    debugger;
+    
 
     const mUnits = updateUnit;
     for (const row of mUnits) {
@@ -205,7 +205,7 @@ const ProductMultiUnitsGCC = forwardRef<
     }
   };
   useEffect(() => {
-    debugger;
+    
   }, []);
   useEffect(() => {
     const fetchUnits = async () => {
@@ -236,7 +236,7 @@ const ProductMultiUnitsGCC = forwardRef<
         paddedData.forEach((unit, index) => {
           result[`unit${index + 1}`] = unit;
         });
-debugger;
+
         setMultiUnits(result);
         setMultiUnitsMaster(result, fList);
 

@@ -414,16 +414,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+      debugger;
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            userRightsFormCode:
-              isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode,
-          },
-        })
-      );
+
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -441,7 +435,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         employeeID = userSession.employeeId ?? -2;
       }
-      debugger;
+
       const templates = formState.templates;
       const templatesData = formState.templatesData;
       const template = formState.template;
@@ -487,6 +481,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
+      _formState.userRightsFormCode =
+        isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
 
       _formState = {
         ..._formState,
@@ -1698,7 +1694,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // };
 
   return (
-    <div className="relative h-screen">
+    <div className="relative">
       {/* <h1>SAFVAN{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
         <div
@@ -1728,7 +1724,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 left: 0,
                 right: 0,
                 padding: 0,
-                zIndex: 10,
+                zIndex: 40,
               }}
             >
               {formState.isEdit}
@@ -1739,7 +1735,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     {t(formState.title)}
                     {!formState.formElements.lblPosted.visible && (
                       <div title={t("posted_transaction")}>
-                        <Info className="text-[#ef4444] w-4 h-4"/>
+                        <Info className="text-[#ef4444] w-4 h-4" />
                       </div>
                     )}
                   </h6>
@@ -1793,108 +1789,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
           {/* header ends here */}
 
-          <ErpPurchaseGrid
-            columns={purchaseGridCol}
-            keyField={"productID"}
-            height={gridHeight}
-            gridId={`${gridCode}-grid`}
-            onAddData={handleAddData}
-          />
-
-          <div
-            style={{
-              maxWidth: formState.userConfig?.maxWidth
-                ? `${formState.userConfig?.maxWidth}px`
-                : "100%",
-              marginLeft:
-                formState.userConfig?.alignment === "left" ? "0" : "auto",
-              marginRight:
-                formState.userConfig?.alignment === "right" ? "0" : "auto",
-              textAlign: formState.userConfig?.alignment,
-              border:
-                formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
-                  ? "1px solid #ccc"
-                  : "none",
-              padding: formState.userConfig?.maxWidth ? "10px" : "0",
-              borderRadius:
-                formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
-                  ? "10px"
-                  : "none",
-              borderBottomLeftRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderBottomRightRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderBottom:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "none"
-                  : "1px solid #ccc",
-              marginTop: "2.5rem",
-            }}
-          >
-            {/* <div
-              className={
-                formState.userConfig?.isExpanded
-                  ? "grid grid-rows-2 !mt-[35px]"
-                  : "grid grid-cols-2 gap-8 !mt-[35px]"
-              }
-            >
-              <>
-                Expanded View - First Row
-
-                <>
-                  
-                </>
-              </>
-            </div> */}
+          <div className="mt-24">
+            <ErpPurchaseGrid
+              columns={purchaseGridCol}
+              keyField={"productID"}
+              height={gridHeight}
+              gridId={`${gridCode}-grid`}
+              onAddData={handleAddData}
+            />
           </div>
+
           <div
             className="relative"
-            style={{
-              maxWidth: formState.userConfig?.gridMaxWidth
-                ? `${formState.userConfig?.gridMaxWidth}px`
-                : "100%",
-              marginLeft:
-                formState.userConfig?.alignment === "left" ? "0" : "auto",
-              marginRight:
-                formState.userConfig?.alignment === "right" ? "0" : "auto",
-              textAlign: formState.userConfig?.alignment,
-              border:
-                formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
-                  ? "1px solid #ccc"
-                  : "none",
-              padding: formState.userConfig?.gridMaxWidth ? "10px" : "0",
-              borderRadius:
-                formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
-                  ? "10px"
-                  : "none",
-              borderTopLeftRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderTopRightRadius:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "0"
-                  : "10px",
-              borderTop:
-                formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
-                  ? "none"
-                  : "0",
-            }}
-          >
+            >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             {/* <ErpDevGrid
               key={key}

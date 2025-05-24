@@ -129,7 +129,7 @@ export const ProductManageGcc: React.FC<{
                     {...getFieldProps("product.manual")}
                     label={t("manual")}
                     onChange={(data) => {
-                      debugger;
+                      
                       if (data.target.checked == true) {
                         productCodeRef?.current?.focus();
                         productCodeRef?.current?.select();
@@ -172,7 +172,7 @@ export const ProductManageGcc: React.FC<{
                 })}
                 productDataUrl={Urls.load_product_details}
                 onProductSelected={(data: any) => {
-                  debugger;
+                  
                   handleFieldChange({
                     "product.productName": data.productName
                   });
@@ -182,7 +182,7 @@ export const ProductManageGcc: React.FC<{
                 }}
                 ref={gccProductSearchRef}
                 onEnterKeyDown={() => {
-                  debugger;
+                  
                   productGroupRef?.current?.focus()
                 }}
               />
@@ -258,7 +258,7 @@ export const ProductManageGcc: React.FC<{
                       getListUrl: Urls.data_units,
                     }}
                     onSelectItem={(data: any) => {
-                      debugger;
+                      
                       handleFieldChange({ "batch.basicUnitID": data.value, "product.basicUnitID": data.value, "product.basicUnitName": data.label })
                     }}
                     label={t("base_unit")}
@@ -370,7 +370,7 @@ export const ProductManageGcc: React.FC<{
                       getListUrl: Urls.data_acc_ledgers,
                     }}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       handleFieldChange(
                         "product.defaultVendorID",
                         data.defaultVendorID
@@ -431,7 +431,7 @@ export const ProductManageGcc: React.FC<{
                     type="number"
                     required={false}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       const markupPercentage = calculateMarkup(
                         parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
                         parseFloat((data.product.stdSalesPrice ?? 0).toString()),
@@ -465,7 +465,7 @@ export const ProductManageGcc: React.FC<{
                     type="number"
                     required={false}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                         parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
                         parseFloat((data.markup ?? 0).toString()),

@@ -294,7 +294,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formCode: "PI",
     action: UserAction.Show,
     voucherType: VoucherType.PurchaseInvoice,
-    transactionType: "PurchaseInvoice",
+    transactionType: "Purchase",
     formType: "",
     title: TransactionTitles.PurchaseInvoice,
     drCr: "Dr",

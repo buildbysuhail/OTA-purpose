@@ -296,6 +296,58 @@ const SummaryFilter = ({
             }}
           />
         )}
+          {(location.pathname.includes(
+          "inventory/transaction_summary_report"
+        )) && (
+          <ERPDataCombobox
+            label={t("transaction_type")}
+            {...getFieldProps("voucherType")}
+            options={[
+              { value: "SI", label: "Sales Invoice" },
+              { value: "SR", label: "Sales Return" },
+  { value: "PI", label: "Purchase Invoice" },
+  { value: "PR", label: "Purchase Return" },
+  { value: "SO", label: "Sales Order" },
+  { value: "SQ", label: "Sales Quotation" },
+  { value: "SUB", label: "Substitute" },
+  { value: "PO", label: "Purchase Order" },
+  { value: "OS", label: "Opening Stock" },
+  { value: "PQ", label: "Purchase Quotation" },
+  { value: "GR", label: "Goods Request" },
+  { value: "BTO", label: "Branch Transfer Out" },
+  { value: "BTI", label: "Branch Transfer In" },
+  { value: "EX", label: "Excess Stock" },
+  { value: "SI-BT", label: "Sales Transfer To Branch" },
+  { value: "SE-BT", label: "Sales Estimate Transfer To Branch" },
+  { value: "SH", label: "Shortage Stock" },
+  { value: "DMG", label: "Damage Entry" },
+  { value: "ST", label: "Stock Transfer" },
+  { value: "GD", label: "Goods Delivery" },
+  { value: "DR", label: "Goods Delivery Return" },
+  { value: "GRN", label: "Goods Receipt" },
+  { value: "GRR", label: "Goods Receipt Return" },
+  { value: "SD", label: "Sales Discount" },
+  { value: "SVI", label: "Service Invoice" },
+  { value: "STF", label: "Staff Food" },
+  { value: "EX-SP", label: "Excess Stock(SP)" },
+  { value: "SH-SP", label: "Shortage Stock(SP)" },
+  { value: "PE", label: "Purchase Estimate" },
+  { value: "SE", label: "Sales Estimate" },
+  { value: "PRE", label: "Purchase Return Estimate" },
+  { value: "SRE", label: "Sales Return Estimate" },
+  { value: "ILR", label: "Item Load Request" },
+  { value: "DNS", label: "Debit Note Against Sales" }
+            ]}
+            field={{
+              id: "voucherType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("voucherType", data.value);
+            }}
+          />
+        )}
         {(location.pathname.includes(
           "inventory/sales_transfer_summary_report"
         ) ||
@@ -331,7 +383,7 @@ export const SummaryFilterInitialState = {
   // fromDate: clientSession.softwareDate,
   fromDate: moment().local().startOf("day").toDate(), //software date as initial
   toDate: moment().local().endOf("day").toDate(),
-  voucherType: "PI",
+  voucherType: "",
   salesRouteID: 0,
   counterID: 0,
   salesmanID: 0,
@@ -342,7 +394,6 @@ export const SummaryFilterInitialState = {
   isTimeBased: false,
   fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
   toTime: moment().local().format("hh:mm"),
-  transactionType: "",
   reportOf: "",
   IsInactive: false, //true on in shortcut NPIR
 };

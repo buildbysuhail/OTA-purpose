@@ -78,6 +78,7 @@ const Urls = {
   data_nutrients: "/Inventory/Data/NutritionFacts",
   data_scheme_master: "/Inventory/Data/SchemeType/",
   data_products: "/Inventory/Data/Products",
+  data_productsCode: "/Inventory/Data/ProductsCode",
   data_general_master: "/Inventory/Data/GeneralMaster",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
@@ -351,9 +352,9 @@ const Urls = {
   acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
 
   //inventory
-  inv_reports_price_list: "",
+  inv_reports_price_list: "/Inventory/RptInventoryReport/PriceListReport",
   inv_reports_stock_ledger: "",
-  inv_reports_balance_report: "",
+  inv_reports_daily_balance_report: "/Inventory/RptInventoryReport/DailyBalanceReport",
   inv_reports_stock_flow: "",
 
   purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",

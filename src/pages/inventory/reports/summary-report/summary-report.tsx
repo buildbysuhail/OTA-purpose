@@ -1240,7 +1240,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 method={ActionType.POST}
                 filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
-                filterHeight={300}
+                filterHeight={350}
                 filterWidth={790}
                 filterInitialData={{
                   ...SummaryFilterInitialState,

@@ -82,8 +82,8 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     {...getFieldProps("productCode")}
                     field={{
                         id: "productCode",
-                        // getListUrl: Urls.,
-                        valueKey: "value",
+                        getListUrl: Urls.data_productsCode,
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
@@ -118,7 +118,7 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     {...getFieldProps("supplierID")}
                     field={{
                         id: "supplierID",
-                        // getListUrl: Urls.data_suppliers,
+                        getListUrl: Urls.data_Suppliers,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -174,7 +174,7 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     {...getFieldProps("valuationUsing")}
                     field={{
                         id: "valuationUsing",
-                        // getListUrl: Urls.data_valuation_methods,
+                        getListUrl: Urls.data_stock_valuation_methods,
                         valueKey: "value",
                         labelKey: "name",
                     }}

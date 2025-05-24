@@ -13,12 +13,12 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const DailyBalanceAmount = () => {
   const dispatch = useAppDispatch();
-    const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "customerName",
+      dataField: "customer",
       caption: t("customerName"),
       dataType: "string",
       allowSearch: true,
@@ -29,41 +29,39 @@ const DailyBalanceAmount = () => {
     },
     {
       dataField: "openingBalance",
-      caption: t("date"),
+      caption: t("opening_balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.openingBalance == null
-                ? ""
-                : getFormattedValue(cellElement.data.openingBalance);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.openingBalance == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.openingBalance == null
               ? ""
-              : getFormattedValue(
-                  parseFloat(cellElement.data.openingBalance)
-                );
-          }
-        },
+              : getFormattedValue(cellElement.data.openingBalance);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.openingBalance == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.openingBalance));
+        }
       },
+    },
     {
-      dataField: "billAmount",
+      dataField: "billed",
       caption: t("billAmount"),
       dataType: "number",
       allowSearch: true,
@@ -71,34 +69,32 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.billAmount == null
-                ? ""
-                : getFormattedValue(cellElement.data.billAmount);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.billAmount == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billed == null
               ? ""
-              : getFormattedValue(
-                  parseFloat(cellElement.data.billAmount)
-                );
-          }
-        },
+              : getFormattedValue(cellElement.data.billed);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billed == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.billed));
+        }
       },
+    },
     {
-      dataField: "receivedAmount",
+      dataField: "received",
       caption: t("receivedAmount"),
       dataType: "number",
       allowSearch: true,
@@ -106,32 +102,30 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.receivedAmount == null
-                ? ""
-                : getFormattedValue(cellElement.data.receivedAmount);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.receivedAmount == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.received == null
               ? ""
-              : getFormattedValue(
-                  parseFloat(cellElement.data.receivedAmount)
-                );
-          }
-        },
+              : getFormattedValue(cellElement.data.received);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.received == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.received));
+        }
       },
+    },
     {
       dataField: "balance",
       caption: t("balance"),
@@ -141,32 +135,30 @@ const DailyBalanceAmount = () => {
       allowSorting: true,
       minWidth: 200,
       showInPdf: true,
-   cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.balance == null
-                ? ""
-                : getFormattedValue(cellElement.data.balance);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.balance == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
               ? ""
-              : getFormattedValue(
-                  parseFloat(cellElement.data.balance)
-                );
-          }
-        },
+              : getFormattedValue(cellElement.data.balance);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.balance));
+        }
       },
+    },
   ];
   return (
     <Fragment>
@@ -176,9 +168,10 @@ const DailyBalanceAmount = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  filterText=": {fromDate} - {toDate}"
                   columns={columns}
                   gridHeader={t("daily_balance_report")}
-                  dataUrl={Urls.inv_reports_balance_report}
+                  dataUrl={Urls.inv_reports_daily_balance_report}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}

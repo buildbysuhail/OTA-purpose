@@ -326,6 +326,7 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <button className="flex items-center bg-gray-100 p-0 rounded-md"></button>
                 <ErpDevGrid
+                summaryItems={[]}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   moreOption

@@ -8,7 +8,6 @@ import React from "react";
 interface AccVoucherNoProps {
   phone?: boolean;
 }
-
 const api = new APIClient();
 
 interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
@@ -27,7 +26,10 @@ interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
 }
 
 const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
-  ({ formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone }, ref) => {
+  (
+    { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
+    ref
+  ) => {
     return (
       <>
         {formState.formElements.voucherNumber.visible && (
@@ -40,14 +42,18 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
               handleKeyDown && handleKeyDown(e, "voucherNumber");
             }}
             min={1}
-            label={phone ? "Voucher No" : t(formState.formElements.voucherNumber.label)}
+            label={
+              phone
+                ? "Voucher No"
+                : t(formState.formElements.voucherNumber.label)
+            }
             value={formState.transaction.master.voucherNumber}
             type="number"
             required={true}
             showCustomNumberChanger={
               formState.formElements.voucherNumberUpDownBtns.visible == true
             }
-            className="max-w-[125px]"
+            className="max-w-[100px]"
             onChange={async (e: any) => {
               if (e.isCustomNumberChangerEvent == true) {
                 const ret = await loadAndSetTransVoucher(
@@ -58,7 +64,11 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                   undefined,
                   undefined,
                   undefined,
-                  e.mode == "down" ? "decrement" : e.mode == "up" ? "increment" : undefined,
+                  e.mode == "down"
+                    ? "decrement"
+                    : e.mode == "up"
+                    ? "increment"
+                    : undefined,
                   false
                 );
               } else {
@@ -71,9 +81,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             }}
             disabled={formState.formElements.voucherNumber?.disabled}
             labelInfo={
-              <button
-                className={`pe-3`}
-              >
+              <button className={`pe-3`}>
                 <VoucherNumberDetailsSidebar displayType="link" />
               </button>
             }

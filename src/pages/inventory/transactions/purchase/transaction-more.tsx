@@ -33,7 +33,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                 <ERPInput
                   id="despatchDocumentNumber"
                   value={formState.despatchDocumentNumber}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   noLabel={true}
                   onChange={(e) =>
                     dispatch(
@@ -51,7 +51,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="despatchDate"
                   noLabel={true}
                   value={formState.despatchDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -68,7 +68,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="driverID"
                   noLabel={true}
                   value={formState.driverID}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   field={{
                     id: "driverID",
                     valueKey: "id",
@@ -99,7 +99,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="orderNumber"
                   noLabel={true}
                   value={formState.orderNumber}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -115,7 +115,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="orderDate"
                   noLabel={true}
                   value={formState.orderDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -140,7 +140,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="quotationNumber"
                   noLabel={true}
                   value={formState.quotationNumber}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -156,7 +156,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="quotationDate"
                   noLabel={true}
                   value={formState.quotationDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -197,7 +197,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="purchaseInvoiceDate"
                   noLabel={true}
                   value={formState.purchaseInvoiceDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -226,7 +226,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="deliveryNoteNumber"
                   noLabel={true}
                   value={formState.deliveryNoteNumber}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -243,7 +243,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="deliveryDate"
                   noLabel={true}
                   value={formState.deliveryDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -273,7 +273,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                       })
                     )
                   }
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                 />
               </div>
             </div>
@@ -291,7 +291,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="gatePassNo"
                   noLabel={true}
                   value={formState.gatePassNo}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -323,7 +323,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="dueDate"
                   noLabel={true}
                   value={formState.dueDate}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -339,7 +339,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="vehicleID"
                   noLabel={true}
                   value={formState.vehicleID}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   field={{
                     id: "vehicleID",
                     valueKey: "id",
@@ -387,7 +387,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="notes1"
                   noLabel={true}
                   value={formState.notes1}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -403,7 +403,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="notes2"
                   noLabel={true}
                   value={formState.notes2}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
@@ -421,7 +421,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   id="tableId"
                   noLabel={true}
                   value={formState.tableId}
-                  className="flex-1 h-6 text-xs"
+                  className="flex-1 h-6 text-xs max-w-36"
                   field={{
                     id: "tableId",
                     valueKey: "id",

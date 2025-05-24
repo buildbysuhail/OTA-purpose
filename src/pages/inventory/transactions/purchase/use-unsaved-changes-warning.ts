@@ -220,7 +220,7 @@ export const useUnsavedChangesWarning = () => {
   //   const handlePopState = async (e: PopStateEvent) => {
   //     console.log('9');
       
-  //     debugger;
+  //     
   //     const unsavedChanges = await hasUnsavedChanges();
   //     // hasUnsavedChanges().then((unsavedChanges) => {
   //       console.log("Unsaved changes: 213 ", unsavedChanges);
@@ -247,9 +247,9 @@ export const useUnsavedChangesWarning = () => {
   //     const nextPath = e.state?.path || window.location.pathname || "/"; // Get next path from history
 
   //     const unsavedChanges = await hasUnsavedChanges();
-  // debugger;
+  // 
   //     if (unsavedChanges) {
-  //       debugger;
+  //       
   //       // Re-push the same state to prevent navigation
   //       window.history.pushState(null, '', window.location.href);
   //       // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
@@ -273,14 +273,14 @@ export const useUnsavedChangesWarning = () => {
 
   useEffect(() => {
     const unlisten = _history.listen(({ action, location: newLocation }) => {
-      debugger;
+      
       if (action === 'POP' || action === 'PUSH' || action === 'REPLACE') {
         const intendedPath = location.pathname ==  newLocation.pathname ? pendingLocation.current: newLocation.pathname;
 
         hasUnsavedChanges().then((unsavedChanges) => {
           debugger
           if (unsavedChanges) {
-            debugger;
+            
             // Re-push the same state to prevent navigation
             window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
             // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
@@ -311,7 +311,7 @@ export const useUnsavedChangesWarning = () => {
 
   const handleLeave = useCallback(() => {
     console.log('11');
-    debugger;
+    
     if (isLeavingPage) {
       
       console.log('12');

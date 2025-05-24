@@ -428,7 +428,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       return true;
     });
     // .map((column) => {
-    //   debugger;
+    //   
     //   if (column.dataField == "groupName") {
     //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
     //   }
@@ -514,7 +514,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
 
   const dataGridRef = useRef<any>(null);
   useEffect(() => {
-    debugger;
+    
     const gridInstance = dataGridRef.current?.instance();
     if (gridInstance) {
       gridInstance.clearGrouping(); // Explicitly clear existing grouping

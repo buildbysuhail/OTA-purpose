@@ -82,7 +82,7 @@ export const ProductManageIndia: React.FC<{
 
     async function handlePriceValidation() {
       try {
-        debugger;
+        
         const obj = getFieldProps("*") as productDto;
         const showWarning =
           appSettings.inventorySettings.showRateWarning.toUpperCase();
@@ -204,7 +204,7 @@ export const ProductManageIndia: React.FC<{
                   />
 
                   <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300" onClick={async () => {
-                    debugger;
+                    
                     const nextProductCode = await api.getAsync(
                       `${Urls.products}SelectNextProductCode`
                     ); handleFieldChange(
@@ -258,7 +258,7 @@ export const ProductManageIndia: React.FC<{
                 })}
                 productDataUrl={Urls.load_product_details}
                 onProductSelected={(data: any) => {
-                  debugger;
+                  
                   handleFieldChange({
                     "product.productName": data.productName
                   });
@@ -268,7 +268,7 @@ export const ProductManageIndia: React.FC<{
                 }}
                 ref={productSearchRef}
                 onEnterKeyDown={() => {
-                  debugger;
+                  
                   productCategoryRef?.current?.focus()
                 }}
               />
@@ -286,7 +286,7 @@ export const ProductManageIndia: React.FC<{
                     }}
                     // labelDirection={isMobile ? "vertical" : "horizontal"}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       handleFieldChange(
                         "product.productCategoryID",
                         data.product.productCategoryID
@@ -393,7 +393,7 @@ export const ProductManageIndia: React.FC<{
                       getListUrl: Urls.data_units,
                     }}
                     onSelectItem={(data: any) => {
-                      debugger;
+                      
                       handleFieldChange({
                         "batch.basicUnitID": data.value,
                         "product.basicUnitID": data.value,
@@ -591,7 +591,7 @@ export const ProductManageIndia: React.FC<{
                   ref={salesPriceRef}
                   required={false}
                   onChangeData={(data: any) => {
-                    debugger;
+                    
                     const markupPercentage = calculateMarkup(
                       parseFloat(
                         (data.product.stdPurchasePrice ?? 0).toString()
@@ -629,7 +629,7 @@ export const ProductManageIndia: React.FC<{
                   type="number"
                   required={false}
                   onChangeData={(data: any) => {
-                    debugger;
+                    
                     const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                       parseFloat(
                         (data.product.stdPurchasePrice ?? 0).toString()
@@ -806,7 +806,7 @@ export const ProductManageIndia: React.FC<{
                       _data.product.stdSalesPrice = 0;
                       _data.product.manual = true;
                     }
-                    debugger;
+                    
                     handleDataChange(_data);
                   }}
                   label={t("product_type")}

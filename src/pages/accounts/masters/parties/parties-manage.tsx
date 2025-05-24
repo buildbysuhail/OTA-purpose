@@ -208,7 +208,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           fixedPosition: "right",
           width: 50,
           cellRender: (cellElement: any, cellInfo: any) => {
-            debugger;
+            
             return (
               <ERPGridActions
                 view={{ visible: false, type: "link" }}

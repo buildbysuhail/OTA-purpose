@@ -563,12 +563,12 @@ const TransactionGrid: React.FC<{
                 action: () => {
                   const row = cellElement.data;
                   const transactionMasterID = parseInt(
-                    row.accTransactionMasterID || "0",
+                    row.invTransactionMasterID || "0",
                     10
                   );
 
                   const vchtype = row.voucherType;
-                  const voucherform = row.formType;
+                  const voucherform = row.voucherForm;
 
                   const prefix = row.voucherPrefix;
                   const vchno = row.voucherNumber;
@@ -598,7 +598,7 @@ const TransactionGrid: React.FC<{
                     };
                   }
                   const url = new URL(
-                    `${window.location.origin}${TransactionBase.Accounts}/${transactionType}`
+                    `${window.location.origin}${TransactionBase.Purchase}/${transactionType}`
                   );
 
                   // Append all parameters from the `params` object
@@ -618,7 +618,7 @@ const TransactionGrid: React.FC<{
                 confirmationMessage:
                   "Are you sure you want to delete this transaction?",
                 url: `/Accounts/${transactionType}/`,
-                key: cellElement?.data?.accTransactionMasterID,
+                key: cellElement?.data?.invTransactionMasterID,
               }}
             />
           );

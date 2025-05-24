@@ -118,7 +118,7 @@ export const SpecialPrice: React.FC = () => {
       setIsDataLoading(true);
       const url = `${Urls.select_product_by_barcode}${obj.barcode}`;
       const response = await api.get(url);
-      debugger;
+      
       setSpecialPriceForm((prev) => ({
         ...prev,
         data: {
@@ -175,7 +175,7 @@ export const SpecialPrice: React.FC = () => {
       const url = `${Urls.special_price_scheme_by_group_id}ByGroup`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
-        debugger;
+        
         setGridData((prev: any) => [...prev, ...response.items]);
         // handleLoad();
       });

@@ -114,7 +114,7 @@ function App() {
 } = getUserSessionData();
     syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
     const language = userProfileDetails?.language;
-debugger;
+
     if (!token && ["/login","/shared-view","accept-user-invitation"].includes(pathname)) {
       navigate("/login");
     } else {
@@ -158,7 +158,7 @@ debugger;
     import("preline");
   }, []);
   useEffect(() => {
-    debugger;
+    
    if (typeof window === 'undefined') {
 			// Handle the case where window is not available (server-side rendering)
 			return;

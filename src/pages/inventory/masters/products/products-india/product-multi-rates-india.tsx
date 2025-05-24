@@ -137,7 +137,7 @@ const MultiRates: React.FC<{
   }, [allColumns, isGlobal]);
 
   const fetchData = async () => {
-    debugger;
+    
     const responseData = getFieldProps("prices")
       .value as ProductPriceInputDto[];
     const updatedData = responseData.map((item, index) => ({

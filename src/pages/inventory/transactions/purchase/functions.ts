@@ -29,7 +29,7 @@ export const clearEntryControl = (
 ): TransactionFormState => {
   return state;
 };
-export const setUserRights = (
+export const setUserRightsFn = (
   state: TransactionFormState,
   userSession: UserModel,
   hasRight: (formCode: string, action: UserAction) => boolean
@@ -57,6 +57,11 @@ export const setUserRights = (
     : false;
   return state;
 };
+export const disableControlsFn = (state: TransactionFormState): TransactionFormState => {
+      state.formElements.pnlMasters.disabled = true;
+      state.formElements.dxGrid.disabled = true;
+      return state; 
+    };
 export const validateTransactionDate = (
   transDate: Date,
   skipPostDatedAndPredated: boolean = false,

@@ -2,9 +2,10 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   calculateTotal,
+  disableControlsFn,
   isDirtyTransaction,
   setTransactionForHistory,
-  setUserRights,
+  setUserRightsFn,
   validateTransactionDate,
 } from "./functions";
 import { useAccPrint } from "./use-print";
@@ -384,14 +385,15 @@ export const useTransaction = (
             : voucher.transaction.master.prevTransDate;
     voucher.transaction.master.oldLedgerID = voucher.transaction.master.ledgerID ;
     voucher.isPostedTransaction =  voucher.transaction.master.isPosted;
-    voucher = setUserRights(voucher, userSession, hasRight);
+    voucher = setUserRightsFn(voucher, userSession, hasRight);
+    voucher = disableControlsFn(voucher);
     const addData = Array.from({ length: 40300 }, (_, index) => ({
   ...initialTransactionDetailData,
   slNo: index + 1
 })) as TransactionDetail[];
     voucher.transaction.details = [...voucher.transaction.details, ...addData];
     // Handle master data
-
+    voucher.formElements.lblPosted.visible = voucher.isPostedTransaction
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster: TransactionMaster = {

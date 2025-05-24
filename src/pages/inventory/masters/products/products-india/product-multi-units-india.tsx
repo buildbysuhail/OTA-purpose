@@ -91,7 +91,7 @@ const ProductMultiUnitsIndia = forwardRef<
     }));
 
     const handleAddUnit = async () => {
-      debugger;
+      
       const obj = getFieldProps("*");
       const updated = [...obj.units, unit];
 
@@ -121,7 +121,7 @@ const ProductMultiUnitsIndia = forwardRef<
           id: Number(x.id), // Ensure type matches: number
           name: String(x.name), // Ensure type matches: string
         }));
-      debugger;
+      
       setSelectedUnits(selected);
       unSetSelectedUnits(unSelected);
 
@@ -142,7 +142,7 @@ const ProductMultiUnitsIndia = forwardRef<
 
           const obj = getFieldProps("*") as any as productDto;
           const updated = [...obj.units, unit];
-          debugger;
+          
           let selected = updated
             .filter((x) => x.unitID ?? 0 > 0)
             .map((x: any) => ({
@@ -174,7 +174,7 @@ const ProductMultiUnitsIndia = forwardRef<
               id: Number(x.id), // Ensure type matches: number
               name: String(x.name), // Ensure type matches: string
             }));
-          debugger;
+          
           setSelectedUnits(selected);
           unSetSelectedUnits(unSelected);
         } catch (error) {
@@ -342,7 +342,7 @@ const ProductMultiUnitsIndia = forwardRef<
 }; 
 
 const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
-  debugger;
+  
   const barcodeArray = barcodesString
     .split(",")
     .map((barcode:any) => barcode.trim())
@@ -456,7 +456,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                 onChange={(e) => {
                   const obj = getFieldProps("*") as productDto;
                   const mFactor = Number(e.target.value);
-                  debugger;
+                  
                   setUnit((prev) => ({
                     ...prev,
                     multiFactor: Number(e.target.value),

@@ -414,6 +414,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+      
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
       dispatch(
@@ -441,7 +442,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         employeeID = userSession.employeeId ?? -2;
       }
-      debugger;
+      
       const templates = formState.templates;
       const templatesData = formState.templatesData;
       const template = formState.template;
@@ -1737,7 +1738,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px] flex items-center gap-2">
                     {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                     {t(formState.title)}
-                    {!formState.formElements.lblPosted.visible && (
+                    {formState.formElements.lblPosted.visible && (
                       <div title={t("posted_transaction")}>
                         <Info className="text-[#ef4444] w-4 h-4"/>
                       </div>

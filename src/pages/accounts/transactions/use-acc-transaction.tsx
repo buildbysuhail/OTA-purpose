@@ -1385,7 +1385,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);
@@ -1768,7 +1768,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    debugger;
+    
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {
@@ -1879,7 +1879,7 @@ export const useAccTransaction = (
   const handleLedgerCodeKeyDown = async (e: any) => {
     if (e === "Enter" || e === "Tab") {
       try {
-        debugger;
+        
         const response = await api.getAsync(
           `${Urls.get_ledgerId_by_code}${
             formState.row.ledgerCode == undefined ||
@@ -1888,7 +1888,7 @@ export const useAccTransaction = (
               : formState.row.ledgerCode
           }`
         );
-        debugger;
+        
         if (response && response > 0) {
           dispatch(
             accFormStateRowHandleFieldChange({
@@ -1954,7 +1954,7 @@ export const useAccTransaction = (
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
-    debugger;
+    
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =

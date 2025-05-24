@@ -101,7 +101,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
   const productMultiUnitsGccRef = useRef<ProductMultiUnitsGccRef>(null);
   const handleTabChange = async (index: number,obj:productDto) => {
     setActiveTab(index);
-    debugger;
+    
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (
@@ -109,7 +109,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       multiRatesIndex !== -1 &&
       multiRatesIndex == index
     ) {
-      debugger;
+      
       if (
         appSettings?.productsSettings?.allowMultirate &&
         obj.prices &&
@@ -130,8 +130,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
 
   const updatePrice = async () => {
     const obj = getFieldProps("*") as productDto;
-    debugger;
-    debugger;
+    
+    
     if (!isNullOrUndefinedOrEmpty(obj.product.autoBarcode)) {
       const payload = {
         units: obj.units,
@@ -271,7 +271,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
-    debugger;
+    
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (multiRatesIndex !== undefined && multiRatesIndex !== -1) {
@@ -299,9 +299,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       );
       let data: productDto;
       let nextProductCode: string;
-      debugger;
+      
       const res = await api.getAsync(`${Urls.get_product_config}`);
-      debugger;
+      
       const st = atob(res);
       const _st: any = customJsonParse(st);
       if (isEditMode) {
@@ -670,7 +670,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           })}
           activeTab={activeTab}
           onClickTabAt={(ta)=>{
-            debugger;
+            
             const obj = getFieldProps("*") as productDto;
             handleTabChange(ta,obj);
           }}
@@ -726,7 +726,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
               return false
             }
           }
-          debugger;
+          
           if (x.title == "Multi Barcode") {
             if (((clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
               return false

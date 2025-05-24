@@ -34,7 +34,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  debugger;
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = () => {

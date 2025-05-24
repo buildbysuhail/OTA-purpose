@@ -89,7 +89,7 @@ const ProductDetailsBatches: React.FC<{
       pageSize={40}
       // onCellClick={handleCellClick}
       onSelectionChanged={async(e) => {
-        debugger;
+        
         const obj = getFieldProps("*") as any as productDto;
         const modifiedData = {...obj};
         const row = e.selectedRowsData[0];

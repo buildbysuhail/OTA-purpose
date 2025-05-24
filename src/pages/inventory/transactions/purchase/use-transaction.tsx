@@ -343,9 +343,9 @@ export const useTransaction = (
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
         voucherType ?? (formState.transaction?.master?.voucherType || ""),
-      formType: formType ?? (formState.transaction?.master?.voucherForm || ""),
-      MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
-      SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
+      voucherForm: formType ?? (formState.transaction?.master?.voucherForm || ""),
+      manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
+      isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
     let vch = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}`,

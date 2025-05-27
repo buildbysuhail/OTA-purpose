@@ -11,7 +11,7 @@ interface RouteGuardProps {
 
 const RouteGuard: React.FC<RouteGuardProps> = ({ children, formCode, action, redirectPath = '/login' }) => {
   const {hasRight} = useUserRights();
-  
+  debugger;
   if (formCode != undefined) {
     const isAllowed = hasRight(formCode,action)
     if(isAllowed != true)

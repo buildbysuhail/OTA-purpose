@@ -520,7 +520,7 @@ const Content: FC<ContentProps> = () => {
         ))
       )
       }
-        
+        <Route path="/accounts/ledger_report" element={<LedgerReport />} />
         <Route path="/accounts/cash_book" element={<CashBookSummary />} />
         <Route path="/accounts/day_book_detailed" element={<DayBookDetailed />} />
         <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />
@@ -552,8 +552,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
         <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} />
-        {/* <Route  path="/accounts/payable_aging"  element={<AccountPayableAgingReport />}/>
-        <Route  path="/accounts/receivable_aging"  element={<AccountReceivableAgingReport />}/> */}
+
         {/* Reports - Accounts */}
         {/* Reports - Inventory */}
         <Route path="/inventory/purchase_summary_report" element={<SummaryReport dataUrl={urls.purchase_summary_report} gridHeader="purchase_summary_report" gridId="grd_purchase_summary" />} />
@@ -593,6 +592,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />} />
         {/* global end */}
         <Route path="/inventory/product_summary" element={<ProductSummaryMaster />} />
+        <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
@@ -601,6 +601,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
         <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />
         <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
+
+        
         <Route path="/inventory/sales_summary_report" element={<SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />} />
         <Route path="/inventory/sales_register_report" element={<RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />} />
         <Route path="/inventory/net_sales_report" element={<NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />} />
@@ -680,7 +682,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/privilege_card_report" element={<PrivilegeCardReport />} />
 
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
-        <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
+
 
         <Route path="/inventory/sales_transfer_summary_report" element={<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />} />
         <Route path="/inventory/sales_transfer_register_report" element={<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />} />
@@ -726,7 +728,11 @@ const Content: FC<ContentProps> = () => {
 
         <Route path="/inventory/gstr3b_report" element={<GSTR3BReport />} />
         {/* global end */}
+        <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
+        <Route path="/inventory/daily_statement_sales" element={<DailyStatementReport dataUrl={urls.daily_statement_sales} gridHeader="daily_statement_report_of_sales" gridId={GridId.daily_statement_sales} />} />
+        <Route path="/inventory/daily_statement_purchase" element={<DailyStatementReport dataUrl={urls.daily_statement_purchase} gridHeader="daily_statement_report_of_purchase" gridId={GridId.daily_statement_purchase} />} />
         {/* Reports - Tax*/}
+      
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
@@ -735,13 +741,12 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
+ 
         <Route path="/inventory-masters/products" element={<Products />} />
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
         <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
         <Route path="/inventory-masters/brands" element={<Brands />} />
-        <Route path="/inventory/daily_statement_sales" element={<DailyStatementReport dataUrl={urls.daily_statement_sales} gridHeader="daily_statement_report_of_sales" gridId={GridId.daily_statement_sales} />} />
-        <Route path="/inventory/daily_statement_purchase" element={<DailyStatementReport dataUrl={urls.daily_statement_purchase} gridHeader="daily_statement_report_of_purchase" gridId={GridId.daily_statement_purchase} />} />
+
         <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />

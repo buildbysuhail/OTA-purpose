@@ -88,7 +88,12 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
             });
           }}
         /> */}
-
+ <ERPCheckbox
+          {...getFieldProps("isVchForm")}
+          label={t("")}
+          noLabel          
+          onChangeData={(data) => handleFieldChange('isVchForm', data.isVchForm)}
+        />
         <ERPDataCombobox
           {...getFieldProps("voucherFormId")}
           label="voucherForm"
@@ -98,6 +103,7 @@ const PurchaseGstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formS
             valueKey: "id",
             labelKey: "name",
           }}
+            disabled={getFieldProps("isVchForm").value!=true}
           className="w-full"
           onSelectItem={(data) => {
             handleFieldChange({

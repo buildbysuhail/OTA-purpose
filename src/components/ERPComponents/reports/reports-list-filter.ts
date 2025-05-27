@@ -1,6 +1,7 @@
+import { UserAction } from "../../../helpers/user-right-helper";
 import { ClientSessionModel } from "../../../redux/slices/client-session/reducer";
 
-export const getFilteredReports = (st: any, clientSession: ClientSessionModel) => {
+export const getFilteredReports = (st: any, clientSession: ClientSessionModel, hasRight: (formCode: string, action: UserAction) => boolean) => {
   debugger;
   if (clientSession.isAppGlobal) {
           const excluded = [
@@ -75,7 +76,7 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel) =
             .filter((parent: any) => !excluded.includes(parent.title))
             .map((parent: any) => {
               const filteredChildren = parent.children?.filter(
-                (child: any) => !excluded.includes(child.title)
+                (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)
               );
               return {
                 ...parent,

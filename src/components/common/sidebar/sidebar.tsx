@@ -42,6 +42,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
+  
+    const { hasRight} = useUserRights();
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
@@ -140,7 +142,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       setMenuitems(st);
     } else if (type == "reports") {      
       let st = menuitems;
-      setMenuitems(getFilteredReports(st, clientSession));
+      setMenuitems(getFilteredReports(st, clientSession, hasRight));
     } else if (type == "erp") {
       let st: [] = [];
 

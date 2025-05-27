@@ -32,7 +32,7 @@ const ReferenceNumber = React.forwardRef<
                 id="referenceNumber"
                 label={t(formState.formElements.referenceNumber.label)}
                 value={formState.transaction.master.referenceNumber}
-                className="lg:max-w-[300px]"
+                className="w-full min-w-[135px]"
                 onChange={(e) =>
                   dispatch(
                     formStateMasterHandleFieldChange({

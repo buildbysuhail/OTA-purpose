@@ -112,7 +112,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     <div
       className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}
     >
-      <div className="flex items-end gap-1 relative px-4">
+      <div className="flex items-end gap-1 relative px-2">
         <PartyLedger
           ref={ledgerIdRef}
           handleFieldKeyDown={handleFieldKeyDown}
@@ -161,7 +161,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
         }`}
       >
-        <div className="p-4 md:p-2 bg-white border border-gray-300 shadow-lg">
+        <div className="p-4 md:p-2 bg-white border-t border-gray-300 shadow-lg">
           <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
             <Employee
               dispatch={dispatch}
@@ -435,10 +435,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${
               isDropDownOpen ? "bg-gray-100" : ""
             }`}
-            style={{ 
+            style={{
               boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              transform: isDropDownOpen ? 'translateY(0)' : 'translateY(0)',
-              transition: 'transform 0.5s ease-in-out'
+              transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
+              transition: "transform 0.5s ease-in-out",
             }}
           >
             <ChevronDown

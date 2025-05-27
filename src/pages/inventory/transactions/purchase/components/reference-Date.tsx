@@ -16,7 +16,7 @@ const AccReferenceDate = React.forwardRef<
           localInputBox={formState.userConfig?.inputBoxStyle}
           id="referenceDate"
           label={t(formState.formElements.referenceDate.label)}
-          className="max-w-[150px]"
+          className="md:w-[150px]"
           value={new Date(formState.transaction.master.referenceDate)}
           onChange={(e) =>
             dispatch(

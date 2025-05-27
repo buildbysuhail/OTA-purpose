@@ -59,7 +59,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   useEffect(() => { }, []);
   const postUserConfigOnOk = async (response: any) => {
     const base64 = modelToBase64(response);
-    localStorage.setItem("utc", base64);
+    localStorage.setItem("utInvc", base64);
   };
 
   const postUserConfig = async () => {
@@ -67,13 +67,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       const response = await api.post(`${Urls.post_acc_user_config}`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
-        localStorage.setItem("utc", base64);
+        localStorage.setItem("utInvc", base64);
       });
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {
       setIsOpen(false);
-    }
+    } 
   };
 
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
@@ -96,7 +96,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
           const res = await api.postAsync(Urls.reset_user_settings, {});
           handleResponse(res, () => {
             const st = atob(res.item);
-            localStorage.setItem("utc", res.item);
+            localStorage.setItem("utInvc", res.item);
             const _st: any = customJsonParse(st);
             dispatch(formStateHandleFieldChange({ fields: { userConfig: _st } }));
           });

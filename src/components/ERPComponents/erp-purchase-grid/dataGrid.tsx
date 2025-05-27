@@ -88,7 +88,7 @@ interface RowData {
   tableWidth: number;
 }
 
-const Row = React.memo(
+const Row = 
   ({ index, style, data }: ListChildComponentProps<RowData>) => {
     const item = data.details[index];
     const columns = data.columns;
@@ -177,10 +177,7 @@ const Row = React.memo(
           })}
       </tr>
     );
-  },
-  // only re-render if this row's data object changed
-  (prev, next) => prev.index === next.index && prev.data.tableWidth === next.data.tableWidth
-);
+  };
 
 export default function ErpPurchaseGrid<T extends DataItem>({
   columns = [],

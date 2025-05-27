@@ -1,16 +1,16 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   customJsonParse,
   modelToBase64,
   modelToBase64Unicode,
-} from "../../../utilities/jsonConverter";
-import { AccTransactionData, AccTransactionRow } from "./acc-transaction-types";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+} from "../utilities/jsonConverter";
+import { AccTransactionData, AccTransactionRow } from "./accounts/transactions/acc-transaction-types";
+import { useAppSelector } from "../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
-import { accFormStateHandleFieldChange } from "./reducer";
-import { setTransactionForHistory } from "./functions";
-import { history as _history } from "../../../history";
+import { accFormStateHandleFieldChange } from "./accounts/transactions/reducer";
+import { history as _history } from "../history";
+import { setTransactionForHistory } from "../helpers/transaction-modified-util";
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -23,37 +23,48 @@ export const useUnsavedChangesWarning = () => {
   const isInitialMount = useRef(true);
   const navigationAttempted = useRef(false);
   const lastNavigationTime = useRef(Date.now());
-  const _formState = useAppSelector((x) => x.AccTransaction);
+    const _accFormState = useAppSelector((x) => x.AccTransaction);
+  const _invFormState = useAppSelector((x) => x.InventoryTransaction);
   const dispatch = useDispatch();
 
-  // const hasUnsavedChanges = useCallback(() => {
-  //   try {
-  //     if (!_formState || !_formState.prev) return false;
-  //     const currentStateCompare = {
-  //       transaction: _formState.transaction,
-  //       row: _formState.row
-  //     };
-  //     if (!_formState) return false;
+  // Determine which form state to use based on flags
+  // Determine which form state to use based on flags
+  const _formState = useMemo(() => {
+    // First check if flags explicitly indicate which state to use
+    if ((_accFormState as any)?.isAcc === true) return _accFormState as any;
+    if ((_invFormState as any)?.isInv === true) return _invFormState as any;
+    
+    // Fallback: use whichever state has data
+    if ((_accFormState as any)?.prev || (_accFormState as any)?.transaction) return _accFormState as any;
+    if ((_invFormState as any)?.prev || (_invFormState as any)?.transaction) return _invFormState as any;
+    
+    // Last resort: return the first non-null state
+    return (_accFormState as any) || (_invFormState as any) || null;
+  }, [_accFormState, _invFormState]);
 
-  //     const _prevState: {
-  //       transaction: AccTransactionData;
-  //       row: AccTransactionRow
-  //     } = customJsonParse(atob(_formState.prev));
+  // Determine transaction type for navigation
+  const getTransactionType = useCallback(() => {
+    if (_accFormState?.isAcc) {
+      return _accFormState.transactionType;
+    }
+    if (_invFormState?.isInv) {
+      return _invFormState.transactionType;
+    }
+    return null;
+  }, [_accFormState, _invFormState]);
 
-  //     if (!_prevState || Object.keys(_prevState).length !== 2) return false;
-
-  //     const base64 = modelToBase64(currentStateCompare);
-  //     const isEqual = _formState.prev === base64;
-  //     console.log(`isEqual: ${isEqual}`);
-
-  //     return !isEqual;
-  //   } catch (error) {
-  //     console.error('Error checking for unsaved changes:', error);
-  //     return false;
-  //   }
-  // }, [_formState]);
-
+  // Determine the base path for navigation
+  const getBasePath = useCallback(() => {
+    if (_accFormState?.isAcc) {
+      return '/accounts/transactions';
+    }
+    if (_invFormState?.isInv) {
+      return '/inventory/transactions'; // Adjust this path as needed
+    }
+    return '/';
+  }, [_accFormState, _invFormState]);
   const hasUnsavedChanges = useCallback(async () => {
+    
     try {
       if (!_formState || !_formState.prev) return false;
 
@@ -197,95 +208,6 @@ export const useUnsavedChangesWarning = () => {
     return () => document.removeEventListener("click", blockNavigation, true);
   }, [hasUnsavedChanges]);
 
-  // Handle history changes and location updates
-  // useEffect(() => {
-  //   if (isInitialMount.current) {
-  //     console.log('5');
-
-  //     isInitialMount.current = false;
-  //     return;
-  //   }
-
-  //   const now = Date.now();
-  //   if (now - lastNavigationTime.current < 100) {
-  //     console.log('6');
-
-  //     return;
-  //   }
-  //   lastNavigationTime.current = now;
-
-  //   if (location.pathname !== currentPath.current && !navigationAttempted.current) {
-  //     console.log('7');
-
-  //     hasUnsavedChanges().then((unsavedChanges) => {
-  //       if (unsavedChanges) {
-  //         console.log('8');
-
-  //         pendingLocation.current = location.pathname;
-  //         navigationAttempted.current = true;
-  //         // window.history.pushState(null, '', currentPath.current);
-  //         setIsLeavingPage(false);
-  //       }
-  //     });
-  //   }
-  // }, [location, hasUnsavedChanges]);
-
-  // Handle browser back/forward buttons
-  // useEffect(() => {
-  //   const handlePopState = async (e: PopStateEvent) => {
-  //     console.log('9');
-
-  //     
-  //     const unsavedChanges = await hasUnsavedChanges();
-  //     // hasUnsavedChanges().then((unsavedChanges) => {
-  //       console.log("Unsaved changes: 213 ", unsavedChanges);
-  //        // Should hit here if executed
-  //       if (unsavedChanges) {
-  //       //   e.preventDefault();
-  //       // console.log("window.location.pathname ", window.location.pathname);
-  //       // console.log("currentPath.current ", currentPath.current);
-  //       //   pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
-  //       //   window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
-  //       //   setIsModalOpen(true);
-  //       //   setIsLeavingPage(false);
-  //       window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
-  //       }
-  //   //  }).catch(error => console.error(error));
-
-  //   };
-
-  //   window.addEventListener('popstate', handlePopState);
-  //   return () => window.removeEventListener('popstate', handlePopState);
-  // }, [hasUnsavedChanges]);
-  // useEffect(() => {
-  //   const handlePopState = async (e: PopStateEvent) => {
-  //     const nextPath = e.state?.path || window.location.pathname || "/"; // Get next path from history
-
-  //     const unsavedChanges = await hasUnsavedChanges();
-  // 
-  //     if (unsavedChanges) {
-  //       
-  //       // Re-push the same state to prevent navigation
-  //       window.history.pushState(null, '', window.location.href);
-  //       // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
-  //       setIsLeavingPage(false);
-  //       setIsModalOpen(true);
-  //     }
-
-  //     previousPath.current = nextPath;
-  //   };
-
-  //   // Push an initial state when the component mounts
-  //   window.history.pushState(null, '', window.location.href);
-
-  //   // Listen for back/forward button events
-  //   window.addEventListener('popstate', handlePopState);
-
-  //   return () => {
-  //     window.removeEventListener('popstate', handlePopState);
-  //   };
-  // }, [hasUnsavedChanges]);
-
   useEffect(() => {
     const unlisten = _history.listen(({ action, location: newLocation }) => {
       
@@ -299,12 +221,13 @@ export const useUnsavedChangesWarning = () => {
           .then((unsavedChanges) => {
             
             if (unsavedChanges) {
-              
+              const transactionType = getTransactionType();
+              const basePath = getBasePath();
               // Re-push the same state to prevent navigation
               window.history.pushState(
                 null,
                 "",
-                `/accounts/transactions/${_formState.transactionType}`
+                `${basePath}/${transactionType}`
               );
               // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
               setIsLeavingPage(false);

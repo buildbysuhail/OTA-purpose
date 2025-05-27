@@ -67,7 +67,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
           const value =
             cellElement.data?.taxableValue == null
               ? ""
-              : getFormattedValue(cellElement.data.taxableValue);
+              : getFormattedValue(cellElement.data.taxableValue,false,4);
           return {
             ...exportCell,
             text: value,
@@ -77,7 +77,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+            : getFormattedValue(parseFloat(cellElement.data.taxableValue),false,4);
         }
       },
     },

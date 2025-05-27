@@ -128,7 +128,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   couponAmt: 0.0,
   projectID: 0,
   // currencyID:0,
-  labelDesignID:0,
+  labelDesignID: 0,
   customerType: "",
   taxOnDiscount: 0.0,
   draftTransactionMasterID: 0,
@@ -152,7 +152,10 @@ export const TransactionMasterInitialData: TransactionMaster = {
   hasroundOff: false,
   cashPaid: 0.0,
   supplyType: "",
-  other: TransactionMaster3InitialData
+  other: TransactionMaster3InitialData,
+  prevTransDate: "",
+  oldLedgerID: 0,
+  dueDays: 0
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo:0,
@@ -460,5 +463,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   isPartyWiseSummaryOpen: false,
   isFormStateDetailOpen: false,
   selectedRow: undefined,
-  userRightsFormCode: ""
+  userRightsFormCode: "",
+  isPostedTransaction: false,
+  isInv: false
 }

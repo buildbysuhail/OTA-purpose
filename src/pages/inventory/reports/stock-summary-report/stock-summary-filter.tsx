@@ -161,7 +161,7 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     field={{
                         id: "location",
                         getListUrl: Urls.data_locations,
-                        valueKey: "value",
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
@@ -175,7 +175,7 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     field={{
                         id: "valuationUsing",
                         getListUrl: Urls.data_stock_valuation_methods,
-                        valueKey: "value",
+                        valueKey: "id",
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
@@ -188,12 +188,12 @@ const StockSummaryFilter = ({ getFieldProps, handleFieldChange, formState }: any
                     label={t("show_batch_wise")}
                     onChangeData={(data) => handleFieldChange("showBatchWise", data.showBatchWise)}
                 />
-                <ERPCheckbox
+                {/* <ERPCheckbox
                     id="standardFormat"
                     {...getFieldProps("standardFormat")}
                     label={t("standard_format")}
                     onChangeData={(data) => handleFieldChange("standardFormat", data.standardFormat)}
-                />
+                /> */}
             </div>
 
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2 p-4 rounded-md border border-gray-200">
@@ -274,8 +274,8 @@ export const StockSummaryFilterInitialState = {
     productCategoryID: 0,
     wareHouseID: 0,
     supplierID: 0,
-    valuationUsing: "",
-    showBatchWise: false,
+    valuationUsing: "SPP",
+    showBatchWise: true,
     barcode: "",
     productCode: "",
     groupCategoryID: 0,

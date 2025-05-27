@@ -1934,7 +1934,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                 }
               />
             )}
-            {MemoizedSummary}
+            {summaryItems && summaryItems.length > 0 && MemoizedSummary}
             <ColumnFixing enabled={true} />
             <Scrolling
               mode={scrollingMode}

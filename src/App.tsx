@@ -37,7 +37,7 @@ import { setApplicationSettings } from "./redux/slices/app/application-settings-
 import AutoClicker from "./Nodevwatermark";
 import { ClientSessionModel, setSoftwareDate } from "./redux/slices/client-session/reducer";
 import moment from "moment";
-import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
+import { useUnsavedChangesWarning } from "./pages/use-unsaved-changes-warning";
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
 import { useAppState } from "./utilities/hooks/useAppState";
 import AcceptInvitation from "./pages/auth/accept-invitation";

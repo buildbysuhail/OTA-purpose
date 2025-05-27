@@ -63,7 +63,7 @@ export const useUserRights = () => {
 
         if (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.split("").includes("S")
+          filteredRows[0]?.userRights?.split("").includes(action)
         ) {
           result = true;
         }

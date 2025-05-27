@@ -644,6 +644,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       _formState = {
         ..._formState,
+        isAcc: true,
         transactionType: transactionType ?? "",
         formCode: formCode ?? "",
         title:

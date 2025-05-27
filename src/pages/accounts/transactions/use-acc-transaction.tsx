@@ -50,8 +50,6 @@ import {
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import {
   calculateTotal,
-  isDirtyAccTransaction,
-  setTransactionForHistory,
   validateTransactionDate,
 } from "./functions";
 import { useAccPrint } from "./use-print";
@@ -60,6 +58,7 @@ import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
 import localData from "../../../enums/local-datas";
 import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
+import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 
 
 interface FormElementState {
@@ -241,7 +240,7 @@ export const useAccTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
-    const _s_isDirty = isDirtyAccTransaction(formState.prev, {
+    const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });

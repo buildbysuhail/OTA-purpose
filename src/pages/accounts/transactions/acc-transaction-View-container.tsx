@@ -11,7 +11,7 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { isChooseVoucherEnabled } from "../../../components/common/content/transaction-routes";
 import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
-import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
+import { useUnsavedChangesWarning } from "../../use-unsaved-changes-warning";
 import { useNavigate } from "react-router-dom";
 import HistorySidebar from "../../inventory/transactions/purchase/historySidebar";
 import Header from "../../inventory/transactions/purchase/components/header";

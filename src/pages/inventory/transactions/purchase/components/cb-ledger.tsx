@@ -38,9 +38,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               triggerEffect={triggerEffect}
               id="ledgerID"
               required={true}
-              className={
-                formState.userConfig?.isExpanded ? "w-[350px]" : "w-full"
-              }
+              className="w-full min-w-[150px]"
               value={formState.transaction.master.ledgerID}
               label={t(formState.formElements.ledgerID.label)}
               data={formState.transaction.master}

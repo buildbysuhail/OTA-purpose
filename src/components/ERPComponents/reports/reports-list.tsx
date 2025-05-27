@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState, useRef } from "react";
 import jwtHelper from "../../../helpers/jwt_helper";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import ReportsCard from "./Components/reports-card";
 import { ReportsMenuItems } from "../../common/sidebar/sidemenu/reports-routes";
@@ -16,6 +16,8 @@ import { ChartLine } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { customJsonParse } from "../../../utilities/jsonConverter";
+import { RootState } from "../../../redux/store";
+import { getFilteredReports } from "./reports-list-filter";
 
 interface MenuItem {
   title: string;
@@ -34,7 +36,9 @@ const ReportList = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
-  const [settingsRoutes, setSettingRoutes] = useState(ReportsMenuItems);
+  
+    let clientSession = useAppSelector((state: RootState) => state.ClientSession);
+  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession) as any);
   let sds = jwtHelper.getLoggedInUserRole();
   const preloadComponents = () => {};
 
@@ -50,7 +54,7 @@ const ReportList = () => {
   const findFavoritesInChildren = (routes: any, favorites: any) => {
     let favoriteItems: { id: number; title: string; children?: any[] }[] = [];
 
-    routes.forEach((route: any) => {
+    routes?.forEach((route: any) => {
       if (Array.isArray(favorites) && favorites?.includes(route.id)) {
         favoriteItems?.push(route);
       }

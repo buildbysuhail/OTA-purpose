@@ -53,7 +53,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             showCustomNumberChanger={
               formState.formElements.voucherNumberUpDownBtns.visible == true
             }
-            className="max-w-[100px]"
+            className="w-full max-w-[150px]"
             onChange={async (e: any) => {
               if (e.isCustomNumberChangerEvent == true) {
                 const ret = await loadAndSetTransVoucher(

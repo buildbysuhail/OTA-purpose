@@ -140,19 +140,16 @@ export default function ERPMultiSelect({
       <ERPInput
         label={label}
         value={
-          displayValue.length > 77
-            ? displayValue.substring(0, 77) + '...'
-            : displayValue
+          displayValue
         }
         placeholder={placeholder}
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         id={''}
       />
-
       {isOpen && (
         <div className={`absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}>
-          <div className="p-2 sticky top-0 bg-white border-b">
+         aSasaS <div className="p-2 sticky top-0 bg-white border-b">
             <ERPInput
               noLabel={true}
               value={searchTerm}

@@ -20,9 +20,10 @@ const StockSummary = () => {
             allowSorting: true,
             width: 150,
             showInPdf:true,
+            groupIndex:0
         },
         {
-            dataField: "productName",
+            dataField: "product",
             caption: t("product_name"),
             dataType: "string",
             allowSearch: true,
@@ -40,7 +41,30 @@ const StockSummary = () => {
             allowSorting: true,
             width: 75,
             showInPdf:true,
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stock == null
+                ? ""
+                : getFormattedValue(cellElement.data.stock);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stock == null
+              ? ""
+              : getFormattedValue(cellElement.data.stock);
+          }
         },
+      },
         {
             dataField: "unit",
             caption: t("unit"),
@@ -60,7 +84,30 @@ const StockSummary = () => {
             allowSorting: true,
             width: 75,
             showInPdf:true,
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdPPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdPPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdPPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.stdPPrice);
+          }
         },
+      },
         {
             dataField: "stockValue",
             caption: t("stock_value"),
@@ -70,7 +117,30 @@ const StockSummary = () => {
             allowSorting: true,
             width: 75,
             showInPdf:true,
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stockValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.stockValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stockValue == null
+              ? ""
+              : getFormattedValue(cellElement.data.stockValue);
+          }
         },
+      },
         {
             dataField: "stdSPrice",
             caption: t("s_rate"),
@@ -80,7 +150,30 @@ const StockSummary = () => {
             allowSorting: true,
             width: 75,
             showInPdf:true,
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdSPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdSPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdSPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.stdSPrice);
+          }
         },
+      },
         {
             dataField: "stockDetails",
             caption: t("stock_details"),

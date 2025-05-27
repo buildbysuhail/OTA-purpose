@@ -509,15 +509,23 @@ const Content: FC<ContentProps> = () => {
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
 
-        {ReportsMenuItems.map((route, index) => 
-        route?.children?.map((routeChild, indexChild) => (
+         {ReportsMenuItems.map((route, index) => 
+        route?.children?.map((routeChild, indexChild) => {
+  const childPath = routeChild.path.includes("/_/")
+    ? "/" + routeChild.path.split("/_/")[1]
+    : routeChild.path;
 
-          <Route path={routeChild.path} element={
+  return (
+
+           <Route
+      key={indexChild}
+      path={childPath}
+      element={
           <RouteGuard  formCode={routeChild.formCode} action={routeChild.action}>
           <CashBookSummary />
           </RouteGuard>} />
           
-        ))
+        ); })
       )
       }
         <Route path="/accounts/ledger_report" element={<LedgerReport />} />

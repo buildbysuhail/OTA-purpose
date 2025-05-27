@@ -18,6 +18,7 @@ import Urls from "../../../redux/urls";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { RootState } from "../../../redux/store";
 import { getFilteredReports } from "./reports-list-filter";
+import { useUserRights } from "../../../helpers/user-right-helper";
 
 interface MenuItem {
   title: string;
@@ -37,8 +38,9 @@ const ReportList = () => {
   const rootState = useRootState();
   const dispatch = useAppDispatch();
   
+    const { hasRight} = useUserRights();
     let clientSession = useAppSelector((state: RootState) => state.ClientSession);
-  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession) as any);
+  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession, hasRight) as any);
   let sds = jwtHelper.getLoggedInUserRole();
   const preloadComponents = () => {};
 

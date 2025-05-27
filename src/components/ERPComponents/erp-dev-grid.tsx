@@ -318,7 +318,7 @@ const createStore = async (
   bodyProps?: any,
   setFilterValidations?: any,
   setShowFilter?: any,
-  setTotalRowCount?: any,  
+  totalRowCountRef?: React.MutableRefObject<number>,  
   onInitialDataLoad?: (e: any) => void
 ) => {
   return new CustomStore({
@@ -417,13 +417,9 @@ const createStore = async (
         } else {
           setFilterValidations(undefined);
         }
-        setTotalRowCount((prev: number) =>
-          prev <= 0 || (loadOptions.skip ?? 0) == 0
-            ? result.dataRowCount != undefined && result.dataRowCount != null
-              ? result.dataRowCount
-              : result.totalCount
-            : prev
-        );
+          if (totalRowCountRef) {
+          totalRowCountRef.current = result?.dataRowCount || result?.totalCount || 0;
+        }
         const data = result != undefined
         ? result.isOk != undefined && result.isOk == false
           ? {
@@ -457,7 +453,10 @@ const createStore = async (
             groupCount: 0,
           }
         
-        if(onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
+          if (totalRowCountRef) {
+            totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
+          }
+          if(onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
           onInitialDataLoad(data.data);
         }
         return data;
@@ -625,6 +624,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // };
 
     // Get Actionswidth from the column configuration
+    const totalRowCountDisplayRef = useRef<HTMLSpanElement>(null);
+    const totalRowCountRef = useRef<number>(0);
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
     const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
@@ -765,7 +766,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // const onCloseFilter = useCallback(() => {
     //   console.log(`filterShowCountww: ${filterShowCount}`);
     //   if (filterShowCount == 0) {
-    //
     //     setFilter({});
     //     setFilterShowCount((prev) => prev + 1);
     //     console.log(`filterShowCount333: ${filterShowCount}`);
@@ -782,6 +782,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const fetchStore = async () => {
         if (data) {
           setStore(data);
+          if (data.totalCount) {
+            totalRowCountRef.current = data.totalCount;
+          }
           changeReload && changeReload(false);
           return;
         }
@@ -807,13 +810,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             enablefilter,
             method,
             postData,
-            filter,initialSort,
+            filter,
+            initialSort,
             initialFilters,
             paramNames,
             bodyProps,
             setFilterValidations,
             setShowFilter,
-            setTotalRowCount,
+            totalRowCountRef,
             onInitialDataLoad
           );
           setCurrentStore(newStore);
@@ -824,8 +828,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } catch (error) {
           console.error("Error creating store:", error);
           setStore(null);
-        } finally {
-        }
+          totalRowCountRef.current = 0; // Reset count on error
+        } 
+        // finally {
+        // }
       };
       fetchStore();
     }, [
@@ -1590,7 +1596,8 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       [condition] // Add dependencies here
     );
 
-    const [totalRowCount, setTotalRowCount] = useState<number>(0);
+    // const [totalRowCount, setTotalRowCount] = useState<number>(0);
+    // const totalRowCountRef = useRef<number>(0);
     const [isAtBottom, setIsAtBottom] = useState(false);
 
     // Handle scroll events
@@ -1803,7 +1810,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
               };
               options.excelCell.value = renderResult?.text;
             } else {
-              options.excelCell = options.excelCell; 
+              options.excelCell = options.excelCell; // Retain the original value
             }
           }
         };
@@ -1830,6 +1837,13 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
         setSearchText(currentSearchText);
       }
     }, [isMobileMenuOpen]);
+
+    // Add this effect to update total count when data source changes
+    useEffect(() => {
+      if (memoizedStore && 'totalCount' in memoizedStore) {
+        totalRowCountRef.current = (memoizedStore as any).totalCount || 0;
+      }
+    }, [memoizedStore]);
 
     return (
       <Fragment>
@@ -1874,7 +1888,19 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
             onKeyDown={onKeyDown}
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
-            onContentReady={onContentReady}
+            onContentReady={(e) => {
+              if (e.component) {
+                const instance = e.component;
+                const totalCount = instance.totalCount();
+                if (totalCount !== undefined) {
+                  totalRowCountRef.current = totalCount;
+                  if (totalRowCountDisplayRef.current) {
+                    totalRowCountDisplayRef.current.textContent = totalCount.toString();
+                  }
+                }
+              }
+              onContentReady && onContentReady(e);
+            }}
             showColumnLines={showColumnLines}
             showRowLines={showRowLines}
             rowAlternationEnabled={true}
@@ -2116,7 +2142,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                                   onClick={() => {
                                     handlePrintExcel();
                                     handleMobileMenuClose();
-                                  }}
+                                                                   }}
                                 >
                                   <Table className="w-4 h-4 mr-3 text-[#22c55e]" />
                                   <span>{t("export_to_excel")}</span>
@@ -2128,6 +2154,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                           {showPrintButton && (
                             <li>
                               <button
+                               
                                 className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
                                 onClick={() => {
                                   handlePrintPdf();
@@ -2443,11 +2470,13 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
           </DataGrid>
 
           {showTotalCount == true && (
-            <div className="p-3 bg-gray border dark:border-dark-border border-gray">
+            <div className="p-3 bg-gray border dark:border-dark-border border-gray flex items-center gap-1">
               <span className="text-gray font-semibold">
                 {t("total_records")}
               </span>
-              <span className="text-gray">{totalRowCount}</span>
+              <span ref={totalRowCountDisplayRef} className="text-gray">
+                {totalRowCountRef.current || 0}
+              </span>
             </div>
           )}
         </div>

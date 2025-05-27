@@ -22,7 +22,7 @@ import { TbReceipt } from "react-icons/tb";
 
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
-  Purchase = "/purchase/transactions",
+  Purchase = "/inventory/transactions",
   Sales = "/sales/transactions",
 }
 

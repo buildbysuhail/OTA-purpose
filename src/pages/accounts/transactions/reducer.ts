@@ -19,11 +19,12 @@ import { RootState } from "../../../redux/store";
 import { UserModel } from "../../../redux/slices/user-session/reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
-import { calculateTotal, clearEntryControl, setTransactionForHistory } from "./functions";
+import { calculateTotal, clearEntryControl } from "./functions";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import moment from "moment";
 import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",

@@ -11,8 +11,8 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { isChooseVoucherEnabled } from "../../../../components/common/content/transaction-routes";
 import TransactionForm from "./transaction";
 import VoucherSelector from "../../../transaction-base/voucher-selector";
-import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
 import { useNavigate } from "react-router-dom";
+import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
 
 const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {

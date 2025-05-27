@@ -412,12 +412,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadLedgerData();
   }, [formState.transaction.master.ledgerID]);
 
-  useEffect(() => {
+   useEffect(() => {
     const initializeFormElements = async () => {
       debugger;
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-
+     
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -435,7 +435,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         employeeID = userSession.employeeId ?? -2;
       }
-
+      
       const templates = formState.templates;
       const templatesData = formState.templatesData;
       const template = formState.template;
@@ -481,11 +481,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
-      _formState.userRightsFormCode =
-        isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
+       _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
 
       _formState = {
         ..._formState,
+        isInv: true,
         transaction: {
           ..._formState.transaction,
           master: {
@@ -511,8 +511,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         }
       });
 
-      let _formElements = {
-        ...initialFormElements,
+      _formState.formElements = {
+        ..._formState.formElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
         pnlImport: {
           ...initialFormElements.pnlImport,
@@ -538,32 +538,44 @@ const TransactionForm: React.FC<TransactionProps> = ({
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
+       _formState.transaction.master.fromWarehouseID =
+              applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
-        _formElements.cbWarehouse.visible = true;
+         _formState.formElements.cbWarehouse.visible = true;
 
-        if (formState.userConfig?.presetWarehouseId ?? 0 > 0) {
-          formState.transaction.master.fromWarehouseID =
-            formState.userConfig?.presetWarehouseId ?? 0;
-          _formElements.cbWarehouse.disabled = true;
+        if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
+          _formState.transaction.master.fromWarehouseID =
+            _formState.userConfig?.presetWarehouseId ?? 0;
+           _formState.formElements.cbWarehouse.disabled = true;
         } else {
           if (
             applicationSettings.accountsSettings.allowSalesCounter &&
-            (formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
+            (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
           ) {
-            formState.transaction.master.fromWarehouseID =
-              formState.userConfig?.counterWiseWarehouseId ?? 0;
+            _formState.transaction.master.fromWarehouseID =
+              _formState.userConfig?.counterWiseWarehouseId ?? 0;
           } else {
-            formState.transaction.master.fromWarehouseID =
+            _formState.transaction.master.fromWarehouseID =
               applicationSettings.inventorySettings.defaultWareHouse;
           }
         }
       }
-      dispatch(formStateSet(_formState));
-      if (voucherNo != undefined && voucherNo > 0) {
-        dispatch(
-          setUserRight({ userSession: userSession, hasRight: hasRight })
-        );
+      _formState.templates = templates;
+      _formState.templatesData = templatesData;
+      const _template = templatesData?.find(
+        (x) => x.templateGroup == _formState.transaction.master.voucherType
+      );
+      if (_template != undefined) {
+        _formState.template = _template;
+      } else {
+        _formState.template = null;
       }
+      setTransVoucher(_formState, true);
+      // if (voucherNo != undefined && voucherNo > 0) {
+      //   dispatch(
+      //     setUserRight({ userSession: userSession, hasRight: hasRight })
+      //   );
+      // }
     };
     initializeFormElements();
   }, [voucherType, voucherPrefix]);

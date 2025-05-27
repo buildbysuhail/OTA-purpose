@@ -479,6 +479,7 @@ export interface AccTransactionFormState {
   tmpVoucherNo?: number
   billWiseRemarks?: string
   masterAccountActive?: boolean
+  isAcc?: boolean
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {
@@ -648,7 +649,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   transactionType: "",
   prev: "",
   showPartySelection: false,
-  isPrintModalOpen: false
+  isPrintModalOpen: false,
+  isAcc: false
 }
 export interface PrintTransProps {
   masterAccount: string;

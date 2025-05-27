@@ -219,6 +219,7 @@ import ItemUsedForService from "../../../pages/inventory/reports/item_used_for_s
 import LPOReport from "../../../pages/inventory/reports/lpo_report/lpo_report";
 import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
 import { SearchProvider } from "../../../pages/accounts/transactions/search-context.tsx";
+import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -507,7 +508,19 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
-        <Route path="/accounts/ledger_report" element={<LedgerReport />} />
+
+        {ReportsMenuItems.map((route, index) => 
+        route?.children?.map((routeChild, indexChild) => (
+
+          <Route path={routeChild.path} element={
+          <RouteGuard  formCode={routeChild.formCode} action={routeChild.action}>
+          <CashBookSummary />
+          </RouteGuard>} />
+          
+        ))
+      )
+      }
+        
         <Route path="/accounts/cash_book" element={<CashBookSummary />} />
         <Route path="/accounts/day_book_detailed" element={<DayBookDetailed />} />
         <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />

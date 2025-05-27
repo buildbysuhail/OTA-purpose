@@ -3,8 +3,6 @@ import { useDispatch } from "react-redux";
 import {
   calculateTotal,
   disableControlsFn,
-  isDirtyTransaction,
-  setTransactionForHistory,
   setUserRightsFn,
   validateTransactionDate,
 } from "./functions";
@@ -15,19 +13,58 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../../enums/voucher-types";
 import { APIClient } from "../../../../helpers/api-client";
-import { useUserRights, UserAction } from "../../../../helpers/user-right-helper";
+import {
+  useUserRights,
+  UserAction,
+} from "../../../../helpers/user-right-helper";
 import { RootState } from "../../../../redux/store";
 import Urls from "../../../../redux/urls";
-import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { customJsonParse, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
-import { isNullOrUndefinedOrZero, isNullOrUndefinedOrEmpty, isEnterKey } from "../../../../utilities/Utils";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../utilities/hooks/useAppDispatch";
+import {
+  customJsonParse,
+  modelToBase64Unicode,
+} from "../../../../utilities/jsonConverter";
+import {
+  isNullOrUndefinedOrZero,
+  isNullOrUndefinedOrEmpty,
+  isEnterKey,
+} from "../../../../utilities/Utils";
 import { BillwiseData } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, loadTempRows, formStateTransactionDetailsRowUpdate } from "./reducer";
+import {
+  formStateHandleFieldChange,
+  formStateTransactionMasterHandleFieldChange,
+  updateFormElement,
+  formStateTransactionUpdate,
+  clearState,
+  formStateTransactionDetailsRowRemove,
+  formStateTransactionDetailsRowAdd,
+  formStateMasterHandleFieldChange,
+  loadTempRows,
+  formStateTransactionDetailsRowUpdate,
+} from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
-import { UserConfig, TransactionFormState, TransactionData, Attachments, TransactionMaster,  TransactionDetail,  } from "./transaction-types";
-import { initialTransactionDetailData, TransactionFormStateInitialData, transactionInitialData } from "./transaction-type-data";
+import {
+  UserConfig,
+  TransactionFormState,
+  TransactionData,
+  Attachments,
+  TransactionMaster,
+  TransactionDetail,
+} from "./transaction-types";
+import {
+  initialTransactionDetailData,
+  TransactionFormStateInitialData,
+  transactionInitialData,
+} from "./transaction-type-data";
+import {
+  isDirtyTransaction,
+  setTransactionForHistory,
+} from "../../../../helpers/transaction-modified-util";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -92,7 +129,6 @@ export const useTransaction = (
     }
   };
   const focusAmount = () => {
-    
     if (amountRef.current) {
       amountRef.current?.select();
       amountRef.current?.focus();
@@ -195,7 +231,7 @@ export const useTransaction = (
   const fetchUserConfig = async () => {
     try {
       const base64 = await api.get(Urls.get_acc_user_config);
-      localStorage.setItem("utc", base64);
+      localStorage.setItem("utInvc", base64);
       // Decode the base64 back to JSON string
       const _userConfig = atob(base64);
       const userConfig: UserConfig = customJsonParse(_userConfig);
@@ -217,12 +253,10 @@ export const useTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
-    
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction },
     });
     if (_s_isDirty && skipPrompt != true) {
-
       dispatch(
         formStateHandleFieldChange({
           fields: {
@@ -253,43 +287,43 @@ export const useTransaction = (
       transactionMasterID
     );
 
-    // _formState.formElements = {
-    //   ..._formState.formElements,
-    //   btnAdd: {
-    //     ..._formState.formElements.btnAdd,
-    //     label: t("add"),
-    //   },
-    //   amount: {
-    //     ..._formState.formElements.amount,
-    //     disabled: _formState.transaction.master.isLocked === true,
-    //   },
-    //   lnkUnlockVoucher: {
-    //     ..._formState.formElements.lnkUnlockVoucher,
-    //     visible:
-    //       _formState.transaction.master.isLocked === true
-    //         ? true
-    //         : _formState.formElements.lnkUnlockVoucher.visible,
-    //   },
-    //   pnlMasters: {
-    //     ..._formState.formElements.pnlMasters,
-    //     disabled: _formState.transaction.master.invTransactionMasterId > 0,
-    //   },
-    //   btnSave: {
-    //     ..._formState.formElements.btnSave,
-    //     disabled:
-    //       _formState.transaction.master.isLocked === true
-    //         ? true
-    //         : _formState.formElements.btnSave.disabled,
-    //   },
-    // };
-    // setTransVoucher(_formState);
+    _formState.formElements = {
+      ..._formState.formElements,
+      btnAdd: {
+        ..._formState.formElements.btnAdd,
+        label: t("add"),
+      },
+      amount: {
+        ..._formState.formElements.amount,
+        disabled: _formState.transaction.master.isLocked === true,
+      },
+      lnkUnlockVoucher: {
+        ..._formState.formElements.lnkUnlockVoucher,
+        visible:
+          _formState.transaction.master.isLocked === true
+            ? true
+            : _formState.formElements.lnkUnlockVoucher.visible,
+      },
+      pnlMasters: {
+        ..._formState.formElements.pnlMasters,
+        disabled: _formState.transaction.master.invTransactionMasterID > 0,
+      },
+      btnSave: {
+        ..._formState.formElements.btnSave,
+        disabled:
+          _formState.transaction.master.isLocked === true
+            ? true
+            : _formState.formElements.btnSave.disabled,
+      },
+    };
+    setTransVoucher(_formState);
     return true;
   };
   const setTransVoucher = async (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = localStorage.getItem("utc");
+    const Utc = localStorage.getItem("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const _userConfig = atob(Utc);
@@ -298,15 +332,12 @@ export const useTransaction = (
       userConfig = await fetchUserConfig();
     }
     if (userConfig) {
-      
       _formState.userConfig = userConfig;
     }
 
-    
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState)
     );
-
 
     dispatch(
       formStateHandleFieldChange({
@@ -317,6 +348,7 @@ export const useTransaction = (
     );
   };
   const { t } = useTranslation("transaction");
+
   const loadTransVoucher = async (
     usingManualInvNumber: boolean = false,
     voucherNumber?: number,
@@ -343,7 +375,8 @@ export const useTransaction = (
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
         voucherType ?? (formState.transaction?.master?.voucherType || ""),
-      voucherForm: formType ?? (formState.transaction?.master?.voucherForm || ""),
+      voucherForm:
+        formType ?? (formState.transaction?.master?.voucherForm || ""),
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
@@ -351,7 +384,6 @@ export const useTransaction = (
       `${Urls.inv_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
-
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
@@ -366,45 +398,42 @@ export const useTransaction = (
         },
       };
     }
-
+    debugger;
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
-      transactionMasterID ??
-        formState.transaction.master.invTransactionMasterID
+      transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
-
-    
+    debugger;
     voucher.transaction = {
       ...(vch || {}),
+      details: refactorDetails(
+        vch.details,
+        vch.master.voucherType,
+        vch.master.voucherForm
+      ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
     voucher.transaction.master.prevTransDate =
-          voucher.transaction.master.transactionDate == ""
-            ? moment().local().toISOString()
-            : voucher.transaction.master.prevTransDate;
-    voucher.transaction.master.oldLedgerID = voucher.transaction.master.ledgerID ;
-    voucher.isPostedTransaction =  voucher.transaction.master.isPosted;
+      voucher.transaction.master.transactionDate == ""
+        ? moment().local().toISOString()
+        : voucher.transaction.master.prevTransDate;
+    voucher.transaction.master.oldLedgerID =
+      voucher.transaction.master.ledgerID;
+    voucher.isPostedTransaction = voucher.transaction.master.isPosted;
     voucher = setUserRightsFn(voucher, userSession, hasRight);
     voucher = disableControlsFn(voucher);
-    const addData = Array.from({ length: 40300 }, (_, index) => ({
-  ...initialTransactionDetailData,
-  slNo: index + 1
-})) as TransactionDetail[];
-    voucher.transaction.details = [...voucher.transaction.details, ...addData];
+
     // Handle master data
-    voucher.formElements.lblPosted.visible = voucher.isPostedTransaction
-    voucher.transaction = vch;
+    voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
+    // voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster: TransactionMaster = {
         ...voucher.transaction.master,
-        
       };
       voucher.transaction.master = updatedMaster;
     }
     if (vch?.details) {
-      
-      voucher.transaction.details = refactorDetails(voucher.transaction);
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction
       );
@@ -416,7 +445,6 @@ export const useTransaction = (
     }
 
     voucher.transactionLoading = false;
-
 
     return voucher;
   };
@@ -431,16 +459,193 @@ export const useTransaction = (
       return baseDetail;
     });
   };
-  const refactorDetails = (transaction: TransactionData) => {
-    return transaction.details.map((detail, index) => {
-      const baseDetail = {
-        ...detail,
-        slNo: index + 1,
+  const refactorDetails = (details: any, vtype: string, formType: string) => {
+    // Pre-calculate constants and conditions
+    const isGRN = vtype === "GRN";
+    const isVAT = formType === "VAT";
+    const detailsLength = details.length;
+
+    // Pre-allocate array with known size to avoid dynamic resizing
+    const modifiedDetails: TransactionDetail[] = new Array(
+      Math.max(detailsLength, 50)
+    );
+
+    let validDetailsCount = 0;
+
+    // Single pass through details array
+    for (let i = 0; i < detailsLength; i++) {
+      const detail = details[i];
+      const slNo = i + 1;
+
+      // Parse numbers once and reuse
+      const quantity = detail.quantity ?? 0;
+      const xRate = detail.xRate ?? 0;
+      const unitPrice = detail.unitPrice ?? 0;
+      const costPerItem = detail.costPerItem ?? 0;
+      const additionalExpense = detail.additionalExpense ?? 0;
+      const grossValue = detail.grossValue ?? 0;
+      const discountPer1 = detail.discountPer1 ?? 0;
+      const discountAmt1 = detail.discountAmt1 ?? 0;
+      const schemeDiscAmt = detail.schemeDiscAmt ?? 0;
+      const netValue = detail.netValue ?? 0;
+      const netAmount = detail.netAmount ?? 0;
+      const stdSalesPrice = detail.stdSalesPrice ?? 0;
+      const minSalePrice = detail.minSalePrice ?? 0;
+      const multiFactor = detail.multiFactor ?? 1;
+
+      // Pre-calculate derived values
+      const grossFC = quantity * xRate;
+      const cost = costPerItem - additionalExpense;
+      const totalAddExpense = quantity * additionalExpense;
+      const calculatedMinSalePrice = minSalePrice * multiFactor;
+
+      // Handle conditional values efficiently
+      const vatPerc = isVAT ? detail.vatPercentage?.toString() || "0" : "0";
+      const vatAmount = isVAT
+        ? parseFloat(detail.totalVatAmount?.toString() || "0").toFixed(2)
+        : "0.00";
+      const finalUnitPrice = isGRN
+        ? unitPrice
+        : parseFloat(unitPrice.toFixed(2));
+
+      // Handle sales price fallback
+      const salesPrice =
+        stdSalesPrice || parseFloat(detail.stdSalesPricePB?.toString() || "0");
+
+      // Create object with direct property assignment (faster than spread)
+      const baseDetail: TransactionDetail = {
+        ...detail, // Keep original properties first
+        slNo: slNo + 1,
+        headerCell: (slNo + 1).toString(),
+        pCode: detail.productCode?.toString() || "",
+        productBatchID: detail.productBatchID?.toString() || "",
+        barCode: detail.autoBarcode?.toString() || "",
+        product: detail.productName?.toString() || "",
+        productID: detail.productID?.toString() || "",
+        brandID: detail.brandID?.toString() || "",
+        brand: detail.brandName?.toString() || "",
+        arabicName: detail.itemNameinSecondLanguage?.toString() || "",
+
+        // Pre-calculated quantities and pricing
+        free: parseFloat(detail.free?.toString() || "0").toFixed(4),
+        qty: quantity.toFixed(4),
+        nosQty: detail.qtyInNumbers?.toString() || "",
+
+        // Unit information
+        unit: detail.unitName?.toString() || "",
+        unitID: detail.unitID?.toString() || "",
+        unitPriceFC: xRate.toFixed(4),
+        grossFC: grossFC,
+        unitPrice: finalUnitPrice.toFixed(2),
+
+        // Pre-calculated cost
+        cost: cost.toString(),
+
+        // Tax information
+        cstPerc: detail.cstPerc?.toString() || "",
+        cst: detail.cst?.toString() || "",
+
+        // Product specifications
+        size: detail.specification?.toString() || "",
+        stickerQty: "0",
+        additionalExpense: additionalExpense.toString(),
+        colour: detail.colour?.toString() || detail.color?.toString() || "",
+        warranty: detail.warranty?.toString() || "",
+        totalAddExpense: totalAddExpense,
+
+        // Location and pricing
+        location: detail.location?.toString() || "",
+        profit: detail.totalProfit?.toString() || "",
+        salesPrice: salesPrice.toFixed(2),
+        ratePlusTax: parseFloat(detail.rateWithTax?.toString() || "0").toFixed(
+          2
+        ),
+        margin: detail.marginPer?.toString() || "",
+        stock: detail.stock?.toString() || "",
+        minSalePrice: calculatedMinSalePrice,
+
+        // Optimized date formatting
+        mfdDate: detail.mfgDate
+          ? new Date(detail.mfgDate).toLocaleDateString()
+          : "",
+        expDate: detail.expiryDate
+          ? new Date(detail.expiryDate).toLocaleDateString()
+          : "",
+
+        // Batch information
+        batchNo: detail.batchNo?.toString() || "",
+        manualBarCode: detail.mannualBarcode?.toString() || "",
+
+        // Pre-calculated financial values
+        gross: grossValue.toFixed(2),
+        discPerc: discountPer1.toFixed(2),
+        discount: discountAmt1.toFixed(2),
+        schemeDiscount: schemeDiscAmt.toFixed(2),
+
+        // Conditional VAT calculations
+        vatPerc: vatPerc,
+        vatAmount: vatAmount,
+
+        // Net values
+        netValue: netValue.toFixed(2),
+        total: netAmount.toFixed(2),
+        productDescription: detail.productDescription?.toString() || "",
+
+        // Additional unit information (batch converted)
+        unitID2: detail.unit2ID?.toString() || "",
+        unit2Qty: detail.unit2Qty?.toString() || "",
+        unit2MBarcode: detail.unit2Barcode?.toString() || "",
+        unit2SalesRate: detail.unit2SalesPrice?.toString() || "",
+        unit2MRP: detail.unit2MRP?.toString() || "",
+        unitID3: detail.unit3ID?.toString() || "",
+        unit3Qty: detail.unit3Qty?.toString() || "",
+        unit3MBarcode: detail.unit3Barcode?.toString() || "",
+        unit3SalesRate: detail.unit3SalesPrice?.toString() || "",
+        unit3MRP: detail.unit3MRP?.toString() || "",
+        memo: detail.memo?.toString() || "",
+
+        // Additional fields
+        supplierReferenceProductCode:
+          detail.supplierReferenceProductCode?.toString() || "",
+        warehouseID: detail.warehouseID?.toString() || "",
+        warehouse: detail.warehouse?.toString() || "",
+        barcodePrinted: "",
+        batchCreated: "Y",
+      };
+
+      modifiedDetails[i] = baseDetail;
+
+      // Count valid details (assuming productID exists and > 0)
+      const productID = baseDetail.productID;
+      if (!isNullOrUndefinedOrZero(baseDetail.productID) && productID > 0) {
+        validDetailsCount++;
       }
-      return baseDetail;
-    });
+    }
+
+    // Calculate empty rows needed
+    const blankDetailsCount = detailsLength - validDetailsCount;
+    const emptyRowsNeeded = Math.max(0, 50 - blankDetailsCount);
+
+    // Fill remaining slots with empty rows if needed
+    if (emptyRowsNeeded > 0) {
+      for (let i = detailsLength; i < detailsLength + emptyRowsNeeded; i++) {
+        modifiedDetails[i] = {
+          ...initialTransactionDetailData,
+          slNo: i + 1,
+        };
+      }
+    }
+
+    // Return appropriately sized array
+    return modifiedDetails.slice(
+      0,
+      Math.max(detailsLength + emptyRowsNeeded, 50)
+    );
   };
-  const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   async function undoEditMode(
     isEdit: boolean,
     transactionMasterId: number
@@ -700,20 +905,17 @@ export const useTransaction = (
     //   detailID = 0;
     // const { firstDebitLedgerID, firstCreditLedgerID } =
     //   getFirstDebitCreditLedgerIDs(formState.transaction);
-
     // for (let index = 0; index < details.length; index++) {
     //   const element: any = details[index];
     //   if (isNullOrUndefinedOrZero(element.ledgerID)) {
     //     break;
     //   }
-
     //   element.adjAmount = 0;
     //   element.checkBouncedDate = element.bankDate;
     //   element.currencyID = 1;
     //   element.exchangeRate = 1;
     //   element.isDisplay = true;
     //   element.isDr = true;
-
     //   switch (formState.transaction.master.voucherType) {
     //     case "CP":
     //     case "BP":
@@ -724,7 +926,6 @@ export const useTransaction = (
     //       element.ledgerID = element.ledgerID; // Preserve original ledgerID
     //       element.relatedLedgerID = formState.masterAccountID;
     //       break;
-
     //     case "CR":
     //     case "BR":
     //     case "DN":
@@ -734,7 +935,6 @@ export const useTransaction = (
     //       element.relatedLedgerID = element.ledgerID ?? 0;
     //       element.ledgerID = formState.masterAccountID;
     //       break;
-
     //     case "JV":
     //     case "JVSP":
     //       if (formState.row.drCr === "Dr") {
@@ -745,7 +945,6 @@ export const useTransaction = (
     //         element.relatedLedgerID = formState.masterAccountID;
     //       }
     //       break;
-
     //     case "OB":
     //       if (formState.row.drCr === "Dr") {
     //         element.relatedLedgerID =
@@ -757,7 +956,6 @@ export const useTransaction = (
     //           applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
     //       }
     //       break;
-
     //     case "MJV":
     //       if (element.drCr === "Dr") {
     //         element.ledgerID = element.ledgerID; // Keep original ledger ID
@@ -801,7 +999,6 @@ export const useTransaction = (
     //     element.checkBouncedDate == ""
     //       ? moment().local().toISOString()
     //       : element.checkBouncedDate;
-
     //   if (
     //     billWiseExcludedTransactions.includes(
     //       formState.transaction.master.voucherType
@@ -841,7 +1038,6 @@ export const useTransaction = (
     //           ?.name ?? ""
     //       : "",
     // };
-
     // master.transactionMasterID = formState.isEdit
     //   ? master.transactionMasterID
     //   : 0;
@@ -860,7 +1056,6 @@ export const useTransaction = (
     //     ? moment().local().toISOString()
     //     : master.transactionDate;
     // const totalAmount = master.totalAmount || 0;
-
     // if (master.drCr === "Cr") {
     //   master.totalCredit = totalAmount;
     //   master.totalDebit = 0;
@@ -870,7 +1065,6 @@ export const useTransaction = (
     // } else {
     //   master.totalDebit = master.totalCredit = totalAmount;
     // }
-
     // if (
     //   master.voucherType === "JV" ||
     //   master.voucherType === "MJV" ||
@@ -1042,10 +1236,7 @@ export const useTransaction = (
     //   );
     // }
   };
-  const clearRow = async (
-    isEdit: boolean,
-    transactionMasterID: number
-  ) => {
+  const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
     await undoEditMode(isEdit, transactionMasterID);
     dispatch(
       clearState({
@@ -1057,10 +1248,10 @@ export const useTransaction = (
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
         voucherNo: 0,
-        rowOnly:true
+        rowOnly: true,
       })
     );
-  }
+  };
   const clearControls = async (
     isEdit: boolean,
     transactionMasterID: number
@@ -1118,7 +1309,6 @@ export const useTransaction = (
     // if (applicationSettings.accountsSettings?.billwiseMandatory) {
     //   if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
     //     let _drCr = getDrCr(formState.transaction.master.voucherType);
-
     //     if (formState.isRowEdit != true) {
     //       if (
     //         (billwiseDetails == undefined || billwiseDetails == null) &&
@@ -1217,7 +1407,6 @@ export const useTransaction = (
     //     },
     //   });
     // }
-
     // if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
     //   ERPAlert.show({
     //     icon: "info",
@@ -1231,7 +1420,6 @@ export const useTransaction = (
     //       return false;
     //     },
     //   });
-
     //   return false;
     // }
     // if (
@@ -1265,7 +1453,6 @@ export const useTransaction = (
     //   formState.formElements.amount.disabled = false;
     // }
     // formState.formElements.btnAdd;
-
     // const costCentreName =
     //   formState.row.costCentreID ?? 0 > 0
     //     ? dataContainer.costCentres?.find(
@@ -1308,12 +1495,10 @@ export const useTransaction = (
     //   amount: { disabled: false },
     //   linkEdit: { visible: true },
     // };
-
     // // Conditionally update costCentreID if needed
     // if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
     //   updatedFields.costCentreID = { disabled: true };
     // }
-
     // // Dispatch the updateFormElement action
     // dispatch(
     //   updateFormElement({
@@ -1372,7 +1557,6 @@ export const useTransaction = (
     //   case "PV":
     //   case "PBR":
     //     return "Cr";
-
     //     break;
     //   case "OB":
     //   case "MJV":
@@ -1396,7 +1580,6 @@ export const useTransaction = (
     //   // Check PDC validation first
     //   if (row?.transactionDetailID) {
     //     const isPDCValid = await validatePDC(row?.transactionDetailID);
-
     //     if (isPDCValid) {
     //       ERPAlert.show({
     //         title: t("warning"),
@@ -1415,13 +1598,11 @@ export const useTransaction = (
     //       return;
     //     }
     //   }
-
     //   // Handle empty row
     //   if (!row) {
     //     // clearControls();
     //     return;
     //   }
-
     //   // Enable buttons
     //   dispatch(
     //     updateFormElement({
@@ -1431,7 +1612,6 @@ export const useTransaction = (
     //       },
     //     })
     //   );
-
     //   // Update row data in form state
     //   dispatch(
     //     formStateHandleFieldChange({
@@ -1443,9 +1623,7 @@ export const useTransaction = (
     //       },
     //     })
     //   );
-
     //   let transDetailsID = row.transactionDetailID;
-
     //   // Handle special voucher type cases
     //   if (
     //     ["CR", "BR", "CN", "CQR", "PBR", "JV"].includes(
@@ -1460,7 +1638,6 @@ export const useTransaction = (
     //       transDetailsID = transDetailsID + 1;
     //     }
     //   }
-
     //   // Update row edit state
     //   dispatch(
     //     formStateHandleFieldChange({
@@ -1485,7 +1662,6 @@ export const useTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    
     // if (field === "test") {
     //   focusLedgerCombo();
     // } else if (field === "grid") {
@@ -1813,7 +1989,6 @@ export const useTransaction = (
     //     icon: "warning",
     //   });
     // }
-
     // if (formState.transaction.master.isLocked) {
     //   ERPAlert.show({
     //     title: t("warning"),
@@ -1822,7 +1997,6 @@ export const useTransaction = (
     //   });
     //   return;
     // }
-
     // if (
     //   clientSession.isAppGlobal &&
     //   (formState.transaction.master.voucherType === "CQP" ||
@@ -1850,7 +2024,6 @@ export const useTransaction = (
     //     return false;
     //   }
     // }
-
     // try {
     //   const result = await api.postAsync(
     //     Urls.get_and_set_transaction_edit_mode,
@@ -1860,7 +2033,6 @@ export const useTransaction = (
     //         formState.transaction.master.transactionMasterID ?? 0,
     //     }
     //   );
-
     //   if (result?.isOk == true) {
     //     dispatch(
     //       formStateHandleFieldChange({
@@ -1933,7 +2105,6 @@ export const useTransaction = (
     //     return false;
     //   }
     // }
-
     // ERPAlert.show({
     //   title: t("confirm_delete"),
     //   text: t("delete_this_voucher"),
@@ -1949,7 +2120,6 @@ export const useTransaction = (
     //             transactionType: transactionType,
     //           })
     //         ).unwrap();
-
     //         if (res != undefined && res.isOk != true) {
     //           ERPAlert.show({
     //             title: t("failed"),
@@ -2090,107 +2260,103 @@ export const useTransaction = (
     // }
   };
   const openBillwise = async () => {
-  //   dispatch(
-  //     formStateHandleFieldChange({
-  //       fields: {
-  //         ledgerBillWiseLoading: true,
-  //       },
-  //     })
-  //   );
-  //   const _drcr = getDrCr(formState.transaction.master.voucherType);
-  //   let transactionDetailID = formState.row.transactionDetailID ?? 0;
-  //   switch (formState.transaction.master.voucherType) {
-  //     case "CR":
-  //     case "BR":
-  //     case "CN":
-  //     case "CQR":
-  //     case "PBR":
-  //       if (formState.isEdit && transactionDetailID > 0) {
-  //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-  //       }
-
-  //       break;
-  //     case "JV":
-  //       if (formState.isEdit && transactionDetailID > 0) {
-  //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-  //       }
-
-  //       break;
-  //     case "OB":
-  //       if (
-  //         formState.isEdit &&
-  //         transactionDetailID > 0 &&
-  //         formState.row.drCr.toUpperCase() == "CR"
-  //       )
-  //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-
-  //       break;
-  //   }
-  //   const billwise = await api.getAsync(
-  //     `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&TransactionDetailID=${transactionDetailID}`
-  //   );
-  //   if (transactionDetailID > 0) {
-  //     billwise.map((x: BillwiseData) => {
-  //       return {
-  //         ...x,
-  //         balanceAfter: x.balance - x.billwiseAmount,
-  //       };
-  //     });
-  //   }
-  //   setTimeout(() => {
-  //     dispatch(
-  //       formStateHandleFieldChange({
-  //         fields: {
-  //           billwiseData: billwise,
-  //           ledgerBillWiseLoading: false,
-  //         },
-  //       })
-  //     );
-  //   }, 0);
-  // };
-  // const billWiseExcludedTransactions = [
-  //   "TXP",
-  //   "CPT",
-  //   "BPT",
-  //   "CNT",
-  //   "EXP",
-  //   "CRT",
-  //   "BRT",
-  //   "DNT",
-  //   "INC",
-  // ];
-  // const showBillwise = async () => {
-  //   if (
-  //     billWiseExcludedTransactions.includes(
-  //       formState.transaction.master.voucherType
-  //     )
-  //   ) {
-  //     return false;
-  //   }
-  //   if (formState.row.ledgerID && formState.ledgerData != null) {
-  //     const isBillwiseApplicable = await isLedgerBillwiseApplicable(
-  //       formState.transaction.master.voucherType === "CN" ||
-  //         formState.transaction.master.voucherType === "DN"
-  //         ? formState.masterAccountID
-  //         : formState.row.ledgerID
-  //     );
-  //     if (isBillwiseApplicable == true) {
-  //       let _drCr = getDrCr(formState.transaction.master.voucherType);
-
-  //       dispatch(
-  //         formStateHandleFieldChange({
-  //           fields: { showbillwise: true, billwiseDrCr: _drCr },
-  //         })
-  //       );
-  //     } else {
-  //       if (formState.formElements?.costCentreID.visible == true) {
-  //         focusCostCenterRef();
-  //       } else {
-  //         addOrEditRow();
-  //         focusLedgerCode();
-  //       }
-  //     }
-  //   }
+    //   dispatch(
+    //     formStateHandleFieldChange({
+    //       fields: {
+    //         ledgerBillWiseLoading: true,
+    //       },
+    //     })
+    //   );
+    //   const _drcr = getDrCr(formState.transaction.master.voucherType);
+    //   let transactionDetailID = formState.row.transactionDetailID ?? 0;
+    //   switch (formState.transaction.master.voucherType) {
+    //     case "CR":
+    //     case "BR":
+    //     case "CN":
+    //     case "CQR":
+    //     case "PBR":
+    //       if (formState.isEdit && transactionDetailID > 0) {
+    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
+    //       }
+    //       break;
+    //     case "JV":
+    //       if (formState.isEdit && transactionDetailID > 0) {
+    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
+    //       }
+    //       break;
+    //     case "OB":
+    //       if (
+    //         formState.isEdit &&
+    //         transactionDetailID > 0 &&
+    //         formState.row.drCr.toUpperCase() == "CR"
+    //       )
+    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
+    //       break;
+    //   }
+    //   const billwise = await api.getAsync(
+    //     `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&TransactionDetailID=${transactionDetailID}`
+    //   );
+    //   if (transactionDetailID > 0) {
+    //     billwise.map((x: BillwiseData) => {
+    //       return {
+    //         ...x,
+    //         balanceAfter: x.balance - x.billwiseAmount,
+    //       };
+    //     });
+    //   }
+    //   setTimeout(() => {
+    //     dispatch(
+    //       formStateHandleFieldChange({
+    //         fields: {
+    //           billwiseData: billwise,
+    //           ledgerBillWiseLoading: false,
+    //         },
+    //       })
+    //     );
+    //   }, 0);
+    // };
+    // const billWiseExcludedTransactions = [
+    //   "TXP",
+    //   "CPT",
+    //   "BPT",
+    //   "CNT",
+    //   "EXP",
+    //   "CRT",
+    //   "BRT",
+    //   "DNT",
+    //   "INC",
+    // ];
+    // const showBillwise = async () => {
+    //   if (
+    //     billWiseExcludedTransactions.includes(
+    //       formState.transaction.master.voucherType
+    //     )
+    //   ) {
+    //     return false;
+    //   }
+    //   if (formState.row.ledgerID && formState.ledgerData != null) {
+    //     const isBillwiseApplicable = await isLedgerBillwiseApplicable(
+    //       formState.transaction.master.voucherType === "CN" ||
+    //         formState.transaction.master.voucherType === "DN"
+    //         ? formState.masterAccountID
+    //         : formState.row.ledgerID
+    //     );
+    //     if (isBillwiseApplicable == true) {
+    //       let _drCr = getDrCr(formState.transaction.master.voucherType);
+    //       dispatch(
+    //         formStateHandleFieldChange({
+    //           fields: { showbillwise: true, billwiseDrCr: _drCr },
+    //         })
+    //       );
+    //     } else {
+    //       if (formState.formElements?.costCentreID.visible == true) {
+    //         focusCostCenterRef();
+    //       } else {
+    //         addOrEditRow();
+    //         focusLedgerCode();
+    //       }
+    //     }
+    //   }
   };
   const billwiseChanged = async (showBillwise: boolean) => {
     try {
@@ -2206,7 +2372,6 @@ export const useTransaction = (
       //   //   case "PBP":
       //   //     drCr = "Dr";
       //   //     break;
-
       //   //   case "CR":
       //   //   case "BR":
       //   //   case "CN":
@@ -2215,17 +2380,14 @@ export const useTransaction = (
       //   //   case "PBR":
       //   //     drCr = "Cr";
       //   //     break;
-
       //   //   case "OB":
       //   //   case "MJV":
       //   //     drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
       //   //     break;
-
       //   //   case "JV":
       //   //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
       //   //     break;
       //   // }
-
       //   if (
       //     formState.showbillwise === true &&
       //     formState.row.ledgerID &&
@@ -2235,7 +2397,6 @@ export const useTransaction = (
       //   } else {
       //   }
       // };
-
       // loadLedgerData();
     } catch (error) {
       return false;
@@ -2243,159 +2404,158 @@ export const useTransaction = (
     }
   };
 
-// const TransactionDetailsFieldChange =  async(
-//   index: number,
-//         columnName: keyof TransactionDetail,
-//         value: TransactionDetail[keyof TransactionDetail],
-//     ): Promise<void> => {
-  
-//   switch (columnName) {
-//     case "unitPriceFC":
-//       if (formState.transaction.master.voucherForm === "Import") {
-//         const detail = formState.transaction.details[index];
-        
-//         const unitPrice = detail.unitPriceFC * formState.transaction.master.exchangeRate;
-//         const grossFC = detail.unitPriceFC * detail.qty;
-//         formStateTransactionDetailsRowUpdate([{index, key: "unitPrice",value: unitPrice}
-//           , {index, key: "grossFC",value: grossFC}
-//         ])
-//       }
-//       break;
-      
-//     case "qty":
-//     case "unitPrice":
-//       formState.transaction.details[index][columnName as keyof Pick<TransactionDetail, 'Qty' | 'UnitPrice'>] = 
-//         polosysFramework.general.val(value);
-//       calculateRowAmount(index);
-//       break;
-      
-//     case "margin":
-//       formState.transaction.details[index].Margin = polosysFramework.general.val(value);
-//       break;
-      
-//     case "salesPrice":
-//       {
-//         const detail = formState.transaction.details[index];
-//         detail.SalesPrice = polosysFramework.general.val(value);
-        
-//         const sp = detail.SalesPrice;
-//         const netAmount = polosysFramework.general.val(detail.Total);
-//         const qty = polosysFramework.general.val(detail.Qty) || 1;
-        
-//         const cost = netAmount / qty;
-//         let marginPerc = 0;
-        
-//         if (cost !== 0) {
-//           marginPerc = ((sp / cost) - 1) * 100;
-//         }
-        
-//         detail.Margin = marginPerc;
-//       }
-//       break;
-      
-//     case "product":
-//       {
-//         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
-        
-//         if (value.trim() !== "") {
-//           formState.transaction.details[index].Product = value;
-          
-//           let searchText = "";
-//           if (value.trim() === "%") return;
-          
-//           if (chkInSearch.checked && value.length > 2) {
-//             searchText = "%" + value;
-//           } else {
-//             searchText = value;
-//           }
-          
-//           if (settings.inventorySettings.advancedProductSearching) {
-//             searchText = searchText.replace(/ /g, "%");
-//           }
-          
-//           const products = new polosysERPInventoryClass.masters.products();
-//           let dt;
-          
-//           if (chkCodeSearch.checked) {
-//             dt = products.getProductsForPurchaseTransactionsView(searchText, true);
-//           } else {
-//             dt = products.getProductsForPurchaseTransactionsView(searchText);
-//           }
-          
-//           // Populate product grid
-//           const currentCell = dgvInventory.getCurrentCellDetails();
-//           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
-          
-//           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
-//           pnlProductBatches.left = cellRect.left;
-          
-//           pnlProductBatches.visible = true;
-//           dgvProduct.visible = true;
-//           dgvProduct.width = pnlProductBatches.width;
-//           dgvProductBatches.visible = false;
-//           lblproductName.visible = false;
-          
-//           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
-//           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
-          
-//           pnlProductBatches.bringToFront();
-//           setProductPanelSize();
-          
-//           dgvProduct.columns["ProductID"].visible = false;
-//           dgvProduct.loadGridViewDesignSettings();
-//         } else {
-//           pnlProductBatches.visible = false;
-//         }
-//       }
-//       break;
-      
-//     case "pCode":
-//       {
-//         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
-        
-//         formState.transaction.details[index].PCode = value;
-        
-//         if (value !== "" && value !== "%") {
-//           let searchText = "";
-          
-//           if (chkInSearch.checked) {
-//             searchText = "%" + value;
-//           } else {
-//             searchText = value;
-//           }
-          
-//           const products = new polosysERPInventoryClass.masters.products();
-//           const dt = products.getProductsForPurchaseTransactionsView(searchText, true);
-          
-//           // Populate product grid
-//           const currentCell = dgvInventory.getCurrentCellDetails();
-//           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
-          
-//           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
-//           pnlProductBatches.left = cellRect.left;
-          
-//           pnlProductBatches.visible = true;
-//           dgvProduct.visible = true;
-//           dgvProduct.width = pnlProductBatches.width;
-//           dgvProductBatches.visible = false;
-//           lblproductName.visible = false;
-          
-//           setProductPanelSize();
-          
-//           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
-//           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
-          
-//           dgvProduct.columns["ProductID"].visible = false;
-//           dgvProduct.loadGridViewDesignSettings();
-//         } else {
-//           pnlProductBatches.visible = false;
-//           dgvProduct.visible = false;
-//         }
-//       }
-//       break;
-//   }
-// };
+  // const TransactionDetailsFieldChange =  async(
+  //   index: number,
+  //         columnName: keyof TransactionDetail,
+  //         value: TransactionDetail[keyof TransactionDetail],
+  //     ): Promise<void> => {
 
+  //   switch (columnName) {
+  //     case "unitPriceFC":
+  //       if (formState.transaction.master.voucherForm === "Import") {
+  //         const detail = formState.transaction.details[index];
+
+  //         const unitPrice = detail.unitPriceFC * formState.transaction.master.exchangeRate;
+  //         const grossFC = detail.unitPriceFC * detail.qty;
+  //         formStateTransactionDetailsRowUpdate([{index, key: "unitPrice",value: unitPrice}
+  //           , {index, key: "grossFC",value: grossFC}
+  //         ])
+  //       }
+  //       break;
+
+  //     case "qty":
+  //     case "unitPrice":
+  //       formState.transaction.details[index][columnName as keyof Pick<TransactionDetail, 'Qty' | 'UnitPrice'>] =
+  //         polosysFramework.general.val(value);
+  //       calculateRowAmount(index);
+  //       break;
+
+  //     case "margin":
+  //       formState.transaction.details[index].Margin = polosysFramework.general.val(value);
+  //       break;
+
+  //     case "salesPrice":
+  //       {
+  //         const detail = formState.transaction.details[index];
+  //         detail.SalesPrice = polosysFramework.general.val(value);
+
+  //         const sp = detail.SalesPrice;
+  //         const netAmount = polosysFramework.general.val(detail.Total);
+  //         const qty = polosysFramework.general.val(detail.Qty) || 1;
+
+  //         const cost = netAmount / qty;
+  //         let marginPerc = 0;
+
+  //         if (cost !== 0) {
+  //           marginPerc = ((sp / cost) - 1) * 100;
+  //         }
+
+  //         detail.Margin = marginPerc;
+  //       }
+  //       break;
+
+  //     case "product":
+  //       {
+  //         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
+
+  //         if (value.trim() !== "") {
+  //           formState.transaction.details[index].Product = value;
+
+  //           let searchText = "";
+  //           if (value.trim() === "%") return;
+
+  //           if (chkInSearch.checked && value.length > 2) {
+  //             searchText = "%" + value;
+  //           } else {
+  //             searchText = value;
+  //           }
+
+  //           if (settings.inventorySettings.advancedProductSearching) {
+  //             searchText = searchText.replace(/ /g, "%");
+  //           }
+
+  //           const products = new polosysERPInventoryClass.masters.products();
+  //           let dt;
+
+  //           if (chkCodeSearch.checked) {
+  //             dt = products.getProductsForPurchaseTransactionsView(searchText, true);
+  //           } else {
+  //             dt = products.getProductsForPurchaseTransactionsView(searchText);
+  //           }
+
+  //           // Populate product grid
+  //           const currentCell = dgvInventory.getCurrentCellDetails();
+  //           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
+
+  //           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
+  //           pnlProductBatches.left = cellRect.left;
+
+  //           pnlProductBatches.visible = true;
+  //           dgvProduct.visible = true;
+  //           dgvProduct.width = pnlProductBatches.width;
+  //           dgvProductBatches.visible = false;
+  //           lblproductName.visible = false;
+
+  //           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
+  //           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
+
+  //           pnlProductBatches.bringToFront();
+  //           setProductPanelSize();
+
+  //           dgvProduct.columns["ProductID"].visible = false;
+  //           dgvProduct.loadGridViewDesignSettings();
+  //         } else {
+  //           pnlProductBatches.visible = false;
+  //         }
+  //       }
+  //       break;
+
+  //     case "pCode":
+  //       {
+  //         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
+
+  //         formState.transaction.details[index].PCode = value;
+
+  //         if (value !== "" && value !== "%") {
+  //           let searchText = "";
+
+  //           if (chkInSearch.checked) {
+  //             searchText = "%" + value;
+  //           } else {
+  //             searchText = value;
+  //           }
+
+  //           const products = new polosysERPInventoryClass.masters.products();
+  //           const dt = products.getProductsForPurchaseTransactionsView(searchText, true);
+
+  //           // Populate product grid
+  //           const currentCell = dgvInventory.getCurrentCellDetails();
+  //           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
+
+  //           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
+  //           pnlProductBatches.left = cellRect.left;
+
+  //           pnlProductBatches.visible = true;
+  //           dgvProduct.visible = true;
+  //           dgvProduct.width = pnlProductBatches.width;
+  //           dgvProductBatches.visible = false;
+  //           lblproductName.visible = false;
+
+  //           setProductPanelSize();
+
+  //           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
+  //           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
+
+  //           dgvProduct.columns["ProductID"].visible = false;
+  //           dgvProduct.loadGridViewDesignSettings();
+  //         } else {
+  //           pnlProductBatches.visible = false;
+  //           dgvProduct.visible = false;
+  //         }
+  //       }
+  //       break;
+  //   }
+  // };
 
   return {
     undoEditMode,
@@ -2432,7 +2592,6 @@ export const useTransaction = (
     // showBillwise,
     // billWiseExcludedTransactions,
     getDrCr,
-    clearRow
-  
+    clearRow,
   };
 };

@@ -387,7 +387,12 @@ export const userRights: UserRight[] = [
 // POST Section
 { id: 10331, headId: 103, name: "TrReports_Post", fullName: "POST", formCode: "POST", treeNode: 3, description: "POST Actions" },
 { id: 1034101, headId: 10331, name: "TrReports_Post_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print POST Report" },
-
+//NOT in 1050
+ // Bank Flow Group
+    { id: 10332, headId: 103, name: "TrReports_Bankflow", fullName: "Bank Flow", formCode: "BankFlwRpt", treeNode: 3, description: "View Bank Flow" },
+    { id: 1033201, headId: 10332, name: "TrReports_BankFlow_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Bank Flow" },
+    { id: 1033202, headId: 10332, name: "TrReports_BankFlow_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Bank Flow" },
+    { id: 1033203, headId: 10332, name: "TrReports_BankFlow_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Bank Flow" },
 
     //#endregion Accounts Reports Ends
 //#region other Utilities
@@ -860,6 +865,49 @@ export const userRights: UserRight[] = [
 { id: 2030217, headId: 2030215, name: "NdSchemeWiseSalesReport", fullName: "Scheme Wise Sales Report", formCode: "ITMSCMSRPT", treeNode: 4, description: "Manage Scheme Wise Sales Report" },
 { id: 203021701, headId: 2030217, name: "NdSchemeWiseSalesReport_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Scheme Wise Sales Report Show" },
 { id: 203021702, headId: 2030217, name: "NdSchemeWiseSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Scheme Wise Sales Report Print" },
+
+//#region NOT IN 1050
+{ id: 2030218, headId: 20302, name: "NdNetSalesReport", fullName: "Net Sales Report", formCode: "RPTNTSI", treeNode: 3, description: "Manage Net Sales Report" },
+{ id: 203021801, headId: 2030218, name: "NdNetSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Net Sales Report" },
+{ id: 203021802, headId: 2030218, name: "NdNetSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Net Sales Report" },
+{ id: 203021803, headId: 2030218, name: "NdNetSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Net Sales Report" },
+
+{ id: 2030219, headId: 20302, name: "NdDaywiseSummaryWithProfit", fullName: "Daywise Summary With Profit", formCode: "RPTSIDWSWP", treeNode: 3, description: "Manage Daywise Summary With Profit" },
+{ id: 203021901, headId: 2030219, name: "NdDaywiseSummaryWithProfit_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Daywise Summary With Profit" },
+{ id: 203021902, headId: 2030219, name: "NdDaywiseSummaryWithProfit_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Daywise Summary With Profit" },
+{ id: 203021903, headId: 2030219, name: "NdDaywiseSummaryWithProfit_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Daywise Summary With Profit" },
+
+{ id: 2030220, headId: 20302, name: "NdSalesmanWiseSalesAndCollections", fullName: "Salesman Wise Sales and Collections", formCode: "RPTSIMWSAC", treeNode: 3, description: "Manage Salesman Wise Sales and Collections" },
+{ id: 203022001, headId: 2030220, name: "NdSalesmanWiseSalesAndCollections_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Salesman Wise Sales and Collections" },
+{ id: 203022002, headId: 2030220, name: "NdSalesmanWiseSalesAndCollections_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Salesman Wise Sales and Collections" },
+{ id: 203022003, headId: 2030220, name: "NdSalesmanWiseSalesAndCollections_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Salesman Wise Sales and Collections" },
+
+{ id: 2030221, headId: 20302, name: "NdNonInvoicedGoodsDeliveryReport", fullName: "Non Invoiced Goods Delivery Report", formCode: "RPTSINIGDR", treeNode: 3, description: "Manage Non Invoiced Goods Delivery Report" },
+{ id: 203022101, headId: 2030221, name: "NdNonInvoicedGoodsDeliveryReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Non Invoiced Goods Delivery Report" },
+{ id: 203022102, headId: 2030221, name: "NdNonInvoicedGoodsDeliveryReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Non Invoiced Goods Delivery Report" },
+{ id: 203022103, headId: 2030221, name: "NdNonInvoicedGoodsDeliveryReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Non Invoiced Goods Delivery Report" },
+
+{ id: 2030222, headId: 20302, name: "NdPendingOrderReport", fullName: "Pending Order Report", formCode: "RPTPOR", treeNode: 3, description: "Manage Pending Order Report" },
+{ id: 203022201, headId: 2030222, name: "NdPendingOrderReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Pending Order Report" },
+{ id: 203022202, headId: 2030222, name: "NdPendingOrderReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Pending Order Report" },
+{ id: 203022203, headId: 2030222, name: "NdPendingOrderReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Pending Order Report" },
+
+{ id: 2030223, headId: 20302, name: "NdPromotionalSalesReport", fullName: "Promotional Sales Report", formCode: "RPTPRMSIR", treeNode: 3, description: "Manage Promotional Sales Report" },
+{ id: 203022301, headId: 2030223, name: "NdPromotionalSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Promotional Sales Report" },
+{ id: 203022302, headId: 2030223, name: "NdPromotionalSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Promotional Sales Report" },
+{ id: 203022303, headId: 2030223, name: "NdPromotionalSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Promotional Sales Report" },
+
+{ id: 2030224, headId: 20302, name: "NdGroupedBrandwiseSalesReport", fullName: "Grouped Brandwise Sales Report", formCode: "RPTGRPBRDWSIR", treeNode: 3, description: "Manage Grouped Brandwise Sales Report" },
+{ id: 203022401, headId: 2030224, name: "NdGroupedBrandwiseSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Grouped Brandwise Sales Report" },
+{ id: 203022402, headId: 2030224, name: "NdGroupedBrandwiseSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Grouped Brandwise Sales Report" },
+{ id: 203022403, headId: 2030224, name: "NdGroupedBrandwiseSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Grouped Brandwise Sales Report" },
+
+{ id: 2030225, headId: 20302, name: "NdPartyMonthWiseSalesSummary", fullName: "Party Month Wise Sales Summary", formCode: "RPTPRTYMWSIS", treeNode: 3, description: "Manage Party Month Wise Sales Summary" },
+{ id: 203022501, headId: 2030225, name: "NdPartyMonthWiseSalesSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Party Month Wise Sales Summary" },
+{ id: 203022502, headId: 2030225, name: "NdPartyMonthWiseSalesSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Party Month Wise Sales Summary" },
+{ id: 203022503, headId: 2030225, name: "NdPartyMonthWiseSalesSummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Party Month Wise Sales Summary" },
+
+//#endregion NOT IN 1050
 //#endregion Sales Report sepearte Menu
 
 //#region Purchase Report sepearte Menu
@@ -905,6 +953,26 @@ export const userRights: UserRight[] = [
 { id: 203030802, headId: 2030308, name: "NdPurchaseOrderSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Purchase Order Summary Settings" },
 { id: 203030803, headId: 2030308, name: "NdPurchaseOrderSummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Purchase Order Summary Export" },
 
+//#region NOT IN 1050
+{ id: 2030311, headId: 20303, name: "NdCreditPurchaseSummary", fullName: "Credit Purchase Summary", formCode: "RPTCPIS", treeNode: 3, description: "Manage Credit Purchase Summary" },
+{ id: 203031101, headId: 2030311, name: "NdCreditPurchaseSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Credit Purchase Summary Print" },
+{ id: 203031102, headId: 2030311, name: "NdCreditPurchaseSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Credit Purchase Summary Settings" },
+{ id: 203031103, headId: 2030311, name: "NdCreditPurchaseSummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Credit Purchase Summary Export" },
+
+{ id: 2030312, headId: 20303, name: "NdPartyMonthwisePurchaseSummary", fullName: "Party Monthwise Purchase Summary", formCode: "RPTPMPIS", treeNode: 3, description: "Manage Party Monthwise Purchase Summary" },
+{ id: 203031201, headId: 2030312, name: "NdPartyMonthwisePurchaseSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Party Monthwise Purchase Summary Print" },
+{ id: 203031202, headId: 2030312, name: "NdPartyMonthwisePurchaseSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Party Monthwise Purchase Summary Settings" },
+{ id: 203031203, headId: 2030312, name: "NdPartyMonthwisePurchaseSummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Party Monthwise Purchase Summary Export" },
+
+{ id: 2030313, headId: 20303, name: "NdPurchaseOrderTransit", fullName: "Purchase Order Transit", formCode: "RPTPIOT", treeNode: 3, description: "Manage Purchase Order Transit" },
+{ id: 203031301, headId: 2030313, name: "NdPurchaseOrderTransit_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Purchase Order Transit Print" },
+{ id: 203031302, headId: 2030313, name: "NdPurchaseOrderTransit_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Purchase Order Transit Settings" },
+{ id: 203031303, headId: 2030313, name: "NdPurchaseOrderTransit_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Purchase Order Transit Export" },
+
+
+
+
+//#endregion NOT IN 1050
 //#endregion Purchase Report sepearte Menu
 { id: 20304, headId: 203, name: "trTaxReports", fullName: "Tax Reports", formCode: "TAXRPT", treeNode: 3, description: "Manage Tax Reports" },
 { id: 2030401, headId: 20304, name: "trTaxReports_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Tax Reports Print" },
@@ -1130,6 +1198,21 @@ export const userRights: UserRight[] = [
   { id: 203120701, headId: 2031207, name: "BranchTransferIn_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer In Print" },
   { id: 203120702, headId: 2031207, name: "BranchTransferIn_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer In Settings" },
   { id: 203120703, headId: 2031207, name: "BranchTransferIn_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer In Export" },
+
+//#region NOT IN 1050
+ // Branch Transfer Out Summary
+  { id: 2031210, headId: 20312, name: "BranchTransferOutSummary", fullName: "Branch Transfer Out Summary", formCode: "BTOSRPT", treeNode: 4, description: "Manage Branch Transfer Out Summary" },
+  { id: 203120601, headId: 2031210, name: "BranchTransferOutSummary_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer Out Summary Print" },
+  { id: 203120602, headId: 2031210, name: "BranchTransferOutSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer Out Summary Settings" },
+  { id: 203120603, headId: 2031210, name: "BranchTransferOutSummary_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer Out Summary Export" },
+  
+  // Branch Transfer In Summary
+  { id: 2031211, headId: 20312, name: "BranchTransferInSummary", fullName: "Branch Transfer In Summary", formCode: "BTISRPT", treeNode: 4, description: "Manage Branch Transfer In Summary" },
+  { id: 203121101, headId: 2031211, name: "BranchTransferInSummary_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer In Summary Print" },
+  { id: 203121102, headId: 2031211, name: "BranchTransferInSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer In Summary Settings" },
+  { id: 203121103, headId: 2031211, name: "BranchTransferInSummary_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer In Summary Export" },
+//#endregion NOT IN 1050
+
   
   // Transaction Analysis
   { id: 20313, headId: 203, name: "TransactionAnalysis", fullName: "Transaction Analysis", formCode: "TARPT", treeNode: 3, description: "Manage Transaction Analysis" },
@@ -1271,7 +1354,12 @@ export const userRights: UserRight[] = [
   // Routewise Sales and Collection
   { id: 2032705, headId: 20327, name: "RoutewiseSalesCollection", fullName: "Routewise Sales and Collection", formCode: "ROUTWISE_SL_CR_1", treeNode: 4, description: "Manage Routewise Sales and Collection" },
   { id: 203270501, headId: 2032705, name: "RoutewiseSalesCollection_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Routewise Sales and Collection Show" },
-  
+  //#region NOT IN 1050 and india
+  { id: 2032706, headId: 20327, name: "VoidReport", fullName: "Void Report", formCode: "RPTADVOID", treeNode: 4, description: "Manage Void Report" },
+  { id: 203270601, headId: 2032706, name: "VoidReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Void Report Print" },
+  { id: 203270602, headId: 2032706, name: "VoidReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Void Report Settings" },
+  { id: 203270603, headId: 2032706, name: "VoidReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Void Report Export" },
+//#endregion NOT IN 1050
   // Service Report
   { id: 20328, headId: 203, name: "ServiceReport", fullName: "Service Report", formCode: "SERVCRPT", treeNode: 3, description: "Manage Service Report" },
   { id: 2032801, headId: 20328, name: "ServiceReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Service Report Print" },

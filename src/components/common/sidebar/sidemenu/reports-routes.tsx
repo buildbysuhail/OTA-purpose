@@ -34,121 +34,129 @@ import { UserAction } from "../../../../helpers/user-right-helper";
 import { lazy, ReactElement } from "react";
 const TrialBalance = lazy(() => import("../../../../pages/accounts/reports/trialBalance/trial-balance"));
 const StockFlow = lazy(() => import("../../../../pages/inventory/reports/stock-flow/stock-flow-report"));
-import TrialBalancePeriodwise from "../../../../pages/accounts/reports/trialBalance/trial-balance-detailed";
-import ProfitAndLossDetailedReport from "../../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed";
-import ProfitAndLossReport from "../../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report";
-import BalanceSheet from "../../../../pages/accounts/reports/balanceSheet/balace-sheet";
-import BalancesheetVertical from "../../../../pages/accounts/reports/balanceSheet/balancesheet-vertical";
-import TransactionReport from "../../../../pages/accounts/reports/transactionReport/transaction-report";
-import AccountsHistoryReport from "../../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
-import InventoryHistoryReport from "../../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report";
-import DailySummaryMaster from "../../../../pages/accounts/reports/dailySummary/daily-summary-master";
-import DailySummaryGlobal from "../../../../pages/accounts/reports/dailySummary/daily-summary-global";
-import BillwiseProfit from "../../../../pages/accounts/reports/billwise-profit/billwise-profit";
-import BillwiseProfitGlobal from "../../../../pages/accounts/reports/billwise-profit/billwise-profit-global";
-import LedgerReport from "../../../../pages/accounts/reports/ledger-report";
-import OutstandingAccountPayableAgingReport from "../../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report";
-import OutstandingAccountPayableReport from "../../../../pages/accounts/reports/outStandingReports/outstanding-account-payable-report";
-import PartySummaryMaster from "../../../../pages/accounts/reports/partywise-summary/party-summary-master";
-import OutstandingAccountReceivableReport from "../../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report";
-import OutstandingAccountReceivableAgingReport from "../../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-receivable-aging-report";
-import CashBookSummary from "../../../../pages/accounts/reports/cashBook/cash-book-summary";
-import DayBookDetailed from "../../../../pages/accounts/reports/dayBook/day-book-detailed";
-import DayBookSummary from "../../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary";
-import PaymentReport from "../../../../pages/accounts/reports/payment-report";
-import CollectionReport from "../../../../pages/accounts/reports/collection-report";
-import CashSummary from "../../../../pages/accounts/reports/cashSummary/cash-summary";
-import CashSummaryLedgerwise from "../../../../pages/accounts/reports/cashSummary/cash-summary-ledgerwise";
-import IncomeReport from "../../../../pages/accounts/reports/incomeexpense/income-report";
-import IncomeReportDetailed from "../../../../pages/accounts/reports/incomeexpense/income-report-detailed";
-import ExpenseReport from "../../../../pages/accounts/reports/incomeexpense/expense-report";
-import BankFlowReport from "../../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
-import IncomExpenseStatement from "../../../../pages/accounts/reports/incomeexpense/income-expense-statement";
-import BankStatementReport from "../../../../pages/accounts/reports/bank-statement-report";
-import CashFlowReport from "../../../../pages/accounts/reports/CashFlowBankFlow/rpt-cash-flow-report";
-import ExpenseReportDetailed from "../../../../pages/accounts/reports/incomeexpense/expense-report-detailed";
-import SummaryReport from "../../../../pages/inventory/reports/summary-report/summary-report";
+const TrialBalancePeriodwise = lazy(() => import("../../../../pages/accounts/reports/trialBalance/trial-balance-detailed"));
+const ProfitAndLossDetailedReport = lazy(() => import("../../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed"));
+const ProfitAndLossReport = lazy(() => import("../../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report"));
+const BalanceSheet = lazy(() => import("../../../../pages/accounts/reports/balanceSheet/balace-sheet"));
+const BalancesheetVertical = lazy(() => import("../../../../pages/accounts/reports/balanceSheet/balancesheet-vertical"));
+const TransactionReport = lazy(() => import("../../../../pages/accounts/reports/transactionReport/transaction-report"));
+const AccountsHistoryReport = lazy(() => import("../../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report"));
+const InventoryHistoryReport = lazy(() => import("../../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report"));
+const DailySummaryMaster = lazy(() => import("../../../../pages/accounts/reports/dailySummary/daily-summary-master"));
+const DailySummaryGlobal = lazy(() => import("../../../../pages/accounts/reports/dailySummary/daily-summary-global"));
+const BillwiseProfit = lazy(() => import("../../../../pages/accounts/reports/billwise-profit/billwise-profit"));
+const BillwiseProfitGlobal = lazy(() => import("../../../../pages/accounts/reports/billwise-profit/billwise-profit-global"));
+const LedgerReport = lazy(() => import("../../../../pages/accounts/reports/ledger-report"));
+const OutstandingAccountPayableAgingReport = lazy(() => import("../../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report"));
+const OutstandingAccountPayableReport = lazy(() => import("../../../../pages/accounts/reports/outStandingReports/outstanding-account-payable-report"));
+const PartySummaryMaster = lazy(() => import("../../../../pages/accounts/reports/partywise-summary/party-summary-master"));
+const OutstandingAccountReceivableReport = lazy(() => import("../../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report"));
+const OutstandingAccountReceivableAgingReport = lazy(() => import("../../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-receivable-aging-report"));
+const CashBookSummary = lazy(() => import("../../../../pages/accounts/reports/cashBook/cash-book-summary"));
+const DayBookDetailed = lazy(() => import("../../../../pages/accounts/reports/dayBook/day-book-detailed"));
+const DayBookSummary = lazy(() => import("../../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary"));
+const PaymentReport = lazy(() => import("../../../../pages/accounts/reports/payment-report"));
+const CollectionReport = lazy(() => import("../../../../pages/accounts/reports/collection-report"));
+const CashSummary = lazy(() => import("../../../../pages/accounts/reports/cashSummary/cash-summary"));
+const CashSummaryLedgerwise = lazy(() => import("../../../../pages/accounts/reports/cashSummary/cash-summary-ledgerwise"));
+const IncomeReport = lazy(() => import("../../../../pages/accounts/reports/incomeexpense/income-report"));
+const IncomeReportDetailed = lazy(() => import("../../../../pages/accounts/reports/incomeexpense/income-report-detailed"));
+const ExpenseReport = lazy(() => import("../../../../pages/accounts/reports/incomeexpense/expense-report"));
+const BankFlowReport = lazy(() => import("../../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report"));
+const IncomExpenseStatement = lazy(() => import("../../../../pages/accounts/reports/incomeexpense/income-expense-statement"));
+const BankStatementReport = lazy(() => import("../../../../pages/accounts/reports/bank-statement-report"));
+const CashFlowReport = lazy(() => import("../../../../pages/accounts/reports/CashFlowBankFlow/rpt-cash-flow-report"));
+const ExpenseReportDetailed = lazy(() => import("../../../../pages/accounts/reports/incomeexpense/expense-report-detailed"));
+const SummaryReport = lazy(() => import("../../../../pages/inventory/reports/summary-report/summary-report"));
+const RegisterReport = lazy(() => import("../../../../pages/inventory/reports/register-report/register-report"));
+const PartyWiseReport = lazy(() => import("../../../../pages/inventory/reports/party-wise-report/party-wise-report"));
+const TaxReportDetailed = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed"));
+const TaxReportSummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary"));
+const CreditPurchaseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report"));
+const PartyMonthwiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report"));
+const PurchaseOrderTransitReport = lazy(() => import("../../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report"));
+const PurchaseTaxGSTDailySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report"));
+const PurchaseTaxGSTAdvRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-adv-register-format-report"));
+const PurchaseTaxGSTRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-register-format-report"));
+const PurchaseTaxGSTDetailed = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-detailed-report"));
+const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-monthly-summary-report"));
+const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
+const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
+const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
+const OpeningStock = lazy(() => import("../../../../pages/inventory/reports/opening-stock-report/opening-stock"));
+const StockTransfer = lazy(() => import("../../../../pages/inventory/reports/stock-transfer-report/stock-transfer"));
+const DamageStock = lazy(() => import("../../../../pages/inventory/reports/damage-stock-report/damage-stock"));
+const ExcessStock = lazy(() => import("../../../../pages/inventory/reports/excess-stock-report/excess-stock"));
+const ShortageStock = lazy(() => import("../../../../pages/inventory/reports/shortage-stock-report/shortage-stock"));
+const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out"));
+const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
+const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out"));
+const BranchTransferSummaryIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in"));
+const ItemWiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary"));
+const StockSummary = lazy(() => import("../../../../pages/inventory/reports/stock-summary-report/stock-summary"));
+const StockLedger = lazy(() => import("../../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
+const ExpiryReport = lazy(() => import("../../../../pages/inventory/reports/expiry-report/expiry-report"));
+const TransactionAnalysisReport = lazy(() => import("../../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report"));
+const SalesAndSalesReturn = lazy(() => import("../../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return"));
+const NetSalesReport = lazy(() => import("../../../../pages/inventory/reports/net-sales-report/net-sales"));
+const DaywiseSummaryWithProfit = lazy(() => import("../../../../pages/inventory/reports/daywise-summary-with-profit-report/daywise-summary-with-profit"));
+const GroupwiseSalesSummaryDevexpress = lazy(() => import("../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-devexpress"));
+const GroupwiseSalesSummary = lazy(() => import("../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary"));
+const SalesmanwiseSalesAndCollection = lazy(() => import("../../../../pages/inventory/reports/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection"));
+const NonInvoicedGoodsDelivery = lazy(() => import("../../../../pages/inventory/reports/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery"));
+const PendingOrderReport = lazy(() => import("../../../../pages/inventory/reports/pending-order-report/pending-order"));
+const PromotionalSalesReport = lazy(() => import("../../../../pages/inventory/reports/promotional-sales-report/promotional-sales"));
+const GroupedBrandwiseSales = lazy(() => import("../../../../pages/inventory/reports/grouped-brandwise-sales-report/grouped-brandwise-sales"));
+const CouponReports = lazy(() => import("../../../../pages/inventory/reports/coupon-report/coupon-report"));
+const SchemeWiseSales = lazy(() => import("../../../../pages/inventory/reports/scheme-wise-sales-report/scheme-wise-sales"));
+const RouteWiseSalesAndCollection = lazy(() => import("../../../../pages/inventory/reports/routewise-sales-and-collection-report/routewise-sales-and-collection"));
+const BranchInventoryRequestPendingOrder = lazy(() => import("../../../../pages/inventory/reports/branch-inventory-request-pending-order-report/branch-inventory-request-pending-order"));
+const PrintDetails = lazy(() => import("../../../../pages/inventory/reports/print-details-report/print-details"));
+const InventoryStatusReport = lazy(() => import("../../../../pages/inventory/reports/inventory-status-report/inventory-status"));
+const VoidReport = lazy(() => import("../../../../pages/inventory/reports/void-report/void-report"));
+const CounterReport = lazy(() => import("../../../../pages/inventory/reports/counter-report/counter-report"));
+const DiagnosisReport = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report"));
+const DiagnosisReportZeroRateProductlist = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-zero-rate-productlist"));
+const DiagnosisReportPostDatedTransactions = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-post-dated-transactions"));
+const DiagnosisReportSalesPriceLessThanLPCost = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-lp-cost"));
+const DiagnosisReportSalesPriceLessthanPurchasePrice = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price"));
+const DiagnosisReportSalesPriceLessthanMSP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp"));
+const DiagnosisReportSalesPriceGreaterthanMRP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp"));
+const CustomerVisitTotalVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report"));
+const CustomerVisitLastVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report"));
+const FOCRegisterReport = lazy(() => import("../../../../pages/inventory/reports/foc-register-report/foc-register-report"));
+const DiscountReportInventory = lazy(() => import("../../../../pages/inventory/reports/discount_report_inventory-report/discount_report_inventory-report"));
+const DiscountReportCollection = lazy(() => import("../../../../pages/inventory/reports/discount_report_collection-report/discount_report_collection-report"));
+const ItemUsedForService = lazy(() => import("../../../../pages/inventory/reports/item_used_for_service-report/item_used_for_service-report"));
+const LPOReport = lazy(() => import("../../../../pages/inventory/reports/lpo_report/lpo_report"));
+const SalesTransferMonthWiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/sales-transfer-monthWise-summary/sales-transfer-monthwise-summary-report"));
+const PurchaseTaxReport = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/Purchase-Tax-report"));
+const SalesTax = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/sales-tax"));
+const VatReturnForm = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form"));
+const VatReturnFormArabic = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic"));
+const KsaEInvoiceReportSummary = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/ksa-e-invoice-report/ksa-e-invoice-summary.tsx"));
+const KsaEInvoiceReportDetailed = lazy(() => import("../../../../pages/inventory/reports/tax-reports-ksa/ksa-e-invoice-report/ksa-e-invoice-detailed"));
+const GSTR1B2B = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-b2b"));
+const GSTR1B2CLarge = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-b2c-large"));
+const GSTR1B2CSmall = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-b2c-small"));
+const GSTR1CDNR = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-cdnr"));
+const GSTR1CDNUR = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-cdnur"));
+const GSTR1HSNSummary = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-summaryOfHSN"));
+const GSTR1Docs = lazy(() => import("../../../../pages/inventory/reports/GSTR1/gstr1-docs"));
+const GSTR3BReport = lazy(() => import("../../../../pages/inventory/reports/GSTR3B/gstr3b"));
+const DailyStatementReport = lazy(() => import("../../../../pages/inventory/reports/daily-statement-report/daily-statement-report"));
+const DailyStatementAllReport = lazy(() => import("../../../../pages/inventory/reports/daily-statement-report/daily-statement-all-report "));
+const PriceList = lazy(() => import("../../../../pages/inventory/reports/price-list/price-list-report"));
+const DailyBalanceAmount = lazy(() => import("../../../../pages/inventory/reports/daily-balance/daily-balance-report"));
+const ProductSummaryMaster = lazy(() => import("../../../../pages/inventory/reports/product-summary/product-summary-master"));
+const InventorySummaryReport = lazy(() => import("../../../../pages/inventory/reports/inventory-summary-report/inventory-summary-report"));
+const ServiceReport = lazy(() => import("../../../../pages/inventory/reports/service-report/service-report"));
+const SalesmanIncentiveReport = lazy(() => import("../../../../pages/inventory/reports/salesman-incentive-report/salesman-incentive-report"));
+const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/reports/privilege-card-report/privilege-card"));
+
 import urls from "../../../../redux/urls";
-import RegisterReport from "../../../../pages/inventory/reports/register-report/register-report";
-import PartyWiseReport from "../../../../pages/inventory/reports/party-wise-report/party-wise-report";
-import TaxReportDetailed from "../../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
-import TaxReportSummary from "../../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
-import CreditPurchaseSummaryReport from "../../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report";
-import PartyMonthwiseSummaryReport from "../../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report";
-import PurchaseOrderTransitReport from "../../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report";
-import PurchaseTaxGSTDailySummary from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report";
-import PurchaseTaxGSTAdvRegisterFormat from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-adv-register-format-report";
-import PurchaseTaxGSTRegisterFormat from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-register-format-report";
-import PurchaseTaxGSTDetailed from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-detailed-report";
-import PurchaseTaxGSTMonthlySummary from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-monthly-summary-report";
-import PurchaseTaxGSTTaxwiseWithHSN from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
-import PurchaseTaxGSTTaxwise from "../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report";
-import PurchaseReturnTaxGSTSalesAndReturn from "../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
-import OpeningStock from "../../../../pages/inventory/reports/opening-stock-report/opening-stock";
-import StockTransfer from "../../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
-import DamageStock from "../../../../pages/inventory/reports/damage-stock-report/damage-stock";
-import ExcessStock from "../../../../pages/inventory/reports/excess-stock-report/excess-stock";
-import ShortageStock from "../../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
-import BranchTransferOut from "../../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
-import BranchTransferIn from "../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
-import BranchTransferSummaryOut from "../../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
-import BranchTransferSummaryIn from "../../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
-import ItemWiseSummaryReport from "../../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary";
-import StockSummary from "../../../../pages/inventory/reports/stock-summary-report/stock-summary";
-import StockLedger from "../../../../pages/inventory/reports/stock-ledger/stock-ledger-report";
-import ExpiryReport from "../../../../pages/inventory/reports/expiry-report/expiry-report";
-import TransactionAnalysisReport from "../../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report";
-import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
-import SalesAndSalesReturn from "../../../../pages/inventory/reports/sales-and-sales-return-report/sales-and-sales-return";
-import NetSalesReport from "../../../../pages/inventory/reports/net-sales-report/net-sales";
-import DaywiseSummaryWithProfit from "../../../../pages/inventory/reports/daywise-summary-with-profit-report/daywise-summary-with-profit";
-import GroupwiseSalesSummaryDevexpress from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-devexpress";
-import GroupwiseSalesSummary from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary";
-import SalesmanwiseSalesAndCollection from "../../../../pages/inventory/reports/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection";
-import NonInvoicedGoodsDelivery from "../../../../pages/inventory/reports/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery";
-import PendingOrderReport from "../../../../pages/inventory/reports/pending-order-report/pending-order";
-import PromotionalSalesReport from "../../../../pages/inventory/reports/promotional-sales-report/promotional-sales";
-import GroupedBrandwiseSales from "../../../../pages/inventory/reports/grouped-brandwise-sales-report/grouped-brandwise-sales";
-import CouponReports from "../../../../pages/inventory/reports/coupon-report/coupon-report";
-import SchemeWiseSales from "../../../../pages/inventory/reports/scheme-wise-sales-report/scheme-wise-sales";
-import RouteWiseSalesAndCollection from "../../../../pages/inventory/reports/routewise-sales-and-collection-report/routewise-sales-and-collection";
-import BranchInventoryRequestPendingOrder from "../../../../pages/inventory/reports/branch-inventory-request-pending-order-report/branch-inventory-request-pending-order";
-import PrintDetails from "../../../../pages/inventory/reports/print-details-report/print-details";
-import InventoryStatusReport from "../../../../pages/inventory/reports/inventory-status-report/inventory-status";
-import VoidReport from "../../../../pages/inventory/reports/void-report/void-report";
-import CounterReport from "../../../../pages/inventory/reports/counter-report/counter-report";
-import DiagnosisReport from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report";
-import DiagnosisReportZeroRateProductlist from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-zero-rate-productlist";
-import DiagnosisReportPostDatedTransactions from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-post-dated-transactions";
-import DiagnosisReportSalesPriceLessThanLPCost from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-lp-cost";
-import DiagnosisReportSalesPriceLessthanPurchasePrice from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price";
-import DiagnosisReportSalesPriceLessthanMSP from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp";
-import DiagnosisReportSalesPriceGreaterthanMRP from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp";
-import CustomerVisitTotalVisit from "../../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report";
-import CustomerVisitLastVisit from "../../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report";
-import FOCRegisterReport from "../../../../pages/inventory/reports/foc-register-report/foc-register-report";
-import DiscountReportInventory from "../../../../pages/inventory/reports/discount_report_inventory-report/discount_report_inventory-report";
-import DiscountReportCollection from "../../../../pages/inventory/reports/discount_report_collection-report/discount_report_collection-report";
-import ItemUsedForService from "../../../../pages/inventory/reports/item_used_for_service-report/item_used_for_service-report";
-import LPOReport from "../../../../pages/inventory/reports/lpo_report/lpo_report";
-import SalesTransferMonthWiseSummaryReport from "../../../../pages/inventory/reports/sales-transfer-monthWise-summary/sales-transfer-monthwise-summary-report";
-import PurchaseTaxReport from "../../../../pages/inventory/reports/tax-reports-ksa/Purchase-Tax-report";
-import SalesTax from "../../../../pages/inventory/reports/tax-reports-ksa/sales-tax";
-import VatReturnForm from "../../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form";
-import VatReturnFormArabic from "../../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic";
-import KsaEInvoiceReportSummary from "../../../../pages/inventory/reports/tax-reports-ksa/ksa-e-invoice-report/ksa-e-invoice-summary.tsx";
-import KsaEInvoiceReportDetailed from "../../../../pages/inventory/reports/tax-reports-ksa/ksa-e-invoice-report/ksa-e-invoice-detailed";
-import GSTR1B2B from "../../../../pages/inventory/reports/GSTR1/gstr1-b2b";
-import GSTR1B2CLarge from "../../../../pages/inventory/reports/GSTR1/gstr1-b2c-large";
-import GSTR1B2CSmall from "../../../../pages/inventory/reports/GSTR1/gstr1-b2c-small";
-import GSTR1CDNR from "../../../../pages/inventory/reports/GSTR1/gstr1-cdnr";
-import GSTR1CDNUR from "../../../../pages/inventory/reports/GSTR1/gstr1-cdnur";
-import GSTR1HSNSummary from "../../../../pages/inventory/reports/GSTR1/gstr1-summaryOfHSN";
-import GSTR1Docs from "../../../../pages/inventory/reports/GSTR1/gstr1-docs";
-import GSTR3BReport from "../../../../pages/inventory/reports/GSTR3B/gstr3b";
 import GridId from "../../../../redux/gridId";
-import DailyStatementReport from "../../../../pages/inventory/reports/daily-statement-report/daily-statement-report";
-import DailyStatementAllReport from "../../../../pages/inventory/reports/daily-statement-report/daily-statement-all-report ";
+import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -182,12 +190,12 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 27,element:<TrialBalance />, formCode:"TBRpt", action: UserAction.Show, path: `/reports/_/accounts/trial_balance`, type: 'link', active: false, selected: false, title: 'trial_balance', icon: SlEqualizer },
-      { id: 28,element:<TrialBalancePeriodwise />, formCode:"TBRpt", action: UserAction.Show,  path: `/reports/_/accounts/trial_balance_period_wise`, type: 'link', active: false, selected: false, title: 'trial_balance_periodwise', icon: ImEqualizer2 },
-      { id: 29,element:<ProfitAndLossReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss`, type: 'link', active: false, selected: false, title: 'profit_&_loss_account', icon: TrendingUp },
-      { id: 30,element:<ProfitAndLossDetailedReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss_detailed`, type: 'link', active: false, selected: false, title: 'profit_&_loss_account_detailed', icon: TfiStatsUp },
-      { id: 31,element:<BalanceSheet />, formCode:"BSRPT", action: UserAction.Show, path: `/reports/_/accounts/balance_sheet`, type: 'link', active: false, selected: false, title: 'balance_sheet', icon: Scale },
-      { id: 32,element:<BalancesheetVertical />, formCode:"BSRPT", action: UserAction.Show, path: `/reports/_/accounts/balance_sheet_detailed`, type: 'link', active: false, selected: false, title: 'balance_sheet_detailed', icon: FaScaleUnbalancedFlip },
+      { id: 1,element:<TrialBalance />, formCode:"TBRpt", action: UserAction.Show, path: `/reports/_/accounts/trial_balance`, type: 'link', active: false, selected: false, title: 'trial_balance', icon: SlEqualizer },
+      { id: 2,element:<TrialBalancePeriodwise />, formCode:"TBRpt", action: UserAction.Show,  path: `/reports/_/accounts/trial_balance_period_wise`, type: 'link', active: false, selected: false, title: 'trial_balance_periodwise', icon: ImEqualizer2 },
+      { id: 3,element:<ProfitAndLossReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss`, type: 'link', active: false, selected: false, title: 'profit_&_loss_account', icon: TrendingUp },
+      { id: 4,element:<ProfitAndLossDetailedReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss_detailed`, type: 'link', active: false, selected: false, title: 'profit_&_loss_account_detailed', icon: TfiStatsUp },
+      { id: 5,element:<BalanceSheet />, formCode:"BSRPT", action: UserAction.Show, path: `/reports/_/accounts/balance_sheet`, type: 'link', active: false, selected: false, title: 'balance_sheet', icon: Scale },
+      { id: 6,element:<BalancesheetVertical />, formCode:"BSRPT", action: UserAction.Show, path: `/reports/_/accounts/balance_sheet_detailed`, type: 'link', active: false, selected: false, title: 'balance_sheet_detailed', icon: FaScaleUnbalancedFlip },
     ]
   },
 
@@ -203,26 +211,26 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 17,element:<TransactionReport />, formCode:"TRANSRPT", action: UserAction.Show, path: `/reports/_/accounts/transaction_report`, type: 'link', active: false, selected: false, title: 'transaction_report', icon: FiFileText },
-      { id: 18,element:<AccountsHistoryReport />, formCode:"RPTTRAHST", action: UserAction.Show, path: `/reports/_/accounts/transaction_history_accounts`, type: 'link', active: false, selected: false, title: 'transaction_history_accounts', icon: LuHistory },
-      { id: 19,element:<InventoryHistoryReport />, formCode:"RPTTRAHST", action: UserAction.Show, path: `/reports/_/accounts/transaction_history_inventory`, type: 'link', active: false, selected: false, title: 'transaction_history_inventory', icon: MdOutlineManageHistory },
-      { id: 20,element:<DailySummaryMaster />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report', icon: CalendarClock },
-      { id: 20,element:<DailySummaryGlobal />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report___', icon: CalendarClock },
-      { id: 21,element:<BillwiseProfit />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report', icon: ChartNoAxesCombined },
-      { id: 21,element:<BillwiseProfitGlobal />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report__', icon: ChartNoAxesCombined },
-      { id: 22,element:<PartySummaryMaster />, formCode:"PRTSUM", action: UserAction.Show, path: `/reports/_/accounts/partywise_summary`, type: 'link', active: false, selected: false, title: 'partywise_summary_report', icon: Component },
-      { id: 23,element:<OutstandingAccountPayableReport />, formCode:"RPTACCPAY", action: UserAction.Show, path: `/reports/_/accounts/outstanding_payable`, type: 'link', active: false, selected: false, title: 'account_payable', icon: LucideCreditCard },
-      { id: 24,element:<OutstandingAccountReceivableReport />, formCode:"RPTACCREC", action: UserAction.Show, path: `/reports/_/accounts/outstanding_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable', icon: LucideDollarSign },
-      { id: 25,element:<OutstandingAccountPayableAgingReport />, formCode:"APAGINGRPT", action: UserAction.Show, path: `/reports/_/accounts/outstanding_aging_payable`, type: 'link', active: false, selected: false, title: 'account_payable_aging_report', icon: Clock1Icon },
-      { id: 26,element:<OutstandingAccountReceivableAgingReport />, formCode:"ARAGINGRPT", action: UserAction.Show, path: `/reports/_/accounts/outstanding_aging_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', icon: Calendar },
-      { id: 1,element:<LedgerReport />, formCode:"LEDGRRPT", action: UserAction.Show, path: `/reports/_/accounts/ledger_report`, type: 'link', active: false, selected: false, title: 'ledger_report', icon: IoBookOutline },
-      { id: 2,element:<CashBookSummary />, formCode:"CPRPT", action: UserAction.Show, path: `/reports/_/accounts/cash_book`, type: 'link', active: false, selected: false, title: 'cash_book', icon: FaCoins },
-      { id: 3,element:<DayBookDetailed />, formCode:"DBRPT", action: UserAction.Show, path: `/reports/_/accounts/day_book_detailed`, type: 'link', active: false, selected: false, title: 'day_book_detailed', icon: BookCopy },
-      { id: 4,element:<DayBookSummary />, formCode:"DBRPT", action: UserAction.Show, path: `/reports/_/accounts/day_book_summary`, type: 'link', active: false, selected: false, title: 'day_book_summary', icon: MdLibraryBooks },
-      { id: 5,element:<PaymentReport />, formCode:"PAYMRPT", action: UserAction.Show, path: `/reports/_/accounts/payment_report`, type: 'link', active: false, selected: false, title: 'payment_report', icon: MdOutlinePayments },
-      { id: 6,element:<CollectionReport />, formCode:"COLLRPT", action: UserAction.Show, path: `/reports/_/accounts/collection_report`, type: 'link', active: false, selected: false, title: 'collection_report', icon: BsCollection },
-      { id: 7,element:<CashSummary />, formCode:"RPTCASHSUM", action: UserAction.Show, path: `/reports/_/accounts/cash_summary`, type: 'link', active: false, selected: false, title: 'cash_summary_report', icon: GrDocumentStore },
-      { id: 8,element:<CashSummaryLedgerwise />, formCode:"RPTCASHSUM", action: UserAction.Show, path: `/reports/_/accounts/cash_summary_ledgerwise`, type: 'link', active: false, selected: false, title: 'cash_summary_ledgerwise_report', icon: TbCoins },
+      { id: 100,element:<TransactionReport />, formCode:"TRANSRPT", action: UserAction.Show, path: `/reports/_/accounts/transaction_report`, type: 'link', active: false, selected: false, title: 'transaction_report', icon: FiFileText },
+      { id: 101,element:<AccountsHistoryReport />, formCode:"RPTTRAHST", action: UserAction.Show, path: `/reports/_/accounts/transaction_history_accounts`, type: 'link', active: false, selected: false, title: 'transaction_history_accounts', icon: LuHistory },
+      { id: 102,element:<InventoryHistoryReport />, formCode:"RPTTRAHST", action: UserAction.Show, path: `/reports/_/accounts/transaction_history_inventory`, type: 'link', active: false, selected: false, title: 'transaction_history_inventory', icon: MdOutlineManageHistory },
+      { id: 103,element:<DailySummaryMaster />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report', icon: CalendarClock },
+      { id: 104,element:<DailySummaryGlobal />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report___', icon: CalendarClock },
+      { id: 105,element:<BillwiseProfit />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report', icon: ChartNoAxesCombined },
+      { id: 106,element:<BillwiseProfitGlobal />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report__', icon: ChartNoAxesCombined },
+      { id: 107,element:<PartySummaryMaster />, formCode:"PRTSUM", action: UserAction.Show, path: `/reports/_/accounts/partywise_summary`, type: 'link', active: false, selected: false, title: 'partywise_summary_report', icon: Component },
+      { id: 108,element:<OutstandingAccountPayableReport />, formCode:"RPTACCPAY", action: UserAction.Show, path: `/reports/_/accounts/outstanding_payable`, type: 'link', active: false, selected: false, title: 'account_payable', icon: LucideCreditCard },
+      { id: 109,element:<OutstandingAccountReceivableReport />, formCode:"RPTACCREC", action: UserAction.Show, path: `/reports/_/accounts/outstanding_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable', icon: LucideDollarSign },
+      { id: 110,element:<OutstandingAccountPayableAgingReport />, formCode:"APAGINGRPT", action: UserAction.Show, path: `/reports/_/accounts/outstanding_aging_payable`, type: 'link', active: false, selected: false, title: 'account_payable_aging_report', icon: Clock1Icon },
+      { id: 111,element:<OutstandingAccountReceivableAgingReport />, formCode:"ARAGINGRPT", action: UserAction.Show, path: `/reports/_/accounts/outstanding_aging_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', icon: Calendar },
+      { id: 112,element:<LedgerReport />, formCode:"LEDGRRPT", action: UserAction.Show, path: `/reports/_/accounts/ledger_report`, type: 'link', active: false, selected: false, title: 'ledger_report', icon: IoBookOutline },
+      { id: 113,element:<CashBookSummary />, formCode:"CPRPT", action: UserAction.Show, path: `/reports/_/accounts/cash_book`, type: 'link', active: false, selected: false, title: 'cash_book', icon: FaCoins },
+      { id: 114,element:<DayBookDetailed />, formCode:"DBRPT", action: UserAction.Show, path: `/reports/_/accounts/day_book_detailed`, type: 'link', active: false, selected: false, title: 'day_book_detailed', icon: BookCopy },
+      { id: 115,element:<DayBookSummary />, formCode:"DBRPT", action: UserAction.Show, path: `/reports/_/accounts/day_book_summary`, type: 'link', active: false, selected: false, title: 'day_book_summary', icon: MdLibraryBooks },
+      { id: 116,element:<PaymentReport />, formCode:"PAYMRPT", action: UserAction.Show, path: `/reports/_/accounts/payment_report`, type: 'link', active: false, selected: false, title: 'payment_report', icon: MdOutlinePayments },
+      { id: 117,element:<CollectionReport />, formCode:"COLLRPT", action: UserAction.Show, path: `/reports/_/accounts/collection_report`, type: 'link', active: false, selected: false, title: 'collection_report', icon: BsCollection },
+      { id: 118,element:<CashSummary />, formCode:"RPTCASHSUM", action: UserAction.Show, path: `/reports/_/accounts/cash_summary`, type: 'link', active: false, selected: false, title: 'cash_summary_report', icon: GrDocumentStore },
+      { id: 119,element:<CashSummaryLedgerwise />, formCode:"RPTCASHSUM", action: UserAction.Show, path: `/reports/_/accounts/cash_summary_ledgerwise`, type: 'link', active: false, selected: false, title: 'cash_summary_ledgerwise_report', icon: TbCoins },
     ]
   },
 
@@ -238,14 +246,14 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 9,element:<IncomeReport />, formCode:"IcmRpt", action: UserAction.Show, path: `/reports/_/accounts/income_report`, type: 'link', active: false, selected: false, title: 'income_report', icon: FaHandHoldingDollar },
-      { id: 10,element:<IncomeReportDetailed />, formCode:"IcmRpt", action: UserAction.Show, path: `/reports/_/accounts/income_report_detailed`, type: 'link', active: false, selected: false, title: 'income_report_detailed', icon: GiReceiveMoney },
-      { id: 11,element:<ExpenseReport />, formCode:"ExpRpt", action: UserAction.Show, path: `/reports/_/accounts/expense_report`, type: 'link', active: false, selected: false, title: 'expense_report', icon: GiSwapBag },
-      { id: 12,element:<ExpenseReportDetailed />, formCode:"ExpRpt", action: UserAction.Show, path: `/reports/_/accounts/expense_report_detailed`, type: 'link', active: false, selected: false, title: 'expense_report_detailed', icon: FaSackDollar },
-      { id: 13,element:<IncomExpenseStatement />, formCode:"INCEXPSMT", action: UserAction.Show, path: `/reports/_/accounts/income_expense_statement`, type: 'link', active: false, selected: false, title: 'income_expense_statement', icon: LiaFileInvoiceDollarSolid },
-      { id: 14,element:<CashFlowReport />, formCode:"CashFlwRpt", action: UserAction.Show, path: `/reports/_/accounts/cash_flow`, type: 'link', active: false, selected: false, title: 'cash_flow', icon: CircleStackIcon },
-      { id: 15,element:<BankFlowReport />, formCode:"CashFlwRpt", action: UserAction.Show, path: `/reports/_/accounts/bank_flow`, type: 'link', active: false, selected: false, title: 'bank_flow', icon: RiBankLine },
-      { id: 16,element:<BankStatementReport />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/accounts/bank_statement`, type: 'link', active: false, selected: false, title: 'bank_statement', icon: RiBankFill },
+      { id: 200,element:<IncomeReport />, formCode:"IcmRpt", action: UserAction.Show, path: `/reports/_/accounts/income_report`, type: 'link', active: false, selected: false, title: 'income_report', icon: FaHandHoldingDollar },
+      { id: 201,element:<IncomeReportDetailed />, formCode:"IcmRpt", action: UserAction.Show, path: `/reports/_/accounts/income_report_detailed`, type: 'link', active: false, selected: false, title: 'income_report_detailed', icon: GiReceiveMoney },
+      { id: 202,element:<ExpenseReport />, formCode:"ExpRpt", action: UserAction.Show, path: `/reports/_/accounts/expense_report`, type: 'link', active: false, selected: false, title: 'expense_report', icon: GiSwapBag },
+      { id: 203,element:<ExpenseReportDetailed />, formCode:"ExpRpt", action: UserAction.Show, path: `/reports/_/accounts/expense_report_detailed`, type: 'link', active: false, selected: false, title: 'expense_report_detailed', icon: FaSackDollar },
+      { id: 204,element:<IncomExpenseStatement />, formCode:"INCEXPSMT", action: UserAction.Show, path: `/reports/_/accounts/income_expense_statement`, type: 'link', active: false, selected: false, title: 'income_expense_statement', icon: LiaFileInvoiceDollarSolid },
+      { id: 205,element:<CashFlowReport />, formCode:"CashFlwRpt", action: UserAction.Show, path: `/reports/_/accounts/cash_flow`, type: 'link', active: false, selected: false, title: 'cash_flow', icon: CircleStackIcon },
+      { id: 206,element:<BankFlowReport />, formCode:"BankFlwRpt", action: UserAction.Show, path: `/reports/_/accounts/bank_flow`, type: 'link', active: false, selected: false, title: 'bank_flow', icon: RiBankLine },
+      { id: 207,element:<BankStatementReport />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/accounts/bank_statement`, type: 'link', active: false, selected: false, title: 'bank_statement', icon: RiBankFill },
     ]
   },
 
@@ -270,31 +278,31 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 66,element:<RegisterReport dataUrl={urls.purchase_return_register} gridHeader="purchase_return_register_report" gridId="grd_purchase_return_register" />, formCode:"RPTPRREG", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_register`, type: 'link', active: false, selected: false, title: 'purchase_return_register', icon: PiUsersThreeLight },
       { id: 67,element:<SummaryReport dataUrl={urls.purchase_estimate_summary} gridHeader="purchase_estimate_summary_report" gridId="grd_purchase_estimate_summary" />, formCode:"RPTPES", action: UserAction.Show, path: `/reports/_/inventory/purchase_estimate_summary`, type: 'link', active: false, selected: false, title: 'purchase_estimate_summary', icon: PiUsersThreeLight },
       { id: 68,element:<SummaryReport dataUrl={urls.purchase_order_summary} gridHeader="purchase_order_summary" gridId="grd_purchase_order_summary" />, formCode:"RPTPOS", action: UserAction.Show, path: `/reports/_/inventory/purchase_order_summary`, type: 'link', active: false, selected: false, title: 'purchase_order_summary', icon: PiUsersThreeLight },
-      { id: 69,element:<CreditPurchaseSummaryReport />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/credit_purchase_summary`, type: 'link', active: false, selected: false, title: 'credit_purchase_summary', icon: AiOutlineFileText },
-      { id: 70,element:<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
-      { id: 71,element:<PurchaseOrderTransitReport />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/purchase_order_transit_report`, type: 'link', active: false, selected: false, title: 'purchase_order_transit_report', icon: AiOutlineFileText },
-      { id: 72,element:<RegisterReport dataUrl={urls.purchase_estimate_register} gridHeader="purchase_estimate_register_report" gridId="grd_purchase_estimate_register" />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/purchase_estimate_register_report`, type: 'link', active: false, selected: false, title: 'purchase_estimate_register_report', icon: AiOutlineFileText },
+      { id: 69,element:<CreditPurchaseSummaryReport />, formCode:"RPTCPIS", action: UserAction.Show, path: `/reports/_/inventory/credit_purchase_summary`, type: 'link', active: false, selected: false, title: 'credit_purchase_summary', icon: AiOutlineFileText },
+      { id: 70,element:<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />, formCode:"RPTPMPIS", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
+      { id: 71,element:<PurchaseOrderTransitReport />, formCode:"RPTPIOT", action: UserAction.Show, path: `/reports/_/inventory/purchase_order_transit_report`, type: 'link', active: false, selected: false, title: 'purchase_order_transit_report', icon: AiOutlineFileText },
+      { id: 72,element:<RegisterReport dataUrl={urls.purchase_estimate_register} gridHeader="purchase_estimate_register_report" gridId="grd_purchase_estimate_register" />, formCode:"RPTPIER", action: UserAction.Show, path: `/reports/_/inventory/purchase_estimate_register_report`, type: 'link', active: false, selected: false, title: 'purchase_estimate_register_report', icon: AiOutlineFileText },
       { id: 73,element:<RegisterReport dataUrl={urls.purchase_return_estimate_register} gridHeader="purchase_return_estimate_register_report" gridId="grd_purchase_return_estimate_register" />, formCode:"PREREGT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_estimate_register_report`, type: 'link', active: false, selected: false, title: 'purchase_return_estimate_register_report', icon: AiOutlineFileText },
       { id: 74,element:<SummaryReport dataUrl={urls.purchase_return_estimate_summary} gridHeader="purchase_return_estimate_summary_report" gridId="grd_purchase_return_estimate_summary" />, formCode:"PRESUMMY", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_estimate_summary_report', icon: HiOutlineDocumentReport },
 
       //purchase Tax
-      { id: 86,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_daily_summary_report" gridId="grd_purchase_gst_daily_summary_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 90,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_taxwise_report" gridId="grd_purchase_gst_taxwise_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 91,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_taxwise_with_hsn_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 88,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_monthly_summary_report" gridId="grd_purchase_gst_monthly_summary_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 87,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_detailed_report" gridId="grd_purchase_gst_detailed_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 89,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_register_format_report" gridId="grd_purchase_gst_register_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 85,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_advanced_register_format_report" gridId="grd_purchase_gst_adv_register_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_advance_register_format_report', icon: AiOutlineFileText },
+      { id: 86,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_daily_summary_report" gridId="grd_purchase_gst_daily_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_daily_summary_report', icon: AiOutlineFileText },
+      { id: 90,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_taxwise_report" gridId="grd_purchase_gst_taxwise_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_report', icon: AiOutlineFileText },
+      { id: 91,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_taxwise_with_hsn_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
+      { id: 88,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_monthly_summary_report" gridId="grd_purchase_gst_monthly_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_monthly_summary_report', icon: AiOutlineFileText },
+      { id: 87,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_detailed_report" gridId="grd_purchase_gst_detailed_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_detailed_report', icon: AiOutlineFileText },
+      { id: 89,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_register_format_report" gridId="grd_purchase_gst_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_register_format_report', icon: AiOutlineFileText },
+      { id: 85,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_advanced_register_format_report" gridId="grd_purchase_gst_adv_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_gst_advance_register_format_report', icon: AiOutlineFileText },
 
       //purchase return Tax
-      { id: 93,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 97,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
-      { id: 98,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 99,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 95,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 94,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_detailed_report" gridId="grd_purchase_return_gst_detailed_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 96,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_register_format_report" gridId="grd_purchase_return_gst_register_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 92,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_advanced_register_format_report" gridId="grd_purchase_return_gst_adv_register_report" />, formCode:"BKSTMT", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_adv_register_format_report', icon: AiOutlineFileText },
+      { id: 93,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_daily_summary_report', icon: AiOutlineFileText },
+      { id: 97,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
+      { id: 98,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_report', icon: AiOutlineFileText },
+      { id: 99,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
+      { id: 95,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_monthly_summary_report', icon: AiOutlineFileText },
+      { id: 94,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_detailed_report" gridId="grd_purchase_return_gst_detailed_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_detailed_report', icon: AiOutlineFileText },
+      { id: 96,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_register_format_report" gridId="grd_purchase_return_gst_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_register_format_report', icon: AiOutlineFileText },
+      { id: 92,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_advanced_register_format_report" gridId="grd_purchase_return_gst_adv_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', active: false, selected: false, title: 'purchase_return_gst_adv_register_format_report', icon: AiOutlineFileText },
 
     ]
   },
@@ -310,32 +318,32 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 100,element:<OpeningStock />, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
-      { id: 101,element:<StockTransfer />, formCode:"STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight },
-      { id: 102,element:<DamageStock />, formCode:"DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
-      { id: 103,element:<ExcessStock />, formCode:"EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
-      { id: 104,element:<ShortageStock />, formCode:"SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
-      { id: 105,element:<BranchTransferOut />, formCode:"BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
-      { id: 106,element:<BranchTransferIn />, formCode:"BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight },
-      { id: 107,element:<BranchTransferSummaryOut />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight },
-      { id: 108,element:<BranchTransferSummaryIn />, formCode:"", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight },
-      { id: 111,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />, formCode:"OSRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight },
-      { id: 112,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />, formCode:"SUBRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight },
-      { id: 113,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_out_summary} gridHeader="itemwise_branch_transfer_out_summary" gridId="grd_itemwise_branch_transfer_out_summary" />, formCode:"BTORPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_out_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_out_summary', icon: PiPackageLight },
-      { id: 114,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_in_summary} gridHeader="itemwise_branch_transfer_in_summary" gridId="grd_itemwise_branch_transfer_in_summary" />, formCode:"BTIRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_in_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_in_summary', icon: PiPackageLight },
-      { id: 115,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_excess_summary} gridHeader="itemwise_excess_summary" gridId="grd_itemwise_excess_summary" />, formCode:"EXRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_excess_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_excess_summary', icon: PiPackageLight },
-      { id: 116,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_shortage_summary} gridHeader="itemwise_shortage_summary" gridId="grd_itemwise_shortage_summary" />, formCode:"SHRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_shortage_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_shortage_summary', icon: PiPackageLight },
-      { id: 117,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_damage_stock_summary} gridHeader="itemwise_damage_stock_summary" gridId="grd_itemwise_damage_stock_summary" />, formCode:"DMGRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_damage_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_damage_stock_summary', icon: PiPackageLight },
-      { id: 118,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_summary} gridHeader="itemwise_goods_delivery_summary" gridId="grd_itemwise_goods_delivery_summary" />, formCode:"GDRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_summary', icon: PiPackageLight },
-      { id: 119,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_return_summary} gridHeader="itemwise_goods_delivery_return_summary" gridId="grd_itemwise_goods_delivery_return_summary" />, formCode:"DRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_return_summary', icon: PiPackageLight },
-      { id: 120,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_summary} gridHeader="itemwise_goods_receipt_summary" gridId="grd_itemwise_goods_receipt_summary" />, formCode:"GRNRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight },
-      { id: 121,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />, formCode:"GRRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight },
-      { id: 122,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />, formCode:"GR_RPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight },
-      { id: 123,element:<StockSummary />, formCode:"RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight },
-      { id: 124,element:<StockLedger />, formCode:"RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList },
-      { id: 125,element:<ExpiryReport />, formCode:"EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList },
-      { id: 126,element:<TransactionAnalysisReport />, formCode:"TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics },
-      { id: 127,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
+      { id: 700,element:<OpeningStock />, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
+      { id: 701,element:<StockTransfer />, formCode:"STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight },
+      { id: 702,element:<DamageStock />, formCode:"DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
+      { id: 703,element:<ExcessStock />, formCode:"EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
+      { id: 704,element:<ShortageStock />, formCode:"SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
+      { id: 705,element:<BranchTransferOut />, formCode:"BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
+      { id: 706,element:<BranchTransferIn />, formCode:"BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight },
+      { id: 707,element:<BranchTransferSummaryOut />, formCode:"BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight },
+      { id: 708,element:<BranchTransferSummaryIn />, formCode:"BTISRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight },
+      { id: 711,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />, formCode:"OSRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight },
+      { id: 712,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />, formCode:"SUBRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight },
+      { id: 713,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_out_summary} gridHeader="itemwise_branch_transfer_out_summary" gridId="grd_itemwise_branch_transfer_out_summary" />, formCode:"BTORPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_out_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_out_summary', icon: PiPackageLight },
+      { id: 714,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_in_summary} gridHeader="itemwise_branch_transfer_in_summary" gridId="grd_itemwise_branch_transfer_in_summary" />, formCode:"BTIRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_in_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_in_summary', icon: PiPackageLight },
+      { id: 715,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_excess_summary} gridHeader="itemwise_excess_summary" gridId="grd_itemwise_excess_summary" />, formCode:"EXRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_excess_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_excess_summary', icon: PiPackageLight },
+      { id: 716,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_shortage_summary} gridHeader="itemwise_shortage_summary" gridId="grd_itemwise_shortage_summary" />, formCode:"SHRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_shortage_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_shortage_summary', icon: PiPackageLight },
+      { id: 717,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_damage_stock_summary} gridHeader="itemwise_damage_stock_summary" gridId="grd_itemwise_damage_stock_summary" />, formCode:"DMGRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_damage_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_damage_stock_summary', icon: PiPackageLight },
+      { id: 718,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_summary} gridHeader="itemwise_goods_delivery_summary" gridId="grd_itemwise_goods_delivery_summary" />, formCode:"GDRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_summary', icon: PiPackageLight },
+      { id: 719,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_return_summary} gridHeader="itemwise_goods_delivery_return_summary" gridId="grd_itemwise_goods_delivery_return_summary" />, formCode:"DRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_return_summary', icon: PiPackageLight },
+      { id: 720,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_summary} gridHeader="itemwise_goods_receipt_summary" gridId="grd_itemwise_goods_receipt_summary" />, formCode:"GRNRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight },
+      { id: 721,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />, formCode:"GRRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight },
+      { id: 722,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />, formCode:"GR_RPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight },
+      { id: 723,element:<StockSummary />, formCode:"RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight },
+      { id: 724,element:<StockLedger />, formCode:"RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList },
+      { id: 725,element:<ExpiryReport />, formCode:"EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList },
+      { id: 726,element:<TransactionAnalysisReport />, formCode:"TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics },
+      { id: 727,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
     ]
   },
   {
@@ -352,7 +360,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     children: [
       { id: 128,element:<SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />, formCode:"RPTSLSUM", action: UserAction.Show,  path: `/reports/_/inventory/sales_summary_report`, type: 'link', active: false, selected: false, title: 'sales_summary', icon: PiPackageLight },
       { id: 129,element:<RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />, formCode:"RPTSRSUM", action: UserAction.Show,  path: `/reports/_/inventory/sales_register_report`, type: 'link', active: false, selected: false, title: 'sales_register', icon: PiPackageLight },
-      { id: 130,element:<NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight },
+      { id: 130,element:<NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />, formCode:"RPTNTSI", action: UserAction.Show,  path: `/reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight },
       { id: 131,element:<PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />, formCode:"RPTPRTSL", action: UserAction.Show,  path: `/reports/_/inventory/partywise_sales_report`, type: 'link', active: false, selected: false, title: 'partywise_sales', icon: PiPackageLight },
       { id: 132,element:<TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />, formCode:"RPTSITAX", action: UserAction.Show,  path: `/reports/_/inventory/sales_tax_report_summary`, type: 'link', active: false, selected: false, title: 'sales_tax_report_summary', icon: PiPackageLight },
       { id: 133,element:<TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />, formCode:"RPTSITAX", action: UserAction.Show,  path: `/reports/_/inventory/sales_tax_report_detailed`, type: 'link', active: false, selected: false, title: 'sales_tax_report_detailed', icon: PiPackageLight },
@@ -363,27 +371,27 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 138,element:<SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />, formCode:"RPTSES", action: UserAction.Show,  path: `/reports/_/inventory/sales_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'sales_estimate_summary', icon: PiPackageLight },
       { id: 139,element:<SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />, formCode:"RPTSQS", action: UserAction.Show,  path: `/reports/_/inventory/sales_quotation_summary_report`, type: 'link', active: false, selected: false, title: 'sales_quotation_summary', icon: PiPackageLight },
       { id: 140,element:<SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />, formCode:"RPTSUB", action: UserAction.Show,  path: `/reports/_/inventory/substitute_report`, type: 'link', active: false, selected: false, title: 'substitute_report', icon: PiPackageLight },
-      { id: 141,element:<DaywiseSummaryWithProfit />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight },
+      { id: 141,element:<DaywiseSummaryWithProfit />, formCode:"RPTSIDWSWP", action: UserAction.Show,  path: `/reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight },
       { id: 142,element:<GroupwiseSalesSummaryDevexpress />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_devexpress_report`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress', icon: PiPackageLight },
       { id: 143,element:<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isGroupWise: true }} />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_report_groupwise`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_report', icon: PiPackageLight },
       { id: 144,element:<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isCategoryWise: true }} />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_report_categorywise`, type: 'link', active: false, selected: false, title: 'categorywise_sales_summary_report', icon: PiPackageLight },
       { id: 145,element:<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isSectionWise: true }} />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_report_sectionwise`, type: 'link', active: false, selected: false, title: 'sectionwise_sales_summary_report', icon: PiPackageLight },
       { id: 146,element:<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isBrandWise: true }} />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_report_brandwise`, type: 'link', active: false, selected: false, title: 'brandwise_sales_summary_report', icon: PiPackageLight },
       { id: 147,element:<GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isProductCatWise: true }} />, formCode:"GRPWSSLRPT", action: UserAction.Show,  path: `/reports/_/inventory/groupwise_sales_summary_report_product_categorywise`, type: 'link', active: false, selected: false, title: 'product_categorywise_sales_summary_report', icon: PiPackageLight },
-      { id: 148,element:<SalesmanwiseSalesAndCollection />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/salesman_wise_sales_and_collection_report`, type: 'link', active: false, selected: false, title: 'salesman_wise_sales_and_collection', icon: PiPackageLight },
-      { id: 149,element:<NonInvoicedGoodsDelivery />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/non_invoiced_goods_delivery_report`, type: 'link', active: false, selected: false, title: 'non_invoiced_goods_delivery', icon: PiPackageLight },
+      { id: 148,element:<SalesmanwiseSalesAndCollection />, formCode:"RPTSIMWSAC", action: UserAction.Show,  path: `/reports/_/inventory/salesman_wise_sales_and_collection_report`, type: 'link', active: false, selected: false, title: 'salesman_wise_sales_and_collection', icon: PiPackageLight },
+      { id: 149,element:<NonInvoicedGoodsDelivery />, formCode:"RPTSINIGDR", action: UserAction.Show,  path: `/reports/_/inventory/non_invoiced_goods_delivery_report`, type: 'link', active: false, selected: false, title: 'non_invoiced_goods_delivery', icon: PiPackageLight },
       { id: 150,element:<SummaryReport dataUrl={urls.booking_summary} gridHeader="booking_summary" gridId="grd_booking_summary" />, formCode:"RPTBKSSUM", action: UserAction.Show,  path: `/reports/_/inventory/booking_summary_report`, type: 'link', active: false, selected: false, title: 'booking_summary', icon: PiPackageLight },
-      { id: 151,element:<PendingOrderReport />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/pending_order_report`, type: 'link', active: false, selected: false, title: 'pending_order', icon: PiPackageLight },
-      { id: 152,element:<PromotionalSalesReport />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/promotional_sales_report`, type: 'link', active: false, selected: false, title: 'promotional_sales', icon: PiPackageLight },
-      { id: 153,element:<GroupedBrandwiseSales />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/grouped_brandwise_sales_report`, type: 'link', active: false, selected: false, title: 'grouped_brandwise_sales', icon: PiPackageLight },
-      { id: 154,element:<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight },
+      { id: 151,element:<PendingOrderReport />, formCode:"RPTPOR", action: UserAction.Show,  path: `/reports/_/inventory/pending_order_report`, type: 'link', active: false, selected: false, title: 'pending_order', icon: PiPackageLight },
+      { id: 152,element:<PromotionalSalesReport />, formCode:"RPTPRMSIR", action: UserAction.Show,  path: `/reports/_/inventory/promotional_sales_report`, type: 'link', active: false, selected: false, title: 'promotional_sales', icon: PiPackageLight },
+      { id: 153,element:<GroupedBrandwiseSales />, formCode:"RPTGRPBRDWSIR", action: UserAction.Show,  path: `/reports/_/inventory/grouped_brandwise_sales_report`, type: 'link', active: false, selected: false, title: 'grouped_brandwise_sales', icon: PiPackageLight },
+      { id: 154,element:<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />, formCode:"RPTPRTYMWSIS", action: UserAction.Show,  path: `/reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight },
       { id: 155,element:<CouponReports />, formCode:"COUPSALRPT", action: UserAction.Show,  path: `/reports/_/inventory/coupon_reports`, type: 'link', active: false, selected: false, title: 'coupon_reports', icon: PiPackageLight },
       { id: 156,element:<SchemeWiseSales />, formCode:"ITMSCMSRPT", action: UserAction.Show,  path: `/reports/_/inventory/scheme_wise_sales_report`, type: 'link', active: false, selected: false, title: 'scheme_wise_sales', icon: PiPackageLight },
       { id: 158,element:<RouteWiseSalesAndCollection />, formCode:"ROUTWISE_SL_CR_1", action: UserAction.Show,  path: `/reports/_/inventory/routewise_sales_collection_report`, type: 'link', active: false, selected: false, title: 'routewise_sales_collection', icon: PiPackageLight },
       { id: 159,element:<BranchInventoryRequestPendingOrder />, formCode:"ADVBRNCHPEN", action: UserAction.Show,  path: `/reports/_/inventory/branch_inventory_request_pending_order_report`, type: 'link', active: false, selected: false, title: 'branch_inventory_request_pending_order', icon: PiPackageLight },
       { id: 160,element:<PrintDetails />, formCode:"ADVPRINT", action: UserAction.Show,  path: `/reports/_/inventory/print_details_report`, type: 'link', active: false, selected: false, title: 'print_details', icon: PiPackageLight },
       { id: 161,element:<InventoryStatusReport />, formCode:"INVSTATUSRPT", action: UserAction.Show,  path: `/reports/_/inventory/inventory_status_report`, type: 'link', active: false, selected: false, title: 'inventory_status', icon: PiPackageLight },
-      { id: 162,element:<VoidReport />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/void_report`, type: 'link', active: false, selected: false, title: 'void_report', icon: PiPackageLight },
+      { id: 162,element:<VoidReport />, formCode:"RPTADVOID", action: UserAction.Show,  path: `/reports/_/inventory/void_report`, type: 'link', active: false, selected: false, title: 'void_report', icon: PiPackageLight },
       { id: 163,element:<CounterReport />, formCode:"CNTRRPT", action: UserAction.Show,  path: `/reports/_/inventory/counter_report`, type: 'link', active: false, selected: false, title: 'counter_report', icon: PiPackageLight },
       { id: 164,element:<RegisterReport dataUrl={urls.sales_return_estimate_register} gridHeader="sales_return_estimate_register" gridId="grd_sales_return_estimate_register" />, formCode:"SREREGT", action: UserAction.Show,  path: `/reports/_/inventory/sales_return_estimate_register_report`, type: 'link', active: false, selected: false, title: 'sales_return_estimate_register', icon: PiPackageLight },
       { id: 165,element:<DiagnosisReport />, formCode:"ADVDIGREPT", action: UserAction.Show,  path: `/reports/_/inventory/diagnosis_report`, type: 'link', active: false, selected: false, title: 'diagnosis_report', icon: PiPackageLight },
@@ -415,12 +423,12 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 210,element:<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_summary', icon: FaHandHoldingDollar },
-      { id: 211,element:<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_register_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_register', icon: GiReceiveMoney },
-      { id: 212,element:<NetSalesReport dataUrl={urls.net_sales_transfer_report} gridHeader="net_sales_transfer_report" gridId="grd_net_sales_transfer_report" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/net_sales_transfer_report`, type: 'link', active: false, selected: false, title: 'net_sales_transfer_report', icon: GiSwapBag },
-      { id: 213,element:<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
-      { id: 214,element:<SalesTransferMonthWiseSummaryReport dataUrl={urls.sales_transfer_monthWise_summary} gridHeader="sales_transfer_monthWise_summary" gridId="grd_sales_transfer_monthWise_summary" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_monthWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_monthWise_summary', icon: FaSackDollar },
-      { id: 215,element:<PartyMonthwiseSummaryReport dataUrl={urls.sales_transfer_partyWise_summary} gridHeader="sales_transfer_partyWise_summary" gridId="grd_sales_transfer_partyWise_summary" />, formCode:"", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_summary', icon: FaSackDollar },
+      { id: 210,element:<SummaryReport dataUrl={urls.sales_transfer_summary} gridHeader="sales_transfer_summary" gridId="grd_sales_transfer_summary" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_summary', icon: FaHandHoldingDollar },
+      { id: 211,element:<RegisterReport dataUrl={urls.sales_transfer_register} gridHeader="sales_transfer_register" gridId="grd_sales_transfer_register" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_register_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_register', icon: GiReceiveMoney },
+      { id: 212,element:<NetSalesReport dataUrl={urls.net_sales_transfer_report} gridHeader="net_sales_transfer_report" gridId="grd_net_sales_transfer_report" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/net_sales_transfer_report`, type: 'link', active: false, selected: false, title: 'net_sales_transfer_report', icon: GiSwapBag },
+      { id: 213,element:<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
+      { id: 214,element:<SalesTransferMonthWiseSummaryReport dataUrl={urls.sales_transfer_monthWise_summary} gridHeader="sales_transfer_monthWise_summary" gridId="grd_sales_transfer_monthWise_summary" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_monthWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_monthWise_summary', icon: FaSackDollar },
+      { id: 215,element:<PartyMonthwiseSummaryReport dataUrl={urls.sales_transfer_partyWise_summary} gridHeader="sales_transfer_partyWise_summary" gridId="grd_sales_transfer_partyWise_summary" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_summary_report`, type: 'link', active: false, selected: false, title: 'sales_transfer_partyWise_summary', icon: FaSackDollar },
     ]
   },
   {
@@ -508,15 +516,15 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 1,
     children: [
-      { id: 500,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
-      { id: 501,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
-      { id: 502,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/product_summary`, type: 'link', active: false, selected: false, title: 'product_summary', icon: AiOutlineFileText },
-      { id: 503,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/transaction_summary_report`, type: 'link', active: false, selected: false, title: 'transaction_summary', icon: PiPackageLight },
-      { id: 504,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/inventory_transaction_register_report`, type: 'link', active: false, selected: false, title: 'inventory_transaction_register', icon: PiPackageLight },
-      { id: 505,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/inventory_summary_report`, type: 'link', active: false, selected: false, title: 'inventory_summary_report', icon: PiPackageLight },
-      { id: 506,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/service_report`, type: 'link', active: false, selected: false, title: 'service_report', icon: PiPackageLight },
-      { id: 507,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/salesman_incentive_report`, type: 'link', active: false, selected: false, title: 'salesman_incentive_report', icon: PiPackageLight },
-      { id: 508,element:<StockFlow />, formCode:"RPTSTKFL", action: UserAction.Show,  path: `/reports/_/inventory/privilege_card_report`, type: 'link', active: false, selected: false, title: 'privilege_card', icon: PiPackageLight },
+      { id: 500,element:<PriceList />, formCode:"PL", action: UserAction.Show,  path: `/reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
+      { id: 501,element:<DailyBalanceAmount />, formCode:"RPTDLBLRPT", action: UserAction.Show,  path: `/reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
+      { id: 502,element:<ProductSummaryMaster />, formCode:"PSUMRPT", action: UserAction.Show,  path: `/reports/_/inventory/product_summary`, type: 'link', active: false, selected: false, title: 'product_summary', icon: AiOutlineFileText },
+      { id: 503,element:<SummaryReport dataUrl={urls.transaction_summary} gridHeader="transaction_summary" gridId="grd_transaction_summary" />, formCode:"INVTRSUM", action: UserAction.Show,  path: `/reports/_/inventory/transaction_summary_report`, type: 'link', active: false, selected: false, title: 'transaction_summary', icon: PiPackageLight },
+      { id: 504,element:<RegisterReport dataUrl={urls.inventory_transaction_register} gridHeader="inventory_transaction_register" gridId="grd_inventory_transaction_register" />, formCode:"INVTRREG", action: UserAction.Show,  path: `/reports/_/inventory/inventory_transaction_register_report`, type: 'link', active: false, selected: false, title: 'inventory_transaction_register', icon: PiPackageLight },
+      { id: 505,element:<InventorySummaryReport />, formCode:"RPTINVSUM", action: UserAction.Show,  path: `/reports/_/inventory/inventory_summary_report`, type: 'link', active: false, selected: false, title: 'inventory_summary_report', icon: PiPackageLight },
+      { id: 506,element:<ServiceReport />, formCode:"SERVCRPT", action: UserAction.Show,  path: `/reports/_/inventory/service_report`, type: 'link', active: false, selected: false, title: 'service_report', icon: PiPackageLight },
+      { id: 507,element:<SalesmanIncentiveReport />, formCode:"RPTSLIC", action: UserAction.Show,  path: `/reports/_/inventory/salesman_incentive_report`, type: 'link', active: false, selected: false, title: 'salesman_incentive_report', icon: PiPackageLight },
+      { id: 508,element:<PrivilegeCardReport />, formCode:"RPTPRCRD", action: UserAction.Show,  path: `/reports/_/inventory/privilege_card_report`, type: 'link', active: false, selected: false, title: 'privilege_card', icon: PiPackageLight },
     ]
   },
 

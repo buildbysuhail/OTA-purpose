@@ -3,11 +3,9 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
 } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import moment from "moment";
 import PurchaseGstReportFilter, {
   PurchaseGstReportFilterInitialState,
 } from "./purchase-tax-gst-report-filter";
@@ -1375,8 +1373,8 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilter />}
-                filterHeight={240}
-                filterWidth={790}
+                filterHeight={220}
+                filterWidth={600}
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

@@ -381,8 +381,8 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilter />}
-                filterHeight={240}
-                filterWidth={790}
+                filterHeight={220}
+                filterWidth={600}
                 filterInitialData={PurchaseGstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

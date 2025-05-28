@@ -21,8 +21,8 @@ interface GridPreferenceChooserProps {
 
 const api = new APIClient();
 const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences, GridPreferenceChooserAccTrance,eclipseClass }) => {
-  const dragItem = useRef(null);
-  const dragOverItem = useRef(null);
+ const dragItem = useRef<string | null>(null);
+const dragOverItem = useRef<string | null>(null);
   const [searchCols, setSearchCols] = useState<String>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   /* ########################################################################################### */
@@ -42,18 +42,29 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
     dragOverItem.current = e.currentTarget.id;
   };
 
-  const handleDropping = (e: any) => {
-    let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
-    let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
+const handleDropping = (e: any) => {
+  // Extract dataField from the id (e.g., "name_name" -> "name")
+  const draggedDataField = dragItem.current ? dragItem.current.split('_')[0] : null;
+  const targetDataField = dragOverItem.current ? dragOverItem.current.split('_')[0] : null;
+
+  // Find indices based on the extracted dataField
+  let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === draggedDataField);
+  let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === targetDataField);
+
+  // Only proceed if valid indices are found
+  if (startIndex !== -1 && endIndex !== -1) {
     setPreferences((prevPreferences: any) => {
       return {
         ...prevPreferences,
-        columnPreferences: (moveArrayElement(preferences.columnPreferences, startIndex, endIndex))
+        columnPreferences: moveArrayElement(preferences.columnPreferences, startIndex, endIndex),
       };
     });
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
+  }
+
+  // Reset drag references
+  dragItem.current = null;
+  dragOverItem.current = null;
+};
   /* ########################################################################################### */
   /* ########################################################################################### */
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);

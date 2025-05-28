@@ -1,9 +1,6 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -21,7 +18,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "receiverName",
@@ -31,7 +28,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "invoiceNumber",
@@ -41,7 +38,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "invoiceDate",
@@ -52,7 +49,7 @@ const GSTR1B2B = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MM-yyyy",
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "invoiceValue",
@@ -62,7 +59,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -84,10 +81,10 @@ const GSTR1B2B = () => {
           return cellElement.data?.invoiceValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.invoiceValue),
-                false,
-                4
-              );
+              parseFloat(cellElement.data.invoiceValue),
+              false,
+              4
+            );
         }
       },
     },
@@ -99,7 +96,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "reverseCharge",
@@ -109,7 +106,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "applicableTaxRatePercentage",
@@ -119,7 +116,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -131,10 +128,10 @@ const GSTR1B2B = () => {
             cellElement.data?.applicableTaxRatePercentage == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.applicableTaxRatePercentage,
-                  false,
-                  2
-                );
+                cellElement.data.applicableTaxRatePercentage,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -145,10 +142,10 @@ const GSTR1B2B = () => {
           return cellElement.data?.applicableTaxRatePercentage == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.applicableTaxRatePercentage),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.applicableTaxRatePercentage),
+              false,
+              2
+            );
         }
       },
     },
@@ -160,7 +157,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "eCommerceGSTIN",
@@ -170,7 +167,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "rate",
@@ -180,7 +177,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -213,7 +210,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -235,10 +232,10 @@ const GSTR1B2B = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -250,7 +247,7 @@ const GSTR1B2B = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -272,10 +269,10 @@ const GSTR1B2B = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },

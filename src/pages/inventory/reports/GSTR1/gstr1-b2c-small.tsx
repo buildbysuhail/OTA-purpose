@@ -53,10 +53,10 @@ const GSTR1B2CSmall = () => {
             cellElement.data?.applicablePercentOfTaxRate == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.applicablePercentOfTaxRate,
-                  false,
-                  2
-                );
+                cellElement.data.applicablePercentOfTaxRate,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -67,10 +67,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.applicablePercentOfTaxRate == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.applicablePercentOfTaxRate),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.applicablePercentOfTaxRate),
+              false,
+              2
+            );
         }
       },
     },
@@ -137,10 +137,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -174,10 +174,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },

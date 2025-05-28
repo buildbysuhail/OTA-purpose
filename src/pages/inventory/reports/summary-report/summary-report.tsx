@@ -990,7 +990,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "upi" && !clientSession.isAppGlobal) {
           return {
             ...column,
-            caption: "QRPay",
+            caption: t("qr_pay"),
           };
         }
         if (column.dataField == "exchangeRate") {

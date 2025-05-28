@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -19,7 +18,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "invoiceDate",
@@ -30,7 +29,7 @@ const GSTR1B2CLarge = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MMM-yyyy",
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "invoiceValue",
@@ -40,7 +39,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -62,10 +61,10 @@ const GSTR1B2CLarge = () => {
           return cellElement.data?.invoiceValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.invoiceValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.invoiceValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -77,7 +76,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "applicablePercentOfTaxRate",
@@ -87,7 +86,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -99,10 +98,10 @@ const GSTR1B2CLarge = () => {
             cellElement.data?.applicablePercentOfTaxRate == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.applicablePercentOfTaxRate,
-                  false,
-                  2
-                );
+                cellElement.data.applicablePercentOfTaxRate,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -113,10 +112,10 @@ const GSTR1B2CLarge = () => {
           return cellElement.data?.applicablePercentOfTaxRate == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.applicablePercentOfTaxRate),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.applicablePercentOfTaxRate),
+              false,
+              2
+            );
         }
       },
     },
@@ -128,7 +127,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -161,7 +160,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -183,10 +182,10 @@ const GSTR1B2CLarge = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -198,7 +197,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -220,10 +219,10 @@ const GSTR1B2CLarge = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },
@@ -235,7 +234,7 @@ const GSTR1B2CLarge = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
   ];
 

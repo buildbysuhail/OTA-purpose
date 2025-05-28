@@ -1,12 +1,8 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import GSTR1DocsFilter, {
   GSTR1DocsFilterInitialState,

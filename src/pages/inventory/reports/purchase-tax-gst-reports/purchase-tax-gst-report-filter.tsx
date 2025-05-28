@@ -11,15 +11,15 @@ const PurchaseGstReportFilter = ({
   handleFieldChange,
   formState,
 }: any) => {
-  const { t } = useTranslation("inventory");
+  const { t } = useTranslation("accountsReport");
   return (
-    <div className="grid grid-cols-1 gap-4 overflow-hidden">
+    <div className="grid grid-cols-1 gap-2 md:gap-4 overflow-y-auto overflow-x-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2">
           <ERPDateInput
             label={t("date_from")}
             {...getFieldProps("fromDate")}
-            className="max-w-[150px]"
+            className="w-full"
             datatype="date"
             onChangeData={(data: any) =>
               handleFieldChange("fromDate", data.fromDate)
@@ -29,7 +29,7 @@ const PurchaseGstReportFilter = ({
           <ERPDateInput
             label={t("date_to")}
             {...getFieldProps("toDate")}
-            className="max-w-[150px]"
+            className="w-full"
             datatype="date"
             onChangeData={(data: any) =>
               handleFieldChange("toDate", data.toDate)
@@ -48,9 +48,10 @@ const PurchaseGstReportFilter = ({
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 items-end gap-4">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-end gap-4">
         <ERPInput
           {...getFieldProps("gSTPerc")}
+          label={t("gst_percentage")}
           className="w-32"
           placeholder="0.00"
           datatype="number"
@@ -84,7 +85,7 @@ const PurchaseGstReportFilter = ({
           />
           <ERPDataCombobox
             {...getFieldProps("isVchForm")}
-            label="voucherForm"
+            label={t("voucher_form")}
             field={{
               id: "isVchForm",
               getListUrl: Urls.data_form_type,
@@ -104,7 +105,7 @@ const PurchaseGstReportFilter = ({
 
         <ERPCheckbox
           {...getFieldProps("excludeNA")}
-          label={t("Exclude NA")}
+          label={t("exclude_na")}
           onChangeData={(data) =>
             handleFieldChange("excludeNA", data.excludeNA)
           }

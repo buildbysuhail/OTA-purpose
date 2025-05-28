@@ -90,9 +90,7 @@ const PurchaseOrderTransitReportFilter = ({
 
       {/* Warehouse Type Radio Buttons */}
       <div className="flex items-end gap-2">
-        <label className="text-sm font-medium">
-          {t("warehouse_type")}:
-        </label>
+        <label className="text-sm font-medium">{t("warehouse_type")}:</label>
         <div className="flex space-x-5">
           <ERPRadio
             id="physical"

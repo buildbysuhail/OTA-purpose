@@ -1,21 +1,30 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useLocation } from "react-router-dom";
-import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
+import PurchaseGstReportFilterGstCat, {
+  PurchaseGstReportFilterGstCatInitialState,
+} from "./purchase-tax-gst-report-filter-gst";
 
 interface PurchaseTaxGSTDetailedProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
+const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
+  const [filter, setFilter] = useState<any>(
+    PurchaseGstReportFilterGstCatInitialState
+  );
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -24,7 +33,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -33,7 +42,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 60,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "gstin",
@@ -42,7 +51,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "party",
@@ -51,7 +60,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "address1",
@@ -60,7 +69,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "address2",
@@ -77,7 +86,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 70,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "taxableValue",
@@ -109,7 +118,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
-      }
+      },
     },
     {
       dataField: "cgstPerc",
@@ -141,7 +150,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "cgst",
@@ -173,7 +182,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgst));
         }
-      }
+      },
     },
     {
       dataField: "sgstPerc",
@@ -205,7 +214,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "sgst",
@@ -237,7 +246,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgst));
         }
-      }
+      },
     },
     {
       dataField: "igstPerc",
@@ -269,7 +278,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igstPerc));
         }
-      }
+      },
     },
     {
       dataField: "igst",
@@ -301,7 +310,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igst));
         }
-      }
+      },
     },
     {
       dataField: "cessPerc",
@@ -332,7 +341,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cessPerc));
         }
-      }
+      },
     },
     {
       dataField: "cessAmt",
@@ -363,7 +372,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cessAmt));
         }
-      }
+      },
     },
     {
       dataField: "addCessPerc",
@@ -394,7 +403,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
         }
-      }
+      },
     },
     {
       dataField: "addCess",
@@ -425,7 +434,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.addCess));
         }
-      }
+      },
     },
     {
       dataField: "total",
@@ -457,7 +466,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.total));
         }
-      }
+      },
     },
     {
       dataField: "refNumber",
@@ -466,7 +475,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 60,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "refDate",
@@ -475,7 +484,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -484,7 +493,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf: true
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -493,7 +502,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      visible: false
+      visible: false,
     },
     {
       dataField: "financialYearID",
@@ -513,11 +522,11 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
     //   showInPdf: true
     // }
   ];
-  
+
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
 
       console.log(itemInfo);
 
@@ -586,8 +595,8 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -612,7 +621,7 @@ const PurchaseTaxGSTDetailed: FC<PurchaseTaxGSTDetailedProps> = ({ gridHeader, d
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilterGstCat />}
-                filterHeight={240}
+                filterHeight={220}
                 filterWidth={790}
                 filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

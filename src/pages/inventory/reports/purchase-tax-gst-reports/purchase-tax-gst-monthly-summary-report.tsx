@@ -325,7 +325,7 @@ const PurchaseTaxGSTMonthlySummary: FC<PurchaseTaxGSTMonthlySummaryProps> = ({ g
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseGstReportFilterGstCat />}
-                filterHeight={240}
+                filterHeight={220}
                 filterWidth={790}
                 filterInitialData={PurchaseGstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

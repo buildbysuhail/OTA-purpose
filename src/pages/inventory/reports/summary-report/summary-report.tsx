@@ -440,7 +440,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
             const value =
               cellElement.data?.cardAmt == null
                 ? 0
-                : getFormattedValue(cellElement.data.cardAmt,false,4);
+                : getFormattedValue(cellElement.data.cardAmt, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -450,7 +450,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           } else {
             return cellElement.data?.cardAmt == null
               ? 0
-              : getFormattedValue(cellElement.data.cardAmt,false,4);
+              : getFormattedValue(cellElement.data.cardAmt, false, 4);
           }
         },
       },
@@ -473,7 +473,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
             const value =
               cellElement.data?.upi == null
                 ? 0
-                : getFormattedValue(cellElement.data.upi,false,4);
+                : getFormattedValue(cellElement.data.upi, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -483,7 +483,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           } else {
             return cellElement.data?.upi == null
               ? 0
-              : getFormattedValue(cellElement.data.upi,false,4);
+              : getFormattedValue(cellElement.data.upi, false, 4);
           }
         },
       },
@@ -962,7 +962,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
     // Filter columns based on the `visible` property
     return baseColumns
       .filter((column) => {
-       
         if (
           column.dataField == "salesAmount" ||
           column.dataField == "totalProfit"
@@ -980,7 +979,10 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           column.dataField == "totalExciseTax" ||
           column.dataField == "toWarehouseName"
         ) {
-          return clientSession.isAppGlobal && !applicationSettings.accountsSettings.allowMultiPayments;
+          return (
+            clientSession.isAppGlobal &&
+            !applicationSettings.accountsSettings.allowMultiPayments
+          );
         }
         return true;
       })
@@ -991,8 +993,8 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
             caption: "QRPay",
           };
         }
-         if (column.dataField == "exchangeRate") {
-              return {
+        if (column.dataField == "exchangeRate") {
+          return {
             ...column,
             visible: filter.voucher_form == "Import",
           };
@@ -1021,7 +1023,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(value) || "0";
     };
   }, []);
- 
+
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
@@ -1040,10 +1042,20 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: (itemInfo: { value: any })=>{
-               return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
-             },
-           },
+        customizeText: (itemInfo: { value: any }) => {
+          return (
+            getFormattedValue(
+              parseFloat(
+                getFormattedValue(
+                  isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                ).replace(/,/g, "") || "0"
+              ),
+              false,
+              4
+            ) || "0"
+          );
+        },
+      },
       {
         column: "disc",
         summaryType: "sum",
@@ -1240,7 +1252,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 method={ActionType.POST}
                 filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
-                filterHeight={350}
+                filterHeight={300}
                 filterWidth={790}
                 filterInitialData={{
                   ...SummaryFilterInitialState,

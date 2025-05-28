@@ -193,11 +193,11 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
             {
               (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null) && preferences?.columnPreferences?.filter((item: any) => item.caption?.toLowerCase()
                 .includes(searchCols.toLowerCase())
-              )?.map((column: ColumnPreference) => {
+              )?.map((column: ColumnPreference,index: number) => {
                 return (
                   <div
                     key={column.dataField}
-                    id={column.dataField}
+                    id={`${column.dataField}_${column.dataField}`}
                     className="px-1 py-1"
                     draggable
                     onDragStart={handleDragStart}

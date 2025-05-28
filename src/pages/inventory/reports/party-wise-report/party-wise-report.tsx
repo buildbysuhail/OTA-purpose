@@ -1,12 +1,14 @@
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { APIClient } from "../../../../helpers/api-client";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PartyWiseReportFilter, { PartyWiseReportFilterInitialState, } from "./party-wise-report-filter";
+import PartyWiseReportFilter, {
+  PartyWiseReportFilterInitialState,
+} from "./party-wise-report-filter";
 import moment from "moment";
 
 interface PartyWiseReportProps {
@@ -15,13 +17,17 @@ interface PartyWiseReportProps {
   gridId: string;
 }
 
-const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId }) => {
+const PartyWiseReport: FC<PartyWiseReportProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(PartyWiseReportFilterInitialState);
   const columns: DevGridColumn[] = [
-      {
-      sortIndex:0,
-      sortOrder:"asc",
+    {
+      sortIndex: 0,
+      sortOrder: "asc",
       dataField: "siNo",
       caption: t("SINo"),
       dataType: "number",
@@ -37,15 +43,17 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
         exportCell: any
       ) => {
-        return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
-      }
+        return cellElement.data.date == null || cellElement.data.date == ""
+          ? ""
+          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+      },
     },
     {
       dataField: "vchNo",
@@ -54,7 +62,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -63,7 +71,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "party",
@@ -72,7 +80,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "address1",
@@ -81,7 +89,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "address2",
@@ -98,7 +106,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "netAmount",
@@ -107,7 +115,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -139,7 +147,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -171,7 +179,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ref_Date",
@@ -180,7 +188,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "employeeName",
@@ -196,10 +204,15 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
-      return (value).toString() || "0";
+      return value.toString() || "0";
     };
   }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -230,7 +243,12 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: true, sorting: true,summary:true }}
+                remoteOperations={{
+                  filtering: true,
+                  paging: true,
+                  sorting: true,
+                  summary: true,
+                }}
                 columns={columns}
                 moreOption
                 gridHeader={t(gridHeader)}
@@ -243,7 +261,9 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({ gridHeader, dataUrl, gridId
                 filterHeight={220}
                 filterWidth={450}
                 filterInitialData={PartyWiseReportFilterInitialState}
-                onFilterChanged={(f: any) => { setFilter(f); }}
+                onFilterChanged={(f: any) => {
+                  setFilter(f);
+                }}
                 reload={true}
                 gridId={gridId}
               />

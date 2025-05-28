@@ -1,21 +1,31 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
-import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
+import PurchaseGstReportFilterGstCat, {
+  PurchaseGstReportFilterGstCatInitialState,
+} from "./purchase-tax-gst-report-filter-gst";
 
 interface PurchaseTaxGSTDailySummaryProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
+const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
+  const [filter, setFilter] = useState<any>(
+    PurchaseGstReportFilterGstCatInitialState
+  );
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -56,7 +66,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
     },
     {
       dataField: "gstPercentage",
-      caption: t("gstpercentage"),
+      caption: t("gst_percentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -72,7 +82,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.gstPercentage == null
               ? ""
-              : getFormattedValue(cellElement.data.gstPercentage,false,4);
+              : getFormattedValue(cellElement.data.gstPercentage, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -82,7 +92,11 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.gstPercentage == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.gstPercentage),false,4);
+            : getFormattedValue(
+              parseFloat(cellElement.data.gstPercentage),
+              false,
+              4
+            );
         }
       },
     },
@@ -104,7 +118,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.taxableValue == null
               ? ""
-              : getFormattedValue(cellElement.data.taxableValue,false,4);
+              : getFormattedValue(cellElement.data.taxableValue, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -114,7 +128,11 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue),false,4);
+            : getFormattedValue(
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              4
+            );
         }
       },
     },
@@ -136,7 +154,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.totalGST == null
               ? ""
-              : getFormattedValue(cellElement.data.totalGST,false,4);
+              : getFormattedValue(cellElement.data.totalGST, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -146,7 +164,11 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.totalGST == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.totalGST),false,4);
+            : getFormattedValue(
+              parseFloat(cellElement.data.totalGST),
+              false,
+              4
+            );
         }
       },
     },
@@ -168,7 +190,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.cess == null
               ? ""
-              : getFormattedValue(cellElement.data.cess,false,4);
+              : getFormattedValue(cellElement.data.cess, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -178,7 +200,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.cess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cess),false,4);
+            : getFormattedValue(parseFloat(cellElement.data.cess), false, 4);
         }
       },
     },
@@ -200,7 +222,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.addCess == null
               ? ""
-              : getFormattedValue(cellElement.data.addCess,false,4);
+              : getFormattedValue(cellElement.data.addCess, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -210,7 +232,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.addCess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCess),false,4);
+            : getFormattedValue(parseFloat(cellElement.data.addCess), false, 4);
         }
       },
     },
@@ -232,7 +254,7 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total,false,4);
+              : getFormattedValue(cellElement.data.total, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -242,16 +264,16 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(cellElement.data.total,false,4);
+            : getFormattedValue(cellElement.data.total, false, 4);
         }
       },
-    }
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
 
       console.log(itemInfo);
 
@@ -308,8 +330,8 @@ const PurchaseTaxGSTDailySummary: FC<PurchaseTaxGSTDailySummaryProps> = ({ gridH
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

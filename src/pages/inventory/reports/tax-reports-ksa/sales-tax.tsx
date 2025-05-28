@@ -65,22 +65,35 @@ const SalesTax = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
-     cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.taxableAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))
+            cellElement.data?.taxableAmount == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.taxableAmount)
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.taxableAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))}
+              {cellElement.data?.taxableAmount == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.taxableAmount)
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -93,22 +106,39 @@ const SalesTax = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-     cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatPercentage == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,2)
+            cellElement.data?.vatPercentage == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.vatPercentage),
+                  false,
+                  2
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.vatPercentage == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage),false,2)}
+              {cellElement.data?.vatPercentage == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.vatPercentage),
+                    false,
+                    2
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -121,22 +151,39 @@ const SalesTax = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-   cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)
+            cellElement.data?.vatAmount == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.vatAmount),
+                  false,
+                  4
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount),false,4)}
+              {cellElement.data?.vatAmount == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.vatAmount),
+                    false,
+                    4
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -149,22 +196,31 @@ const SalesTax = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-    cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))
+            cellElement.data?.amount == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.amount));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))}
+              {cellElement.data?.amount == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.amount))}
             </span>
-          )
+          );
         }
       },
     },
@@ -227,22 +283,35 @@ const SalesTax = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
-    cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))
+            cellElement.data?.grandTotal == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.grandTotal)
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))}
+              {cellElement.data?.grandTotal == null
+                ? ""
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.grandTotal)
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -263,7 +332,7 @@ const SalesTax = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-    const customizeSummaryRow4 = useMemo(() => {
+  const customizeSummaryRow4 = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
       if (
@@ -279,12 +348,11 @@ const SalesTax = () => {
   }, []);
 
   const summaryItems: SummaryConfig[] = [
-
-     {
+    {
       column: "customerName",
       summaryType: "custom",
       valueFormat: "string",
-      displayFormat: "TOTAL"
+      displayFormat: "TOTAL",
     },
     {
       column: "taxableAmount",
@@ -328,7 +396,7 @@ const SalesTax = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                  filterText=":{fromDate} - {toDate}"
+                filterText=":{fromDate} - {toDate}"
                 gridHeader={t("monthly_vat_sales_statement_report")}
                 dataUrl={Urls.sales_tax}
                 hideGridAddButton={true}

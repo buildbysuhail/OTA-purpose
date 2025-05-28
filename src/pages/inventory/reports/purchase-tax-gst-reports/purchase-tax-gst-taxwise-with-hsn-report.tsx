@@ -1,29 +1,39 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
+import PurchaseGstReportFilter, {
+  PurchaseGstReportFilterInitialState,
+} from "./purchase-tax-gst-report-filter";
 import { useLocation } from "react-router-dom";
 interface PurchaseTaxGSTTaxwiseWithHSNProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
+  const [filter, setFilter] = useState<any>(
+    PurchaseGstReportFilterInitialState
+  );
   const columns: DevGridColumn[] = [
     {
       dataField: "gstPercentage",
-      caption: t("gstpercentage"),
+      caption: t("gst_percentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      groupIndex: 0
+      groupIndex: 0,
     },
     {
       dataField: "form",
@@ -71,7 +81,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.qty));
         }
-      }
+      },
     },
     {
       dataField: "unit",
@@ -112,11 +122,11 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
-      }
+      },
     },
     {
       dataField: "cgstPerc",
-      caption: t("cgstperc"),
+      caption: t("cgst_perc"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -144,7 +154,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "cgst",
@@ -176,11 +186,11 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgst));
         }
-      }
+      },
     },
     {
       dataField: "sgstPerc",
-      caption: t("sgstperc"),
+      caption: t("sgst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -208,7 +218,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "sgst",
@@ -240,11 +250,11 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgst));
         }
-      }
+      },
     },
     {
       dataField: "igstPerc",
-      caption: t("igstperc"),
+      caption: t("igst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -272,7 +282,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igstPerc));
         }
-      }
+      },
     },
     {
       dataField: "igst",
@@ -304,11 +314,11 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igst));
         }
-      }
+      },
     },
     {
       dataField: "cessPerc",
-      caption: t("cessperc"),
+      caption: t("cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -336,7 +346,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cessPerc));
         }
-      }
+      },
     },
     {
       dataField: "cessAmt",
@@ -372,7 +382,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
     },
     {
       dataField: "addCessPerc",
-      caption: t("addcessperc"),
+      caption: t("add_cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -400,11 +410,11 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
         }
-      }
+      },
     },
     {
       dataField: "addCess",
-      caption: t("addcess_amount"),
+      caption: t("add_cess_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -489,7 +499,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
       console.log(itemInfo);
       const value = itemInfo.value;
       if (
@@ -634,7 +644,7 @@ const PurchaseTaxGSTTaxwiseWithHSN: FC<PurchaseTaxGSTTaxwiseWithHSNProps> = ({ g
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-    setKey((prev: any) => prev + 1)
+    setKey((prev: any) => prev + 1);
   }, [location]);
   return (
     <Fragment>

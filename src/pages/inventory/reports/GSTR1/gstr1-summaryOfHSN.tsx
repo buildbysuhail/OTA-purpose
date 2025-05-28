@@ -1,9 +1,6 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -75,10 +72,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.totalQuantity == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.totalQuantity),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.totalQuantity),
+              false,
+              2
+            );
         }
       },
     },
@@ -112,10 +109,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.totalValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.totalValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.totalValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -149,10 +146,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -186,10 +183,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.rateOfTax == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.rateOfTax),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.rateOfTax),
+              false,
+              2
+            );
         }
       },
     },
@@ -213,10 +210,10 @@ const GSTR1HSNSummary = () => {
             cellElement.data?.integratedTaxAmount == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.integratedTaxAmount,
-                  false,
-                  2
-                );
+                cellElement.data.integratedTaxAmount,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -227,10 +224,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.integratedTaxAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.integratedTaxAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.integratedTaxAmount),
+              false,
+              2
+            );
         }
       },
     },
@@ -264,10 +261,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.centralTaxAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.centralTaxAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.centralTaxAmount),
+              false,
+              2
+            );
         }
       },
     },
@@ -291,10 +288,10 @@ const GSTR1HSNSummary = () => {
             cellElement.data?.stateOrUTTaxAmount == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.stateOrUTTaxAmount,
-                  false,
-                  2
-                );
+                cellElement.data.stateOrUTTaxAmount,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -305,10 +302,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.stateOrUTTaxAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.stateOrUTTaxAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.stateOrUTTaxAmount),
+              false,
+              2
+            );
         }
       },
     },
@@ -341,10 +338,10 @@ const GSTR1HSNSummary = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },

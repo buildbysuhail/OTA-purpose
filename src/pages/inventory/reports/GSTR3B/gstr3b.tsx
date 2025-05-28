@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import GSTR3BReportFilter, {
@@ -59,10 +57,10 @@ const GSTR3BReport = () => {
               cellElement.data?.totalTaxableValue == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.totalTaxableValue,
-                    false,
-                    2
-                  );
+                  cellElement.data.totalTaxableValue,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -240,10 +238,10 @@ const GSTR3BReport = () => {
               cellElement.data?.interStateSupplies == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.interStateSupplies,
-                    false,
-                    2
-                  );
+                  cellElement.data.interStateSupplies,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -254,10 +252,10 @@ const GSTR3BReport = () => {
             return cellElement.data?.interStateSupplies == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.interStateSupplies,
-                  false,
-                  2
-                );
+                cellElement.data.interStateSupplies,
+                false,
+                2
+              );
           }
         },
       },
@@ -281,10 +279,10 @@ const GSTR3BReport = () => {
               cellElement.data?.intraStateSupplies == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.intraStateSupplies,
-                    false,
-                    2
-                  );
+                  cellElement.data.intraStateSupplies,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -295,10 +293,10 @@ const GSTR3BReport = () => {
             return cellElement.data?.intraStateSupplies == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.intraStateSupplies,
-                  false,
-                  2
-                );
+                cellElement.data.intraStateSupplies,
+                false,
+                2
+              );
           }
         },
       },
@@ -334,10 +332,10 @@ const GSTR3BReport = () => {
               cellElement.data?.unregisteredTaxableValue == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.unregisteredTaxableValue,
-                    false,
-                    2
-                  );
+                  cellElement.data.unregisteredTaxableValue,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -348,10 +346,10 @@ const GSTR3BReport = () => {
             return cellElement.data?.unregisteredTaxableValue == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.unregisteredTaxableValue,
-                  false,
-                  2
-                );
+                cellElement.data.unregisteredTaxableValue,
+                false,
+                2
+              );
           }
         },
       },
@@ -375,10 +373,10 @@ const GSTR3BReport = () => {
               cellElement.data?.unregisteredIntegratedTax == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.unregisteredIntegratedTax,
-                    false,
-                    2
-                  );
+                  cellElement.data.unregisteredIntegratedTax,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -389,16 +387,16 @@ const GSTR3BReport = () => {
             return cellElement.data?.unregisteredIntegratedTax == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.unregisteredIntegratedTax,
-                  false,
-                  2
-                );
+                cellElement.data.unregisteredIntegratedTax,
+                false,
+                2
+              );
           }
         },
       },
       {
         dataField: "taxableTaxableValue",
-        caption: t("taxable_taxable_value"),
+        caption: t("taxable_value"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -416,10 +414,10 @@ const GSTR3BReport = () => {
               cellElement.data?.taxableTaxableValue == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.taxableTaxableValue,
-                    false,
-                    2
-                  );
+                  cellElement.data.taxableTaxableValue,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -430,10 +428,10 @@ const GSTR3BReport = () => {
             return cellElement.data?.taxableTaxableValue == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.taxableTaxableValue,
-                  false,
-                  2
-                );
+                cellElement.data.taxableTaxableValue,
+                false,
+                2
+              );
           }
         },
       },
@@ -457,10 +455,10 @@ const GSTR3BReport = () => {
               cellElement.data?.taxableIntegratedTax == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.taxableIntegratedTax,
-                    false,
-                    2
-                  );
+                  cellElement.data.taxableIntegratedTax,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -471,10 +469,10 @@ const GSTR3BReport = () => {
             return cellElement.data?.taxableIntegratedTax == null
               ? 0
               : getFormattedValue(
-                  cellElement.data.taxableIntegratedTax,
-                  false,
-                  2
-                );
+                cellElement.data.taxableIntegratedTax,
+                false,
+                2
+              );
           }
         },
       },
@@ -531,10 +529,10 @@ const GSTR3BReport = () => {
               cellElement.data?.uinIntegratedTax == null
                 ? 0
                 : getFormattedValue(
-                    cellElement.data.uinIntegratedTax,
-                    false,
-                    2
-                  );
+                  cellElement.data.uinIntegratedTax,
+                  false,
+                  2
+                );
             return {
               ...exportCell,
               text: value,
@@ -626,10 +624,10 @@ const GSTR3BReport = () => {
                   filter.supplyType == "inAndOutSupplies"
                     ? Urls.gstr3b_InoutSupplies
                     : filter.supplyType == "eligibleITC"
-                    ? Urls.gstr3b_EligibleITC
-                    : filter.supplyType == "exemptNilRated"
-                    ? Urls.gstr3b_ExemptNilRated
-                    : Urls.gstr3b_InterstateSupplies
+                      ? Urls.gstr3b_EligibleITC
+                      : filter.supplyType == "exemptNilRated"
+                        ? Urls.gstr3b_ExemptNilRated
+                        : Urls.gstr3b_InterstateSupplies
                 }
                 hideGridAddButton={true}
                 enablefilter={true}
@@ -637,7 +635,7 @@ const GSTR3BReport = () => {
                 method={ActionType.POST}
                 filterContent={<GSTR3BReportFilter />}
                 filterWidth={790}
-                filterHeight={370}
+                filterHeight={310}
                 onFilterChanged={(f: any) => {
                   setFilter({ ...f, showFilterInitially: false });
                 }}

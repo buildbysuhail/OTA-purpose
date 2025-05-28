@@ -1,11 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import GSTR1CDNRFilter, {
@@ -118,10 +115,10 @@ const GSTR1CDNR = () => {
           return cellElement.data?.noteValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.noteValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.noteValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -176,10 +173,10 @@ const GSTR1CDNR = () => {
             cellElement.data?.applicablePercentOfTaxRate == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.applicablePercentOfTaxRate,
-                  false,
-                  2
-                );
+                cellElement.data.applicablePercentOfTaxRate,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -190,10 +187,10 @@ const GSTR1CDNR = () => {
           return cellElement.data?.applicablePercentOfTaxRate == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.applicablePercentOfTaxRate),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.applicablePercentOfTaxRate),
+              false,
+              2
+            );
         }
       },
     },
@@ -226,10 +223,10 @@ const GSTR1CDNR = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -262,10 +259,10 @@ const GSTR1CDNR = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },

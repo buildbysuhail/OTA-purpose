@@ -86,7 +86,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
     },
     {
       dataField: "vchNo",
-      caption: t("vch_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

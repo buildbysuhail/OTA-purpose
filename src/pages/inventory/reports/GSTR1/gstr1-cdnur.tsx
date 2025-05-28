@@ -1,9 +1,6 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -23,7 +20,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "noteNumber",
@@ -33,7 +30,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "noteDate",
@@ -44,7 +41,7 @@ const GSTR1CDNUR = () => {
       allowSorting: true,
       width: 100,
       format: "dd-MMM-yyyy",
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "noteType",
@@ -54,7 +51,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "placeOfSupply",
@@ -64,7 +61,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "noteValue",
@@ -73,7 +70,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -95,10 +92,10 @@ const GSTR1CDNUR = () => {
           return cellElement.data?.noteValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.noteValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.noteValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -110,7 +107,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -122,10 +119,10 @@ const GSTR1CDNUR = () => {
             cellElement.data?.applicablePercentOfTaxRate == null
               ? ""
               : getFormattedValue(
-                  cellElement.data.applicablePercentOfTaxRate,
-                  false,
-                  2
-                );
+                cellElement.data.applicablePercentOfTaxRate,
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -136,10 +133,10 @@ const GSTR1CDNUR = () => {
           return cellElement.data?.applicablePercentOfTaxRate == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.applicablePercentOfTaxRate),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.applicablePercentOfTaxRate),
+              false,
+              2
+            );
         }
       },
     },
@@ -150,7 +147,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -182,7 +179,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -204,10 +201,10 @@ const GSTR1CDNUR = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.taxableValue),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.taxableValue),
+              false,
+              2
+            );
         }
       },
     },
@@ -218,7 +215,7 @@ const GSTR1CDNUR = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -240,10 +237,10 @@ const GSTR1CDNUR = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.cessAmount),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.cessAmount),
+              false,
+              2
+            );
         }
       },
     },

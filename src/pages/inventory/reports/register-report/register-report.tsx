@@ -904,7 +904,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "gstin",
-        caption: t("GSTIN"),
+        caption: t("gstin"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -941,7 +941,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "priceCategoryID",
-        caption: t("PriceCategoryID"),
+        caption: t("price_category_ID"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1013,7 +1013,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "vNUM",
-        caption: t("VNUM"),
+        caption: t("vnum"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1023,7 +1023,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "cgstPerc",
-        caption: t("CGST %"),
+        caption: t("cgst_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1058,7 +1058,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "cgst",
-        caption: t("CGST"),
+        caption: t("cgst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1090,7 +1090,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "sgstPerc",
-        caption: t("SGST %"),
+        caption: t("sgst_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1125,7 +1125,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "sgst",
-        caption: t("SGST"),
+        caption: t("sgst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1157,7 +1157,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "igstPerc",
-        caption: t("IGST %"),
+        caption: t("igst_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1192,7 +1192,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "igst",
-        caption: t("IGST"),
+        caption: t("igst"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1224,7 +1224,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "gstPercent",
-        caption: t("GST %"),
+        caption: t("gst_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1259,7 +1259,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "gstAmt",
-        caption: t("GST Amt"),
+        caption: t("gst_amt"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1295,7 +1295,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "hsnCode",
-        caption: t("HSNCode"),
+        caption: t("hsn_code"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -1305,7 +1305,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
 
       {
         dataField: "salesPrice",
-        caption: t("SalesPrice"),
+        caption: t("sales_price"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1337,7 +1337,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "remarks",
-        caption: t("Remarks"),
+        caption: t("remarks"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -1345,7 +1345,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "cessPerc",
-        caption: t("Cess %"),
+        caption: t("cess_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1380,7 +1380,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "cessAmt",
-        caption: t("Cess"),
+        caption: t("cess"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1416,7 +1416,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "additionalCessPerc",
-        caption: t("Additional Cess %"),
+        caption: t("additional_cess_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1455,7 +1455,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "additionalCess",
-        caption: t("Additional Cess"),
+        caption: t("additional_cess"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1499,7 +1499,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       // },
       {
         dataField: "gstNo",
-        caption: t("GSTNo"),
+        caption: t("gst_no"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -1595,7 +1595,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       // },
       {
         dataField: "referenceNumber",
-        caption: t("ReferenceNumber"),
+        caption: t("reference_number"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -1603,7 +1603,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         dataField: "baseUnitQuantity",
-        caption: t("BaseUnitQuantity"),
+        caption: t("base_unit_quantity"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -1686,7 +1686,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
           return {
             ...column,
-            caption: "QRPay",
+            caption: t("qr_pay"),
           };
         }
         if (column.dataField == "xRate") {

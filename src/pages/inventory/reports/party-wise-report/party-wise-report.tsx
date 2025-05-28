@@ -29,7 +29,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
       sortIndex: 0,
       sortOrder: "asc",
       dataField: "siNo",
-      caption: t("SINo"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

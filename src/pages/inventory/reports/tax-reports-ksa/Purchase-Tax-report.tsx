@@ -1,17 +1,21 @@
-import { useTranslation } from "react-i18next"
-import { Fragment, useMemo } from "react"
-import moment from "moment"
-import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState } from "./Purchase-Tax-report-filter"
-import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import GridId from "../../../../redux/gridId"
-import { ActionType } from "../../../../redux/types"
-import Urls from "../../../../redux/urls"
-import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
+import { useTranslation } from "react-i18next";
+import { Fragment, useMemo } from "react";
+import moment from "moment";
+import PurchaseTaxReportFilter, {
+  PurchaseTaxReportFilterInitialState,
+} from "./Purchase-Tax-report-filter";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
+import GridId from "../../../../redux/gridId";
+import { ActionType } from "../../../../redux/types";
+import Urls from "../../../../redux/urls";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const PurchaseTaxReport = () => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
 
   const columns: DevGridColumn[] = [
     {
@@ -22,7 +26,7 @@ const PurchaseTaxReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      format: "dd-MMM-yyyy"
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "customerName",
@@ -51,26 +55,35 @@ const PurchaseTaxReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.taxableAmount == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.taxableAmount)
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
               {cellElement.data?.taxableAmount == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))}
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.taxableAmount)
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -84,26 +97,39 @@ const PurchaseTaxReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.vatPercentage == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage), false, 4)
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.vatPercentage),
+                  false,
+                  4
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
               {cellElement.data?.vatPercentage == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage), false, 4)}
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.vatPercentage),
+                    false,
+                    4
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -117,24 +143,39 @@ const PurchaseTaxReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount), false, 4)
+            cellElement.data?.vatAmount == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.vatAmount),
+                  false,
+                  4
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
               {cellElement.data?.vatAmount == null
                 ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount), false, 4)}
+                : getFormattedValue(
+                    Number.parseFloat(cellElement.data.vatAmount),
+                    false,
+                    4
+                  )}
             </span>
-          )
+          );
         }
       },
     },
@@ -148,22 +189,31 @@ const PurchaseTaxReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))
+            cellElement.data?.amount == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.amount));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))}
+              {cellElement.data?.amount == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.amount))}
             </span>
-          )
+          );
         }
       },
     },
@@ -230,7 +280,7 @@ const PurchaseTaxReport = () => {
       width: 100,
       showInPdf: true,
     },
-  ]
+  ];
 
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -246,7 +296,7 @@ const PurchaseTaxReport = () => {
       return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
-    const customizeSummaryRow1 = useMemo(() => {
+  const customizeSummaryRow1 = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
       if (
@@ -257,7 +307,7 @@ const PurchaseTaxReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return getFormattedValue(value,false,4) || "0"; // Ensure formatted output or fallback to "0"
+      return getFormattedValue(value, false, 4) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const summaryItems: SummaryConfig[] = [
@@ -265,7 +315,7 @@ const PurchaseTaxReport = () => {
       column: "customerName",
       summaryType: "custom",
       valueFormat: "string",
-      displayFormat: "TOTAL"
+      displayFormat: "TOTAL",
     },
     {
       column: "taxableAmount",
@@ -284,7 +334,7 @@ const PurchaseTaxReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
   ];
   return (
     <Fragment>
@@ -316,8 +366,7 @@ const PurchaseTaxReport = () => {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default PurchaseTaxReport
-
+export default PurchaseTaxReport;

@@ -226,22 +226,24 @@ export default function ErpPurchaseGrid<T extends DataItem>({
 
   return (
     <div
-      style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box", marginTop: 10 }}
+      style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box"}}
     >
-      <GridPreferenceChooser
+      <div className={`relative border border-gray-300 rounded-md ${className} w-full overflow-hidden`}>
+        <div className={`absolute top-[-7px] ${appState.dir==="ltr"?"left-[3px]":"right-[3px]"}  z-20`}>
+        <GridPreferenceChooser
         gridId={gridId}
         columns={columns}
         onApplyPreferences={onApplyPreferences}
         GridPreferenceChooserAccTrance
-        eclipseClass="my-0 ml-2"
+        eclipseClass="m-0 p-0"
+        
       />
-
-      <div className={`border border-gray-100 rounded-md ${className} w-full overflow-hidden`}>
+        </div>
         {/* Header */}
         <div
           ref={headerRef}
           className="w-full overflow-x-auto shadow-md rounded-lg sticky top-0 z-10"
-          style={{ boxSizing: "border-box" }}
+          // style={{ boxSizing: "border-box" }}
         >
           <table className="min-w-full table-auto">
             <thead>

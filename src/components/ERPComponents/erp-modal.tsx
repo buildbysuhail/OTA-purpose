@@ -355,7 +355,7 @@ const ERPModal = React.memo(
                         </DialogTitle>
 
                         <div
-                          className={`bg-inherit flex flex-col justify-between flex-grow  h-full w-full`}
+                          className={`bg-inherit flex flex-col justify-between flex-grow  w-full`}
                         >
                           <ERPScrollArea
                             maxHeight={`${modalHeight - (footer ? 90 : 0)}px`}

@@ -275,7 +275,7 @@ export const StockSummaryFilterInitialState = {
     wareHouseID: 0,
     supplierID: 0,
     valuationUsing: "SPP",
-    showBatchWise: true,
+    showBatchWise: true,//Settings.InventorySettings.BatchCriteria == "NB") chkBatchWise.Checked = true
     barcode: "",
     productCode: "",
     groupCategoryID: 0,

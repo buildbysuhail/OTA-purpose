@@ -782,7 +782,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
                   {selectedInvoice.customer}
                 </Typography>
                 <Typography variant="body2">Kerala, India</Typography>
-                <Typography variant="body2">satvan.work@gmail.com</Typography>
+                <Typography variant="body2">safvan.work@gmail.com</Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="body2">
                   <strong>Invoice Date:</strong> {selectedInvoice.date}

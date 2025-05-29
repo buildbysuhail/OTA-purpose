@@ -157,9 +157,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       {/* Dropdown content */}
       <div
         ref={dropdownRef}
-        className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
-          isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
-        }`}
+        className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
+          }`}
       >
         <div className="p-4 md:p-2 bg-white border-t border-gray-300 shadow-lg">
           <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
@@ -268,10 +267,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     valueKey: "id",
                     labelKey: "name",
                     getListUrl: Urls.data_employees,
-                    params: `ledgerType=${
-                      formState.formElements?.cbVatAccount?.accLedgerType ||
+                    params: `ledgerType=${formState.formElements?.cbVatAccount?.accLedgerType ||
                       LedgerType.All
-                    }`,
+                      }`,
                   }}
                   disabled={
                     formState.formElements.cbVatAccount.disabled ||
@@ -350,8 +348,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               <ERPModal
                 isOpen={isMoreModalOpen}
                 title="More Options"
-                width={630}
-                height={620}
+                width={650}
+                height={580}
                 closeModal={closeMoreModal}
                 content={
                   <MoreOptionsModalContent
@@ -432,9 +430,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
           <button
             onClick={toggleDropdown}
-            className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${
-              isDropDownOpen ? "bg-gray-100" : ""
-            }`}
+            className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""
+              }`}
             style={{
               boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
               transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
@@ -442,13 +439,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             }}
           >
             <ChevronDown
-              className={`mx-2 transition-transform duration-500 ${
-                isDropDownOpen
-                  ? "transform rotate-180"
-                  : hasAnimated
+              className={`mx-2 transition-transform duration-500 ${isDropDownOpen
+                ? "transform rotate-180"
+                : hasAnimated
                   ? ""
                   : "animate-[bounce_2s_1]"
-              }`}
+                }`}
               size={24}
             />
           </button>

@@ -514,6 +514,7 @@ const Content: FC<ContentProps> = () => {
   const childPath = routeChild.path.includes("/_/")
     ? "/" + routeChild.path.split("/_/")[1]
     : routeChild.path;
+console.log(childPath);
 
   return (
 
@@ -526,8 +527,17 @@ const Content: FC<ContentProps> = () => {
           </RouteGuard>} />
           
         ); })
+
+        
       )
       }
+      {/* <Route path="/accounts/trial_balance" element={<TrialBalance />} />
+        <Route path="/accounts/trial_balance_period_wise" element={<TrialBalancePeriodwise />} />
+        <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
+        <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
+        <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
+        <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} /> */}
+
         
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}

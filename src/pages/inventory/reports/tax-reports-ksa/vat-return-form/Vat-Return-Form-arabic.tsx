@@ -1,111 +1,134 @@
-import { useTranslation } from "react-i18next"
-import { Fragment, useMemo } from "react"
-import moment from "moment"
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid"
-import GridId from "../../../../../redux/gridId"
-import { ActionType } from "../../../../../redux/types"
-import Urls from "../../../../../redux/urls"
-import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format"
-import { useSelector } from "react-redux"
-import { RootState } from "../../../../../redux/store"
-import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../../../../accounts/reports/cashSummary/cash-summary-report-filter"
+import { useTranslation } from "react-i18next";
+import { Fragment } from "react";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../../../redux/types";
+import Urls from "../../../../../redux/urls";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import CashSummaryReportFilter, {
+  CashSummaryReportFilterInitialState,
+} from "../../../../accounts/reports/cashSummary/cash-summary-report-filter";
 
 const VatReturnFormArabic = () => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
-const userSession = useSelector((state: RootState) => state.UserSession);
-const setupCurrencyCode = (countryId: number): string => {
-  let currencyCode = '';
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const setupCurrencyCode = (countryId: number): string => {
+    let currencyCode = "";
 
-  switch (countryId) {
-    case 1: // Saudi Arabia
-      currencyCode = 'SAR';
-      break;
-    case 120: // UAE
-      currencyCode = 'AED';
-      break;
-    case 122: // Bahrain
-      currencyCode = 'BHD';
-      break;
-    case 124: // Qatar
-      currencyCode = 'QAR';
-      break;
-    case 118: // Kuwait
-      currencyCode = 'KWD';
-      break;
-    case 104: // Oman
-      currencyCode = 'OMR';
-      break;
-    default:
-      currencyCode = '';
-      break;
-  }
+    switch (countryId) {
+      case 1: // Saudi Arabia
+        currencyCode = "SAR";
+        break;
+      case 120: // UAE
+        currencyCode = "AED";
+        break;
+      case 122: // Bahrain
+        currencyCode = "BHD";
+        break;
+      case 124: // Qatar
+        currencyCode = "QAR";
+        break;
+      case 118: // Kuwait
+        currencyCode = "KWD";
+        break;
+      case 104: // Oman
+        currencyCode = "OMR";
+        break;
+      default:
+        currencyCode = "";
+        break;
+    }
 
-  return currencyCode;
-};
+    return currencyCode;
+  };
   // const columns: DevGridColumn[] = useMemo(() => {
-    const baseColumns: DevGridColumn[] = [
-      {
+  const baseColumns: DevGridColumn[] = [
+    {
       dataField: "title",
       caption: t("العنوان"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
         exportCell: any
       ) => {
         if (exportCell != undefined) {
-          return  {
+          return {
             ...exportCell,
             text: cellInfo.value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data?.title=="اجمالي المبيعات" ||
-            cellElement.data?.title=="اجمالي المشتريات"||
-            cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-            cellElement.data?.title=="صافي الضريبة المستحقة"
-             ? '#FF0000':'',
+            textColor:
+              cellElement.data?.title == "اجمالي المبيعات" ||
+              cellElement.data?.title == "اجمالي المشتريات" ||
+              cellElement.data?.title ==
+                "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+              cellElement.data?.title == "صافي الضريبة المستحقة"
+                ? "#FF0000"
+                : "",
             font: {
               ...exportCell.font,
-              color:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة" ? { argb: 'FFFF0000' } : "",
+              color:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? { argb: "FFFF0000" }
+                  : "",
               size: 10,
-              style:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?'bold':'normal',
-              bold:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?true:false,
+              style:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? true
+                  : false,
             },
           };
-        }
-        else {
-          return (<span className={`${cellElement.data?.title=="اجمالي المبيعات"||
-            cellElement.data?.title=="اجمالي المشتريات"||
-            cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-               cellElement.data?.title=="صافي الضريبة المستحقة"
-            ? 'font-bold text-[#DC143C]' : 
-            cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"?'font-bold bg-[#1b7c47] text-[#fcfafb]':
-            cellElement.data?.title=="الضريبة على المشتريات"?'font-bold bg-[#eb9d29] text-[#fcfafb]':
-            
-            ''}`}>
-            {cellElement.data.title}
-          </span>)
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data?.title ==
+                    "ضريبة القيمة المضافة على المبيعات"
+                  ? "font-bold bg-[#1b7c47] text-[#fcfafb]"
+                  : cellElement.data?.title == "الضريبة على المشتريات"
+                  ? "font-bold bg-[#eb9d29] text-[#fcfafb]"
+                  : ""
+              }`}
+            >
+              {cellElement.data.title}
+            </span>
+          );
         }
       },
     },
@@ -118,74 +141,112 @@ const setupCurrencyCode = (countryId: number): string => {
       width: 300,
       visible: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.amount == null
               ? ""
-              :cellElement.data?.title=="اجمالي المبيعات"||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"?
-              getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.amount)))  
-              :cellElement.data?.amount == 0?
-              getArabicNumber('0'):
-              getArabicNumber(getFormattedValue(cellElement.data.amount,false,4)) 
+              : cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+              ? getArabicNumber(
+                  getFormattedValue(Number.parseFloat(cellElement.data.amount))
+                )
+              : cellElement.data?.amount == 0
+              ? getArabicNumber("0")
+              : getArabicNumber(
+                  getFormattedValue(cellElement.data.amount, false, 4)
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-            textColor: cellElement.data?.title=="اجمالي المبيعات" ||
-            cellElement.data?.title=="اجمالي المشتريات"||
-            cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-            cellElement.data?.title=="صافي الضريبة المستحقة"
-             ? '#FF0000':'',
-             font: {
+            textColor:
+              cellElement.data?.title == "اجمالي المبيعات" ||
+              cellElement.data?.title == "اجمالي المشتريات" ||
+              cellElement.data?.title ==
+                "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+              cellElement.data?.title == "صافي الضريبة المستحقة"
+                ? "#FF0000"
+                : "",
+            font: {
               ...exportCell.font,
-              color:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة" ? { argb: 'FFFF0000' } : "",
+              color:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? { argb: "FFFF0000" }
+                  : "",
               size: 10,
-              style:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?'bold':'normal',
-              bold:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?true:false,
+              style:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? true
+                  : false,
             },
-          }
+          };
         } else {
           return (
-            <span className={`${cellElement.data?.title=="اجمالي المبيعات"||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-                 cellElement.data?.title=="صافي الضريبة المستحقة"
-              ? 'font-bold text-[#DC143C]' : ''}`}>
+            <span
+              className={`${
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
               {cellElement.data?.amount == null
                 ? ""
-                :cellElement.data?.title=="اجمالي المبيعات"||
-                cellElement.data?.title=="اجمالي المشتريات"||
-                cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-                cellElement.data?.title=="صافي الضريبة المستحقة"?
-                getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.amount)))  
-                :cellElement.data?.amount == 0?
-                getArabicNumber('0'):
-                getArabicNumber(getFormattedValue(cellElement.data.amount,false,4))  }
+                : cellElement.data?.title == "اجمالي المبيعات" ||
+                  cellElement.data?.title == "اجمالي المشتريات" ||
+                  cellElement.data?.title ==
+                    "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                  cellElement.data?.title == "صافي الضريبة المستحقة"
+                ? getArabicNumber(
+                    getFormattedValue(
+                      Number.parseFloat(cellElement.data.amount)
+                    )
+                  )
+                : cellElement.data?.amount == 0
+                ? getArabicNumber("0")
+                : getArabicNumber(
+                    getFormattedValue(cellElement.data.amount, false, 4)
+                  )}
             </span>
-          )
+          );
         }
-      }
       },
+    },
     {
       dataField: "adjustment",
       caption: t("مبلغ التعديل ( ريال )"),
@@ -195,61 +256,95 @@ const setupCurrencyCode = (countryId: number): string => {
       width: 300,
       showInPdf: true,
       visible: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.adjustment == null
               ? ""
-              :getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.adjustment))) 
+              : getArabicNumber(
+                  getFormattedValue(
+                    Number.parseFloat(cellElement.data.adjustment)
+                  )
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-            textColor: cellElement.data?.title=="اجمالي المبيعات" ||
-            cellElement.data?.title=="اجمالي المشتريات"||
-            cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-            cellElement.data?.title=="صافي الضريبة المستحقة"
-             ? '#FF0000':'',
-             font: {
+            textColor:
+              cellElement.data?.title == "اجمالي المبيعات" ||
+              cellElement.data?.title == "اجمالي المشتريات" ||
+              cellElement.data?.title ==
+                "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+              cellElement.data?.title == "صافي الضريبة المستحقة"
+                ? "#FF0000"
+                : "",
+            font: {
               ...exportCell.font,
-              color:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة" ? { argb: 'FFFF0000' } : "",
+              color:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? { argb: "FFFF0000" }
+                  : "",
               size: 10,
-              style:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?'bold':'normal',
-              bold:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?true:false,
+              style:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? true
+                  : false,
             },
-          }
+          };
         } else {
           return (
-            <span className={`${cellElement.data?.title=="اجمالي المبيعات"||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-                 cellElement.data?.title=="صافي الضريبة المستحقة"
-              ? 'font-bold text-[#DC143C]' : ''}`}>
+            <span
+              className={`${
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
               {cellElement.data?.adjustment == null
                 ? ""
-                :getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.adjustment))) }
+                : getArabicNumber(
+                    getFormattedValue(
+                      Number.parseFloat(cellElement.data.adjustment)
+                    )
+                  )}
             </span>
-          )
+          );
         }
-      }
       },
-     {
+    },
+    {
       dataField: "vatAmount",
       caption: t("مبلغ ضريبة القيمة المضافة ( ريال )"),
       dataType: "number",
@@ -258,64 +353,101 @@ const setupCurrencyCode = (countryId: number): string => {
       allowFiltering: true,
       width: 300,
       visible: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.vatAmount == null
               ? ""
-              :getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))) 
+              : getArabicNumber(
+                  getFormattedValue(
+                    Number.parseFloat(cellElement.data.vatAmount)
+                  )
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-            textColor: cellElement.data?.title=="اجمالي المبيعات" ||
-            cellElement.data?.title=="اجمالي المشتريات"||
-            cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-            cellElement.data?.title=="صافي الضريبة المستحقة"
-             ? '#FF0000':'',
-             font: {
+            textColor:
+              cellElement.data?.title == "اجمالي المبيعات" ||
+              cellElement.data?.title == "اجمالي المشتريات" ||
+              cellElement.data?.title ==
+                "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+              cellElement.data?.title == "صافي الضريبة المستحقة"
+                ? "#FF0000"
+                : "",
+            font: {
               ...exportCell.font,
-              color:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة" ? { argb: 'FFFF0000' } : "",
+              color:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? { argb: "FFFF0000" }
+                  : "",
               size: 10,
-              style:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?'bold':'normal',
-              bold:cellElement.data?.title=="اجمالي المبيعات" ||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-              cellElement.data?.title=="صافي الضريبة المستحقة"||
-              cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"||
-              cellElement.data?.title=="الضريبة على المشتريات"
-              ?true:false,
+              style:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة" ||
+                cellElement.data?.title ==
+                  "ضريبة القيمة المضافة على المبيعات" ||
+                cellElement.data?.title == "الضريبة على المشتريات"
+                  ? true
+                  : false,
             },
-          }
+          };
         } else {
           return (
-            <span className={`${cellElement.data?.title=="اجمالي المبيعات"||
-              cellElement.data?.title=="اجمالي المشتريات"||
-              cellElement.data?.title=="اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية"||
-                 cellElement.data?.title=="صافي الضريبة المستحقة"
-              ? 'font-bold text-[#DC143C]' : cellElement.data?.title=="ضريبة القيمة المضافة على المبيعات"?'font-bold bg-[#DC143C]':''}`}>
+            <span
+              className={`${
+                cellElement.data?.title == "اجمالي المبيعات" ||
+                cellElement.data?.title == "اجمالي المشتريات" ||
+                cellElement.data?.title ==
+                  "اجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية" ||
+                cellElement.data?.title == "صافي الضريبة المستحقة"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data?.title ==
+                    "ضريبة القيمة المضافة على المبيعات"
+                  ? "font-bold bg-[#DC143C]"
+                  : ""
+              }`}
+            >
               {cellElement.data?.vatAmount == null
                 ? ""
-                :getArabicNumber(getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))) }
+                : getArabicNumber(
+                    getFormattedValue(
+                      Number.parseFloat(cellElement.data.vatAmount)
+                    )
+                  )}
             </span>
-          )
+          );
         }
-      }
       },
-    ];
+    },
+  ];
   //   // Filter columns based on the `visible` property
   //   return baseColumns
-     
+
   //     .map((column) => {
   //       if (column.dataField !== "title") {
   //         return {
@@ -346,7 +478,7 @@ const setupCurrencyCode = (countryId: number): string => {
                   showFilterInitially={true}
                   filterWidth={350}
                   filterHeight={200}
-                  filterContent={<CashSummaryReportFilter/>}
+                  filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
@@ -357,10 +489,10 @@ const setupCurrencyCode = (countryId: number): string => {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default VatReturnFormArabic
+export default VatReturnFormArabic;
 
 export function getArabicNumber(number: string): string {
   const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
@@ -387,4 +519,3 @@ export function getArabicNumber(number: string): string {
 
   return arabicNumber;
 }
-

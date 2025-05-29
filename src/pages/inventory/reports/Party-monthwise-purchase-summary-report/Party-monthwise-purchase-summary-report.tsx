@@ -1,10 +1,14 @@
-import { useTranslation } from "react-i18next"
-import { FC, Fragment, useMemo } from "react"
-import PartyMonthwisePurchaseSummaryReportFilter, { PartyMonthwisePurchaseSummaryReportFilterInitialState } from "./Party-monthwise-purchase-summary-report-filter"
-import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import { ActionType } from "../../../../redux/types"
-import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
+import { useTranslation } from "react-i18next";
+import { FC, Fragment, useMemo } from "react";
+import PartyMonthwisePurchaseSummaryReportFilter, {
+  PartyMonthwisePurchaseSummaryReportFilterInitialState,
+} from "./Party-monthwise-purchase-summary-report-filter";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../../redux/types";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface PartyMonthwiseSummaryReportProps {
   gridHeader: string;
@@ -12,10 +16,13 @@ interface PartyMonthwiseSummaryReportProps {
   gridId: string;
 }
 
-const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
-
+const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -25,7 +32,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      format:'dd-MMM-yyyy'
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "voucherNumber",
@@ -107,7 +114,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       width: 80,
       showInPdf: true,
     },
-   
+
     {
       dataField: "addressStreet",
       caption: t("address_street"),
@@ -142,9 +149,6 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       width: 100,
       showInPdf: true,
     },
-   
-  
-   
     {
       dataField: "total",
       caption: t("total"),
@@ -155,18 +159,27 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.total));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
+          return cellElement.data?.total == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.total));
         }
       },
     },
@@ -189,60 +202,68 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.grandTotal == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))
+              : getFormattedValue(
+                Number.parseFloat(cellElement.data.grandTotal)
+              );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.grandTotal == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
+          return cellElement.data?.grandTotal == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal));
         }
       },
     },
   ];
-   
-    const customizeSummaryRow = useMemo(() => {
-        return (itemInfo: { value: any }) => {
-          const value = itemInfo.value;
-          if (
-            value === null ||
-            value === undefined ||
-            value === "" ||
-            isNaN(value)
-          ) {
-            return "0"; // Ensure "0" is displayed when value is missing
-          }
-          return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
-        };
-      }, []);
-    const summaryItems: SummaryConfig[] = [
-        {
-          column: "partyType",
-          summaryType: "custom",
-          valueFormat: "string",
-          displayFormat: "TOTAL",
-        },
-        {
-          column: "total",
-          summaryType: "sum",
-          valueFormat: "currency",
-          customizeText: customizeSummaryRow,
-        },
-         {
-          column: "grandTotal",
-          summaryType: "sum",
-          valueFormat: "currency",
-          customizeText: customizeSummaryRow,
-        },
-      ];
-  
+
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "partyType",
+      summaryType: "custom",
+      valueFormat: "string",
+      displayFormat: "TOTAL",
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "grandTotal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Fragment>
@@ -252,8 +273,13 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                summaryItems={summaryItems}
-                   remoteOperations={{ filtering: true, paging: true, sorting: true,summary:true }}
+                  summaryItems={summaryItems}
+                  remoteOperations={{
+                    filtering: true,
+                    paging: true,
+                    sorting: true,
+                    summary: true,
+                  }}
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
                   gridHeader={t(gridHeader)}
@@ -265,7 +291,9 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
                   filterWidth={450}
                   filterHeight={150}
                   filterContent={<PartyMonthwisePurchaseSummaryReportFilter />}
-                  filterInitialData={PartyMonthwisePurchaseSummaryReportFilterInitialState}
+                  filterInitialData={
+                    PartyMonthwisePurchaseSummaryReportFilterInitialState
+                  }
                   hideGridAddButton={true}
                   reload={true}
                 />
@@ -275,8 +303,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({ gri
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default PartyMonthwiseSummaryReport
-
+export default PartyMonthwiseSummaryReport;

@@ -92,6 +92,8 @@ const Urls = {
   data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
   data_units: "/Inventory/Data/UnitOfMeasures",
   data_taxCategory: "/Inventory/Data/TaxCategory/",
+  data_driver:"/Data/Driver/",
+  data_deliveryMan:"/Data/DeliveryMan/",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
@@ -691,7 +693,7 @@ const Urls = {
   // URLs for QuantityLimitController (Inventory Module)
 
   quantity_limit: "/Inventory/QuantityLimit/", // GET/delete/insertpost
-  select_products_for_product_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
+  select_products_for_pduct_qty_limit: "/Inventory/QuantityLimit/ForPduct", // GET (pass ItemQtyLimitParamDto as query parameters)
 
   // URLs for QuantitySlabController (Inventory Module)
   qty_slab_offer: "/Inventory/QuantitySlab/", // POST

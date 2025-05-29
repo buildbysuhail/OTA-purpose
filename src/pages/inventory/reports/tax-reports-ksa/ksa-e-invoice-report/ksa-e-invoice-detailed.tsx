@@ -5,11 +5,13 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import KsaEInvoiceReportFilter, { KsaEInvoiceReportFilterInitialState } from "./ksa-e-invoice-filter";
+import KsaEInvoiceReportFilter, {
+  KsaEInvoiceReportFilterInitialState,
+} from "./ksa-e-invoice-filter";
 
 const KsaEInvoiceReportDetailed = () => {
   const { getFormattedValue } = useNumberFormat();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -72,7 +74,7 @@ const KsaEInvoiceReportDetailed = () => {
     },
     {
       dataField: "address1",
-      caption: t("address_1"),
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -310,7 +312,7 @@ const KsaEInvoiceReportDetailed = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-      dataType: "boolean"
+      dataType: "boolean",
       // cellRender: (
       //     cellElement: any,
       //     cellInfo: any,
@@ -338,7 +340,7 @@ const KsaEInvoiceReportDetailed = () => {
       width: 200,
       visible: false,
       showInPdf: true,
-    }, 
+    },
     {
       dataField: "eInvoiceTime",
       caption: t("e_invoice_time"),
@@ -377,7 +379,11 @@ const KsaEInvoiceReportDetailed = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={false}
                 gridHeader={t("ksa_e_invoice_report_detailed")}

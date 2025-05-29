@@ -32,7 +32,7 @@ interface GrnNumberProps extends VoucherElementProps {
   
 
 const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
-  ({ dispatch, t,closeModal }) => {
+  (props, ref) => {
     
 
     const goToPreviousPage = () => {
@@ -61,8 +61,8 @@ const {
   // formState,
 } = useFormManager<GrnNumberData>({
   url: Urls.account_group, // Change this if needed
-  onSuccess: useCallback(() => dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: true })), [dispatch]),
-  onClose: useCallback(() => dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: false })), [dispatch]),
+  onSuccess: useCallback(() => props.dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: true })), [props.dispatch]),
+  onClose: useCallback(() => props.dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: false })), [props.dispatch]),
   key: rootState.PopupData.accountGroup.key, // Consider renaming if not account group
   useApiClient: true,
   initialData: initialGrnNumber,
@@ -93,7 +93,7 @@ const {
       <label
         className="w-24 mr-4 flex items-center justify-end h-10 text-sm font-medium"
       >
-        {t("GRN No")}:
+        {props.t("GRN No")}:
       </label>
   
       {/* INPUT ROW */}
@@ -108,7 +108,7 @@ const {
           // placeholder={t("Form_Type")}
           data={formState?.loadData}
           onSelectItem={(e) =>
-            dispatch(formStateLoadDataUpdate({ key: "formType", value: e.value }))
+            props.dispatch(formStateLoadDataUpdate({ key: "formType", value: e.value }))
           }
           value={formState?.loadData?.formType}
           field={{ id: "FormType", valueKey: "id", labelKey: "name", getListUrl: Urls.data_employees }}
@@ -132,13 +132,13 @@ const {
           localInputBox={formState?.userConfig?.inputBoxStyle}
           min={1}
           label=""                   /* turn off its internal label */
-          placeholder={t("V Number")}
+          placeholder={props.t("V Number")}
           type="number"
           className="w-[80px]"
         />
   
         <ERPButton
-          title={t("Load")}
+          title={props.t("Load")}
           className="h-10"           /* match the inputs’ height */
         />
       </div>
@@ -146,7 +146,7 @@ const {
       <ERPFormButtons
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={closeModal}
+        onCancel={props.closeModal}
       />
     </div>
   );

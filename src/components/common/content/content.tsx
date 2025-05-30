@@ -224,7 +224,7 @@ import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
-const OpeningStock = lazy(() => import("../../../pages/inventory/reports/opening-stock-report/opening-stock"));
+const OpeningStock = lazy(() => import("../../../pages/inventory/reports/stock-journal-report/stock-journal"));
 const StockFlow = lazy(() => import("../../../pages/inventory/reports/stock-flow/stock-flow-report"));
 const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report"));
 

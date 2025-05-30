@@ -83,7 +83,7 @@ const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/invent
 const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
 const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
 const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
-const OpeningStock = lazy(() => import("../../../../pages/inventory/reports/opening-stock-report/opening-stock"));
+// const OpeningStock = lazy(() => import("../../../../pages/inventory/reports/stock-journal-report/stock-journal"));
 const StockTransfer = lazy(() => import("../../../../pages/inventory/reports/stock-transfer-report/stock-transfer"));
 const DamageStock = lazy(() => import("../../../../pages/inventory/reports/damage-stock-report/damage-stock"));
 const ExcessStock = lazy(() => import("../../../../pages/inventory/reports/excess-stock-report/excess-stock"));
@@ -157,6 +157,7 @@ const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/repor
 import urls from "../../../../redux/urls";
 import GridId from "../../../../redux/gridId";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
+import StockJournalReport from "../../../../pages/inventory/reports/stock-journal-report/stock-journal";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -318,7 +319,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 700,element:<OpeningStock />, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
+      { id: 700,element:<StockJournalReport dataUrl={urls.opening_stock} gridHeader="opening_stock_report" gridId="grd_opening_stock_journal"/>, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
       { id: 701,element:<StockTransfer />, formCode:"STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight },
       { id: 702,element:<DamageStock />, formCode:"DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
       { id: 703,element:<ExcessStock />, formCode:"EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },

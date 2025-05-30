@@ -51,7 +51,10 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productID", data.value);
+            handleFieldChange({
+              productID: data.value,
+              product: data.label,
+            });
           }}
           className="w-full"
         />
@@ -66,7 +69,10 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("warehouseID", data.value);
+            handleFieldChange({
+              wareHouseID: data.value,
+              wareHouse: data.label,
+            });
           }}
           className="w-full"
         />
@@ -95,10 +101,11 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
 
 export default StockLedgerFilter;
 export const StockLedgerFilterInitialState = {
-  fromDate: moment().local().startOf("month").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: new Date(),
+  toDate:new Date(),
   productID: 0,
   warehouseID: 0,
-  batchwiseBarcode: "",
-  showOpeningStock: true
+  isBatchwise: false,
+  autobarcode: 0,
+  showOpeningStock: false
 };

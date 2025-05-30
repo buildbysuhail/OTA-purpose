@@ -34,6 +34,7 @@ export interface DevGridColumn {
     allowEditing?: boolean;
     format?: string;
     visible?: boolean;
+    readOnly?: boolean;
     visibleDynamic?: (filter: any) => boolean;
     captionDynamic?: (filter: any) => string;
     groupIndex?:any;

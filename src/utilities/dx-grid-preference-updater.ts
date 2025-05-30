@@ -46,13 +46,12 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     width: column.width,
     alignment: column.alignment??'left',
     visible: column.visible??true,
-    readOnly: false,
     fontBold: false,
     fontColor: '',
     fontSize: 0,
     displayOrder: index,
     showInPdf: column.showInPdf?? false,
-    
+    readOnly: column.readOnly ?? false,
     }
   };
 export function getInitialPreference(gridId: any, columns: any) {

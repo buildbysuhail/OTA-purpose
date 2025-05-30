@@ -28,36 +28,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
   const pxToPoint = (px: number) => px * (72 / 96);
-  // const data = [
-  //   {
-  //     autoBarcode: 550001,
-  //     brandName: "5 STAR",
-  //     cost: 90,
-  //     mrp: 0,
-  //     productBatchID: 1,
-  //     productCode: "BRP01",
-  //     productName: "BROAST POWD",
-  //     salesPrice: 100,
-  //     siNo: 1,
-  //     specification: "",
-  //     unitID: 1,
-  //     unitName: "PCs",
-  //   },
-  //   {
-  //     autoBarcode: 550002,
-  //     brandName: "5 STAR",
-  //     cost: 90,
-  //     mrp: 0,
-  //     productBatchID: 2,
-  //     productCode: "BRS01",
-  //     productName: "BROAST POWDER SALT 5KG",
-  //     salesPrice: 100,
-  //     siNo: 2,
-  //     specification: "",
-  //     unitID: 1,
-  //     unitName: "PCs",
-  //   },
-  // ]
+  
   useEffect(() => {
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
     const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
@@ -241,7 +212,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <PDFViewer width="100%" height={700}>
+      <PDFViewer width="100%" height="100%">
         <PreviewDocument />
       </PDFViewer>
     </div>

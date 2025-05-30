@@ -26,26 +26,38 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
 }) => {
   const location = useLocation();
   const { t } = useTranslation("accountsReport");
- const handleCalculateSummary = (e: any) => {
-  debugger
-    if (e.name === 'marginPerc') {
-      if (e.summaryProcess === 'start') {
-        e.totalMargin = 0;
-        e.totalNetValue = 0;
+
+
+
+const handleCalculateSummary = (e: any) => {
+  if (e.name !== "marginPerc") return;
+
+  switch (e.summaryProcess) {
+    case "start":
+      e.totalMargin = 0;
+      e.totalNetValue = 0;
+      break;
+    case "calculate":
+      const dataSource = e.component.getDataSource();
+      console.log("dataSource", dataSource);
+      
+      const allRows = dataSource.items();
+      console.log("allRows", allRows);
+      const row = allRows[e.rowIndex];
+      if (row) {
+        const margin = Number(row.margin) || 0;
+        const netValue = Number(row.netValue) || 0;
+        e.totalMargin += margin;
+        e.totalNetValue += netValue;
       }
-      if (e.summaryProcess === 'calculate') {
-        e.totalMargin += e.value.margin;
-        e.totalNetValue += e.value.netValue;
-      }
-      if (e.summaryProcess === 'finalize') {
-        if (e.totalNetValue !== 0) {
-          e.totalValue = (e.totalMargin / e.totalNetValue) * 100;
-        } else {
-          e.totalValue = 0;
-        }
-      }
-    }
-  };
+      break;
+    case "finalize":
+      e.totalValue = e.totalNetValue ? (e.totalMargin / e.totalNetValue) * 100 : 0;
+      break;
+  }
+};
+
+
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -616,42 +628,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
     //       return column;
     //     });;
   }, [t, filterInitialData]);
-  //   {
-  //     dataField: "category",
-  //     caption: t("category"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     allowSorting: true,
-  //     width: 100,
-  // },
-  // {
-  //     dataField: "section",
-  //     caption: t("section"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     allowSorting: true,
-  //     width: 100,
-  // },
-  // {
-  //     dataField: "productCategory",
-  //     caption: t("product_category"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     allowSorting: true,
-  //     width: 120,
-  // },
-  // {
-  //     dataField: "brandName",
-  //     caption: t("brand"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     allowSorting: true,
-  //     width: 100,
-  // }
+
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -717,10 +694,11 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
     {
       column: "marginPerc",
       summaryType: "custom",
-      valueFormat: "currency",
-      showInColumn:"marginPerc"
-      
+      valueFormat: "percent",
+      showInColumn:"marginPerc",
+
     },
+    
     {
       column: "margin",
       summaryType: "sum",
@@ -786,7 +764,15 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
-                method={ActionType.POST}
+                method={ActionType.POST}   allowEditing={{
+                      allow: true,
+                      config: {
+                      edit: true,
+                      add: false,
+                      delete: false,
+                      },
+                    }}
+               
                 filterContent={<GroupwiseSalesSummaryFilter />}
                 filterWidth={790}
                 filterHeight={370}

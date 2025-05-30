@@ -749,7 +749,7 @@ export default function PDFBarcodeDesigner() {
     }
     const activeTemplate: TemplateDto = {
       // ...templateData.activeTemplate,
-      id:id,
+      id:id== "new" ? 0 : id,//temparary fix
       templateType:tmpTemplate.propertiesState.template_type??"standard",
       templateKind:tmpTemplate.propertiesState.template_kind??"standard",
       templateGroup:tmpTemplate.propertiesState.template_group??"",

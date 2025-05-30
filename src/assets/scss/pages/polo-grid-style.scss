@@ -1042,13 +1042,13 @@ $dark-grid-selection: #000000;
 .hasRightFixedColumn {
 
   .dx-datagrid-rowsview .dx-datagrid-content {
-    padding-right: 15px;
+    padding-inline-end: 15px;
     padding-bottom: 15px;
 
   }
 
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
-    padding-right: 1px;
+    padding-inline-end: 1px;
   }
 
   .dx-datagrid-scroll-container .dx-col-fixed {
@@ -1088,11 +1088,11 @@ $dark-grid-selection: #000000;
   // }
 
   .dx-datagrid-rowsview td:last-child {
-    padding-right: 21px !important;
+    padding-inline-end: 21px !important;
   }
 
   // .actions-padding {
-  //   padding-right: 21px !important;
+  //   padding-inline-end: 21px !important;
   // }
 
   .dx-scrollbar-hoverable {

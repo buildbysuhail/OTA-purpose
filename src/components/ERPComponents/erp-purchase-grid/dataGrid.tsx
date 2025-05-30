@@ -59,12 +59,13 @@ interface RowData {
   details: TransactionDetail[];
   columns: DevGridColumn[];
   tableWidth: number;
-}
 
+}
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   const item = data.details[index];
   const columns = data.columns;
   const tableWidth = data.tableWidth;
+
 
   return (
     <tr
@@ -82,53 +83,8 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const cellValue = item[fieldKey];
-
-          if (column.dataField === "product" && column.allowEditing) {
-            return (
-              <td
-                key={column.dataField}
-                className={column.cssClass || ""}
-                style={{
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign: column.alignment || "left",
-                  boxSizing: "border-box",
-                }}
-              >
-                <ERPProductSearch
-                  noLabel
-                  showCheckBox={false}
-                  value={(cellValue as string) || ""}
-                  productDataUrl={Urls.load_product_details}
-                />
-              </td>
-            );
-          }
-
-          if (
-            column.allowEditing &&
-            (column.dataType === "string" || column.dataType === "number")
-          ) {
-            return (
-              <td
-                key={column.dataField}
-                className={column.cssClass || ""}
-                style={{
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign: column.dataType === "number" ? "right" : "left",
-                  boxSizing: "border-box",
-                }}
-              >
-                <EditableCell
-                  rowIndex={index}
-                  column={column}
-                  value={cellValue as string | number}
-                />
-              </td>
-            );
-          }
-
+           console.log('readOnly:', column.readOnly, 'dataField:', column.dataField, 'cellValue:', cellValue);
+           
           return (
             <td
               key={column.dataField}
@@ -136,17 +92,37 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
               style={{
                 width: column.width ? `${column.width}px` : "150px",
                 minWidth: column.width ? `${column.width}px` : "150px",
-                textAlign: column.alignment || "left",
-                boxSizing: "border-box",
+                textAlign: column.alignment || (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "content-box",
               }}
+              role="gridcell"
             >
-              {cellValue}
+              {column.dataField === "product" && !column.readOnly ? (
+                <ERPProductSearch
+                  noLabel
+                  showCheckBox={false}
+                  value={(cellValue as string) || ""}
+                  productDataUrl={Urls.load_product_details}
+                  tabIndex={-1}
+                />
+              ) : column.readOnly ? (
+                cellValue
+              ) : (
+                <EditableCell
+                  rowIndex={index}
+                  column={column}
+                  value={cellValue as string | number}
+                />
+              )
+             
+              }
             </td>
           );
         })}
     </tr>
   );
 };
+
 
 const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
@@ -231,11 +207,11 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   <th
                     key={col.dataField}
                     id={`${col.dataField}_${col.dataField}`}
-                    className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-100 text-sm whitespace-nowrap cursor-move"
+                    className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-600 text-sm whitespace-nowrap cursor-move"
                     style={{
                       width: col.width ? `${col.width}px` : "150px",
                       minWidth: col.width ? `${col.width}px` : "150px",
-                      textAlign: col.alignment || "left",
+                      textAlign:"center",
                       boxSizing: "border-box",
                     }}
                     draggable={!col.isLocked}
@@ -264,7 +240,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 }}
                 itemKey={(index) => `${gridId}-${index}`}
                 className="bg-white"
-                style={{ direction: appState?.dir, overflowX: "hidden", boxSizing: "border-box" }}
+                style={{ direction: appState?.dir, overflowX: "hidden",  }}
               >
                 {Row}
               </List>

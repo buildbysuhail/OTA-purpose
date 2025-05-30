@@ -28,7 +28,7 @@ const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
   { label: "Letter", value: "LETTER" },
-  { label: "Custom", value: "CUSTOM" },
+  // { label: "Custom", value: "CUSTOM" },
 ];
 
 const retailPageSizes = [
@@ -81,8 +81,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           />
         </div>
 
-        <ERPDataCombobox
-          defaultValue={propertiesState?.pageSize ?? "A4"}
+        {/* <ERPDataCombobox
           value={propertiesState?.pageSize ?? "A4"}
           field={{
             id: "pageSize",
@@ -90,15 +89,24 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             valueKey: "value",
             labelKey: "label",
           }}
-          data={propertiesState}
-          onChangeData={(data: any) => {
-            onChange?.({ ...propertiesState, pageSize: data.pageSize })
+          onSelectItem={(data: any) => {
+            debugger;
+            onChange?.({ ...propertiesState, pageSize: data.value })
           }}
           id="pageSize"
           options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
           label={t("page_size")}
-        />
-        {
+        /> */}
+           <ERPDataCombobox
+                       defaultData={propertiesState?.pageSize ?? "A4"}
+                       
+                      handleChange={(id, value) => onChange?.({  ...propertiesState, pageSize: value })}
+                       id="pageSize"
+                   
+                    options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
+                     label={t("page_size")} 
+                    />
+        {/* {
           propertiesState?.pageSize == "CUSTOM" &&(
             <>
             <div className="flex items-center space-x-3">
@@ -166,7 +174,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           </div>
             </>
           )
-        }
+        } */}
         <ERPDataCombobox
           id="orientation"
           field={{

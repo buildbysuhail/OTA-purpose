@@ -231,7 +231,7 @@ const sanitizeData = (data: any, initialState: any): any => {
         let response;
         let rawData = (useApiClient ? localFormState : reduxFormState)?.data
         debugger
-         const sanitizedData = sanitizeData(rawData, initialData.data);
+         const sanitizedData = sanitizeData(rawData, initialData?.data);
         if (isEdit) {
           response = await apiClient.put(
             `${url}`,

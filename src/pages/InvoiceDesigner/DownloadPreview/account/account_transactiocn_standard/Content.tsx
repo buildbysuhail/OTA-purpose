@@ -1,17 +1,15 @@
 import { View, Text, Image,StyleSheet } from "@react-pdf/renderer";
-import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
-import { TemplateState } from "../../Designer/interfaces";
+import { dateTrimmer, getAmountInWords } from "../../../../../utilities/Utils";
+import useCurrentBranch from "../../../../../utilities/hooks/use-current-branch";
+import { TemplateState } from "../../../Designer/interfaces";
 import { IndianRupee } from 'lucide-react';
-import { AccTransactionData } from "../../../accounts/transactions/acc-transaction-types";
-import VoucherType from "../../../../enums/voucher-types";
+import { AccTransactionData } from "../../../../accounts/transactions/acc-transaction-types";
+import VoucherType from "../../../../../enums/voucher-types";
 
 const styles = StyleSheet.create({
 
     bgImage: {
       position: 'absolute',
-      top: 0,
-      left: 0,
       width: '100%',
       height: '100%',
       zIndex: -10,
@@ -40,6 +38,7 @@ const styles = StyleSheet.create({
   
   export const Content = ({ data, template, currentBranch, docIDKey, currency,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string;indexNO?:number }) => {
     const headerState = template?.headerState;
+    const   propertiesState = template?.propertiesState;
     const fontFamily = template?.propertiesState?.font_family || "Roboto";
     const fontSize = template?.propertiesState?.font_size || 12;
     const color = template?.propertiesState?.font_color || "#000";
@@ -82,8 +81,11 @@ const styles = StyleSheet.create({
             src={template?.background_image}
             style={[
               styles.bgImage,
-              { objectPosition: headerState?.bg_image_header_position || 'center' }
+              { objectPosition: propertiesState?.bg_image_position || 'center',
+                objectFit: propertiesState?.bg_image_objectFit || 'fill'
+               }
             ]}
+          
           />
         )}
 
@@ -91,18 +93,18 @@ const styles = StyleSheet.create({
         <View style={styles.content}>
             {/* date & No */}
           <View style={styles.VoucherInfo}>
-            
-              <View style={{
+            {headerState?.showNumberField && 
+            <View style={{
                 display: "flex", flexDirection: "row",gap:2,
               }}>
                 <Text style={labelStyles}>{headerState?.numberField?`${headerState?.numberField} :`:"No :"}</Text>
                 <Text style={[fontStyles, styles.dottedBorder,{width:50}]}>
                   {data.master?.voucherNumber }
                 </Text>
-              </View>
-           
-    
-            
+               </View>
+            }
+              
+            {headerState?.accountTransactionInfo?.showDateField &&
              <View style={{
                 display: "flex", flexDirection: "row",gap:2,
               }}>
@@ -111,12 +113,12 @@ const styles = StyleSheet.create({
                   {dateTrimmer(data.master?.transactionDate)}
                 </Text>
               </View>
-            
+            }
              </View>
             {/* Payment Details */}
           
-       
-            <View style={{ display: "flex", flexDirection: "column",gap:30, width:"100%" }}>
+       { headerState?.accountTransactionInfo?.showPaymentMode &&
+         <View style={{ display: "flex", flexDirection: "column",gap:30, width:"100%" }}>
             <View style={{ display: "flex", flexDirection: "row",justifyContent:"flex-start" ,gap:5 ,width:"100%" }}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode?`${headerState?.accountTransactionInfo?.paymentMode}`:"PAYMENT GIVEN TO"}:</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
@@ -127,9 +129,11 @@ const styles = StyleSheet.create({
             </View>
             <View style={{ width: "100%", borderBottom:"1px dotted rgb(38, 37, 37)" }} />
           </View>
+       }
+          
 
-
-             <View style={{ display: "flex", flexDirection: "row", justifyContent:"flex-start",gap:5, width:"100%", }}>
+       { headerState?.accountTransactionInfo?.showAmountInWords &&
+         <View style={{ display: "flex", flexDirection: "row", justifyContent:"flex-start",gap:5, width:"100%", }}>
               <Text style={labelStyles}>the sum of rupees :</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
@@ -137,6 +141,8 @@ const styles = StyleSheet.create({
               </Text>
               </View>
             </View>
+       }
+           
           
           <View style={{ display: "flex", flexDirection: "row",gap:10, width:"100%",justifyContent:"flex-start",alignItems:"flex-start" }}>
            <View style={{ display: "flex", flexDirection: "row",gap:5, width:"100%",justifyContent:"flex-start" }}>
@@ -164,9 +170,9 @@ const styles = StyleSheet.create({
             
            }}>
             <View style={{display:"flex",flexDirection:"row",border:"2px solid rgb(38, 37, 37)",borderRadius:5,width:"100%",height:30}}>
-              <View style={{width:"30%",backgroundColor:"rgb(38, 37, 37)"}}>
+              {/* <View style={{width:"30%",backgroundColor:"rgb(38, 37, 37)"}}>
               <Text style={{color:"rgb(251, 250, 250)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>Rs:</Text>
-              </View>
+              </View> */}
               <View style={{flex:1,backgroundColor:"rgb(246, 245, 245)"}}>
               <Text style={{color:"rgb(61, 60, 60)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>
                {data.details[indexNO]?.amount}

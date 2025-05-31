@@ -99,7 +99,7 @@ const ReportList = () => {
         debugger
         const jsonString = await api.getAsync(Urls.get_favorite_reports);
         debugger
-        const userConfig: number[] = (jsonString ?? "")
+        const userConfig: number[] = String(jsonString ?? "")
   .split(",")
   .map((s: any) => Number(s.trim()))
   .filter((n: any) => !isNaN(n));

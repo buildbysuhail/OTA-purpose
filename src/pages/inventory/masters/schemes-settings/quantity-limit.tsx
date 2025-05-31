@@ -150,7 +150,7 @@ export const QuantityLimit: React.FC = () => {
     try {
         setIsApiLoading(true);
       const response = await api.getAsync(
-        `${Urls.select_products_for_product_qty_limit}?${queryString}`
+        `${Urls.select_products_for_pduct_qty_limit}?${queryString}`
       );
       handleResponse(response);
       setGridData(response);

@@ -693,7 +693,7 @@ const Urls = {
   // URLs for QuantityLimitController (Inventory Module)
 
   quantity_limit: "/Inventory/QuantityLimit/", // GET/delete/insertpost
-  select_products_for_pduct_qty_limit: "/Inventory/QuantityLimit/ForPduct", // GET (pass ItemQtyLimitParamDto as query parameters)
+  select_products_for_pduct_qty_limit: "/Inventory/QuantityLimit/ForProduct", // GET (pass ItemQtyLimitParamDto as query parameters)
 
   // URLs for QuantitySlabController (Inventory Module)
   qty_slab_offer: "/Inventory/QuantitySlab/", // POST

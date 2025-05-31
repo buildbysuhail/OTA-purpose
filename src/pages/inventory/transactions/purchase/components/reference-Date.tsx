@@ -14,14 +14,14 @@ const AccReferenceDate = React.forwardRef<
       {formState.formElements.referenceDate.visible && (
         <ERPDateInput
           localInputBox={formState.userConfig?.inputBoxStyle}
-          id="referenceDate"
+          id="purchaseInvoiceDate"
           label={t(formState.formElements.referenceDate.label)}
           className="md:w-[150px]"
-          value={new Date(formState.transaction.master.referenceDate)}
+          value={new Date(formState.transaction.master.purchaseInvoiceDate)}
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({
-                fields: { referenceDate: e.target?.value },
+                fields: { purchaseInvoiceDate: e.target?.value },
               })
             )
           }

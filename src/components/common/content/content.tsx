@@ -490,7 +490,7 @@ const Content: FC<ContentProps> = () => {
         <Route
           path={`/accounts/transactions/BankReconciliation`}
           element={
-            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+            <RouteGuard formCode="BRC" action={UserAction.Show}>
               <BankReconciliation />
             </RouteGuard>
           }
@@ -498,7 +498,7 @@ const Content: FC<ContentProps> = () => {
         <Route
           path="accounts/transactions/PostDatedCheques"
           element={
-            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+            <RouteGuard formCode="PDC" action={UserAction.Show}>
               <PostDatedCheques />
             </RouteGuard>
           }
@@ -506,21 +506,22 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters End */}
 
         {/* Reports */}
-        <Route path="/reports" element={<ReportList />} />
+        <Route path="reports" element={<ReportList />} />
         {/* Reports - Accounts */}
 
          {ReportsMenuItems.map((route, index) => 
         route?.children?.map((routeChild, indexChild) => {
-  const childPath = routeChild.path.includes("/_/")
-    ? "/" + routeChild.path.split("/_/")[1]
-    : routeChild.path;
-console.log(childPath);
+//   const childPath = routeChild.path.includes("/_/")
+//     ? "/" + routeChild.path.split("/_/")[1]
+//     : routeChild.path;
+// console.log(childPath);
+// console.log("path");
 
   return (
 
            <Route
       key={indexChild}
-      path={childPath}
+      path={routeChild.routePath}
       element={
           <RouteGuard  formCode={routeChild.formCode} action={routeChild.action} >
           {routeChild.element}
@@ -532,14 +533,14 @@ console.log(childPath);
       )
       }
       {/* <Route path="/accounts/trial_balance" element={<TrialBalance />} />
-        <Route path="/accounts/trial_balance_period_wise" element={<TrialBalancePeriodwise />} />
+        <Route path="/accounts/trial_balance_period_wise" element={<TrialBalancePeriodwise />} /> */}
         <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
         <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
-        <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} /> */}
+        <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} /> 
 
         
-        {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
+        {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

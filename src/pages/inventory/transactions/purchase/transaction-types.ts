@@ -155,13 +155,10 @@ export interface TransactionMaster {
   cardTip: number;
   notes1: string;
   notes2: string;
-  referenceDate: string; //new
-  referenceNumber: string; //new
   particulars: string;//new
   lb: boolean;//new
   hasCashPaid: boolean;//new
   hasroundOff: boolean;//new
-  cashPaid: number;//new
   supplyType: string;//new
   other: TransactionMaster3;
   labelDesignID:number;

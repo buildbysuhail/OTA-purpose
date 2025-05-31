@@ -137,9 +137,9 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         cssClass: "centered-header",
         cellRender: (data) => (
           <div style={{ textAlign: "center" }}>
-            <Link to={`/accounts/transactions/CashPayment/${data.value}`} style={{ color: "#1b6de0", textDecoration: "underline" }}>
+            {/* <Link to={`/accounts/transactions/CashPayment/${data.value}`} style={{ color: "#1b6de0", textDecoration: "underline" }}> */}
               {data.value}
-            </Link>
+            {/* </Link> */}
           </div>
         )
       },

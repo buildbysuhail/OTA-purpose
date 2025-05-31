@@ -514,7 +514,7 @@ const Content: FC<ContentProps> = () => {
   const childPath = routeChild.path.includes("/_/")
     ? "/" + routeChild.path.split("/_/")[1]
     : routeChild.path;
-console.log(childPath);
+// console.log(childPath);
 
   return (
 

@@ -5,9 +5,16 @@ import Urls from "../../../../redux/urls";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
-const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport')
+const StockJournalReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+    const userSession = useSelector((state: RootState) => state.UserSession);
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -16,7 +23,9 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             label={t("from_date")}
             {...getFieldProps("fromDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("fromDate", data.fromDate)
+            }
           />
         </div>
         <div className="col-span-1 sm:col-span-1 md:col-span-1">
@@ -24,7 +33,9 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             label={t("to_date")}
             {...getFieldProps("toDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("toDate", data.toDate)
+            }
           />
         </div>
       </div>
@@ -52,7 +63,7 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             {...getFieldProps("productGpID")}
             field={{
               id: "productGpID",
-              getListUrl: Urls.productGroup,
+              getListUrl: Urls.data_productgroup,
               valueKey: "id",
               labelKey: "name",
             }}
@@ -77,25 +88,29 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             }}
           />
         </div>
-{/* visible false for os */}
- {location.pathname.includes(
-          "inventory/opening_stock_report"
-        ) && (
-        <div className="col-span-1">
-          <ERPDataCombobox
-            label={t("from_warehouse")}
-            {...getFieldProps("fromWarehouse")}
-            field={{
-              id: "fromWarehouse",
-              getListUrl: Urls.data_warehouse,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) => {
-              handleFieldChange("fromWarehouse", data.value);
-            }}
-          />
-        </div>
+        {/* visible false for os */}
+        {(location.pathname.includes("inventory/stock_transfer_report") ||
+          location.pathname.includes("inventory/damage_stock_report") ||
+          location.pathname.includes("inventory/excess_stock_report") ||
+          location.pathname.includes("inventory/shortage_stock_report")) && (
+          <div className="col-span-1">
+            <ERPDataCombobox
+              label={t("from_warehouse")}
+              {...getFieldProps("fromWarehouse")}
+              field={{
+                id: "fromWarehouse",
+                getListUrl: Urls.data_warehouse,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              disabled={location.pathname.includes(
+                "inventory/excess_stock_report"
+              )}
+              onSelectItem={(data) => {
+                handleFieldChange("fromWarehouse", data.value);
+              }}
+            />
+          </div>
         )}
         <div className="col-span-1">
           <ERPDataCombobox
@@ -107,30 +122,41 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
               valueKey: "id",
               labelKey: "name",
             }}
+            disabled={location.pathname.includes(
+              "inventory/damage_stock_report"
+            )||location.pathname.includes(
+              "inventory/shortage_stock_report"
+            )}
             onSelectItem={(data) => {
               handleFieldChange("toWarehouse", data.value);
             }}
           />
         </div>
-
+ {userSession.dbIdValue == "543140180640" && (
         <div className="col-span-1">
           <ERPInput
             label={t("voucher_number")}
             {...getFieldProps("voucherNumber")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("voucherNumber", data.voucherNumber)}
+            onChangeData={(data: any) =>
+              handleFieldChange("voucherNumber", data.voucherNumber)
+            }
           />
         </div>
-
+ )}
+  {userSession.dbIdValue == "543140180640" && (
         <div className="col-span-1">
           <ERPInput
             label={t("vehicle")}
             {...getFieldProps("vehicleID")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("vehicleID", data.vehicleID)}
+            onChangeData={(data: any) =>
+              handleFieldChange("vehicleID", data.vehicleID)
+            }
           />
         </div>
-
+  )}
+   {userSession.dbIdValue == "543140180640" && (
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("employee")}
@@ -146,7 +172,9 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             }}
           />
         </div>
-        <div className="flex items-center space-x-4">
+)}
+{/* always visible false */}
+        {/* <div className="flex items-center space-x-4">
           <ERPRadio
             id="summary"
             name="reportType"
@@ -163,22 +191,28 @@ const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState 
             checked={formState.reportType === "details"}
             onChange={(e) => handleFieldChange("reportType", e.target.value)}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
-}
+};
 export default StockJournalReportFilter;
 export const StockJournalReportFilterInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
-  fromWarehouse: 0,
-  toWarehouse: 0,
+  fromWarehouse: location.pathname.includes("inventory/excess_stock_report")
+    ? 4
+    : 0,
+  toWarehouse: location.pathname.includes("inventory/damage_stock_report")
+    ? 3
+    : location.pathname.includes("inventory/shortage_stock_report")
+    ? 2
+    : 0,
   productID: 0,
   productGpID: 0,
   brandID: 0,
-  voucherNumber: "",  // newly added
-  vehicleID: "",     // newly added
-  employeeID: 0,    // newly added
-  reportType: "",  // newly added
+  voucherNumber: "", // newly added
+  vehicleID: "", // newly added
+  employeeID: 0, // newly added
+  // reportType: "", // newly added
 };

@@ -15,6 +15,9 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "vat_return_form_arabic",
             "ksa_e_invoice_summary",
             "ksa_e_invoice_detailed",
+
+            "daily_summary_report",
+            "billwise_profit_report",
   
           
           
@@ -30,9 +33,18 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
                 children: filteredChildren,
               };
             })
-            .filter((parent: any) => parent.children?.length > 0);
+            .filter((parent: any) => parent.children?.length > 0).map((x:any)=>{
+              return {
+                ...x,
+                title:x.title.includes("___")?x.title.replace("___",""):x.title 
+              }
+            });
         } else {
-          const excluded = ["purchase_estimate_register_report",
+          const excluded = [
+            "billwise_profit_report___",
+            "daily_summary_report___",
+
+            "purchase_estimate_register_report",
             "purchase_return_estimate_register_report",
             "purchase_return_estimate_summary_report",
   

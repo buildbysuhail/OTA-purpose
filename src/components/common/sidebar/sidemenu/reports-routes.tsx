@@ -83,11 +83,6 @@ const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/invent
 const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
 const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
 const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
-// const OpeningStock = lazy(() => import("../../../../pages/inventory/reports/stock-journal-report/stock-journal"));
-const StockTransfer = lazy(() => import("../../../../pages/inventory/reports/stock-transfer-report/stock-transfer"));
-const DamageStock = lazy(() => import("../../../../pages/inventory/reports/damage-stock-report/damage-stock"));
-const ExcessStock = lazy(() => import("../../../../pages/inventory/reports/excess-stock-report/excess-stock"));
-const ShortageStock = lazy(() => import("../../../../pages/inventory/reports/shortage-stock-report/shortage-stock"));
 const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out"));
 const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
 const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out"));
@@ -153,11 +148,11 @@ const InventorySummaryReport = lazy(() => import("../../../../pages/inventory/re
 const ServiceReport = lazy(() => import("../../../../pages/inventory/reports/service-report/service-report"));
 const SalesmanIncentiveReport = lazy(() => import("../../../../pages/inventory/reports/salesman-incentive-report/salesman-incentive-report"));
 const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/reports/privilege-card-report/privilege-card"));
+const StockJournalReport = lazy(() => import("../../../../pages/inventory/reports/stock-journal-report/stock-journal"));
 
 import urls from "../../../../redux/urls";
 import GridId from "../../../../redux/gridId";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
-import StockJournalReport from "../../../../pages/inventory/reports/stock-journal-report/stock-journal";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -218,7 +213,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 103,element:<DailySummaryMaster />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report', icon: CalendarClock },
       { id: 104,element:<DailySummaryGlobal />, formCode:"DSUMRPT", action: UserAction.Show, path: `/reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'daily_summary_report___', icon: CalendarClock },
       { id: 105,element:<BillwiseProfit />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report', icon: ChartNoAxesCombined },
-      { id: 106,element:<BillwiseProfitGlobal />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report__', icon: ChartNoAxesCombined },
+      { id: 106,element:<BillwiseProfitGlobal />, formCode:"PFTRPT", action: UserAction.Show, path: `/reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'billwise_profit_report___', icon: ChartNoAxesCombined },
       { id: 107,element:<PartySummaryMaster />, formCode:"PRTSUM", action: UserAction.Show, path: `/reports/_/accounts/partywise_summary`, type: 'link', active: false, selected: false, title: 'partywise_summary_report', icon: Component },
       { id: 108,element:<OutstandingAccountPayableReport />, formCode:"RPTACCPAY", action: UserAction.Show, path: `/reports/_/accounts/outstanding_payable`, type: 'link', active: false, selected: false, title: 'account_payable', icon: LucideCreditCard },
       { id: 109,element:<OutstandingAccountReceivableReport />, formCode:"RPTACCREC", action: UserAction.Show, path: `/reports/_/accounts/outstanding_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable', icon: LucideDollarSign },
@@ -320,10 +315,10 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     columns: 2,
     children: [
       { id: 700,element:<StockJournalReport dataUrl={urls.opening_stock} gridHeader="opening_stock_report" gridId="grd_opening_stock_journal"/>, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
-      { id: 701,element:<StockTransfer />, formCode:"STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight },
-      { id: 702,element:<DamageStock />, formCode:"DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
-      { id: 703,element:<ExcessStock />, formCode:"EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
-      { id: 704,element:<ShortageStock />, formCode:"SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
+      { id: 701,element:<StockJournalReport dataUrl={urls.stock_transfer} gridHeader="stock_transfer_report" gridId="grd_stock_transfer_journal"/>, formCode:"STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight },
+      { id: 702,element:<StockJournalReport dataUrl={urls.damage_stock} gridHeader="damage_stock_report" gridId="grd_damage_stock_journal"/>, formCode:"DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
+      { id: 703,element:<StockJournalReport dataUrl={urls.excess_stock} gridHeader="excess_stock_report" gridId="grd_excess_stock_journal"/>, formCode:"EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
+      { id: 704,element:<StockJournalReport dataUrl={urls.shortage_stock} gridHeader="shortage_stock_report" gridId="grd_shortage_stock_journal"/>, formCode:"SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
       { id: 705,element:<BranchTransferOut />, formCode:"BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
       { id: 706,element:<BranchTransferIn />, formCode:"BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight },
       { id: 707,element:<BranchTransferSummaryOut />, formCode:"BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight },

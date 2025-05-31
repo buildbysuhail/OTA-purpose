@@ -181,46 +181,46 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
        
           }}
     },
-    {
-      dataField: "monthBal",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.monthBal;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
-          return {
-            ...exportCell,
-            text: value,
-            bold: true,
-            alignment: "right",
-            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
-            font: {
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              ...exportCell.font,
-              size: 10,
-              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
-            },
-          };
-        }
-        else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57] ' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
-          </span>)
+    // {
+    //   dataField: "monthBal",
+    //   caption: t("balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    //   showInPdf:true,
+    //   cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+    //     if (exportCell != undefined) {
+    //       const balance = cellElement.data?.monthBal;
+    //       const isDebit = balance >= 0;
+    //       const value =
+    //         balance == null
+    //           ? ""
+    //           : balance < 0
+    //           ? getFormattedValue(-1 * balance) + " Cr"
+    //           : getFormattedValue(balance) + " Dr";
+    //       return {
+    //         ...exportCell,
+    //         text: value,
+    //         bold: true,
+    //         alignment: "right",
+    //         textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+    //         font: {
+    //           color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+    //           ...exportCell.font,
+    //           size: 10,
+    //           style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+    //           bold: cellElement.data.ledgerName === "TOTAL"?true:false,
+    //         },
+    //       };
+    //     }
+    //     else {
+    //       return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57] ' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+    //         {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
+    //       </span>)
        
-          }}
-    },
+    //       }}
+    // },
     {
       dataField: "branch",
       caption: t("branch"),

@@ -14,8 +14,8 @@ const GrandTotalLabel: React.FC<VoucherElementProps> = ({ formState, t, }) => {
     //   textAlign="right"
     // />
     <div className="flex items-center justify-between">
-      <span>{t(formState.formElements.grandTotal.label)}:</span>
-      <span>{formState.transaction.master.billDiscount}</span>
+      <span>{t(formState.formElements.grandTotal.label)}</span>
+      <span>:{formState.transaction.master.billDiscount}</span>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer"
-import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils"
-import type { TemplateState } from "../../Designer/interfaces"
-import type { AccTransactionData } from "../../../accounts/transactions/acc-transaction-types"
-import VoucherType from "../../../../enums/voucher-types"
+import { dateTrimmer, getAmountInWords } from "../../../../../utilities/Utils"
+import type { TemplateState } from "../../../Designer/interfaces"
+import type { AccTransactionData } from "../../../../accounts/transactions/acc-transaction-types"
+import VoucherType from "../../../../../enums/voucher-types"
 
 const styles = StyleSheet.create({
   container: {

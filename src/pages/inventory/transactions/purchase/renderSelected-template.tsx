@@ -1,6 +1,6 @@
-import AccountTransactionsTemplate, { AccountTransactionProps } from "../../../InvoiceDesigner/DownloadPreview/account_transactiocn-premium";
-import AccountTransactionsVoucher from "../../../InvoiceDesigner/DownloadPreview/account_transactiocn_standard";
-import AccountTransactionsUniversal from "../../../InvoiceDesigner/DownloadPreview/account_transaction-universal";
+import AccountTransactionsTemplate, { AccountTransactionProps } from "../../../InvoiceDesigner/DownloadPreview/account/account_transactiocn-premium";
+import AccountTransactionsVoucher from "../../../InvoiceDesigner/DownloadPreview/account/account_transactiocn_standard";
+import AccountTransactionsUniversal from "../../../InvoiceDesigner/DownloadPreview/account/account_transaction-universal";
 
 export const renderSelectedTemplate = (props: AccountTransactionProps) => {
   const { template, data, currentBranch, userSession } = props;

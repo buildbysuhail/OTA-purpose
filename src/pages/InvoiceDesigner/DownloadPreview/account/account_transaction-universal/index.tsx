@@ -1,6 +1,6 @@
 import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-pdf/renderer";
-import { TemplateState } from "../../Designer/interfaces";
-import FontRegistration from "../../../LabelDesigner/fontRegister";
+import { TemplateState } from "../../../Designer/interfaces";
+import FontRegistration from "../../../../LabelDesigner/fontRegister";
 import { Header } from "./Header";
 import { Content } from "./Content";
 import { AccountTransactionProps } from "../account_transactiocn-premium";

@@ -88,7 +88,8 @@ const ERPStepInput = ({
       }}
       prefix={<MinusIcon className=" cursor-pointer w-4 h-4" />}
       suffix={<PlusIcon className=" w-4 h-4" />}
-      inputClassName="text-center"
+      inputClassName=""
+      // inputClassName="text-center"
     />
   );
 };

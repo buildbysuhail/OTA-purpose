@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { adviceTableState, ItemTableState, TemplateState } from "./interfaces";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
-import ERPTab from "../../../components/ERPComponents/erp-tab";
-import VoucherType from "../../../enums/voucher-types";
+import { adviceTableState, ItemTableState, TemplateState } from "../../interfaces";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import ERPInput from "../../../../../components/ERPComponents/erp-input";
+import ERPStepInput from "../../../../../components/ERPComponents/erp-step-input";
+import ERPTab from "../../../../../components/ERPComponents/erp-tab";
+import VoucherType from "../../../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
 
 interface ItemTableDesignerProps {

@@ -2585,7 +2585,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
             <ERPPreviousUrlButton />
             <h1 className="flex-grow font-semibold text-lg text-zinc-800">
-              {t("cash_payment")}
+              {/* {t("cash_payment")} */}
+              {t(formState.title)}
             </h1>
           </div>
 

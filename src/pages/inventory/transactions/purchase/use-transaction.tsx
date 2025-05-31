@@ -414,6 +414,7 @@ export const useTransaction = (
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
+    voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
         ? moment().local().toISOString()
@@ -426,10 +427,18 @@ export const useTransaction = (
 
     // Handle master data
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
+    voucher.formElements.costCentreID.disabled = voucher.transaction.master.costCentreID <= 0 &&
+            (formState.userConfig?.presetCostenterId??0) > 0 ? true: false
     // voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster: TransactionMaster = {
         ...voucher.transaction.master,
+        costCentreID: voucher.transaction.master.costCentreID <= 0 
+          ?
+            formState.userConfig?.presetCostenterId??0 > 0 
+              ? formState.userConfig?.presetCostenterId??0 
+              : applicationSettings.accountsSettings.defaultCostCenterID
+          :  voucher.transaction.master.costCentreID
       };
       voucher.transaction.master = updatedMaster;
     }
@@ -2147,20 +2156,20 @@ export const useTransaction = (
     // });
   };
   const handleLoadByRefNo = useCallback(async () => {
-    if (formState.transaction.master.referenceNumber) {
+    if (formState.transaction.master.purchaseInvoiceDate) {
       await loadAndSetTransVoucher(
         true,
         undefined,
         undefined,
         undefined,
         undefined,
-        formState.transaction.master.referenceNumber,
+        formState.transaction.master.purchaseInvoiceNumber,
         undefined,
         undefined,
         true
       );
     }
-  }, [formState.transaction.master.referenceNumber]);
+  }, [formState.transaction.master.purchaseInvoiceNumber]);
 
   const handleRefresh = async () => {
     try {

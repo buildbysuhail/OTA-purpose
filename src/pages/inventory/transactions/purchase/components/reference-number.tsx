@@ -29,14 +29,14 @@ const ReferenceNumber = React.forwardRef<
               <ERPInput
                 ref={ref}
                 localInputBox={formState?.userConfig?.inputBoxStyle}
-                id="referenceNumber"
+                id="purchaseInvoiceDate"
                 label={t(formState.formElements.referenceNumber.label)}
-                value={formState.transaction.master.referenceNumber}
+                value={formState.transaction.master.purchaseInvoiceDate}
                 className="w-full min-w-[135px]"
                 onChange={(e) =>
                   dispatch(
                     formStateMasterHandleFieldChange({
-                      fields: { referenceNumber: e.target?.value },
+                      fields: { purchaseInvoiceDate: e.target?.value },
                     })
                   )
                 }

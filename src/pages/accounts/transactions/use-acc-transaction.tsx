@@ -59,6 +59,7 @@ import { useTranslation } from "react-i18next";
 import localData from "../../../enums/local-datas";
 import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
+import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
 
 
 interface FormElementState {
@@ -2058,7 +2059,19 @@ export const useAccTransaction = (
         fields: {
           employee: { disabled: false },
           jvDrCr: { disabled: false },
-          masterAccount: { disabled: false },
+          masterAccount: { disabled: (formState.transaction.master.voucherType ==
+                        VoucherType.CashPayment ||
+                        formState.transaction.master.voucherType ==
+                          VoucherType.CashReceipt) &&
+                      userSession?.counterwiseCashLedgerId > 0 &&
+                      applicationSettings.accountsSettings?.allowSalesCounter &&
+                      userSession?.counterAssignedCashLedgerId > 0
+                        ? userSession.countryId == Countries.India
+                          ? formState.masterAccountActive == true
+                            ? false
+                            : true
+                          : true
+                        : false  },
           referenceDate: { disabled: false },
           referenceNumber: { disabled: false },
           transactionDate: { disabled: false },

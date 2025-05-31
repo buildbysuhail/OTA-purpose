@@ -403,6 +403,8 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
     top: 35px;
     padding-left: 10px;
     padding-right: 10px;
+    margin-top: 15px !important;
+    /* margin-bottom: 15px !important; */
     left: 0;
     /* background: #f1f1f1; */
     height: 100%;

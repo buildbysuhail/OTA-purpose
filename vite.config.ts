@@ -5,6 +5,10 @@ import react from '@vitejs/plugin-react'
 // C:\\Host\\Polosys\\Ui
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: '192.168.20.208',
+    port: 5173, 
+  },
   build: {
     // outDir: 'build',
     outDir: 'C:\\Host\\Polosys\\Ui',

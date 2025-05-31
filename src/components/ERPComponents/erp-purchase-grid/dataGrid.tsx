@@ -83,7 +83,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const cellValue = item[fieldKey];
-           console.log('readOnly:', column.readOnly, 'dataField:', column.dataField, 'cellValue:', cellValue);
+          //  console.log('readOnly:', column.readOnly, 'dataField:', column.dataField, 'cellValue:', cellValue);
            
           return (
             <td

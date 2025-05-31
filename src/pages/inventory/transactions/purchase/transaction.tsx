@@ -451,7 +451,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherPrefix: voucherPrefix ?? "",
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
-              referenceDate: moment().local().toISOString(),
+              purchaseInvoiceDate: moment().local().toISOString(),
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:

@@ -16,7 +16,7 @@ import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
 import VoucherType from "../../../enums/voucher-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { UserModel } from "../../../redux/slices/user-session/reducer";
+import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { calculateTotal, clearEntryControl } from "./functions";
@@ -154,6 +154,20 @@ const accTransactionSlice = createSlice({
       state.formElements.referenceNumber.disabled = false;
       state.formElements.transactionDate.disabled = false;
       state.formElements.linkEdit.visible = false;
+      debugger;
+      state.formElements.masterAccount.disabled = (state.transaction.master.voucherType ==
+              VoucherType.CashPayment ||
+              state.transaction.master.voucherType ==
+                VoucherType.CashReceipt) &&
+            userSession?.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings?.allowSalesCounter &&
+            userSession?.counterAssignedCashLedgerId > 0
+              ? userSession.countryId == Countries.India
+                ? state.masterAccountActive == true
+                  ? false
+                  : true
+                : true
+              : false;
 
       if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
         state.formElements.costCentreID.disabled = true;

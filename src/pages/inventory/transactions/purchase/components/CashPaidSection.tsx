@@ -42,16 +42,16 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
 
         <ERPInput
           localInputBox={formState?.userConfig?.inputBoxStyle}
-          id="cashPaid"
+          id="cashReceived"
           type="number"
           min={0}
           noLabel
-          value={formState.transaction.master.cashPaid}
+          value={formState.transaction.master.cashReceived}
           className="max-w-[110px] min-w-[110px] !m-0"
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({
-                fields: { cashPaid: e.target?.value },
+                fields: { cashReceived: e.target?.value },
               })
             )
           }

@@ -362,6 +362,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               />
             )}
           </div>
+          {formState.formElements.pnlImport.visible &&
           <div className="inline-flex items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
             {formState.formElements.cbCurrency?.visible && (
               <ERPDataCombobox
@@ -422,6 +423,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             />
             <ERPButton title={t("set")} variant="secondary" className="!m-0" />
           </div>
+}
         </div>
       </div>
 

@@ -510,7 +510,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           x.visible = true;
         }
       });
-
+debugger;
       _formState.formElements = {
         ..._formState.formElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },

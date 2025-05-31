@@ -2,8 +2,8 @@ import { Document, Page, View, Image } from "@react-pdf/renderer"
 
 import Table from "./Table"
 import Footer from "./Footer"
-import type { TemplateState } from "../../Designer/interfaces"
-import FontRegistration from "../../../LabelDesigner/fontRegister"
+import type { TemplateState } from "../../../Designer/interfaces"
+import FontRegistration from "../../../../LabelDesigner/fontRegister"
 import { Header } from "./Header"
 import { Content } from "./Content"
 

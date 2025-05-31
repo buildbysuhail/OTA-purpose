@@ -245,14 +245,16 @@ const Header: FC<HeaderProps> = () => {
             <div className="header-content-left">
               <div className="header-element">
                 <div className="horizontal-logo">
-                  <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
+                  {/* <a href={`${import.meta.env.BASE_URL}`} className="header-logo"> */}
+                  <Link to="/" className="header-logo">
                     <img src={desktoplogo} alt="logo" className="desktop-logo" />
                     <img src={togglelogo} alt="logo" className="toggle-logo" />
                     <img src={desktopdark} alt="logo" className="desktop-dark" />
                     <img src={toggledark} alt="logo" className="toggle-dark" />
                     <img src={desktopwhite} alt="logo" className="desktop-white" />
                     <img src={togglewhite} alt="logo" className="toggle-white" />
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </div>
               </div>
               <div className="header-element md:px-[0.325rem] !items-center">

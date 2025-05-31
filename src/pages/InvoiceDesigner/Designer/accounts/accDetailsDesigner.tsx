@@ -2,26 +2,27 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
-import { HeaderState, TemplateState } from "./interfaces";
+import { HeaderState, TemplateState } from "../interfaces";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSlider from "../../../components/ERPComponents/erp-slider";
-import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
-import { RootState } from "../../../redux/store";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import ERPRadio from "../../../components/ERPComponents/erp-radio";
-import VoucherType from "../../../enums/voucher-types";
-import { accTransaction } from "../constants/TemplateCategories";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import ERPSlider from "../../../../components/ERPComponents/erp-slider";
+import ERPStepInput from "../../../../components/ERPComponents/erp-step-input";
+import { RootState } from "../../../../redux/store";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import ERPRadio from "../../../../components/ERPComponents/erp-radio";
+import VoucherType from "../../../../enums/voucher-types";
+import { accTransaction } from "../../constants/TemplateCategories";
 
 
 interface HeaderDesignerProps {
   onChange: (state: HeaderState) => void;
   template?: TemplateState;
+  templateKind?: string;
 }
 
-const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps) => {
+const AccountTransactionDetailsDesigner = ({ template, onChange,templateKind}: HeaderDesignerProps) => {
   const [searchParams] = useSearchParams();
   const [currentTab, setTab] = useState<"org_detail" | "cust_detail" | "document_detail" | "">("org_detail");
   const templateGroup = searchParams?.get("template_group");
@@ -32,7 +33,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
   return (
     <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
 
-      {!["qty_adjustment", "value_adjustment"]?.includes(templateGroup!) &&
+      {templateKind !== "standard"  &&
         <div
           className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
           onClick={() => setTab(currentTab === "cust_detail" ? "" : "cust_detail")}
@@ -168,7 +169,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
       {/* */}
 
       {currentTab === "document_detail" &&
-        <div className="flex flex-col gap-5 bg-white p-4">
+        <div className="flex flex-col gap-3 bg-white p-4">
 
           <div className="text-sm">Document Title</div>
 
@@ -180,12 +181,22 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                 onChange={(e) => onChange({ ...headerState, showDocTitle: e.target.checked })}
               />
               {headerState?.showDocTitle && (
-                <ERPInput
+                <div className="flex items-center gap-2">
+           
+              <ERPCheckbox
+                checked={headerState?.docTitleUnderline}
+                id="docTitleUnderline" label="Title Underline"
+                onChange={(e) => onChange({ ...headerState, docTitleUnderline: e.target.checked })}
+              />
+                  <ERPInput
+                  className="w-full"
                   id="docTitle"
                   noLabel
                   value={headerState?.docTitle}
                   onChange={(e) => onChange({ ...headerState, docTitle: e.target?.value })}
-                />
+                />  
+                </div>
+              
               )}
             </div>
          
@@ -197,9 +208,46 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             id="bg_color"
             type="color"
             placeholder=""
+            customSize="md"
           />
-
-          <ERPStepInput
+          <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                 id="docTitleFontSize"
+                label={"Font Size (pts)"}
+                className="bg-slate-300"
+                value={headerState?.docTitleFontSize??10}
+                onChange={(e) =>
+                  onChange?.({ ...headerState, docTitleFontSize: parseInt(e.target.value, 10) })
+                }
+                min={5}
+                max={28}
+                step={1}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                 id="docTitleFontSize"
+                type="number"
+                noLabel
+                value={headerState?.docTitleFontSize??10}
+                data={headerState}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const docTitleFontSize = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...headerState,
+                      docTitleFontSize
+                  });
+                }}
+            
+               min={5}
+               max={28}
+               step={1}
+              />
+            </div>
+          </div>
+          {/* <ERPStepInput
             value={headerState?.docTitleFontSize ?? 16}
             onChange={(font_size) => onChange?.({ ...headerState, docTitleFontSize: font_size })}
             label="Font Size (pts)"
@@ -208,7 +256,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             min={8}
             max={28}
             step={1}
-          />
+          /> */}
 
 
           {/*  */}
@@ -380,8 +428,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
               )}
             </div>
          
-
-            <div className="flex flex-col gap-2">
+         {templateKind !== "standard" && (
+           <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showReferenceField"
                 label="Reference Field"
@@ -398,6 +446,9 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                 />
               )}
             </div>
+         )   
+        }
+      
         <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="headerStateNumberField"
@@ -416,36 +467,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
         </div>
 
         
-        {/* <div className="flex flex-col gap-2">
-              <ERPCheckbox
-              id="showOverPayment"
-                label="Over Payment"
-                checked={headerState?.accountTransactionInfo?.showOverPayment}
-                onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, showOverPayment: e.target.checked } })}
-              />
-
-              {headerState?.accountTransactionInfo?.showOverPayment && (
-                <ERPInput
-                  noLabel
-                  id="overPayment"
-                  value={headerState?.accountTransactionInfo?.overPayment}
-                  onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, overPayment: e.target?.value } })}
-                />
-              )}
-         </div> */}
-
-            {/* */}
-            {/* <div className="flex flex-col gap-2">
-                <ERPInput
-                  label="Payment Refund"
-                  id="paymentRefund"
-                  value={headerState?.accountTransactionInfo?.paymentRefund}
-                  onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, paymentRefund: e.target?.value } })}
-                />
-           
-            </div> */}
-          {/* */}
-
+        
           {/* */}
             <ERPCheckbox
               id="showAmountInWords"
@@ -456,7 +478,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
           {/* */}
 
          {/* Amount Recived */}
-         
+         {templateKind !== "standard" &&(
+          <>
           <ERPInput
             label="Amount Received"
             id="amtReceivedLabel"
@@ -514,6 +537,9 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             max={28}
             step={1}
           />
+         </>
+        )}
+         
       
      </>
      }

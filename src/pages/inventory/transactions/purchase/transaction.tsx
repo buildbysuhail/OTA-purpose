@@ -62,6 +62,7 @@ import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
 import ObjectViewer from "./components/fomstate-view";
+import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
 
 interface BilledItem {
   id?: number;
@@ -150,21 +151,26 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
 
-  const toggleDropdown = () => {
-    setIsDropDownOpen(!isDropDownOpen);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isDropUpOpen, setIsDropUpOpen] = useState(false); 
+
+  
+  const toggleHeaderDropdown = () => {
+    setIsDropDownOpen((prev) => !prev);
+    setIsDropUpOpen(false); 
   };
+
+  const toggleFooterDropup = () => {
+    setIsDropUpOpen((prev) => !prev);
+    setIsDropDownOpen(false); 
+  };
+
+ 
 
   const SIDEBAR_WIDTH = "196px";
-
-  const [isDropUpOpen, setIsDropUpOpen] = useState(false);
-
-  const toggleDropup = () => {
-    setIsDropUpOpen(!isDropUpOpen);
-  };
 
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -312,6 +318,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     let gridHeightWindows = wh - 470;
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
+
+  console.log( "transaction mj23", {setGridHeight});
+  
 
   useEffect(() => {
     dispatch(
@@ -1920,6 +1929,8 @@ debugger;
             ledgerCodeRef={ledgerCodeRef}
             voucherNumberRef={voucherNumberRef}
             refNoRef={refNoRef}
+            isDropDownOpen={isDropDownOpen} 
+            toggleDropdown={toggleHeaderDropdown}
           />
           {/* header ends here */}
 
@@ -1931,46 +1942,6 @@ debugger;
               gridId={`${gridCode}-grid`}
               onAddData={handleAddData}
             />
-          </div>
-
-          <div
-            className="relative"
-            >
-            {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
-            {/* <ErpDevGrid
-              key={key}
-              GridPreferenceChooserTrance
-              heightToAdjustOnWindows={formState.userConfig?.gridHeight ?? 700}
-              summaryItems={summaryItems}
-              ref={erpGridRef}
-              keyExpr="slNo"
-              columns={columns}
-              height={gridHeight}
-              allowFiltering={false}
-              dataUrl={Urls.acc_reports_ledger}
-              hideGridAddButton={true}
-              hideDefaultExportButton={true}
-              hideDefaultSearchPanel={true}
-              allowSearching={false}
-              allowExport={false}
-              hideGridHeader={true}
-              enablefilter={false}
-              remoteOperations={false}
-              data={formState.transaction.details}
-              gridId={`${gridCode}-grid`}
-              onClickByRootState={(e: any, state: RootState) => {
-                onSelectionChanged(e, state, true);
-              }}
-              showTotalCount={false}
-              onKeyDown={(e) => handleKeyDown("grid", e)}
-              onSelectionChangedByRootState={(e: any, state: RootState) =>
-                onSelectionChanged(e, state, false)
-              }
-              enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
-              showPrintButton={false}
-              className="pb-14"
-            ></ErpDevGrid> */}
           </div>
           {formState.showSaveDialog && (
             <ERPAlert
@@ -2000,6 +1971,118 @@ debugger;
         </div>
       )}
 
+           {deviceInfo?.isMobile && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
+          {/* Sale Header */}
+          <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
+            <ERPPreviousUrlButton />
+            {/* test mj23 */}
+            <h1 className="flex-grow font-semibold text-lg text-zinc-800">
+              {/* {t("cash_payment")} */}
+              {t(formState.title)}
+            </h1>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
+           <AccHeader
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  t={t} // Replace with your translation function
+                  loadTemporaryRows={loadTemporaryRows}
+                  deleteTransVoucher={deleteTransVoucher}
+                  handleRefresh={handleRefresh}
+                  createNewVoucher={createNewVoucher}
+                  handleEdit={handleEdit}
+                  printVoucher={printVoucher}
+                  handleClearControls={handleClearControls}
+                  handleHistoryClick={handleHistoryClick}
+                  setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                  transactionType={formState.transactionType} // Replace with your actual transaction type
+                  voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                  userSession={userSession} // Replace with your actual user session object
+                  unlockVoucher={unlockVoucher}
+                  setShowValidation={setShowValidation}
+                  showValidation={showValidation}
+                  selectTemplates={selectTemplates}
+                  goToPreviousPage={goToPreviousPage}
+                  isHistorySidebarOpen={isHistorySidebarOpen}
+                  setIsPrintModalOpen={setIsPrintModalOpen}
+                  printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+                />
+
+            {/* Voucher Info */}
+            <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
+              <div className="flex items-center gap-2 flex-1">
+                <TransactionHeader
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleKeyDown={handleKeyDown}
+                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  t={t}
+                  handleLoadByRefNo={handleLoadByRefNo}
+                  handleFieldChange={handleFieldChange}
+                  setIsPartyDetailsOpen={setIsPartyDetailsOpen}
+                  triggerEffect={triggerEffect}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  ledgerCodeRef={ledgerCodeRef}
+                  voucherNumberRef={voucherNumberRef}
+                  refNoRef={refNoRef}
+                  isDropDownOpen={isDropDownOpen} 
+                  toggleDropdown={toggleHeaderDropdown}
+                />
+              </div>
+            </div>
+
+            {/* Form Section */}
+            <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
+              <div className="space-y-2">
+                
+              </div>
+                  <ErpPurchaseGrid
+                    columns={purchaseGridCol}
+                    keyField={"productID"}
+                    height={gridHeight}
+                    gridId={`${gridCode}-grid`}
+                    onAddData={handleAddData}
+                  />
+                   <TransactionFooter
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                    focusDiscount={focusDiscount}
+                    focusAmount={focusAmount}
+                    goToPreviousPage={goToPreviousPage}
+                    save={save}
+                    selectAttachment={selectAttachment}
+                    isDropUpOpen={isDropUpOpen} 
+                    toggleDropup={toggleFooterDropup}
+                  />
+
+              {/* Total Summary */}
+              {/* <div className="bg-white shadow-md p-[10px] rounded-lg mt-0">
+                <div className="flex justify-between mb-2 text-gray-600 text-sm">
+                  <span className="flex-1">
+                    {t("total_disc")}:{" "}
+                    {getFormattedValue(
+                      Number(
+                        formState.transaction.details.reduce(
+                          (total, item) => total + (item.discount ?? 0),
+                          0
+                        )
+                      )
+                    )}
+                  </span>
+                </div>
+              </div> */}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* footer starts here */}
       <TransactionFooter
         formState={formState}
@@ -2012,6 +2095,8 @@ debugger;
         goToPreviousPage={goToPreviousPage}
         save={save}
         selectAttachment={selectAttachment}
+        isDropUpOpen={isDropUpOpen} 
+        toggleDropup={toggleFooterDropup}
       />
       {/* footer ends here */}
 

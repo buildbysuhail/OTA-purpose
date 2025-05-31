@@ -1,7 +1,7 @@
 import { View, Text, Image,StyleSheet } from "@react-pdf/renderer";
-import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
-import { TemplateState } from "../../Designer/interfaces";
+import { dateTrimmer, getAmountInWords } from "../../../../../utilities/Utils";
+import useCurrentBranch from "../../../../../utilities/hooks/use-current-branch";
+import { TemplateState } from "../../../Designer/interfaces";
 
 const styles = StyleSheet.create({
 

@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer"
-import type { TemplateState } from "../../Designer/interfaces"
+import type { TemplateState } from "../../../Designer/interfaces"
 
 const styles = StyleSheet.create({
   headerContainer: {

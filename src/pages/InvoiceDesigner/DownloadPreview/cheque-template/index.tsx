@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer"
 import FontRegistration from "../../../LabelDesigner/fontRegister"
 
-import type { AccountTransactionProps } from "../account_transactiocn-premium"
+import type { AccountTransactionProps } from "../account/account_transactiocn-premium"
 import { getAmountInWords } from "../../../../utilities/Utils"
 import { calculateContentHeight, calculateItemsPerPage, getPageDimensions, getPageSizeForPDF, groupItemsIntoPages } from "../../utils/pdf-util"
 

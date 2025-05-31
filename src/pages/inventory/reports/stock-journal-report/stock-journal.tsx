@@ -4,31 +4,15 @@ import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import { useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import OpeningStockFilter, { OpeningStockFilterInitialState, } from "./opening-stock-filter";
-interface OpeningStock {
-  date: string;
-  voucherNumber: string;
-  vType: string;
-  barcode: string;
-  productCode: string;
-  productName: string;
-  groupName: string;
-  brandName: string;
-  unitName: string;
-  qty: number;
-  cost: number;
-  total: number;
-  remarks: string;
-  fromWarehouse: string;
-  toWarehouse: string;
-  salesPrice: number;
-  totalSalesValue: number;
-  si: number;
+import StockJournalReportFilter, { StockJournalReportFilterInitialState } from "./stock-journal-filter";
+interface StockJournalSummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
-
-const OpeningStock = () => {
+const StockJournalReport: FC<StockJournalSummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
@@ -129,7 +113,30 @@ const OpeningStock = () => {
       allowSorting: true,
       width: 60,
       showInPdf: true,
-    },
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.qty == null
+                ? ""
+                : getFormattedValue(cellElement.data.qty);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.qty == null
+              ? ""
+              : getFormattedValue(cellElement.data.qty);
+          }
+        },
+      },
     {
       dataField: "cost",
       caption: t("cost"),
@@ -139,7 +146,30 @@ const OpeningStock = () => {
       allowSorting: true,
       width: 60,
       showInPdf: true,
-    },
+      cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cost == null
+                ? ""
+                : getFormattedValue(cellElement.data.cost);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cost == null
+              ? ""
+              : getFormattedValue(cellElement.data.cost);
+          }
+        },
+      },
     {
       dataField: "total",
       caption: t("total"),
@@ -149,7 +179,30 @@ const OpeningStock = () => {
       allowSorting: true,
       width: 70,
       showInPdf: true,
-    },
+       cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.total == null
+                ? ""
+                : getFormattedValue(cellElement.data.total);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(cellElement.data.total);
+          }
+        },
+      },
     {
       dataField: "remarks",
       caption: t("remarks"),
@@ -257,18 +310,18 @@ const OpeningStock = () => {
                 }}
                 columns={columns}
                 moreOption={true}
-                gridHeader={t("opening_stock_report")}
-                dataUrl={Urls.opening_stock}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<OpeningStockFilter />}
+                filterContent={<StockJournalReportFilter />}
                 filterWidth={700}
                 filterHeight={340}
-                filterInitialData={OpeningStockFilterInitialState}
+                filterInitialData={StockJournalReportFilterInitialState}
                 reload={true}
-                gridId="grd_opening_stock"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -277,4 +330,4 @@ const OpeningStock = () => {
     </Fragment>
   );
 };
-export default OpeningStock;
+export default StockJournalReport;

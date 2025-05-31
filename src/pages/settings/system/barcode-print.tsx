@@ -671,6 +671,8 @@ const BarcodePrint: React.FC = () => {
           isForm={true}
           closeModal={() => { setShowPrint(false); }}
           content={<DownloadBarcodePreview template={template} data={data} />}
+          width={1000}
+          height={800}
         />
       }
     </Fragment>

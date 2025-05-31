@@ -6,7 +6,7 @@ import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import moment from "moment";
 
-const OpeningStockFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const StockJournalReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -77,7 +77,10 @@ const OpeningStockFilter = ({ getFieldProps, handleFieldChange, formState }: any
             }}
           />
         </div>
-
+{/* visible false for os */}
+ {location.pathname.includes(
+          "inventory/opening_stock_report"
+        ) && (
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("from_warehouse")}
@@ -93,7 +96,7 @@ const OpeningStockFilter = ({ getFieldProps, handleFieldChange, formState }: any
             }}
           />
         </div>
-
+        )}
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("to_warehouse")}
@@ -165,8 +168,8 @@ const OpeningStockFilter = ({ getFieldProps, handleFieldChange, formState }: any
     </div>
   );
 }
-export default OpeningStockFilter;
-export const OpeningStockFilterInitialState = {
+export default StockJournalReportFilter;
+export const StockJournalReportFilterInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
   fromWarehouse: 0,

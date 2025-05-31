@@ -189,7 +189,7 @@ export interface PropertiesState {
   /// background
   bg_color?: string;
   bg_image_position?: string;
-
+  bg_image_objectFit?:string;
   printer?: string;
 
   /// Font
@@ -224,6 +224,7 @@ export interface HeaderState {
   showOrgAddress?: boolean;
   showDocTitle?: boolean;
   docTitle?: string;
+  docTitleUnderline?: boolean;
   showBalanceDue?: boolean;
 
   hasPhoneField?: boolean;
@@ -238,6 +239,7 @@ export interface HeaderState {
   bgColor?: string;
   isFirstOnly?: boolean;
   bg_image_header_position?: string;
+  bg_image_header_objectFit?:string;
   headerHeight?: number;
 
   /// Document Title

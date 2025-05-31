@@ -81,8 +81,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           />
         </div>
 
-        {/* <ERPDataCombobox
+        <ERPDataCombobox
           value={propertiesState?.pageSize ?? "A4"}
+          defaultValue={propertiesState?.pageSize ?? "A4"}
           field={{
             id: "pageSize",
             required: true,
@@ -96,8 +97,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           id="pageSize"
           options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
           label={t("page_size")}
-        /> */}
-           <ERPDataCombobox
+        />
+           {/* <ERPDataCombobox
                        defaultData={propertiesState?.pageSize ?? "A4"}
                        
                       handleChange={(id, value) => onChange?.({  ...propertiesState, pageSize: value })}
@@ -105,8 +106,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                    
                     options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
                      label={t("page_size")} 
-                    />
-        {/* {
+                    /> */}
+        {
           propertiesState?.pageSize == "CUSTOM" &&(
             <>
             <div className="flex items-center space-x-3">
@@ -174,7 +175,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           </div>
             </>
           )
-        } */}
+        }
         <ERPDataCombobox
           id="orientation"
           field={{
@@ -202,61 +203,95 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           </label>
           <div className="flex gap-2 mt-1">
  
+          <ERPInput
+            id="top"
+            label={t("top")}
+            type="number"
+            value={propertiesState?.padding?.top??10}
+            onChange={(e) => {
+              const value = e.target.value;
+              const top = value === "" ? 0 : parseInt(value, 10);
+              onChange?.({
+                ...propertiesState,
+                padding: {
+                  ...propertiesState?.padding,
+                  top
+                },
+              });
+            }}
+            placeholder=" "
+            className="w-full"
+            min={0}
+            max={300}
+            maxLength={3}
+          />
+           <ERPInput
+            value={propertiesState?.padding?.bottom ?? 10} 
+            onChange={(e) => {
+              const value = e.target.value;
+              const bottomValue = value === "" ? 0 : parseInt(value, 10); // Prevent NaN
+              onChange?.({
+                ...propertiesState,
+                padding: {
+                  ...propertiesState?.padding,
+                  bottom: bottomValue,
+                },
+              });
+            }}
+            label={t("bottom")}
+            type="number"
+            id="bottom"
+            placeholder=" "
+            className="w-full"
+            min={0}
+            max={300}
+            maxLength={3}
+          />
             <ERPInput
-              id="padding_top"
-              label={t("top")}
-              type="number"
-              value={propertiesState?.padding?.top}
-          
-              onChange={(e) =>
-                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: parseInt(e.target.value, 10)} })
-              }
-              placeholder=" "
-              className="w-full"
-              min={0}
-              step={10}
-              max={60}
-            />
-            <ERPInput
-              value={propertiesState?.padding?.bottom}
+              value={propertiesState?.padding?.left??10}
            
-              onChange={(e) =>
-                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: parseInt(e.target.value, 10)} })
-              }
-              label={t("bottom")}
-              type="number"
-              id="padding_bottom"
-              placeholder=" "
-              className="w-full"
-              min={0}
-              max={60}
-            />
-            <ERPInput
-              value={propertiesState?.padding?.left}
-           
-              onChange={(e) =>
-                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: parseInt(e.target.value, 10)} })
-              }
+              onChange={(e) => {
+              const value = e.target.value;
+              const left = value === "" ? 0 : parseInt(value, 10);
+              onChange?.({
+                ...propertiesState,
+                padding: {
+                  ...propertiesState?.padding,
+                  left
+                },
+              });
+            }}
               label={t("left")}
               type="number"
-              id="padding_left"
+              id="left"
               placeholder=" "
               className="w-full"
               min={0}
-              max={60}
+              max={300}
+              maxLength={3}
             />
+             
             <ERPInput
-              value={propertiesState?.padding?.right}
-              onChange={(e) =>
-                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: parseInt(e.target.value, 10)} })
-              }
+              value={propertiesState?.padding?.right??10}
+                 onChange={(e) => {
+              const value = e.target.value;
+              const right = value === "" ? 0 : parseInt(value, 10);
+              onChange?.({
+                ...propertiesState,
+                padding: {
+                  ...propertiesState?.padding,
+                  right
+                },
+              });
+            }}
               label={t("right")}
               type="number"
-              id="padding_right"
+              id="right"
               placeholder=" "
               className="w-full"
               min={0}
-              max={60}
+              max={300}
+              maxLength={3}
             />
           </div>
         </div>
@@ -351,7 +386,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               { value: "italic", label: t("italic") },
             ]}
           />
-          <ERPStepInput
+          {/* <ERPStepInput
             value={propertiesState?.font_size}
             onChange={(font_size) => onChange?.({ ...propertiesState, font_size })}
             label={t("font_size")}
@@ -360,8 +395,80 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             min={8}
             max={28}
             step={1}
-          />
-         
+          /> */}
+           <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                 id="font_size"
+                label={t("font_size")}
+                className="bg-slate-300"
+                value={propertiesState?.font_size??10}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, font_size: parseInt(e.target.value, 10) })
+                }
+                min={5}
+                max={28}
+                step={1}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                 id="font_size"
+                type="number"
+                noLabel
+                value={propertiesState?.font_size??10}
+                data={propertiesState}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const font_size = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...propertiesState,
+                      font_size
+                  });
+                }}
+            
+               min={5}
+               max={28}
+               step={1}
+              />
+            </div>
+          </div>
+               <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                id="font_weight"
+                label={t("font_weight")}
+                className="bg-slate-300"
+                value={propertiesState?.font_weight??400}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, font_weight: parseInt(e.target.value, 10) })
+                }
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                id="font_weight"
+                type="number"
+                noLabel
+                value={propertiesState?.font_weight??400}
+                data={propertiesState}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const font_weight = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...propertiesState,
+                      font_weight
+                  });
+                }}
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+          </div>  
         </div>
         <div className="flex flex-col gap-2 mt-1">
           <ERPDataCombobox
@@ -384,23 +491,50 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               { value: "italic", label: t("italic") },
             ]}
           />
-          <ERPStepInput
-            value={propertiesState?.label_font_size}
-            onChange={(label_font_size) => onChange?.({ ...propertiesState, label_font_size })}
-            label={t("label_font_size")}
-            id="label_font_size"
-            placeholder=" "
-            min={8}
-            max={28}
-            step={1}
-          />
+      
+            <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                 id="label_font_size"
+                label={t("label_font_size")}
+                className="bg-slate-300"
+                value={propertiesState?.label_font_size??10}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, label_font_size: parseInt(e.target.value, 10) })
+                }
+                min={5}
+                max={28}
+                step={1}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                 id="label_font_size"
+                type="number"
+                noLabel
+                value={propertiesState?.label_font_size??10}
+                data={propertiesState}
+                  onChange={(e) => {
+                  const value = e.target.value;
+                  const label_font_size = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...propertiesState,
+                      label_font_size
+                  });
+                }}
+               min={5}
+               max={28}
+               step={1}
+              />
+            </div>
+          </div>
           <div className="flex items-center space-x-3">
             <div className="basis-2/3 ">
               <ERPSlider
                 id="label_font_weight"
                 label={t("label_font_weight")}
                 className="bg-slate-300"
-                value={propertiesState?.label_font_weight}
+                value={propertiesState?.label_font_weight??400}
                 onChange={(e) =>
                   onChange?.({ ...propertiesState, label_font_weight: parseInt(e.target.value, 10) })
                 }
@@ -414,17 +548,22 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 id="label_font_weight"
                 type="number"
                 noLabel
-                value={propertiesState?.label_font_weight}
+                value={propertiesState?.label_font_weight??400}
                 data={propertiesState}
-                onChange={(e) =>
-                  onChange?.({ ...propertiesState, label_font_weight: parseInt(e.target.value, 10) })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const label_font_weight = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...propertiesState,
+                      label_font_weight
+                  });
+                }}
                 min={300}
                 max={700}
                 step={100}
               />
             </div>
-          </div>
+          </div>  
 
           <ERPInput
             value={propertiesState?.font_color}
@@ -433,6 +572,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             id="font_color"
             placeholder=" "
             type="color"
+            customSize="md"
+            // inputClassName="bg-black"
           />
           <ERPInput
             value={propertiesState?.label_font_color}
@@ -441,6 +582,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             id="label_font_color"
             placeholder=" "
             type="color"
+            customSize="md"
           />
         </div>
       </div>
@@ -458,7 +600,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           {t("background_image")}
         </label>
         <div className="flex flex-col gap-2">
-          {!["journal_entry", "customer", "vendor"]?.includes(templateGroup!) && <>
+         
             <ERPInput
               ref={inputFile}
               type="file"
@@ -481,7 +623,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 {t("choose_from_desktop")}</div>
             </label>
             {
-              templateData.activeTemplate.background_image ?
+              templateData.activeTemplate.background_image &&
                 <>
                   <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">{t("click_save_to_apply")}</div>
                   {templateData.activeTemplate.background_image && <img src={templateData.activeTemplate.background_image} alt="background_image" height={100} width={100} className="size-5" />}21`1`
@@ -490,10 +632,35 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                     onClick={() => { handleSetTemplateBackgroundImage(undefined, dispatch); inputFile.current!.value = "" }}>
                     {t("remove")}
                   </div>
-                </> : <></>
-            }
+
+                  <ERPDataCombobox
+           
+              label={t("image_fit")}
+              id="bg_image_objectFit"
+              field={{
+                id: "bg_image_objectFit",
+                required: true,
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              value={propertiesState?.bg_image_objectFit?? "fill"}
+              defaultValue={ "fill"}
+              handleChangeData={(id, value) => {
+                  onChange?.({ ...propertiesState, bg_image_objectFit: value })
+              }}
+              options={[
+                { label: "fill", value: "fill" },
+                { label: "contain", value: "contain" },
+                { label: "cover", value: "cover" },
+                { label: "scale-down", value: "scale-down" },
+                { label: "none", value: "none" },
+
+              ]}
+            />
+
+
             <ERPDataCombobox
-              data={propertiesState}
+              
               label={t("image_position")}
               id="bg_image_position"
               field={{
@@ -502,34 +669,34 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 valueKey: "value",
                 labelKey: "label",
               }}
-              value={propertiesState?.bg_image_position ?? "top left"}
-              defaultValue={propertiesState?.bg_image_position ?? "top left"}
-              handleChange={(id, value) => {
-                dispatch(setTemplatePropertiesState({
-                  ...templateData,
-                  bg_image_position: value
-                }))
+              value={propertiesState?.bg_image_position ?? "center"}
+              handleChangeData={(id, value) => {
+               onChange?.({ ...propertiesState, bg_image_position: value })
               }}
               options={[
                 { label: "Top left", value: "top left" },
-                { label: "Top center", value: "top center" },
-                { label: "Top right", value: "top right" },
-                { label: "Center left", value: "center left" },
-                { label: "Center center", value: "center center" },
-                { label: "Center right", value: "center right" },
-                { label: "Bottom left", value: "bottom left" },
-                { label: "Bottom center", value: "bottom center" },
+                { label: "Center left", value: "top center" },
+                { label: "Bottom left", value: "top right" },
+                { label: "Top center", value: "center left" },
+                { label: "Center", value: "center" },
+                { label: "Bottom center", value: "center right" },
+                { label: "Top right", value: "bottom left" },
+                { label: "Center right", value: "bottom center" },
                 { label: "Bottom right", value: "bottom right" },
               ]}
             />
-          </>
-          }
+                </> 
+            }
+          
+      
+          
           <ERPInput
             value={propertiesState?.bg_color}
             onChange={(e) => { onChange?.({ ...propertiesState, bg_color: e.target?.value }) }}
             label={t("color")}
             id="bg_color"
             type="color"
+             customSize="md"
             placeholder=""
           />
         </div>

@@ -20,21 +20,21 @@ import { setTemplate, setTemplateAccTableState, setTemplateAdviceTableState, set
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
 import { TemplateDto, TemplateState } from "./Designer/interfaces";
-import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn-premium";
+import AccountTransactionsTemplate from "./DownloadPreview/account/account_transactiocn-premium";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
 import useCurrentBranch from "../../utilities/hooks/use-current-branch";
-import AccTableDesigner from "./Designer/accTableDesigner";
+import AccTableDesigner from "./Designer/accounts/accTableDesigner";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
-import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_standard";
+import AccountTransactionsVoucher from "./DownloadPreview/account/account_transactiocn_standard";
 import { RootState } from "../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
-import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
-import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-universal";
+import AccountTransactionDetailsDesigner from "./Designer/accounts/accDetailsDesigner";
+import AccountTransactionsUniversal from "./DownloadPreview/account/account_transaction-universal";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "./DownloadPreview/advice-template";
-import AdviceTableDesigner from "./Designer/adviceTableDesigner";
+import AdviceTableDesigner from "./Designer/accounts/advice/adviceTableDesigner";
 import { accTransaction } from "./constants/TemplateCategories";
 import ChequeTemplate from "./DownloadPreview/cheque-template";
 
@@ -160,44 +160,9 @@ const InvoiceDesigner = () => {
 
   //  Handling View Design Tab Category
   useEffect(() => {
-    if (
-      templateGroup &&
-      [
-        "payment_receipts",
-        "retainer_payment_receipts",
-        "payment_made",
-      ]?.includes(templateGroup)
-    )
-      setDesignTabs(
-        designSections?.filter(
-          (tab) => tab.id !== 4 && tab.id !== 5 && tab?.id !== 7
-        )
-      );
 
-    if (templateGroup && ["journal_entry"]?.includes(templateGroup))
-      setDesignTabs(
-        designSections?.filter(
-          (tab) => tab?.id !== 5 && tab?.id !== 6 && tab?.id !== 7
-        )
-      );
-
-    if (templateGroup && ["customer", "vendor"]?.includes(templateGroup))
-      setDesignTabs(
-        designSections?.filter(
-          (tab) => tab?.id !== 5 && tab?.id !== 6 && tab?.id !== 7
-        )
-      );
-
-    if (
-      templateGroup &&
-      ["qty_adjustment", "value_adjustment"]?.includes(templateGroup)
-    )
-      setDesignTabs(
-        designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 7)
-      );
-
-    if (templateGroup && ["barcode"]?.includes(templateGroup))
-      setDesignTabs(designSections?.filter((tab) => tab?.id == 7));
+    if (templateGroup && accTransaction?.includes(templateGroup as VoucherType))
+      setDesignTabs(designSections);
   }, [templateGroup]);
 
   useEffect(() => {
@@ -328,10 +293,11 @@ const InvoiceDesigner = () => {
   const templateKindComponentMap = {
     premium: AccountTransactionsTemplate,
     standard: AccountTransactionsVoucher,
-    universal: AccountTransactionsUniversal,
-    // Add more template kinds here as needed
+    universal: AccountTransactionsUniversal
   };
 
+
+  
   return (
     <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark ">
       {/* Mini Tab Icons */}
@@ -355,13 +321,7 @@ const InvoiceDesigner = () => {
                 </div>
                 <div className="text-[10px]">
                   {
-                    [
-                      "payment_receipts",
-                      "retainer_payment_receipts",
-                      "payment_made",
-                    ]?.includes(templateGroup!) && val.id === 3
-                      ? " Receipt Information"
-                      : t(val.name)
+                    t(val.name)
                   }
                 </div>
               </div>
@@ -374,7 +334,7 @@ const InvoiceDesigner = () => {
         <div className="flex justify-between items-center border-b p-4 ">
           <h1 className="text-base">{t(currentSection.name)}</h1>
           {
-            ["CP", "CR"].includes(templateGroup) ? (
+            accTransaction.includes(templateGroup as VoucherType) ? (
               <div>
                 <button
                   title={t("save_template")}
@@ -485,6 +445,7 @@ const InvoiceDesigner = () => {
             />
           ) : (
             <AccountTransactionDetailsDesigner
+            templateKind={templateKind}
               template={templateData?.activeTemplate}
               onChange={(headerState) =>
                 dispatch(setTemplateHeaderState(headerState))

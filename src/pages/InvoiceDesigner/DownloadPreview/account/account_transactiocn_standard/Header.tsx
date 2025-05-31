@@ -1,7 +1,7 @@
 import { View, Text, Image,StyleSheet } from "@react-pdf/renderer";
-import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
-import { TemplateState } from "../../Designer/interfaces";
+import { dateTrimmer, getAmountInWords } from "../../../../../utilities/Utils";
+import useCurrentBranch from "../../../../../utilities/hooks/use-current-branch";
+import { TemplateState } from "../../../Designer/interfaces";
 
 const styles = StyleSheet.create({
 
@@ -40,16 +40,14 @@ const styles = StyleSheet.create({
     zIndex: -10,
   },
   docTitle:{
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "medium",
-    textDecoration:"underline"
   },
 });
 
 export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string;currency?: string;}) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
-
 
   const fontFamily = template?.propertiesState?.font_family || "Roboto";
   const fontSize = template?.propertiesState?.font_size || 12;
@@ -118,10 +116,12 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
           )}
         </View>
         <View style={{ flexBasis: "33.33%", display: "flex", justifyContent: "flex-end",alignItems:"center"  }}>
-         
-            <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
-              {headerState?.docTitle || "Payment Voucher"}
+         {headerState?.showDocTitle &&
+             <Text style={[styles.docTitle, {  textDecoration:headerState?.docTitleUnderline?"underline":"none", color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
+              {headerState?.docTitle || "Account Transaction"}
             </Text>
+         }
+        
           
           </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>

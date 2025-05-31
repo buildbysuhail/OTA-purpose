@@ -2,7 +2,7 @@ import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-
 import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 
-import { AccountTransactionProps } from "../account_transactiocn-premium";
+import { AccountTransactionProps } from "../account/account_transactiocn-premium";
 import { Header } from "./Header";
 import { Content } from "./Content";
 import Table from "./Table";

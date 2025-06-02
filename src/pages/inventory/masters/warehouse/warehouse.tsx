@@ -61,7 +61,7 @@ const WareHouse = () => {
     {
       dataField: "type",
       caption: t("type"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

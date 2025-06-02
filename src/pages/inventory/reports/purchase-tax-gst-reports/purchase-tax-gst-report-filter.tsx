@@ -118,8 +118,8 @@ const PurchaseGstReportFilter = ({
 export default PurchaseGstReportFilter;
 
 export const PurchaseGstReportFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   gSTPerc: null,
   isVchForm: false,
   voucherForm: "",

@@ -300,7 +300,7 @@ const StockSummaryFilter = ({
 
 export default StockSummaryFilter;
 export const StockSummaryFilterInitialState = {
-  asOnDate: moment().local().endOf("day").toDate(),
+  asOnDate: moment().local().toDate(),
   productGroupID: 0,
   productID: 0,
   brandID: 0,

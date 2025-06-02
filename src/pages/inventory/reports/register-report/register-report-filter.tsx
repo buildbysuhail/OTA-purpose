@@ -498,8 +498,8 @@ export default RegisterFilter;
 
 export const RegisterFilterInitialState = {
   // fromDate: clientSession.softwareDate,
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   voucherType: "",
   productGroupID: 0,
   brandID: 0,
@@ -509,8 +509,8 @@ export const RegisterFilterInitialState = {
   salesmanID: 0,
   warehouseID: 0,
   voucherForm: "",
-  groupCategoryID: 0,
-  sectionID: 0,
+  groupCategoryID: -1,
+  sectionID: -1,
   productCode: "",
   partyLedgerID: 0,
   costCenterID: 0,

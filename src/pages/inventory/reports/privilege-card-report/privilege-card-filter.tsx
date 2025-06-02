@@ -43,7 +43,7 @@ const PrivilegeCardReportFilter = ({ getFieldProps, handleFieldChange, formState
 export default PrivilegeCardReportFilter;
 export const PrivilegeCardReportFilterInitialState = {
     dateFrom: moment().local().startOf("month").toDate(),
-    dateTo: moment().local().endOf("day").toDate(),
+    dateTo: moment().local().toDate(),
     cardNo: "",
     showCardNo: false
 };

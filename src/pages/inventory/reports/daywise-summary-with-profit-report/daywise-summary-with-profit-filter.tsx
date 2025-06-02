@@ -90,8 +90,8 @@ const DaywiseSummaryWithProfitFilter = ({ getFieldProps, handleFieldChange, form
 
 export default DaywiseSummaryWithProfitFilter;
 export const DaywiseSummaryWithProfitFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     salesRouteID: -1,
     costCenterID: -1,
     showTransactionTimeProfit: false,

@@ -26,6 +26,6 @@ const GroupedBrandwiseSalesFilter = ({ getFieldProps, handleFieldChange, formSta
 
 export default GroupedBrandwiseSalesFilter;
 export const GroupedBrandwiseSalesFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
 };

@@ -280,8 +280,8 @@ const ItemWiseSummaryFilter = ({
 export default ItemWiseSummaryFilter;
 
 export const ItemWiseSummaryFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     productGroupID: 0,
     brandID: 0,
     productID: 0,
@@ -289,8 +289,8 @@ export const ItemWiseSummaryFilterInitialState = {
     salesmanID: 0,
     warehouseID: 0,
     partyID: 0,
-    supplierID: 0,
-    groupCategoryID: 0,
+    supplierID: -1,
+    groupCategoryID: -1,
     sectionID: 0,
     productCode: "",
     toBranchID: 0,

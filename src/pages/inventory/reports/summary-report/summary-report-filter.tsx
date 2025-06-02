@@ -382,8 +382,8 @@ export default SummaryFilter;
 
 export const SummaryFilterInitialState = {
   // fromDate: clientSession.softwareDate,
-  fromDate: moment().local().startOf("day").toDate(), //software date as initial
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(), //software date as initial
+  toDate: moment().local().toDate(),
   voucherType: "",
   salesRouteID: 0,
   counterID: 0,

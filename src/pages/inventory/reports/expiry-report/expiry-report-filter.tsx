@@ -156,8 +156,8 @@ const ExpiryReportFilter = ({
 
 export default ExpiryReportFilter;
 export const ExpiryReportFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   productGroupID: 0,
   productID: 0,
   brandID: 0,

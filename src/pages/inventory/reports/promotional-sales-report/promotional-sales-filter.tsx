@@ -188,8 +188,8 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
 
 export default PromotionalSalesReportFilter;
 export const PromotionalSalesReportFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     productGroupID: 0,
     brandID: 0,
     productID: 0,

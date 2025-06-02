@@ -29,6 +29,6 @@ const RouteWiseSalesAndCollectionFilter = ({ getFieldProps, handleFieldChange, f
 }
 export default RouteWiseSalesAndCollectionFilter;
 export const RouteWiseSalesAndCollectionFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
 };

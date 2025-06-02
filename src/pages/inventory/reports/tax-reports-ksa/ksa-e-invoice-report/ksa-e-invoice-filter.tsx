@@ -124,7 +124,7 @@ const KsaEInvoiceReportFilter = ({
 export default KsaEInvoiceReportFilter;
 export const KsaEInvoiceReportFilterInitialState = {
   fromDate: moment().local().subtract(2, "day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   includeSI: true,
   includeSR: true,
   includeDN: true,

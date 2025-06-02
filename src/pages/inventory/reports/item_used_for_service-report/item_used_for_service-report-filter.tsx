@@ -124,7 +124,7 @@ export default ItemUsedForServiceFilter;
 
 export const ItemUsedForServiceFilterInitialState = {
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   productID: 0,
   productGroupID: 0,
   serviceID: 0,

@@ -58,8 +58,8 @@ const PurchaseTaxReportDetailedFilter = ({
 export default PurchaseTaxReportDetailedFilter;
 
 export const PurchaseTaxReportDetailedFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   vatPercentageEnabled: false,
   vatPercentage: 0.0,
 };

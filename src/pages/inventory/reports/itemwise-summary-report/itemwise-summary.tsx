@@ -453,7 +453,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-  const customizeDate = (itemInfo: any) => `Net Total`;
+  const customizeTotal = (itemInfo: any) => `Net Total`;
   const customizeGroup = (itemInfo: any) => `Group Total`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -490,7 +490,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
     {
       column: "productName",
       summaryType: "max",
-      customizeText: customizeDate,
+      customizeText: customizeTotal,
     },
     {
       column: "totQty",
@@ -537,6 +537,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
+              
               <ErpDevGrid
                 key={key}
                 ref={dataGridRef}

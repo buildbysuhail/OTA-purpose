@@ -28,6 +28,6 @@ const CouponReportsFilter = ({ getFieldProps, handleFieldChange, formState }: an
 
 export default CouponReportsFilter;
 export const CouponReportsFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate()
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate()
 };

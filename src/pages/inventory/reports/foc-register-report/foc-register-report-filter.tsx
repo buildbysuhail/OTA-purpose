@@ -148,7 +148,7 @@ export default FOCRegisterReportFilter;
 
 export const FOCRegisterReportFilterInitialState = {
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   productGroupID: 0,
   brandID: 0,
   productID: 0,

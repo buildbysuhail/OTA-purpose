@@ -117,7 +117,7 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
 export default StockFlowReportFilter;
 export const StockFlowReportFilterInitialState = {
   dateFrom: moment().local().startOf("month").toDate(),
-  dateTo: moment().local().endOf("day").toDate(),
+  dateTo: moment().local().toDate(),
   productID: 0,
   productGroupID: 0,
   warehouseID: 0,

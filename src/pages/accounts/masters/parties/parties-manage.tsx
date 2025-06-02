@@ -368,8 +368,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             <ERPInput
               {...getFieldProps("address1")}
               label={t("address")}
+              required={true}
               placeholder={t("address")}
-              required={false}
               onChangeData={(data: any) =>
                 handleFieldChange("address1", data.address1)
               }
@@ -379,7 +379,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               {...getFieldProps("mobilePhone")}
               label={t("mobile_phone")}
               placeholder={t("mobile_phone")}
-              required={false}
+              required={true}
               onChangeData={(data: any) =>
                 handleFieldChange("mobilePhone", data.mobilePhone)
               }
@@ -1190,18 +1190,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     />
 
                     <div className="pt-2 text-right">
-                      <ERPButton
-                        type="button"
-                        title={t("clear")}
-                        variant="secondary"
-                        className="mr-2"
-                        onClick={() => {
-                          clearForm();
-                        }}
-                        disabled={projectOnAction}
-                      />
-
-                      <ERPButton
+                        <ERPButton
                         type="button"
                         disabled={projectOnAction}
                         variant="primary"
@@ -1213,6 +1202,18 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             : t("Save")
                         }
                       />
+                      <ERPButton
+                        type="button"
+                        title={t("clear")}
+                        variant="secondary"
+                        className="mr-2"
+                        onClick={() => {
+                          clearForm();
+                        }}
+                        disabled={projectOnAction}
+                      />
+
+                    
                     </div>
                   </div>
                 </div>

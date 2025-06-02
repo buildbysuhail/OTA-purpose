@@ -95,8 +95,8 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
 
 export default NetSalesReportFilter;
 export const NetSalesReportFilterInitialState = {
-    dateFrom: moment().local().startOf("day").toDate(),
-    dateTo: moment().local().endOf("day").toDate(),
+    dateFrom: moment().local().toDate(),
+    dateTo: moment().local().toDate(),
     salesRouteID: 0,
     salesmanID: 0,
     partyID: 0,

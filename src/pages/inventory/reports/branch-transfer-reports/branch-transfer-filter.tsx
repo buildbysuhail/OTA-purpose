@@ -4,10 +4,11 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 
-const BranchTransferInFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const BranchTransferFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
+    <div className="grid grid-cols-1 gap-4">
+      {/* Date Fields */}
       <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
         <ERPDateInput
           label={t("from_date")}
@@ -23,11 +24,11 @@ const BranchTransferInFilter = ({ getFieldProps, handleFieldChange, formState }:
         />
       </div>
       <ERPDataCombobox
-        label={t("branch")}
+        label={t("to_branch")}
         {...getFieldProps("toBranchID")}
         field={{
           id: "toBranchID",
-          getListUrl: Urls.data_users,
+          getListUrl: Urls.data_acc_Branches,
           valueKey: "id",
           labelKey: "name",
         }}
@@ -38,9 +39,9 @@ const BranchTransferInFilter = ({ getFieldProps, handleFieldChange, formState }:
     </div>
   );
 }
-export default BranchTransferInFilter;
-export const BranchTransferInFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+export default BranchTransferFilter;
+export const BranchTransferFilterInitialState = {
+  fromDate:moment().local().toDate(),
+  toDate: moment().local().toDate(),
   toBranchID: 0,
 };

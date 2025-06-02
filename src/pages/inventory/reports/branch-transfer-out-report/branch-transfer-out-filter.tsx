@@ -28,7 +28,7 @@ const BranchTransferOutFilter = ({ getFieldProps, handleFieldChange, formState }
         {...getFieldProps("toBranchID")}
         field={{
           id: "toBranchID",
-          getListUrl: Urls.Branch,
+          getListUrl: Urls.data_acc_Branches,
           valueKey: "id",
           labelKey: "name",
         }}

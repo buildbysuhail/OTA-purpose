@@ -60,6 +60,7 @@ const BranchTransferSummaryOut = () => {
       allowSorting: true,
       width: 100,
       showInPdf:true,
+      format:"dd-MMM-yyyy"
     },
     {
       dataField: "warehouseName",

@@ -27,16 +27,17 @@ interface BranchTransferOut {
 const BranchTransferOut = () => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
-    {
-      dataField: "voucherNumber",
-      caption: t("voucher_number"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 90,
-      showInPdf:true,
-    },
+    // {
+    //   dataField: "voucherNumber",
+    //   caption: t("voucher_number"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 90,
+    //   showInPdf:true,
+    //         groupIndex:0
+    // },
     {
       dataField: "vNo",
       caption: t("v_no"),
@@ -46,6 +47,7 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 75,
       showInPdf:true,
+      groupIndex:0
     },
     {
       dataField: "date",
@@ -56,6 +58,8 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 90,
       showInPdf:true,
+      format:"dd-MMM-yyyy",
+            groupIndex:1
     },
     {
       dataField: "fromBranch",
@@ -66,6 +70,7 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 90,
       showInPdf:true,
+            groupIndex:2
     },
     {
       dataField: "toBranch",
@@ -76,6 +81,7 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 90,
       showInPdf:true,
+            groupIndex:3
     },
     {
       dataField: "productCode",
@@ -105,17 +111,63 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 75,
       showInPdf:true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.quantity == null
+                ? ""
+                : getFormattedValue(cellElement.data.quantity);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.quantity == null
+              ? ""
+              : getFormattedValue(cellElement.data.quantity);
+          }
+        },
+      },
     {
       dataField: "unitPrice",
-      caption: t("unit_price"),
+      caption: t("price"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 90,
       showInPdf:true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.unitPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.unitPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.unitPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.unitPrice);
+          }
+        },
+      },
     {
       dataField: "netAmount",
       caption: t("net_amount"),
@@ -125,7 +177,30 @@ const BranchTransferOut = () => {
       allowSorting: true,
       width: 80,
       showInPdf:true,
-    },
+     cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.netAmount == null
+                ? ""
+                : getFormattedValue(cellElement.data.netAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.netAmount == null
+              ? ""
+              : getFormattedValue(cellElement.data.netAmount);
+          }
+        },
+      },
     {
       dataField: "invTransactionMasterID",
       caption: t("inv_transaction_master_id"),
@@ -167,14 +242,51 @@ const BranchTransferOut = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `Net Total`;
+  const customizeTotalGroup = (itemInfo: any) => `Sub Total`;
   const summaryItems: SummaryConfig[] = [
+     {
+      column: "productName",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
     {
+      column: "quantity",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+   {
       column: "netAmount",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
+     {
+      column: "productName",
+      summaryType: "max",
+      customizeText: customizeTotalGroup,
+            isGroupItem: true,
+      showInGroupFooter: true,
+    },
+   
+    {
+      isGroupItem: true,
+      showInGroupFooter: true,
+      column: "quantity",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      isGroupItem: true,
+      showInGroupFooter: true,
+      column: "netAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+   
   ];
 
   return (

@@ -2516,7 +2516,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           >  
             <ErpDevGrid
               key={key}
-              GridPreferenceChooserAccTrance
+              showChooserOnGridHead
               heightToAdjustOnWindows={
                 formState.userConfig?.gridHeight !== undefined && formState.userConfig?.gridHeight !== null && formState.userConfig?.gridHeight !== '' 
                   ? formState.userConfig?.gridHeight 

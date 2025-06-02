@@ -142,7 +142,7 @@ interface ERPDevGridProps {
   showBorders?: boolean;
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
-  GridPreferenceChooserAccTrance?: boolean;
+  showChooserOnGridHead?: boolean;
   // ERPGridActionsstyle?: boolean;
   showColumnHeaders?: boolean;
   showRowLines?: boolean;
@@ -503,7 +503,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
-      GridPreferenceChooserAccTrance = false,
+      showChooserOnGridHead = false,
       // ERPGridActionsstyle = false,
       showColumnHeaders = true,
       showRowLines = true,
@@ -679,6 +679,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         dispatch(popupAction({ isOpen: true, key: null, reload: false }));
     }, [dispatch, popupAction]);
 
+    
+      const preferenceChooserRef = useRef<{
+        handleDropping: (eFromDataGrid?: boolean, draggedDataField?: number|null, targetDataField?: number|null) => void;
+        // getDragState: () => { draggedDataField: string | null; targetDataField: string | null };
+      }>(null);
+      
     useEffect(() => {
       let wh = window.innerHeight;
       let gridHeightMobile =
@@ -747,6 +753,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, [gridId]);
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
+        debugger;
         setPreferences(pref);
         const updatedColumns = applyGridColumnPreferences(columns, pref);
         setGridCols(updatedColumns);
@@ -1718,9 +1725,6 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       );
     }, [summaryItems, columns]);
 
-    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] =
-      useState(GridPreferenceChooserAccTrance);
-
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleMobileMenuClick = () => {
@@ -1844,12 +1848,23 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
         totalRowCountRef.current = (memoizedStore as any).totalCount || 0;
       }
     }, [memoizedStore]);
-
+const handleOptionChanged = (e: any) => {
+  if (e.fullName?.startsWith("columns")) {
+    if (e.fullName.endsWith("visibleIndex")) {
+      preferenceChooserRef.current?.handleDropping(true,e.previousValue, e.value)
+      console.log("Column reordered:", e.fullName, e.value);
+      console.log("Column reordered:", e);
+    } else if (e.fullName.endsWith("width")) {
+      console.log("Column width changed:", e.fullName, e.value);
+    }
+  }
+};
     return (
       <Fragment>
+        {JSON.stringify(preferences)}
         <div
           className={`custom-data-grid ${
-            isPreferenceChooserVisible ? "toolbar-expanded" : ""
+            showChooserOnGridHead ? "toolbar-expanded" : ""
           } 
           ${className}`}
           style={gridStyle}
@@ -1857,6 +1872,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             loadPanel={{enabled:loadPanelEnabled}}
+            onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
             rtlEnabled={appState?.dir === "rtl"}
             ref={gridRef}
@@ -1870,9 +1886,6 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
             allowColumnResizing={allowColumnResizing}
             columnAutoWidth={columnAutoWidth}
             onRowPrepared={handleRowPrepared}
-            onToolbarPreparing={(e) => {
-              setIsPreferenceChooserVisible(GridPreferenceChooserAccTrance);
-            }}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={(e) =>
@@ -2019,18 +2032,6 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                   </div>
                 </Item>
               )}
-              {isPreferenceChooserVisible && (
-              <div className="hidden sm:block">
-                <Item key={appState?.dir} location="before">
-                  <GridPreferenceChooser
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
-                  />
-                </Item>
-              </div>
-              )}
 
                 <Item>
                 <div className="block sm:hidden relative">
@@ -2167,9 +2168,9 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                             </li>
                           )}
 
-                          {ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
+                          {ShowGridPreferenceChooser && !showChooserOnGridHead && (
                             <li>
-                              <div
+                              {/* <div
                                 onClick={() => {
                                   setIsPreferenceChooserVisible(true);
                                   handleMobileMenuClose();
@@ -2178,7 +2179,15 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                               >
                                 <Settings className="w-4 h-4 mr-3 text-[#6366f1]" />
                                 <span>{t("preferences")}</span>
-                              </div>
+                              </div> */}
+                               <GridPreferenceChooser
+                               ref={preferenceChooserRef}
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                    
+                    showChooserOnGridHead={showChooserOnGridHead}
+                  />
                             </li>
                           )}
 
@@ -2340,13 +2349,16 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                 </Item>
               )}
 
-              {ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
+              {ShowGridPreferenceChooser && !showChooserOnGridHead && (
                 <Item>
                 <div className="hidden sm:block">
                   <GridPreferenceChooser
+                               ref={preferenceChooserRef}
                     columns={columns}
                     gridId={gridId}
                     onApplyPreferences={onApplyPreferences}
+                    
+                    showChooserOnGridHead={showChooserOnGridHead}
                   />
                 </div>
                 </Item>
@@ -2409,7 +2421,27 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
                     ? column.captionDynamic(filter)
                     : column.caption
                 }
-                // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
+                 headerCellRender={
+      column.dataField === "slNo" && showChooserOnGridHead
+        ? () => (
+            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+               <GridPreferenceChooser
+                               ref={preferenceChooserRef}
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                    
+                    showChooserOnGridHead={showChooserOnGridHead}
+                  />
+              <span>
+                {column.captionDynamic
+                  ? column.captionDynamic(filter)
+                  : column.caption}
+              </span>
+            </div>
+          )
+        : column?.headerCellRender
+    }
                 groupIndex={column.groupIndex}
                 cssClass={column.cssClass}
                 format={column.format}

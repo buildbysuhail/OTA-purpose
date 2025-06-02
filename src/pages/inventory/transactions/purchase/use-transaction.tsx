@@ -414,7 +414,7 @@ export const useTransaction = (
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
-    voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0;
+    voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0 ;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
         ? moment().local().toISOString()
@@ -699,155 +699,215 @@ export const useTransaction = (
     return response;
   };
 
-  const validate = (): boolean => {
-    // Check if demo version is expired
-    if (clientSession.isDemoVersion) {
-      const demoExpiryDate = new Date(clientSession.demoExpiryDate);
-      const transactionDate = new Date(
-        formState.transaction.master.transactionDate
-      ); // Assuming `dtpTransDate` is a Date object
-      const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
-        .local()
-        .toDate();
+ async function validate(): Promise<boolean> {
+  const master = formState.transaction.master;
+  const details = formState.transaction.details;
 
-      const daysUntilExpiry = Math.floor(
-        (demoExpiryDate.getTime() - transactionDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      );
-      const daysSinceSoftwareDate = Math.floor(
-        (transactionDate.getTime() - softwareDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      );
+  // Stock update restriction
+  if (!formState.transaction.master.stockUpdate) {
+    const confirm = await ERPAlert.show({
+      icon: "info",
+      title: t("stock_update_warning"),
+      text: t("stock_already_updated_warning"),
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+      showCancelButton: true,
+      onCancel: () =>{return false},
+    });
+    if (!confirm) {
+      return false;
+    };
+  }
 
-      if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
-        dispatch(
-          updateFormElement({
-            fields: {
-              transactionDate: { disabled: true },
-              btnSave: { disabled: true },
-              btnAdd: { disabled: true },
-            },
-          })
-        );
-        ERPAlert.show({
-          icon: "warning",
-          title: t("demo_expired"),
-        });
-        return false;
-      }
-    }
-    if (["TXP"].includes(formState.transaction.master.voucherType)) {
-      if (applicationSettings.accountsSettings.allowUserwiseCounter == true) {
-        if (
-          clientSession.counterShiftId == undefined ||
-          clientSession.counterShiftId == 0
-        ) {
-          ERPAlert.show({
-            icon: "warning",
-            title: t("please_open_counter_for_transaction"),
-          });
-          return false;
-        }
-      }
-    }
-    const isvld = finalSave();
-    return isvld;
-  };
-  const finalSave = () => {
-    // const validateTransDate = validateTransactionDate(
-    //   new Date(formState.transaction.master.transactionDate),
-    //   false,
-    //   userSession,
-    //   clientSession,
-    //   applicationSettings,
-    //   undefined,
-    //   hasBlockedRight
-    // );
-    // if (!validateTransDate.valid) {
-    //   ERPAlert.show({
-    //     icon: "warning",
-    //     title: t("transaction_warning"),
-    //     text: validateTransDate.message,
-    //   });
-    //   return false;
-    // }
+  // Cost centre validation
+  if (applicationSettings.accountsSettings.maintainCostCenter && !master.costCentreID) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("validation_error"),
+      text: t("select_valid_cost_centre"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-    // // Validate transaction amount
-    // if (
-    //   formState.transaction.master.totalAmount === null ||
-    //   formState.transaction.master.totalAmount == 0
-    // ) {
-    //   ERPAlert.show({
-    //     icon: "warning",
-    //     title: t("invalid_transaction"),
-    //     text: t("zero_transaction"),
-    //   });
-    //   return false;
-    // }
+  // Grand total check
+  if (master.grandTotal < 0) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("validation_error"),
+      text: t("wrong_discount_or_value"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-    // if (
-    //   (formState.transaction.master.voucherType == "JV" ||
-    //     formState.transaction.master.voucherType == "JVSP") &&
-    //   (formState.transaction.master.drCr == "" ||
-    //     formState.transaction.master.drCr == null)
-    // ) {
-    //   ERPAlert.show({
-    //     icon: "warning",
-    //     title: t("debit_or_credit_in_master_ledger"),
-    //   });
-    //   return false;
-    // }
-    // // Validate master ledger existence
-    // if (
-    //   formState.transaction.master.voucherType !== "OB" &&
-    //   formState.transaction.master.voucherType !== "MJV"
-    // ) {
-    //   const isExist =
-    //     formState.transaction?.details?.find(
-    //       (x) => x.ledgerID == formState.masterAccountID
-    //     ) != undefined;
-    //   if (isExist) {
-    //     ERPAlert.show({
-    //       icon: "warning",
-    //       title: t("duplicate_ledger"),
-    //       text: t("master_ledger_exists_in_row"),
-    //     });
-    //     return false;
-    //   }
-    // }
+  // Transaction date check
+  const transDateValidation = validateTransactionDate(
+     new Date(new Date(formState.transaction.master.transactionDate)),
+      false,
+      userSession,
+      clientSession,
+      applicationSettings,
+      undefined,
+      hasBlockedRight);
+       if (!transDateValidation.valid) {
+            await ERPAlert.show({
+              title: t("warning"),
+              text: transDateValidation.message,
+              icon: "warning",
+            });
+          }
+      
+ 
 
-    // if (formState.transaction.master.voucherType == "MJV") {
-    //   const totalDebit = Number(
-    //     formState.transaction.details.reduce(
-    //       (sum, x) => sum + (Number(x.debit) || 0),
-    //       0
-    //     )
-    //   ).toFixed(applicationSettings.mainSettings?.decimalPoints || 2);
-    //   const totalCredit = Number(
-    //     formState.transaction.details.reduce(
-    //       (sum, x) => sum + (Number(x.credit) || 0),
-    //       0
-    //     )
-    //   ).toFixed(applicationSettings.mainSettings?.decimalPoints || 2);
-    //   if (totalDebit !== totalCredit) {
-    //     ERPAlert.show({
-    //       icon: "warning",
-    //       title: t("debit/credit"),
-    //       text: t("total_debit_and_credit"),
-    //     });
-    //     return false;
-    //   }
-    // }
-    // if (!validateStatus(formState.transaction.details)) {
-    //   ERPAlert.show({
-    //     icon: "warning",
-    //     title: t("debit/credit"),
-    //     text: t("contains_multiple_statuses"),
-    //   });
-    //   return false;
-    // }
-    return true;
-  };
+  // Day close check
+  // const closedDate = await getClosedDate("Purchase");
+  // if (new Date(closedDate) >= new Date(master.transactionDate)) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("invalid_transaction_date"),
+  //     text: t("day_closed"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
+
+  // if (isEdit && new Date(closedDate) >= new Date(master.prevTransactionDate)) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("invalid_transaction_date"),
+  //     text: t("cannot_edit_day_closed"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
+
+  // // Party selection check
+  // if (!master.partyId) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("invalid_party"),
+  //     text: t("select_cash_or_party"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
+
+  // // Reference number validation
+  // if (
+  //   Settings.InventorySettings.IsReferenceNumberMandatoryInPurchase &&
+  //   !master.refNo
+  // ) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("reference_number_required"),
+  //     text: t("reference_number_not_entered"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
+
+  // if (master.refNo) {
+  //   const refExists = await checkReferenceNumberExists(master);
+  //   if (refExists) {
+  //     if (!isEdit || refExists.toString() !== master.voucherNumber) {
+  //       await ERPAlert.show({
+  //         icon: "error",
+  //         title: t("invalid_reference_number"),
+  //         text: t("reference_exists_in_pi", { ref: refExists }),
+  //         confirmButtonText: t("ok"),
+  //       });
+  //       return false;
+  //     }
+  //   }
+  // }
+
+  // // Scheme discount account check
+  // if (
+  //   DBID_VALUE === "SAMAPLASTICS" &&
+  //   getSchemeDiscount(details) > 0 &&
+  //   !master.schemeDiscountPostingLedgerId
+  // ) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("scheme_discount_warning"),
+  //     text: t("select_scheme_discount_posting_ledger"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
+
+  // // Product validation
+  // for (let i = 0; i < details.length; i++) {
+  //   const row = details[i];
+  //   if (!row.productBatchId || row.productBatchId === 0) {
+  //     await ERPAlert.show({
+  //       icon: "error",
+  //       title: t("validation_error"),
+  //       text: t("invalid_item_details_in_row", { row: i + 1 }),
+  //       confirmButtonText: t("ok"),
+  //     });
+  //     return false;
+  //   }
+  // }
+
+  // // Purchase cost change warning
+  // if (Settings.InventorySettings.ShowPurchaseCostChangeWarning && !isEdit) {
+  //   let priceChangeItems = "";
+  //   for (const item of details) {
+  //     if (item.unitPrice !== item.unitPriceOriginal) {
+  //       priceChangeItems += `\n${item.product} [${item.barCode}]`;
+  //     }
+  //   }
+  //   if (priceChangeItems) {
+  //     await ERPAlert.show({
+  //       icon: "info",
+  //       title: t("purchase_price_changed"),
+  //       text: priceChangeItems,
+  //       confirmButtonText: t("ok"),
+  //     });
+  //   }
+  // }
+
+  // // Gross amount zero validation
+  // for (let i = 0; i < details.length; i++) {
+  //   const row = details[i];
+  //   if (row.gross === 0) {
+  //     const confirm = await ERPAlert.show({
+  //       icon: "question",
+  //       title: t("zero_value"),
+  //       text: t("zero_qty_in_row", { row: i + 1 }),
+  //       confirmButtonText: t("yes"),
+  //       cancelButtonText: t("no"),
+  //       showCancelButton: true,
+  //     });
+  //     if (!confirm) {
+  //       // optionally set focus logic here
+  //       return false;
+  //     }
+  //   }
+  // }
+
+  // // Check no items after blank rows
+  // const firstFreeIndex = details.findIndex((x) => !x.productId);
+  // for (let i = firstFreeIndex + 1; i < details.length; i++) {
+  //   if (details[i].productId) {
+  //     await ERPAlert.show({
+  //       icon: "error",
+  //       title: t("validation_error"),
+  //       text: t("items_after_blank_row", { row: firstFreeIndex + 1 }),
+  //       confirmButtonText: t("ok"),
+  //     });
+  //     return false;
+  //   }
+  // }
+
+  // // Finalize
+  // calculateTotal();
+  return true;
+}
+
+  
   // const validateStatus = (accounts: TransactionRow[]): boolean => {
   //   try {
   //     let hasC = false;
@@ -1516,34 +1576,7 @@ export const useTransaction = (
     // );
     // focusLedgerCombo();
   };
-  const validatePDC = async (
-    transactionDetailsId: number
-  ): Promise<boolean> => {
-    try {
-      if (!transactionDetailsId) {
-        return false;
-      }
-
-      const params = {
-        accDetailId: transactionDetailsId,
-      };
-
-      const response = await api.getAsync(
-        `${Urls.validate_cheque_status}`,
-        `detailId=${transactionDetailsId}`
-      );
-
-      return response;
-    } catch (error) {
-      ERPAlert.show({
-        type: "error",
-        title: t("error"),
-        text:
-          error instanceof Error ? error.message : t("failed_to_validate_PDC"),
-      });
-      return true; // Maintain original behavior of returning true on error
-    }
-  };
+ 
   interface RowClickHandlerParams {
     row: any;
   }

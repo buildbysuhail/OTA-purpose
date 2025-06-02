@@ -72,8 +72,8 @@ export default function ERPAlert({
 }
 
 // Utility function for showing alerts
-ERPAlert.show = (options: ERPAlertProps) => {
-  return Swal.fire({
+ERPAlert.show = async (options: ERPAlertProps) => {
+  return await Swal.fire({
     title: options.title,
     text: options.text,
     width: options.width || 450,
@@ -96,6 +96,7 @@ ERPAlert.show = (options: ERPAlertProps) => {
   }).then((result) => {
     if (result.isConfirmed) {
       options.onConfirm && options.onConfirm()
+      return true;
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       options.onCancel && options.onCancel()
       return false;

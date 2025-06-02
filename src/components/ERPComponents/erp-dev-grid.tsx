@@ -681,6 +681,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     
       const preferenceChooserRef = useRef<{
+        handleColumnPreferenceChange: (dataField: string, key: string, value: any, eFromDataGrid?: boolean) => void;
         handleDropping: (eFromDataGrid?: boolean, draggedDataField?: number|null, targetDataField?: number|null) => void;
         // getDragState: () => { draggedDataField: string | null; targetDataField: string | null };
       }>(null);
@@ -1852,16 +1853,23 @@ const handleOptionChanged = (e: any) => {
   if (e.fullName?.startsWith("columns")) {
     if (e.fullName.endsWith("visibleIndex")) {
       preferenceChooserRef.current?.handleDropping(true,e.previousValue, e.value)
-      console.log("Column reordered:", e.fullName, e.value);
-      console.log("Column reordered:", e);
     } else if (e.fullName.endsWith("width")) {
-      console.log("Column width changed:", e.fullName, e.value);
+      const index = parseInt(e.fullName.match(/columns\[(\d+)\]/)?.[1] || "-1");
+      debugger;
+      preferenceChooserRef.current?.handleColumnPreferenceChange(gridCols[index].dataField??"","width", e.value, true)
     }
   }
 };
     return (
       <Fragment>
-        {JSON.stringify(preferences)}
+         <GridPreferenceChooser
+                               ref={preferenceChooserRef}
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                    
+                    showChooserOnGridHead={showChooserOnGridHead}
+                  />
         <div
           className={`custom-data-grid ${
             showChooserOnGridHead ? "toolbar-expanded" : ""
@@ -2421,27 +2429,6 @@ const handleOptionChanged = (e: any) => {
                     ? column.captionDynamic(filter)
                     : column.caption
                 }
-                 headerCellRender={
-      column.dataField === "slNo" && showChooserOnGridHead
-        ? () => (
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-               <GridPreferenceChooser
-                               ref={preferenceChooserRef}
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    
-                    showChooserOnGridHead={showChooserOnGridHead}
-                  />
-              <span>
-                {column.captionDynamic
-                  ? column.captionDynamic(filter)
-                  : column.caption}
-              </span>
-            </div>
-          )
-        : column?.headerCellRender
-    }
                 groupIndex={column.groupIndex}
                 cssClass={column.cssClass}
                 format={column.format}

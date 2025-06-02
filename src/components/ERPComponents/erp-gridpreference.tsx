@@ -120,7 +120,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   const handleColumnPreferenceChange = (
     dataField: string,
     key: string,
-    value: any
+    value: any,
+    eFromDataGrid: boolean = false
   ) => {
     setPreferences((prevPreferences: any) => {
       if (!prevPreferences) return prevPreferences;
@@ -136,10 +137,14 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
         }
       );
 
-      return {
+      const updatedPreferences = {
         ...prevPreferences,
         columnPreferences: updatedColumnPreferences,
       };
+      if (eFromDataGrid) {
+          onChange(updatedPreferences);
+        }
+        return updatedPreferences;
     });
   };
 
@@ -167,6 +172,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     handleDragStart,
     handleDragEnd,
     handleDropping,
+    handleColumnPreferenceChange
     // getDragState: () => ({
     //   draggedDataField: dragItem.current ? dragItem.current.split("_")[0] : null,
     //   targetDataField: dragOverItem.current ? dragOverItem.current.split("_")[0] : null,

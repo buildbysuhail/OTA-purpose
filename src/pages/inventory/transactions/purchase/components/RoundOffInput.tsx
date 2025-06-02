@@ -61,11 +61,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
             })
           )
         }
-        disabled={
-          formState.transaction.master.hasroundOff !== true ||
-          formState.formElements.roundAmount?.disabled ||
-          formState.formElements.pnlMasters?.disabled
-        }
+        readOnly
       />
     </div>
   );

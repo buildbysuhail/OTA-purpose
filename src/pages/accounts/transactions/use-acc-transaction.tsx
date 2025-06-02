@@ -1314,6 +1314,15 @@ export const useAccTransaction = (
         })
       );
     }
+    else {
+      dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          saving: false,
+        },
+      })
+    );
+    }
   };
   const clearRow = async (isEdit: boolean, accTransactionMasterID: number) => {
     await undoEditMode(isEdit, accTransactionMasterID);
@@ -2234,11 +2243,13 @@ export const useAccTransaction = (
       }
     }
 
-    ERPAlert.show({
+    await ERPAlert.show({
       title: t("confirm_delete"),
       text: t("delete_this_voucher"),
       icon: "warning",
       confirmButtonText: t("delete_it"),
+      showCancelButton: true,
+      cancelButtonText: t("no"),
       onConfirm: async () => {
         try {
           if (formState.transaction?.master?.accTransactionMasterID > 0) {
@@ -2274,6 +2285,9 @@ export const useAccTransaction = (
           console.error("Error deleting voucher:", error);
         }
       },
+      onCancel: async() => {
+        return false
+      }
     });
   };
   const handleLoadByRefNo = useCallback(async () => {

@@ -499,7 +499,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
-            hasroundOff: formType != "Import",
+            hasroundOff: formType == "Import" ? true: _formState.transaction.master.hasroundOff,
           },
         },
         userConfig: {
@@ -525,11 +525,11 @@ debugger;
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
         pnlImport: {
           ...initialFormElements.pnlImport,
-          visible: formType == "Import",
+          visible: formType == "Import" ? true : _formState.formElements.pnlImport.visible,
         },
         grandTotalFc: {
           ...initialFormElements.grandTotalFc,
-          visible: formType == "Import",
+          visible: formType == "Import" ? true : _formState.formElements.grandTotalFc.visible,
         },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,

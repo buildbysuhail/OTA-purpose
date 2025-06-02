@@ -15,7 +15,7 @@ interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
-  GridPreferenceChooserAccTrance?: boolean;
+  showChooserOnGridHead?: boolean;
   eclipseClass?: string;
 }
 
@@ -26,7 +26,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     gridId,
     columns,
     onApplyPreferences,
-    GridPreferenceChooserAccTrance,
+    showChooserOnGridHead,
     eclipseClass,
   }: GridPreferenceChooserProps,
   ref: Ref<any>
@@ -51,18 +51,19 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     dragOverItem.current = e.currentTarget.id;
   };
 
-  const handleDropping = (eFromDataGrid: boolean = false) => {
-    const draggedDataField = dragItem.current ? dragItem.current.split("_")[0] : null;
+ const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number|null, endIndex?: number|null) => {debugger;
+     const draggedDataField = dragItem.current ? dragItem.current.split("_")[0] : null;
     const targetDataField = dragOverItem.current ? dragOverItem.current.split("_")[0] : null;
 
-    let startIndex = preferences.columnPreferences?.findIndex(
+    startIndex = startIndex != null ? startIndex :preferences.columnPreferences?.findIndex(
       (fld: any) => fld?.dataField === draggedDataField
     );
-    let endIndex = preferences.columnPreferences?.findIndex(
+    endIndex = endIndex != null ? endIndex : preferences.columnPreferences?.findIndex(
       (fld: any) => fld?.dataField === targetDataField
     );
 
     if (startIndex !== -1 && endIndex !== -1) {
+      
       setPreferences((prevPreferences: any) => {
         const updatedPreferences = {
           ...prevPreferences,
@@ -72,6 +73,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
             endIndex
           ),
         };
+      console.log(`updatedPreferences`);
+      
         if (eFromDataGrid) {
           onChange(updatedPreferences);
         }
@@ -117,7 +120,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   const handleColumnPreferenceChange = (
     dataField: string,
     key: string,
-    value: any
+    value: any,
+    eFromDataGrid: boolean = false
   ) => {
     setPreferences((prevPreferences: any) => {
       if (!prevPreferences) return prevPreferences;
@@ -133,10 +137,14 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
         }
       );
 
-      return {
+      const updatedPreferences = {
         ...prevPreferences,
         columnPreferences: updatedColumnPreferences,
       };
+      if (eFromDataGrid) {
+          onChange(updatedPreferences);
+        }
+        return updatedPreferences;
     });
   };
 
@@ -164,6 +172,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     handleDragStart,
     handleDragEnd,
     handleDropping,
+    handleColumnPreferenceChange
     // getDragState: () => ({
     //   draggedDataField: dragItem.current ? dragItem.current.split("_")[0] : null,
     //   targetDataField: dragOverItem.current ? dragOverItem.current.split("_")[0] : null,
@@ -172,11 +181,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
 
   return (
     <Fragment>
-      {GridPreferenceChooserAccTrance ? (
+      {showChooserOnGridHead ? (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+             setIsOpen(true)}}
           onTouchEnd={() => setIsOpen(true)}
-          className={` ${eclipseClass ? eclipseClass : "mt-[15px]"} `}
+          className={` ${eclipseClass ? eclipseClass : "mt-[0px]"} `}
         >
           <Ellipsis className="text-[#0ea5e9]" />
         </button>

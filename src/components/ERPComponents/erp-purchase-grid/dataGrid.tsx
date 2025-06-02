@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppD
 import { RootState } from "../../../redux/store";
 import Input from "./test-input";
 import { Loader2, Plus, Search } from "lucide-react";
-import GridPreferenceList from "../erp-gridpreference";
+import GridPreferenceChooser from "../erp-gridpreference";
 import type { DevGridColumn, GridPreference } from "../../types/dev-grid-column";
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
@@ -187,12 +187,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     >
       <div className={`relative border border-gray-300 rounded-md ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
-          <GridPreferenceList
+          <GridPreferenceChooser
             ref={preferenceChooserRef}
             gridId={gridId}
             columns={columns}
             onApplyPreferences={onApplyPreferences}
-            GridPreferenceChooserAccTrance
+            showChooserOnGridHead
             eclipseClass="m-0 p-0"
           />
         </div>

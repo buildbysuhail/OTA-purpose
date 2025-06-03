@@ -287,6 +287,12 @@ export const TemplateTypes: {
       name: "cheque",
       template_group_id: "Cheque"
     },
+     {
+      id: 57,
+      name: "CustomerBalanceReport",
+      template_group_id:  "CBR"
+    },
+     
   ];
 
   export const accTransaction = [

@@ -399,15 +399,12 @@ export interface accountTransactionInfo {
   showPaymentRefund?: boolean;
   paymentRefund?: string;
 
-  showAmountInWords?: boolean;
+  //  amtReceivedLabel?: string;
+  //  currencySymbolPosition?: "after" | "before";
 
-   //
-   amtReceivedLabel?: string;
-   currencySymbolPosition?: "after" | "before";
-
-   amtReceivedFontSize?: number;
-   amtReceivedFontColor?: string;
-   amtReceivedBgColor?: string;
+  //  amtReceivedFontSize?: number;
+  //  amtReceivedFontColor?: string;
+  //  amtReceivedBgColor?: string;
    
 }
 export interface adviceTransInfo {
@@ -434,8 +431,10 @@ export interface adviceTransInfo {
    
 }
 export interface ItemTableMasterState {
-  showTableBorder?: boolean;
-  tableBorderColor?: string;
+  showTableRowBorder?: boolean;
+  showTableColBorder?: boolean;
+  tableRowBorderColor?: string;
+  tableColBorderColor?: string;
   /// Table Header
   headerRepeatOnPage?:boolean;
   headerFontSize?: number;
@@ -630,7 +629,7 @@ export interface TotalState {
   showTotal?: boolean;
   totalInfoLabel?: string;
 
-  currencyPosition?: { label?: string; value?: string };
+  currencyPosition?: "after" | "before";
 
   showQuantity?: boolean;
   quantityInfoLabel?: string;
@@ -651,6 +650,14 @@ export interface TotalState {
   totalFontColor?: string;
   showTotalBgColor?: boolean;
   totalBgColor?: string;
+
+    /// Total(Subtotal, Tax)
+   amtReceivedFontSize?: number;
+   amtReceivedFontColor?: string;
+   amtReceivedBgColor?: string;
+   amtReceivedLabel?: string;
+   amtWidth?:number;
+   amtHeight?:number;
 
   /// Balance Due
   balanceFontSize?: number;
@@ -853,8 +860,10 @@ export const initialTemplateState: ActionState<TemplateState> = {
   
     },
     itemTableState: {
-      showTableBorder: true,
-      tableBorderColor: "#000000",
+      showTableRowBorder: false,
+      showTableColBorder: false,
+      tableRowBorderColor: "#000000",
+      tableColBorderColor: "#000000",
       headerFontSize: 12,
       showTableHeaderBg: false,
       tableHeaderBgColor: "#FFFFFF",
@@ -941,7 +950,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       showTax: false,
       showTotal: true,
       totalInfoLabel: "Total",
-      currencyPosition: { label: "USD", value: "USD" },
+      currencyPosition: "after",
       showQuantity: true,
       quantityInfoLabel: "Quantity",
       showPaymentDetail: false,

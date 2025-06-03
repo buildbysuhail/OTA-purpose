@@ -1,4 +1,5 @@
-import CustomerBalanceTemplate from "./customer-balance";
+
+import CustomerBalanceTemplate from "../../../../pages/InvoiceDesigner/invocieDesigner.tsx/reports/customerBalace/designer";
 import { ReportRenderProps } from "./report-interface";
 import StatementTemplate from "./statement-template";
 

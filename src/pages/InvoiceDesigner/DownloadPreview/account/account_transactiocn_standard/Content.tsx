@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
  
   });
   
-  export const Content = ({ data, template, currentBranch, docIDKey, currency,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string;indexNO?:number }) => {
+  export const Content = ({ data, template, currentBranch, docIDKey, clientSession,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; clientSession:any;indexNO?:number }) => {
     const headerState = template?.headerState;
+    const totalState = template?.totalState;
     const   propertiesState = template?.propertiesState;
     const fontFamily = template?.propertiesState?.font_family || "Roboto";
     const fontSize = template?.propertiesState?.font_size || 12;
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
              </View>
             {/* Payment Details */}
           
-       { headerState?.accountTransactionInfo?.showPaymentMode &&
+       {/* { headerState?.accountTransactionInfo?.showPaymentMode && */}
          <View style={{ display: "flex", flexDirection: "column",gap:30, width:"100%" }}>
             <View style={{ display: "flex", flexDirection: "row",justifyContent:"flex-start" ,gap:5 ,width:"100%" }}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode?`${headerState?.accountTransactionInfo?.paymentMode}`:"PAYMENT GIVEN TO"}:</Text>
@@ -129,18 +130,18 @@ const styles = StyleSheet.create({
             </View>
             <View style={{ width: "100%", borderBottom:"1px dotted rgb(38, 37, 37)" }} />
           </View>
-       }
+      {/*   } */}
           
-
-       { headerState?.accountTransactionInfo?.showAmountInWords &&
+     
+       { totalState?.showAmoutInWords  &&
          <View style={{ display: "flex", flexDirection: "row", justifyContent:"flex-start",gap:5, width:"100%", }}>
               <Text style={labelStyles}>the sum of rupees :</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
-                {getAmountInWords(Number(data.details[indexNO]?.amount), currency)}
+                {getAmountInWords(Number(data.details[indexNO]?.amount), clientSession?.currency?? "INR")}
               </Text>
               </View>
-            </View>
+        </View>
        }
            
           
@@ -165,22 +166,43 @@ const styles = StyleSheet.create({
             </View>
           </View>
           <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"flex-start", width:"100%"}}>
-  
-           <View style={{display:"flex",flexDirection:"column",gap:2,
+          {totalState?.showTotalSection && 
+            <View style={{display:"flex",flexDirection:"column",gap:2,
             
            }}>
-            <View style={{display:"flex",flexDirection:"row",border:"2px solid rgb(38, 37, 37)",borderRadius:5,width:"100%",height:30}}>
-              {/* <View style={{width:"30%",backgroundColor:"rgb(38, 37, 37)"}}>
-              <Text style={{color:"rgb(251, 250, 250)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>Rs:</Text>
-              </View> */}
-              <View style={{flex:1,backgroundColor:"rgb(246, 245, 245)"}}>
-              <Text style={{color:"rgb(61, 60, 60)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>
-               {data.details[indexNO]?.amount}
+          <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center", // Center the Text component horizontally
+                alignItems: "center", // Center the Text component vertically
+                border: "2px solid rgb(38, 37, 37)",
+                borderRadius: 5,
+                width: "100%",
+                height: 30,
+                backgroundColor: totalState.totalBgColor ?? "rgb(246, 245, 245)",
+              }}
+            >
+              <Text
+                style={{
+                  color: totalState?.totalFontColor ?? "rgb(61, 60, 60)",
+                  fontSize: totalState.totalFontSize ?? 14,
+                  fontStyle: "italic",
+                  fontFamily: "RobotoMono",
+                  textAlign: "center", // Center text within the Text component
+                 paddingHorizontal: 5,
+                }}
+              >
+                {totalState?.currencyPosition === "before" ? clientSession?.currencySymbol ?? "INR" : ""}
+                {data.details[indexNO]?.amount}
+                {totalState?.currencyPosition === "after" ? clientSession?.currencySymbol ?? "INR" : ""}
               </Text>
-              </View>
             </View>
+            {/* this are need come frome note */}
               <Text style={{color:"rgb(87, 86, 86)",fontSize:6,fontStyle:"italic",fontFamily:"RobotoMono"}}>*All Cheque/DD are subject to realisation</Text>
-           </View>
+           </View>         
+          }
+
            <View style={{alignSelf:"flex-end"}}>
             <Text style={labelStyles}>Reciver Name </Text>
             </View >

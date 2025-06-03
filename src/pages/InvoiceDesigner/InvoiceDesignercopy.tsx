@@ -105,7 +105,6 @@ export interface TemplateImagesTypes {
 }
 
 const api = new APIClient();
-
 const InvoiceDesigner = () => {
   const { id } = useParams();
   const navigate = useNavigate();

@@ -1,8 +1,16 @@
 import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-pdf/renderer";
-import FontRegistration from "../../../../../pages/LabelDesigner/fontRegister";
-import { ReportRenderProps } from "../report-interface";
+import FontRegistration from "../../../../../LabelDesigner/fontRegister";
 import { Header } from "./HeaderTem";
 import { Content } from "./Content";
+import { TemplateState } from "../../../../Designer/interfaces";
+export interface ReportRenderProps {
+  template?: TemplateState;
+  data?: any;
+  currentBranch?: any;
+  userSession?:any;
+  orientation:"portrait"|"landscape";
+  printCase?:string
+}
 
 
 // Define styles
@@ -22,7 +30,7 @@ const styles = StyleSheet.create({
 
 })
 
-const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession }: ReportRenderProps) => {
+const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession,template }: ReportRenderProps) => {
   // Sample data is already defined in your original file
 
   return (

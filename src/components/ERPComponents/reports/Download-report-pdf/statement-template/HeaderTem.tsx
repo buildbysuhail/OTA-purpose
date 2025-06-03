@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
+    marginLeft: -30,
   },
   statementTitle: {
     color: "#000",

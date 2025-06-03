@@ -145,14 +145,14 @@ const BranchManage: React.FC = React.memo(() => {
           {...getFieldProps("createdDate")}
           label={t("date_from")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("createdDate", data)}
+          onChangeData={(data: any) => handleFieldChange("createdDate", data.createdDate)}
         />
 
         <ERPDateInput
           {...getFieldProps("modifiedDate")}
           label={t("date_to")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("modifiedDate", data)}
+          onChangeData={(data: any) => handleFieldChange("modifiedDate", data.modifiedDate)}
         />
 
         <ERPInput

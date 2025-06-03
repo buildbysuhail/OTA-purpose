@@ -1,8 +1,7 @@
 import { View, Text, StyleSheet } from "@react-pdf/renderer"
-import CurrencyFormatter from "../../../../formatters/currency-formatter"
 import moment from "moment"
-import { FormatDate } from "../../../../formatters/date-formatter"
-import { Countries } from "../../../../../redux/slices/user-session/user-branches-reducer"
+import CurrencyFormatter from "../../../../../../components/formatters/currency-formatter"
+import { FormatDate } from "../../../../../../components/formatters/date-formatter"
 
 const styles = StyleSheet.create({
   content: {

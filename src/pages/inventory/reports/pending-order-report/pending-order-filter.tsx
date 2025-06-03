@@ -57,7 +57,7 @@ const PendingOrderReportFilter = ({ getFieldProps, handleFieldChange, formState 
 
 export default PendingOrderReportFilter;
 export const PendingOrderReportFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     voucherType: "",
 };

@@ -1,7 +1,5 @@
-
-
-
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer"
+import moment from "moment";
 
 const styles = StyleSheet.create({
   companyInfo: {
@@ -67,7 +65,8 @@ const styles = StyleSheet.create({
     flexBasis: "30%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
+    marginLeft: -30,
   },
   statementTitle: {
     color: "#000",
@@ -128,8 +127,8 @@ export const HeaderTemp = ({
         )}
 
         <View style={styles.companyTitle}>
-          <Text style={styles.arabicTitle}>ض.ق.م-٢٣٥٤٣٣٥٤٤٥٤٥٤٥٣٤</Text>
-          <Text style={styles.englishTitle}>{userSession.headerFooter?.heading7 || "Sama United Trading Company"}</Text>
+          <Text style={styles.arabicTitle}>{currentBranch.nameInSecondLanguage || ""}</Text>
+          <Text style={styles.englishTitle}>{userSession.headerFooter?.heading7 || ""}</Text>
         </View>
       </View>
 
@@ -149,26 +148,20 @@ export const HeaderTemp = ({
         <View style={styles.rightColumn}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>From</Text>
-            <Text style={styles.infoValue}>15/01/2025</Text>
+            <Text style={styles.infoValue}>{moment(data.filter.dateFrom).format("DD/MM/YYYY")}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>To</Text>
-            <Text style={styles.infoValue}>15/01/2025</Text>
+            <Text style={styles.infoValue}>{moment(data.filter.dateTo).format("DD/MM/YYYY")}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Ledger</Text>
-            <Text style={styles.ledgerValue}>MUASSASA ALGHILAL ALDHAHABIA </Text>
+            <Text style={styles.ledgerValue}>{data.filter.ledgerName} </Text>
           </View>
         </View>
       </View>
     </View>
   )
 }
-
-
-
-
-
-

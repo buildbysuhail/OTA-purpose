@@ -49,6 +49,6 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
 export default SalesmanIncentiveReportFilter;
 export const SalesmanIncentiveReportFilterInitialState = {
     dtpFrom: moment().local().startOf("month").toDate(),
-    dtpTo: moment().local().endOf("day").toDate(),
+    dtpTo: moment().local().toDate(),
     employee: 0,
 };

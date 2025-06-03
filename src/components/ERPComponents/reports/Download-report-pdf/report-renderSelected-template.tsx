@@ -5,7 +5,7 @@ import StatementTemplate from "./statement-template";
 
 
 export const renderReportSelectedTemplate = (props: ReportRenderProps) => {
-  const { orientation, data, currentBranch, userSession,printCase } = props;
+  const { orientation, data, currentBranch, userSession,printCase, getFormattedValue } = props;
 
   switch (printCase) {
     case "statement":
@@ -15,6 +15,7 @@ export const renderReportSelectedTemplate = (props: ReportRenderProps) => {
         data={data}
         currentBranch={currentBranch}
         userSession={userSession}
+        getFormattedValue={getFormattedValue}
         />
       );
     case "customer_balance":
@@ -24,6 +25,7 @@ export const renderReportSelectedTemplate = (props: ReportRenderProps) => {
         data={data}
         currentBranch={currentBranch}
         userSession={userSession}
+        getFormattedValue={getFormattedValue}
         />
       );
     case "":

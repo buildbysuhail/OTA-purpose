@@ -198,8 +198,8 @@ const StockJournalReportFilter = ({
 };
 export default StockJournalReportFilter;
 export const StockJournalReportFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   fromWarehouse: location.pathname.includes("inventory/excess_stock_report")
     ? 4
     : 0,

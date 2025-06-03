@@ -55,7 +55,7 @@ const SalesmanwiseSalesAndCollectionFilter = ({
 export default SalesmanwiseSalesAndCollectionFilter;
 export const SalesmanwiseSalesAndCollectionFilterInitialState = {
  fromDate: moment().startOf("month").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   isVatIncluded: true,
   routeWise: true,
 };

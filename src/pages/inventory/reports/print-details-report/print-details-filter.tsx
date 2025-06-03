@@ -57,7 +57,7 @@ const PrintDetailsFilter = ({ getFieldProps, handleFieldChange, formState }: any
 }
 export default PrintDetailsFilter;
 export const PrintDetailsFilterInitialState = {
-  dateFrom: moment().local().startOf("day").toDate(),
-  dateTo: moment().local().endOf("day").toDate(),
+  dateFrom: moment().local().toDate(),
+  dateTo: moment().local().toDate(),
   voucherType: "startsWith",
 };

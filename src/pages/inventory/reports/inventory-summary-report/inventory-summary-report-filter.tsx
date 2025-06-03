@@ -39,6 +39,6 @@ const InventorySummaryReportFilter = ({ getFieldProps, handleFieldChange, formSt
 
 export default InventorySummaryReportFilter;
 export const InventorySummaryReportFilterInitialState = {
-    asonDate: moment().local().endOf("day").toDate(),
+    asonDate: moment().local().toDate(),
     branchID: 0
 };

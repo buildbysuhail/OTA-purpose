@@ -85,7 +85,7 @@ export default DiscountReportCollectionFilter;
 
 export const DiscountReportCollectionFilterInitialState = {
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   routeID: 0,
   salesmanID: 0,
   counterID: 0,

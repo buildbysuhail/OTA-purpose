@@ -28,6 +28,6 @@ const SchemeWiseSalesFilter = ({ getFieldProps, handleFieldChange, formState }: 
 
 export default SchemeWiseSalesFilter;
 export const SchemeWiseSalesFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
 };

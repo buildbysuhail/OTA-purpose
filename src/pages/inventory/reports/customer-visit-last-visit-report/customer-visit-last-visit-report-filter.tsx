@@ -34,6 +34,6 @@ export default CustomerVisitLastVisitFilter;
 
 export const CustomerVisitLastVisitFilterInitialState = {
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   salesRouteID: 0,
 };

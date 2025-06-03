@@ -161,7 +161,7 @@ const mapItemsToOptions = (
   const itemsArray = Array.isArray(items) ? items : Object.values(items);
 return itemsArray.map((item: any) => ({
   label: getNestedValue(item, labelKey) || "",
-  value: getNestedValue(item, valueKey) || "",
+  value: getNestedValue(item, valueKey) ?? "",
   name: getNestedValue(item, nameKey) || "",
   is_active: item?.is_active,
 }));

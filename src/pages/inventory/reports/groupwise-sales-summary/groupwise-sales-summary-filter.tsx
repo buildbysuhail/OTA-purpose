@@ -102,8 +102,8 @@ const GroupwiseSalesSummaryFilter = ({
 
 export default GroupwiseSalesSummaryFilter;
 export const GroupwiseSalesSummaryFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   productGroupID: 0,
   groupCategoryID: 0,
   sectionID: 0,

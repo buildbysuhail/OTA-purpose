@@ -80,7 +80,7 @@ export default CustomerVisitTotalVisitFilter;
 
 export const CustomerVisitTotalVisitFilterInitialState = {
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   mainRoute: 0, 
   salesRoute: 0, 
   zeroVisit: false,

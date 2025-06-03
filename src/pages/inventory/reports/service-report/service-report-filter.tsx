@@ -77,8 +77,8 @@ const ServiceReportFilter = ({ getFieldProps, handleFieldChange, formState }: an
 
 export default ServiceReportFilter;
 export const ServiceReportFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
-    toDate: moment().local().endOf("day").toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     serviceID: 0,
     isWarrantyService: "",
 };

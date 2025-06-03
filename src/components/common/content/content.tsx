@@ -128,10 +128,10 @@ import IncomExpenseStatement from "../../../pages/accounts/reports/incomeexpense
 import BankStatementReport from "../../../pages/accounts/reports/bank-statement-report";
 import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
 import ProductSummaryMaster from "../../../pages/inventory/reports/product-summary/product-summary-master";
-import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
-import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
-import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
-import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
+// import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
+// import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
+// import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
+// import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import urls from "../../../redux/urls";
@@ -580,10 +580,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_return_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />} />
         {/* global end */}
         <Route path="/inventory/product_summary" element={<ProductSummaryMaster />} />
-        <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
+        {/* <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
-        <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} />
+        <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} /> */}
         <Route path="/inventory/branch_transfer_out_report" element={<BranchTransferOut />} />
         <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
         <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />

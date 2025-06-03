@@ -88,7 +88,6 @@ export const Header = ({
         ...styles.headerContainer,
         height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
         backgroundColor: template?.headerState?.bgColor || "#fff",
-        marginBottom: 10,
         padding: `${paddingTop}pt ${paddingRight}pt 0 ${paddingLeft}pt`,
       }}
       fixed={!headerState?.isFirstOnly}

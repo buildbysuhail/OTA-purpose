@@ -55,8 +55,8 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
   const fontWeight = template?.propertiesState?.font_weight || 400;
   const fontStyle = template?.propertiesState?.fontStyle || "normal";
 
-  const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
-  const orgNameFontSize = headerState?.OrganizationFontSize || 12;
+  const NameFontColor = headerState?.OrganizationFontColor || "#000";
+  const NameFontSize = headerState?.OrganizationFontSize || 12;
 
   const fontStyles = {
     color,
@@ -110,7 +110,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
             />
              )}
           {headerState?.showOrgName && (
-            <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold",fontFamily:fontFamily,}}>
+            <Text style={{ color: NameFontColor, fontSize: NameFontSize, fontWeight: "semibold",fontFamily:fontFamily,}}>
               {currentBranch?.name}
             </Text>
           )}

@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { FooterState } from "./interfaces";
 import { isFile } from "../../../utilities/Utils";
-import { TemplateImagesTypes } from "../InvoiceDesigner";
+import { TemplateImagesTypes } from "../invocieDesigner.tsx/InvoiceDesignerLanding";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";

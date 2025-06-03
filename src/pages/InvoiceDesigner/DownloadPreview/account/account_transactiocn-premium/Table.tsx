@@ -19,13 +19,18 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
       display: "flex",
       marginBottom: 10,
       marginTop: 10,
+      // borderBottom: `1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
+      // borderTop: `1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
+      // borderLeft: `1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
+      // borderRight: `1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
     },
     thead: {
       backgroundColor: accTableState?.showTableHeaderBg ? accTableState?.tableHeaderBgColor : "#fff",
       color: accTableState?.headerFontColor || "#000",
       fontSize: accTableState?.headerFontSize || 12,
       flexDirection: "row",
-      borderBottom: `1px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor : ""}`,
+      borderBottom:`1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
+      borderRight:`1px solid ${accTableState?.showTableColBorder ? accTableState?.tableColBorderColor : ""}`,
     },
     th: {
       padding: 4,
@@ -37,7 +42,8 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
     },
     tr: {
       flexDirection: "row",
-      borderBottom: `1px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor : ""}`,
+      borderBottom: `1px solid ${accTableState?.showTableRowBorder ? accTableState?.tableRowBorderColor : ""}`,
+      // borderRight: `1px solid ${accTableState?.showTableColBorder ? accTableState?.tableColBorderColor : ""}`,
       backgroundColor: accTableState?.showRowBg ? accTableState?.itemRowBgColor : "#fff",
     },
     td: {

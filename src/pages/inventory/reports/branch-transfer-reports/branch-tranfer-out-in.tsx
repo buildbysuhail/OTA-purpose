@@ -1,31 +1,27 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import { useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import BranchTransferOutFilter, { BranchTransferOutFilterInitialState } from "./branch-transfer-out-filter";
-
-interface BranchTransferOut {
-  voucherNumber: number;
-  vNo: string;
-  date: Date;
-  fromBranch: string;
-  toBranch: string;
-  productCode: string;
-  productName: string;
-  quantity: number;
-  unitPrice: number;
-  netAmount: number;
-  invTransactionMasterID: number;
-  autoBarcode: string;
-  itemAlias: string;
+import { BranchTransferFilterInitialState } from "./branch-transfer-filter";
+import { useLocation } from "react-router-dom";
+import BranchTransferFilter from "./branch-transfer-filter";
+interface BranchTransferInOutProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
-
-const BranchTransferOut = () => {
-  const { t } = useTranslation('accountsReport');
+const BranchTransferOutIn: FC<BranchTransferInOutProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     // {
     //   dataField: "voucherNumber",
@@ -46,8 +42,8 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 75,
-      showInPdf:true,
-      groupIndex:0
+      showInPdf: true,
+      groupIndex: 0,
     },
     {
       dataField: "date",
@@ -57,9 +53,9 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
-      showInPdf:true,
-      format:"dd-MMM-yyyy",
-            groupIndex:1
+      showInPdf: true,
+      format: "dd-MMM-yyyy",
+      groupIndex: 1,
     },
     {
       dataField: "fromBranch",
@@ -69,8 +65,8 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
-      showInPdf:true,
-            groupIndex:2
+      showInPdf: true,
+      groupIndex: 2,
     },
     {
       dataField: "toBranch",
@@ -80,8 +76,8 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
-      showInPdf:true,
-            groupIndex:3
+      showInPdf: true,
+      groupIndex: 3,
     },
     {
       dataField: "productCode",
@@ -100,7 +96,9 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
+      sortIndex: 0,
+      sortOrder: "asc",
     },
     {
       dataField: "quantity",
@@ -110,31 +108,31 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 75,
-      showInPdf:true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.quantity == null
-                ? ""
-                : getFormattedValue(cellElement.data.quantity);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.quantity == null
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(cellElement.data.quantity);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.quantity == null
+            ? ""
+            : getFormattedValue(cellElement.data.quantity);
+        }
       },
+    },
     {
       dataField: "unitPrice",
       caption: t("price"),
@@ -143,31 +141,31 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 90,
-      showInPdf:true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.unitPrice == null
-                ? ""
-                : getFormattedValue(cellElement.data.unitPrice);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.unitPrice == null
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(cellElement.data.unitPrice);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.unitPrice == null
+            ? ""
+            : getFormattedValue(cellElement.data.unitPrice);
+        }
       },
+    },
     {
       dataField: "netAmount",
       caption: t("net_amount"),
@@ -176,31 +174,31 @@ const BranchTransferOut = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 80,
-      showInPdf:true,
-     cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.netAmount == null
-                ? ""
-                : getFormattedValue(cellElement.data.netAmount);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.netAmount == null
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netAmount == null
               ? ""
               : getFormattedValue(cellElement.data.netAmount);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netAmount == null
+            ? ""
+            : getFormattedValue(cellElement.data.netAmount);
+        }
       },
+    },
     {
       dataField: "invTransactionMasterID",
       caption: t("inv_transaction_master_id"),
@@ -213,30 +211,35 @@ const BranchTransferOut = () => {
     },
     {
       dataField: "autoBarcode",
-      caption: t("auto_barcode"),
+      caption: t("barcode"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "itemAlias",
-      caption: t("item_alias"),
+      caption: t("alias_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-    }
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -245,7 +248,7 @@ const BranchTransferOut = () => {
   const customizeTotal = (itemInfo: any) => `Net Total`;
   const customizeTotalGroup = (itemInfo: any) => `Sub Total`;
   const summaryItems: SummaryConfig[] = [
-     {
+    {
       column: "productName",
       summaryType: "max",
       customizeText: customizeTotal,
@@ -256,20 +259,20 @@ const BranchTransferOut = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-   {
+    {
       column: "netAmount",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-     {
+    {
       column: "productName",
       summaryType: "max",
       customizeText: customizeTotalGroup,
-            isGroupItem: true,
+      isGroupItem: true,
       showInGroupFooter: true,
     },
-   
+
     {
       isGroupItem: true,
       showInGroupFooter: true,
@@ -286,9 +289,12 @@ const BranchTransferOut = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-   
   ];
-
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -296,22 +302,28 @@ const BranchTransferOut = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
+                filterText=" From : {fromDate} - {toDate}"
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 moreOption={true}
-                gridHeader={t("branch_transfer_out_report")}
-                dataUrl={Urls.branch_transfer_out}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<BranchTransferOutFilter />}
+                filterContent={<BranchTransferFilter />}
                 filterWidth={360}
                 filterHeight={260}
-                filterInitialData={BranchTransferOutFilterInitialState}
+                filterInitialData={BranchTransferFilterInitialState}
                 reload={true}
-                gridId="grd_branch_transfer_out"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -320,4 +332,4 @@ const BranchTransferOut = () => {
     </Fragment>
   );
 };
-export default BranchTransferOut;
+export default BranchTransferOutIn;

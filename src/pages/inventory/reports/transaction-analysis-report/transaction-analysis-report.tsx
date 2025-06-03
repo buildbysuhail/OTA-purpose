@@ -194,12 +194,12 @@ const TransactionAnalysis = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                moreOption={false}
                 gridHeader={t("transaction_analysis")}
                 dataUrl={Urls.transaction_analysis}
                 hideGridAddButton={true}
                 enablefilter={false}
-                method={ActionType.GET}
+                method={ActionType.POST}
                 reload={true}
                 gridId="grd_transaction_analysis"
               />

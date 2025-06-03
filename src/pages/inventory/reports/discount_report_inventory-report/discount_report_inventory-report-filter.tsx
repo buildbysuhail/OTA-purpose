@@ -120,7 +120,7 @@ export default DiscountReportInventoryFilter;
 export const DiscountReportInventoryFilterInitialState = {
   voucherType: "",
   fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  toDate: moment().local().toDate(),
   salesRouteID: 0,
   partyID: 0,
   counterID: 0,

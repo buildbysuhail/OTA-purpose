@@ -53,7 +53,7 @@ const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: 
 }
 export default InventoryStatusFilter;
 export const InventoryStatusFilterInitialState = {
-  dateFrom: moment().local().startOf("day").toDate(),
-  dateTo: moment().local().endOf("day").toDate(),
+  dateFrom: moment().local().toDate(),
+  dateTo: moment().local().toDate(),
   voucherType: "",
 };

@@ -16,8 +16,8 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 const SalesAndSalesReturn = () => {
   const { t } = useTranslation("accountsReport");
   const [filterState, setFilterState] = useState({
-    dateFrom: moment().local().startOf("day").toDate(),
-    dateTo: moment().local().endOf("day").toDate(),
+    dateFrom: moment().local().toDate(),
+    dateTo: moment().local().toDate(),
     printLineBetweenRows: false,
   });
 

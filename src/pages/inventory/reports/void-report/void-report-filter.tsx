@@ -83,8 +83,8 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
 export default VoidReportFilter;
 
 export const VoidReportFilterInitialState = {
-  fromDate: moment().local().startOf("day").toDate(),
-  toDate: moment().local().endOf("day").toDate(),
+  fromDate: moment().local().toDate(),
+  toDate: moment().local().toDate(),
   counterID: 0,
   userID: 0,
   status: "",

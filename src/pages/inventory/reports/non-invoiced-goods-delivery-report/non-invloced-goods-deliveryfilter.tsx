@@ -57,5 +57,5 @@ const NonInvoicedGoodsDeliveryFilter = ({ getFieldProps, handleFieldChange, form
 export default NonInvoicedGoodsDeliveryFilter;
 export const NonInvoicedGoodsDeliveryFilterInitialState = {
     fromDate: null,
-    toDate: moment().local().endOf("day").toDate(),
+    toDate: moment().local().toDate(),
 };

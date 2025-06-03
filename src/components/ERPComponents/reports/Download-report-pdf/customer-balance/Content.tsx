@@ -1,4 +1,8 @@
 import { View, Text, StyleSheet } from "@react-pdf/renderer"
+import CurrencyFormatter from "../../../../formatters/currency-formatter"
+import moment from "moment"
+import { FormatDate } from "../../../../formatters/date-formatter"
+import { Countries } from "../../../../../redux/slices/user-session/user-branches-reducer"
 
 const styles = StyleSheet.create({
   content: {
@@ -106,17 +110,14 @@ export const Content = ({
   currentBranch: any
   userSession: any
 }) => {
-  const date = "01/03/2025"
-  const customerName = "MUASSASA ALGHILAL ALDHAHABIA"
-  const balance = "SR 712,620.00"
 
   return (
     <View style={styles.content}>
       {/* Date and Customer Section */}
    
       <View style={styles.dateCol}>
-      <Text style={styles.label}>Date : {date}</Text>
-      <Text style={styles.label}>To   : {customerName}</Text>
+      <Text style={styles.label}>Date :  {data.customerAccName}</Text>
+      <Text style={styles.label}>To   : {FormatDate(data.asOnDate)}</Text>
       </View>
 
 
@@ -125,10 +126,10 @@ export const Content = ({
         <View style={styles.leftColumn}>
           <Text style={styles.paragraph}>
             As per our normal financial audit requirements please check and confirm the accuracy of our balance as of{" "}
-            {date}
+            {`    ${FormatDate(data.asOnDate)}`}
           </Text>
           <View style={[styles.balanceBox, { alignSelf:"flex-start" }]}>
-            <Text style={styles.balanceText}>{balance}</Text>
+            <Text style={styles.balanceText}> <CurrencyFormatter amount={data.balance} ></CurrencyFormatter> </Text>
           </View>
           <Text style={styles.paragraph}>
             Please confirm the balance to pay and request you to sign and stamp in the space given below.
@@ -142,19 +143,23 @@ export const Content = ({
             No customer is entitled to review the balance after the corresponding annual
           </Text>
         </View>
-
+{`    ${FormatDate(data.asOnDate)}`}
         <View style={styles.rightColumn}>
           <Text style={[styles.paragraph, styles.arabicText]}>
             بمناسبة تدقيق حساباتنا الدورية المعتادة لبياناتنا المالية فإننا نرغب في الحصول على تأييد مباشر للمبالغ
-            المستحقة لنا من طرفكم حتى تاريخ {date}
+            المستحقة لنا من طرفكم حتى تاريخ 
+            {`    ${FormatDate(data.asOnDate)}`}
+            
           </Text>
           <View style={[styles.balanceBox, { alignSelf: "flex-end" }]}>
-            <Text style={styles.balanceText}>{balance}</Text>
+            <Text style={styles.balanceText}><CurrencyFormatter amount={data.balance} ></CurrencyFormatter></Text>
           </View>
+
           <Text style={[styles.paragraph, styles.arabicText]}>
             نرجو مقارنة الرصيد الموضح أعلاه مع سجلاتكم وتوضيح أي خلاف بالتفصيل كما نأمل منكم توقيع وختم هذه الرسالة تم
             اعادتها مباشرة على عنوان الشركة أو مع مندوبنا بعد اعتمادها أو إرسالها بالفاكس على رقم (٨٢٥٦٣٢٢٠١٤)
           </Text>
+
           <Text style={[styles.paragraph, styles.arabicText]}>
             وإذا لم يصلنا الرد خلال (١٥) أيام سوف يعتبر هذا بمثابة موافقة نهائية على الرصيد
           </Text>

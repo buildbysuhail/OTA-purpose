@@ -51,7 +51,7 @@ const jwtHelper = {
       return 'USD';
     } else {
       const decodedToken = jwt_decode.jwtDecode(user);
-      return ((decodedToken as any)['Currency']) !== undefined && ((decodedToken as any)['Currency']) !== null && ((decodedToken as any)['Currency']) !== '' ? ((decodedToken as any)['Currency']) : 'USD';
+      return ((decodedToken as any)['CurrencyCode']) !== undefined && ((decodedToken as any)['CurrencyCode']) !== null && ((decodedToken as any)['CurrencyCode']) !== '' ? ((decodedToken as any)['CurrencyCode']) : 'USD';
     }
   },
   getLocale: () => {

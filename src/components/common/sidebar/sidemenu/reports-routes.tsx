@@ -83,10 +83,10 @@ const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/invent
 const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
 const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
 const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
-const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out"));
-const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
-const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out"));
-const BranchTransferSummaryIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in"));
+// const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out"));
+// const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
+// const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out"));
+// const BranchTransferSummaryIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in"));
 const ItemWiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary"));
 const StockSummary = lazy(() => import("../../../../pages/inventory/reports/stock-summary-report/stock-summary"));
 const StockLedger = lazy(() => import("../../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));

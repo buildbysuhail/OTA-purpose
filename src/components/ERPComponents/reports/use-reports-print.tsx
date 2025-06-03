@@ -74,6 +74,7 @@ export const useReportPrint = () => {
     const printCB = async ({orientation,data ,clickedItem}:printStatement) => {
       const api = new APIClient();
       const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: data, AsOnDate: moment().local().toDate() })
+      debugger;
       await handleDirectPrint({orientation,data: rpt,clickedItem});
     };
     return {

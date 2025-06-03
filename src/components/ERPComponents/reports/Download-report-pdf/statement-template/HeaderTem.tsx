@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flexBasis: "30%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
   },
   statementTitle: {
     color: "#000",
@@ -129,8 +129,8 @@ export const HeaderTemp = ({
         )}
 
         <View style={styles.companyTitle}>
-          <Text style={styles.arabicTitle}>{currentBranch.nameInSecondLanguage ||""}</Text>
-          <Text style={styles.englishTitle}>{userSession.headerFooter?.heading7 ||""}</Text>
+          <Text style={styles.arabicTitle}>{currentBranch.nameInSecondLanguage || ""}</Text>
+          <Text style={styles.englishTitle}>{userSession.headerFooter?.heading7 || ""}</Text>
         </View>
       </View>
 

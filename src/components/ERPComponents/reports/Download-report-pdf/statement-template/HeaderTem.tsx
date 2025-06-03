@@ -1,6 +1,3 @@
-
-
-
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer"
 import moment from "moment";
 
@@ -167,9 +164,3 @@ export const HeaderTemp = ({
     </View>
   )
 }
-
-
-
-
-
-

@@ -4,6 +4,10 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
 import { renderReportSelectedTemplate } from "./Download-report-pdf/report-renderSelected-template";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import moment from "moment";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface printStatement {
     orientation:"portrait"|"landscape";
@@ -19,6 +23,7 @@ export const useReportPrint = () => {
       (state: RootState) => state.ClientSession
     );
 
+   const { getFormattedValue } = useNumberFormat()
   const handleDirectPrint = async ({orientation,data,clickedItem}:printStatement) => {
     let pdfDocument;
   console.log("data on ledger",data);
@@ -28,7 +33,8 @@ export const useReportPrint = () => {
         data: data,
         currentBranch: currentBranch,
         userSession: userSession,
-        printCase:clickedItem
+        printCase:clickedItem,
+        getFormattedValue
       });
     try {
       // Create a PDF blob
@@ -65,8 +71,10 @@ export const useReportPrint = () => {
     const printStatement = async ({orientation,data,clickedItem}:printStatement) => {
       await handleDirectPrint({orientation,data,clickedItem});
     };
-    const printCB = async ({orientation,data,clickedItem}:printStatement) => {
-      await handleDirectPrint({orientation,data,clickedItem});
+    const printCB = async ({orientation,data ,clickedItem}:printStatement) => {
+      const api = new APIClient();
+      const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: data, AsOnDate: moment().local().toDate() })
+      await handleDirectPrint({orientation,data: rpt,clickedItem});
     };
     return {
      printStatement,

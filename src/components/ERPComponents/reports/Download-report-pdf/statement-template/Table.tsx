@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "@react-pdf/renderer"
 import React from "react"
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format"
 
 const styles = StyleSheet.create({
   tableContainer: {
@@ -66,12 +67,10 @@ const styles = StyleSheet.create({
   },
 })
 
-// Format currency
-const formatCurrency = (amount: number) => {
-  return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
 
-const Table = ({ data }: { data: any }) => {
+const Table = ({ data, getFormattedValue }: { data: any , getFormattedValue: any}) => {
+  const ob = data.find((x: any) => x.particulars == "Opening Balance")
+  const tot = data.find((x: any) => x.particulars == "TOTAL")
   return (
     <View style={styles.tableContainer}>
       {/* Table Header */}
@@ -100,23 +99,88 @@ const Table = ({ data }: { data: any }) => {
                 </Text>
                 <Text style={[styles.tableCell, styles.poNumberCell]}>{item.refNo}</Text>
                 <Text style={[styles.tableCell, styles.debitCell]}>
-                  {item.debit > 0 ? formatCurrency(item.debit) : "0.00"}
+                  {item.particulars === "TOTAL"
+                ? getFormattedValue(item.debit)
+                : getFormattedValue(item.debit, false, 3)}
                 </Text>
                 <Text style={[styles.tableCell, styles.creditCell]}>
-                  {item.credit > 0 ? formatCurrency(item.credit) : "0.00"}
+                   {item.particulars === "TOTAL"
+                ? getFormattedValue(item.credit)
+                : getFormattedValue(item.credit, false, 3)}
                 </Text>
-                <Text style={[styles.tableCell, styles.balanceCell]}>{formatCurrency(item.balance)} Dr</Text>
+                <Text style={[styles.tableCell, styles.balanceCell]}>{
+                   item.balance == null
+              ? ""
+              : item.balance < 0
+                ? getFormattedValue(-1 * item.balance, false, 3) + " Cr"
+                : getFormattedValue(item.balance, false, 3) + " Dr"} </Text>
               </View>
 
               {/* Narration row if exists */}
               {isNarrationRow && (
                 <View style={[styles.tableRow, styles.narrationRow]}>
-                  <Text style={[styles.tableCell, { width: "100%" }]}>narration: {item.narration}</Text>
+                  <Text style={[styles.tableCell, { width: "100%" }]}>{item.narration}</Text>
                 </View>
               )}
             </React.Fragment>
           )
         })}
+         <View style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.dateCell]}></Text>
+                <Text style={[styles.tableCell, styles.voucherCell]}>
+                  
+                </Text>
+                <Text style={[styles.tableCell, styles.poNumberCell]}></Text>
+                <Text style={[styles.tableCell, styles.debitCell]}>
+                  
+                </Text>
+                <Text style={[styles.tableCell, styles.creditCell]}>
+                   
+                </Text>
+                <Text style={[styles.tableCell, styles.balanceCell]}>
+                   </Text>
+              </View>
+        <View style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.dateCell]}></Text>
+                <Text style={[styles.tableCell, styles.voucherCell]}>
+                  
+                </Text>
+                <Text style={[styles.tableCell, styles.poNumberCell]}></Text>
+                <Text style={[styles.tableCell, styles.debitCell]}>
+                  {ob.debit == null && ob.credit == null
+              ? ""
+              : ob.debit > 0
+                ?getFormattedValue(ob.debit, false, 3) + " Dr" 
+              : ob.credit > 0
+                ?getFormattedValue(ob.credit, false, 3) + " Cr" : "0"}
+                </Text>
+                <Text style={[styles.tableCell, styles.creditCell]}>
+                   
+                </Text>
+                <Text style={[styles.tableCell, styles.balanceCell]}>
+                   </Text>
+              </View>
+              
+        <View style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.dateCell]}></Text>
+                <Text style={[styles.tableCell, styles.voucherCell]}>
+                  
+                </Text>
+                <Text style={[styles.tableCell, styles.poNumberCell]}></Text>
+                <Text style={[styles.tableCell, styles.debitCell]}>
+                  {tot.debit == null && tot.credit == null
+              ? ""
+              : tot.debit > 0
+                ?getFormattedValue(tot.debit, false, 3) + " Dr" 
+              : tot.credit > 0
+                ?getFormattedValue(tot.credit, false, 3) + " Cr" : "0"}
+                </Text>
+                <Text style={[styles.tableCell, styles.creditCell]}>
+                   
+                </Text>
+                <Text style={[styles.tableCell, styles.balanceCell]}>
+                   </Text>
+              </View>
       </View>
     </View>
   )

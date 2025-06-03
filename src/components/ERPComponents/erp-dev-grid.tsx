@@ -117,7 +117,8 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
-  moreOption?: boolean;
+  showMoreOption?: boolean;
+  moreOptions?: React.ReactNode[];
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
@@ -180,6 +181,7 @@ interface ERPDevGridProps {
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
+  onDataChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onRowPrepared?: (e: any) => void;
@@ -319,7 +321,8 @@ const createStore = async (
   setFilterValidations?: any,
   setShowFilter?: any,
   totalRowCountRef?: React.MutableRefObject<number>,  
-  onInitialDataLoad?: (e: any) => void
+  onInitialDataLoad?: (e: any) => void,  
+  onDataChanged?: (e: any) => void
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -453,6 +456,7 @@ const createStore = async (
             groupCount: 0,
           }
         
+      onDataChanged != undefined && onDataChanged(data.data);
           if (totalRowCountRef) {
             totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
           }
@@ -479,7 +483,8 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
-      moreOption = false,
+      moreOptions = [],
+      showMoreOption = false,
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
@@ -531,6 +536,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onRowClick,
       onRowUpdated,
       onFilterChanged,
+      onDataChanged,
       onCellClick,
       onRowDblClick,
       onRowPrepared,
@@ -635,7 +641,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
-    const { printStatement, printCB } = useReportPrint();
 
     //  // Determine the Actionswidth value
     //  const actionsWidth = childPopupPropsDynamic
@@ -826,7 +831,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             setFilterValidations,
             setShowFilter,
             totalRowCountRef,
-            onInitialDataLoad
+            onInitialDataLoad,onDataChanged
           );
           setCurrentStore(newStore);
           setStore(newStore);
@@ -2262,7 +2267,7 @@ const handleOptionChanged = (e: any) => {
                 </div>
                 </Item>
               )}
-              {moreOption && (
+              {showMoreOption && (
                 <Item>
                   <div className="relative hidden sm:block">
                     <button
@@ -2283,54 +2288,9 @@ const handleOptionChanged = (e: any) => {
                       >
                         <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
                           <ul className="space-y-1">
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  printStatement({
-                                    orientation:
-                                      preferences?.orientation ?? "portrait",
-                                    data: memoizedStore,
-                                    clickedItem: "statement",
-                                  })
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("statement")}
-                                </span>
-                              </button>
-                            </li>
-
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  printCB({
-                                    orientation:
-                                      preferences?.orientation ?? "portrait",
-                                    data: memoizedStore,
-                                    clickedItem: "customer_balance",
-                                  })
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("customer_balance")}
-                                </span>
-                              </button>
-                            </li>
-
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("billwise_details")}
-                                </span>
-                              </button>
-                            </li>
+                            {moreOptions?.map((option: any, index: any) => (
+                              option
+                            ))}
                           </ul>
                         </nav>
                       </div>
@@ -2400,7 +2360,7 @@ const handleOptionChanged = (e: any) => {
 
               {customToolbarItems
                 ?.filter((item: any) => item.location === "before")
-                .map((toolbarItem: any, index: any) => (
+                 .map((toolbarItem: any, index: any) => (
                   <Item key={index} location="before">
                     {toolbarItem.item}
                   </Item>

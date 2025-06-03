@@ -58,6 +58,8 @@ export const useNumberFormat = () => {
       return '';
     }
     const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
+    console.log(`_decimalPoint${_decimalPoint}`);
+    
     let formattedText: string = val?.toLocaleString(undefined, {
       minimumFractionDigits: _decimalPoint,
       maximumFractionDigits: _decimalPoint,

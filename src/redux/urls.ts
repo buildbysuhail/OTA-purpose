@@ -708,6 +708,7 @@ const Urls = {
   log_user_action: "/Core/UserAction/",
   get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
   get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
+  get_customer_balance: "/Accounts/RptLedgerReport/CustomerBalanceReport/",
   get_and_set_transaction_edit_mode:
     "/Core/TransactionBase/GetAndSetTransactionEditMode/",
   get_ledgerId_by_code: "/Core/TransactionBase/GetLedgerIdByCode/",

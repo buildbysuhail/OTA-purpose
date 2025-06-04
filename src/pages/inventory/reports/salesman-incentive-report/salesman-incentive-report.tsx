@@ -7,20 +7,14 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import SalesmanIncentiveReportFilter, { SalesmanIncentiveReportFilterInitialState } from "./salesman-incentive-report-filter";
 import Urls from "../../../../redux/urls";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import moment from "moment";
 
 const SalesmanIncentiveReport = () => {
     const { t } = useTranslation('accountsReport');
+     const userSession = useSelector((state: RootState) => state.UserSession);
     const columns: DevGridColumn[] = [
-        {
-            dataField: "slNo",
-            caption: t("sl_no"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 50,
-            showInPdf:true,
-        },
         {
             dataField: "billNo",
             caption: t("bill_no"),
@@ -34,12 +28,13 @@ const SalesmanIncentiveReport = () => {
         {
             dataField: "date",
             caption: t("date"),
-            dataType: "string",
+            dataType: "date",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 100,
             showInPdf:true,
+            format:"dd-MMM-yyyy"
         },
         {
             dataField: "billAmount",
@@ -50,7 +45,30 @@ const SalesmanIncentiveReport = () => {
             allowSorting: true,
             width: 100,
             showInPdf:true,
-        },
+        cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billAmount == null
+              ? ""
+              : getFormattedValue(cellElement.data.billAmount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billAmount == null
+            ? ""
+            : getFormattedValue(cellElement.data.billAmount, false, 4);
+        }
+      },
+    },
         {
             dataField: "smIncentive",
             caption: t("sm_incentive"),
@@ -60,9 +78,32 @@ const SalesmanIncentiveReport = () => {
             allowSorting: true,
             width: 100,
             showInPdf:true,
+       cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.smIncentive == null
+              ? ""
+              : getFormattedValue(cellElement.data.smIncentive, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.smIncentive == null
+            ? ""
+            : getFormattedValue(cellElement.data.smIncentive, false, 4);
         }
+      },
+    },
     ];
-
+const customizeTotal = (itemInfo: any) => `TOTAL`;
     const { getFormattedValue } = useNumberFormat();
     const customizeSummaryRow = useMemo(() => {
         return (itemInfo: { value: any }) => {
@@ -70,16 +111,15 @@ const SalesmanIncentiveReport = () => {
             if (value === null || value === undefined || value === "" || isNaN(value)) {
                 return "0";
             }
-            return getFormattedValue(value) || "0";
+            return getFormattedValue(value,false,2) || "0";
         };
     }, [getFormattedValue]);
 
     const summaryItems: SummaryConfig[] = [
         {
-            column: "billAmount",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
+            column: "billNo",
+            summaryType: "max",
+            customizeText: customizeTotal,
         },
         {
             column: "smIncentive",
@@ -99,17 +139,19 @@ const SalesmanIncentiveReport = () => {
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
-                                gridHeader={t("salesman_incentive_report")}
+                                 filterText="{employee > 0 && : [employeeName]} {employee <= 0 && : All} From {fromDate} To {toDate}"
+                                gridHeader={t("salesman_incentive_report_of_salesman")}
                                 dataUrl={Urls.salesman_incentive_report}
                                 hideGridAddButton={true}
                                 enablefilter={true}
-                                showFilterInitially={true}
+                                // showFilterInitially={false}
                                 method={ActionType.POST}
                                 filterContent={<SalesmanIncentiveReportFilter />}
                                 filterWidth={600}
                                 filterHeight={250}
-                                filterInitialData={SalesmanIncentiveReportFilterInitialState}
+                                filterInitialData={{...SalesmanIncentiveReportFilterInitialState,
+                                    fromDate:moment(userSession.finFrom).local().startOf("day"),
+                                }}
                                 reload={true}
                                 gridId="grd_salesman_incentive_report"
                             />

@@ -12,24 +12,23 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <ERPDateInput
                         label={t("from_date")}
-                        {...getFieldProps("dtpFrom")}
+                        {...getFieldProps("fromDate")}
                         className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("dtpFrom", data.dtpFrom)}
+                        onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
                     />
                     <ERPDateInput
                         label={t("to_date")}
-                        {...getFieldProps("dtpTo")}
+                        {...getFieldProps("toDate")}
                         className="w-full"
-                        onChangeData={(data: any) => handleFieldChange("dtpTo", data.dtpTo)}
+                        onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
                     />
                 </div>
             </div>
-
             <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-center gap-2">
                     <div className="flex-1">
                         <ERPDataCombobox
-                            label={t("employee")}
+                            label={t("sales_man")}
                             {...getFieldProps("employee")}
                             field={{
                                 id: "employee",
@@ -37,7 +36,12 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
                                 valueKey: "id",
                                 labelKey: "name",
                             }}
-                            onSelectItem={(data) => { handleFieldChange("employee", data.value); }}
+                            onSelectItem={(data) => {
+                                 handleFieldChange({
+            employee: data.value,
+            employeeName: data.label,
+          })
+                                }}
                         />
                     </div>
                 </div>
@@ -48,7 +52,7 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
 
 export default SalesmanIncentiveReportFilter;
 export const SalesmanIncentiveReportFilterInitialState = {
-    dtpFrom: moment().local().startOf("month").toDate(),
-    dtpTo: moment().local().toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     employee: 0,
 };

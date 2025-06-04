@@ -17,7 +17,7 @@ const AccReferenceDate = React.forwardRef<
           id="purchaseInvoiceDate"
           label={t(formState.formElements.referenceDate.label)}
           className="md:w-[150px]"
-          value={new Date(formState.transaction.master.purchaseInvoiceDate)}
+          value={formState.transaction.master.purchaseInvoiceDate}
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({

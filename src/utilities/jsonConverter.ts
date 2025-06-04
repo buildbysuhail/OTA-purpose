@@ -48,9 +48,18 @@ function toCamelCase(str: string): string {
 
 export function modelToBase64Unicode(model: any): string {
   try {
-    const jsonString = JSON.stringify(model);
+    console.log('modelToBase64Unicode');
+    
+   const jsonString = JSON.stringify(model);
     const encoded = new TextEncoder().encode(jsonString);
-    const base64 = btoa(String.fromCharCode(...encoded));
+
+    // Convert byte array to string in chunks
+    let binary = '';
+    for (let i = 0; i < encoded.length; i += 1024) {
+      binary += String.fromCharCode.apply(null, encoded.slice(i, i + 1024) as any);
+    }
+
+    const base64 = btoa(binary);
     return base64;
   } catch (error) {
     console.error("Error converting model to base64:", error);

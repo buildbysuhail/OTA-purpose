@@ -345,7 +345,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         );
         data.onHold = holdStatus;
       }
-      debugger
+      
 
       // if (!clientSession.isAppGlobal) {
       const markupPercentage = calculateMarkup(

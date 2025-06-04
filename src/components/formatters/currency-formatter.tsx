@@ -9,7 +9,7 @@ interface CurrencyFormatterProps {
 }
 
 const CurrencyFormatter = ({ amount = 0, currency = '', locale = '', useLocale = false }) => {
-    debugger;
+    
     let style = 'currency';
     amount = amount??0;
     currency = currency == null || currency === '' ? jwtHelper.getCurrency() : currency;

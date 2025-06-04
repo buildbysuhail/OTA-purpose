@@ -56,7 +56,7 @@ export const FormatDate = (
 
   const d = typeof date === 'string' ? moment(date).local().toDate() : date;
 
-  debugger;
+  
    if (isNaN(d.getTime())) {
     console.warn('Invalid date passed to formatDate:', date);
     return '';
@@ -67,7 +67,7 @@ export const FormatDate = (
     // Add default time: e.g., 10:00 AM
     d.setHours(10, 0, 0, 0);
   }
-  debugger;
+  
   const { jsLocale, dfLocale } = countryIdLocaleMap[countryId] ?? {
     jsLocale: 'en-US',
     dfLocale: enUS,

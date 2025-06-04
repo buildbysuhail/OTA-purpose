@@ -74,7 +74,7 @@ const ReportList = () => {
   };
   const toggleFavorite = async (routeId: number) => {
     setFavorites((prevFavorites) => {
-      debugger
+      
       const newFavorites = prevFavorites?.includes(routeId)
         ? prevFavorites?.filter((id) => id !== routeId)
         : [...prevFavorites, routeId];
@@ -96,9 +96,9 @@ const ReportList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        debugger
+        
         const jsonString = await api.getAsync(Urls.get_favorite_reports);
-        debugger
+        
         const userConfig: number[] = String(jsonString ?? "")
   .split(",")
   .map((s: any) => Number(s.trim()))

@@ -196,7 +196,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       });
     };
     closeMenuRecursively(menuitems);
-    setMenuitems((arr: any) => [...arr]);
+    setMenuitems((arr: any) => Array.isArray(arr) ? [...arr] : []);
   }
 
   useEffect(() => {
@@ -547,7 +547,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       }
     }
 
-    setMenuitems((arr: any) => [...arr]);
+    setMenuitems((arr: any) => Array.isArray(arr) ? [...arr] : []);
   }
   function getParentObject(obj: any, childObject: any): any {
   for (const key in obj) {
@@ -766,7 +766,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         }
       }
     }
-    setMenuitems((arr: any) => [...arr]);
+    setMenuitems((arr: any) => Array.isArray(arr) ? [...arr] : []);
   }
   function setAncestorsActive(MENUITEMS: any, targetObject: any) {
     const theme = appState;

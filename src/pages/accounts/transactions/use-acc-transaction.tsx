@@ -1101,7 +1101,7 @@ export const useAccTransaction = (
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
-    debugger
+    
     const { firstDebitLedgerID, firstCreditLedgerID } =
       getFirstDebitCreditLedgerIDs(formState.transaction);
     const master = {

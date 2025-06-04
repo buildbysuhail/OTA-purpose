@@ -154,7 +154,7 @@ const accTransactionSlice = createSlice({
       state.formElements.referenceNumber.disabled = false;
       state.formElements.transactionDate.disabled = false;
       state.formElements.linkEdit.visible = false;
-      debugger;
+      
       state.formElements.masterAccount.disabled = (state.transaction.master.voucherType ==
               VoucherType.CashPayment ||
               state.transaction.master.voucherType ==

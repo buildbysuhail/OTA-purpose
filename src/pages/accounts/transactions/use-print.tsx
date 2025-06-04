@@ -41,7 +41,7 @@ export const useAccPrint = () => {
   const handleDirectPrint = async (template: any, transaction?: any) => {
     let pdfDocument
     if (adviceTem.includes(template.templateGroup)) {
-      debugger
+      
       const data = await api.getAsync(
         `${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`,
       )

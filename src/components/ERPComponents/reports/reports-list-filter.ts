@@ -2,7 +2,7 @@ import { UserAction } from "../../../helpers/user-right-helper";
 import { ClientSessionModel } from "../../../redux/slices/client-session/reducer";
 
 export const getFilteredReports = (st: any, clientSession: ClientSessionModel, hasRight: (formCode: string, action: UserAction) => boolean) => {
-  debugger;
+  
   if (clientSession.isAppGlobal) {
           const excluded = [
             "purchase_tax_report_detailed",
@@ -22,12 +22,18 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
           
           
           ];
+            debugger;
           st = st
             .filter((parent: any) => !excluded.includes(parent.title))
             .map((parent: any) => {
               const filteredChildren = parent.children?.filter(
                 (child: any) => !excluded.includes(child.title)
-              );
+              ).map((x:any)=>{
+              return {
+                ...x,
+                title:x.title.includes("___")?x.title.replace("___",""):x.title 
+              }
+            });
               return {
                 ...parent,
                 children: filteredChildren,
@@ -39,6 +45,7 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
                 title:x.title.includes("___")?x.title.replace("___",""):x.title 
               }
             });
+            return st;
         } else {
           const excluded = [
             "billwise_profit_report___",
@@ -84,18 +91,19 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "sales_transfer_partyWise_summary",
        
           ];
-          // st = st
-          //   .filter((parent: any) => !excluded.includes(parent.title))
-          //   .map((parent: any) => {
-          //     const filteredChildren = parent.children?.filter(
-          //       (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)
-          //     );
-          //     return {
-          //       ...parent,
-          //       children: filteredChildren,
-          //     };
-          //   })
-          //   .filter((parent: any) => parent.children?.length > 0);
+          st = st
+            .filter((parent: any) => !excluded.includes(parent.title))
+            .map((parent: any) => {
+              const filteredChildren = parent.children?.filter(
+                (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)
+              );
+              return {
+                ...parent,
+                children: filteredChildren,
+              };
+            })
+            .filter((parent: any) => parent.children?.length > 0);
+            debugger;
             return st;
         }
 }

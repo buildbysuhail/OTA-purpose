@@ -423,7 +423,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
    useEffect(() => {
     const initializeFormElements = async () => {
-      debugger;
+      
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
      
@@ -519,7 +519,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           x.visible = true;
         }
       });
-debugger;
+
       _formState.formElements = {
         ..._formState.formElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },

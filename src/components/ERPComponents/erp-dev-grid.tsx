@@ -759,7 +759,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, [gridId]);
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
-        debugger;
+        
         setPreferences(pref);
         const updatedColumns = applyGridColumnPreferences(columns, pref);
         setGridCols(updatedColumns);
@@ -1868,7 +1868,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           preferenceChooserRef.current?.handleDropping(true, e.previousValue, e.value)
         } else if (e.fullName.endsWith("width")) {
           const index = parseInt(e.fullName.match(/columns\[(\d+)\]/)?.[1] || "-1");
-          debugger;
+          
           preferenceChooserRef.current?.handleColumnPreferenceChange(gridCols[index].dataField ?? "", "width", e.value, true)
         }
       }

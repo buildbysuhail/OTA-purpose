@@ -82,7 +82,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             labelKey: "label",
           }}
           onSelectItem={(data: any) => {
-            debugger;
+            
             onChange?.({ ...propertiesState, pageSize: data.value })
           }}
           id="pageSize"

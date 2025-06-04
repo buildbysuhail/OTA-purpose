@@ -398,13 +398,13 @@ export const useTransaction = (
         },
       };
     }
-    debugger;
+    
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
-    debugger;
+    
     voucher.transaction = {
       ...(vch || {}),
       details: refactorDetails(

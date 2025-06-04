@@ -327,7 +327,7 @@ const LedgerReport = () => {
     // If you need to access the data elsewhere, you can use dataRef.current
   }, []);
   const pStatement = () => {
-    debugger;
+    
     printStatement({
                                     orientation:
                                        "portrait",

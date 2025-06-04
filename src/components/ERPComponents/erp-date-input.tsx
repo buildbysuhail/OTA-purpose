@@ -465,7 +465,32 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             onChange={handleChangeNormal}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
-            onBlur={onBlur}
+            onBlur={(e) => {
+              const value = e.target.value; // e.g., "0023-06-04"
+
+              // Check if value is in yyyy-mm-dd format
+              if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                const [year, month, day] = value.split("-");
+                let correctedYear = year;
+
+                if (year.startsWith("00")) {
+                  correctedYear = "20" + year.slice(2); // "0023" -> "2023"
+                } else if (year.startsWith("0")) {
+                  correctedYear = "2" + year.slice(1); // "0234" -> "2234"
+                }
+
+                const correctedDate = `${correctedYear}-${month}-${day}`;
+                console.log("Corrected date:", correctedDate);
+                handleChangeNormal({
+                  ...e,
+                  target: { ...e.target, value: correctedDate }
+                });
+              }
+              
+              if (onBlur) {
+                onBlur(e);
+              }
+            }}
             disableEnterNavigation={disableEnterNavigation}
             required={required}
             readOnly={readonly}

@@ -586,7 +586,7 @@ const PostDatedCheques = () => {
                         id="chequeFromDate"
                         label={t("cheque_from_date")}
                         onChange={(e) => handleDateChange("chequeFromDate", e.target.value)}
-                        value={new Date(formState.chequeFromDate)}
+                        value={formState.chequeFromDate}
                         className="w-full sm:w-40"
                       />
                     </div>
@@ -595,7 +595,7 @@ const PostDatedCheques = () => {
                         id="chequeToDate"
                         label={t("to_date")}
                         onChange={(e) => handleDateChange("chequeToDate", e.target.value)}
-                        value={new Date(formState.chequeToDate)}
+                        value={formState.chequeToDate}
                         className="w-full sm:w-40"
                       />
                     </div>

@@ -19,7 +19,7 @@ const BankDate = React.forwardRef<HTMLInputElement, BankDateProps>(({
           id="bankDate"
 
           label={t(formState.formElements.bankDate.label)}
-          value={new Date(formState.row.bankDate)}
+          value={formState.row.bankDate}
           onChange={(e) =>
             dispatch(
               accFormStateRowHandleFieldChange({

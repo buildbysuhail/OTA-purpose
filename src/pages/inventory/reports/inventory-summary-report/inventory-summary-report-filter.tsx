@@ -3,6 +3,8 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const InventorySummaryReportFilter = ({
   getFieldProps,
@@ -10,7 +12,7 @@ const InventorySummaryReportFilter = ({
   formState,
 }: any) => {
   const { t } = useTranslation("accountsReport");
-
+  const userSession = useSelector((state: RootState) => state.UserSession);
   return (
     <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       <div className="grid grid-cols-1 gap-4">
@@ -24,10 +26,10 @@ const InventorySummaryReportFilter = ({
             }
           />
         </div>
-
         <ERPDataCombobox
           label={t("branch")}
           {...getFieldProps("branchID")}
+           disabled={userSession.userTypeCode!="CA"}
           field={{
             id: "branchID",
             getListUrl: Urls.data_acc_Branches_All,

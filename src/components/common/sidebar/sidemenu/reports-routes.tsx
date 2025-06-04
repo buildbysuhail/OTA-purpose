@@ -147,7 +147,7 @@ const ProductSummaryMaster = lazy(() => import("../../../../pages/inventory/repo
 const InventorySummaryReport = lazy(() => import("../../../../pages/inventory/reports/inventory-summary-report/inventory-summary-report"));
 const ServiceReport = lazy(() => import("../../../../pages/inventory/reports/service-report/service-report"));
 const SalesmanIncentiveReport = lazy(() => import("../../../../pages/inventory/reports/salesman-incentive-report/salesman-incentive-report"));
-const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/reports/privilege-card-report/privilege-card"));
+const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/reports/privilege-card-report/privilege-card-report"));
 const StockJournalReport = lazy(() => import("../../../../pages/inventory/reports/stock-journal-report/stock-journal"));
 
 import urls from "../../../../redux/urls";

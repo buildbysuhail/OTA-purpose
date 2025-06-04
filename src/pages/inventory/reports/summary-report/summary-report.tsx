@@ -1024,13 +1024,13 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
     };
   }, []);
 
-  const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
       {
         column: "address2",
         summaryType: "max",
-        customizeText: customizeDate,
+        customizeText: customizeTotal,
       },
       {
         column: "gross",

@@ -6,21 +6,12 @@ import { ActionType } from "../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import PrivilegeCardReportFilter, { PrivilegeCardReportFilterInitialState } from "./privilege-card-filter";
+import PrivilegeCardReportFilter, { PrivilegeCardReportFilterInitialState } from "./privilege-card-report-filter";
 
 const PrivilegeCardReport = () => {
     const { t } = useTranslation('accountsReport');
     const columns: DevGridColumn[] = [
-        {
-            dataField: "slNo",
-            caption: t("sl_no"),
-            dataType: "number",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 50,
-            showInPdf:true,
-        },
+      
         {
             dataField: "billNo",
             caption: t("bill_no"),
@@ -70,7 +61,30 @@ const PrivilegeCardReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
-        },
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.addAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.addAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.addAmt == null
+            ? ""
+            : getFormattedValue(cellElement.data.addAmt);
+        }
+      },
+    },
         {
             dataField: "redeem",
             caption: t("redeem"),
@@ -80,7 +94,30 @@ const PrivilegeCardReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
-        },
+        cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.redeem == null
+              ? ""
+              : getFormattedValue(cellElement.data.redeem);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.redeem == null
+            ? ""
+            : getFormattedValue(cellElement.data.redeem);
+        }
+      },
+    },
         {
             dataField: "balance",
             caption: t("balance"),
@@ -90,7 +127,30 @@ const PrivilegeCardReport = () => {
             allowSorting: true,
             width: 80,
             showInPdf:true,
-        },
+        cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(cellElement.data.balance);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(cellElement.data.balance);
+        }
+      },
+    },
     ];
 
     const { getFormattedValue } = useNumberFormat();
@@ -100,16 +160,15 @@ const PrivilegeCardReport = () => {
             if (value === null || value === undefined || value === "" || isNaN(value)) {
                 return "0";
             }
-            return getFormattedValue(value) || "0";
+            return getFormattedValue(value,false,2) || "0";
         };
     }, [getFormattedValue]);
-
+const customizeTotal = (itemInfo: any) => `TOTAL`;
     const summaryItems: SummaryConfig[] = [
         {
-            column: "billAmount",
-            summaryType: "sum",
-            valueFormat: "currency",
-            customizeText: customizeSummaryRow,
+            column: "billNo",
+            summaryType: "max",
+            customizeText: customizeTotal,
         },
         {
             column: "addAmt",

@@ -179,19 +179,104 @@ export const DummyInvoiceData = {
   ],
 };
 
+// export const DummyVoucherData ={
+// asOnDate : 
+// "2025-06-03T00:00:00",
+// balance
+// : 
+// 6561.98,
+// code
+// : 
+// 10977,
+// customerAccName
+// : 
+// "  MUASSASA  ALGHILAL ALDHAHABIA",
+// ledgerID
+// : 
+// 10063
+// }
+
 export const DummyVoucherData ={
-asOnDate : 
-"2025-06-03T00:00:00",
-balance
-: 
-6561.98,
-code
-: 
-10977,
-customerAccName
-: 
-"  MUASSASA  ALGHILAL ALDHAHABIA",
-ledgerID
-: 
-10063
+"master": {
+    "accTransactionMasterID": 600000366345,
+    "departmentID": 0,
+    "costCentreID": 0,
+    "billwiseMasterID": 0,
+    "employeeID": 23,
+    "invTransactionID": 0,
+    "transactionDate": "2024-12-04T00:00:00",
+    "prevTransDate": "0001-01-01T00:00:00",
+    "bankDate": "2024-12-04T00:00:00",
+    "voucherPrefix": "",
+    "voucherNumber": 2,
+    "referenceNumber": "526468465eet",
+    "referenceDate": "2024-12-04T00:00:00",
+    "dueDate": "2024-12-04T00:00:00",
+    "particulars": "CASH A/C (MADEENA VAN)",
+    "totalDebit": 1800,
+    "billwiseTotalAdjAmt": null,
+    "billwiseAdjAmt": null,
+    "totalCredit": 0,
+    "totDiscount": 0,
+    "empIncentive": 0,
+    "commonNarration": "",
+    "remarks": "BW:193,",
+    "voucherType": "CP",
+    "formType": "",
+    "debitNoteTransID": 0,
+    "creditNoteTransID": 0,
+    "currencyID": 63,
+    "accTransactionDetailID": 0,
+    "adjustedTransDetailID": 0,
+    "currencyRate": 1,
+    "isPosted": false,
+    "randomKey": 624449,
+    "onlineTrans": "",
+    "isEdit": false,
+    "checkStatus": null,
+    "checkBouncedDate": "2024-12-04T00:00:00+05:30",
+    "drCr": "Dr",
+    "isSalesView": false,
+    "branchID": 1,
+    "counterID": 0,
+    "refBranchID": 0,
+    "uuid": "77b0fde2-da51-48dd-961e-d0190778806e"
+  },
+  "details": [
+    
+    {
+      "accTransactionMasterID": 0,
+      "accTransactionDetailID": 600002149755,
+      "ledgerID": 2374,
+      "relatedLedgerID": 9753,
+      "amount": 700,
+      "discount": 0,
+      "debit": 700,
+      "credit": 0,
+      "randomKey": 0,
+      "incentives": 0,
+      "projectSiteID": 0,
+      "narration": "",
+      "currencyID": 1,
+      "exchangeRate": null,
+      "adjAmount": 0,
+      "bankDate": "2000-01-01T00:00:00",
+      "chequeNumber": "",
+      "particularsLedgerID": 0,
+      "isDr": true,
+      "isDisplay": false,
+      "voucherType": null,
+      "checkStatus": "P",
+      "checkBouncedDate": "2000-01-01T00:00:00",
+      "billwiseDetails": "",
+      "branchID": 0,
+      "costCentreID": 3,
+      "projectID": 2,
+      "bankName": "",
+      "nameOnCheque": "",
+      "firstCreditLedgerid": 0,
+      "firstDebitLedgerID": 0,
+      "taxAmount": 0
+    },
+  ],
 }

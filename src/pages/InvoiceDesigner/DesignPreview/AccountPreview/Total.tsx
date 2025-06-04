@@ -45,8 +45,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                   <>
                     <a>{totalState.subTotalLabel}</a>
                     <a>
-                      {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.sub_total).toFixed(DECIMALS)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currency}
+                      {totalState?.currencyPosition === "before" && currency} {Number(data?.sub_total).toFixed(DECIMALS)}{" "}
+                      {totalState?.currencyPosition === "after" && currency}
                     </a>
                   </>
                 )}
@@ -54,8 +54,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                   <>
                     <a>Discount</a>
                     <a>
-                      {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.discount_price).toFixed(DECIMALS)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currency}
+                      {totalState?.currencyPosition === "before" && currency} {Number(data?.discount_price).toFixed(DECIMALS)}{" "}
+                      {totalState?.currencyPosition === "after"  && currency}
                     </a>
                   </>
                 )}
@@ -64,8 +64,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                   <>
                     <a>Tax</a>
                     <a>
-                      {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.total_tax_amount).toFixed(DECIMALS)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currency}
+                      {totalState?.currencyPosition === "before" && currency} {Number(data?.total_tax_amount).toFixed(DECIMALS)}{" "}
+                      {totalState?.currencyPosition === "after"  && currency}
                     </a>
                   </>
                 )}
@@ -74,8 +74,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                   <>
                     <a>{totalState?.totalInfoLabel || "Total"} </a>
                     <a>
-                      {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.total_price).toFixed(DECIMALS)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currency}
+                      {totalState?.currencyPosition === "before" && currency} {Number(data?.total_price).toFixed(DECIMALS)}{" "}
+                      {totalState?.currencyPosition === "after"  && currency}
                     </a>
                   </>
                 )}
@@ -84,8 +84,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                   <>
                     <a>{totalState?.paymentMadeLabel || "Amount Paid"}</a>
                     <a>
-                      {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.paid_amount).toFixed(DECIMALS)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currency}
+                      {totalState?.currencyPosition === "before" && currency} {Number(data?.paid_amount).toFixed(DECIMALS)}{" "}
+                      {totalState?.currencyPosition === "after"  && currency}
                     </a>
                   </>
                 )}
@@ -97,8 +97,8 @@ const Total = ({ template, data, templateGroupId, currency }: AccountPreviewProp
                 >
                   <a>{totalState?.balanceAmountLabel || "Amount Due"}</a>
                   <a>
-                    {totalState?.currencyPosition?.value === "Before" && currency} {Number(data?.balance_due).toFixed(DECIMALS)}{" "}
-                    {totalState?.currencyPosition?.value === "After" && currency}
+                    {totalState?.currencyPosition === "before" && currency} {Number(data?.balance_due).toFixed(DECIMALS)}{" "}
+                    {totalState?.currencyPosition === "after"  && currency}
                   </a>
                 </div>
               )}
@@ -173,7 +173,7 @@ const TaxSummaryTable = ({ data, template }: AccountPreviewProps) => {
   /// Items
   const backgroundColor = itemTableState?.showRowBg ? itemTableState?.itemRowBgColor : "#fff";
   const color = itemTableState?.itemRowFontColor || "#000";
-  const borderColor = itemTableState?.tableBorderColor;
+  const borderColor = itemTableState?.tableRowBorderColor;
   const fontSize = itemTableState?.itemRowFontSize;
 
   /* ########################################################################################### */

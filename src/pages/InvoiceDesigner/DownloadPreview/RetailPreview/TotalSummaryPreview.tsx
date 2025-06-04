@@ -17,7 +17,7 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
   const totalSummarycolor = template?.totalState?.totalFontColor || "#000";
   const balnceFontSize = template?.totalState?.balanceFontSize || 12;
 
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
 
   return (
     <View

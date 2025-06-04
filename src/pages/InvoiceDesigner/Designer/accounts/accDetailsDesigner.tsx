@@ -472,8 +472,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange,templateKind}: H
             <ERPCheckbox
               id="showAmountInWords"
                 label="show Amount In Words"
-                checked={headerState?.accountTransactionInfo?.showAmountInWords}
-                onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, showAmountInWords: e.target.checked } })}
+                // checked={headerState?.accountTransactionInfo?.showAmountInWords}
+                // onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, showAmountInWords: e.target.checked } })}
             />
           {/* */}
 
@@ -483,8 +483,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange,templateKind}: H
           <ERPInput
             label="Amount Received"
             id="amtReceivedLabel"
-            value={headerState?.accountTransactionInfo?.amtReceivedLabel}
-            onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedLabel: e.target?.value } })}
+            // value={headerState?.accountTransactionInfo?.amtReceivedLabel}
+            // onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedLabel: e.target?.value } })}
           />
 
           {/* <div className="flex justify-start gap-4 ">
@@ -512,24 +512,24 @@ const AccountTransactionDetailsDesigner = ({ template, onChange,templateKind}: H
           Amount Received
           </label>
           <ERPInput
-            value={headerState?.accountTransactionInfo?.amtReceivedFontColor}
-            onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedFontColor: e.target?.value } })}
+            // value={headerState?.accountTransactionInfo?.amtReceivedFontColor}
+            // onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedFontColor: e.target?.value } })}
             label="Font Color"
             id="amtFont_color"
             type="color"
             placeholder=""
           />
             <ERPInput
-            value={headerState?.accountTransactionInfo?.amtReceivedBgColor}
-            onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedBgColor: e.target?.value } })}
+            // value={headerState?.accountTransactionInfo?.amtReceivedBgColor}
+            // onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedBgColor: e.target?.value } })}
             label="Background Color"
             id="amtBg_color"
             type="color"
             placeholder=""
           />
           <ERPStepInput
-            value={headerState?.accountTransactionInfo?.amtReceivedFontSize ?? 16}
-            onChange={(font_size) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedFontSize: font_size} })}
+            // value={headerState?.accountTransactionInfo?.amtReceivedFontSize ?? 16}
+            // onChange={(font_size) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, amtReceivedFontSize: font_size} })}
             label="Font Size (pts)"
             id="font_size"
             placeholder=" "

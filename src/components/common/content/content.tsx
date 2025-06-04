@@ -103,6 +103,11 @@ import TransactionFormContainer from "../../../pages/inventory/transactions/purc
 import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
 import { SearchProvider } from "../../../pages/accounts/transactions/search-context.tsx";
 import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
+import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-india/tax-category-india";
+import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
+import GeneralMaster from "../../../pages/inventory/masters/general-master";
+import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
+import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -197,6 +202,26 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/customers" element={<Customers />} />
         <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
         {/* Accounts Masters End */}
+
+<Route path="/inventory-masters/products" element={<Products />} />
+        <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
+        <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
+        <Route path="/inventory-masters/brands" element={<Brands />} />
+        <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
+        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
+        <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
+        <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
+        <Route path="/inventory-masters/tax-category" element={clientSession.isAppGlobal ? <TaxCategoryIndia /> : <TaxCategory />} />
+        <Route path="/inventory-masters/tcs-category" element={<TcsCategory />} />
+        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
+        <Route path="/inventory-masters/section" element={<Section />} />
+        <Route path="/inventory-masters/schemes" element={<Schemes />} />
+        <Route path="/inventory-masters/scheme_settings_special" element={<SchemeSettingsSpecial />} />
+        <Route path="/inventory-masters/scheme_settings_discount" element={<SchemeSettingsDiscount />} />
+        <Route path="/inventory-masters/product_price_settings" element={clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />} />
+        <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
+        <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
+        <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
 
         {/* Accounts Transaction */}
         {/* <Route

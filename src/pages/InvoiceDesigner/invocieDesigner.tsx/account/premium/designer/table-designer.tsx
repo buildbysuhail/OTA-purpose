@@ -309,8 +309,8 @@ const LayoutEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
   return (
     <div className="flex flex-col gap-4">
       <ERPCheckbox
-        id="showTableBorder"
-        label={t("table_border")}
+        id="showTableRowBorder"
+        label={t("table_row_border")}
         onChange={(e) => onChange?.({ ...accTableState, showTableRowBorder: e.target.checked })}
         checked={accTableState?.showTableRowBorder}
       />
@@ -327,7 +327,7 @@ const LayoutEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
 
       <ERPCheckbox
         id="showTableColBorder"
-        label={t("table_border")}
+        label={t("table_col_border")}
         onChange={(e) => onChange?.({ ...accTableState, showTableColBorder: e.target.checked })}
         checked={accTableState?.showTableColBorder}
       />

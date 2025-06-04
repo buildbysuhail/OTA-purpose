@@ -222,7 +222,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
             }
 
             <ERPDataCombobox
-              defaultValue={totalState?.currencyPosition?.value ?? "Before"}
+              defaultValue={totalState?.currencyPosition?? "before"}
               handleChange={(id, value) => onChange?.({ ...totalState, currencyPosition: value })}
               id="pos_currency"
               label={t("currency_symbol")}

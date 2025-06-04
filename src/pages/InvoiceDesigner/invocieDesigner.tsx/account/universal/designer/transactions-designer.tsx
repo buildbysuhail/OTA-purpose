@@ -180,14 +180,14 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
 
         
         
-          {/* */}
+{/*    
             <ERPCheckbox
               id="showAmountInWords"
                 label="show Amount In Words"
                 checked={headerState?.accountTransactionInfo?.showAmountInWords}
                 onChange={(e) => handleChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, showAmountInWords: e.target.checked } })}
-            />
-          {/* */}
+            /> */}
+          
 
         
          

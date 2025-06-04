@@ -59,9 +59,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                     </View>
                     <View style={{ width: "50%" }}>
                       <Text>
-                        {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                        {totalState?.currencyPosition === "before" && currencySymbol}
                         {" "}{Number(data?.sub_total).toFixed(2)}{" "}
-                        {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                        {totalState?.currencyPosition === "after" && currencySymbol}
                       </Text>
                     </View>
                   </View>
@@ -74,9 +74,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                     </View>
                     <View style={{ width: "50%" }}>
                       <Text>
-                        {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                        {totalState?.currencyPosition === "before" && currencySymbol}
                         {" "}{Number(data?.discount_price).toFixed(2)}{" "}
-                        {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                        {totalState?.currencyPosition === "after" && currencySymbol}
                       </Text>
                     </View>
                   </View>
@@ -89,9 +89,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                     </View>
                     <View style={{ width: "50%" }}>
                       <Text>
-                        {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                        {totalState?.currencyPosition === "before" && currencySymbol}
                         {" "}{Number(data?.total_tax_amount).toFixed(2)}{" "}
-                        {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                        {totalState?.currencyPosition === "after" && currencySymbol}
                       </Text>
                     </View>
                   </View>
@@ -104,9 +104,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                     </View>
                     <View style={{ width: "50%" }}>
                       <Text>
-                        {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                        {totalState?.currencyPosition === "before" && currencySymbol}
                         {" "}{Number(data?.total_price).toFixed(2)}{" "}
-                        {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                        {totalState?.currencyPosition === "after" && currencySymbol}
                       </Text>
                     </View>
                   </View>
@@ -119,9 +119,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                     </View>
                     <View style={{ width: "50%" }}>
                       <Text>
-                        {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                        {totalState?.currencyPosition === "before" && currencySymbol}
                         {" "}{Number(data?.paid_amount).toFixed(2)}{" "}
-                        {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                        {totalState?.currencyPosition === "after" && currencySymbol}
                       </Text>
                     </View>
                   </View>
@@ -144,9 +144,9 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
                   </View>
                   <View style={{ width: "50%" }}>
                     <Text>
-                      {totalState?.currencyPosition?.value === "Before" && currencySymbol}
+                      {totalState?.currencyPosition === "before" && currencySymbol}
                       {" "}{Number(data?.balance_due).toFixed(2)}{" "}
-                      {totalState?.currencyPosition?.value === "After" && currencySymbol}
+                      {totalState?.currencyPosition === "after" && currencySymbol}
                     </Text>
                   </View>
                 </View>
@@ -263,7 +263,7 @@ const TaxSummaryTablePDF = ({ template, taxInfo }: DownloadPreviewProps) => {
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
   const Itemscolor = itemTableState?.itemRowFontColor || "#000";
   const ItemsBackgroundColor = itemTableState?.showRowBg ? itemTableState?.itemRowBgColor : "#fff";
 
@@ -302,7 +302,7 @@ const TaxSummaryTablePDF = ({ template, taxInfo }: DownloadPreviewProps) => {
       fontSize: ItemsfontSize,
       borderColor: ItemsborderColor,
       backgroundColor: ItemsBackgroundColor,
-      borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+      borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
     }
 
   });

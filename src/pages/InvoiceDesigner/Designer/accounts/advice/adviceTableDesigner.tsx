@@ -220,19 +220,19 @@ const LayoutEditor = ({ adviceTableState, onChange }: ItemTableDesignerProps) =>
   return (
     <div className="flex flex-col gap-4">
       <ERPCheckbox
-        id="showTableBorder"
+        id="showTableRowBorder"
         label={t("table_border")}
-        onChange={(e) => onChange?.({ ...adviceTableState, showTableBorder: e.target.checked })}
-        checked={adviceTableState?.showTableBorder}
+        onChange={(e) => onChange?.({ ...adviceTableState, showTableRowBorder: e.target.checked })}
+        checked={adviceTableState?.showTableRowBorder}
       />
 
-      {adviceTableState?.showTableBorder && (
+      {adviceTableState?.showTableRowBorder && (
         <ERPInput
-          id="tableBorderColor"
+          id="tableRowBorderColor"
           label={t("border_color")}
           type="color"
-          value={adviceTableState?.tableBorderColor}
-          onChange={(e) => onChange?.({ ...adviceTableState, tableBorderColor: e.target?.value })}
+          value={adviceTableState?.tableRowBorderColor}
+          onChange={(e) => onChange?.({ ...adviceTableState, tableRowBorderColor: e.target?.value })}
         />
       )}
 

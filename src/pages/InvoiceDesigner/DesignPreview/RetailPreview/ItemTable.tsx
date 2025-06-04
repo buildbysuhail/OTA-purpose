@@ -55,7 +55,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
   const backgroundColor = itemTableState?.itemRowBgColor || "#fff";
   const color = itemTableState?.itemRowFontColor || "#000";
   const fontSize = itemTableState?.itemRowFontSize;
-  const borderColor = itemTableState?.tableBorderColor;
+  const borderColor = itemTableState?.tableRowBorderColor;
 
   return (
     <div
@@ -94,7 +94,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
                     color,
                     fontSize,
                   }}
-                  className={`${itemTableState.showTableBorder && "border-b border-dashed"} p-1 px-2`}
+                  className={`${itemTableState.showTableRowBorder && "border-b border-dashed"} p-1 px-2`}
                 >
                   {index + 1}
                 </td>
@@ -107,7 +107,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
                     color,
                     fontSize,
                   }}
-                  className={`${itemTableState.showTableBorder && "border-b border-dashed"}  p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b border-dashed"}  p-1`}
                 >
                   {val?.item_name}
                 </td>
@@ -120,7 +120,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
                     color,
                     fontSize,
                   }}
-                  className={`${itemTableState.showTableBorder && "border-b border-dashed"} text-center p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b border-dashed"} text-center p-1`}
                 >
                   {Number(val?.qty)}
                 </td>
@@ -134,7 +134,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
                     color,
                     fontSize,
                   }}
-                  className={`${itemTableState.showTableBorder && "border-b border-dashed"} text-center p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b border-dashed"} text-center p-1`}
                 >
                   {val?.item_rate}
                 </td>
@@ -147,7 +147,7 @@ const ItemTable = ({ template, data }: ItemTableProps) => {
                     color,
                     fontSize,
                   }}
-                  className={`${itemTableState.showTableBorder && "border-b border-dashed"} text-right p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b border-dashed"} text-right p-1`}
                 >
                   {val?.total_price}
                 </td>

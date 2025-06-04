@@ -458,7 +458,7 @@ const createStore = async (
 
         onDataChanged != undefined && onDataChanged(data.data);
         if (totalRowCountRef) {
-          totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
+          // totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
         }
         if (onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
           onInitialDataLoad(data.data);

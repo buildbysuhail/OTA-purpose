@@ -38,7 +38,10 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productID", data.value);
+            handleFieldChange({
+              productID: data.value,
+              product: data.label,
+            });
           }}
           showCheckbox={true}
         />
@@ -47,7 +50,9 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
           label={t("product_code")}
           {...getFieldProps("productCode")}
           className="w-full"
-          onChangeData={(val: string) => handleFieldChange("productCode", val)}
+            onChangeData={(data) =>
+            handleFieldChange("productCode", data.productCode)
+          }
         />
 
         <ERPDataCombobox
@@ -60,7 +65,10 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productGroupID", data.value);
+           handleFieldChange({
+              productGroupID: data.value,
+              productGroup: data.label,
+            });
           }}
           showCheckbox={true}
         />
@@ -100,7 +108,7 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
           {...getFieldProps("sectionID")}
           field={{
             id: "sectionID",
-            getListUrl: Urls.data_sections,
+            getListUrl: Urls.data_sections_sort_byid,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -116,11 +124,11 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
 
 export default StockFlowReportFilter;
 export const StockFlowReportFilterInitialState = {
-  dateFrom: moment().local().startOf("month").toDate(),
+  dateFrom: moment().local().toDate(),
   dateTo: moment().local().toDate(),
   productID: 0,
   productGroupID: 0,
   warehouseID: 0,
   brandID: 0,
-  sectionID: 0
+  sectionID: -1
 };

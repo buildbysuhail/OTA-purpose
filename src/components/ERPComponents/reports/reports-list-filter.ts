@@ -84,18 +84,18 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "sales_transfer_partyWise_summary",
        
           ];
-          st = st
-            .filter((parent: any) => !excluded.includes(parent.title))
-            .map((parent: any) => {
-              const filteredChildren = parent.children?.filter(
-                (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)
-              );
-              return {
-                ...parent,
-                children: filteredChildren,
-              };
-            })
-            .filter((parent: any) => parent.children?.length > 0);
+          // st = st
+          //   .filter((parent: any) => !excluded.includes(parent.title))
+          //   .map((parent: any) => {
+          //     const filteredChildren = parent.children?.filter(
+          //       (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)
+          //     );
+          //     return {
+          //       ...parent,
+          //       children: filteredChildren,
+          //     };
+          //   })
+          //   .filter((parent: any) => parent.children?.length > 0);
             return st;
         }
 }

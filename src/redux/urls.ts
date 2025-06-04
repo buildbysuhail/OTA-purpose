@@ -84,6 +84,7 @@ const Urls = {
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",
   data_sections: "/Inventory/Data/Sections",
+  data_sections_sort_byid: "/Inventory/Data/SectionsNoSort",
   data_kitchen: "/Inventory/Data/Kitchens",
   data_groupcategory: "/Inventory/Data/GroupCategory",
   data_locations: "/Inventory/Data/Locations",

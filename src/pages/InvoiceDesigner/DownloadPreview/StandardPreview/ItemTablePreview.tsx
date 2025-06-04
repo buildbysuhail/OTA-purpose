@@ -17,7 +17,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
   const Itemscolor = itemTableState?.itemRowFontColor || "#000";
   const ItemsBackgroundColor = itemTableState?.showRowBg ? itemTableState?.itemRowBgColor : "#fff";
 
@@ -162,7 +162,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     justifyContent: "center",
                     borderColor: ItemsborderColor,
                     backgroundColor: ItemsBackgroundColor,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                   }}
                 >
                   <Text>{index + 1}</Text>
@@ -180,7 +180,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     justifyContent: "center",
                     borderColor: ItemsborderColor,
                     backgroundColor: ItemsBackgroundColor,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                   }}
                 >
                   {itemTableState?.showLineItem && templateGroupId !== "journal_entry" && <Text>{val?.item_name}</Text>}
@@ -213,7 +213,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     justifyContent: "center",
                     borderColor: ItemsborderColor,
                     backgroundColor: ItemsBackgroundColor,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                   }}
                 >
                   <Text> {val?.hsn_code}</Text>
@@ -232,7 +232,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     justifyContent: "center",
                     borderColor: ItemsborderColor,
                     backgroundColor: ItemsBackgroundColor,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                   }}
                 >
                   <Text> {val?.qty} {itemTableState?.showQtyUnit && val?.item_unit?.name}</Text>
@@ -249,7 +249,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -268,7 +268,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -287,7 +287,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -306,7 +306,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -327,7 +327,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -345,7 +345,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -364,7 +364,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -383,7 +383,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -402,7 +402,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -421,7 +421,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     borderColor: ItemsborderColor,
                     color: Itemscolor,
                     fontSize: ItemsfontSize,
-                    borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                    borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
                     flex: "2",
                     padding: "5pt",
                   }}
@@ -449,7 +449,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
   const Itemscolor = itemTableState?.itemRowFontColor || "#000";
   const ItemsBackgroundColor = itemTableState?.itemRowBgColor || "#fff";
 
@@ -596,7 +596,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
                     }}
                   >
                     <Text>{dateTrimmer(transaction?.date)}</Text>
@@ -613,7 +613,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",
@@ -636,7 +636,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",
@@ -659,7 +659,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",
@@ -681,7 +681,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",
@@ -704,7 +704,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",
@@ -727,7 +727,7 @@ const StatementTablePrintView = ({ data, template }: DownloadPreviewProps) => {
                       fontSize: ItemsfontSize,
                       borderColor: ItemsborderColor,
                       backgroundColor: ItemsBackgroundColor,
-                      borderBottomWidth: itemTableState.showTableBorder ? "2px" : "0px",
+                      borderBottomWidth: itemTableState.showTableRowBorder ? "2px" : "0px",
 
                       display: "flex",
                       flexDirection: "column",

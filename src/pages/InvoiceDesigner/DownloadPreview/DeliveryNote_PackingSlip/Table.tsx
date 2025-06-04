@@ -11,7 +11,7 @@ const Table = ({ data, template }: DNSPTEmpProps) => {
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
   const Itemscolor = itemTableState?.itemRowFontColor || "#000";
   const ItemsBackgroundColor = itemTableState?.itemRowBgColor || "#fff";
   return (
@@ -85,7 +85,7 @@ const Table = ({ data, template }: DNSPTEmpProps) => {
                 justifyContent: "center",
                 borderColor: ItemsborderColor,
                 backgroundColor: ItemsBackgroundColor,
-                borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
               }}
             >
               <Text>{index + 1}</Text>
@@ -101,7 +101,7 @@ const Table = ({ data, template }: DNSPTEmpProps) => {
                 justifyContent: "flex-start",
                 borderColor: ItemsborderColor,
                 backgroundColor: ItemsBackgroundColor,
-                borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                borderBottomWidth: itemTableState?.tableRowBorderColor ? "2px" : "0px",
               }}
             >
               <Text>{val?.item_name}</Text>
@@ -119,7 +119,7 @@ const Table = ({ data, template }: DNSPTEmpProps) => {
                 justifyContent: "flex-end",
                 borderColor: ItemsborderColor,
                 backgroundColor: ItemsBackgroundColor,
-                borderBottomWidth: itemTableState?.showTableBorder ? "2px" : "0px",
+                borderBottomWidth: itemTableState?.showTableRowBorder ? "2px" : "0px",
               }}
             >
               <Text> {val?.qty}</Text>

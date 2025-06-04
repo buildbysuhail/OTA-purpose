@@ -16,7 +16,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;
-  const ItemsborderColor = itemTableState?.tableBorderColor;
+  const ItemsborderColor = itemTableState?.tableRowBorderColor;
   const Itemscolor = itemTableState?.itemRowFontColor || "#000";
   const ItemsBackgroundColor = itemTableState?.itemRowBgColor || "#fff";
 
@@ -143,7 +143,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   borderColor: ItemsborderColor,
                   color: Itemscolor,
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",
@@ -162,7 +162,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   borderColor: ItemsborderColor,
                   color: Itemscolor,
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",
@@ -181,7 +181,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   borderColor: ItemsborderColor,
                   color: Itemscolor,
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",
@@ -199,7 +199,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   borderColor: ItemsborderColor,
                   color: Itemscolor,
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",
@@ -217,7 +217,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   borderColor: ItemsborderColor,
                   color: Itemscolor,
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",
@@ -238,7 +238,7 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
                   flexDirection: "row",
                   alignItems: "center",
                   fontSize: ItemsfontSize,
-                  borderBottomWidth: itemTableState.showTableBorder ? "1px" : "0px",
+                  borderBottomWidth: itemTableState.showTableRowBorder ? "1px" : "0px",
                   borderStyle: "dashed",
                   borderLeft: "none",
                   borderRight: "none",

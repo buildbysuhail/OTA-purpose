@@ -32,7 +32,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
       flexDirection: "row",
       flexWrap: "nowrap",
       borderBottom: `1px solid ${
-        adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor : ""
+        adviceTableState?.showTableRowBorder ? adviceTableState?.tableColBorderColor : ""
       }`,
     },
     th: {
@@ -47,7 +47,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
       flexDirection: "row",
       flexWrap: "nowrap",
       borderBottom: `1px solid ${
-        adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor : ""
+        adviceTableState?.showTableRowBorder ? adviceTableState?.tableColBorderColor : ""
       }`,
       backgroundColor: adviceTableState?.showRowBg
         ? adviceTableState?.itemRowBgColor

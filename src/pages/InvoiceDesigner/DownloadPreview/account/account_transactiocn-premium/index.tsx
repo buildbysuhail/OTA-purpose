@@ -13,6 +13,7 @@ export interface AccountTransactionProps {
   currentBranch?: any
   userSession?: any
   clientSession?: any
+  currency?: string
 }
 
 const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession }: AccountTransactionProps) => {

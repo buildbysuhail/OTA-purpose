@@ -23,7 +23,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
   /// Items
   const backgroundColor = itemTableState?.showRowBg ? itemTableState?.itemRowBgColor : "#fff";
   const color = itemTableState?.itemRowFontColor || "#000";
-  const borderColor = itemTableState?.tableBorderColor || "#000";
+  const borderColor = itemTableState?.tableRowBorderColor || "#000";
   const fontSize = itemTableState?.itemRowFontSize;
 
   const itemDescrFontColor = itemTableState?.itemDescriptionFontColor || "#000"
@@ -92,7 +92,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showLineItemNumber && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.lineItemNumberWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                   >
                     {index + 1}
                   </td>
@@ -100,7 +100,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {(itemTableState?.showLineItem || itemTableState?.showDiscription) && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.lineItemWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"}  p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"}  p-1`}
                   >
                     {itemTableState?.showLineItem && templateGroupId !== "journal_entry" && val?.item_name}
                     {templateGroupId === "journal_entry" && itemTableState?.showLineItem && val?.account_name}
@@ -116,7 +116,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showHsnSac && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.hsnSacWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                   >
                     {val?.hsn_code}
                   </td>
@@ -124,7 +124,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showQuantity && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.quantityWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                   >
                     {val?.qty} {itemTableState.showQtyUnit && val?.item_unit?.name}
                   </td>
@@ -132,7 +132,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showRate && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.rateWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                   >
                     {val?.item_rate}
                   </td>
@@ -141,7 +141,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showDiscount && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.discountWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                   >
                     {val?.discount_price}
                   </td>
@@ -149,14 +149,14 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
 
                 {itemTableState?.showTaxPercentage && <td
                   style={{ ...styles.tdStyle, width: itemTableState?.taxPercentageWidth }}
-                  className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                 >
                   {val?.item_tax_category?.total_percentage}
                 </td>}
 
                 {itemTableState?.showTaxAmount && <td
                   style={{ ...styles.tdStyle, width: itemTableState?.taxAmountWidth }}
-                  className={`${itemTableState.showTableBorder && "border-b"} text-center p-1`}
+                  className={`${itemTableState.showTableRowBorder && "border-b"} text-center p-1`}
                 >
                   {(parseFloat(val?.item_rate) * (parseFloat(val?.item_tax_category?.total_percentage) / 100)).toFixed(2)}
                 </td>}
@@ -165,7 +165,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showAmount && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.amountWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-right p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-right p-1`}
                   >
                     { val?.total_price}
                   </td>
@@ -173,7 +173,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showContactDetails && (
                   <td
                     style={styles.tdStyle}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-left p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-left p-1`}
                   >
                     {val?.contact?.name}
                   </td>
@@ -181,7 +181,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {templateGroupId === "journal_entry" && (
                   <td
                     style={styles.tdStyle}
-                    className={`${itemTableState?.showTableBorder && "border-b"} text-right p-1`}
+                    className={`${itemTableState?.showTableRowBorder && "border-b"} text-right p-1`}
                   >
                     {val?.debit}
                   </td>
@@ -189,7 +189,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {templateGroupId === "journal_entry" && (
                   <td
                     style={styles.tdStyle}
-                    className={`${itemTableState?.showTableBorder && "border-b"} text-right p-1`}
+                    className={`${itemTableState?.showTableRowBorder && "border-b"} text-right p-1`}
                   >
                     {val?.credit}
                   </td>
@@ -197,7 +197,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showQtyAdjustment && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.qtyAdjustmentWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-right p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-right p-1`}
                   >
                     {val?.quantity_adjusted}
                   </td>
@@ -205,7 +205,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
                 {itemTableState?.showValueAdjustment && (
                   <td
                     style={{ ...styles.tdStyle, width: itemTableState?.valueAdjustmentWidth }}
-                    className={`${itemTableState.showTableBorder && "border-b"} text-right p-1`}
+                    className={`${itemTableState.showTableRowBorder && "border-b"} text-right p-1`}
                   >
                     {val?.adjusted_value}
                   </td>
@@ -233,7 +233,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
   const backgroundColor = itemTableState?.itemRowBgColor || "#fff";
   const color = itemTableState?.itemRowFontColor || "#000";
   const fontSize = itemTableState?.itemRowFontSize;
-  const borderColor = itemTableState?.tableBorderColor;
+  const borderColor = itemTableState?.tableRowBorderColor;
 
   const styles = StyleSheet.create({
     theadStyle: {
@@ -288,7 +288,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showDateField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="">{dateTrimmer(transaction?.date)}</div>
                     </td>
@@ -296,7 +296,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showTransactionTypeField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2 `}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2 `}
                     >
                       <div className="break-words max-w-[80px]"> {transaction?.voucher_code}</div>
                     </td>
@@ -304,7 +304,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showTransactionDetailsField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="break-words max-w-[100px]"> </div>
                     </td>
@@ -312,7 +312,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showAmountField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="break-words max-w-[50px]"> {transaction?.amount}</div>
                     </td>
@@ -320,7 +320,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showPaymentField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="break-words max-w-[50px]"> {isNaN(transaction?.payments) ? "" : parseFloat(transaction?.payments)}</div>
                     </td>
@@ -328,7 +328,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showRefundField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="break-words max-w-[50px]"> -- </div>
                     </td>
@@ -336,7 +336,7 @@ const StatementTableView = ({ template, data, templateGroupId, currency }: Accou
                   {itemTableState?.statementTable?.showBalanceField && (
                     <td
                       style={styles?.tdStyle}
-                      className={`${itemTableState.showTableBorder && "border-b"} p-1 px-2`}
+                      className={`${itemTableState.showTableRowBorder && "border-b"} p-1 px-2`}
                     >
                       <div className="break-words max-w-[50px]"> {transaction?.balance}</div>
                     </td>

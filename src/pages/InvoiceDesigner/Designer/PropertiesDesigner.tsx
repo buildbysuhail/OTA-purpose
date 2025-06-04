@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { PropertiesState } from "./interfaces";
-import { TemplateImagesTypes } from "../InvoiceDesigner";
+import { TemplateImagesTypes } from "../invocieDesigner.tsx/InvoiceDesignerLanding";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
@@ -44,7 +44,6 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
   const { t } = useTranslation('system');
   const inputFile = useRef<HTMLInputElement>(null);
   const [maxHeight, setMaxHeight] = useState<number>(500);
-
   useEffect(() => {
     let wh = window.innerHeight;
     setMaxHeight(wh);
@@ -57,15 +56,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
   return (
     <ERPScrollArea className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
-      {/* <div
-        className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
-        onClick={() => setTab(currentTab === "temp_props" ? "" : "temp_props")}
-      >
-        <div>Template Properties</div>
-        <div>
-          <ChevronDownIcon className={`h-5  ${currentTab === "temp_props" ? "" : "-rotate-90"} transition-all`} />
-        </div>
-      </div> */}
+  
 
       <div className="transition-all  flex flex-col gap-4  p-4 ">
         <div>
@@ -433,7 +424,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               />
             </div>
           </div>
-               <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3">
             <div className="basis-2/3 ">
               <ERPSlider
                 id="font_weight"

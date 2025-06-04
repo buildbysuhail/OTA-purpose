@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useRef, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -10,6 +10,8 @@ import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-rep
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
 import moment from "moment";
+import { FileUp } from "lucide-react";
+import { useReportPrint } from "../../../components/ERPComponents/reports/use-reports-print";
 
 interface LedgerReport {
   from: Date;
@@ -317,6 +319,23 @@ const LedgerReport = () => {
       width: 150,
     },
   ];
+  
+  const dataRef = useRef<any[]>([]);
+   // Function to update data without causing re-render
+  const updateData = useCallback((newData: any[]) => {
+    dataRef.current = newData;
+    // If you need to access the data elsewhere, you can use dataRef.current
+  }, []);
+  const pStatement = () => {
+    debugger;
+    printStatement({
+                                    orientation:
+                                       "portrait",
+                                    data: {data: dataRef.current, filter: filter},
+                                    clickedItem: "statement",
+                                  })
+  };
+    const { printStatement, printCB } = useReportPrint();
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -329,7 +348,50 @@ const LedgerReport = () => {
                 summaryItems={[]}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
-                  moreOption
+                  showMoreOption
+                  moreOptions={[<li key="statement">
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                onClick={() =>
+                                  pStatement()
+                                }
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("statement")}
+                                </span>
+                              </button>
+                            </li>,
+
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                onClick={() =>
+                                  printCB({
+                                    orientation:
+                                     "portrait",
+                                    data: filter.ledgerID,
+                                    clickedItem: "customer_balance",
+                                  })
+                                }
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("customer_balance")}
+                                </span>
+                              </button>
+                            </li>,
+
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("billwise_details")}
+                                </span>
+                              </button>
+                            </li>]}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   filterText="of {showAll == true && All} {showAll == false && [ledgerName]
                    ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && ,
@@ -345,6 +407,7 @@ const LedgerReport = () => {
                   filterWidth={650}
                   filterInitialData={LedgerReportFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
+                   onDataChanged={updateData}
                   reload={true}
                   gridId="grd_ledger_report"
                   childPopupProps={{

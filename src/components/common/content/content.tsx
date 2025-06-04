@@ -132,7 +132,7 @@ import ProductSummaryMaster from "../../../pages/inventory/reports/product-summa
 // import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
 // import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
 // import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
-import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
+// import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import urls from "../../../redux/urls";
 import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary";
@@ -149,9 +149,9 @@ import PurchaseTaxGSTTaxwise from "../../../pages/inventory/reports/purchase-tax
 import PurchaseTaxGSTTaxwiseWithHSN from "../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report";
 import PurchaseReturnTaxGSTSalesAndReturn from "../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report";
 import VatReturnForm from "../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form";
-import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
-import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
-import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
+// import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
+// import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
+// import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
 import SummaryReport from "../../../pages/inventory/reports/summary-report/summary-report";
 import RegisterReport from "../../../pages/inventory/reports/register-report/register-report";
 import VatReturnFormArabic from "../../../pages/inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic";
@@ -584,10 +584,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
         <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} /> */}
-        <Route path="/inventory/branch_transfer_out_report" element={<BranchTransferOut />} />
+        {/* <Route path="/inventory/branch_transfer_out_report" element={<BranchTransferOut />} />
         <Route path="/inventory/branch_transfer_in_report" element={<BranchTransferIn />} />
         <Route path="/inventory/branch_transfer_summary_out_report" element={<BranchTransferSummaryOut />} />
-        <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} />
+        <Route path="/inventory/branch_transfer_summary_in_report" element={<BranchTransferSummaryIn />} /> */}
         <Route path="/inventory/sales_summary_report" element={<SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />} />
         <Route path="/inventory/sales_register_report" element={<RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />} />
         <Route path="/inventory/net_sales_report" element={<NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />} />

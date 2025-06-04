@@ -48,8 +48,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   amountReceived: {
-    height: 120,
-    width: 150,
     padding: 10,
     display: "flex",
     flexDirection: "column",
@@ -94,12 +92,14 @@ export const Content = ({
   currentBranch,
   docIDKey,
   currency,
+  clientSession
 }: {
   data: AccTransactionData
   template?: TemplateState
   currentBranch: any
   docIDKey?: string
   currency?: string
+  clientSession?: any
 }) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5
   const headerState = template?.headerState
@@ -158,7 +158,7 @@ export const Content = ({
               fontSize: titleFontSize,
               fontFamily: fontFamily,
               textAlign: "center",
-              textDecoration: "underline",
+              textDecoration: headerState.docTitleUnderline?"underline":"none",
             },
           ]}
         >
@@ -218,35 +218,41 @@ export const Content = ({
 
         
 
-          {headerState?.accountTransactionInfo?.showAmountInWords && (
+          {totalState?.showAmoutInWords && (
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
               <Text style={labelStyles}>Amount In Words</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {getAmountInWords(Number(data.master?.totalAmount), currency)}
+                {getAmountInWords(Number(data.master?.totalAmount),clientSession?.currency??"INR" )}
               </Text>
             </View>
           )}
         </View>
-
+        { 
+          totalState?.showTotalSection && 
         <View
           style={[
             styles.amountReceived,
             {
-              backgroundColor: headerState?.accountTransactionInfo?.amtReceivedBgColor ?? "#65a30d",
-              color: headerState?.accountTransactionInfo?.amtReceivedFontColor ?? "#ffffff",
+              maxWidth: "33.33%",
+              height: totalState?.amtHeight?`${totalState?.amtHeight}pt`:120,
+              width: totalState?.amtWidth?`${totalState?.amtWidth}pt` : 150,
+              backgroundColor: totalState?.amtReceivedBgColor ?? "#65a30d",
+              color: totalState?.amtReceivedFontColor ?? "#ffffff",
               fontWeight: "medium",
             },
           ]}
         >
           <Text style={{ fontSize: 14 }}>
-            {headerState?.accountTransactionInfo?.amtReceivedLabel || "Amount Received"}
+            {totalState?.amtReceivedLabel || "Amount Received"}
           </Text>
-          <Text style={{ fontSize: headerState?.accountTransactionInfo?.amtReceivedFontSize ?? 14 }}>
-            {headerState?.accountTransactionInfo?.currencySymbolPosition === "before" ? "INR" : ""}{" "}
+          <Text style={{ fontSize: totalState?.amtReceivedFontSize ?? 14 }}>
+            {totalState?.currencyPosition === "before" ? clientSession?.currency_symbol??"INR" : ""}{" "}
             {data.master?.totalAmount}{" "}
-            {headerState?.accountTransactionInfo?.currencySymbolPosition === "after" ? "INR" : ""}
+            {totalState?.currencyPosition === "after" ? clientSession?.currency_symbol??"INR" : ""}
           </Text>
         </View>
+        }
+
       </View>
 
       {/* Bill To and Signature */}

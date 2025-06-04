@@ -1,8 +1,17 @@
 import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-pdf/renderer";
-import FontRegistration from "../../../../../pages/LabelDesigner/fontRegister";
-import { ReportRenderProps } from "../report-interface";
-import { Header } from "./HeaderTem";
+import FontRegistration from "../../../../../LabelDesigner/fontRegister";
+import { HeaderIn } from "./HeaderTem";
 import { Content } from "./Content";
+import { TemplateState } from "../../../../Designer/interfaces";
+import { Header } from "../../../../DownloadPreview/advice-template/Header";
+export interface ReportRenderProps {
+  template?: TemplateState;
+  data?: any;
+  currentBranch?: any;
+  userSession?:any;
+  orientation:"portrait"|"landscape";
+  printCase?:string
+}
 
 
 // Define styles
@@ -22,7 +31,7 @@ const styles = StyleSheet.create({
 
 })
 
-const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession }: ReportRenderProps) => {
+const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession,template }: ReportRenderProps) => {
   // Sample data is already defined in your original file
 
   return (
@@ -30,8 +39,9 @@ const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession
       <FontRegistration />
       <Page size={"A4"} orientation={orientation === "landscape" ? "landscape" : "portrait"} wrap style={styles.page}>
         {/* Main Container */}
+        <Header data={data} template={template} currentBranch={currentBranch} />
         <View style={styles.contentWrapper}>
-        <Header data={data} currentBranch={currentBranch} userSession={userSession}/>
+        <HeaderIn data={data} currentBranch={currentBranch} userSession={userSession}/>
         <View style={{ border: "1px solid black",padding: 10 }}>
         <Content data={data} currentBranch={currentBranch} userSession={userSession} />
         </View>

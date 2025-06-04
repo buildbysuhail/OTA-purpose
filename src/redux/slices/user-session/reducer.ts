@@ -16,6 +16,11 @@ export enum Countries {
   India = 48,
   Saudi = 1,
   Oman = 100,
+  Qatar = 124,
+  Kuwait = 118,
+  UAE = 120,
+  Malaysia = 50,
+  UnitedStates = 9
 }
 export interface UserModel {
   userId: number;

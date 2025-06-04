@@ -117,7 +117,8 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
-  moreOption?: boolean;
+  showMoreOption?: boolean;
+  moreOptions?: React.ReactNode[];
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
@@ -128,7 +129,7 @@ interface ERPDevGridProps {
   rowData?: string;
   dataUrl?: string;
   filterInitialData?: any;
-  filterData?: {changed: boolean, data: any};
+  filterData?: { changed: boolean, data: any };
   enablefilter?: boolean;
   initialSort?: any;
   filterContent?: React.ReactNode;
@@ -168,18 +169,19 @@ interface ERPDevGridProps {
   allowResizing?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
-    | boolean
-    | {
-        filtering?: boolean;
-        sorting?: boolean;
-        paging?: boolean;
-        summary?: boolean;
-        groupPaging?: boolean;
-        grouping?: boolean;
-      };
+  | boolean
+  | {
+    filtering?: boolean;
+    sorting?: boolean;
+    paging?: boolean;
+    summary?: boolean;
+    groupPaging?: boolean;
+    grouping?: boolean;
+  };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
+  onDataChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onRowPrepared?: (e: any) => void;
@@ -318,13 +320,14 @@ const createStore = async (
   bodyProps?: any,
   setFilterValidations?: any,
   setShowFilter?: any,
-  totalRowCountRef?: React.MutableRefObject<number>,  
-  onInitialDataLoad?: (e: any) => void
+  totalRowCountRef?: React.MutableRefObject<number>,
+  onInitialDataLoad?: (e: any) => void,
+  onDataChanged?: (e: any) => void
 ) => {
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
-      
+
       if (!loadOptions.sort || (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)) {
         loadOptions.sort = initialSort;
       }
@@ -381,7 +384,7 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated = formatDateFields(filterData);
-      
+
       const postDataModified = formatDateFields(postData);
       try {
         setFilterValidations(undefined);
@@ -389,16 +392,16 @@ const createStore = async (
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-            ? await api.postAsync(
+              ? await api.postAsync(
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
                   : postDataModified != undefined
-                  ? postDataModified
-                  : {},
+                    ? postDataModified
+                    : {},
                 queryString
               )
-            : null;
+              : null;
 
         if (
           result != undefined &&
@@ -417,18 +420,18 @@ const createStore = async (
         } else {
           setFilterValidations(undefined);
         }
-          if (totalRowCountRef) {
+        if (totalRowCountRef) {
           totalRowCountRef.current = result?.dataRowCount || result?.totalCount || 0;
         }
         const data = result != undefined
-        ? result.isOk != undefined && result.isOk == false
-          ? {
+          ? result.isOk != undefined && result.isOk == false
+            ? {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
             }
-          : {
+            : {
               data:
                 result.loadResult != undefined
                   ? result.loadResult
@@ -446,17 +449,18 @@ const createStore = async (
                   ? result.loadResult.summary
                   : result.summary,
             }
-        : {
+          : {
             data: [],
             totalCount: -1,
             summary: {},
             groupCount: 0,
           }
-        
-          if (totalRowCountRef) {
-            totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
-          }
-          if(onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
+
+        onDataChanged != undefined && onDataChanged(data.data);
+        if (totalRowCountRef) {
+          totalRowCountRef.current = data.totalCount > 0 ? data.totalCount : totalRowCountRef.current;
+        }
+        if (onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
           onInitialDataLoad(data.data);
         }
         return data;
@@ -479,7 +483,8 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
-      moreOption = false,
+      moreOptions = [],
+      showMoreOption = false,
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
@@ -492,7 +497,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       postData,
       rowData,
       filterInitialData,
-      filterData = {changed: false, data: null},
+      filterData = { changed: false, data: null },
       enablefilter = false,
       filterContent = <></>,
       filterWidth = 400,
@@ -531,6 +536,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onRowClick,
       onRowUpdated,
       onFilterChanged,
+      onDataChanged,
       onCellClick,
       onRowDblClick,
       onRowPrepared,
@@ -635,7 +641,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
-    const { printStatement, printCB } = useReportPrint();
 
     //  // Determine the Actionswidth value
     //  const actionsWidth = childPopupPropsDynamic
@@ -679,13 +684,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         dispatch(popupAction({ isOpen: true, key: null, reload: false }));
     }, [dispatch, popupAction]);
 
-    
-      const preferenceChooserRef = useRef<{
-        handleColumnPreferenceChange: (dataField: string, key: string, value: any, eFromDataGrid?: boolean) => void;
-        handleDropping: (eFromDataGrid?: boolean, draggedDataField?: number|null, targetDataField?: number|null) => void;
-        // getDragState: () => { draggedDataField: string | null; targetDataField: string | null };
-      }>(null);
-      
+
+    const preferenceChooserRef = useRef<{
+      handleColumnPreferenceChange: (dataField: string, key: string, value: any, eFromDataGrid?: boolean) => void;
+      handleDropping: (eFromDataGrid?: boolean, draggedDataField?: number | null, targetDataField?: number | null) => void;
+      // getDragState: () => { draggedDataField: string | null; targetDataField: string | null };
+    }>(null);
+
     useEffect(() => {
       let wh = window.innerHeight;
       let gridHeightMobile =
@@ -697,8 +702,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         heightToAdjustOnWindowsInModal !== undefined
           ? heightToAdjustOnWindowsInModal
           : wh - heightToAdjustOnWindows < 300
-          ? 300
-          : wh - heightToAdjustOnWindows;
+            ? 300
+            : wh - heightToAdjustOnWindows;
       setGridHeight({
         mobile: height != undefined ? height : gridHeightMobile,
         windows: height != undefined ? height : gridHeightWindows,
@@ -743,7 +748,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [filterInitialData]);
     useEffect(() => {
-      if (filterData  && filterData.changed === true) {
+      if (filterData && filterData.changed === true) {
         setFilter(filterData.data);
       }
     }, [filterData]);
@@ -826,7 +831,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             setFilterValidations,
             setShowFilter,
             totalRowCountRef,
-            onInitialDataLoad
+            onInitialDataLoad, onDataChanged
           );
           setCurrentStore(newStore);
           setStore(newStore);
@@ -837,7 +842,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           console.error("Error creating store:", error);
           setStore(null);
           totalRowCountRef.current = 0; // Reset count on error
-        } 
+        }
         // finally {
         // }
       };
@@ -904,18 +909,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           );
           const result = conditionResult
             ? trueValue.replace(
-                /\[([^\]]+)\]/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(formState[innerPlaceholder]);
-                  }
-                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+              /\[([^\]]+)\]/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return appFormatDate(formState[innerPlaceholder]);
                 }
-              )
+                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -923,22 +928,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return rowData != undefined
-                      ? appFormatDate(rowData[innerPlaceholder])
-                      : "N/A";
-                  }
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
                   return rowData != undefined
-                    ? rowData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                    ? appFormatDate(rowData[innerPlaceholder])
+                    : "N/A";
                 }
-              )
+                return rowData != undefined
+                  ? rowData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -946,20 +951,20 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("****");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(postData[innerPlaceholder]);
-                  }
-                  return postData != undefined
-                    ? postData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return appFormatDate(postData[innerPlaceholder]);
                 }
-              )
+                return postData != undefined
+                  ? postData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -967,22 +972,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("---");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date") ||
-                    innerPlaceholder.includes("finFrom") ||
-                    innerPlaceholder.includes("finTo")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(userSession[innerPlaceholder]);
-                  }
-                  return userSession != undefined
-                    ? userSession[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date") ||
+                  innerPlaceholder.includes("finFrom") ||
+                  innerPlaceholder.includes("finTo")
+                ) {
+                  // If the placeholder is a date, format it
+                  return appFormatDate(userSession[innerPlaceholder]);
                 }
-              )
+                return userSession != undefined
+                  ? userSession[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
           return result;
         } else if (formState[placeholder] !== undefined) {
@@ -1014,8 +1019,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const totalRows = gridInstance.totalCount(); // or gridInstance.getDataSource().totalCount()
       if (totalRows > 500) {
         const userConfirmed = window.confirm(
-          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${
-            (totalRows ?? 0) / 25
+          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${(totalRows ?? 0) / 25
           } pages, Please click 'Wait' if the application becomes unresponsive.`
         );
         if (!userConfirmed) {
@@ -1032,11 +1036,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
       doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
       doc.setFont("Amiri");
-      const pageTitle = `${gridHeader} - ${
-        !filterText || !filter
-          ? filterText || ""
-          : formatStringWithConditions(filterText.toString(), filter)
-      }`;
+      const pageTitle = `${gridHeader} - ${!filterText || !filter
+        ? filterText || ""
+        : formatStringWithConditions(filterText.toString(), filter)
+        }`;
 
       let currentY = 30;
 
@@ -1073,13 +1076,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
 
       const pageWidth = doc.internal.pageSize.getWidth() - 80;
-const wrappedTitleLines = doc.splitTextToSize(pageTitle, pageWidth);
+      const wrappedTitleLines = doc.splitTextToSize(pageTitle, pageWidth);
       doc.setFont("Amiri");
       doc.setFontSize(12);
       doc.text(pageTitle, 40, currentY, { align: "left" });
       doc.setFontSize(10);
 
-currentY += wrappedTitleLines.length * 7; // ~7 units per line height
+      currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       const originalColumnVisibility = gridInstance
         .getVisibleColumns()
         .map((column: any) => ({
@@ -1089,8 +1092,8 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
 
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.dataField)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.dataField)
         : gridCols.filter((col) => col.showInPdf).map((col) => col.dataField);
 
       const columnsWithoutWidth = pdfVisibleColumns.filter(
@@ -1115,11 +1118,11 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       }
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.width || 0)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.width || 0)
         : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.width || 100);
+          .filter((col) => col.showInPdf)
+          .map((col) => col.width || 100);
 
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
@@ -1190,16 +1193,16 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
           if (column.cellRenderDynamicRootState) {
             renderResult = column.cellRenderDynamicRootState(
               { data: options.gridCell.data },
-            options.gridCell,
-            filter,
+              options.gridCell,
+              filter,
             );
           }
           if (column.cellRender) {
             renderResult = column.cellRender(
               { data: options.gridCell.data },
-            options.gridCell,
-            filter,
-            options.pdfCell
+              options.gridCell,
+              filter,
+              options.pdfCell
             );
           }
 
@@ -1216,7 +1219,7 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
           // let isDefined = renderResult !== undefined;
           // let isObject = typeof renderResult === "object";
           // let isValidReactElement = React.isValidElement(renderResult);
-
+          if (isNullOrUndefinedOrEmpty(renderResult.textColor)) { renderResult = { ...renderResult, textColor: '#000' } }
           if (React.isValidElement(renderResult)) {
             const staticMarkup =
               ReactDOMServer.renderToStaticMarkup(renderResult);
@@ -1236,7 +1239,8 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
             typeof renderResult === "object" &&
             renderResult.text
           ) {
-            options.pdfCell = renderResult;
+            // options.pdfCell = renderResult;
+            Object.assign(options.pdfCell, renderResult);
             options.pdfCell.text = renderResult.text;
           } else {
             options.pdfCell = options.pdfCell;
@@ -1384,11 +1388,11 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
               if (column) {
                 const renderResult = column.cellRender
                   ? column.cellRender(
-                      { data: options.gridCell.data },
-                      options.gridCell,
-                      filter,
-                      options.excelCell.style
-                    )
+                    { data: options.gridCell.data },
+                    options.gridCell,
+                    filter,
+                    options.excelCell.style
+                  )
                   : undefined;
 
                 let isDefined = renderResult !== undefined;
@@ -1429,24 +1433,33 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
     );
 
     const handlePrintPdf = async () => {
-      
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-        const doc = await generatePdf(gridInstance, true); // Generate the PDF with the print action flag
-        doc?.autoPrint(); // Automatically trigger the print dialog
-        doc?.output("dataurlnewwindow"); // Open the PDF in a new window
+        const doc = await generatePdf(gridInstance, true);
+        doc?.setProperties({ title: gridHeader });
+        if (doc) {
+          doc.autoPrint();
+          const blob = doc.output("blob");
+          const url = URL.createObjectURL(blob);
+          const newWindow = window.open(url, "_blank");
+          if (newWindow) {
+            newWindow.onload = () => {
+              URL.revokeObjectURL(url);
+            };
+          }
+        }
       }
     };
 
     const handlePrintMobilePdf = async () => {
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-        const doc = await generatePdf(gridInstance, true); 
-        doc?.autoPrint(); 
+        const doc = await generatePdf(gridInstance, true);
+        doc?.autoPrint();
         doc?.save(gridHeader);
       }
     };
-    
+
 
     const handleInvoke = useCallback(
       (row: any) => {
@@ -1535,9 +1548,9 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
 
             dynamicProps?.bodyProps != undefined
               ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-                  const trimmedProp = prop.trim();
-                  updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-                })
+                const trimmedProp = prop.trim();
+                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+              })
               : {};
 
             const pdata =
@@ -1690,10 +1703,10 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
     const MemoizedSummary = useMemo(() => {
       return (
         <Summary recalculateWhileEditing={true} skipEmptyValues={false}
-        calculateCustomSummary={(e: any) => {
-          
-          handleCalculateSummary ? handleCalculateSummary(e): undefined
-        }}>
+          calculateCustomSummary={(e: any) => {
+
+            handleCalculateSummary ? handleCalculateSummary(e) : undefined
+          }}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {
             return config.isGroupItem == true ? (
               <GroupItem
@@ -1849,37 +1862,39 @@ currentY += wrappedTitleLines.length * 7; // ~7 units per line height
         totalRowCountRef.current = (memoizedStore as any).totalCount || 0;
       }
     }, [memoizedStore]);
-const handleOptionChanged = (e: any) => {
-  if (e.fullName?.startsWith("columns")) {
-    if (e.fullName.endsWith("visibleIndex")) {
-      preferenceChooserRef.current?.handleDropping(true,e.previousValue, e.value)
-    } else if (e.fullName.endsWith("width")) {
-      const index = parseInt(e.fullName.match(/columns\[(\d+)\]/)?.[1] || "-1");
-      debugger;
-      preferenceChooserRef.current?.handleColumnPreferenceChange(gridCols[index].dataField??"","width", e.value, true)
-    }
-  }
-};
+    const handleOptionChanged = (e: any) => {
+      if (e.fullName?.startsWith("columns")) {
+        if (e.fullName.endsWith("visibleIndex")) {
+          preferenceChooserRef.current?.handleDropping(true, e.previousValue, e.value)
+        } else if (e.fullName.endsWith("width")) {
+          const index = parseInt(e.fullName.match(/columns\[(\d+)\]/)?.[1] || "-1");
+          debugger;
+          preferenceChooserRef.current?.handleColumnPreferenceChange(gridCols[index].dataField ?? "", "width", e.value, true)
+        }
+      }
+    };
     return (
       <Fragment>
+       {
+        showChooserOnGridHead && 
          <GridPreferenceChooser
-                               ref={preferenceChooserRef}
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    
-                    showChooserOnGridHead={showChooserOnGridHead}
-                  />
+          ref={preferenceChooserRef}
+          columns={columns}
+          gridId={gridId}
+          onApplyPreferences={onApplyPreferences}
+
+          showChooserOnGridHead={showChooserOnGridHead}
+        />
+       }
         <div
-          className={`custom-data-grid ${
-            showChooserOnGridHead ? "toolbar-expanded" : ""
-          } 
+          className={`custom-data-grid ${showChooserOnGridHead ? "toolbar-expanded" : ""
+            } 
           ${className}`}
           style={gridStyle}
         >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
-            loadPanel={{enabled:loadPanelEnabled}}
+            loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1985,7 +2000,7 @@ const handleOptionChanged = (e: any) => {
 
             {allowSearching && <SearchPanel visible={true} />}
             {KeyboardNavigation && (
-             <KeyboardNavigation {...keyboardNavigation} />
+              <KeyboardNavigation {...keyboardNavigation} />
             )}
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
@@ -2041,7 +2056,7 @@ const handleOptionChanged = (e: any) => {
                 </Item>
               )}
 
-                <Item>
+              <Item>
                 <div className="block sm:hidden relative">
                   <button
                     onClick={handleMobileMenuClick}
@@ -2151,7 +2166,7 @@ const handleOptionChanged = (e: any) => {
                                   onClick={() => {
                                     handlePrintExcel();
                                     handleMobileMenuClose();
-                                                                   }}
+                                  }}
                                 >
                                   <Table className="w-4 h-4 mr-3 text-[#22c55e]" />
                                   <span>{t("export_to_excel")}</span>
@@ -2163,7 +2178,7 @@ const handleOptionChanged = (e: any) => {
                           {showPrintButton && (
                             <li>
                               <button
-                               
+
                                 className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
                                 onClick={() => {
                                   handlePrintPdf();
@@ -2188,14 +2203,14 @@ const handleOptionChanged = (e: any) => {
                                 <Settings className="w-4 h-4 mr-3 text-[#6366f1]" />
                                 <span>{t("preferences")}</span>
                               </div> */}
-                               <GridPreferenceChooser
-                               ref={preferenceChooserRef}
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    
-                    showChooserOnGridHead={showChooserOnGridHead}
-                  />
+                              <GridPreferenceChooser
+                                ref={preferenceChooserRef}
+                                columns={columns}
+                                gridId={gridId}
+                                onApplyPreferences={onApplyPreferences}
+
+                                showChooserOnGridHead={showChooserOnGridHead}
+                              />
                             </li>
                           )}
 
@@ -2252,17 +2267,17 @@ const handleOptionChanged = (e: any) => {
 
               {showPrintButton && (
                 <Item>
-                <div className="hidden sm:block">
-                  <button
-                    className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
-                    onClick={handlePrintPdf}
-                  >
-                    <Printer className="w-4 h-4" />
-                  </button>
-                </div>
+                  <div className="hidden sm:block">
+                    <button
+                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+                      onClick={handlePrintPdf}
+                    >
+                      <Printer className="w-4 h-4" />
+                    </button>
+                  </div>
                 </Item>
               )}
-              {moreOption && (
+              {showMoreOption && (
                 <Item>
                   <div className="relative hidden sm:block">
                     <button
@@ -2283,54 +2298,9 @@ const handleOptionChanged = (e: any) => {
                       >
                         <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
                           <ul className="space-y-1">
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  printStatement({
-                                    orientation:
-                                      preferences?.orientation ?? "portrait",
-                                    data: memoizedStore,
-                                    clickedItem: "statement",
-                                  })
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("statement")}
-                                </span>
-                              </button>
-                            </li>
-
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  printCB({
-                                    orientation:
-                                      preferences?.orientation ?? "portrait",
-                                    data: memoizedStore,
-                                    clickedItem: "customer_balance",
-                                  })
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("customer_balance")}
-                                </span>
-                              </button>
-                            </li>
-
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("billwise_details")}
-                                </span>
-                              </button>
-                            </li>
+                            {moreOptions?.map((option: any, index: any) => (
+                              option
+                            ))}
                           </ul>
                         </nav>
                       </div>
@@ -2341,59 +2311,59 @@ const handleOptionChanged = (e: any) => {
 
               {enablefilter == true && (
                 <Item>
-                <div className="hidden sm:block">
-                  <ErpGridGlobalFilter
-                    width={filterWidth}
-                    height={filterHeight}
-                    title={gridHeader}
-                    gridId={gridId}
-                    validations={filterValidations}
-                    initialData={filter}
-                    content={filterContent}
-                    toogleFilter={showFilter}
-                    onApplyFilters={(filters) => onApplyFilter(filters)}
-                  />
-                </div>
+                  <div className="hidden sm:block">
+                    <ErpGridGlobalFilter
+                      width={filterWidth}
+                      height={filterHeight}
+                      title={gridHeader}
+                      gridId={gridId}
+                      validations={filterValidations}
+                      initialData={filter}
+                      content={filterContent}
+                      toogleFilter={showFilter}
+                      onApplyFilters={(filters) => onApplyFilter(filters)}
+                    />
+                  </div>
                 </Item>
               )}
 
               {ShowGridPreferenceChooser && !showChooserOnGridHead && (
                 <Item>
-                <div className="hidden sm:block">
-                  <GridPreferenceChooser
-                               ref={preferenceChooserRef}
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    
-                    showChooserOnGridHead={showChooserOnGridHead}
-                  />
-                </div>
+                  <div className="hidden sm:block">
+                    <GridPreferenceChooser
+                      ref={preferenceChooserRef}
+                      columns={columns}
+                      gridId={gridId}
+                      onApplyPreferences={onApplyPreferences}
+
+                      showChooserOnGridHead={showChooserOnGridHead}
+                    />
+                  </div>
                 </Item>
               )}
 
               {!hideGridAddButton && (
                 <Item>
-                <div className="hidden sm:block">
-                  <div>
-                    {gridAddButtonType == "link" && (
-                      <Link
-                        to={gridAddButtonLink}
-                        className="ti-btn-primary-full ti-btn ti-btn-full"
-                      >
-                        {t("new")}
-                        <Plus className="w-4 h-4" />
-                      </Link>
-                    )}
-                    {gridAddButtonType == "popup" && (
-                      <ERPButton
-                        variant="primary"
-                        onClick={onPopupOpenClick}
-                        title={addButtonText}
-                        startIcon={gridAddButtonIcon}
-                      />
-                    )}
-                  </div>
+                  <div className="hidden sm:block">
+                    <div>
+                      {gridAddButtonType == "link" && (
+                        <Link
+                          to={gridAddButtonLink}
+                          className="ti-btn-primary-full ti-btn ti-btn-full"
+                        >
+                          {t("new")}
+                          <Plus className="w-4 h-4" />
+                        </Link>
+                      )}
+                      {gridAddButtonType == "popup" && (
+                        <ERPButton
+                          variant="primary"
+                          onClick={onPopupOpenClick}
+                          title={addButtonText}
+                          startIcon={gridAddButtonIcon}
+                        />
+                      )}
+                    </div>
                   </div>
                 </Item>
               )}
@@ -2417,7 +2387,7 @@ const handleOptionChanged = (e: any) => {
 
             {gridCols?.map((column, index) => (
               <Column
-              buttons={column?.buttons}
+                buttons={column?.buttons}
                 customizeText={column.customizeText}
                 editorOptions={column.editorOptions}
                 validationRules={column.validationRules}
@@ -2432,7 +2402,7 @@ const handleOptionChanged = (e: any) => {
                 groupIndex={column.groupIndex}
                 cssClass={column.cssClass}
                 format={column.format}
-                dataType={column.dataType??"string"}
+                dataType={column.dataType ?? "string"}
                 allowSorting={column.allowSorting}
                 allowSearch={column.allowSearch}
                 // allowResizing={column.allowResizing}
@@ -2449,32 +2419,32 @@ const handleOptionChanged = (e: any) => {
                 fixedPosition={column.fixedPosition}
                 cellRender={
                   column.cellRenderDynamic === undefined &&
-                  column.cellRender === undefined &&
-                  column.cellRenderDynamicRootState === undefined
+                    column.cellRender === undefined &&
+                    column.cellRenderDynamicRootState === undefined
                     ? undefined
                     : (cellElement: any, cellInfo: any) => {
-                        if (column.cellRenderDynamic) {
-                          return column.cellRenderDynamic(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
-                        if (column.cellRenderDynamicRootState) {
-                          return column.cellRenderDynamicRootState(
-                            cellElement,
-                            cellInfo,
-                            rootState
-                          );
-                        }
-                        if (column.cellRender) {
-                          return column.cellRender(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
+                      if (column.cellRenderDynamic) {
+                        return column.cellRenderDynamic(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
                       }
+                      if (column.cellRenderDynamicRootState) {
+                        return column.cellRenderDynamicRootState(
+                          cellElement,
+                          cellInfo,
+                          rootState
+                        );
+                      }
+                      if (column.cellRender) {
+                        return column.cellRender(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
+                      }
+                    }
                 }
                 visible={
                   column.visibleDynamic != undefined
@@ -2528,8 +2498,8 @@ const handleOptionChanged = (e: any) => {
               originDynamic
                 ? originDynamic(isChildOpen.key)
                 : childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).origin
-                : childPopupProps?.origin
+                  ? childPopupPropsDynamic(isChildOpen.key).origin
+                  : childPopupProps?.origin
             }
             closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
             content={

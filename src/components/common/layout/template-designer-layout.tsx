@@ -12,7 +12,7 @@ import Sidebar from "../sidebar/sidebar";
 import Footer from "../footer/footer";
 import Content from "../content/content";
 import { Route, Routes } from "react-router-dom";
-import InvoiceDesigner from "../../../pages/InvoiceDesigner/InvoiceDesigner";
+import InvoiceDesigner from "../../../pages/InvoiceDesigner/invocieDesigner.tsx/InvoiceDesignerLanding";
 // import InvoiceDesigner from "../../../pages/InvoiceDesigner/InvoiceDesigner";
 
 interface LayoutProps {

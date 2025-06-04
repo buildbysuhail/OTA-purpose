@@ -12,10 +12,10 @@ export interface AccountTransactionProps {
   template?: TemplateState
   currentBranch?: any
   userSession?: any
-  currency?: any
+  clientSession?: any
 }
 
-const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession }: AccountTransactionProps) => {
+const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession }: AccountTransactionProps) => {
   const paperSize = template?.propertiesState?.pageSize || "A4"
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
 
@@ -59,7 +59,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
           )}
 
           {/* Content Section */}
-          <Content data={data} template={template} currentBranch={currentBranch} />
+          <Content data={data} template={template} currentBranch={currentBranch} clientSession={clientSession} />
 
           {/* Table Section - Allow to break across pages */}
           <Table data={data} template={template} />

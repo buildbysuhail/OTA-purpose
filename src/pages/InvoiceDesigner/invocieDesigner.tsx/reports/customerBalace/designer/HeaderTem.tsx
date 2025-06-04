@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const Header = ({
+export const HeaderIn = ({
   data,
   currentBranch,
   userSession,

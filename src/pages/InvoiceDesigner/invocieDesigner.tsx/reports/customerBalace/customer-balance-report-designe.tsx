@@ -13,7 +13,7 @@ import useCurrentBranch from "../../../../../utilities/hooks/use-current-branch"
 import { RootState } from "../../../../../redux/store";
 import { TemplateReducerState } from "../../../../../redux/reducers/TemplateReducer";
 import { TemplateDto, TemplateState } from "../../../Designer/interfaces";
-import { setTemplate } from "../../../../../redux/slices/templates/reducer";
+import { setTemplate, setTemplatePropertiesState } from "../../../../../redux/slices/templates/reducer";
 import Urls from "../../../../../redux/urls";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 import ERPToast from "../../../../../components/ERPComponents/erp-toast";
@@ -21,6 +21,8 @@ import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save"
 import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import CustomerBalanceTemplate from "./designer";
 import { DummyVoucherData } from "../../../constants/DummyData";
+import PropertiesDesigner from "../../../Designer/PropertiesDesigner";
+import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
 
 interface DesignSectionType {
   id: number;
@@ -50,7 +52,7 @@ const designSections: Array<DesignSectionType> = [
   {
     id: 2,
     name: "header_&_footer",
-    description: "Template 1 description",
+    description: "Template 1 description",  
     type: "header&footer",
     icon: <BarsArrowUpIcon />,
   },
@@ -252,7 +254,7 @@ const CustomerBalanceTemplateDesigner : React.FC<StandardDesignType> = ({}) => {
                 </button>
               </div>  
           </div>
-               {/* {currentSection.type == "properties" &&
+               {currentSection.type == "properties" &&
                     <PropertiesDesigner
                         templateGroup={templateGroup}
                         tempImages={{ templateImages, setTemplateImages }}
@@ -262,13 +264,16 @@ const CustomerBalanceTemplateDesigner : React.FC<StandardDesignType> = ({}) => {
                         }
                     />
                }
-                {currentSection.type == "header&footer" &&
-                  <AccStandredHeaderFooterDesigner/>
-             }
 
-                 {currentSection.type == "transactions" &&
-                  <AccStandardTransaction/>
-             } */}
+        {currentSection.type == "header&footer" &&
+          <HeaderFooterDesigner
+            tempImages={{ templateImages, setTemplateImages }}
+            footerState={templateData?.activeTemplate?.footerState}
+            headerState={templateData?.activeTemplate?.headerState}
+          // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
+          />
+        }
+                
       </div>
             <PDFViewer
                     className="pdf-viewer"

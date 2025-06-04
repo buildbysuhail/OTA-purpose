@@ -54,7 +54,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
         <ERPScrollArea
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
-                <h6 className="bg-[#80808012] p-[2px]">{t("organization_details")}</h6>
+                <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
                 <ERPCheckbox
                     id="showLogo"
                     label={t("show_organization_logo")}
@@ -74,7 +74,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         </div>
                     )}
 
-                {!["qty_adjustment", "value_adjustment"].includes(templateGroup!) &&
+                
                     <>
                         <ERPCheckbox
                             id="showOrgName"
@@ -156,11 +156,10 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                             )}
                         </div>
                     </>
-                }
             </div>
 
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
-                <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
+                {/* <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6> */}
                 <ERPInput
                     id="bgColor"
                     type="color"

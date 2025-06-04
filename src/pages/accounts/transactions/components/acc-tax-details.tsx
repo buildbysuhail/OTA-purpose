@@ -90,7 +90,7 @@ const AccTaxDetails = React.forwardRef<HTMLInputElement, AccTaxDetailsProps>(({
             localInputBox={formState.userConfig?.inputBoxStyle}
             id="invoiceDate"
             label={t("invoice_date")}
-            value={new Date(formState.row.invoiceDate)}
+            value={formState.row.invoiceDate}
             onChange={(e) => dispatch(accFormStateRowHandleFieldChange({ fields: { invoiceDate: e.target?.value }, }))}
             disabled={formState.formElements.pnlMasters?.disabled}
             disableEnterNavigation

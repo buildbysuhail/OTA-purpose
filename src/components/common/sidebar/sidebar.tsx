@@ -549,25 +549,27 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
     setMenuitems((arr: any) => [...arr]);
   }
-  function getParentObject(obj: any, childObject: any) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if (
-          typeof obj[key] === "object" &&
-          JSON.stringify(obj[key]) === JSON.stringify(childObject)
-        ) {
-          return obj; // Return the parent object
-        }
-        if (typeof obj[key] === "object") {
-          const parentObject: any = getParentObject(obj[key], childObject);
-          if (parentObject !== null) {
-            return parentObject;
-          }
+  function getParentObject(obj: any, childObject: any): any {
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (
+        typeof obj[key] === "object" &&
+        obj[key] !== null &&
+        JSON.stringify(obj[key]) === JSON.stringify(childObject)
+      ) {
+        return obj;
+      }
+
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        const parentObject = getParentObject(obj[key], childObject);
+        if (parentObject !== null) {
+          return parentObject;
         }
       }
     }
-    return null; // Object not found
   }
+  return null;
+}
 
   function setMenuAncestorsActive(targetObject: any) {
     const parent = getParentObject(menuitems, targetObject);

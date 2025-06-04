@@ -190,7 +190,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     columns: 2,
     children: [
       { id: 1,element:<TrialBalance />, formCode:"TBRpt", action: UserAction.Show, path: `/reports/_/accounts/trial_balance`, routePath: `/accounts/trial_balance`, type: 'link',  active: false, selected: false, title: 'trial_balance', icon: SlEqualizer },
-      { id: 2,element:<TrialBalancePeriodwise />, formCode:"TBRpt", action: UserAction.Show,  path: `/reports/_/accounts/trial_balance_period_wise`, routePath: `/accounts/trial_balance_period_wise`, type: 'link', active: false, selected: false, title: 'trial_balance_periodwise', icon: ImEqualizer2 },
+      { id: 2,element:<TrialBalancePeriodwise />, formCode:"TBRpt", action: UserAction.Show,  path: `/reports/_/accounts/trial_balance_period_wise`, routePath: "/accounts/trial_balance_period_wise", type: 'link', active: false, selected: false, title: 'trial_balance_periodwise', icon: ImEqualizer2 },
       { id: 3,element:<ProfitAndLossReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss`, type: 'link', routePath:'', active: false, selected: false, title: 'profit_&_loss_account', icon: TrendingUp },
       { id: 4,element:<ProfitAndLossDetailedReport />, formCode:"PLRPT", action: UserAction.Show, path: `/reports/_/accounts/profit_and_loss_detailed`, type: 'link', routePath:'', active: false, selected: false, title: 'profit_&_loss_account_detailed', icon: TfiStatsUp },
       { id: 5,element:<BalanceSheet />, formCode:"BSRPT", action: UserAction.Show, path: `/reports/_/accounts/balance_sheet`, type: 'link', routePath:'', active: false, selected: false, title: 'balance_sheet', icon: Scale },

@@ -25,7 +25,7 @@ export const renderReportSelectedTemplate = (props: ReportRenderProps) => {
         data={data}
         currentBranch={currentBranch}
         userSession={userSession}
-        getFormattedValue={getFormattedValue}
+        // getFormattedValue={getFormattedValue}
         />
       );
     case "":

@@ -1875,7 +1875,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     };
     return (
       <Fragment>
-        <GridPreferenceChooser
+       {
+        showChooserOnGridHead && 
+         <GridPreferenceChooser
           ref={preferenceChooserRef}
           columns={columns}
           gridId={gridId}
@@ -1883,6 +1885,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           showChooserOnGridHead={showChooserOnGridHead}
         />
+       }
         <div
           className={`custom-data-grid ${showChooserOnGridHead ? "toolbar-expanded" : ""
             } 

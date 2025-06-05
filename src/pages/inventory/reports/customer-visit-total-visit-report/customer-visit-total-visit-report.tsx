@@ -9,20 +9,6 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CustomerVisitTotalVisitFilter, { CustomerVisitTotalVisitFilterInitialState } from "./customer-visit-total-visit-report-filter";
 import GridId from "../../../../redux/gridId";
 
-interface NewGridInterface {
-  si: number;
-  partyCode: string;
-  partyName: string;
-  address1: string;
-  address2: string;
-  workPhone: string;
-  officePhone: string;
-  mobilePhone: string;
-  contactPhone: string;
-  routeName: string;
-  noOFVisited: number;
-}
-
 const CustomerVisitTotalVisit = () => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
@@ -31,6 +17,7 @@ const CustomerVisitTotalVisit = () => {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
+      groupIndex:0,
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
@@ -107,22 +94,6 @@ const CustomerVisitTotalVisit = () => {
       width: 70,
     }
   ];
-
-  const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
-  ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -130,10 +101,8 @@ const CustomerVisitTotalVisit = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
                 gridHeader={t("customer_visit_total_visit")}
                 dataUrl={Urls.customer_visit_total_visit}
                 hideGridAddButton={true}

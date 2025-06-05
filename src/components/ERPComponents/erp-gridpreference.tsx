@@ -185,9 +185,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
         <button
           onClick={(e) => {
             e.stopPropagation();
-             setIsOpen(true)}}
+            setIsOpen(true);
+          }}
           onTouchEnd={() => setIsOpen(true)}
-          className={` ${eclipseClass ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0"} `}
+          className={`${
+            eclipseClass ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0 z-10 pointer-events-auto"
+          }`}
+          style={{ zIndex: 10 }}
         >
           <Ellipsis className="text-[#0ea5e9] mjtestnow" />
         </button>

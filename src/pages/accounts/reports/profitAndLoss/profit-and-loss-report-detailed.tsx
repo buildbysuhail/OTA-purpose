@@ -663,7 +663,7 @@ const ProfitAndLossDetailedReport = () => {
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width={400}
-                height={300}
+                height={220}
                 gridId="gridPandL_detailed"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}

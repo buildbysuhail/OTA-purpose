@@ -4,6 +4,7 @@ import FontRegistration from "../../../../LabelDesigner/fontRegister";
 import { Header } from "./Header";
 import { Content } from "./Content";
 import { AccountTransactionProps } from "../account_transactiocn-premium";
+import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util";
 
 
 const AccountTransactionsUniversal = ({ data, template, currentBranch,userSession}: AccountTransactionProps) => {
@@ -14,12 +15,20 @@ const paddingRight = template?.propertiesState?.padding?.right || 10;
 const paddingTop = template?.propertiesState?.padding?.top || 10;
 const paddingBottom = template?.propertiesState?.padding?.bottom || 10
 const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-
+  // Get the page size for the PDF
+    const pageSize = template?.propertiesState?.pageSize ?? "A4"
+          // Get the actual page dimensions based on the selected page size
+          const selectedPageSize = getPageDimensions(
+            pageSize,
+            template?.propertiesState?.width,
+            template?.propertiesState?.height,
+          )
+        const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
 return (
   <Document>
   <FontRegistration />
   <Page
-    size={"A4"}
+    size={pdfPageSize}
     orientation={pageOrientation}
     wrap
   >

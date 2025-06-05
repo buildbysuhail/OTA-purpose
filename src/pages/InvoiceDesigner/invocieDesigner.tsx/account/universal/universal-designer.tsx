@@ -24,9 +24,10 @@ import Urls from "../../../../../redux/urls";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save";
-import AccUniversalHeaderFooterDesigner from "./designer/header-footer-designer";
 import AccUniversalTransaction from "./designer/transactions-designer";
 import AccountTransactionsUniversal from "../../../DownloadPreview/account/account_transaction-universal";
+import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+
 interface DesignSectionType {
   id: number;
   name: string;
@@ -173,15 +174,12 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
   };
 
     const getPDFTemplateData = async () => {
+      debugger;
         const res = await api.getAsync(`${Urls.templates}${id || ""}`)
         let cc: TemplateState = customJsonParse(res.content);
         const template = {
         ...cc,
         id: res.id,
-        background_image: res?.payload?.data?.background_image as string | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
-        signature_image: res?.payload?.data?.signature_image as string | undefined,
         branchId: res.branchId,
         content: res.content,
         isCurrent: res.isCurrent,
@@ -266,7 +264,7 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
                     />
                }
                 {currentSection.type == "header&footer" &&
-                  <AccUniversalHeaderFooterDesigner/>
+                  <HeaderFooterDesigner/>
              }
 
                  {currentSection.type == "transactions" &&
@@ -284,11 +282,8 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
                   currentBranch={currentBranch}
                   userSession={userSession}
                 />
-
-             </PDFViewer>
-             
-
-    </div>
+             </PDFViewer>           
+      </div>
   );
   
 };

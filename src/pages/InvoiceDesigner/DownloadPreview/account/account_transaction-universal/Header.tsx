@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     width: "100%",
     marginVertical:10,
-    zIndex: 10,
+   
   },
   otherInfo:{
     display:"flex",
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    zIndex: -10,
+    zIndex: -20,
   },
 });
 
@@ -74,7 +74,7 @@ export  const Header = ({ data, template, currentBranch,userSession}: { data: an
       backgroundColor: template?.headerState?.bgColor || "#fff",
       position: 'relative',
       // borderBottom:"1px solid rgb(104, 101, 101)",
-      zIndex:10
+      zIndex:20
       }}>
   {/* Background Image */}
     {template?.background_image_header && (
@@ -82,7 +82,8 @@ export  const Header = ({ data, template, currentBranch,userSession}: { data: an
           src={template?.background_image_header}
           style={[
             styles.bgImage,
-            { objectPosition: headerState?.bg_image_header_position || 'center' } // Control image position
+            { objectPosition: headerState?.bg_image_header_position || 'center' , // Control image position
+             objectFit: headerState?.bg_image_header_objectFit || 'fill'}
           ]}
         />
       )}

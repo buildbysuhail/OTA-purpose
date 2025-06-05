@@ -6,6 +6,7 @@ import type { TemplateState } from "../../../Designer/interfaces"
 import FontRegistration from "../../../../LabelDesigner/fontRegister"
 import { Header } from "./Header"
 import { Content } from "./Content"
+import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util"
 
 export interface AccountTransactionProps {
   data: any
@@ -25,11 +26,17 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
   const paddingRight = template?.propertiesState?.padding?.right || 10
   const paddingTop = template?.propertiesState?.padding?.top || 10
   const paddingBottom = template?.propertiesState?.padding?.bottom || 10
-
+   const pageSize = template?.propertiesState?.pageSize ?? "A4"
+   const selectedPageSize = getPageDimensions(
+            pageSize,
+            template?.propertiesState?.width,
+            template?.propertiesState?.height,
+          )
+    const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
   return (
     <Document>
       <FontRegistration />
-      <Page size={"A4"} orientation={pageOrientation}>
+      <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
         <Header data={data} template={template} currentBranch={currentBranch} />
 

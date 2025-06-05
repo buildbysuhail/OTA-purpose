@@ -10,11 +10,17 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
   const DEFAULT_COLUMN_WIDTH = "10%";
 
   const labelStyles = {
-    fontWeight: propertiesState?.label_font_weight || "normal",
-    fontStyle: propertiesState?.label_font_style || "normal",
-    fontFamily: propertiesState?.font_family || "Helvetica",
+    fontWeight: propertiesState?.label_font_weight ,
+    fontStyle: propertiesState?.label_font_style ,
+    fontFamily: propertiesState?.font_family ,
   };
-
+  const normalizeWidth = (widthVal: string | number): string => {
+    const w = widthVal.toString().trim();
+    if (w.endsWith("%") || w.endsWith("pt")) {
+      return w;
+    }
+    return `${w}pt`;
+  };
   // Styles
   const styles = StyleSheet.create({
     table: {
@@ -47,16 +53,20 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
         : "none",
     },
     th: {
-     padding: 4,
-      flex: 1,
-      textAlign: "center",
-
+    padding: 4,
+    textAlign: "center",
+    // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "center",
+    // flexWrap: "wrap", 
     },
     tbody: {
       flexDirection: "column",
     },
     tr: {
       flexDirection: "row",
+      color: accTableState?.itemRowFontColor || "#000",
+      fontSize: accTableState?.itemRowFontSize   || 12,
       borderBottom: accTableState?.showTableRowBorder
         ? `1px solid ${accTableState?.tableRowBorderColor || "#000"}`
         : "none",
@@ -65,22 +75,15 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
         : "#fff",
     },
     td: {
-      padding: 4,
-      textAlign: "center",
-      color: accTableState?.itemRowFontColor || "#000",
-      fontSize: accTableState?.itemRowFontSize || 12,
-      fontWeight: propertiesState?.font_weight,
-      minHeight: 24,
-      overflow: "hidden", // Prevent overflow
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
+     padding: 4,
+    textAlign: "center",     // allow body text to wrap
+   
     },
     cellText: {
-      ...labelStyles,
-      wordWrap: "break-word",
-      overflowWrap: "break-word",
-      hyphens: "auto",
+      // ...labelStyles,
+      // wordWrap: "break-word",
+      // overflowWrap: "break-word",
+      // hyphens: "auto",
     },
   });
 
@@ -101,14 +104,15 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
   };
 
   // Helper function to create cell style with proper width constraints
-  const getCellStyle = (baseStyle: any, width: string) => ({
-    ...baseStyle,
-    width: width,
-    minWidth: width,
-    maxWidth: width,
-    flex: 0, // Prevent flex growth
-    flexShrink: 0, // Prevent flex shrinking
-  });
+const getCellStyle = (baseStyle: any, width: string | number) => {
+    const w = normalizeWidth(width);
+    return {
+      ...baseStyle,
+      width: w,
+      minWidth: w,
+      maxWidth: w,
+    };
+  };
 
   // Function to Render the Table Header
   const renderHeader = () => {
@@ -168,7 +172,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
         {accTableState?.showAmount && (
           <View
             style={{
-              ...getCellStyle(styles.th, accTableState?.amountWidth || DEFAULT_COLUMN_WIDTH),
+              ...getCellStyle(styles.th, accTableState?.amountWidth  || DEFAULT_COLUMN_WIDTH),
               borderRight:
                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -285,7 +289,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
   const visibleColumns = getVisibleColumnsCount();
 
   return (
-    <View style={[styles.table, labelStyles]} wrap>
+    <View style={[styles.table,labelStyles]} wrap>
       {/* Table Header */}
       {renderHeader()}
 
@@ -302,12 +306,12 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
                   ? { borderBottom: "none" }
                   : {},
               ]}
-              wrap={false}
+          
             >
               {accTableState?.showLineItemNumber && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.lineItemNumberWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.lineItemNumberWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -323,7 +327,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showLedgerCode && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.ledgerCodeWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.ledgerCodeWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -339,7 +343,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showLedger && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.ledgerWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.ledgerWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -355,7 +359,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showAmount && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.amountWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.amountWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -363,7 +367,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
                   }}
                 >
                   <Text style={styles.cellText}>
-                    {`${item.amount || ""}5142543216512`}
+                    {`${item.amount || ""}5142543`}
                   </Text>
                 </View>
               )}
@@ -371,7 +375,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showNarration && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.narrationWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.narrationWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -387,7 +391,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showBillwiseDetails && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.billwiseDetailsWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.billwiseDetailsWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -403,7 +407,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showDiscount && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.discountWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.discountWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -419,7 +423,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showCostCenter && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.costCenterWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.costCenterWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -435,7 +439,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showAmountFc && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.amountFcWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.amountFcWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
@@ -451,7 +455,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {accTableState?.showBankCharge && (
                 <View
                   style={{
-                    ...getCellStyle(styles.td, accTableState?.bankChargeWidth || DEFAULT_COLUMN_WIDTH),
+                    ...getCellStyle(styles.th, accTableState?.bankChargeWidth || DEFAULT_COLUMN_WIDTH),
                     borderRight:
                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`

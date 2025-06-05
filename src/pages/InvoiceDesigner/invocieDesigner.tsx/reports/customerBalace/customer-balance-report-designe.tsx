@@ -266,12 +266,7 @@ const CustomerBalanceTemplateDesigner : React.FC<StandardDesignType> = ({}) => {
                }
 
         {currentSection.type == "header&footer" &&
-          <HeaderFooterDesigner
-            tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData?.activeTemplate?.footerState}
-            headerState={templateData?.activeTemplate?.headerState}
-          // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
-          />
+          <HeaderFooterDesigner/>
         }
                 
       </div>

@@ -1386,7 +1386,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       },
       {
         dataField: "ledgerID",
-        visible: !deviceInfo.isMobile,
+        visible: false,
         caption: t("ledger_ID"),
         width: 100,
         cellRender: (cellData: any) =>

@@ -385,6 +385,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   ) => {
     const { t } = useTranslation("main");
     const [isOpen, setIsOpen] = useState(false);
+    const [lcct, setLcct] = useState<string>("");
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<Option[]>([]);
     const [loading, setLoading] = useState(false);
@@ -430,6 +431,15 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, [reload]);
     
     useEffect(() => {
+      
+    }, []);
+    useEffect(() => { 
+      if (isOpen){
+        const _lcct = localStorage.getItem("lcct");
+        if(lcct != _lcct) {
+          loadData();
+        }
+      }
       const handleScroll = () => {
         if (isOpen && comboboxRef.current) {
           const rect = comboboxRef.current.getBoundingClientRect();
@@ -770,35 +780,18 @@ useEffect(() => {
         }
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
-          const promise = api
-            .getWithCacheAsync(url, params)
-            .then((_res) => {
-              if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
-                localStorage.setItem(btoa(url), JSON.stringify(_res));
-                return filterLedgers(_res, params);
+          const res = await api
+            .getWithCacheAsync(url, params);
+             if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
+                localStorage.setItem(btoa(url), JSON.stringify(res));
+                return filterLedgers(res, params);
               }
-              return _res;
-            })
-            .finally(() => {
-              // apiRequestCache.delete(cacheKey);
-            });
+              return res;
 
-          // apiRequestCache.set(cacheKey, promise);
-          return promise;
         } else {
-          const promise = api
+          const res = await api
             .getAsync(url, params)
-            .then((_res) => {
-              // 3. Update Redux After
-
-              return _res;
-            })
-            .finally(() => {
-              // apiRequestCache.delete(cacheKey);
-            });
-
-          // apiRequestCache.set(cacheKey, promise);
-          return promise;
+             return res;
         }
       },
       [
@@ -815,6 +808,7 @@ useEffect(() => {
       try {
         let _items;
 
+              debugger;
         // Check if data is available in Redux
         let _continue = true;
         let fetchWithCache = false;
@@ -837,6 +831,7 @@ useEffect(() => {
           } else {
             if (fetchWithCache) {
               _items = await fetchData(true);
+              debugger;
             } else {
               _items = await fetchData();
             }
@@ -855,6 +850,7 @@ useEffect(() => {
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
+        setLcct(localStorage.getItem("lcct")??"")
         if (_reload === true) {
           changeReload && changeReload(false);
         }
@@ -1000,6 +996,10 @@ useEffect(() => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      //  const _lcct = localStorage.getItem("lcct");
+      //   if(lcct != _lcct) {
+      //     loadData();
+      //   }
       const value = event.target.value;
       setInputValue(value);
       setQuery(value);

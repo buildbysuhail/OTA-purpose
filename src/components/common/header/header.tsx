@@ -22,8 +22,12 @@ import { useSelector } from "react-redux";
 import * as switcherdata from "../switcher/switcherdata/switcherdata";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import { Button } from "../../../dark/Button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, RefreshCcw, Sun } from "lucide-react";
 import { menuClose, toggleSidebar } from "./toggle-sidebar";
+import CachedUrls from "../../../redux/cached-urls";
+import config from "../../../config";
+import { APIClient } from "../../../helpers/api-client";
+const api  = new APIClient();
 
 interface HeaderProps { }
 
@@ -236,6 +240,19 @@ const Header: FC<HeaderProps> = () => {
   };
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+
+  const refreshCache = async () => {
+   
+    try {
+      CachedUrls.forEach(async(x) => {
+        await api.getWithCacheAsync(x,"", true)        
+        localStorage.setItem("lcct", new Date().toISOString());
+      })
+      
+    } catch (error) {
+      console.error("Error refreshing cache:", error);
+    }
+  };
 
   return (
     <Fragment>
@@ -793,6 +810,13 @@ const Header: FC<HeaderProps> = () => {
                             <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
                             {t("account_settings")}
                           </Link>
+                        </li>
+
+                        <li>
+                          <button className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" onClick={refreshCache} >
+                            <RefreshCcw className="w-[1.125rem] h-[1.125rem] me-2 opacity-70" />
+                            {t("refresh_cache")}
+                          </button>
                         </li>
 
                         <li>

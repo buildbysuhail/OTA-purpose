@@ -19,6 +19,7 @@ export interface TransactionProps {
   transactionMasterID?: number,
   financialYearID?: number,
   isTeller?: boolean | false,
+  // localInputBox?: inputBox;
 }
 export interface TransactionData {
   master: TransactionMaster;

@@ -128,6 +128,14 @@ const userSessionSlice = createSlice({
     setUserSession: (state, action: PayloadAction<UserModel>) => {
       return action.payload;
     },
+   setUserSessionItem: <
+  K extends keyof UserModel
+>(
+  state: UserModel,
+  action: PayloadAction<{ key: K; value: UserModel[K] }>
+) => {
+  state[action.payload.key] = action.payload.value;
+},
   },
   extraReducers: (builder) => {
     builder.addCase(userSession?.fulfilled, (state, action) => {
@@ -146,6 +154,6 @@ const userSessionSlice = createSlice({
   },
 });
 
-export const { setUserSession } = userSessionSlice.actions;
+export const { setUserSession, setUserSessionItem } = userSessionSlice.actions;
 
 export default userSessionSlice.reducer;

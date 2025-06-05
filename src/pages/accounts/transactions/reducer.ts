@@ -454,34 +454,7 @@ const accTransactionSlice = createSlice({
     accFormStateReset: () => {
       return accTransactionFormStateInitialData;
     },
-    setUserRight: (
-      state,
-      action: PayloadAction<{
-        userSession: UserModel;
-        hasRight: (formCode: string, action: UserAction) => boolean;
-      }>
-    ) => {
-      const { userSession, hasRight } = action.payload;
-
-      const isClosed = userSession.financialYearStatus === "Closed";
-
-      state.formElements.btnSave.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Add) &&
-          (state?.transaction?.details?.length ?? 0) > 0
-        : false;
-
-      state.formElements.btnEdit.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Edit)
-        : false;
-
-      state.formElements.btnDelete.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Delete)
-        : false;
-
-      state.formElements.btnPrint.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Print)
-        : false;
-    },
+    
     updateFormElement: (
       state,
       action: PayloadAction<{
@@ -753,7 +726,6 @@ export const {
   accFormStateClearRowForNew,
   clearState,
   enableControls,
-  setUserRight,
   disableControls,
   updateFormElement,
   accFormStateTransactionDetailsSetSlNo,

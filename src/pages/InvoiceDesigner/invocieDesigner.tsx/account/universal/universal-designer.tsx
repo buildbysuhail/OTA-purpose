@@ -174,7 +174,7 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
   };
 
     const getPDFTemplateData = async () => {
-      debugger;
+      
         const res = await api.getAsync(`${Urls.templates}${id || ""}`)
         let cc: TemplateState = customJsonParse(res.content);
         const template = {

@@ -60,6 +60,7 @@ import localData from "../../../enums/local-datas";
 import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
+import { UserModel } from "../../../redux/slices/user-session/reducer";
 
 
 interface FormElementState {
@@ -606,7 +607,7 @@ export const useAccTransaction = (
             break;
         }
       }
-debugger;
+
       voucher.transaction.details = refactorDetails(voucher.transaction);
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction
@@ -640,8 +641,8 @@ debugger;
     });
   };
   const refactorDetails = (transaction: AccTransactionData) => {
-    
-debugger;
+    debugger;
+
     return transaction.details.map((detail, index) => {
       const baseDetail = {
         ...detail,
@@ -657,7 +658,7 @@ debugger;
           ? new Date(detail.checkBouncedDate).toISOString()
           : moment.utc("2000-01-01").startOf("day").toISOString(),
       };
-debugger;
+
       // Handle voucher type specific logic
       switch (transaction.master.voucherType) {
         case "CP":
@@ -1009,7 +1010,7 @@ if (
       element.exchangeRate = 1;
       element.isDisplay = true;
       element.isDr = true;
-debugger;
+
       switch (formState.transaction.master.voucherType) {
         case "CP":
         case "BP":
@@ -1530,7 +1531,7 @@ debugger;
 
       return false;
     }
-    debugger;
+    
     if (
       !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
       isNullOrUndefinedOrZero(formState.masterAccountID)
@@ -2078,7 +2079,31 @@ debugger;
   const loadTemporaryRows = async () => {
     dispatch(loadTempRows());
   };
+const setUserRight = (
+      state: AccTransactionFormState, userSession: UserModel,
+        hasRight: (formCode: string, action: UserAction) => boolean
+    ) => {
 
+      const isClosed = userSession.financialYearStatus === "Closed";
+
+      state.formElements.btnSave.disabled = !isClosed
+        ? hasRight(state.formCode, UserAction.Add) &&
+          (state?.transaction?.details?.length ?? 0) > 0
+        : false;
+
+      state.formElements.btnEdit.disabled = !isClosed
+        ? hasRight(state.formCode, UserAction.Edit)
+        : false;
+
+      state.formElements.btnDelete.disabled = !isClosed
+        ? hasRight(state.formCode, UserAction.Delete)
+        : false;
+
+      state.formElements.btnPrint.disabled = !isClosed
+        ? hasRight(state.formCode, UserAction.Print)
+        : false;
+        return state.formElements;
+    }
   const enableCombo = async () => {
     dispatch(
       updateFormElement({
@@ -2102,6 +2127,7 @@ debugger;
           referenceNumber: { disabled: false },
           transactionDate: { disabled: false },
           linkEdit: { visible: false },
+          btnAdd: { disabled: false },
         },
       })
     );
@@ -2583,5 +2609,6 @@ debugger;
     billWiseExcludedTransactions,
     getDrCr,
     clearRow,
+    setUserRight
   };
 };

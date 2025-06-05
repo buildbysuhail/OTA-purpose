@@ -810,7 +810,7 @@ useEffect(() => {
       try {
         let _items;
 
-              debugger;
+              
         // Check if data is available in Redux
         let _continue = true;
         let fetchWithCache = false;
@@ -833,7 +833,7 @@ useEffect(() => {
           } else {
             if (fetchWithCache) {
               _items = await fetchData(true);
-              debugger;
+              
             } else {
               _items = await fetchData();
             }
@@ -899,7 +899,7 @@ useEffect(() => {
         );
         let final: Option | null = null;
         // Handle value == -2 by selecting the first item if items are loaded
-        debugger;
+        
         const x = getListUrl;
         const y = `${field?.getListUrl??""}${field?.params??""}`;
         if (value === -2 && x== y) {

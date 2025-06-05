@@ -33,7 +33,6 @@ import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
-  setUserRight,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -278,6 +277,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billWiseExcludedTransactions,
     getDrCr,
     clearRow,
+    setUserRight
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -343,14 +343,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       try {
         const _drcr = getDrCr(formState.transaction.master.voucherType);
-        const ledgerID = formState.row.ledgerID;
+        const ledgerID = formState.row.ledgerID??0;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
         let formElmns = {
           ...formState.formElements,
         };
-        if (!isNullOrUndefinedOrZero(ledgerID)) {
+        if (ledgerID > 0) {
           if (
             billwiseMandatory &&
             ((!isRowEdit && !formState.row.billwiseDetails) ||
@@ -414,6 +414,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               },
             })
           );
+          
           dispatch(
             accFormStateRowHandleFieldChange({
               fields: {
@@ -611,7 +612,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ? t(title)
               : t(title) + "[" + formType + "]") ?? "",
           row: {
-            ...AccTransactionRowInitialData,
+            ...AccTransactionRowInitialData,            
+            ledgerCode: "",
             narration:
               (voucherType == "JV" || voucherType == "JVSP") &&
               formState?.userConfig?.keepNarrationForJV
@@ -1257,14 +1259,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       } else {
         _formState.template = null;
       }
+      
+    if (voucherNo != undefined && voucherNo > 0) {
+      _formState.formElements = setUserRight(_formState,userSession,hasRight);
+    }
       setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously
     };
 
     initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    }
   }, [voucherType, voucherPrefix, location.search, voucherNo]);
 
   

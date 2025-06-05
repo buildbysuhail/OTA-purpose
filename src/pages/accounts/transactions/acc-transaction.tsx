@@ -1386,7 +1386,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       },
       {
         dataField: "ledgerID",
-        visible: !deviceInfo.isMobile,
+        visible: false,
         caption: t("ledger_ID"),
         width: 100,
         cellRender: (cellData: any) =>
@@ -1542,7 +1542,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 handleRemoveItem(cellElement.rowIndex);
               }}
               disabled={
-                formState.formElements.pnlMasters?.disabled
+                (formState.isRowEdit &&
+                  cellElement.data.accTransactionDetailID ==
+                    formState.row.accTransactionDetailID) 
               }
               className="ti-btn-link"
               type="button"
@@ -1599,7 +1601,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     console.log(cols);
     setKey(modelToBase64Unicode(cols));
     return cols;
-  }, [formState.formElements.gridColumns, formState.formElements.pnlMasters?.disabled]);
+  }, [formState.formElements.gridColumns]);
 
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -1892,7 +1894,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   : "grid grid-cols-2 gap-8"
               }
             >
-              {formState.formElements.pnlMasters?.disabled.toString()}
               {formState.userConfig?.isExpanded ? (
                 <>
                   {/* Expanded View - First Row */}

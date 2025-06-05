@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { postAction } from "../../redux/slices/app-thunks";
 import { useTranslation } from "react-i18next";
+import { APIClient } from "../../helpers/api-client";
 
 const TO_RADIANS = Math.PI / 180;
 export function useDebounceEffect(
@@ -54,7 +55,7 @@ type ERPCropperProps = {
   useCircle?: boolean;
   onImageSuccess: (str: string) => void;
 };
-
+const api = new APIClient;
 const ERPCropper: React.FC<ERPCropperProps> = ({
   closeModal,
   apiUrl,
@@ -79,14 +80,15 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
     setIsLoading(true);
     const blob = await createCropImage();
     const base64String = await convertBlobToBase64(blob);
-    let res = await dispatch(
-      postAction({ apiUrl: apiUrl, data: { base64: base64String } }) as any
-    );
+    let res = await api.postAsync(apiUrl, { base64: base64String });
+    //  dispatch(
+    //   postAction({ apiUrl: apiUrl, data: { base64: base64String } }) as any
+    // );
     setIsLoading(false);
     handleResponse(res, () => {
       setIsOpen(false);
       setImgSrc("");
-      onImageSuccess(res.payload.item);
+      onImageSuccess(res.item.base64);
       setIsOpen(false);
     });
   };

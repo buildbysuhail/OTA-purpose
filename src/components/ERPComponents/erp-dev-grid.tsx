@@ -423,7 +423,7 @@ const createStore = async (
         if (totalRowCountRef) {
           totalRowCountRef.current = result?.dataRowCount || result?.totalCount || 0;
         }
-        debugger;
+        
         const data = result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
@@ -1926,7 +1926,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={(e) => {
-              debugger;
+              
               if (e.component) {
                 const instance = e.component;
                 const totalCount = instance.totalCount();

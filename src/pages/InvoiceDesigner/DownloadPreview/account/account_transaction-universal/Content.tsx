@@ -81,16 +81,23 @@ const styles = StyleSheet.create({
             src={template?.background_image}
             style={[
               styles.bgImage,
-              { objectPosition: headerState?.bg_image_header_position || 'center' }
+               { objectPosition: template?.propertiesState?.bg_image_position || 'center',
+                objectFit: template?.propertiesState?.bg_image_objectFit || 'fill'
+               }
             ]}
           />
         )}
 
       
         <View style={styles.content}>
-            <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily,textAlign:"center" }]}>
-                {headerState?.docTitle || "CASH RECEIPT VOUCHER"}
+          {headerState?.showDocTitle &&
+            <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, 
+              fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily,textAlign:"center",
+              textDecoration:headerState?.docTitleUnderline?"underline":"none", }]}>
+                {headerState?.docTitle}
              </Text>
+          }
+          
             {/* date & No */}
           <View style={styles.VoucherInfo}>
           <View style={{ display: "flex", flexDirection: "column",gap:10,}}>

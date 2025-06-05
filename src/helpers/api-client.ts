@@ -70,44 +70,35 @@ class APIClient {
   getWithCacheAsync = async (
     url: string,
     queryString: string = "",
+    ignoreCach: boolean = false,
     config?: AxiosRequestConfig,
     token?: string
   ): Promise<any> => {
     try {
+      
       setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${url}`;
-      
+      debugger;
       // Check if a request is already in-flight
-      if (inFlightRequests.has(cacheKey)) {
+      if (inFlightRequests.has(cacheKey) && !ignoreCach) {
         return inFlightRequests.get(cacheKey);
       }
       
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       // Start the axios GET request and store its Promise
-      const promise = axios
-        .get(fullUrl, config)
-        .then((response: AxiosResponse) => {
-          // Return response.data if status exists
-          return response?.status !== undefined && response?.status !== null
-            ? response.data
-            : response;
-        })
-        .catch((error) => {
-          if (axios.isAxiosError(error)) {
-            if (error.response) {
-            } else if (error.request) {
-            } else {
-            }
-          } else {
-          }
-          return undefined;
-        })
-        .finally(() => {
-          inFlightRequests.delete(cacheKey);
-        });
-      inFlightRequests.set(cacheKey, promise);
-      return promise;
+      let resData: any;
+       const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
+      if (response?.status != undefined && response?.status != null) {
+        resData = response?.data;
+      }
+      else {
+        resData = response
+      }      
+      inFlightRequests.set(cacheKey, resData);      
+      localStorage.setItem(btoa(url), JSON.stringify(resData))
+      return resData
+    
     } catch (error) {
       console.error("Unexpected error in getAsync:", error);
       return undefined;

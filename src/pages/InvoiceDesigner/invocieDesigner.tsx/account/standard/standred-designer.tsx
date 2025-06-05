@@ -12,9 +12,7 @@ import PropertiesDesigner from "../../../Designer/PropertiesDesigner";
 import { TemplateReducerState } from "../../../../../redux/reducers/TemplateReducer";
 import { TemplateImagesTypes } from "../../InvoiceDesignerLanding";
 import { setTemplate, setTemplatePropertiesState } from "../../../../../redux/slices/templates/reducer";
-import HeaderFooterDesigner from "./designer/header-footer-desiner";
 import AccStandardTransaction from "./designer/transactions-designer";
-import AccStandredHeaderFooterDesigner from "./designer/header-footer-desiner";
 import AccountTransactionsVoucher from "../../../DownloadPreview/account/account_transactiocn_standard";
 import { DummyVoucherData } from "../../../constants/DummyData";
 import useCurrentBranch from "../../../../../utilities/hooks/use-current-branch";
@@ -28,6 +26,8 @@ import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save";
 import TotalStdDesigner from "./designer/total-designer";
+import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+
 interface DesignSectionType {
   id: number;
   name: string;
@@ -181,10 +181,6 @@ const StandardDesigner : React.FC<StandardDesignType> = ({}) => {
         const template = {
         ...cc,
         id: res.id,
-        background_image: res?.payload?.data?.background_image as string | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
-        signature_image: res?.payload?.data?.signature_image as string | undefined,
         branchId: res.branchId,
         content: res.content,
         isCurrent: res.isCurrent,
@@ -271,7 +267,7 @@ const StandardDesigner : React.FC<StandardDesignType> = ({}) => {
                     />
                }
                 {currentSection.type == "header&footer" &&
-                  <AccStandredHeaderFooterDesigner/>
+                  <HeaderFooterDesigner/>
                 }
 
                  {currentSection.type == "transactions" &&

@@ -25,11 +25,12 @@ import Urls from "../../../../../redux/urls";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save";
-import AccPremiumHeaderFooterDesigner from "./designer/header-footer-desinger";
 import AccPremiumTransaction from "./designer/transaction-desiner";
 import AccountTransactionsTemplate from "../../../DownloadPreview/account/account_transactiocn-premium";
 import TotalPremiumDesigner from "./designer/total-designer";
 import TablePremiumDesigner from "./designer/table-designer";
+import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+
 interface DesignSectionType {
   id: number;
   name: string;
@@ -141,10 +142,10 @@ const PremiumDesigner : React.FC<StandardDesignType> = ({}) => {
         thumbImage: dataUrl,
         content: JSON.stringify(tmpTemplate),
         isCurrent: tmpTemplate.isCurrent ?? false,
-        backgroundImage: tmpTemplate.background_image ?? "",
-        backgroundImageHeader: tmpTemplate.background_image_header ?? "",
-        backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
-        signatureImage: tmpTemplate.signature_image ?? "",
+        // backgroundImage: tmpTemplate.background_image ?? "",
+        // backgroundImageHeader: tmpTemplate.background_image_header ?? "",
+        // backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
+        // signatureImage: tmpTemplate.signature_image ?? "",
         branchId: 0,
         id: templateData.activeTemplate?.id == null ? 0 : templateData.activeTemplate?.id
       };
@@ -270,7 +271,7 @@ const PremiumDesigner : React.FC<StandardDesignType> = ({}) => {
                     />
                  }
                  {currentSection.type == "header&footer" &&
-                  <AccPremiumHeaderFooterDesigner/>
+                  <HeaderFooterDesigner/>
                  }
 
                  {currentSection.type == "transactions" &&

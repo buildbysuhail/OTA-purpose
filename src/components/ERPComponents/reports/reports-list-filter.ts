@@ -22,7 +22,7 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
           
           
           ];
-            debugger;
+            
           st = st
             .filter((parent: any) => !excluded.includes(parent.title))
             .map((parent: any) => {
@@ -103,7 +103,7 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
               };
             })
             .filter((parent: any) => parent.children?.length > 0);
-            debugger;
+            
             return st;
         }
 }

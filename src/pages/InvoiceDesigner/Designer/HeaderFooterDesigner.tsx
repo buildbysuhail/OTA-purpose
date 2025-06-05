@@ -1,39 +1,40 @@
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
+
+import { RootState } from "../../../redux/store";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useTranslation } from "react-i18next";
+import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { FooterState, HeaderState } from "./interfaces";
+import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
+import ErpDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
-import ERPSlider from "../../../components/ERPComponents/erp-slider";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../redux/store";
-import { useTranslation } from "react-i18next";
+
 
 interface TempImageProps {
 }
 
 interface FooterDesignerProps {
-    footerState?: FooterState;
-    headerState?: HeaderState;
-    tempImages: TempImageProps;
+
+    tempImages?: TempImageProps;
 }
 
-const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDesignerProps) => {
+const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const inputFooterFile = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
-    const [currentTab, setTab] = useState<"header" | "footer" | "">("header");
     const userSession = useSelector((state: RootState) => state?.UserSession);
     let userBranches = useAppSelector((state: RootState) => state.UserBranches);
     const templateGroup = searchParams?.get("template_group");
     const [maxHeight, setMaxHeight] = useState<number>(500);
     const { t } = useTranslation('system');
+
     useEffect(() => {
         let wh = window.innerHeight;
         setMaxHeight(wh);
@@ -41,8 +42,10 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
 
     /* ######################################################################################### */
     const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+    const headerState = templateData?.activeTemplate?.headerState || {};
+    const footerState = templateData?.activeTemplate?.footerState || {};
     const dispatch = useDispatch();
-    const handleChange = (type: "header" | "footer", key: keyof HeaderState | keyof FooterState, value: string | number | boolean) => {
+    const handleChange = (type: "header" | "footer", key: keyof HeaderState  | keyof FooterState, value: string | number | boolean) => {
         if (type === "header") {
             dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
         } else {
@@ -56,6 +59,11 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
                 <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
                 <ERPCheckbox
+                    id="showHeader"
+                    label={t("show_header")}
+                    checked={headerState?.showHeader}
+                    onChange={(e) => handleChange("header", "showHeader", e.target.checked)}
+                /><ERPCheckbox
                     id="showLogo"
                     label={t("show_organization_logo")}
                     checked={headerState?.showLogo}
@@ -74,8 +82,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         </div>
                     )}
 
-                
-                    <>
+               
                         <ERPCheckbox
                             id="showOrgName"
                             checked={headerState?.showOrgName}
@@ -155,9 +162,80 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                 />
                             )}
                         </div>
-                    </>
+             
             </div>
+         <div className="transition-all  flex flex-col gap-5 bg-white p-4">
+                {/* <h6 className="bg-[#80808012] p-[2px]">{t("document_title")}</h6> */}
+                 <div className="flex flex-col gap-2">
+                              <ERPCheckbox
+                                checked={headerState?.showDocTitle}
+                                id="showDocTitle" label="Document Title"
+                                onChange={(e) => handleChange( "header", "showDocTitle", e.target.checked )}
+                              />
+                              {headerState?.showDocTitle && (
+                                <div className="flex items-center gap-2">
+                           
+                              <ERPCheckbox
+                                checked={headerState?.docTitleUnderline}
+                                id="docTitleUnderline" label="Title Underline"
+                                 onChange={(e) => handleChange( "header", "docTitleUnderline", e.target.checked )}
+                              />
+                                  <ERPInput
+                                  className="w-full"
+                                  id="docTitle"
+                                  noLabel
+                                  value={headerState?.docTitle}
+                                  onChange={(e) => handleChange( "header", "docTitle", e.target?.value )}
+                                />  
+                                </div>
+                              
+                              )}
+                            </div>
+                         
+                
+                          <ERPInput
+                            value={headerState?.docTitleFontColor}
+                             onChange={(e) => handleChange( "header", "docTitleFontColor", e.target?.value )}
+                            label="Font Color"
+                            id="bg_color"
+                            type="color"
+                            placeholder=""
+                            customSize="md"
+                          />
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                 id="docTitleFontSize"
+                                label={"Font Size (pts)"}
+                                className="bg-slate-300"
+                                value={headerState?.docTitleFontSize??10}
+                                onChange={(e) => handleChange( "header", "docTitleFontSize", parseInt(e.target?.value, 10) )}
+                                min={5}
+                                max={28}
+                                step={1}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                 id="docTitleFontSize"
+                                type="number"
+                                noLabel
+                                value={headerState?.docTitleFontSize??10}
+                                data={headerState}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const docTitleFontSize = value === "" ? 0 : parseInt(value, 10);
+                                  handleChange( "header", "docTitleFontSize", docTitleFontSize )
+                                }}
+                            
+                               min={5}
+                               max={28}
+                               step={1}
+                              />
+                            </div>
+                          </div>
 
+            </div>
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
                 {/* <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6> */}
                 <ERPInput
@@ -205,23 +283,55 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                 {t("remove")}
                             </div>
                             <div className="font-light text-sm">{t("image_position")}</div>
-                            <ERPDataCombobox
-                                noLabel
-                                id="position"
-                                defaultValue={headerState?.bg_image_header_position ?? "top left"}
-                                handleChange={(id, value) => handleChange("header", "bg_image_header_position", value)}
-                                options={[
-                                    { label: "Top left", value: "top left" },
-                                    { label: "Top center", value: "top center" },
-                                    { label: "Top right", value: "top right" },
-                                    { label: "Center left", value: "center left" },
-                                    { label: "Center center", value: "center center" },
-                                    { label: "Center right", value: "center right" },
-                                    { label: "Bottom left", value: "bottom left" },
-                                    { label: "Bottom center", value: "bottom center" },
-                                    { label: "Bottom right", value: "bottom right" },
-                                ]}
-                            />
+                               <ErpDataCombobox
+                                   
+                                      label={t("image_fit")}
+                                      id="bg_image_header_objectFit"
+                                      field={{
+                                        id: "bg_image_header_objectFit",
+                                        required: true,
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                      value={headerState?.bg_image_header_objectFit?? "fill"}
+                                      defaultValue={ "fill"}
+                                       handleChange={(id, value) => handleChange("header", "bg_image_header_objectFit", value)}
+
+                                      options={[
+                                        { label: "fill", value: "fill" },
+                                        { label: "contain", value: "contain" },
+                                        { label: "cover", value: "cover" },
+                                        { label: "scale-down", value: "scale-down" },
+                                        { label: "none", value: "none" },
+                        
+                                      ]}
+                                    />
+                        
+                        
+                                    <ErpDataCombobox
+                                      
+                                      label={t("image_position")}
+                                      id="bg_image_header_position"
+                                      field={{
+                                        id: "bg_image_header_position",
+                                        required: true,
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                      value={headerState?.bg_image_header_position ?? "center"}
+                                      handleChange={(id, value) => handleChange("header", "bg_image_header_position", value)}
+                                      options={[
+                                        { label: "Top left", value: "top left" },
+                                        { label: "Center left", value: "top center" },
+                                        { label: "Bottom left", value: "top right" },
+                                        { label: "Top center", value: "center left" },
+                                        { label: "Center", value: "center" },
+                                        { label: "Bottom center", value: "center right" },
+                                        { label: "Top right", value: "bottom left" },
+                                        { label: "Center right", value: "bottom center" },
+                                        { label: "Bottom right", value: "bottom right" },
+                                      ]}
+                                    />
                         </>}
                 </div>
 
@@ -261,6 +371,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
             >
                 Footer 
                 <ChevronDownIcon className={`h-5   -rotate-90 transition-all`} />
+            
+                         
             </div> */}
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
                 <h6 className="bg-[#80808012] p-[2px]">{t("footer")}</h6>
@@ -325,8 +437,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                             <div className="text-accent text-xs cursor-pointer  max-w-min" onClick={() => handleSetTemplateBackgroundImageFooter(undefined, dispatch)}>
                                 {t("remove")}
                             </div>
-                            <div className="font-light text-sm">{t("image_position")}</div>
-                            <ERPDataCombobox
+                           
+                            <ErpDataCombobox
                                 noLabel
                                 id="position"
                                 defaultValue={footerState?.bg_image_footer_position ?? "top left"}

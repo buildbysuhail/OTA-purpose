@@ -1934,7 +1934,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
           {/* header ends here */}
 
-          <div className="mt-24">
+          <div className="mt-[123PX]">
             <ErpPurchaseGrid
               columns={purchaseGridCol}
               keyField={"productID"}

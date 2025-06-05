@@ -786,7 +786,21 @@ debugger;
         (transactionDate.toDate().getTime() - softwareDate.getTime()) /
           (1000 * 60 * 60 * 24)
       );
-
+if (
+      !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
+      isNullOrUndefinedOrZero(formState.masterAccountID)
+    ) {
+      ERPAlert.show({
+        icon: "info",
+        // title: t("select_master_account"),
+        title: "Please Select " + formState.formElements.masterAccount.label,
+        onConfirm: (result: any) => {
+          focusMasterAccount();
+          return false;
+        },
+      });
+      return false;
+    }
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
         dispatch(
           updateFormElement({
@@ -1516,6 +1530,7 @@ debugger;
 
       return false;
     }
+    debugger;
     if (
       !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
       isNullOrUndefinedOrZero(formState.masterAccountID)

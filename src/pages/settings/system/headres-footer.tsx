@@ -31,7 +31,31 @@ interface HeadersAndFootersInf {
   footer9: string;
   footer10: string;
 }
-
+const initialHeadersAndFooters= {
+data:{  branchID: 0,
+  headerFooterID: 0,
+  heading1: '',
+  heading2: '',
+  heading3: '',
+  heading4: '',
+  heading5: '',
+  heading6: '',
+  heading7: '',
+  heading8: '',
+  heading9: '',
+  heading10: '',
+  footer1: '',
+  footer2: '',
+  footer3: '',
+  footer4: '',
+  footer5: '',
+  footer6: '',
+  footer7: '',
+  footer8: '',
+  footer9: '',
+  footer10: ''
+}
+};
 const HeadersAndFooters: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const {
@@ -48,7 +72,8 @@ const HeadersAndFooters: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleHeaderFooterPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true,
-    loadDataRequired: true
+    loadDataRequired: true,
+    initialData: initialHeadersAndFooters
   });
 
   const { t } = useTranslation("system");

@@ -606,7 +606,7 @@ export const useAccTransaction = (
             break;
         }
       }
-
+debugger;
       voucher.transaction.details = refactorDetails(voucher.transaction);
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction
@@ -640,6 +640,8 @@ export const useAccTransaction = (
     });
   };
   const refactorDetails = (transaction: AccTransactionData) => {
+    
+debugger;
     return transaction.details.map((detail, index) => {
       const baseDetail = {
         ...detail,
@@ -655,7 +657,7 @@ export const useAccTransaction = (
           ? new Date(detail.checkBouncedDate).toISOString()
           : moment.utc("2000-01-01").startOf("day").toISOString(),
       };
-
+debugger;
       // Handle voucher type specific logic
       switch (transaction.master.voucherType) {
         case "CP":
@@ -687,7 +689,7 @@ export const useAccTransaction = (
           };
 
         case "JV":
-        case "SP":
+        case "JVSP":
           if (
             transaction.master.drCr === "Dr" ||
             transaction.master.drCr === "Debit"
@@ -784,7 +786,21 @@ export const useAccTransaction = (
         (transactionDate.toDate().getTime() - softwareDate.getTime()) /
           (1000 * 60 * 60 * 24)
       );
-
+if (
+      !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
+      isNullOrUndefinedOrZero(formState.masterAccountID)
+    ) {
+      ERPAlert.show({
+        icon: "info",
+        // title: t("select_master_account"),
+        title: "Please Select " + formState.formElements.masterAccount.label,
+        onConfirm: (result: any) => {
+          focusMasterAccount();
+          return false;
+        },
+      });
+      return false;
+    }
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
         dispatch(
           updateFormElement({
@@ -993,7 +1009,7 @@ export const useAccTransaction = (
       element.exchangeRate = 1;
       element.isDisplay = true;
       element.isDr = true;
-
+debugger;
       switch (formState.transaction.master.voucherType) {
         case "CP":
         case "BP":
@@ -1017,7 +1033,7 @@ export const useAccTransaction = (
 
         case "JV":
         case "JVSP":
-          if (formState.row.drCr === "Dr") {
+          if (formState.transaction.master.drCr === "Dr") {
             element.relatedLedgerID = element.ledgerID ?? 0;
             element.ledgerID = formState.masterAccountID;
           } else {
@@ -1514,6 +1530,7 @@ export const useAccTransaction = (
 
       return false;
     }
+    debugger;
     if (
       !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
       isNullOrUndefinedOrZero(formState.masterAccountID)

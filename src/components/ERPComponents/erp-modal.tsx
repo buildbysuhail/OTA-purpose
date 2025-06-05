@@ -18,6 +18,8 @@ import { Minimize2, Maximize2, X } from "lucide-react";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
 
+type ModalPosition = "center" | "left" | "right" | "top" | "bottom" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
 type ERPModalProps = {
   title: string;
   isOpen: boolean;
@@ -51,6 +53,7 @@ type ERPModalProps = {
   disableParentInteraction?: boolean;
   customPosition?: boolean;
   customStyle?: React.CSSProperties;
+  initialPosition?: ModalPosition; 
 };
 
 const ERPModal = React.memo(
@@ -87,6 +90,7 @@ const ERPModal = React.memo(
     disableParentInteraction = true,
     customPosition = false,
     customStyle = {},
+    initialPosition = "center", 
   }: ERPModalProps) => {
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
@@ -95,33 +99,90 @@ const ERPModal = React.memo(
     const [initPosition, setInitPosition] = useState({ x: 0, y: 0 });
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
 
+    const calculateInitialPosition = (windowWidth: number, windowHeight: number, modalW: number, modalH: number) => {
+      const padding = 20; // Padding from edges
+      let x = 0, y = 0;
+
+      switch (initialPosition) {
+        case "center":
+          x = (windowWidth - modalW) / 2;
+          y = (windowHeight - modalH) / 2;
+          break;
+        case "left":
+          x = padding;
+          y = (windowHeight - modalH) / 2;
+          break;
+        case "right":
+          x = windowWidth - modalW - padding;
+          y = (windowHeight - modalH) / 2;
+          break;
+        case "top":
+          x = (windowWidth - modalW) / 2;
+          y = padding;
+          break;
+        case "bottom":
+          x = (windowWidth - modalW) / 2;
+          y = windowHeight - modalH - padding;
+          break;
+        case "top-left":
+          x = padding;
+          y = padding;
+          break;
+        case "top-right":
+          x = windowWidth - modalW - padding;
+          y = padding;
+          break;
+        case "bottom-left":
+          x = padding;
+          y = windowHeight - modalH - padding;
+          break;
+        case "bottom-right":
+          x = windowWidth - modalW - padding;
+          y = windowHeight - modalH - padding;
+          break;
+        default:
+          x = (windowWidth - modalW) / 2;
+          y = (windowHeight - modalH) / 2;
+      }
+
+      // Ensure the modal stays within bounds
+      x = Math.max(0, Math.min(x, windowWidth - modalW));
+      y = Math.max(0, Math.min(y, windowHeight - modalH));
+
+      return { x, y };
+    };
+
     const calculateDimensionsAndPosition = () => {
       if (!isOpen) return;
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
       let newWidth, newHeight, newX, newY;
+      
       if (isMaximized) {
         newWidth = windowWidth - 50;
         newHeight = windowHeight - 50;
         newX = (windowWidth - newWidth) / 2;
         newY = (windowHeight - newHeight) / 2;
-        setInitPosition({
-          x: (windowWidth - width) / 2,
-          y: (windowHeight - height) / 2,
-        });
+        
+        const originalWidth = Math.min(windowWidth - 40, width);
+        const originalHeight = Math.min(windowHeight - 40, height);
+        const originalPos = calculateInitialPosition(windowWidth, windowHeight, originalWidth, originalHeight);
+        setInitPosition(originalPos);
       } else {
         newWidth = Math.min(windowWidth - 40, width);
         newHeight = Math.min(windowHeight - 40, height);
-        newX = Math.max((windowWidth - newWidth) / 2, 0);
-        newY = Math.max((windowHeight - newHeight) / 2, 0);
+        const calculatedPos = calculateInitialPosition(windowWidth, windowHeight, newWidth, newHeight);
+        newX = calculatedPos.x;
+        newY = calculatedPos.y;
       }
+      
       setModalWidth(newWidth);
       setModalHeight(newHeight);
       setPosition({ x: newX, y: newY });
       setIsPositionCalculated(true);
     };
-    // Reset state when modal closes
 
+    // Reset state when modal closes
     useEffect(() => {
       if (!isOpen) {
         setIsMaximized(initialMaximize);
@@ -137,11 +198,12 @@ const ERPModal = React.memo(
       if (isOpen) {
         calculateDimensionsAndPosition();
       }
-    }, [isOpen, isMaximized, width, height]);
+    }, [isOpen, isMaximized, width, height, initialPosition]);
 
     const handleClose = () => {
       closeModal(false);
     };
+    
     const handleSubmit = () => {
       if (onSubmitModel) {
         onSubmitModel();
@@ -251,30 +313,26 @@ const ERPModal = React.memo(
                       onDragStop={(_, d) => {
                         if (!isMaximized) {
                           setPosition({ x: d.x, y: d.y });
-                          // setInitPosition({ x: d.x, y: d.y });
                         }
                       }}
                       onResizeStop={(_, __, ref, ___, pos) => {
                         setModalHeight(ref.offsetHeight);
                         setModalWidth(ref.offsetWidth);
                         setPosition(pos);
-                        // setInitPosition({ x: pos.x, y: pos.y });
                       }}
                       onResize={(_, __, ref, ___, pos) => {
                         setPosition({ x: pos.x, y: pos.y });
                         setModalHeight(ref.offsetHeight);
                         setModalWidth(ref.offsetWidth);
-                        //  setInitPosition({ x: pos.x, y: pos.y });
                       }}
                       disableDragging={isMaximized}
                       enableResizing={!isMaximized}
                       bounds="parent"
-                      // bounds="window"
                       minWidth={minWidth}
                       minHeight={minHeight}
                       dragGrid={[10, 10]}
                       resizeGrid={[10, 10]}
-                      dragHandleClassName="drag-handle" // Specify the drag handle class name
+                      dragHandleClassName="drag-handle"
                       className="pointer-events-auto bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
                     >
                       <DialogPanel
@@ -297,7 +355,7 @@ const ERPModal = React.memo(
                                 type="button"
                                 title={closeTitle}
                                 onTouchEnd={(e) => {
-                                  e.stopPropagation(); // Stop propagation for touch events
+                                  e.stopPropagation();
                                   handleClose();
                                 }}
                                 onClick={(e) => {
@@ -314,14 +372,12 @@ const ERPModal = React.memo(
                                 className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
                                 onClick={() => {
                                   if (isMaximized) {
-                                    // Restore to previous position
                                     setPosition(initPosition);
                                   }
                                   setIsMaximized(!isMaximized);
                                 }}
                                 onTouchEnd={() => {
                                   if (isMaximized) {
-                                    // Restore to previous position
                                     setPosition(initPosition);
                                   }
                                   setIsMaximized(!isMaximized);
@@ -340,13 +396,13 @@ const ERPModal = React.memo(
                             <button
                               className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full"
                               onClick={(e) => {
-                                e.stopPropagation(); // Stop propagation here
+                                e.stopPropagation();
                                 handleClose();
                               }}
                               onTouchEnd={(e) => {
-                                e.stopPropagation(); // Stop propagation for touch events
+                                e.stopPropagation();
                                 handleClose();
-                              }} // Add this for mobile touch support
+                              }}
                               aria-label="Close"
                             >
                               <X size={15} />
@@ -369,7 +425,7 @@ const ERPModal = React.memo(
                                     ? {
                                         ...contentProps,
                                         isMaximized: isMaximized,
-                                        modalHeight: modalHeight, // Pass isMaximized to the content
+                                        modalHeight: modalHeight,
                                         rowData: rowData,
                                         origin: origin,
                                         postData:
@@ -383,7 +439,7 @@ const ERPModal = React.memo(
                                           ? contentProps
                                           : {},
                                         isMaximized: isMaximized,
-                                        modalHeight: modalHeight, // Pass isMaximized to the content
+                                        modalHeight: modalHeight,
                                         rowData: rowData,
                                         origin: origin,
                                         postData:
@@ -443,8 +499,10 @@ const ERPModal = React.memo(
       prevProps.hasSubmit === nextProps.hasSubmit &&
       prevProps.submitTitle === nextProps.submitTitle &&
       prevProps.contentProps === nextProps.contentProps &&
-      prevProps.footer === nextProps.footer
+      prevProps.footer === nextProps.footer &&
+      prevProps.initialPosition === nextProps.initialPosition
     );
   }
 );
+
 export default ERPModal;

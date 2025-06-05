@@ -444,7 +444,7 @@ const BalancesheetVertical = () => {
                   // postData={postData}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterText="as of {asonDate}"
+                  filterText="As On {asonDate}"
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}

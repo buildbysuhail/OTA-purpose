@@ -79,7 +79,7 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
 export default CustomerVisitTotalVisitFilter;
 
 export const CustomerVisitTotalVisitFilterInitialState = {
-  fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
+  fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   mainRoute: 0, 
   salesRoute: 0, 

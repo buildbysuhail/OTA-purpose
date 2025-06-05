@@ -395,10 +395,10 @@ const Content: FC<ContentProps> = () => {
             )}
           </>
         ))}
-        <Route
+       <Route
           path={`/accounts/transactions/BankReconciliation`}
           element={
-            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+            <RouteGuard formCode="BRC" action={UserAction.Show}>
               <BankReconciliation />
             </RouteGuard>
           }
@@ -406,7 +406,7 @@ const Content: FC<ContentProps> = () => {
         <Route
           path="accounts/transactions/PostDatedCheques"
           element={
-            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+            <RouteGuard formCode="PDC" action={UserAction.Show}>
               <PostDatedCheques />
             </RouteGuard>
           }

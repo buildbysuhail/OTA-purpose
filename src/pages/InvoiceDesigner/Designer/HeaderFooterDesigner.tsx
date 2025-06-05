@@ -57,8 +57,13 @@ const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
         <ERPScrollArea
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
-                <h6 className="bg-[#80808012] p-[2px]">{t("organization_details")}</h6>
+                <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
                 <ERPCheckbox
+                    id="showHeader"
+                    label={t("show_header")}
+                    checked={headerState?.showHeader}
+                    onChange={(e) => handleChange("header", "showHeader", e.target.checked)}
+                /><ERPCheckbox
                     id="showLogo"
                     label={t("show_organization_logo")}
                     checked={headerState?.showLogo}
@@ -160,7 +165,7 @@ const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
              
             </div>
          <div className="transition-all  flex flex-col gap-5 bg-white p-4">
-                <h6 className="bg-[#80808012] p-[2px]">{t("document_title")}</h6>
+                {/* <h6 className="bg-[#80808012] p-[2px]">{t("document_title")}</h6> */}
                  <div className="flex flex-col gap-2">
                               <ERPCheckbox
                                 checked={headerState?.showDocTitle}
@@ -232,7 +237,7 @@ const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
 
             </div>
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
-                <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
+                {/* <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6> */}
                 <ERPInput
                     id="bgColor"
                     type="color"

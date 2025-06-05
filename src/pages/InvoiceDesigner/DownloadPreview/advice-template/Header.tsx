@@ -86,6 +86,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
   };
   
   return (
+  headerState?.showHeader ? (
     <View style={{
       width:"100%",
       height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
@@ -133,7 +134,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           {headerState?.docTitle }
         </Text>
          }
-           <View style={{flexDirection:"row",gap:5,}}>
+           {/* <View style={{flexDirection:"row",gap:5,}}>
            {headerState?.adviceTransInfo?.showPrefix &&
            <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{data.master?.voucherPrefix}</Text>
           }
@@ -143,7 +144,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
            {headerState?.adviceTransInfo?.showFormType && data.master?.formType ||  data.master?.formType !== " "  &&
            <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data.master?.formType}]`}</Text>
           }
-           </View>
+           </View> */}
            
         </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
@@ -174,6 +175,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
         
       </View>
     </View>
+  ): (null)
   );
 };
 

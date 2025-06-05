@@ -277,7 +277,21 @@ const CustomerBalanceTemplateDesigner : React.FC<StandardDesignType> = ({}) => {
                     style={{ maxHeight: maxHeight, margin: 20, border: "1px solid #DFDFDF" }}>
                 <CustomerBalanceTemplate
                   template={templateData.activeTemplate}
-                  data={DummyVoucherData}
+                    data={{asOnDate
+: 
+"2025-06-05T00:00:00",
+balance
+: 
+704474.98,
+code
+: 
+10977,
+customerAccName
+: 
+"  MUASSASA  ALGHILAL ALDHAHABIA",
+ledgerID
+: 
+10063}}
                   userSession={userSession}
                    orientation="portrait"
                   currentBranch={currentBranch}

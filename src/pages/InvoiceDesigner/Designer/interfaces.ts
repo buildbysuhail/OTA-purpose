@@ -241,6 +241,7 @@ export interface HeaderState {
   bg_image_header_position?: string;
   bg_image_header_objectFit?:string;
   headerHeight?: number;
+  showHeader?: boolean;
 
   /// Document Title
   docTitleFontSize?: number;
@@ -766,6 +767,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       isFirstOnly: false,
       bg_image_header_position: "center",
       headerHeight: 50,
+      showHeader: true,
       docTitleFontSize: 16,
       docTitleFontColor: "#000000",
       OrganizationFontSize: 12,

@@ -19,6 +19,7 @@ import WorkspaceSettingsApis from "./workspace-settings-apis";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
 import { useTranslation } from "react-i18next";
+import { setUserSessionItem } from "../../redux/slices/user-session/reducer";
 
 interface WorkSpaceSettingsProps { }
 
@@ -154,11 +155,19 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   };
 
   /////////////////////////////////////////////////////////////////////
-  const onImageSuccess = useMemo(() => {
-    return (url: string) => {
-      appDispatch(userSession());
+  const onImageSuccess = (url: string) => {
+      
+    const company = _userSession?.companies.find(
+        (x: any) => x?.id === _userSession?.currentClientId
+      );
+
+      let companies = [..._userSession?.companies]
+      companies = companies.map(x => ({
+  ...x,
+  logo: x.id === _userSession?.currentClientId ? url : x.logo
+}));
+      dispatch(setUserSessionItem({key: "companies", value: companies}));
     };
-  }, []);
 
   useEffect(() => {
     getBasicInfo();

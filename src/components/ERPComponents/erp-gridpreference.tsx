@@ -187,9 +187,9 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
             e.stopPropagation();
              setIsOpen(true)}}
           onTouchEnd={() => setIsOpen(true)}
-          className={` ${eclipseClass ? eclipseClass : "mt-[0px]"} `}
+          className={` ${eclipseClass ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0"} `}
         >
-          <Ellipsis className="text-[#0ea5e9]" />
+          <Ellipsis className="text-[#0ea5e9] mjtestnow" />
         </button>
       ) : (
         <button

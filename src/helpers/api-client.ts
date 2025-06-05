@@ -74,6 +74,7 @@ class APIClient {
     token?: string
   ): Promise<any> => {
     try {
+      
       setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${url}`;

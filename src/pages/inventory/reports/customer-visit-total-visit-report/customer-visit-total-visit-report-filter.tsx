@@ -33,20 +33,20 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("main_route")}
-            {...getFieldProps("mainRoute")}
+            {...getFieldProps("salesRouteID")}
             field={{
-              id: "mainRoute",
+              id: "salesRouteID",
               getListUrl: Urls.data_mainsalesroute, 
               valueKey: "id",
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("mainRoute", data.value);
+              handleFieldChange("salesRouteID", data.value);
             }}
           />
         </div>
 
-        <div className="col-span-1">
+        {/* <div className="col-span-1">
           <ERPDataCombobox
             label={t("sales_route")}
             {...getFieldProps("salesRoute")}
@@ -60,7 +60,7 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
               handleFieldChange("salesRoute", data.value);
             }}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="col-span-1">
@@ -81,7 +81,7 @@ export default CustomerVisitTotalVisitFilter;
 export const CustomerVisitTotalVisitFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  mainRoute: 0, 
-  salesRoute: 0, 
+  // mainRoute: 0, 
+  salesRouteID: 0, 
   zeroVisit: false,
 };

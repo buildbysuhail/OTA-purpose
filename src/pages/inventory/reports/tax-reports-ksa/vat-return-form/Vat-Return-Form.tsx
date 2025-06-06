@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Fragment, useMemo } from "react";
-import moment from "moment";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../../redux/types";
@@ -8,9 +7,7 @@ import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import CashSummaryReportFilter, {
-  CashSummaryReportFilterInitialState,
-} from "../../../../accounts/reports/cashSummary/cash-summary-report-filter";
+import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../../../../accounts/reports/cashSummary/cash-summary-report-filter";
 
 const VatReturnForm = () => {
   const { t } = useTranslation("accountsReport");
@@ -42,9 +39,9 @@ const VatReturnForm = () => {
         currencyCode = "";
         break;
     }
-
     return currencyCode;
   };
+  
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -68,40 +65,40 @@ const VatReturnForm = () => {
               alignment: "right",
               textColor:
                 cellElement.data?.title == "Total sales" ||
-                cellElement.data?.title == "Total purchases" ||
-                cellElement.data?.title == "Total VAT due for current period" ||
-                cellElement.data?.title == "Net VAT due (or claim)"
+                  cellElement.data?.title == "Total purchases" ||
+                  cellElement.data?.title == "Total VAT due for current period" ||
+                  cellElement.data?.title == "Net VAT due (or claim)"
                   ? "#FF0000"
                   : "",
               font: {
                 ...exportCell.font,
                 color:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)"
+                    cellElement.data?.title == "Net VAT due (or claim)"
                     ? { argb: "FFFF0000" }
                     : "",
                 size: 10,
                 style:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? "bold"
                     : "normal",
                 bold:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? true
                     : false,
               },
@@ -109,19 +106,18 @@ const VatReturnForm = () => {
           } else {
             return (
               <span
-                className={`${
-                  cellElement.data?.title == "Total sales" ||
+                className={`${cellElement.data?.title == "Total sales" ||
                   cellElement.data?.title == "Total purchases" ||
                   cellElement.data?.title ==
-                    "Total VAT due for current period" ||
+                  "Total VAT due for current period" ||
                   cellElement.data?.title == "Net VAT due (or claim)"
-                    ? "font-bold text-[#DC143C]"
-                    : cellElement.data?.title == "VAT on sales"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data?.title == "VAT on sales"
                     ? "font-bold bg-[#1b7c47] text-[#fcfafb]"
                     : cellElement.data?.title == "VAT On Purchases"
-                    ? "font-bold bg-[#eb9d29] text-[#fcfafb]"
-                    : ""
-                }`}
+                      ? "font-bold bg-[#eb9d29] text-[#fcfafb]"
+                      : ""
+                  }`}
               >
                 {cellElement.data.title}
               </span>
@@ -151,12 +147,12 @@ const VatReturnForm = () => {
                 : cellElement.data?.title == "Total sales" ||
                   cellElement.data?.title == "Total purchases" ||
                   cellElement.data?.title ==
-                    "Total VAT due for current period" ||
+                  "Total VAT due for current period" ||
                   cellElement.data?.title == "Net VAT due (or claim)"
-                ? getFormattedValue(Number.parseFloat(cellElement.data.amount))
-                : cellElement.data?.amount == 0
-                ? 0
-                : getFormattedValue(cellElement.data.amount, false, 4);
+                  ? getFormattedValue(Number.parseFloat(cellElement.data.amount))
+                  : cellElement.data?.amount == 0
+                    ? 0
+                    : getFormattedValue(cellElement.data.amount, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -164,40 +160,40 @@ const VatReturnForm = () => {
               alignmentExcel: { horizontal: "right" },
               textColor:
                 cellElement.data?.title == "Total sales" ||
-                cellElement.data?.title == "Total purchases" ||
-                cellElement.data?.title == "Total VAT due for current period" ||
-                cellElement.data?.title == "Net VAT due (or claim)"
+                  cellElement.data?.title == "Total purchases" ||
+                  cellElement.data?.title == "Total VAT due for current period" ||
+                  cellElement.data?.title == "Net VAT due (or claim)"
                   ? "#FF0000"
                   : "",
               font: {
                 ...exportCell.font,
                 color:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)"
+                    cellElement.data?.title == "Net VAT due (or claim)"
                     ? { argb: "FFFF0000" }
                     : "",
                 size: 10,
                 style:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? "bold"
                     : "normal",
                 bold:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? true
                     : false,
               },
@@ -205,29 +201,28 @@ const VatReturnForm = () => {
           } else {
             return (
               <span
-                className={`${
-                  cellElement.data?.title == "Total sales" ||
+                className={`${cellElement.data?.title == "Total sales" ||
                   cellElement.data?.title == "Total purchases" ||
                   cellElement.data?.title ==
-                    "Total VAT due for current period" ||
+                  "Total VAT due for current period" ||
                   cellElement.data?.title == "Net VAT due (or claim)"
-                    ? "font-bold text-[#DC143C]"
-                    : ""
-                }`}
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+                  }`}
               >
                 {cellElement.data?.amount == null
                   ? ""
                   : cellElement.data?.title == "Total sales" ||
                     cellElement.data?.title == "Total purchases" ||
                     cellElement.data?.title ==
-                      "Total VAT due for current period" ||
+                    "Total VAT due for current period" ||
                     cellElement.data?.title == "Net VAT due (or claim)"
-                  ? getFormattedValue(
+                    ? getFormattedValue(
                       Number.parseFloat(cellElement.data.amount)
                     )
-                  : cellElement.data?.amount == 0
-                  ? 0
-                  : getFormattedValue(cellElement.data.amount, false, 4)}
+                    : cellElement.data?.amount == 0
+                      ? 0
+                      : getFormattedValue(cellElement.data.amount, false, 4)}
               </span>
             );
           }
@@ -253,8 +248,8 @@ const VatReturnForm = () => {
               cellElement.data?.adjustment == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.adjustment)
-                  );
+                  Number.parseFloat(cellElement.data.adjustment)
+                );
             return {
               ...exportCell,
               text: value,
@@ -262,40 +257,40 @@ const VatReturnForm = () => {
               alignmentExcel: { horizontal: "right" },
               textColor:
                 cellElement.data?.title == "Total sales" ||
-                cellElement.data?.title == "Total purchases" ||
-                cellElement.data?.title == "Total VAT due for current period" ||
-                cellElement.data?.title == "Net VAT due (or claim)"
+                  cellElement.data?.title == "Total purchases" ||
+                  cellElement.data?.title == "Total VAT due for current period" ||
+                  cellElement.data?.title == "Net VAT due (or claim)"
                   ? "#FF0000"
                   : "",
               font: {
                 ...exportCell.font,
                 color:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)"
+                    cellElement.data?.title == "Net VAT due (or claim)"
                     ? { argb: "FFFF0000" }
                     : "",
                 size: 10,
                 style:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? "bold"
                     : "normal",
                 bold:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? true
                     : false,
               },
@@ -303,21 +298,20 @@ const VatReturnForm = () => {
           } else {
             return (
               <span
-                className={`${
-                  cellElement.data?.title == "Total sales" ||
+                className={`${cellElement.data?.title == "Total sales" ||
                   cellElement.data?.title == "Total purchases" ||
                   cellElement.data?.title ==
-                    "Total VAT due for current period" ||
+                  "Total VAT due for current period" ||
                   cellElement.data?.title == "Net VAT due (or claim)"
-                    ? "font-bold text-[#DC143C]"
-                    : ""
-                }`}
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+                  }`}
               >
                 {cellElement.data?.adjustment == null
                   ? ""
                   : getFormattedValue(
-                      Number.parseFloat(cellElement.data.adjustment)
-                    )}
+                    Number.parseFloat(cellElement.data.adjustment)
+                  )}
               </span>
             );
           }
@@ -343,12 +337,12 @@ const VatReturnForm = () => {
               cellElement.data?.vatAmount == null
                 ? ""
                 : cellElement.data?.title == "Standard rate domestic purchases"
-                ? getFormattedValue(
+                  ? getFormattedValue(
                     Number.parseFloat(cellElement.data.vatAmount),
                     false,
                     6
                   )
-                : getFormattedValue(
+                  : getFormattedValue(
                     Number.parseFloat(cellElement.data.vatAmount)
                   );
             return {
@@ -358,40 +352,40 @@ const VatReturnForm = () => {
               alignmentExcel: { horizontal: "right" },
               textColor:
                 cellElement.data?.title == "Total sales" ||
-                cellElement.data?.title == "Total purchases" ||
-                cellElement.data?.title == "Total VAT due for current period" ||
-                cellElement.data?.title == "Net VAT due (or claim)"
+                  cellElement.data?.title == "Total purchases" ||
+                  cellElement.data?.title == "Total VAT due for current period" ||
+                  cellElement.data?.title == "Net VAT due (or claim)"
                   ? "#FF0000"
                   : "",
               font: {
                 ...exportCell.font,
                 color:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)"
+                    cellElement.data?.title == "Net VAT due (or claim)"
                     ? { argb: "FFFF0000" }
                     : "",
                 size: 10,
                 style:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? "bold"
                     : "normal",
                 bold:
                   cellElement.data?.title == "Total sales" ||
-                  cellElement.data?.title == "Total purchases" ||
-                  cellElement.data?.title ==
+                    cellElement.data?.title == "Total purchases" ||
+                    cellElement.data?.title ==
                     "Total VAT due for current period" ||
-                  cellElement.data?.title == "Net VAT due (or claim)" ||
-                  cellElement.data?.title == "VAT on sales" ||
-                  cellElement.data?.title == "VAT On Purchases"
+                    cellElement.data?.title == "Net VAT due (or claim)" ||
+                    cellElement.data?.title == "VAT on sales" ||
+                    cellElement.data?.title == "VAT On Purchases"
                     ? true
                     : false,
               },
@@ -399,28 +393,27 @@ const VatReturnForm = () => {
           } else {
             return (
               <span
-                className={`${
-                  cellElement.data?.title == "Total sales" ||
+                className={`${cellElement.data?.title == "Total sales" ||
                   cellElement.data?.title == "Total purchases" ||
                   cellElement.data?.title ==
-                    "Total VAT due for current period" ||
+                  "Total VAT due for current period" ||
                   cellElement.data?.title == "Net VAT due (or claim)"
-                    ? "font-bold text-[#DC143C]"
-                    : cellElement.data?.title == "VAT on sales"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data?.title == "VAT on sales"
                     ? "font-bold bg-[#DC143C]"
                     : ""
-                }`}
+                  }`}
               >
                 {cellElement.data?.vatAmount == null
                   ? ""
                   : cellElement.data?.title ==
                     "Standard rate domestic purchases"
-                  ? getFormattedValue(
+                    ? getFormattedValue(
                       Number.parseFloat(cellElement.data.vatAmount),
                       false,
                       6
                     )
-                  : getFormattedValue(
+                    : getFormattedValue(
                       Number.parseFloat(cellElement.data.vatAmount)
                     )}
               </span>
@@ -459,7 +452,7 @@ const VatReturnForm = () => {
                   gridId="grd_vat_return_form"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={350}
+                  filterWidth={400}
                   filterHeight={200}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}

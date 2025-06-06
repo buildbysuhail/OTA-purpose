@@ -1,35 +1,34 @@
 import { useTranslation } from "react-i18next";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 
 const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ps-1 ">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ps-1 overflow-hidden">
       <div className="flex flex-col items-start gap-2">
         {/* <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isProductGroup")}
           label={t("product_group")}
           onChangeData={(data: any) => handleFieldChange('isProductGroup', data.isProductGroup)}
+        />
+        <ERPDataCombobox
+          label={t("product_group")}
+          {...getFieldProps("productGroupID")}
+          field={{
+            id: "productGroupID",
+            getListUrl: Urls.data_productgroup,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              productGroupID: data.value,
+              productGroup: data.label,
+            });
+          }}
         /> */}
-          {/* <ERPDataCombobox
-                  label={t("product_group")}
-                  {...getFieldProps("productGroupID")}
-                  field={{
-                    id: "productGroupID",
-                    getListUrl: Urls.data_productgroup,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  onSelectItem={(data) => {
-                    handleFieldChange({
-                      productGroupID: data.value,
-                      productGroup: data.label,
-                    });
-                  }}
-                /> */}
         <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("productGroupID")}
@@ -106,7 +105,7 @@ const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           onSelectItem={(data: any) => handleFieldChange('productCategoryID', data.value)}
         />
         {/* always visible false */}
-           {/* <ERPDataCombobox
+        {/* <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("taxCategoryID")}
           noLabel

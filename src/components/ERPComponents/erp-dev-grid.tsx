@@ -1926,12 +1926,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={(e) => {
-              
+              debugger;
               if (e.component) {
                 const instance = e.component;
                 const totalCount = instance.totalCount();
                 if (totalCount !== undefined) {
-                  // totalRowCountRef.current = totalCount;
+                  totalRowCountRef.current = totalRowCountRef.current ? totalRowCountRef.current :totalCount;
                   if (totalRowCountDisplayRef.current) {
                     totalRowCountDisplayRef.current.textContent = totalRowCountRef.current.toString();
                   }

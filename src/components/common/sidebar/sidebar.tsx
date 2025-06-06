@@ -220,8 +220,6 @@ const sd = st
       //     return item;
       //   })
       // );
-      
-      debugger;
       setMenuitems(sd);
     }
   }, [userSession.countryId,userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);

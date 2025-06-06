@@ -3,10 +3,10 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {  DrillDownCellTemplate,} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import TransactrionHistoryReportFilter, {  TransactrionHistoryReportFilterInitialState,} from "../transaction-history-report-filter";
+import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState, } from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
@@ -232,7 +232,7 @@ const AccountsHistoryReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactrionHistoryReportFilter />}
-                  filterInitialData={  TransactrionHistoryReportFilterInitialState}
+                  filterInitialData={TransactrionHistoryReportFilterInitialState}
                   filterWidth={335}
                   filterHeight={250}
                   // gridAddButtonType="popup"

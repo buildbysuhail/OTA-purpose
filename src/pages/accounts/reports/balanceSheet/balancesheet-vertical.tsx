@@ -448,8 +448,8 @@ const BalancesheetVertical = () => {
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
-                  filterHeight={300}
-                  filterWidth={400}
+                  filterHeight={230}
+                  filterWidth={600}
                   reload={true}
                   hideGridAddButton={true}
                   method={ActionType.POST}

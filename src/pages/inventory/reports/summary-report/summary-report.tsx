@@ -1,8 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
@@ -24,9 +22,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -497,9 +493,8 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         visible: false,
         width: 100,
       },
-      // if (this.VoucherForm != "Import")
-      //   {
-      //     dgvReport.Columns["ExchangeRate"].Visible = false;
+      //   if (this.VoucherForm != "Import") {
+      //   dgvReport.Columns["ExchangeRate"].Visible = false;
       // }
       {
         dataField: "exchangeRate",
@@ -1252,7 +1247,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 method={ActionType.POST}
                 filterContent={<SummaryFilter />}
                 // columnResizingMode={"widget"}
-                filterHeight={300}
+                filterHeight={350}
                 filterWidth={790}
                 filterInitialData={{
                   ...SummaryFilterInitialState,

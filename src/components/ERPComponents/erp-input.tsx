@@ -74,6 +74,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   variant?: "filled" | "outlined" | "standard" | "normal";
   localInputBox?: inputBox; // Local styling preferences
   boldInput?: boolean;
+  contextClassName?: string;
 }
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
@@ -129,6 +130,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       localInputBox, // Destructure localInputBox
       isTransaction,
       boldInput = false,
+      contextClassName,
       ...props
     }: ERPInputProps,
     ref
@@ -695,7 +697,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       };
       return (
         <div
-          className={`${className}`}
+          className={`${className} ${contextClassName || ""} `}
           style={{
             marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
@@ -854,7 +856,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
                 }}
-                className={`form-control !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
+                className={`form-control ${contextClassName || ""} !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
                   }`} 
                 onWheel={(e) => {
                   if (type === "number") {

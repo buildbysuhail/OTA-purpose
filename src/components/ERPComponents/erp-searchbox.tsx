@@ -30,6 +30,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   searchType?: "grid" | "normal" | "modal";
   placeholder?: string;
   labelDirection?: "horizontal" | "vertical";
+  contextClassNametwo?: string;
   noLabel?: boolean;
 }
 
@@ -158,6 +159,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   placeholder,
   noLabel,
   labelDirection = "vertical",
+  contextClassNametwo,
   clearAfterSelection = true,
   showCheckBox = true,
   searchType = "grid",
@@ -328,6 +330,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             id={inputId || "test"}
             placeholder={placeholder}
             labelDirection={labelDirection}
+            contextClassName={contextClassNametwo}
             value={inputValue.searchValue}
             onChange={handleChange}
             onKeyDown={handleInputKeyDown}

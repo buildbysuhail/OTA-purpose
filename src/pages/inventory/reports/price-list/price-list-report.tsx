@@ -1,7 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
-import PriceListReportFilter, {
-  PriceListReportFilterInitialState,
-} from "./price-list-report-filter";
+import PriceListReportFilter, { PriceListReportFilterInitialState } from "./price-list-report-filter";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -110,7 +108,7 @@ const PriceList = () => {
             const value =
               cellElement.data?.pPrice == null
                 ? ""
-                : getFormattedValue(cellElement.data.pPrice,false,4);
+                : getFormattedValue(cellElement.data.pPrice, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -120,7 +118,7 @@ const PriceList = () => {
           } else {
             return cellElement.data?.pPrice == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.pPrice),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.pPrice), false, 4);
           }
         },
       },
@@ -143,7 +141,7 @@ const PriceList = () => {
             const value =
               cellElement.data?.sPrice == null
                 ? ""
-                : getFormattedValue(cellElement.data.sPrice,false,4);
+                : getFormattedValue(cellElement.data.sPrice, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -153,7 +151,7 @@ const PriceList = () => {
           } else {
             return cellElement.data?.sPrice == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.sPrice),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.sPrice), false, 4);
           }
         },
       },
@@ -176,7 +174,7 @@ const PriceList = () => {
             const value =
               cellElement.data?.msp == null
                 ? ""
-                : getFormattedValue(cellElement.data.msp,false,3);
+                : getFormattedValue(cellElement.data.msp, false, 3);
             return {
               ...exportCell,
               text: value,
@@ -186,7 +184,7 @@ const PriceList = () => {
           } else {
             return cellElement.data?.msp == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.msp),false,3);
+              : getFormattedValue(parseFloat(cellElement.data.msp), false, 3);
           }
         },
       },
@@ -219,7 +217,7 @@ const PriceList = () => {
             const value =
               cellElement.data?.stock == null
                 ? ""
-                : getFormattedValue(cellElement.data.stock,false,4);
+                : getFormattedValue(cellElement.data.stock, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -229,13 +227,13 @@ const PriceList = () => {
           } else {
             return cellElement.data?.stock == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.stock),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.stock), false, 4);
           }
         },
       },
       {
         dataField: "mannualBarcode",
-        caption: t("mannual_barcode"),
+        caption: t("manual_barcode"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -254,6 +252,7 @@ const PriceList = () => {
         showInPdf: true,
       },
     ];
+
     return baseColumns.filter((column) => {
       if (column.dataField == "arabicName") {
         return !clientSession.isAppGlobal;
@@ -261,6 +260,7 @@ const PriceList = () => {
       return true;
     });
   }, [t, clientSession]);
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -270,12 +270,12 @@ const PriceList = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                   remoteOperations={{
-                  filtering: false,
-                  paging: false,
-                  sorting: false,
-                }}
-                summaryItems={[]}
+                  remoteOperations={{
+                    filtering: false,
+                    paging: false,
+                    sorting: false,
+                  }}
+                  summaryItems={[]}
                   gridHeader={t("price_list")}
                   dataUrl={Urls.inv_reports_price_list}
                   hideGridAddButton={true}

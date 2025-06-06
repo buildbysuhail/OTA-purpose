@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef, useMemo, useCallback, forwardRef } 
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import Input from "./test-input";
-import { Loader2, Plus, Search, ChevronDown, ChevronUp } from "lucide-react";
+import Input from "./erp-grid-input";
+import { Loader2, Plus, Search, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import type { DevGridColumn, GridPreference } from "../../types/dev-grid-column";
 import ERPProductSearch from "../erp-searchbox";
@@ -33,6 +33,17 @@ interface EditableCellProps {
   value: string | number;
 }
 
+
+
+interface DragState {
+  isDragging: boolean;
+  draggedColumn: string | null;
+  draggedIndex: number | null;
+  dropPosition: number | null;
+  startX: number;
+  startY: number;
+}
+
 const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
   const dispatch = useAppDispatch();
   return (
@@ -40,7 +51,8 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
       id={`${column.dataField}_${rowIndex}`}
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
-      className="w-full h-[26px] text-sm text-gray-800 bg-transparent border-2 border-gray-600 focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
+      className="w-full h-[22px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
+      // contextClassName="h-[22px] text-sm px-1 py-0 border-none bg-transparent"
       value={value}
       noBorder
       readOnly={column.readOnly}
@@ -61,11 +73,10 @@ interface RowData {
   details: TransactionDetail[];
   columns: DevGridColumn[];
   tableWidth: number;
-  filteredDetails: TransactionDetail[];
 }
 
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
-  const item = data.filteredDetails[index];
+  const item = data.details[index];
   const columns = data.columns;
   const tableWidth = data.tableWidth;
 
@@ -77,7 +88,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         width: `${tableWidth}px`,
         boxSizing: "border-box",
       }}
-      className="py-0 border-t border-gray-200"
+      className="py-0 border-b border-gray-300"
       key={`inv_transaction_grid_${index}`}
     >
       {columns
@@ -88,14 +99,13 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
           return (
             <td
               key={column.dataField}
-              className={column.cssClass || ""}
+              className={`px-1 py-0 border-r border-gray-300 last:border-r-0 ${column.cssClass || ""}`}
               style={{
                 width: column.width ? `${column.width}px` : "150px",
                 minWidth: column.width ? `${column.width}px` : "150px",
                 textAlign: column.alignment || (column.dataType === "number" ? "right" : "left"),
                 boxSizing: "border-box",
-                height: "30px",
-                borderRight: "1px solid #e5e7eb", // Matches border-gray-200
+                height: "24px", // Uniform row height
               }}
               role="gridcell"
             >
@@ -103,14 +113,29 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                 <ERPProductSearch
                   noLabel
                   showCheckBox={false}
+                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent" 
                   value={(cellValue as string) || ""}
                   productDataUrl={Urls.load_product_details}
                   tabIndex={-1}
+                  className="h-[22px] text-sm"
                 />
               ) : column.dataField === "slNo" || column.readOnly ? (
-                <span className="text-sm text-gray-800 px-1 flex items-center h-[26px]">{cellValue}</span>
+                <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
               ) : column.dataType === "string" ? (
-                <span className="text-sm text-gray-800 px-1 flex items-center h-[26px]">{cellValue}</span>
+                column.dataField === "status" ? (
+                  <span
+                    className={`
+                      inline-flex px-2 py-1 text-xs font-medium rounded-full
+                      ${cellValue === "Active" ? "bg-green-100 text-green-800" : ""}
+                      ${cellValue === "Inactive" ? "bg-red-100 text-red-800" : ""}
+                      ${cellValue === "Pending" ? "bg-yellow-100 text-yellow-800" : ""}
+                    `}
+                  >
+                    {cellValue}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
+                )
               ) : column.allowEditing == true ? (
                 <EditableCell
                   rowIndex={index}
@@ -118,7 +143,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                   value={cellValue as string | number}
                 />
               ) : (
-                <span className="text-sm text-gray-800 px-1 flex items-center h-[26px]">{cellValue}</span>
+                <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
               )}
             </td>
           );
@@ -133,11 +158,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     keyField,
     gridId,
     className = "",
-    rowHeight = 30,
+    rowHeight = 24, // Adjusted to match image
     height = 800,
     onAddData,
     isLoading,
-    // allowColumnReordering = false,
     allowColumnReordering = true,
   }: DataGridProps<T>,
   ref: React.Ref<any>
@@ -145,6 +169,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const listRef = useRef<List>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const dragPreviewRef = useRef<HTMLDivElement>(null);
   const preferenceChooserRef = useRef<{
     handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
     handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
@@ -155,12 +181,18 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const dispatch = useAppDispatch();
   const [preferences, setPreferences] = useState<GridPreference>();
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filterRange, setFilterRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
-  const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
-  const [targetColumn, setTargetColumn] = useState<string | null>(null);
-  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
+  const [dragState, setDragState] = useState<DragState>({
+    isDragging: false,
+    draggedColumn: null,
+    draggedIndex: null,
+    dropPosition: null,
+    startX: 0,
+    startY: 0,
+  });
+  const [dragPreviewPosition, setDragPreviewPosition] = useState({ x: 0, y: 0 });
+  const isDraggingRef = useRef(false);
 
   const calculateTotalWidth = () => {
     const visibleColumns = formState.gridColumns?.filter((c) => c.visible) ?? [];
@@ -192,17 +224,143 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     [columns, dispatch]
   );
 
+  const resetDragState = useCallback(() => {
+    setDragState({
+      isDragging: false,
+      draggedColumn: null,
+      draggedIndex: null,
+      dropPosition: null,
+      startX: 0,
+      startY: 0,
+    });
+    isDraggingRef.current = false;
+  }, []);
+
+  const calculateDropPosition = useCallback((clientX: number): number => {
+    if (!gridRef.current) return -1;
+
+    const headerRow = gridRef.current.querySelector("thead tr");
+    if (!headerRow) return -1;
+
+    const headers = Array.from(headerRow.querySelectorAll("th"));
+    for (let i = 0; i < headers.length; i++) {
+      const headerRect = headers[i].getBoundingClientRect();
+      const centerX = headerRect.left + headerRect.width / 2;
+      if (clientX < centerX) {
+        return i;
+      }
+    }
+    return headers.length;
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+
+      setDragPreviewPosition({
+        x: e.clientX + 10,
+        y: e.clientY - 10,
+      });
+
+      const newDropPosition = calculateDropPosition(e.clientX);
+      setDragState((prev) => ({
+        ...prev,
+        dropPosition: newDropPosition,
+      }));
+    },
+    [calculateDropPosition]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (!isDraggingRef.current) return;
+
+    setDragState((currentDragState) => {
+      if (
+        currentDragState.draggedIndex !== null &&
+        currentDragState.dropPosition !== null &&
+        currentDragState.draggedIndex !== currentDragState.dropPosition
+      ) {
+        const columnsCopy = [...(formState.gridColumns || [])];
+        const draggedIndex = columnsCopy.findIndex((col) => col.dataField === currentDragState.draggedColumn);
+        let insertIndex = currentDragState.dropPosition!;
+        if (insertIndex > currentDragState.draggedIndex!) {
+          insertIndex--;
+        }
+        const [draggedCol] = columnsCopy.splice(draggedIndex, 1);
+        columnsCopy.splice(insertIndex, 0, draggedCol);
+
+        dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
+        preferenceChooserRef.current?.handleDropping(true);
+      }
+      return {
+        isDragging: false,
+        draggedColumn: null,
+        draggedIndex: null,
+        dropPosition: null,
+        startX: 0,
+        startY: 0,
+      };
+    });
+
+    isDraggingRef.current = false;
+  }, [dispatch, formState.gridColumns]);
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent, dataField: string) => {
+      if (!allowColumnReordering || !dataField) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
+      if (columnIndex === -1) return;
+
+      const rect = (e.target as HTMLElement).closest("th")?.getBoundingClientRect();
+      if (!rect) return;
+
+      isDraggingRef.current = true;
+
+      setDragState({
+        isDragging: true,
+        draggedColumn: dataField,
+        draggedIndex: columnIndex,
+        dropPosition: null,
+        startX: e.clientX,
+        startY: e.clientY,
+      });
+
+      setDragPreviewPosition({
+        x: e.clientX + 10,
+        y: e.clientY - 10,
+      });
+    },
+    [formState.gridColumns, allowColumnReordering]
+  );
+
+  // useEffect(() => {
+  //   if (dragState.isDragging) {
+  //     document.addEventListener("mousemove", handleMouseMove);
+  //     document.addEventListener("mouseup", handleMouseUp);
+  //     document.body.style.cursor = "grabbing";
+  //     document.body.style.userSelect = "none";
+
+  //     return () => {
+  //       document.removeEventListener("mousemove", handleMouseMove);
+  //       document.removeEventListener("mouseup", handleMouseUp);
+  //       document.body.style.cursor = "";
+  //       document.body.style.userSelect = "";
+  //     };
+  //   }
+  // }, [dragState.isDragging, handleMouseMove, handleMouseUp]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     document.body.style.cursor = "";
+  //     document.body.style.userSelect = "";
+  //   };
+  // }, []);
+
   const handleColumnClick = (dataField: string) => {
     setSelectedColumn(dataField);
-  };
-
-  const handleSort = (dataField: string) => {
-    if (selectedColumn === dataField) {
-      setSortOrder(sortOrder === "asc" ? "desc" : sortOrder === "desc" ? null : "asc");
-    } else {
-      setSelectedColumn(dataField);
-      setSortOrder("asc");
-    }
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,51 +371,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     setFilterRange({ min, max });
   };
 
-  const sortedAndFilteredDetails = useMemo(() => {
-    let details = [...(formState.transaction?.details || [])];
-
-    // Apply search
-    if (searchQuery && selectedColumn) {
-      details = details.filter((item) =>
-        String(item[selectedColumn as keyof TransactionDetail])
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Apply filter for slNo (numeric range)
-    if (selectedColumn === "slNo" && (filterRange.min !== null || filterRange.max !== null)) {
-      details = details.filter((item) => {
-        const value = Number(item.slNo);
-        const minPass = filterRange.min !== null ? value >= filterRange.min : true;
-        const maxPass = filterRange.max !== null ? value <= filterRange.max : true;
-        return minPass && maxPass;
-      });
-    }
-
-    // Apply sorting
-    if (sortOrder && selectedColumn) {
-      details.sort((a, b) => {
-        const aValue = a[selectedColumn as keyof TransactionDetail];
-        const bValue = b[selectedColumn as keyof TransactionDetail];
-        if (sortOrder === "asc") {
-          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-        } else if (sortOrder === "desc") {
-          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-        }
-        return 0;
-      });
-    }
-
-    return details;
-  }, [formState.transaction?.details, searchQuery, filterRange, sortOrder, selectedColumn]);
-
   const handleDragStart = (e: React.DragEvent<HTMLTableCellElement>, dataField: string) => {
     if (!allowColumnReordering || !dataField) return;
-    setDraggedColumn(dataField);
+    setDragState((prev) => ({ ...prev, draggedColumn: dataField }));
     const target = e.currentTarget;
     const rect = target.getBoundingClientRect();
-    setDragPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    setDragPreviewPosition({ x: e.clientX + 10, y: e.clientY - 10 });
     e.dataTransfer.setData("text/plain", dataField);
     e.dataTransfer.effectAllowed = "move";
   };
@@ -268,21 +387,22 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   };
 
   const handleDragEnter = (dataField: string) => {
-    if (allowColumnReordering && draggedColumn && dataField !== draggedColumn) {
-      setTargetColumn(dataField);
+    if (allowColumnReordering && dragState.draggedColumn && dataField !== dragState.draggedColumn) {
+      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
+      setDragState((prev) => ({ ...prev, dropPosition: columnIndex }));
     }
   };
 
   const handleDragLeave = () => {
-    setTargetColumn(null);
+    setDragState((prev) => ({ ...prev, dropPosition: null }));
   };
 
   const handleDrop = (e: React.DragEvent<HTMLTableCellElement>, targetDataField: string) => {
     e.preventDefault();
-    if (!allowColumnReordering || !draggedColumn || draggedColumn === targetDataField) return;
+    if (!allowColumnReordering || !dragState.draggedColumn || dragState.draggedColumn === targetDataField) return;
 
     const columnsCopy = [...(formState.gridColumns || [])];
-    const draggedIndex = columnsCopy.findIndex((col) => col.dataField === draggedColumn);
+    const draggedIndex = columnsCopy.findIndex((col) => col.dataField === dragState.draggedColumn);
     const targetIndex = columnsCopy.findIndex((col) => col.dataField === targetDataField);
 
     if (draggedIndex === -1 || targetIndex === -1) return;
@@ -292,25 +412,21 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
     dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
 
-    setDraggedColumn(null);
-    setTargetColumn(null);
-    setDragPosition(null);
-
-    // Notify GridPreferenceChooser of the change
+    resetDragState();
     preferenceChooserRef.current?.handleDropping(true);
   };
 
   const handleDragEnd = () => {
-    setDraggedColumn(null);
-    setTargetColumn(null);
-    setDragPosition(null);
+    resetDragState();
+    preferenceChooserRef.current?.handleDropping(true);
   };
 
   return (
     <div
       style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box" }}
+      className="bg-white border border-gray-300 rounded-none shadow-none"
     >
-      <div className={`relative border border-gray-200 rounded-none ${className} w-full overflow-hidden`}>
+      <div className={`relative ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           <GridPreferenceChooser
             ref={preferenceChooserRef}
@@ -322,74 +438,59 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           />
         </div>
         <div
-          ref={headerRef}
+          ref={gridRef}
           className="w-full overflow-x-auto rounded-none sticky top-0 z-10"
         >
-          <table className="min-w-full table-auto border-collapse">
+          <table className="w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="flex bg-gray-200 border-b border-gray-200 relative" style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}>
+              <tr className="flex bg-gray-100 border-b border-gray-300 relative" style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}>
                 {formState.gridColumns?.filter((c) => c.visible).map((col, index) => (
                   <React.Fragment key={col.dataField}>
-                    {/* Drop Indicator */}
-                    {targetColumn === col.dataField && draggedColumn !== col.dataField && (
+                    {dragState.dropPosition === index && (
                       <div
-                        className="absolute w-1 bg-blue-500 h-full"
+                        className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 shadow-lg z-10"
                         style={{
                           left: appState.dir === "ltr"
-                            ? `${columns.slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
+                            ? `${(formState.gridColumns ?? [])
+                                .filter((c) => c.visible)
+                                .slice(0, index)
+                                .reduce((sum, c) => sum + (c.width || 150), 0)}px`
                             : undefined,
                           right: appState.dir === "rtl"
-                            ? `${columns.slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
+                            ? `${(formState.gridColumns ?? [])
+                                .filter((c) => c.visible)
+                                .slice(0, index)
+                                .reduce((sum, c) => sum + (c.width || 150), 0)}px`
                             : undefined,
-                          zIndex: 20,
+                        }}
+                      />
+                    )}
+                    {dragState.dropPosition === (formState.gridColumns?.filter((c) => c.visible).length ?? 0) && index === (formState.gridColumns?.filter((c) => c.visible).length ?? 0) - 1 && (
+                      <div
+                        className="absolute right-0 top-0 bottom-0 w-0.5 bg-blue-500 shadow-lg z-10"
+                        style={{
+                          right: appState.dir === "ltr" ? 0 : undefined,
+                          left: appState.dir === "rtl" ? 0 : undefined,
                         }}
                       />
                     )}
                     <th
                       id={`${col.dataField}_${col.dataField}`}
-                      className={`text-center py-1 px-1 font-medium text-gray-700 border-r border-gray-200 text-sm whitespace-nowrap cursor-pointer flex items-center justify-center relative
-                        ${selectedColumn === col.dataField ? "border-2 border-gray-600" : ""}
-                        ${draggedColumn === col.dataField ? "opacity-50" : ""}
-                        ${targetColumn === col.dataField && draggedColumn !== col.dataField ? "bg-gray-300" : "hover:bg-gray-300"}
-                      `}
-                      style={{
-                        width: col.width ? `${col.width}px` : "150px",
-                        minWidth: col.width ? `${col.width}px` : "150px",
-                        boxSizing: "border-box",
-                        ...(selectedColumn === col.dataField && {
-                          width: col.width ? `${col.width - 2}px` : "148px", // Adjust for border width
-                          minWidth: col.width ? `${col.width - 2}px` : "148px",
-                        }),
-                      }}
-                      draggable={allowColumnReordering && !col.isLocked}
-                      onDragStart={(e) => {
-                        if (col.dataField) {
-                          handleDragStart(e, col.dataField);
-                        }
-                        preferenceChooserRef.current?.handleDragStart(e);
-                      }}
-                      onDragOver={handleDragOver}
-                      onDragEnter={() => col.dataField && handleDragEnter(col.dataField)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => col.dataField && handleDrop(e, col.dataField)}
-                      onDragEnd={() => {
-                        handleDragEnd();
-                        preferenceChooserRef.current?.handleDropping(true);
-                      }}
-                      onClick={() => {
-                        if (col.dataField) {
-                          if (col.allowSorting) {
-                            handleSort(col.dataField);
-                          }
-                          handleColumnClick(col.dataField);
-                        }
-                      }}
-                    >
-                      {col.caption}
-                      {col.allowSorting && selectedColumn === col.dataField && sortOrder && (
-                        sortOrder === "asc" ? <ChevronUp className="h-4 w-4 ml-1" /> : <ChevronDown className="h-4 w-4 ml-1" />
-                      )}
-                    </th>
+                      key={col.dataField}
+                    className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-600 text-sm whitespace-nowrap cursor-move"
+                    style={{
+                      width: col.width ? `${col.width}px` : "150px",
+                      minWidth: col.width ? `${col.width}px` : "150px",
+                      textAlign:"center",
+                      boxSizing: "border-box",
+                    }}
+                    draggable={!col.isLocked}
+                    onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}
+                    onDragEnter={(e) => preferenceChooserRef.current?.handleDragEnd(e)}
+                    onDragEnd={() => preferenceChooserRef.current?.handleDropping(true)}
+                  >
+                    {col.caption}
+                  </th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -399,7 +500,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 key={String(keyField)}
                 ref={listRef}
                 height={height}
-                itemCount={sortedAndFilteredDetails.length}
+                itemCount={formState.transaction?.details.length}
                 itemSize={rowHeight}
                 width={tableWidth + 1}
                 outerRef={outerRef}
@@ -407,7 +508,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   details: formState.transaction?.details || [],
                   columns: formState.gridColumns || [],
                   tableWidth,
-                  filteredDetails: sortedAndFilteredDetails,
                 }}
                 itemKey={(index) => `${gridId}-${index}`}
                 className="bg-white"
@@ -420,25 +520,32 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         </div>
       </div>
 
-      {/* Drag Preview */}
-      {draggedColumn && dragPosition && (
+      {dragState.isDragging && dragState.draggedColumn && (
         <div
-          className="fixed pointer-events-none bg-gray-200 text-gray-700 text-sm font-medium opacity-75 border border-gray-200 rounded-sm shadow-md"
+          ref={dragPreviewRef}
+          className="fixed z-50 pointer-events-none bg-white border-2 border-blue-400 rounded-lg shadow-xl px-4 py-2"
           style={{
-            top: dragPosition.y,
-            left: dragPosition.x,
-            width: formState.gridColumns?.find((col) => col.dataField === draggedColumn)?.width || 150,
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 30,
-            // transform: "translate(-50%, -50%)",
+            left: `${dragPreviewPosition.x}px`,
+            top: `${dragPreviewPosition.y}px`,
+            transform: "rotate(3deg)",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {formState.gridColumns?.find((col) => col.dataField === draggedColumn)?.caption}
+          <div className="flex items-center gap-2">
+            <GripVertical className="w-4 h-4 text-blue-500" />
+            <span className="text-sm font-medium text-gray-700">
+              {formState.gridColumns?.find((col) => col.dataField === dragState.draggedColumn)?.caption}
+            </span>
+          </div>
         </div>
       )}
+
+      {/* <div className="px-1 py-1 bg-gray-100 border-t border-gray-300 text-sm text-gray-600">
+        <div className="flex justify-between items-center">
+          <span>Showing {formState.transaction?.details.length} records</span>
+          
+        </div>
+      </div> */}
     </div>
   );
 });

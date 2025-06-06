@@ -20,6 +20,7 @@ import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import {
   getApLocalData,
+  isNullOrUndefinedOrZero,
   setFgAccordingToBgPrimary,
 } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -1797,7 +1798,7 @@ useEffect(() => {
                 }}
               >
                 {enableClearOption &&
-                  (initial) &&
+                  (initial && !isNullOrUndefinedOrZero(initial.value)) &&
                   !noXMarkIcon && (
                     <button
                       type="button"

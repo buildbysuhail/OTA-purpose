@@ -642,7 +642,6 @@ export const useAccTransaction = (
     });
   };
   const refactorDetails = (transaction: AccTransactionData) => {
-    debugger;
 
     return transaction.details.map((detail, index) => {
       const baseDetail = {

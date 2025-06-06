@@ -204,7 +204,44 @@ const accTransactionSlice = createSlice({
           isDateField ? new Date(fieldValue).toISOString() : fieldValue;
       });
     },
+accFormStateHandleFieldChangeKeysOnly: (
+  state,
+  action: PayloadAction<{
+    fields: { [fieldId in keyof AccTransactionFormState]?: any };
+  }>
+) => {
+  const { fields } = action.payload;
 
+  (Object.keys(fields) as (keyof AccTransactionFormState)[]).forEach((key) => {
+    const fieldValue = fields[key];
+
+    if (
+      fieldValue &&
+      typeof fieldValue === 'object' &&
+      !Array.isArray(fieldValue)
+    ) {
+      // Ensure nested object exists in state
+      if (!state[key]) {
+        (state[key] as any) = {};
+      }
+
+      Object.keys(fieldValue).forEach((subKey) => {
+        const subValue = fieldValue[subKey];
+        const current = (state[key] as any)[subKey];
+        const isDateField = current instanceof Date;
+        (state[key] as any)[subKey] = isDateField
+          ? new Date(subValue).toISOString()
+          : subValue;
+      });
+    } else {
+      const current = state[key];
+      const isDateField = current instanceof Date;
+      (state[key] as any) = isDateField
+  ? new Date(fieldValue).toISOString()
+  : fieldValue;
+    }
+  });
+},
  // Inside the createSlice, update the reducer
       acctemplatesData: (
         state,
@@ -734,7 +771,8 @@ export const {
   accFormStateClearDetails,
   accFormStateTransactionAttachmentsRowAdd,
   accFormStateTransactionAttachmentsRowUpdate,
-  accFormStateTransactionAttachmentsRowRemove
+  accFormStateTransactionAttachmentsRowRemove,
+  accFormStateHandleFieldChangeKeysOnly
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

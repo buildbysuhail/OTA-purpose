@@ -18,7 +18,6 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
 
   return (
     <>
-    {formState.row.costCentreID}
       {formState.formElements.costCentreID.visible && (
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}

@@ -32,6 +32,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
+  accFormStateHandleFieldChangeKeysOnly,
   accFormStateRowHandleFieldChange,
   updateFormElement,
 } from "./reducer";
@@ -329,7 +330,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
-  useEffect(() => {
+  const ledgerIDChanged = (item: any) => {
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -343,7 +344,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       try {
         const _drcr = getDrCr(formState.transaction.master.voucherType);
-        const ledgerID = formState.row.ledgerID??0;
+        const ledgerID = item.value??0;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
@@ -399,7 +400,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
 
           dispatch(
-            accFormStateHandleFieldChange({
+            accFormStateHandleFieldChangeKeysOnly({
               fields: {
                 ledgerBalance,
                 groupName: ledgerData?.accGroupName,
@@ -407,40 +408,43 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ? undefined
                   : ledgerData,
                 ledgerDataLoading: false,
+                row:{
+                  ledgerID: ledgerID,
+                  ledgerCode: ledgerData?.ledgerCode,
+                  ledgerName: ledgerData?.partyName,
+                  partyName:
+                    formState.isTaxOnExpense && ledgerData != null
+                      ? ledgerData.partyName ?? ""
+                      : "",
+                  taxNo:
+                    formState.isTaxOnExpense && ledgerData != null
+                      ? // ? ledgerData.taxNumber??""
+                        ledgerData.taxNumber ?? ""
+                      : "",
+              }
               },
             })
           );
           
-          dispatch(
-            accFormStateRowHandleFieldChange({
-              fields: {
-                ledgerCode: ledgerData?.ledgerCode,
-                ledgerName: ledgerData?.partyName,
-                partyName:
-                  formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.partyName ?? ""
-                    : "",
-                taxNo:
-                  formState.isTaxOnExpense && ledgerData != null
-                    ? // ? ledgerData.taxNumber??""
-                      ledgerData.taxNumber ?? ""
-                    : "",
-              },
-            })
-          );
+          // dispatch(
+          //   accFormStateRowHandleFieldChange({
+          //     fields: {
+          //       ledgerCode: ledgerData?.ledgerCode,
+          //       ledgerName: ledgerData?.partyName,
+          //       partyName:
+          //         formState.isTaxOnExpense && ledgerData != null
+          //           ? ledgerData.partyName ?? ""
+          //           : "",
+          //       taxNo:
+          //         formState.isTaxOnExpense && ledgerData != null
+          //           ? // ? ledgerData.taxNumber??""
+          //             ledgerData.taxNumber ?? ""
+          //           : "",
+          //     },
+          //   })
+          // );
         } else {
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                ledgerBalance: 0,
-                groupName: "",
-                ledgerData: undefined,
-                row: {...formState.row,
-                  ledgerCode: ""
-                }
-              },
-            })
-          );
+          
         }
       } catch (error) {
         // Handle error
@@ -455,9 +459,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         })
       );
     };
-
-    loadLedgerData();
-  }, [formState.row.ledgerID]);
+    if(item.value??0 > 0) {
+      loadLedgerData();  
+    } else {
+      // dispatch(
+      //       accFormStateHandleFieldChange({
+      //         fields: {
+      //           ledgerBalance: 0,
+      //           groupName: "",
+      //           ledgerData: undefined,
+      //           row: {...formState.row,
+      //             ledgerCode: ""
+      //           }
+      //         },
+      //       })
+      //     );
+    }
+  };
   useEffect(() => {
     // if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
     dispatch(
@@ -1255,7 +1273,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       
     if (voucherNo != undefined && voucherNo > 0) {
-      debugger;
       _formState.formElements = setUserRight({..._formState.formElements},userSession,_formState.formCode,_formState.transaction.details?.length??0,hasRight);
     }
       setAccTransVoucher(_formState, true);
@@ -1999,6 +2016,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <Ledger
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
+                        onSelectItem={ledgerIDChanged}
                         triggerEffect={triggerEffect}
                         handleKeyDown={handleKeyDown}
                         formState={formState}
@@ -2299,6 +2317,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                     />
                     <Ledger
+                    onSelectItem={ledgerIDChanged}
                       ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}
                       triggerEffect={triggerEffect}
@@ -3001,6 +3020,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                     <div className="mb-1">
                       <Ledger
+                      onSelectItem={ledgerIDChanged}
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
                         triggerEffect={triggerEffect}

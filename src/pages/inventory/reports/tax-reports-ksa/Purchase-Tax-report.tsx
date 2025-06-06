@@ -66,8 +66,8 @@ const PurchaseTaxReport = () => {
             cellElement.data?.taxableAmount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.taxableAmount)
-                );
+                Number.parseFloat(cellElement.data.taxableAmount)
+              );
           return {
             ...exportCell,
             text: value,
@@ -80,8 +80,8 @@ const PurchaseTaxReport = () => {
               {cellElement.data?.taxableAmount == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.taxableAmount)
-                  )}
+                  Number.parseFloat(cellElement.data.taxableAmount)
+                )}
             </span>
           );
         }
@@ -108,10 +108,10 @@ const PurchaseTaxReport = () => {
             cellElement.data?.vatPercentage == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatPercentage),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.vatPercentage),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -124,10 +124,10 @@ const PurchaseTaxReport = () => {
               {cellElement.data?.vatPercentage == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.vatPercentage),
-                    false,
-                    4
-                  )}
+                  Number.parseFloat(cellElement.data.vatPercentage),
+                  false,
+                  4
+                )}
             </span>
           );
         }
@@ -154,10 +154,10 @@ const PurchaseTaxReport = () => {
             cellElement.data?.vatAmount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatAmount),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.vatAmount),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -170,10 +170,10 @@ const PurchaseTaxReport = () => {
               {cellElement.data?.vatAmount == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.vatAmount),
-                    false,
-                    4
-                  )}
+                  Number.parseFloat(cellElement.data.vatAmount),
+                  false,
+                  4
+                )}
             </span>
           );
         }
@@ -353,8 +353,8 @@ const PurchaseTaxReport = () => {
                   gridId={GridId.Purchase_tax}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
-                  filterHeight={230}
+                  filterWidth={400}
+                  filterHeight={200}
                   filterContent={<PurchaseTaxReportFilter />}
                   filterInitialData={PurchaseTaxReportFilterInitialState}
                   hideGridAddButton={true}

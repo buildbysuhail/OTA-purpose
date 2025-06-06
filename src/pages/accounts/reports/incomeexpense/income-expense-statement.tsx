@@ -304,7 +304,7 @@ const IncomExpenseStatement = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={360}
-                  filterHeight={210}
+                  filterHeight={220}
                   filterContent={<IncomeExpenseStatementFilter />}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   filterInitialData={IncomeExpenseStatementFilterInitialState}

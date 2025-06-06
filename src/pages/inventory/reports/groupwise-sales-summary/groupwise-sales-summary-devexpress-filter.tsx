@@ -3,16 +3,13 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPRadio from "../../../../components/ERPComponents/erp-radio";
-import { LedgerType } from "../../../../enums/ledger-types";
 
 const GroupwiseSalesSummaryDevexpressFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport')
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2"> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <ERPDateInput
                         label={t("from_date")}
                         {...getFieldProps("fromDate")}
@@ -25,10 +22,10 @@ const GroupwiseSalesSummaryDevexpressFilter = ({ getFieldProps, handleFieldChang
                         className="w-full"
                         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
                     />
-                {/* </div>
-            </div> */}
+                </div>
+            </div>
 
-            {/* <div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4"> */}
+            <div className="grid grid-cols-1 gap-4">
                 <ERPDataCombobox
                     label={t("supplier")}
                     {...getFieldProps("supplierLedgerID")}
@@ -40,8 +37,7 @@ const GroupwiseSalesSummaryDevexpressFilter = ({ getFieldProps, handleFieldChang
                     }}
                     onSelectItem={(data) => { handleFieldChange("supplierLedgerID", data.value); }}
                 />
-
-            {/* </div> */}
+            </div>
         </div>
     );
 }

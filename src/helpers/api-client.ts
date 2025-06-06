@@ -53,11 +53,15 @@ const setAuthorization = (token?: string) => {
 
 // In-flight requests cache: key => Promise
 const inFlightRequests = new Map<string, Promise<any>>();
+
+
 class APIClient {
   /**
    * Fetches data from the given URL
    */
-
+clearInFlightRequests = () => {
+  inFlightRequests.clear();
+};
   get = (url: string, queryString: string = ""): Promise<any> => {
     setAuthorization();
     let response: Promise<any>;

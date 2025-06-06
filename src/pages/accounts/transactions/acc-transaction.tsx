@@ -347,9 +347,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-        let formElmns = {
-          ...formState.formElements,
-        };
+        let formElmns = { };
         if (ledgerID > 0) {
           if (
             billwiseMandatory &&
@@ -360,9 +358,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=0`
             );
             (formElmns = {
-              ...formElmns,
               amount: {
-                ...formElmns.amount,
                 disabled:
                   (formState.transaction.master.voucherType == "CQP" ||
                     formState.transaction.master.voucherType == "CQR") &&
@@ -439,12 +435,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ledgerBalance: 0,
                 groupName: "",
                 ledgerData: undefined,
+                row: {...formState.row,
+                  ledgerCode: ""
+                }
               },
-            })
-          );
-          dispatch(
-            accFormStateRowHandleFieldChange({
-              fields: { ledgerCode: "" },
             })
           );
         }
@@ -1261,7 +1255,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       
     if (voucherNo != undefined && voucherNo > 0) {
-      _formState.formElements = setUserRight(_formState,userSession,hasRight);
+      debugger;
+      _formState.formElements = setUserRight({..._formState.formElements},userSession,_formState.formCode,_formState.transaction.details?.length??0,hasRight);
     }
       setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously

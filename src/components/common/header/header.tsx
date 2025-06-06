@@ -243,7 +243,8 @@ const Header: FC<HeaderProps> = () => {
 
   const refreshCache = async () => {
    
-    try {
+    try {      
+      api.clearInFlightRequests();
       CachedUrls.forEach(async(x) => {
         await api.getWithCacheAsync(x,"", true)        
         localStorage.setItem("lcct", new Date().toISOString());

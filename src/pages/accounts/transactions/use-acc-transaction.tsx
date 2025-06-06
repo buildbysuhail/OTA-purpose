@@ -40,6 +40,7 @@ import {
   AccUserConfig,
   Attachments,
   BillwiseData,
+  FormElementsState,
 } from "./acc-transaction-types";
 import {
   getApLocalData,
@@ -2080,30 +2081,40 @@ if (
     dispatch(loadTempRows());
   };
 const setUserRight = (
-      state: AccTransactionFormState, userSession: UserModel,
+      formElements: FormElementsState, userSession: UserModel,formCode: string,detailsLength: number,
         hasRight: (formCode: string, action: UserAction) => boolean
     ) => {
 
       const isClosed = userSession.financialYearStatus === "Closed";
 
-      state.formElements.btnSave.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Add) &&
-          (state?.transaction?.details?.length ?? 0) > 0
-        : false;
-
-      state.formElements.btnEdit.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Edit)
-        : false;
-
-      state.formElements.btnDelete.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Delete)
-        : false;
-
-      state.formElements.btnPrint.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Print)
-        : false;
-        return state.formElements;
-    }
+  return {
+    ...formElements,
+    btnSave: {
+      ...formElements.btnSave,
+      disabled: !isClosed
+        ? hasRight(formCode, UserAction.Add) && detailsLength > 0
+        : false,
+    },
+    btnEdit: {
+      ...formElements.btnEdit,
+      disabled: !isClosed
+        ? hasRight(formCode, UserAction.Edit)
+        : false,
+    },
+    btnDelete: {
+      ...formElements.btnDelete,
+      disabled: !isClosed
+        ? hasRight(formCode, UserAction.Delete)
+        : false,
+    },
+    btnPrint: {
+      ...formElements.btnPrint,
+      disabled: !isClosed
+        ? hasRight(formCode, UserAction.Print)
+        : false,
+    },
+  };
+};
   const enableCombo = async () => {
     dispatch(
       updateFormElement({

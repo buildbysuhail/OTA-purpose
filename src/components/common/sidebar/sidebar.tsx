@@ -158,30 +158,73 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         ),
         UserAction.Show
       );
+const sd = st
+  .map((x: any) => {
+    const filteredChildren = x.children
+      ?.map((item: any) => {
+        item.visible = true;
+        item.disabled = false;
 
-      const sd = st.map((x: any) =>
-        x.children?.map((item: any) => {
-          item.visible = true;
-          item.disabled = false;
+        if (!allowedFormCodes.includes(item.rights)) {
+          item.visible = false;
+        }
 
-          if (!allowedFormCodes.find((x) => x == item.rights)) {
-            item.visible = false;
-          }
-          if (
-            exludedRoutes.find(
+        const isExcluded = exludedRoutes.find(
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
                   undefined
             )
-          ) {
-            item.visible = false;
-          }
-        })
-      );
-      setMenuitems(st);
+
+        if (isExcluded) {
+          item.visible = false;
+        }
+
+        return item; // <-- Make sure this is not on a new line after `return`
+      })
+      ?.filter((child: any) => child.visible); // Only keep visible ones
+
+    if (filteredChildren && filteredChildren.length > 0) {
+      return {
+        ...x,
+        children: filteredChildren,
+      };
     }
-  }, [userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
+    if (!filteredChildren && x.type == "link") {
+      return {
+        ...x
+      };
+    }
+
+    return null;
+  })
+  .filter((x) => x !== null);
+      // const sd = st.map((x: any) =>
+      //   x.children?.map((item: any) => {
+      //     item.visible = true;
+      //     item.disabled = false;
+
+      //     if (!allowedFormCodes.find((x) => x == item.rights)) {
+      //       item.visible = false;
+      //     }
+      //     if (
+      //       exludedRoutes.find(
+      //         (route) =>
+      //           route.title === item.title &&
+      //           route.countries.find((x) => x == userSession.countryId) !=
+      //             undefined
+      //       )
+      //     ) {
+      //       item.visible = false;
+      //     }
+      //     return item;
+      //   })
+      // );
+      
+      debugger;
+      setMenuitems(sd);
+    }
+  }, [userSession.countryId,userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();

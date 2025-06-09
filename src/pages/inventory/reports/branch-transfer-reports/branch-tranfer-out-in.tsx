@@ -311,7 +311,7 @@ const BranchTransferOutIn: FC<BranchTransferInOutProps> = ({
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}

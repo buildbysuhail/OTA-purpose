@@ -175,7 +175,7 @@ const CounterReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("counter_report")}
                 dataUrl={Urls.counter_report}
                 hideGridAddButton={true}

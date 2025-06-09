@@ -56,7 +56,7 @@ const DiagnosisReportPostDatedTransactions = () => {
               <ErpDevGrid
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("diagnosis_report_post_dated_transactions")}
                 dataUrl={Urls.diagnosis_report_post_dated_transactions}
                 hideGridAddButton={true}

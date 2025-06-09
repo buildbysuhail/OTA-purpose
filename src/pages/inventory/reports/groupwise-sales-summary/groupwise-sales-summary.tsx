@@ -745,7 +745,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                 }}
                 handleCalculateSummary={handleCalculateSummary}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t(gridHeader)}
                 dataUrl={Urls.groupwise_sales_summary}
                 hideGridAddButton={true}

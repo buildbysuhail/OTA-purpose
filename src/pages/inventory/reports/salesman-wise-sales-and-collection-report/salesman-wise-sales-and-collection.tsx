@@ -451,7 +451,7 @@ const SalesmanwiseSalesAndCollection = () => {
                   summary: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText=": {fromDate} - {toDate}"
                 gridHeader={t("salesmanwise_sales_and_collection_report")}
                 dataUrl={Urls.salesmanwise_sales_and_collection}

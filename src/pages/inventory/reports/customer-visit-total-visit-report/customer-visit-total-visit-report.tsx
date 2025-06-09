@@ -103,8 +103,8 @@ const CustomerVisitTotalVisit = () => {
               <ErpDevGrid
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                filterText="{cardNo !='' && No: [cardNo]} {cardNo =='' && Report}"
-                gridHeader={t("customer_visit_total_visit")}
+                filterText="of Route : {salesRouteID > 0 && [salesRoute]} {salesRouteID <= 0 && All} From {fromDate} - {toDate}"
+                gridHeader={t("customer_visits")}
                 dataUrl={Urls.customer_visit_total_visit}
                 hideGridAddButton={true}
                 enablefilter={true}

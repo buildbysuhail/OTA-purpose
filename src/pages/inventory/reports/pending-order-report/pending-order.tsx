@@ -631,7 +631,7 @@ const PendingOrderReport = () => {
                 }}
                 filterText=": {fromDate} - {toDate}"
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("pending_order_report")}
                 dataUrl={Urls.pending_order}
                 hideGridAddButton={true}

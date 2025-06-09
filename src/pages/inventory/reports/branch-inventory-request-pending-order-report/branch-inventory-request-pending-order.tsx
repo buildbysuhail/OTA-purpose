@@ -168,7 +168,7 @@ const BranchInventoryRequestPendingOrder = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("branch_inventory_request_pending_order_report")}
                 dataUrl={Urls.branch_inventory_request_pending_order}
                 hideGridAddButton={true}

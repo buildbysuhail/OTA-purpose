@@ -287,7 +287,7 @@ const SchemeWiseSales = () => {
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
+                                
                                 gridHeader={t("scheme_wise_sales")}
                                 dataUrl={Urls.scheme_wise_sales}
                                 hideGridAddButton={true}

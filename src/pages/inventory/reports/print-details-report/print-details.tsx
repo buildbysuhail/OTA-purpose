@@ -141,7 +141,7 @@ const PrintDetails = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("print_details_report")}
                 dataUrl={Urls.print_details}
                 hideGridAddButton={true}

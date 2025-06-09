@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CustomerVisitLastVisitFilter, { CustomerVisitLastVisitFilterInitialState } from "./customer-visit-last-visit-report-filter";
 import GridId from "../../../../redux/gridId";
+import moment from "moment";
 
 interface CustomerVisitLastVisitInterface {
   partyCode: string;
@@ -109,12 +110,20 @@ const CustomerVisitLastVisit = () => {
     {
       dataField: "lastTransDate",
       caption: t("last_trans_date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 100,
+       cellRender: (
+              cellElement: any,
+              cellInfo: any,
+              filter: any,
+              exportCell: any
+            ) => {
+              return (cellElement.data.lastTransDate == null || cellElement.data.lastTransDate == "" ? "" : moment(cellElement.data.lastTransDate, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+            }
     },
     {
       dataField: "daysFromLastTrans",
@@ -133,7 +142,7 @@ const CustomerVisitLastVisit = () => {
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
-      visible: true,
+      visible: false,
       width: 100,
     }
   ];
@@ -163,12 +172,12 @@ const CustomerVisitLastVisit = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
-                gridHeader={t("customer_visit_last_visit")}
+                
+              // filterText = `as on ${moment().format('DD-MMM-YYYY')}`;
+                gridHeader={t("days_from_last_transactions")}
                 dataUrl={Urls.customer_visit_last_visit}
                 hideGridAddButton={true}
                 enablefilter={true}
-                showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<CustomerVisitLastVisitFilter />}
                 filterWidth={300}

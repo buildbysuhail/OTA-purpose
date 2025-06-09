@@ -238,7 +238,7 @@ const GSTR1B2CSmall = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1b2c_small_report")}
                 dataUrl={Urls.gstr1b2cSmall}
                 hideGridAddButton={true}

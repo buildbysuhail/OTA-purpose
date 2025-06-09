@@ -405,7 +405,7 @@ const InventoryStatusReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("inventory_status_report")}
                 dataUrl={Urls.inventory_status}
                 hideGridAddButton={true}

@@ -391,7 +391,7 @@ const SalesTax = () => {
                   summary: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText=":{fromDate} - {toDate}"
                 gridHeader={t("monthly_vat_sales_statement_report")}
                 dataUrl={Urls.sales_tax}

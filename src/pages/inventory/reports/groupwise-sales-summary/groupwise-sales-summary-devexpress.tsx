@@ -455,7 +455,7 @@ const GroupwiseSalesSummaryDevexpress = () => {
                   summary: true,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("groupwise_sales_summary_devexpress_report")}
                 dataUrl={Urls.groupwise_sales_summary_devexpress}
                 hideGridAddButton={true}

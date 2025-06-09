@@ -201,7 +201,7 @@ const DiagnosisReportSalesPriceLessthanMSP = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("diagnosis_report_sales_price_less_than_msp")}
                 dataUrl={Urls.diagnosis_report_sales_price_less_than_msp}
                 hideGridAddButton={true}

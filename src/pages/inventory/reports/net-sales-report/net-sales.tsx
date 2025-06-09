@@ -517,7 +517,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
                   summary: true,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}

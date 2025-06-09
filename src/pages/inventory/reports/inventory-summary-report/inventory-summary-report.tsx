@@ -185,7 +185,7 @@ const InventorySummaryReport = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText="{branchID > 0 &&   Branch : [branch]} 
                             {branchID <= 0 &&   of All Branch}"
                 gridHeader={t("inventory_summary_report")}

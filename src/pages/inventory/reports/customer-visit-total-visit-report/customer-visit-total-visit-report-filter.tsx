@@ -41,7 +41,10 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("salesRouteID", data.value);
+              handleFieldChange({
+            salesRouteID: data.value,
+            salesRoute: data.label,
+          })
             }}
           />
         </div>

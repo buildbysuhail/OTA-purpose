@@ -188,7 +188,7 @@ const CouponReports = () => {
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
+                                
                                 gridHeader={t("coupon_reports")}
                                 dataUrl={Urls.coupon_reports}
                                 hideGridAddButton={true}

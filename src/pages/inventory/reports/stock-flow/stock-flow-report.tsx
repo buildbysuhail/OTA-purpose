@@ -1006,7 +1006,7 @@ const StockFlowReport = () => {
                  {productID > 0 && ,   Product : [product]} 
                 {counterID > 0 && ,  Group Name :[productGroup]}"
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("stock_flow_report")}
                 dataUrl={Urls.stock_flow_report}
                 hideGridAddButton={true}

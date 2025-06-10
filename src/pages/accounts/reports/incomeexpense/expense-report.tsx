@@ -246,7 +246,7 @@ const ExpenseReport = () => {
                   method={ActionType.POST}
                   gridId="grd_expense_report"
                   filterWidth={650}
-                  filterHeight={270}
+                  filterHeight={280}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

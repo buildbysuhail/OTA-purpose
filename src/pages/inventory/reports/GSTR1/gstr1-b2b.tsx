@@ -291,7 +291,7 @@ const GSTR1B2B = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1b2b_report")}
                 dataUrl={Urls.gstr1b2b}
                 hideGridAddButton={true}

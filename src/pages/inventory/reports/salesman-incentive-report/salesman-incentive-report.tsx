@@ -144,7 +144,6 @@ const customizeTotal = (itemInfo: any) => `TOTAL`;
                                 dataUrl={Urls.salesman_incentive_report}
                                 hideGridAddButton={true}
                                 enablefilter={true}
-                                // showFilterInitially={false}
                                 method={ActionType.POST}
                                 filterContent={<SalesmanIncentiveReportFilter />}
                                 filterWidth={600}

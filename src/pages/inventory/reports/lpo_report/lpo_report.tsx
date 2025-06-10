@@ -174,7 +174,7 @@ const LPOReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("lpo_report")}
                 dataUrl={Urls.lpo_report}
                 hideGridAddButton={true}

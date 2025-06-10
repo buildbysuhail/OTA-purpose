@@ -105,7 +105,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      format:"dd-MMM-yyyy",
+      format: "dd-MMM-yyyy",
     },
 
     {
@@ -297,7 +297,7 @@ const ExpenseReportDetailed = () => {
                   method={ActionType.POST}
                   gridId="grd_expense_report_details"
                   filterWidth={650}
-                  filterHeight={270}
+                  filterHeight={280}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

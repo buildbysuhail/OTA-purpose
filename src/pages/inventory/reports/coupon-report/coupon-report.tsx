@@ -19,7 +19,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "month",
@@ -29,7 +29,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "year",
@@ -39,7 +39,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 70,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "date",
@@ -49,7 +49,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "billNo",
@@ -59,7 +59,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "customerName",
@@ -69,7 +69,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "cardType",
@@ -79,7 +79,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "cardNumber",
@@ -89,7 +89,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "nameOnCard",
@@ -99,21 +99,21 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 140,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "address1",
-            caption: t("address_1"),
+            caption: t("address1"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 150,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "address2",
-            caption: t("address_2"),
+            caption: t("address2"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
@@ -128,7 +128,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "billTotal",
@@ -138,7 +138,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "couponAmount",
@@ -148,7 +148,7 @@ const CouponReports = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            showInPdf:true,
+            showInPdf: true,
         },
     ];
 
@@ -188,7 +188,7 @@ const CouponReports = () => {
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
+                                
                                 gridHeader={t("coupon_reports")}
                                 dataUrl={Urls.coupon_reports}
                                 hideGridAddButton={true}

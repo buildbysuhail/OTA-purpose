@@ -261,7 +261,7 @@ const GSTR1CDNUR = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1_cdnur_report")}
                 dataUrl={Urls.gstr1cdnur}
                 hideGridAddButton={true}

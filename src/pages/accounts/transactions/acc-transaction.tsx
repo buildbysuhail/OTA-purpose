@@ -32,8 +32,8 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
+  accFormStateHandleFieldChangeKeysOnly,
   accFormStateRowHandleFieldChange,
-  setUserRight,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -278,6 +278,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billWiseExcludedTransactions,
     getDrCr,
     clearRow,
+    setUserRight
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -329,7 +330,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
-  useEffect(() => {
+  const ledgerIDChanged = (item: any) => {
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -343,14 +344,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       try {
         const _drcr = getDrCr(formState.transaction.master.voucherType);
-        const ledgerID = formState.row.ledgerID;
+        const ledgerID = item.value??0;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-        let formElmns = {
-          ...formState.formElements,
-        };
-        if (!isNullOrUndefinedOrZero(ledgerID)) {
+        let formElmns = { };
+        if (ledgerID > 0) {
           if (
             billwiseMandatory &&
             ((!isRowEdit && !formState.row.billwiseDetails) ||
@@ -360,9 +359,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=0`
             );
             (formElmns = {
-              ...formElmns,
               amount: {
-                ...formElmns.amount,
                 disabled:
                   (formState.transaction.master.voucherType == "CQP" ||
                     formState.transaction.master.voucherType == "CQR") &&
@@ -403,7 +400,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
 
           dispatch(
-            accFormStateHandleFieldChange({
+            accFormStateHandleFieldChangeKeysOnly({
               fields: {
                 ledgerBalance,
                 groupName: ledgerData?.accGroupName,
@@ -411,41 +408,43 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ? undefined
                   : ledgerData,
                 ledgerDataLoading: false,
+                row:{
+                  ledgerID: ledgerID,
+                  ledgerCode: ledgerData?.ledgerCode,
+                  ledgerName: ledgerData?.partyName,
+                  partyName:
+                    formState.isTaxOnExpense && ledgerData != null
+                      ? ledgerData.partyName ?? ""
+                      : "",
+                  taxNo:
+                    formState.isTaxOnExpense && ledgerData != null
+                      ? // ? ledgerData.taxNumber??""
+                        ledgerData.taxNumber ?? ""
+                      : "",
+              }
               },
             })
           );
-          dispatch(
-            accFormStateRowHandleFieldChange({
-              fields: {
-                ledgerCode: ledgerData?.ledgerCode,
-                ledgerName: ledgerData?.partyName,
-                partyName:
-                  formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.partyName ?? ""
-                    : "",
-                taxNo:
-                  formState.isTaxOnExpense && ledgerData != null
-                    ? // ? ledgerData.taxNumber??""
-                      ledgerData.taxNumber ?? ""
-                    : "",
-              },
-            })
-          );
+          
+          // dispatch(
+          //   accFormStateRowHandleFieldChange({
+          //     fields: {
+          //       ledgerCode: ledgerData?.ledgerCode,
+          //       ledgerName: ledgerData?.partyName,
+          //       partyName:
+          //         formState.isTaxOnExpense && ledgerData != null
+          //           ? ledgerData.partyName ?? ""
+          //           : "",
+          //       taxNo:
+          //         formState.isTaxOnExpense && ledgerData != null
+          //           ? // ? ledgerData.taxNumber??""
+          //             ledgerData.taxNumber ?? ""
+          //           : "",
+          //     },
+          //   })
+          // );
         } else {
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                ledgerBalance: 0,
-                groupName: "",
-                ledgerData: undefined,
-              },
-            })
-          );
-          dispatch(
-            accFormStateRowHandleFieldChange({
-              fields: { ledgerCode: "" },
-            })
-          );
+          
         }
       } catch (error) {
         // Handle error
@@ -460,9 +459,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         })
       );
     };
-
-    loadLedgerData();
-  }, [formState.row.ledgerID]);
+    if(item.value??0 > 0) {
+      loadLedgerData();  
+    } else {
+      // dispatch(
+      //       accFormStateHandleFieldChange({
+      //         fields: {
+      //           ledgerBalance: 0,
+      //           groupName: "",
+      //           ledgerData: undefined,
+      //           row: {...formState.row,
+      //             ledgerCode: ""
+      //           }
+      //         },
+      //       })
+      //     );
+    }
+  };
   useEffect(() => {
     // if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
     dispatch(
@@ -611,7 +624,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ? t(title)
               : t(title) + "[" + formType + "]") ?? "",
           row: {
-            ...AccTransactionRowInitialData,
+            ...AccTransactionRowInitialData,            
+            ledgerCode: "",
             narration:
               (voucherType == "JV" || voucherType == "JVSP") &&
               formState?.userConfig?.keepNarrationForJV
@@ -1257,14 +1271,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       } else {
         _formState.template = null;
       }
+      
+    if (voucherNo != undefined && voucherNo > 0) {
+      _formState.formElements = setUserRight({..._formState.formElements},userSession,_formState.formCode,_formState.transaction.details?.length??0,hasRight);
+    }
       setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously
     };
 
     initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    }
   }, [voucherType, voucherPrefix, location.search, voucherNo]);
 
   
@@ -2001,6 +2016,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <Ledger
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
+                        onSelectItem={ledgerIDChanged}
                         triggerEffect={triggerEffect}
                         handleKeyDown={handleKeyDown}
                         formState={formState}
@@ -2301,6 +2317,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                     />
                     <Ledger
+                    onSelectItem={ledgerIDChanged}
                       ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}
                       triggerEffect={triggerEffect}
@@ -3003,6 +3020,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                     <div className="mb-1">
                       <Ledger
+                      onSelectItem={ledgerIDChanged}
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
                         triggerEffect={triggerEffect}

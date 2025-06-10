@@ -53,11 +53,15 @@ const setAuthorization = (token?: string) => {
 
 // In-flight requests cache: key => Promise
 const inFlightRequests = new Map<string, Promise<any>>();
+
+
 class APIClient {
   /**
    * Fetches data from the given URL
    */
-
+clearInFlightRequests = () => {
+  inFlightRequests.clear();
+};
   get = (url: string, queryString: string = ""): Promise<any> => {
     setAuthorization();
     let response: Promise<any>;
@@ -79,7 +83,7 @@ class APIClient {
       setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${url}`;
-      debugger;
+      
       // Check if a request is already in-flight
       if (inFlightRequests.has(cacheKey) && !ignoreCach) {
         return inFlightRequests.get(cacheKey);

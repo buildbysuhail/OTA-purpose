@@ -146,7 +146,7 @@ const RouteWiseSalesAndCollection = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("routewise_sales_collection_report")}
                 dataUrl={Urls.routewise_sales_collection}
                 hideGridAddButton={true}

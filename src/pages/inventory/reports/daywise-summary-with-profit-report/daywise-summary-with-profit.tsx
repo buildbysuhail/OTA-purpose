@@ -741,7 +741,7 @@ const DaywiseSummaryWithProfit = () => {
                   summary: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText="{showSalesReturn == true && ,Sales and Return  Summary with Profit Between} 
                  {showSalesReturn == false && , :Sales Summary with Profit Between :} 
                   {fromDate} - {toDate}

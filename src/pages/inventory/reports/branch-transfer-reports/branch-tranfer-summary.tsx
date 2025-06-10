@@ -227,7 +227,7 @@ const BranchTransferSummary: FC<BranchTransferSummaryProps> = ({
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText=": {fromDate} - {toDate}"
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}

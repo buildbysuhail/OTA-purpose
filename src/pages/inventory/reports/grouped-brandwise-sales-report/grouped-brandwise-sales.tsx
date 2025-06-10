@@ -225,7 +225,7 @@ const GroupedBrandwiseSales = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("grouped_brandwise_sales")}
                 dataUrl={Urls.grouped_brandwise_sales}
                 hideGridAddButton={true}

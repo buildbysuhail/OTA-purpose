@@ -196,7 +196,7 @@ const DiscountReportInventory = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("discount_report_inventory")}
                 dataUrl={Urls.discount_report_inventory}
                 hideGridAddButton={true}

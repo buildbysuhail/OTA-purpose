@@ -360,7 +360,7 @@ const GSTR1HSNSummary = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1_hsn_summary_report")}
                 dataUrl={Urls.gstr1hsnSummary}
                 hideGridAddButton={true}

@@ -44,7 +44,7 @@ const ProductSummaryMaster = (): any => {
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: formState.selectedRow?.productID ?? 0,
+      productID: formState.selectedRow?.productID ?? -2,
       productBatchID: 0,
       voucherType: "PI",
       productCode: "",
@@ -56,7 +56,7 @@ const ProductSummaryMaster = (): any => {
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: 0,
+      productID: -2,
       productBatchID: 0,
       voucherType: "PI",
       productCode: "",

@@ -244,7 +244,7 @@ const IncomeReport = () => {
                   method={ActionType.POST}
                   gridId="grd_income_report"
                   filterWidth={650}
-                  filterHeight={270}
+                  filterHeight={280}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

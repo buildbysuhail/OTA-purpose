@@ -253,7 +253,7 @@ const GSTR1B2CLarge = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1b2c_large_report")}
                 dataUrl={Urls.gstr1b2cLarge}
                 hideGridAddButton={true}

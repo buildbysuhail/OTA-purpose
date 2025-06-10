@@ -320,7 +320,7 @@ const DiagnosisReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: true, paging: true, sorting: false, summary: true, }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("diagnosis_report")}
                 dataUrl={Urls.diagnosis_report}
                 hideGridAddButton={true}

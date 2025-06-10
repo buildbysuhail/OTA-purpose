@@ -1,17 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import GroupwiseSalesSummaryDevexpressFilter, {
-  GroupwiseSalesSummaryDevexpressFilterInitialState,
-} from "./groupwise-sales-summary-devexpress-filter";
-import moment from "moment";
+import GroupwiseSalesSummaryDevexpressFilter, { GroupwiseSalesSummaryDevexpressFilterInitialState, } from "./groupwise-sales-summary-devexpress-filter";
 
 const GroupwiseSalesSummaryDevexpress = () => {
   const { t } = useTranslation("accountsReport");
@@ -26,14 +21,14 @@ const GroupwiseSalesSummaryDevexpress = () => {
       width: 100,
       showInPdf: true,
       format: "dd-MMM-yyyy",
-      //   cellRender: (
-      //             cellElement: any,
-      //             cellInfo: any,
-      //             filter: any,
-      //             exportCell: any
-      //           ) => {
-      //             return  (cellElement.data.transactionDate==null||cellElement.data.transactionDate==""?"":moment(cellElement.data.transactionDate, "DD-MMM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-      //           }
+      // cellRender: (
+      //   cellElement: any,
+      //   cellInfo: any,
+      //   filter: any,
+      //   exportCell: any
+      // ) => {
+      //   return (cellElement.data.transactionDate == null || cellElement.data.transactionDate == "" ? "" : moment(cellElement.data.transactionDate, "DD-MMM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+      // }
     },
     {
       dataField: "month",
@@ -460,16 +455,16 @@ const GroupwiseSalesSummaryDevexpress = () => {
                   summary: true,
                 }}
                 columns={columns}
-                moreOption={true}
-                gridHeader="groupwise_sales_summary_devexpress_report"
+                
+                gridHeader={t("groupwise_sales_summary_devexpress_report")}
                 dataUrl={Urls.groupwise_sales_summary_devexpress}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GroupwiseSalesSummaryDevexpressFilter />}
-                filterWidth={350}
-                filterHeight={300}
+                filterWidth={480}
+                filterHeight={220}
                 filterInitialData={
                   GroupwiseSalesSummaryDevexpressFilterInitialState
                 }

@@ -333,7 +333,7 @@ const ServiceReport = () => {
                 }}
                   filterText="Between : {fromDate} - {toDate} {serviceID > 0 &&  Service : [service]} {isWarrantyService=='Y' &&  Warranty Only} {isWarrantyService=='N' && Non Warranty Only}"
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("service_report")}
                 dataUrl={Urls.service_report}
                 hideGridAddButton={true}

@@ -201,7 +201,7 @@ const DiagnosisReportSalesPriceEqualToMRP = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("diagnosis_report_sales_price_equal_to_mrp")}
                 dataUrl={Urls.diagnosis_report_sales_price_equal_to_mrp}
                 hideGridAddButton={true}

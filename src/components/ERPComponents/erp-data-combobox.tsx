@@ -20,6 +20,7 @@ import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import {
   getApLocalData,
+  isNullOrUndefinedOrZero,
   setFgAccordingToBgPrimary,
 } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -386,6 +387,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const { t } = useTranslation("main");
     const [isOpen, setIsOpen] = useState(false);
     const [lcct, setLcct] = useState<string>("");
+    const [getListUrl, setGetListUrl] = useState<string>("");
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<Option[]>([]);
     const [loading, setLoading] = useState(false);
@@ -669,6 +671,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       if (_reload !== undefined && _reload !== true) {
         return;
       }
+      setGetListUrl(`${field?.getListUrl??""}${field?.params??""}`)
       if (!disabledApiCall && field?.freezeDataLoad !== true) {
         loadData();
       }
@@ -808,7 +811,7 @@ useEffect(() => {
       try {
         let _items;
 
-              debugger;
+              
         // Check if data is available in Redux
         let _continue = true;
         let fetchWithCache = false;
@@ -831,7 +834,7 @@ useEffect(() => {
           } else {
             if (fetchWithCache) {
               _items = await fetchData(true);
-              debugger;
+              
             } else {
               _items = await fetchData();
             }
@@ -897,7 +900,10 @@ useEffect(() => {
         );
         let final: Option | null = null;
         // Handle value == -2 by selecting the first item if items are loaded
-        if (value === -2 ) {
+        
+        const x = getListUrl;
+        const y = `${field?.getListUrl??""}${field?.params??""}`;
+        if (value === -2 && x== y) {
           if(items.length == 0) {
             return;
           }
@@ -1792,7 +1798,7 @@ useEffect(() => {
                 }}
               >
                 {enableClearOption &&
-                  (initial) &&
+                  (initial && !isNullOrUndefinedOrZero(initial.value)) &&
                   !noXMarkIcon && (
                     <button
                       type="button"

@@ -14,6 +14,7 @@ import AccTransactionForm from "../transactions/acc-transaction";
 interface PaymentReport {
   from: Date
 }
+
 const PaymentReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -181,7 +182,7 @@ const PaymentReport = () => {
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
                   filterWidth={650}
-                  filterHeight={310}
+                  filterHeight={370}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}
                   gridId="grd_payment_report"

@@ -187,6 +187,7 @@ class DynamicReduxManager {
     // Create the store
     this.store = configureStore({
       reducer: rootReducer,
+      devTools: true,
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
           serializableCheck: false,

@@ -444,12 +444,12 @@ const BalancesheetVertical = () => {
                   // postData={postData}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterText="as of {asonDate}"
+                  filterText="As On {asonDate}"
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
-                  filterHeight={300}
-                  filterWidth={400}
+                  filterHeight={230}
+                  filterWidth={600}
                   reload={true}
                   hideGridAddButton={true}
                   method={ActionType.POST}

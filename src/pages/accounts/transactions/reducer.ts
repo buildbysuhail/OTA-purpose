@@ -204,7 +204,44 @@ const accTransactionSlice = createSlice({
           isDateField ? new Date(fieldValue).toISOString() : fieldValue;
       });
     },
+accFormStateHandleFieldChangeKeysOnly: (
+  state,
+  action: PayloadAction<{
+    fields: { [fieldId in keyof AccTransactionFormState]?: any };
+  }>
+) => {
+  const { fields } = action.payload;
 
+  (Object.keys(fields) as (keyof AccTransactionFormState)[]).forEach((key) => {
+    const fieldValue = fields[key];
+
+    if (
+      fieldValue &&
+      typeof fieldValue === 'object' &&
+      !Array.isArray(fieldValue)
+    ) {
+      // Ensure nested object exists in state
+      if (!state[key]) {
+        (state[key] as any) = {};
+      }
+
+      Object.keys(fieldValue).forEach((subKey) => {
+        const subValue = fieldValue[subKey];
+        const current = (state[key] as any)[subKey];
+        const isDateField = current instanceof Date;
+        (state[key] as any)[subKey] = isDateField
+          ? new Date(subValue).toISOString()
+          : subValue;
+      });
+    } else {
+      const current = state[key];
+      const isDateField = current instanceof Date;
+      (state[key] as any) = isDateField
+  ? new Date(fieldValue).toISOString()
+  : fieldValue;
+    }
+  });
+},
  // Inside the createSlice, update the reducer
       acctemplatesData: (
         state,
@@ -454,34 +491,7 @@ const accTransactionSlice = createSlice({
     accFormStateReset: () => {
       return accTransactionFormStateInitialData;
     },
-    setUserRight: (
-      state,
-      action: PayloadAction<{
-        userSession: UserModel;
-        hasRight: (formCode: string, action: UserAction) => boolean;
-      }>
-    ) => {
-      const { userSession, hasRight } = action.payload;
-
-      const isClosed = userSession.financialYearStatus === "Closed";
-
-      state.formElements.btnSave.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Add) &&
-          (state?.transaction?.details?.length ?? 0) > 0
-        : false;
-
-      state.formElements.btnEdit.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Edit)
-        : false;
-
-      state.formElements.btnDelete.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Delete)
-        : false;
-
-      state.formElements.btnPrint.disabled = !isClosed
-        ? hasRight(state.formCode, UserAction.Print)
-        : false;
-    },
+    
     updateFormElement: (
       state,
       action: PayloadAction<{
@@ -753,7 +763,6 @@ export const {
   accFormStateClearRowForNew,
   clearState,
   enableControls,
-  setUserRight,
   disableControls,
   updateFormElement,
   accFormStateTransactionDetailsSetSlNo,
@@ -762,7 +771,8 @@ export const {
   accFormStateClearDetails,
   accFormStateTransactionAttachmentsRowAdd,
   accFormStateTransactionAttachmentsRowUpdate,
-  accFormStateTransactionAttachmentsRowRemove
+  accFormStateTransactionAttachmentsRowRemove,
+  accFormStateHandleFieldChangeKeysOnly
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

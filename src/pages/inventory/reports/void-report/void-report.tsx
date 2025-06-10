@@ -195,7 +195,7 @@ const VoidReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("void_report")}
                 dataUrl={Urls.void_report}
                 hideGridAddButton={true}

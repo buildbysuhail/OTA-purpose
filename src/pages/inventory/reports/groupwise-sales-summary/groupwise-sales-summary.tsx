@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import { useLocation } from "react-router-dom";
@@ -27,37 +25,32 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
   const location = useLocation();
   const { t } = useTranslation("accountsReport");
 
+  const handleCalculateSummary = (e: any) => {
+    if (e.name !== "marginPerc") return;
+    switch (e.summaryProcess) {
+      case "start":
+        e.totalMargin = 0;
+        e.totalNetValue = 0;
+        break;
+      case "calculate":
+        const dataSource = e.component.getDataSource();
+        console.log("dataSource", dataSource);
 
-
-const handleCalculateSummary = (e: any) => {
-  if (e.name !== "marginPerc") return;
-
-  switch (e.summaryProcess) {
-    case "start":
-      e.totalMargin = 0;
-      e.totalNetValue = 0;
-      break;
-    case "calculate":
-      const dataSource = e.component.getDataSource();
-      console.log("dataSource", dataSource);
-      
-      const allRows = dataSource.items();
-      console.log("allRows", allRows);
-      const row = allRows[e.rowIndex];
-      if (row) {
-        const margin = Number(row.margin) || 0;
-        const netValue = Number(row.netValue) || 0;
-        e.totalMargin += margin;
-        e.totalNetValue += netValue;
-      }
-      break;
-    case "finalize":
-      e.totalValue = e.totalNetValue ? (e.totalMargin / e.totalNetValue) * 100 : 0;
-      break;
-  }
-};
-
-
+        const allRows = dataSource.items();
+        console.log("allRows", allRows);
+        const row = allRows[e.rowIndex];
+        if (row) {
+          const margin = Number(row.margin) || 0;
+          const netValue = Number(row.netValue) || 0;
+          e.totalMargin += margin;
+          e.totalNetValue += netValue;
+        }
+        break;
+      case "finalize":
+        e.totalValue = e.totalNetValue ? (e.totalMargin / e.totalNetValue) * 100 : 0;
+        break;
+    }
+  };
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -70,42 +63,42 @@ const handleCalculateSummary = (e: any) => {
         allowSorting: true,
         width: 120,
       },
-         {
-      dataField: "category",
-      caption: t("category"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 100,
-  },
-  {
-      dataField: "sectionName",
-      caption: t("section"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 100,
-  },
-  {
-      dataField: "productCategory",
-      caption: t("product_category"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 120,
-  },
-  {
-      dataField: "brandName",
-      caption: t("brand"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 100,
-  },
+      {
+        dataField: "category",
+        caption: t("category"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+      },
+      {
+        dataField: "sectionName",
+        caption: t("section"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+      },
+      {
+        dataField: "productCategory",
+        caption: t("product_category"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 120,
+      },
+      {
+        dataField: "brandName",
+        caption: t("brand"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+      },
       {
         dataField: "quantity",
         caption: t("quantity"),
@@ -339,7 +332,7 @@ const handleCalculateSummary = (e: any) => {
       },
       {
         dataField: "salesPerc",
-        caption: t("sales_Percentage"),
+        caption: t("sales_percentage"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -483,60 +476,58 @@ const handleCalculateSummary = (e: any) => {
         },
       },
       // {
-      //     dataField: "unitPrice",
-      //     caption: t("unit_price"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 100,
-      // },
-
-      // {
-      //     dataField: "stdSalesPrice",
-      //     caption: t("std_sales_price"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 120,
+      //   dataField: "unitPrice",
+      //   caption: t("unit_price"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 100,
       // },
       // {
-      //     dataField: "stdPurchasePrice",
-      //     caption: t("std_purchase_price"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 120,
-      // },
-
-      // {
-      //     dataField: "profit",
-      //     caption: t("profit"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 100,
+      //   dataField: "stdSalesPrice",
+      //   caption: t("std_sales_price"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 120,
       // },
       // {
-      //     dataField: "costAsPerStdRate",
-      //     caption: t("std_rate_cost"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 120,
+      //   dataField: "stdPurchasePrice",
+      //   caption: t("std_purchase_price"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 120,
       // },
       // {
-      //     dataField: "profitAsPerStdRate",
-      //     caption: t("std_rate_profit"),
-      //     dataType: "number",
-      //     allowSearch: true,
-      //     allowFiltering: true,
-      //     allowSorting: true,
-      //     width: 120,
+      //   dataField: "profit",
+      //   caption: t("profit"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "costAsPerStdRate",
+      //   caption: t("std_rate_cost"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 120,
+      // },
+      // {
+      //   dataField: "profitAsPerStdRate",
+      //   caption: t("std_rate_profit"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 120,
       // },
     ];
     return baseColumns
@@ -558,75 +549,70 @@ const handleCalculateSummary = (e: any) => {
         }
         return true;
       })
-      // .map((column) => {
-      //   if (column.dataField !== "productGroup") return column;
-
-      //   switch (true) {
-      //     case filterInitialData.isCategoryWise:
-      //       return {
-      //         ...column,
-      //         caption: "category",
-      //         dataField: "category",
-      //       };
-      //     case filterInitialData.isProductCatwise:
-      //       return {
-      //         ...column,
-      //         caption: "product_category",
-      //         dataField: "productCategory",
-      //       };
-      //     case filterInitialData.IsSectionwise:
-      //       return {
-      //         ...column,
-      //         caption: "section",
-      //         dataField: "sectionName",
-      //       };
-      //     case filterInitialData.isBrandwise:
-      //       return {
-      //         ...column,
-      //         caption: "brand_name",
-      //         dataField: "brandName",
-      //       };
-      //     default:
-      //       return column;
-      //   }
-      // });
 
     //   .map((column) => {
-    //       if (column.dataField == "productGroup" && filterInitialData.isCategoryWise) {
+    //     if (column.dataField !== "productGroup") return column;
+
+    //     switch (true) {
+    //       case filterInitialData.isCategoryWise:
     //         return {
     //           ...column,
     //           caption: "category",
-    //           dataField:"category"
+    //           dataField: "category",
     //         };
-    //       }else if(column.dataField == "productGroup" && filterInitialData.isProductCatwise)
+    //       case filterInitialData.isProductCatwise:
+    //         return {
+    //           ...column,
+    //           caption: "product_category",
+    //           dataField: "productCategory",
+    //         };
+    //       case filterInitialData.IsSectionwise:
+    //         return {
+    //           ...column,
+    //           caption: "section",
+    //           dataField: "sectionName",
+    //         };
+    //       case filterInitialData.isBrandwise:
+    //         return {
+    //           ...column,
+    //           caption: "brand_name",
+    //           dataField: "brandName",
+    //         };
+    //       default:
+    //         return column;
+    //     }
+    //   });
 
-    //         {
-    //             return {
-    //               ...column,
-    //               caption: "product_category",
-    //               dataField:"productCategory"
-    //             };
-    //           }else if(column.dataField == "productGroup" && filterInitialData.IsSectionwise)
+    // .map((column) => {
+    //     if (column.dataField == "productGroup" && filterInitialData.isCategoryWise) {
+    //       return {
+    //         ...column,
+    //         caption: "category",
+    //         dataField: "category"
+    //       };
+    //     } else if (column.dataField == "productGroup" && filterInitialData.isProductCatwise) {
+    //       return {
+    //         ...column,
+    //         caption: "product_category",
+    //         dataField: "productCategory"
+    //       };
+    //     } else if (column.dataField == "productGroup" && filterInitialData.IsSectionwise) {
+    //       return {
+    //         ...column,
+    //         caption: "section",
+    //         dataField: "section"
+    //       };
+    //     }
+    //     else if (column.dataField == "productGroup" && filterInitialData.isBrandwise) {
+    //       return {
+    //         ...column,
+    //         caption: "brand_name",
+    //         dataField: "brandName"
+    //       };
+    //     }
 
-    //             {
-    //                 return {
-    //                   ...column,
-    //                   caption: "section",
-    //                   dataField:"section"
-    //                 };
-    //               }
-    //               else if(column.dataField == "productGroup" && filterInitialData.isBrandwise)
-
-    //                 {
-    //                     return {
-    //                       ...column,
-    //                       caption: "brand_name",
-    //                       dataField:"brandName"
-    //                     };
-    //                   }
-
-    //       return column;
-    //     });;
+    //     return column;
+    //   });
   }, [t, filterInitialData]);
 
   const { getFormattedValue } = useNumberFormat();
@@ -644,6 +630,7 @@ const handleCalculateSummary = (e: any) => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+
   const customizeSummaryRowCalc = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -658,6 +645,7 @@ const handleCalculateSummary = (e: any) => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+
   const customizeSummaryRow100 = (itemInfo: any) => `100.00`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -695,10 +683,8 @@ const handleCalculateSummary = (e: any) => {
       column: "marginPerc",
       summaryType: "custom",
       valueFormat: "percent",
-      showInColumn:"marginPerc",
-
+      showInColumn: "marginPerc",
     },
-    
     {
       column: "margin",
       summaryType: "sum",
@@ -721,7 +707,6 @@ const handleCalculateSummary = (e: any) => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-
     {
       column: "free",
       summaryType: "sum",
@@ -729,10 +714,12 @@ const handleCalculateSummary = (e: any) => {
       customizeText: customizeSummaryRow,
     },
   ];
+
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -758,24 +745,23 @@ const handleCalculateSummary = (e: any) => {
                 }}
                 handleCalculateSummary={handleCalculateSummary}
                 columns={columns}
-                moreOption={true}
-                gridHeader={gridHeader}
+                
+                gridHeader={t(gridHeader)}
                 dataUrl={Urls.groupwise_sales_summary}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
-                method={ActionType.POST}   allowEditing={{
-                      allow: true,
-                      config: {
-                      edit: true,
-                      add: false,
-                      delete: false,
-                      },
-                    }}
-               
+                method={ActionType.POST} allowEditing={{
+                  allow: true,
+                  config: {
+                    edit: true,
+                    add: false,
+                    delete: false,
+                  },
+                }}
                 filterContent={<GroupwiseSalesSummaryFilter />}
                 filterWidth={790}
-                filterHeight={370}
+                filterHeight={250}
                 filterInitialData={filterInitialData}
                 reload={true}
                 gridId={gridId}

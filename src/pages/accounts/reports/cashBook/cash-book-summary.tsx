@@ -220,8 +220,8 @@ const CashBookSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
-                  filterWidth={100}
-                  filterHeight={160}
+                  filterWidth={400}
+                  filterHeight={200}
                   filterText="as of {asonDate}"
                   gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}

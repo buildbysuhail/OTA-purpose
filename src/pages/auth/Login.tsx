@@ -65,6 +65,8 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
       setError("");
       if (login.isOk == true) {
+        api.clearInFlightRequests()
+        // clearInFlightRequests();
         await handleLoginSuccess(
           login,
           dispatch,

@@ -15,6 +15,9 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ErpDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
 
 
 interface TempImageProps {
@@ -23,9 +26,11 @@ interface TempImageProps {
 interface FooterDesignerProps {
 
     tempImages?: TempImageProps;
+    footerState?: FooterState;
+    headerState?: HeaderState;
 }
 
-const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
+const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const inputFooterFile = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
@@ -58,12 +63,21 @@ const HeaderFooterDesigner = ({ tempImages }: FooterDesignerProps) => {
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
                 <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
+                <div>
+                    <ERPButton
+                      title={t("add_custom")}
+                      onClick={() => { dispatch(toggleCustomDesignerPopup({ isOpen: true,customTemplate:headerState.headerTopCustom })); }}
+                      variant="primary"
+                    />
+                    
+                </div>
                 <ERPCheckbox
                     id="showHeader"
                     label={t("show_header")}
                     checked={headerState?.showHeader}
                     onChange={(e) => handleChange("header", "showHeader", e.target.checked)}
-                /><ERPCheckbox
+                />
+                <ERPCheckbox
                     id="showLogo"
                     label={t("show_organization_logo")}
                     checked={headerState?.showLogo}

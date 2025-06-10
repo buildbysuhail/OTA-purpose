@@ -43,6 +43,10 @@ import UniversalDesigner from "./account/universal/universal-designer";
 import AdviceTemplateDesigner from "./advice-template/advice-template";
 import ChequeTemplateDesigner from "./cheque-template/cheque-template";
 import CustomerBalanceTemplateDesigner from "./reports/customerBalace/customer-balance-report-designe";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
+import PDFBarcodeDesigner from "../../LabelDesigner/label_designer";
 
 
 export interface TemplateImagesTypes {
@@ -63,7 +67,8 @@ const InvoiceDesigner = () => {
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
   const { templateKind } = location.state || {};
   const templateGroup = searchParams?.get("template_group") || "";
-
+  const dispatch = useDispatch();
+       const rootState = useRootState();
 
   return (
     <div className="h-full">
@@ -91,6 +96,20 @@ const InvoiceDesigner = () => {
     {["CBR"].includes(templateGroup) && (
     <CustomerBalanceTemplateDesigner/>
     )}
+
+      <ERPModal
+            isForm={true}
+            isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
+            title={t("custom_designer")}
+            closeModal={() => {dispatch(toggleCustomDesignerPopup({ isOpen: false })); }}
+            width={5000}
+            height={5000}
+            content={<PDFBarcodeDesigner 
+            forCustomRows
+            template={templateData?.activeTemplate}
+            />
+          }
+          /> 
     </div>
   );
   

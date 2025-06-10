@@ -382,6 +382,9 @@ export interface HeaderState {
   };
   accountTransactionInfo?:accountTransactionInfo;
   adviceTransInfo?:adviceTransInfo;
+
+  headerTopCustom?:[],
+  headerBottomCustom?:[],
 }
 export interface accountTransactionInfo {
 

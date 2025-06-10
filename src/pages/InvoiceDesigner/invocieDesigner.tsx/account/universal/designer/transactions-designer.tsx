@@ -7,8 +7,10 @@ import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-input";
 import ERPSlider from "../../../../../../components/ERPComponents/erp-slider";
-import { HeaderState } from "../../../../Designer/interfaces";
-import { setTemplateHeaderState } from "../../../../../../redux/slices/templates/reducer";
+import { HeaderState, TotalState } from "../../../../Designer/interfaces";
+import { setTemplateHeaderState, setTemplateTotalState } from "../../../../../../redux/slices/templates/reducer";
+import { useTranslation } from "react-i18next";
+import ErpDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 
 
 interface HeaderDesignerProps {
@@ -23,10 +25,17 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
   const { templateKind } = location.state || {};
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
   const headerState = templateData?.activeTemplate?.headerState;
+  const totalState = templateData?.activeTemplate?.totalState;
+ const { t } = useTranslation('system')
+    // Dispatch
   const dispatch = useDispatch();
     const handleChange = (headerState:HeaderState) => {
             dispatch(setTemplateHeaderState(headerState));
  
+    }
+
+    const handleTotalChange = (totalState: TotalState) => {
+    dispatch(setTemplateTotalState(totalState));
     }
   return (
     <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
@@ -42,7 +51,7 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
       {currentTab === "document_detail" &&
         <div className="flex flex-col gap-3 bg-white p-4">
 
-       <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showPaymentMode"
                 label="Payment Mode"
@@ -81,7 +90,7 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
          
  
       
-        <div className="flex flex-col gap-2">
+           <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="headerStateNumberField"
                 label="Number Field"
@@ -97,22 +106,70 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
                 />
               )}
         </div>
+       <ERPCheckbox
+          checked={totalState?.showAmoutInWords}
+          id="showAmoutInWords"
+          label={t("show_amount_in_words")}
+          onChange={(e) => handleTotalChange?.({ ...totalState, showAmoutInWords: e.target.checked })}
+        />
+      <ERPCheckbox
+        
+          checked={totalState?.showTotalSection}
+          id="showTotalSection"
+          label={t("show_total_section")}
+          onChange={(e) => handleTotalChange?.({ ...totalState, showTotalSection: e.target.checked })}
+        />
 
-        
-        
-{/*    
-            <ERPCheckbox
-              id="showAmountInWords"
-                label="show Amount In Words"
-                checked={headerState?.accountTransactionInfo?.showAmountInWords}
-                onChange={(e) => handleChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, showAmountInWords: e.target.checked } })}
-            /> */}
-          
 
-        
-         
-      
-     
+      {
+        totalState?.showTotalSection && (
+        <div className="p-4 flex flex-col gap-4">
+      <h4>{t("total_(subtotal_tax)")}</h4>
+
+      <ERPStepInput
+        value={totalState?.totalFontSize??14}
+        onChange={(totalFontSize) => handleTotalChange?.({ ...totalState, totalFontSize })}
+        label={t("size_(8-19)")}
+        id="totalFontSize"
+        placeholder=" "
+        defaultValue={9}
+        min={8}
+        max={19}
+        step={1}
+      />
+
+      <ErpInput
+        id="totalFontColor"
+        label={t("font_color")}
+        type="color"
+        value={totalState?.totalFontColor}
+        onChange={(e) => handleTotalChange?.({ ...totalState, totalFontColor: e.target?.value })}
+      />
+
+      <ERPCheckbox
+        checked={totalState?.showTotalBgColor}
+        id="showTotalBgColor"
+        label={t("show_background_color")}
+        onChange={(e) => handleTotalChange?.({ ...totalState, showTotalBgColor: e.target.checked })}
+      />
+
+      {
+        totalState?.showTotalBgColor && (
+          <ErpInput
+            id="totalBgColor"
+            label={t("background_color")}
+            type="color"
+            value={totalState?.totalBgColor}
+            onChange={(e) => handleTotalChange?.({ ...totalState, totalBgColor: e.target?.value })}
+          />
+        )
+      }
+    </div>
+        )
+      }
+
+ 
+
 
         </div>}
 

@@ -5,6 +5,8 @@ import { TemplateState } from "../../../Designer/interfaces";
 import { IndianRupee } from 'lucide-react';
 import { AccTransactionData } from "../../../../accounts/transactions/acc-transaction-types";
 import VoucherType from "../../../../../enums/voucher-types";
+import CurrencyFormatter from "../../../../../components/formatters/currency-formatter";
+import { FormatDate } from "../../../../../components/formatters/date-formatter";
 
 const styles = StyleSheet.create({
 
@@ -115,21 +117,20 @@ const styles = StyleSheet.create({
               }}>
                   <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField?`${headerState?.accountTransactionInfo?.dateField} :`:"Date :"}</Text>
                 <Text style={fontStyles}>
-                 {dateTrimmer(data.master?.transactionDate)}
+                 {FormatDate(data.master?.transactionDate)}
                 </Text>
               </View>
           </View>
     
             
              <View style={{ display: "flex", flexDirection: "column",gap:2,}}>
-                <Text style={labelStyles}>{currency?`${currency} :`:"SR :"}</Text>
-                <View style={{border:"1pt solid rgb(23, 23, 23)",padding:4,borderRadius:2,width:100}}>
-                <Text style={[fontStyles,{textAlign:"center"}]}>
-                  {data.master?.totalDebit || "500"}
+                {/* <Text style={labelStyles}>{currency?`${currency} :`:"SR :"}</Text> */}
+                <View style={{border:"1pt solid rgb(23, 23, 23)",display:"flex",flexDirection:"row",justifyContent:"center",padding:4,borderRadius:2,minWidth:100,}}>
+                <Text style={[fontStyles]}>
+                 <CurrencyFormatter amount={data.master?.totalDebit} ></CurrencyFormatter> 
                 </Text>
                 </View>
-               
-              </View>
+             </View>
             
           </View>
             {/* Payment Details */}
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
               <View style={{ flex: 1, borderBottom: "1pt solid rgb(25, 25, 25)"}}>
               <Text style={fontStyles}>
                 {template?.headerState?.billTo}
+                  {/* this need change */}
               </Text>
               </View>
             </View>
@@ -147,6 +149,7 @@ const styles = StyleSheet.create({
               <View style={{ flex: 1, borderBottom: "1pt solid rgb(25, 25, 25)"}}>
               <Text style={fontStyles}>
               {getAmountInWords(Number(data.master?.totalDebit))}
+             
               </Text>
               </View>
             </View>

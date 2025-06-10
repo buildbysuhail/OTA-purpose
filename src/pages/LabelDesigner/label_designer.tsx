@@ -93,6 +93,7 @@ import { useTranslation } from "react-i18next";
 import VoucherType from "../../enums/voucher-types";
 import { AccountMasterFields, fields } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
+import { use } from "i18next";
 
 
 interface SaveDialogProps {
@@ -187,7 +188,12 @@ const imgContent = [
 
 
 const api = new APIClient();
-export default function PDFBarcodeDesigner() {
+interface PDFBarcodeDesignerProps {
+  forCustomRows?: boolean;
+   template?: TemplateState;
+}
+
+const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=false,template}) => {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get(
@@ -245,18 +251,7 @@ export default function PDFBarcodeDesigner() {
     });
   };
 
-// useEffect (() => {
-//   setTemplateData((prevData: TemplateState) => {
-//     const updated = {
-//       ...prevData,
-//       propertiesState:{
-//         ...prevData.propertiesState,
-//         template_group:templateGroup
-//       }
-//     };
-//     return updated;
-//   });
-// },[])
+
 
   const handlePageResize = (
     e: React.SyntheticEvent,
@@ -336,18 +331,18 @@ export default function PDFBarcodeDesigner() {
     //   icon: <Minus className="w-4 h-4" />,
     //   defaultContent: "Line",
     // },
-    // {
-    //   id: DesignerElementType.image,
-    //   label: "Image",
-    //   icon: <Image className="w-4 h-4" />,
-    //   defaultContent: "Image",
-    // },
-    // {
-    //   id: DesignerElementType.qrCode,
-    //   label: "QrCode",
-    //   icon: <QrCodeIcon className="w-4 h-4" />,
-    //   defaultContent: "QrCode",
-    // },
+    {
+      id: DesignerElementType.image,
+      label: "Image",
+      icon: <Image className="w-4 h-4" />,
+      defaultContent: "Image",
+    },
+    {
+      id: DesignerElementType.qrCode,
+      label: "QrCode",
+      icon: <QrCodeIcon className="w-4 h-4" />,
+      defaultContent: "QrCode",
+    },
     // {
     //   id: DesignerElementType.area,
     //   label: "Area",
@@ -918,8 +913,14 @@ export default function PDFBarcodeDesigner() {
   };
 
   useEffect(() => {
-    if (id !== "new") getPDFTemplateData();
+    if (id !== "new"&& !forCustomRows) getPDFTemplateData();
   }, []);
+
+  useEffect(() => {
+    if(forCustomRows && template){
+      setTemplateData(template);
+    }
+  }, [forCustomRows]);
 
   const handlePropertyChange = (
     property: keyof PlacedComponent,
@@ -1378,7 +1379,9 @@ export default function PDFBarcodeDesigner() {
 
   return (
     <div
-    className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : "dir-rtl"}`}
+    className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
+       ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer ==="Arb" ?"dir-rtl":"dir-ltr"}`
+      }
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -1403,7 +1406,15 @@ export default function PDFBarcodeDesigner() {
             <h2 className="text-sm font-semibold text-gray-700">Components</h2>
           </div>
           <div className="space-y-2">
-            {components?.map((component) => (
+            {components?.filter((x: any) => {
+              if(!forCustomRows) {
+               return [DesignerElementType.barcode,
+                DesignerElementType.field,DesignerElementType.text].includes(x.id)
+              }else {
+                return  ![DesignerElementType.barcode].includes(x.id)
+              }
+           
+            })?.map((component) => (
               <div
                 key={component.id}
                 draggable
@@ -1425,9 +1436,13 @@ export default function PDFBarcodeDesigner() {
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center">
-            <div className=" ">
+            {!forCustomRows && 
+               <div className=" ">
               <ERPPreviousUrlButton size="37px" />
             </div>
+            }
+
+         
           </div>
           <div className="flex items-center gap-2">
             <ERPButton
@@ -1444,7 +1459,9 @@ export default function PDFBarcodeDesigner() {
               }}
               variant="secondary"
             ></ERPButton>
-            <ERPButton
+            {!forCustomRows&&
+            <>
+                <ERPButton
               startIcon="ri-arrow-go-back-line"
               title={t("undo")}
               onClick={() => undoChanges("undo")}
@@ -1456,6 +1473,9 @@ export default function PDFBarcodeDesigner() {
               onClick={() => undoChanges("redo")}
               variant="secondary"
             ></ERPButton>
+            </>
+            }
+        
 
             <ERPButton
               title={t("save")}
@@ -1638,9 +1658,11 @@ export default function PDFBarcodeDesigner() {
               </button>
             </div>
             <Tabs value={activeTab} onChange={handleTabChange}>
+              {!forCustomRows &&(
               <Tab label="Page" value="page" />
+              )}
               <Tab label="Element" value="element" />
-              {templateGroup === "barcode" && (
+              {templateGroup === "barcode" && !forCustomRows &&(
                 <Tab label="Label" value="label" />
               )}
             </Tabs>
@@ -3133,9 +3155,7 @@ export default function PDFBarcodeDesigner() {
                
                 <Box sx={{ mb: 1 }}>
                 <ERPDataCombobox
-                      defaultValue={
-                        templateData?.propertiesState?.language_prefer ?? "Eng"
-                      }
+                      defaultValue={ "Eng"}
                       field={{
                         id: "language_prefer",
                         required: true,
@@ -3143,6 +3163,7 @@ export default function PDFBarcodeDesigner() {
                         labelKey: "label",
                       }}
                       data={templateData?.propertiesState}
+                      value={templateData?.propertiesState?.language_prefer ?? "Eng"}
                       onChangeData={(data: any) => {
                         handlePagePropsChange("language_prefer", data.language_prefer);
                       }}
@@ -3209,3 +3230,4 @@ export default function PDFBarcodeDesigner() {
     </div>
   );
 }
+export default PDFBarcodeDesigner;

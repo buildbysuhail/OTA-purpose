@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TemplateState } from '../../pages/InvoiceDesigner/Designer/interfaces';
 export interface popupDataProps {
   isOpen?: boolean | false;
   key?: any | null;
@@ -7,6 +8,7 @@ export interface popupDataProps {
   reload?: boolean;
   id?:number;
   name?:string;
+  customTemplate?:any
 }
 interface popupData {
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
@@ -73,8 +75,10 @@ interface popupData {
   products: popupDataProps
   productSummaryReport: popupDataProps
   GrnNumber: popupDataProps
+  CustomDesignerPopup: popupDataProps;
 }
 const initialState: popupData = {
+  CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" },
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -145,6 +149,9 @@ const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
+    toggleCustomDesignerPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.CustomDesignerPopup = action.payload;
+    },
     onCloseWithUnsavedChange: (state, action: PayloadAction<{ warn: boolean, succeeded: boolean, canceled: boolean }>) => {
       state.onCloseWithUnsavedChange = action.payload;
     },
@@ -363,6 +370,7 @@ const popupDataSlice = createSlice({
 // Extract the actions
 export const {
   // togglePriceListPopup,
+  toggleCustomDesignerPopup,
   onCloseWithUnsavedChange,
   toggleTestPopup,
   toggleGroupOrder,

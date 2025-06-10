@@ -8,7 +8,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface LedgerProps extends AccVoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
-  triggerEffect: boolean;
+  triggerEffect?: boolean;
   onSelectItem?: ((item?: any) => void)
   setIsPartyDetailsOpen: ()=> void;
 }
@@ -18,7 +18,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
   dispatch,
   t,
   handleKeyDown,
-  triggerEffect,
+  triggerEffect = false,
   onSelectItem,
   handleFieldKeyDown,
   setIsPartyDetailsOpen
@@ -31,7 +31,6 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
           <ERPDataCombobox
             localInputBox={formState?.userConfig?.inputBoxStyle}
             ref={ref}
-            triggerEffect={triggerEffect}
             id="ledgerID"
             required={true}
             className={formState.userConfig?.isExpanded ? "w-[350px]" : "w-full"}
@@ -51,8 +50,6 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
               handleKeyDown && handleKeyDown(e, "ledgerID");
             }}
             onSelectItem={(e) => {
-              
-                          debugger;
               onSelectItem && onSelectItem(e)
               handleFieldKeyDown("ledgerID", e.value);
             }}

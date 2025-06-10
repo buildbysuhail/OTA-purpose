@@ -921,13 +921,15 @@ useEffect(() => {
             fieldKey === "currency";
           final = _selected || _default || _exceptional || initialValue || null;
         }
+        debugger;
+        const dfdf = inputValue;
         if (
           (value === undefined || value === null) &&
           (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
           value !== -2
         ) {
           setInitial(null);
-          if (triggerEffect === true || value === null) {
+          if (value === null) {
             handleItemClick({ value: "", label: "" });
             setInputValue("");
           }

@@ -1663,6 +1663,40 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ],
     []
   );
+
+const summaryConfig: SummaryConfig[] = [
+  {
+    column: "qty",
+    summaryType: "sum",
+    valueFormat: "decimal",
+    showInColumn: "qty",
+    alignment: "right",
+    customizeText: ({ value }) => `Total Quantity: ${value}`,
+  },
+  {
+    column: "unitPrice",
+    summaryType: "avg",
+    showInColumn: "unitPrice",
+    alignment: "right",
+    customizeText: ({ value }) => `Average Price: ${value.toFixed(2)}`,
+  },
+  {
+    column: "discount",
+    summaryType: "sum",
+    valueFormat: "currency",
+    showInColumn: "discount",
+    alignment: "right",
+    customizeText: ({ value }) => `Total Discount: ${value}`,
+  },
+  {
+    column: "netValue",
+    summaryType: "sum",
+    valueFormat: "currency",
+    showInColumn: "netValue",
+    alignment: "right",
+    customizeText: ({ value }) => `Net Value: ${value}`,
+  },
+];
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1941,6 +1975,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               height={gridHeight}
               gridId={`${gridCode}-grid`}
               onAddData={handleAddData}
+              summaryConfig={summaryConfig}
             />
           </div>
           {formState.showSaveDialog && (
@@ -2046,6 +2081,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     height={gridHeight}
                     gridId={`${gridCode}-grid`}
                     onAddData={handleAddData}
+                    summaryConfig={summaryConfig}
                   />
                    <TransactionFooter
                     formState={formState}

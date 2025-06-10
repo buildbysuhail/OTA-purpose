@@ -15,6 +15,16 @@ import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from
 
 type DataItem = Record<string, any>;
 
+interface SummaryConfig {
+  column: keyof TransactionDetail;
+  summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
+  valueFormat?: string;
+  displayFormat?: string;
+  showInColumn?: string;
+  alignment?: "center" | "left" | "right";
+  customizeText?: (itemInfo: { value: any }) => string;
+}
+
 interface DataGridProps<T extends DataItem> {
   columns?: DevGridColumn[];
   keyField: string;
@@ -25,6 +35,7 @@ interface DataGridProps<T extends DataItem> {
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
   allowColumnReordering?: boolean;
+  summaryConfig?: SummaryConfig[];
 }
 
 interface EditableCellProps {
@@ -143,6 +154,50 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   );
 };
 
+const SummaryRow: React.FC<{
+  columns: DevGridColumn[];
+  tableWidth: number;
+  summaryValues: Record<string, any>;
+  summaryConfig: SummaryConfig[];
+}> = ({ columns, tableWidth, summaryValues, summaryConfig }) => {
+  return (
+    <tr
+      className="flex bg-gray-100 border-t border-gray-300"
+      style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}
+    >
+      {columns
+        .filter((col) => col.visible && col.dataField != null)
+        .map((column) => {
+          const summary = summaryConfig.find(
+            (s) => s.showInColumn === column.dataField || s.column === column.dataField
+          );
+          const value = summary ? summaryValues[summary.column] : null;
+          const formattedValue = summary?.customizeText
+            ? summary.customizeText({ value })
+            : summary?.valueFormat
+            ? new Intl.NumberFormat("en-US", { style: "decimal", minimumFractionDigits: 2 }).format(value)
+            : value;
+
+          return (
+            <td
+              key={`summary_${column.dataField}`}
+              className="px-1 py-1 border-r border-gray-300 last:border-r-0 text-sm font-medium text-gray-700"
+              style={{
+                width: column.width ? `${column.width}px` : "150px",
+                minWidth: column.width ? `${column.width}px` : "150px",
+                textAlign: summary?.alignment || column.alignment || (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "border-box",
+                height: "24px",
+              }}
+            >
+              {summary ? formattedValue : ""}
+            </td>
+          );
+        })}
+    </tr>
+  );
+};
+
 const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
     columns = [],
@@ -154,6 +209,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     onAddData,
     isLoading,
     allowColumnReordering = true,
+    summaryConfig = [],
   }: DataGridProps<T>,
   ref: React.Ref<any>
 ) {
@@ -191,6 +247,63 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   };
 
   const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
+
+  const calculateSummaryValues = useCallback(() => {
+    const details = formState.transaction?.details || [];
+    const summaryValues: Record<string, any> = {};
+
+    summaryConfig.forEach((config) => {
+      const { column, summaryType } = config;
+      let value: any;
+
+      switch (summaryType) {
+        case "sum":
+          value = details.reduce((sum, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? sum : sum + num;
+          }, 0);
+          break;
+        case "min":
+          value = details.reduce((min, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? min : Math.min(min, num);
+          }, Infinity);
+          break;
+        case "max":
+          value = details.reduce((max, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? max : Math.max(max, num);
+          }, -Infinity);
+          break;
+        case "avg":
+          const validNumbers = details
+            .map((item) => {
+              const val = item[column];
+              return typeof val === "number" ? val : parseFloat(String(val));
+            })
+            .filter((num) => !isNaN(num));
+          value = validNumbers.length ? validNumbers.reduce((sum, num) => sum + num, 0) / validNumbers.length : 0;
+          break;
+        case "count":
+          value = details.length;
+          break;
+        case "custom":
+          value = config.customizeText ? config.customizeText({ value: details }) : 0;
+          break;
+        default:
+          value = 0;
+      }
+
+      summaryValues[column as string] = value;
+    });
+
+    return summaryValues;
+  }, [formState.transaction?.details, summaryConfig]);
+
+  const summaryValues = useMemo(() => calculateSummaryValues(), [calculateSummaryValues]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
@@ -323,32 +436,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         x: e.clientX + 10,
         y: e.clientY - 10,
       });
-    },
-    [formState.gridColumns, allowColumnReordering]
+    }, [formState.gridColumns, allowColumnReordering]
   );
-
-  // useEffect(() => {
-  //   if (dragState.isDragging) {
-  //     document.addEventListener("mousemove", handleMouseMove);
-  //     document.addEventListener("mouseup", handleMouseUp);
-  //     document.body.style.cursor = "grabbing";
-  //     document.body.style.userSelect = "none";
-
-  //     return () => {
-  //       document.removeEventListener("mousemove", handleMouseMove);
-  //       document.removeEventListener("mouseup", handleMouseUp);
-  //       document.body.style.cursor = "";
-  //       document.body.style.userSelect = "";
-  //     };
-  //   }
-  // }, [dragState.isDragging, handleMouseMove, handleMouseUp]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     document.body.style.cursor = "";
-  //     document.body.style.userSelect = "";
-  //   };
-  // }, []);
 
   const handleColumnClick = (dataField: string) => {
     setSelectedColumn(dataField);
@@ -468,20 +557,20 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                     <th
                       id={`${col.dataField}_${col.dataField}`}
                       key={col.dataField}
-                    className="relative !bg-[#f0f09285] px-1 py-1 text-left text-sm font-medium text-gray-700 border-r border-gray-300 last:border-r-0"
-                    style={{
-                      width: col.width ? `${col.width}px` : "150px",
-                      minWidth: col.width ? `${col.width}px` : "150px",
-                      textAlign:"center",
-                      boxSizing: "border-box",
-                    }}
-                    draggable={!col.isLocked}
-                    onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}
-                    onDragEnter={(e) => preferenceChooserRef.current?.handleDragEnd(e)}
-                    onDragEnd={() => preferenceChooserRef.current?.handleDropping(true)}
-                  >
-                    {col.caption}
-                  </th>
+                      className="relative !bg-[#f0f09285] px-1 py-1 text-left text-sm font-medium text-gray-700 border-r border-gray-300 last:border-r-0"
+                      style={{
+                        width: col.width ? `${col.width}px` : "150px",
+                        minWidth: col.width ? `${col.width}px` : "150px",
+                        textAlign: "center",
+                        boxSizing: "border-box",
+                      }}
+                      draggable={!col.isLocked}
+                      onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}
+                      onDragEnter={(e) => preferenceChooserRef.current?.handleDragEnd(e)}
+                      onDragEnd={() => preferenceChooserRef.current?.handleDropping(true)}
+                    >
+                      {col.caption}
+                    </th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -507,6 +596,16 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 {Row}
               </List>
             </tbody>
+            {summaryConfig.length > 0 && (
+              <tfoot>
+                <SummaryRow
+                  columns={formState.gridColumns || []}
+                  tableWidth={tableWidth}
+                  summaryValues={summaryValues}
+                  summaryConfig={summaryConfig}
+                />
+              </tfoot>
+            )}
           </table>
         </div>
       </div>
@@ -530,13 +629,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           </div>
         </div>
       )}
-
-      {/* <div className="px-1 py-1 bg-gray-100 border-t border-gray-300 text-sm text-gray-600">
-        <div className="flex justify-between items-center">
-          <span>Showing {formState.transaction?.details.length} records</span>
-          
-        </div>
-      </div> */}
     </div>
   );
 });

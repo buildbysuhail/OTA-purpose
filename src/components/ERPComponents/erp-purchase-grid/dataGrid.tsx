@@ -206,15 +206,13 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     className = "",
     rowHeight = 24,
     height = 800,
-    onAddData,
-    isLoading,
+    // onAddData,
+    // isLoading,
     allowColumnReordering = true,
     summaryConfig = [],
-  }: DataGridProps<T>,
-  ref: React.Ref<any>
-) {
+  }: DataGridProps<T>) {
   const listRef = useRef<List>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
+  // const headerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const dragPreviewRef = useRef<HTMLDivElement>(null);
@@ -226,10 +224,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useAppDispatch();
-  const [preferences, setPreferences] = useState<GridPreference>();
-  const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filterRange, setFilterRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  // const [preferences, setPreferences] = useState<GridPreference>();
+  // const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
+  // const [searchQuery, setSearchQuery] = useState<string>("");
+  // const [filterRange, setFilterRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
     draggedColumn: null,
@@ -239,7 +237,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     startY: 0,
   });
   const [dragPreviewPosition, setDragPreviewPosition] = useState({ x: 0, y: 0 });
-  const isDraggingRef = useRef(false);
+  // const isDraggingRef = useRef(false);
 
   const calculateTotalWidth = () => {
     const visibleColumns = formState.gridColumns?.filter((c) => c.visible && c.dataField != null) ?? [];
@@ -321,185 +319,53 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      setPreferences(pref);
+      // setPreferences(pref);
       const updated = applyGridColumnPreferences(columns, pref);
       dispatch(formStateHandleFieldChange({ fields: { gridColumns: updated } }));
     },
     [columns, dispatch]
   );
 
-  const resetDragState = useCallback(() => {
-    setDragState({
-      isDragging: false,
-      draggedColumn: null,
-      draggedIndex: null,
-      dropPosition: null,
-      startX: 0,
-      startY: 0,
-    });
-    isDraggingRef.current = false;
-  }, []);
+  // const resetDragState = useCallback(() => {
+  //   setDragState({
+  //     isDragging: false,
+  //     draggedColumn: null,
+  //     draggedIndex: null,
+  //     dropPosition: null,
+  //     startX: 0,
+  //     startY: 0,
+  //   });
+  //   isDraggingRef.current = false;
+  // }, []);
 
-  const calculateDropPosition = useCallback((clientX: number): number => {
-    if (!gridRef.current) return -1;
+  // const calculateDropPosition = useCallback((clientX: number): number => {
+  //   if (!gridRef.current) return -1;
 
-    const headerRow = gridRef.current.querySelector("thead tr");
-    if (!headerRow) return -1;
+  //   const headerRow = gridRef.current.querySelector("thead tr");
+  //   if (!headerRow) return -1;
 
-    const headers = Array.from(headerRow.querySelectorAll("th"));
-    for (let i = 0; i < headers.length; i++) {
-      const headerRect = headers[i].getBoundingClientRect();
-      const centerX = headerRect.left + headerRect.width / 2;
-      if (clientX < centerX) {
-        return i;
-      }
-    }
-    return headers.length;
-  }, []);
+  //   const headers = Array.from(headerRow.querySelectorAll("th"));
+  //   for (let i = 0; i < headers.length; i++) {
+  //     const headerRect = headers[i].getBoundingClientRect();
+  //     const centerX = headerRect.left + headerRect.width / 2;
+  //     if (clientX < centerX) {
+  //       return i;
+  //     }
+  //   }
+  //   return headers.length;
+  // }, []);
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
 
-      setDragPreviewPosition({
-        x: e.clientX + 10,
-        y: e.clientY - 10,
-      });
 
-      const newDropPosition = calculateDropPosition(e.clientX);
-      setDragState((prev) => ({
-        ...prev,
-        dropPosition: newDropPosition,
-      }));
-    },
-    [calculateDropPosition]
-  );
 
-  const handleMouseUp = useCallback(() => {
-    if (!isDraggingRef.current) return;
 
-    setDragState((currentDragState) => {
-      if (
-        currentDragState.draggedIndex !== null &&
-        currentDragState.dropPosition !== null &&
-        currentDragState.draggedIndex !== currentDragState.dropPosition
-      ) {
-        const columnsCopy = [...(formState.gridColumns || [])];
-        const draggedIndex = columnsCopy.findIndex((col) => col.dataField === currentDragState.draggedColumn);
-        let insertIndex = currentDragState.dropPosition!;
-        if (insertIndex > currentDragState.draggedIndex!) {
-          insertIndex--;
-        }
-        const [draggedCol] = columnsCopy.splice(draggedIndex, 1);
-        columnsCopy.splice(insertIndex, 0, draggedCol);
 
-        dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
-        preferenceChooserRef.current?.handleDropping(true);
-      }
-      return {
-        isDragging: false,
-        draggedColumn: null,
-        draggedIndex: null,
-        dropPosition: null,
-        startX: 0,
-        startY: 0,
-      };
-    });
 
-    isDraggingRef.current = false;
-  }, [dispatch, formState.gridColumns]);
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent, dataField: string | undefined) => {
-      if (!allowColumnReordering || !dataField) return;
-      e.preventDefault();
-      e.stopPropagation();
 
-      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
-      if (columnIndex === -1) return;
 
-      const rect = (e.target as HTMLElement).closest("th")?.getBoundingClientRect();
-      if (!rect) return;
 
-      isDraggingRef.current = true;
 
-      setDragState({
-        isDragging: true,
-        draggedColumn: dataField,
-        draggedIndex: columnIndex,
-        dropPosition: null,
-        startX: e.clientX,
-        startY: e.clientY,
-      });
-
-      setDragPreviewPosition({
-        x: e.clientX + 10,
-        y: e.clientY - 10,
-      });
-    }, [formState.gridColumns, allowColumnReordering]
-  );
-
-  const handleColumnClick = (dataField: string) => {
-    setSelectedColumn(dataField);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleFilter = (min: number | null, max: number | null) => {
-    setFilterRange({ min, max });
-  };
-
-  const handleDragStart = (e: React.DragEvent<HTMLTableCellElement>, dataField: string) => {
-    if (!allowColumnReordering || !dataField) return;
-    setDragState((prev) => ({ ...prev, draggedColumn: dataField }));
-    const target = e.currentTarget;
-    const rect = target.getBoundingClientRect();
-    setDragPreviewPosition({ x: e.clientX + 10, y: e.clientY - 10 });
-    e.dataTransfer.setData("text/plain", dataField);
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLTableCellElement>) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
-
-  const handleDragEnter = (dataField: string) => {
-    if (allowColumnReordering && dragState.draggedColumn && dataField !== dragState.draggedColumn) {
-      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
-      setDragState((prev) => ({ ...prev, dropPosition: columnIndex }));
-    }
-  };
-
-  const handleDragLeave = () => {
-    setDragState((prev) => ({ ...prev, dropPosition: null }));
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLTableCellElement>, targetDataField: string) => {
-    e.preventDefault();
-    if (!allowColumnReordering || !dragState.draggedColumn || dragState.draggedColumn === targetDataField) return;
-
-    const columnsCopy = [...(formState.gridColumns || [])];
-    const draggedIndex = columnsCopy.findIndex((col) => col.dataField === dragState.draggedColumn);
-    const targetIndex = columnsCopy.findIndex((col) => col.dataField === targetDataField);
-
-    if (draggedIndex === -1 || targetIndex === -1) return;
-
-    const [draggedCol] = columnsCopy.splice(draggedIndex, 1);
-    columnsCopy.splice(targetIndex, 0, draggedCol);
-
-    dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
-
-    resetDragState();
-    preferenceChooserRef.current?.handleDropping(true);
-  };
-
-  const handleDragEnd = () => {
-    resetDragState();
-    preferenceChooserRef.current?.handleDropping(true);
-  };
 
   return (
     <div

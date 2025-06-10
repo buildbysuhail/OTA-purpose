@@ -191,5 +191,5 @@ export const FOCRegisterReportFilterInitialState = {
   salesRouteID: 0,
   salesmanID: 0,
   warehouseID: 0,
-  voucherType: "",
+  voucherType: "SI",
 };

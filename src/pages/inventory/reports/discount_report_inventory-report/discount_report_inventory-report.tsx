@@ -42,12 +42,13 @@ const DiscountReportInventory = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 75,
+      format:"dd-MMM-yyyy"
     },
     {
       dataField: "party",
@@ -138,6 +139,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+   cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.discountAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.discountAmt, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.discountAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.discountAmt, false, 2);
+        }
+      },
     },
     {
       dataField: "billDiscount",
@@ -148,6 +172,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+     cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billDiscount == null
+              ? 0
+              : getFormattedValue(cellElement.data.billDiscount, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billDiscount == null
+            ? 0
+            : getFormattedValue(cellElement.data.billDiscount, false, 2);
+        }
+      },
     },
     {
       dataField: "grandTotal",
@@ -158,6 +205,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+   cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.grandTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.grandTotal, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.grandTotal == null
+            ? 0
+            : getFormattedValue(cellElement.data.grandTotal, false, 4);
+        }
+      },
     },
     {
       dataField: "totalDisc",
@@ -168,7 +238,30 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
-    }
+    cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalDisc == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalDisc, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalDisc == null
+            ? 0
+            : getFormattedValue(cellElement.data.totalDisc, false, 2);
+        }
+      },
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
@@ -178,12 +271,40 @@ const DiscountReportInventory = () => {
       if (value === null || value === undefined || value === "" || isNaN(value)) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value,false,2) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
+    {
+      column: "address1",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
+    {
+      column: "discountAmt",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "billDiscount",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "grandTotal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totalDisc",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
   ];
 
   return (
@@ -196,8 +317,7 @@ const DiscountReportInventory = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                
-                gridHeader={t("discount_report_inventory")}
+                filterText="{voucherType =='SI' && Sales Discount Report} {voucherType =='PI'&& Purchase Discount Report} {voucherType =='SR'&& Sales Discount Report} {voucherType =='PR'&& Purchase Discount Report} {voucherType =='SO'&& Sales Order Discount Report} {voucherType =='SE' && Sales Estimate Discount Report} {voucherType =='SQ' && Sales Quotation Discount Report} {voucherType =='PE'&& Purchase Estimate Discount Report}{voucherType =='PO'&& Purchase Order Discount Report}{voucherType =='OS'&& Opening stock Discount Report}{salesRouteID > 0 && Route Name :[salesRoute]} Between : {fromDate} - {toDate}"
                 dataUrl={Urls.discount_report_inventory}
                 hideGridAddButton={true}
                 enablefilter={true}

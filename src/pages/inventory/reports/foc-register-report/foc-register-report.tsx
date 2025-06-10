@@ -577,11 +577,9 @@ const FOCRegisterReport = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText="
-                Between : {fromDate} - {toDate} {productID > 0 && ,  Product : [product]} {productGroupID > 0 && , Group Name :[productGroup]} 
-                {brandID > 0 && , Brand : [brand]} {salesRouteID > 0 && ,  Route Name :[salesRoute]} {salesmanID > 0 && , Salesman :[salesman]} {warehouseID > 0 && ,  Warehouse :[warehouse]}"
+                filterText="{voucherType =='SI'&& , Sales Register} {voucherType =='PI'&& , Purchase Register} Between : {fromDate} - {toDate} {productID > 0 && ,  Product : [product]} {productGroupID > 0 && , Group Name :[productGroup]} {brandID > 0 && , Brand : [brand]} {salesRouteID > 0 && ,  Route Name :[salesRoute]} {salesmanID > 0 && , Salesman :[salesman]} {warehouseID > 0 && ,  Warehouse :[warehouse]}"
                 columns={columns}
-                gridHeader={t("free_of_cost_reports_of_sales_register")}
+                gridHeader={t("free_of_cost_reports_of")}
                 dataUrl={Urls.foc_register_report}
                 hideGridAddButton={true}
                 enablefilter={true}

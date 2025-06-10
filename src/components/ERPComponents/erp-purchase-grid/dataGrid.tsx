@@ -33,8 +33,6 @@ interface EditableCellProps {
   value: string | number;
 }
 
-
-
 interface DragState {
   isDragging: boolean;
   draggedColumn: string | null;
@@ -44,6 +42,12 @@ interface DragState {
   startY: number;
 }
 
+interface RowData {
+  details: TransactionDetail[];
+  columns: DevGridColumn[];
+  tableWidth: number;
+}
+
 const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
   const dispatch = useAppDispatch();
   return (
@@ -51,8 +55,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
       id={`${column.dataField}_${rowIndex}`}
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
-      className="w-full h-[22px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
-      // contextClassName="h-[22px] text-sm px-1 py-0 border-none bg-transparent"
+      className="w-full !h-[23px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
       value={value}
       noBorder
       readOnly={column.readOnly}
@@ -68,12 +71,6 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
     />
   );
 };
-
-interface RowData {
-  details: TransactionDetail[];
-  columns: DevGridColumn[];
-  tableWidth: number;
-}
 
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   const item = data.details[index];
@@ -92,7 +89,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
       key={`inv_transaction_grid_${index}`}
     >
       {columns
-        .filter((col) => col.visible)
+        .filter((col) => col.visible && col.dataField != null)
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const cellValue = item[fieldKey];
@@ -105,7 +102,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                 minWidth: column.width ? `${column.width}px` : "150px",
                 textAlign: column.alignment || (column.dataType === "number" ? "right" : "left"),
                 boxSizing: "border-box",
-                height: "24px", // Uniform row height
+                height: "24px",
               }}
               role="gridcell"
             >
@@ -113,37 +110,31 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                 <ERPProductSearch
                   noLabel
                   showCheckBox={false}
-                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent" 
+                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}
                   productDataUrl={Urls.load_product_details}
                   tabIndex={-1}
                   className="h-[22px] text-sm"
                 />
-              ) : column.dataField === "slNo" || column.readOnly ? (
+              ) : column.dataField === "status" ? (
+                <span
+                  className={`
+                    inline-flex px-2 py-1 text-xs font-medium rounded-full
+                    ${cellValue === "Active" ? "bg-green-100 text-green-800" : ""}
+                    ${cellValue === "Inactive" ? "bg-red-100 text-red-800" : ""}
+                    ${cellValue === "Pending" ? "bg-yellow-100 text-yellow-800" : ""}
+                  `}
+                >
+                  {cellValue}
+                </span>
+              ) : column.readOnly ? (
                 <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
-              ) : column.dataType === "string" ? (
-                column.dataField === "status" ? (
-                  <span
-                    className={`
-                      inline-flex px-2 py-1 text-xs font-medium rounded-full
-                      ${cellValue === "Active" ? "bg-green-100 text-green-800" : ""}
-                      ${cellValue === "Inactive" ? "bg-red-100 text-red-800" : ""}
-                      ${cellValue === "Pending" ? "bg-yellow-100 text-yellow-800" : ""}
-                    `}
-                  >
-                    {cellValue}
-                  </span>
-                ) : (
-                  <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
-                )
-              ) : column.allowEditing == true ? (
+              ) : (
                 <EditableCell
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}
                 />
-              ) : (
-                <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
               )}
             </td>
           );
@@ -158,7 +149,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     keyField,
     gridId,
     className = "",
-    rowHeight = 24, // Adjusted to match image
+    rowHeight = 24,
     height = 800,
     onAddData,
     isLoading,
@@ -195,7 +186,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const isDraggingRef = useRef(false);
 
   const calculateTotalWidth = () => {
-    const visibleColumns = formState.gridColumns?.filter((c) => c.visible) ?? [];
+    const visibleColumns = formState.gridColumns?.filter((c) => c.visible && c.dataField != null) ?? [];
     return visibleColumns.reduce((sum, col) => sum + (col.width || 150), 0);
   };
 
@@ -306,7 +297,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   }, [dispatch, formState.gridColumns]);
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent, dataField: string) => {
+    (e: React.MouseEvent, dataField: string | undefined) => {
       if (!allowColumnReordering || !dataField) return;
       e.preventDefault();
       e.stopPropagation();

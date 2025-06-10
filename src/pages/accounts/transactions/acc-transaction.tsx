@@ -462,18 +462,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     if(item.value??0 > 0) {
       loadLedgerData();  
     } else {
-      // dispatch(
-      //       accFormStateHandleFieldChange({
-      //         fields: {
-      //           ledgerBalance: 0,
-      //           groupName: "",
-      //           ledgerData: undefined,
-      //           row: {...formState.row,
-      //             ledgerCode: ""
-      //           }
-      //         },
-      //       })
-      //     );
+      dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                ledgerBalance: 0,
+                groupName: "",
+                ledgerData: undefined,
+                row: {...formState.row,
+                  ledgerCode: "",
+                  ledgerID: 0,
+                  ledgerName: "",
+                  partyName: "",
+                  taxNo: ""
+                }
+              },
+            })
+          );
     }
   };
   useEffect(() => {
@@ -1372,7 +1376,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     ];
     return cols;
   }, [formState.formElements.gridColumns]);
-
   const columns: DevGridColumn[] = useMemo(() => {
     const cols = [
       {
@@ -2017,7 +2020,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
                         onSelectItem={ledgerIDChanged}
-                        triggerEffect={triggerEffect}
                         handleKeyDown={handleKeyDown}
                         formState={formState}
                         dispatch={dispatch}
@@ -2320,7 +2322,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onSelectItem={ledgerIDChanged}
                       ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}
-                      triggerEffect={triggerEffect}
                       handleKeyDown={handleKeyDown}
                       formState={formState}
                       dispatch={dispatch}
@@ -3023,7 +3024,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onSelectItem={ledgerIDChanged}
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
-                        triggerEffect={triggerEffect}
                         handleKeyDown={handleKeyDown}
                         formState={formState}
                         dispatch={dispatch}

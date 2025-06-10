@@ -314,7 +314,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster = {
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
   accTransactionDetailID: 0,
-  ledgerID: null,
+  ledgerID: 0,
   relatedLedgerID: 0,
   amount: undefined,
   discount: 0,

@@ -27,6 +27,9 @@ import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save"
 import AccUniversalTransaction from "./designer/transactions-designer";
 import AccountTransactionsUniversal from "../../../DownloadPreview/account/account_transaction-universal";
 import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { toggleCustomDesignerPopup } from "../../../../../redux/slices/popup-reducer";
 
 interface DesignSectionType {
   id: number;
@@ -67,20 +70,20 @@ const designSections: Array<DesignSectionType> = [
     type: "transactions",
     icon: <AdjustmentsHorizontalIcon />,
   },
-  {
-    id: 4,
-    name: "table",
-    description: "Template 1 description",
-    type: "table",
-    icon: <TableCellsIcon />,
-  },
-  {
-    id: 5,
-    name: "total",
-    description: "Template 1 description",
-    type: "total",
-    icon: <CurrencyDollarIcon />,
-  },
+  // {
+  //   id: 4,
+  //   name: "table",
+  //   description: "Template 1 description",
+  //   type: "table",
+  //   icon: <TableCellsIcon />,
+  // },
+  // {
+  //   id: 5,
+  //   name: "total",
+  //   description: "Template 1 description",
+  //   type: "total",
+  //   icon: <CurrencyDollarIcon />,
+  // },
   {
     id: 6,
     name: "other_details",
@@ -97,6 +100,7 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
       const { id } = useParams();
      const navigate = useNavigate();
      const dispatch = useDispatch();
+       const rootState = useRootState();
       const [designTabs, setDesignTabs] = useState(designSections);
       const [currentSection, setSection] = useState(designSections[0]);
       const [loading, setLoading] = useState(false);
@@ -265,11 +269,11 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
                }
                 {currentSection.type == "header&footer" &&
                   <HeaderFooterDesigner/>
-             }
+                }
 
                  {currentSection.type == "transactions" &&
                   <AccUniversalTransaction/>
-             }
+                 }
       </div>
               <PDFViewer
                     className="pdf-viewer"
@@ -282,7 +286,8 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
                   currentBranch={currentBranch}
                   userSession={userSession}
                 />
-             </PDFViewer>           
+             </PDFViewer>   
+
       </div>
   );
   

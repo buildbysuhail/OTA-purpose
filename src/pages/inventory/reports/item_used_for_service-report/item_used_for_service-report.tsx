@@ -163,7 +163,7 @@ const ItemUsedForService = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("item_used_for_service")}
                 dataUrl={Urls.item_used_for_service}
                 hideGridAddButton={true}

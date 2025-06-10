@@ -13,6 +13,7 @@ import AccTransactionForm from "../transactions/acc-transaction";
 interface CollectionReport {
   from: Date
 }
+
 const CollectionReport = () => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
@@ -197,7 +198,7 @@ const CollectionReport = () => {
                   filterContent={<CollectionReportFilter />}
                   filterInitialData={CollectionReportFilterInitialState}
                   filterWidth={650}
-                  filterHeight={310}
+                  filterHeight={370}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   hideGridAddButton={true}
                   reload={true}

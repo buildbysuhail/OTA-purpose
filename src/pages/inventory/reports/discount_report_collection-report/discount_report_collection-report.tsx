@@ -152,7 +152,7 @@ const DiscountReportCollection = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("discount_report_collection")}
                 dataUrl={Urls.discount_report_collection}
                 hideGridAddButton={true}

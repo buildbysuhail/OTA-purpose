@@ -477,7 +477,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                     <th
                       id={`${col.dataField}_${col.dataField}`}
                       key={col.dataField}
-                    className="text-left py-3 px-4 font-medium text-gray-700 border-r border-gray-600 text-sm whitespace-nowrap cursor-move"
+                    className="relative !bg-[#f0f09285] px-1 py-1 text-left text-sm font-medium text-gray-700 border-r border-gray-300 last:border-r-0"
                     style={{
                       width: col.width ? `${col.width}px` : "150px",
                       minWidth: col.width ? `${col.width}px` : "150px",

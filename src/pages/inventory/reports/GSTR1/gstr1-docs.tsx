@@ -75,7 +75,7 @@ const GSTR1Docs = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("gstr1_documents_report")}
                 dataUrl={Urls.gstr1Docs}
                 hideGridAddButton={true}

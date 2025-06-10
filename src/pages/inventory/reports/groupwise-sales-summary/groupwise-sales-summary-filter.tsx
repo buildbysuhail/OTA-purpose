@@ -4,7 +4,6 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 
 const GroupwiseSalesSummaryFilter = ({
   getFieldProps,
@@ -34,6 +33,7 @@ const GroupwiseSalesSummaryFilter = ({
           />
         </div>
       </div>
+
       <div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4">
         <ERPDataCombobox
           label={t("product_group")}
@@ -46,9 +46,9 @@ const GroupwiseSalesSummaryFilter = ({
           }}
           onSelectItem={(data) => {
             handleFieldChange({
-            productGroupID: data.value,
-            productGroup: data.label,
-          })
+              productGroupID: data.value,
+              productGroup: data.label,
+            })
           }}
         />
         <ERPDataCombobox
@@ -62,9 +62,9 @@ const GroupwiseSalesSummaryFilter = ({
           }}
           onSelectItem={(data) => {
             handleFieldChange({
-            groupCategoryID: data.value,
-            groupCategory: data.label,
-          })
+              groupCategoryID: data.value,
+              groupCategory: data.label,
+            })
           }}
         />
         <ERPDataCombobox
@@ -77,13 +77,14 @@ const GroupwiseSalesSummaryFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-             handleFieldChange({
-            sectionID: data.value,
-            section: data.label,
-          })
+            handleFieldChange({
+              sectionID: data.value,
+              section: data.label,
+            })
           }}
         />
       </div>
+
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2">
         <ERPCheckbox
           {...getFieldProps("showTransactionTimeProfit")}

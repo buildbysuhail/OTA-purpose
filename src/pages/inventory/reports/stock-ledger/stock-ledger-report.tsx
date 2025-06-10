@@ -311,7 +311,7 @@ const StockLedger = () => {
                 {warehouseID > 0 && ,  : Warehouse : [warehouse]} 
                   : Date  From :{fromDate} To {toDate}"
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("stock_ledger_report")}
                 dataUrl={Urls.stock_ledger}
                 hideGridAddButton={true}

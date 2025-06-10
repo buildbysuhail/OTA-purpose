@@ -204,7 +204,7 @@ const NonInvoicedGoodsDelivery = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("non_invoiced_goods_delivery_report")}
                 dataUrl={Urls.non_invoiced_goods_delivery}
                 hideGridAddButton={true}

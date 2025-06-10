@@ -436,7 +436,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
                 }}
                 filterText="From {fromDate} To {toDate}"
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}

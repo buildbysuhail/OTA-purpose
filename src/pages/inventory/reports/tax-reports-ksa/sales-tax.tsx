@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import PurchaseTaxReportFilter, {
-  PurchaseTaxReportFilterInitialState,
-} from "./Purchase-Tax-report-filter";
+import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState, } from "./Purchase-Tax-report-filter";
 
 const SalesTax = () => {
   const { t } = useTranslation("accountsReport");
@@ -76,8 +72,8 @@ const SalesTax = () => {
             cellElement.data?.taxableAmount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.taxableAmount)
-                );
+                Number.parseFloat(cellElement.data.taxableAmount)
+              );
           return {
             ...exportCell,
             text: value,
@@ -90,8 +86,8 @@ const SalesTax = () => {
               {cellElement.data?.taxableAmount == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.taxableAmount)
-                  )}
+                  Number.parseFloat(cellElement.data.taxableAmount)
+                )}
             </span>
           );
         }
@@ -117,10 +113,10 @@ const SalesTax = () => {
             cellElement.data?.vatPercentage == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatPercentage),
-                  false,
-                  2
-                );
+                Number.parseFloat(cellElement.data.vatPercentage),
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -133,10 +129,10 @@ const SalesTax = () => {
               {cellElement.data?.vatPercentage == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.vatPercentage),
-                    false,
-                    2
-                  )}
+                  Number.parseFloat(cellElement.data.vatPercentage),
+                  false,
+                  2
+                )}
             </span>
           );
         }
@@ -162,10 +158,10 @@ const SalesTax = () => {
             cellElement.data?.vatAmount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatAmount),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.vatAmount),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -178,10 +174,10 @@ const SalesTax = () => {
               {cellElement.data?.vatAmount == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.vatAmount),
-                    false,
-                    4
-                  )}
+                  Number.parseFloat(cellElement.data.vatAmount),
+                  false,
+                  4
+                )}
             </span>
           );
         }
@@ -294,8 +290,8 @@ const SalesTax = () => {
             cellElement.data?.grandTotal == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.grandTotal)
-                );
+                Number.parseFloat(cellElement.data.grandTotal)
+              );
           return {
             ...exportCell,
             text: value,
@@ -308,8 +304,8 @@ const SalesTax = () => {
               {cellElement.data?.grandTotal == null
                 ? ""
                 : getFormattedValue(
-                    Number.parseFloat(cellElement.data.grandTotal)
-                  )}
+                  Number.parseFloat(cellElement.data.grandTotal)
+                )}
             </span>
           );
         }
@@ -395,7 +391,7 @@ const SalesTax = () => {
                   summary: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 filterText=":{fromDate} - {toDate}"
                 gridHeader={t("monthly_vat_sales_statement_report")}
                 dataUrl={Urls.sales_tax}
@@ -404,8 +400,8 @@ const SalesTax = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseTaxReportFilter />}
-                filterWidth={340}
-                filterHeight={170}
+                filterWidth={400}
+                filterHeight={200}
                 filterInitialData={PurchaseTaxReportFilterInitialState}
                 reload={true}
                 gridId="grd_sales_tax_report"

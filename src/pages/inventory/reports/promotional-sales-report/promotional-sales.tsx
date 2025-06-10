@@ -570,7 +570,7 @@ const PromotionalSalesReport = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("promotional_sales_report")}
                 dataUrl={Urls.promotional_sales}
                 hideGridAddButton={true}

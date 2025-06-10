@@ -1,47 +1,21 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import FOCRegisterReportFilter, { FOCRegisterReportFilterInitialState } from "./foc-register-report-filter";
+import FOCRegisterReportFilter, {
+  FOCRegisterReportFilterInitialState,
+} from "./foc-register-report-filter";
 import GridId from "../../../../redux/gridId";
-
-interface FOCRegisterReportInterface {
-  masterID: number;
-  date: string;
-  vchNo: number;
-  form: string;
-  party: string;
-  address1: string;
-  address2: string;
-  detailID: number;
-  unitPrice: number;
-  batchNo: string;
-  productCode: string;
-  product: string;
-  productGroup: string;
-  brand: string;
-  categoryCode: string;
-  category: string;
-  quantity: number;
-  free: number;
-  unitCode: string;
-  netAmount: number;
-  freeValue: number;
-  cost: number;
-  freeCost: number;
-  totalProfit: number;
-  mrp: number;
-  specification: string;
-  counterName: string;
-  routeName: string;
-}
+import moment from "moment";
 
 const FOCRegisterReport = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "masterID",
@@ -56,12 +30,22 @@ const FOCRegisterReport = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return cellElement.data.date == null || cellElement.data.date == ""
+          ? ""
+          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+      },
     },
     {
       dataField: "vchNo",
@@ -112,6 +96,39 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+    },
+    {
+      dataField: "unitPrice",
+      caption: t("unit_price"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      visible: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.unitPrice == null
+              ? 0
+              : getFormattedValue(cellElement.data.unitPrice, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.unitPrice == null
+            ? 0
+            : getFormattedValue(cellElement.data.unitPrice, false, 4);
+        }
+      },
     },
     {
       dataField: "detailID",
@@ -202,6 +219,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: false,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.quantity == null
+              ? 0
+              : getFormattedValue(cellElement.data.quantity, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.quantity == null
+            ? 0
+            : getFormattedValue(cellElement.data.quantity, false, 4);
+        }
+      },
     },
     {
       dataField: "free",
@@ -212,6 +252,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 60,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.free == null
+              ? 0
+              : getFormattedValue(cellElement.data.free, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.free == null
+            ? 0
+            : getFormattedValue(cellElement.data.free, false, 4);
+        }
+      },
     },
     {
       dataField: "unitCode",
@@ -223,16 +286,7 @@ const FOCRegisterReport = () => {
       visible: true,
       width: 100,
     },
-    {
-      dataField: "unitPrice",
-      caption: t("unit_price"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      visible: true,
-      width: 100,
-    },
+
     {
       dataField: "netAmount",
       caption: t("net_amount"),
@@ -242,6 +296,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: false,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.netAmount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netAmount == null
+            ? 0
+            : getFormattedValue(cellElement.data.netAmount, false, 4);
+        }
+      },
     },
     {
       dataField: "freeValue",
@@ -252,6 +329,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.freeValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.freeValue, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.freeValue == null
+            ? 0
+            : getFormattedValue(cellElement.data.freeValue, false, 4);
+        }
+      },
     },
     {
       dataField: "cost",
@@ -262,6 +362,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cost == null
+              ? 0
+              : getFormattedValue(cellElement.data.cost, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cost == null
+            ? 0
+            : getFormattedValue(cellElement.data.cost, false, 4);
+        }
+      },
     },
     {
       dataField: "freeCost",
@@ -272,6 +395,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.freeCost == null
+              ? 0
+              : getFormattedValue(cellElement.data.freeCost, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.freeCost == null
+            ? 0
+            : getFormattedValue(cellElement.data.freeCost, false, 4);
+        }
+      },
     },
     {
       dataField: "totalProfit",
@@ -282,6 +428,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: false,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalProfit == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalProfit, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalProfit == null
+            ? 0
+            : getFormattedValue(cellElement.data.totalProfit, false, 4);
+        }
+      },
     },
     {
       dataField: "mrp",
@@ -292,6 +461,29 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.mrp == null
+              ? 0
+              : getFormattedValue(cellElement.data.mrp, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.mrp == null
+            ? 0
+            : getFormattedValue(cellElement.data.mrp, false, 2);
+        }
+      },
     },
     {
       dataField: "specification",
@@ -322,24 +514,56 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 100,
-    }
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value, false, 2) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
+    {
+      column: "party",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
+    {
+      column: "free",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "freeValue",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "freeCost",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totalProfit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -348,10 +572,16 @@ const FOCRegisterReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
+                filterText="
+                Between : {fromDate} - {toDate} {productID > 0 && ,  Product : [product]} {productGroupID > 0 && , Group Name :[productGroup]} 
+                {brandID > 0 && , Brand : [brand]} {salesRouteID > 0 && ,  Route Name :[salesRoute]} {salesmanID > 0 && , Salesman :[salesman]} {warehouseID > 0 && ,  Warehouse :[warehouse]}"
                 columns={columns}
-                moreOption={true}
-                gridHeader={t("foc_register_report")}
+                gridHeader={t("free_of_cost_reports_of_sales_register")}
                 dataUrl={Urls.foc_register_report}
                 hideGridAddButton={true}
                 enablefilter={true}

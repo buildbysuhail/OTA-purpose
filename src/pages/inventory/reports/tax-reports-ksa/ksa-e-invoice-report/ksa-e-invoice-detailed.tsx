@@ -5,9 +5,7 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import KsaEInvoiceReportFilter, {
-  KsaEInvoiceReportFilterInitialState,
-} from "./ksa-e-invoice-filter";
+import KsaEInvoiceReportFilter, { KsaEInvoiceReportFilterInitialState } from "./ksa-e-invoice-filter";
 
 const KsaEInvoiceReportDetailed = () => {
   const { getFormattedValue } = useNumberFormat();
@@ -314,11 +312,11 @@ const KsaEInvoiceReportDetailed = () => {
       showInPdf: true,
       dataType: "boolean",
       // cellRender: (
-      //     cellElement: any,
-      //     cellInfo: any,
-      //     filter: any,
-      //     exportCell: any
-      //   ) => <> {cellElement.data.isReported == true || cellElement.data.isReported == 1 ? 'Yes' : "No"}</>
+      //   cellElement: any,
+      //   cellInfo: any,
+      //   filter: any,
+      //   exportCell: any
+      // ) => <> {cellElement.data.isReported == true || cellElement.data.isReported == 1 ? 'Yes' : "No"}</>
     },
     {
       dataField: "clearanceReceived",
@@ -353,23 +351,23 @@ const KsaEInvoiceReportDetailed = () => {
       showInPdf: true,
     },
     // {
-    //     dataField: "sentCount",
-    //     caption: t("sent_count"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     width: 80,
+    //   dataField: "sentCount",
+    //   caption: t("sent_count"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 80,
     // },
     // {
-    //     dataField: "invTransactionMasterID",
-    //     caption: t("inv_transaction_master_id"),
-    //     dataType: "number",
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     allowSorting: true,
-    //     visible: false,
-    //     width: 120,
+    //   dataField: "invTransactionMasterID",
+    //   caption: t("inv_transaction_master_id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   visible: false,
+    //   width: 120,
     // },
   ];
   return (

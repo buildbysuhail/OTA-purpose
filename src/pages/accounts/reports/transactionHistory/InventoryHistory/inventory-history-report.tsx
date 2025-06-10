@@ -3,18 +3,13 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import TransactrionHistoryReportFilter, {
-  TransactrionHistoryReportFilterInitialState,
-} from "../transaction-history-report-filter";
+import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState, } from "../transaction-history-report-filter";
 import InventoryHistoryDetails from "./inventory-history-details";
 import InventoryHistoryPopup from "./inventory-history-popup";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import moment from "moment";
 
 const InventoryHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -62,7 +57,7 @@ const InventoryHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150, 
+      width: 150,
       showInPdf: true,
     },
     {
@@ -249,7 +244,7 @@ const InventoryHistoryReport = () => {
                     TransactrionHistoryReportFilterInitialState
                   }
                   filterWidth={335}
-                  filterHeight={270}
+                  filterHeight={250}
                   hideGridAddButton={true}
                   reload={true}
                   childPopupPropsDynamic={(dataField: string) => ({

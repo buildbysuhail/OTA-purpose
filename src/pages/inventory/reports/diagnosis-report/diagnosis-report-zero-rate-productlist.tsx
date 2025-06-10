@@ -206,7 +206,7 @@ const DiagnosisReportZeroRateProductlist = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption={true}
+                
                 gridHeader={t("diagnosis_report_zero_rate_productlist")}
                 dataUrl={Urls.diagnosis_report_zero_rate_productlist}
                 hideGridAddButton={true}

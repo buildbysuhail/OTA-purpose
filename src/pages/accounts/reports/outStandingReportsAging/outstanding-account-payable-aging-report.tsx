@@ -565,7 +565,7 @@ const OutstandingAccountPayableAgingReport = () => {
                   hideGridAddButton={true}
                   reload={true}
                   enablefilter={true}
-                  filterHeight={450}
+                  filterHeight={430}
                   filterWidth={600}
                   showFilterInitially={true}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}

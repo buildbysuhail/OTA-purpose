@@ -33,7 +33,7 @@ const CustomerVisitLastVisitFilter = ({ getFieldProps, handleFieldChange, formSt
 export default CustomerVisitLastVisitFilter;
 
 export const CustomerVisitLastVisitFilterInitialState = {
-  fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
+  fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   salesRouteID: 0,
 };

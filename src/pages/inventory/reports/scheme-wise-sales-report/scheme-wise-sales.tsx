@@ -3,7 +3,7 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import SchemeWiseSalesFilter, { SchemeWiseSalesFilterInitialState } from "./scheme-wise-sales-filter";
@@ -29,7 +29,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            visible:false,
+            visible: false,
         },
         {
             dataField: "transactionDate",
@@ -39,7 +39,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "voucherType",
@@ -49,7 +49,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "voucherNumber",
@@ -59,7 +59,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "partyName",
@@ -69,7 +69,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "productCode",
@@ -88,7 +88,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 150,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "autoBarcode",
@@ -98,17 +98,17 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "mannualBarcode",
-            caption: t("mannual_barcode"),
+            caption: t("manual_barcode"),
             dataType: "string",
             allowSearch: true,
             allowFiltering: true,
             allowSorting: true,
             width: 120,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "quantity",
@@ -118,7 +118,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "unitName",
@@ -128,7 +128,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "actualPrice",
@@ -138,7 +138,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "free",
@@ -157,7 +157,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "rateWithTax",
@@ -167,7 +167,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "grossValue",
@@ -177,7 +177,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "discount",
@@ -187,7 +187,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "netValue",
@@ -197,7 +197,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "vat",
@@ -207,7 +207,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 80,
-            showInPdf:true,
+            showInPdf: true,
         },
         {
             dataField: "netAmount",
@@ -217,7 +217,7 @@ const SchemeWiseSales = () => {
             allowFiltering: true,
             allowSorting: true,
             width: 100,
-            showInPdf:true,
+            showInPdf: true,
         },
     ];
 
@@ -287,7 +287,7 @@ const SchemeWiseSales = () => {
                                 summaryItems={summaryItems}
                                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                                 columns={columns}
-                                moreOption={true}
+                                
                                 gridHeader={t("scheme_wise_sales")}
                                 dataUrl={Urls.scheme_wise_sales}
                                 hideGridAddButton={true}

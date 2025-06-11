@@ -16,7 +16,7 @@ const DiscountReportInventoryFilter = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div className="col-span-1">
           <ERPDataCombobox
-            label={t("transactiofdgdfgdn_type")}
+            label={t("transaction_type")}
             {...getFieldProps("voucherType")}
             options={[
               { value: "SI", label: "Sales Invoice" },
@@ -76,11 +76,14 @@ const DiscountReportInventoryFilter = ({
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("salesRouteID", data.value);
+              handleFieldChange({
+                salesRouteID: data.value,
+                salesRoute: data.label,
+              });
             }}
           />
         </div>
-{/* always visible false  */}
+        {/* always visible false  */}
         {/* <div className="col-span-1">
           <ERPDataCombobox
             label={t("salesman")}

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 
 export const DiagnosisReportFilterInitialState = {
-    zeroRateProductlist: false,
+    zeroRateProductlist: true,
     zeroPURateProductlist: false,
     postDatedTransactions: false,
     salesPriceMRP: false,
@@ -35,18 +35,18 @@ const DiagnosisReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
             <ERPRadio
                 id="zeroRateProductlist"
                 name="diagnosisOption"
-                value="zeroRateProductlist"
+                // value={getFieldProps("zeroRateProductlist").value==true}
                 label={t("zero_salesprice_product_list")}
-                checked={getFieldProps("diagnosisOption").value == "zeroRateProductlist"}
-                onChange={(e) => handleFieldChange("diagnosisOption", e.target.value)}
+                checked={getFieldProps("zeroRateProductlist").value==true}
+                onChange={(e) => handleFieldChange("zeroRateProductlist", e.target.checked)}
             />
             <ERPRadio
                 id="postDatedTransactions"
                 name="diagnosisOption"
-                value="postDatedTransactions"
+                // value={getFieldProps("postDatedTransactions").value==true}
                 label={t("post_dated_transactions")}
-                checked={getFieldProps("diagnosisOption").value === "postDatedTransactions"}
-                onChange={(e) => handleFieldChange("diagnosisOption", e.target.value)}
+                checked={getFieldProps("postDatedTransactions").value==true}
+                onChange={(e) => handleFieldChange("postDatedTransactions", e.target.checked)}
             />
             <ERPRadio
                 id="salesPriceCost"

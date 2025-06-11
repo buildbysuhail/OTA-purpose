@@ -1,35 +1,25 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../redux/gridId";
-import ItemUsedForServiceFilter, { ItemUsedForServiceFilterInitialState } from "./item_used_for_service-report-filter";
-
-interface ItemUsedForServiceInterface {
-  jobCardNo: number;
-  date: string;
-  productCode: string;
-  autoBarcode: number;
-  mannualBarcode: string;
-  productName: string;
-  qty: number;
-  unitPrice: number;
-  costPerItem: number;
-  netAmount: number;
-  isWarranty: string;
-}
+import ItemUsedForServiceFilter, {
+  ItemUsedForServiceFilterInitialState,
+} from "./item_used_for_service-report-filter";
 
 const ItemUsedForService = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "jobCardNo",
       caption: t("job_card_no"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
@@ -39,12 +29,13 @@ const ItemUsedForService = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 80,
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "productCode",
@@ -95,6 +86,29 @@ const ItemUsedForService = () => {
       allowSorting: true,
       visible: true,
       width: 70,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.qty == null
+              ? 0
+              : getFormattedValue(cellElement.data.qty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.qty == null
+            ? 0
+            : getFormattedValue(cellElement.data.qty, false, 4);
+        }
+      },
     },
     {
       dataField: "unitPrice",
@@ -105,6 +119,29 @@ const ItemUsedForService = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.unitPrice == null
+              ? 0
+              : getFormattedValue(cellElement.data.unitPrice, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.unitPrice == null
+            ? 0
+            : getFormattedValue(cellElement.data.unitPrice, false, 4);
+        }
+      },
     },
     {
       dataField: "costPerItem",
@@ -115,6 +152,29 @@ const ItemUsedForService = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.costPerItem == null
+              ? 0
+              : getFormattedValue(cellElement.data.costPerItem, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.costPerItem == null
+            ? 0
+            : getFormattedValue(cellElement.data.costPerItem, false, 4);
+        }
+      },
     },
     {
       dataField: "netAmount",
@@ -125,6 +185,29 @@ const ItemUsedForService = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.netAmount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netAmount == null
+            ? 0
+            : getFormattedValue(cellElement.data.netAmount, false, 4);
+        }
+      },
     },
     {
       dataField: "isWarranty",
@@ -135,14 +218,20 @@ const ItemUsedForService = () => {
       allowSorting: true,
       visible: true,
       width: 100,
-    }
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -150,9 +239,24 @@ const ItemUsedForService = () => {
   }, [getFormattedValue]);
 
   const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
+    {
+      column: "productName",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
+    {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "netAmount",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: customizeSummaryRow,
+    },
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -161,10 +265,14 @@ const ItemUsedForService = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
-                gridHeader={t("item_used_for_service")}
+                filterText="Between : {fromDate} - {toDate} {productID > 0 &&   Product : [product]}{productGroupID > 0 &&  Group Name :[productGroup]} {serviceID > 0 &&  Service :[service]} {IsWarrantyService =='Y'&& ,Warranty Only} {IsWarrantyService =='N'&& ,Non Warranty Only}"
+                gridHeader={t("item_used_for_service_report")}
                 dataUrl={Urls.item_used_for_service}
                 hideGridAddButton={true}
                 enablefilter={true}

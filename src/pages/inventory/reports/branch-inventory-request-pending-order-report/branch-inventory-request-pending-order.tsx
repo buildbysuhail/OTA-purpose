@@ -1,29 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import BranchInventoryRequestPendingOrderFilter, { BranchInventoryRequestPendingOrderFilterInitialState } from "./branch-inventory-request-pending-order-report-filter";
-
-interface BranchInventoryRequestPendingOrder {
-  branchID: number;
-  branchName: string;
-  groupName: string;
-  productCode: number;
-  productName: string;
-  color: string;
-  lastRequestDate: Date;
-  requestedQty: number;
-  lastReceivedDate: Date;
-  receivedQty: number;
-  pendingQty: number;
-}
+import BranchInventoryRequestPendingOrderFilter, {
+  BranchInventoryRequestPendingOrderFilterInitialState,
+} from "./branch-inventory-request-pending-order-report-filter";
 
 const BranchInventoryRequestPendingOrder = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "branchID",
@@ -88,6 +79,7 @@ const BranchInventoryRequestPendingOrder = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "requestedQty",
@@ -97,6 +89,29 @@ const BranchInventoryRequestPendingOrder = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.requestedQty == null
+              ? 0
+              : getFormattedValue(cellElement.data.requestedQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.requestedQty == null
+            ? 0
+            : getFormattedValue(cellElement.data.requestedQty, false, 4);
+        }
+      },
     },
     {
       dataField: "lastReceivedDate",
@@ -106,6 +121,7 @@ const BranchInventoryRequestPendingOrder = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "receivedQty",
@@ -115,6 +131,29 @@ const BranchInventoryRequestPendingOrder = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.receivedQty == null
+              ? 0
+              : getFormattedValue(cellElement.data.receivedQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.receivedQty == null
+            ? 0
+            : getFormattedValue(cellElement.data.receivedQty, false, 4);
+        }
+      },
     },
     {
       dataField: "pendingQty",
@@ -124,40 +163,31 @@ const BranchInventoryRequestPendingOrder = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-    }
-  ];
-  const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "requestedQty",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.pendingQty == null
+              ? 0
+              : getFormattedValue(cellElement.data.pendingQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.pendingQty == null
+            ? 0
+            : getFormattedValue(cellElement.data.pendingQty, false, 4);
+        }
+      },
     },
-    {
-      column: "receivedQty",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "pendingQty",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    }
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -165,11 +195,15 @@ const BranchInventoryRequestPendingOrder = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
-                gridHeader={t("branch_inventory_request_pending_order_report")}
+                gridHeader={t("branch_purchase_order_pending_report")}
+                filterText=" {fromDate} - {toDate} {productGroupID>0 &&  Group : [productGroup] }
+                {productID>0 &&  Product :[product] }"
                 dataUrl={Urls.branch_inventory_request_pending_order}
                 hideGridAddButton={true}
                 enablefilter={true}
@@ -178,7 +212,9 @@ const BranchInventoryRequestPendingOrder = () => {
                 filterContent={<BranchInventoryRequestPendingOrderFilter />}
                 filterWidth={700}
                 filterHeight={250}
-                filterInitialData={BranchInventoryRequestPendingOrderFilterInitialState}
+                filterInitialData={
+                  BranchInventoryRequestPendingOrderFilterInitialState
+                }
                 reload={true}
                 gridId="grd_branch_inventory_request_pending_order"
               />

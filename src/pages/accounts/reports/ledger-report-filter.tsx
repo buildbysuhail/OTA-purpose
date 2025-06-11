@@ -13,7 +13,9 @@ const LedgerReportFilter = ({
   handleFieldChange,
   formState,
 }: any) => {
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const { t } = useTranslation("accountsReport");
   // const [reload,setReload]= useState(false);
   return (
@@ -23,7 +25,9 @@ const LedgerReportFilter = ({
           {...getFieldProps("dateFrom")}
           label={t("from")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
 
         <ERPDateInput
@@ -85,7 +89,9 @@ const LedgerReportFilter = ({
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange("relLedgerID", data.relLedgerID)}
+        onChangeData={(data) =>
+          handleFieldChange("relLedgerID", data.relLedgerID)
+        }
       />
 
       <ERPDataCombobox
@@ -105,24 +111,23 @@ const LedgerReportFilter = ({
         }
       />
 
-      {
-        applicationSettings.accountsSettings?.allowSalesCounter == true && (
-          <ERPDataCombobox
-            {...getFieldProps("counterID")}
-            label={t("counter_id")}
-            field={{
-              id: "counterID",
-              getListUrl: Urls.data_counters,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data) => handleFieldChange("counterID", data.counterID)}
-          />
-        )
-      }
+      {applicationSettings.accountsSettings?.allowSalesCounter == true && (
+        <ERPDataCombobox
+          {...getFieldProps("counterID")}
+          label={t("counter_id")}
+          field={{
+            id: "counterID",
+            getListUrl: Urls.data_counters,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange("counterID", data.counterID)
+          }
+        />
+      )}
 
-      {
-        formState.ledgerID != undefined &&
+      {formState.ledgerID != undefined &&
         formState.ledgerID != null &&
         formState.ledgerID != 0 &&
         applicationSettings.accountsSettings?.maintainProjectSite == true && (
@@ -143,8 +148,7 @@ const LedgerReportFilter = ({
               handleFieldChange("project", data.project)
             }
           />
-        )
-      }
+        )}
 
       <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 text-left">
@@ -157,7 +161,9 @@ const LedgerReportFilter = ({
           <ERPCheckbox
             {...getFieldProps("showSummary")}
             label={t("summary_wise")}
-            onChangeData={(data) => handleFieldChange("showSummary", data.showSummary)}
+            onChangeData={(data) =>
+              handleFieldChange("showSummary", data.showSummary)
+            }
           />
 
           {/* <ERPCheckbox
@@ -181,19 +187,28 @@ const LedgerReportFilter = ({
           <ERPCheckbox
             {...getFieldProps("showOpeningBal")}
             label={t("opening_balance")}
-            onChangeData={(data) => handleFieldChange("showOpeningBal", data.showOpeningBal)}
+            onChangeData={(data) =>
+              handleFieldChange("showOpeningBal", data.showOpeningBal)
+            }
           />
 
           <ERPCheckbox
             {...getFieldProps("showSeparateColorForDebitBalance")}
             label={t("show_separate_color_for_debit_balance")}
-            onChangeData={(data) => handleFieldChange("showSeparateColorForDebitBalance", data.showSeparateColorForDebitBalance)}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "showSeparateColorForDebitBalance",
+                data.showSeparateColorForDebitBalance
+              )
+            }
           />
 
           <ERPCheckbox
             {...getFieldProps("showPendingCheques")}
             label={t("show_pending_cheques")}
-            onChangeData={(data) => handleFieldChange("showPendingCheques", data.showPendingCheques)}
+            onChangeData={(data) =>
+              handleFieldChange("showPendingCheques", data.showPendingCheques)
+            }
           />
         </div>
       </div>
@@ -213,7 +228,7 @@ export const LedgerReportFilterInitialState = {
   showSummary: false,
   counterID: 0,
   ignoreCashSales: false,
-  // showWithInventoryDetails: false, 
+  // showWithInventoryDetails: false,
   foreignCurrency: false,
   showOpeningBal: true,
   showPendingCheques: false,

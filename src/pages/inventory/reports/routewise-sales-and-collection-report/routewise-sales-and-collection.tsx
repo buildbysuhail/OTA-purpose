@@ -8,17 +8,6 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import RouteWiseSalesAndCollectionFilter, { RouteWiseSalesAndCollectionFilterInitialState } from "./routewise-sales-and-collection-filter";
 
-interface RouteWiseSalesAndCollection {
-  transactionDate: string;
-  salesRouteID: number;
-  routeName: string;
-  salesTarget: number;
-  totalSales: number;
-  partyName: string;
-  totalCollection: number;
-  month: string;
-  year: number;
-}
 
 const RouteWiseSalesAndCollection = () => {
   const { t } = useTranslation('accountsReport');
@@ -32,6 +21,7 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      format:"dd-MMM-yyyy"
     },
     {
       dataField: "routeName",
@@ -52,9 +42,32 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+     cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.salesTarget == null
+              ? 0
+              : getFormattedValue(cellElement.data.salesTarget, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.salesTarget == null
+            ? 0
+            : getFormattedValue(cellElement.data.salesTarget, false, 4);
+        }
+      },
     },
     {
-      dataField: "totalSales",
+      dataField: "total_Sales",
       caption: t("total_sales"),
       dataType: "number",
       allowSearch: true,
@@ -62,6 +75,29 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+     cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.total_Sales == null
+              ? 0
+              : getFormattedValue(cellElement.data.total_Sales, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.total_Sales == null
+            ? 0
+            : getFormattedValue(cellElement.data.total_Sales, false, 4);
+        }
+      },
     },
     {
       dataField: "partyName",
@@ -74,7 +110,7 @@ const RouteWiseSalesAndCollection = () => {
       showInPdf: true,
     },
     {
-      dataField: "totalCollection",
+      dataField: "total_Collection",
       caption: t("total_collection"),
       dataType: "number",
       allowSearch: true,
@@ -82,6 +118,29 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
+    cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.total_Collection == null
+              ? 0
+              : getFormattedValue(cellElement.data.total_Collection, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.total_Collection == null
+            ? 0
+            : getFormattedValue(cellElement.data.total_Collection, false, 4);
+        }
+      },
     },
     {
       dataField: "month",
@@ -114,8 +173,13 @@ const RouteWiseSalesAndCollection = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
+     {
+      column: "routeName",
+      summaryType: "max",
+    customizeText: customizeTotal,
+    },
     {
       column: "salesTarget",
       summaryType: "sum",
@@ -123,13 +187,13 @@ const RouteWiseSalesAndCollection = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "totalSales",
+      column: "total_Sales",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "totalCollection",
+      column: "total_Collection",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -146,7 +210,7 @@ const RouteWiseSalesAndCollection = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                
+                filterText="Between : {fromDate} - {toDate} "
                 gridHeader={t("routewise_sales_collection_report")}
                 dataUrl={Urls.routewise_sales_collection}
                 hideGridAddButton={true}

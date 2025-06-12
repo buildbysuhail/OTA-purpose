@@ -206,8 +206,6 @@ const SummaryRow: React.FC<{
           const value = summary ? summaryValues[summary.column] : null;
           const formattedValue = summary?.customizeText
             ? summary.customizeText({ value })
-            : summary?.valueFormat
-            ? new Intl.NumberFormat("en-US", { style: "decimal", minimumFractionDigits: 2 }).format(value)
             : value;
 
           return (
@@ -328,7 +326,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     return summaryValues;
   }, [formState.transaction?.details, summaryConfig]);
 
-  const summaryValues = useMemo(() => calculateSummaryValues(), [calculateSummaryValues]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
@@ -494,7 +491,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 <SummaryRow
                   columns={formState.gridColumns || []}
                   tableWidth={tableWidth}
-                  summaryValues={summaryValues}
+                  summaryValues={formState.summary}
                   summaryConfig={summaryConfig}
                 />
               </tfoot>

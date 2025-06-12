@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import {
   // calculateTotal,
   disableControlsFn,
-  getClosedDate,
+  // getClosedDate,
   setUserRightsFn,
   validateTransactionDate,
 } from "./functions";
@@ -762,28 +762,28 @@ export const useTransaction = (
  
 
   // Day close check
-  const closedDate = await getClosedDate(api, formState.transactionType);
-  const tmpDate = new Date(master.transactionDate)
-  tmpDate.setHours(0, 0, 0, 0);
-  if (closedDate >= new Date(tmpDate)) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("invalid_transaction_date"),
-      text: t("day_closed"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
-  }
+  // const closedDate = await getClosedDate(api, formState.transactionType);
+  // const tmpDate = new Date(master.transactionDate)
+  // tmpDate.setHours(0, 0, 0, 0);
+  // if (closedDate >= new Date(tmpDate)) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("invalid_transaction_date"),
+  //     text: t("day_closed"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
 
-  if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("invalid_transaction_date"),
-      text: t("cannot_edit_day_closed"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
-  }
+  // if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
+  //   await ERPAlert.show({
+  //     icon: "error",
+  //     title: t("invalid_transaction_date"),
+  //     text: t("cannot_edit_day_closed"),
+  //     confirmButtonText: t("ok"),
+  //   });
+  //   return false;
+  // }
 
   // Party selection check
   if (!master.ledgerID) {

@@ -42,6 +42,8 @@ interface EditableCellProps {
   rowIndex: number;
   column: DevGridColumn;
   value: string | number;
+  onFocus: () => void;
+  onBlur: () => void;
 }
 
 interface DragState {
@@ -59,14 +61,25 @@ interface RowData {
   tableWidth: number;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
+const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value, onFocus, onBlur }) => {
   const dispatch = useAppDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocus = () => {
+    onFocus();
+  };
+
+  const handleBlur = () => {
+    onBlur();
+  };
+
   return (
     <Input
+      ref={inputRef}
       id={`${column.dataField}_${rowIndex}`}
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
-      className="w-full !h-[23px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
+      className="w-full !h-[20px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
       value={value}
       noBorder
       readOnly={column.readOnly}
@@ -79,14 +92,25 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
           })
         )
       }
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     />
   );
 };
 
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
+  const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
   const item = data.details[index];
   const columns = data.columns;
   const tableWidth = data.tableWidth;
+
+  const handleFocus = (columnKey: string) => {
+    setFocusedColumn(columnKey);
+  };
+
+  const handleBlur = () => {
+    setFocusedColumn(null);
+  };
 
   return (
     <tr
@@ -104,16 +128,21 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const cellValue = item[fieldKey];
+          const isFocused = focusedColumn === column.dataField;
+
           return (
             <td
               key={column.dataField}
-              className={`px-1 py-0 border-r border-gray-300 last:border-r-0 ${column.cssClass || ""}`}
+              className={`px-0 py-0 last:border-r-0 ${column.cssClass || ""} ${
+                isFocused ? "!border-[#4447ef]" : "!border-gray-300"
+              }`}
               style={{
                 width: column.width ? `${column.width}px` : "150px",
                 minWidth: column.width ? `${column.width}px` : "150px",
                 textAlign: column.alignment || (column.dataType === "number" ? "right" : "left"),
                 boxSizing: "border-box",
                 height: "24px",
+                border: isFocused ? "2px solid #EF4444" : "1px solid #D1D5DB",
               }}
               role="gridcell"
             >
@@ -126,15 +155,16 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                   productDataUrl={Urls.load_product_details}
                   tabIndex={-1}
                   className="h-[22px] text-sm"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
                 />
               ) : column.dataField === "status" ? (
                 <span
-                  className={`
-                    inline-flex px-2 py-1 text-xs font-medium rounded-full
-                    ${cellValue === "Active" ? "bg-green-100 text-green-800" : ""}
-                    ${cellValue === "Inactive" ? "bg-red-100 text-red-800" : ""}
-                    ${cellValue === "Pending" ? "bg-yellow-100 text-yellow-800" : ""}
-                  `}
+                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    cellValue === "Active" ? "bg-[#dcfce7] text-[#166534]" : ""
+                  } ${cellValue === "Inactive" ? "bg-[#fee2e2] text-[#991b1b]" : ""} ${
+                    cellValue === "Pending" ? "bg-[#fef9c3] text-[#854d0e]" : ""
+                  }`}
                 >
                   {cellValue}
                 </span>
@@ -145,6 +175,8 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
                 />
               )}
             </td>
@@ -206,13 +238,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     className = "",
     rowHeight = 24,
     height = 800,
-    // onAddData,
-    // isLoading,
     allowColumnReordering = true,
     summaryConfig = [],
-  }: DataGridProps<T>) {
+  }: DataGridProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   const listRef = useRef<List>(null);
-  // const headerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const dragPreviewRef = useRef<HTMLDivElement>(null);
@@ -224,10 +255,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useAppDispatch();
-  // const [preferences, setPreferences] = useState<GridPreference>();
-  // const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
-  // const [searchQuery, setSearchQuery] = useState<string>("");
-  // const [filterRange, setFilterRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
     draggedColumn: null,
@@ -237,7 +265,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     startY: 0,
   });
   const [dragPreviewPosition, setDragPreviewPosition] = useState({ x: 0, y: 0 });
-  // const isDraggingRef = useRef(false);
 
   const calculateTotalWidth = () => {
     const visibleColumns = formState.gridColumns?.filter((c) => c.visible && c.dataField != null) ?? [];
@@ -319,7 +346,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      // setPreferences(pref);
       const updated = applyGridColumnPreferences(columns, pref);
       dispatch(formStateHandleFieldChange({ fields: { gridColumns: updated } }));
     },
@@ -369,6 +395,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   return (
     <div
+      ref={ref}
       style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box" }}
       className="bg-white border border-gray-300 rounded-none shadow-none"
     >

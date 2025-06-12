@@ -38,7 +38,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
       <FontRegistration />
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
-        <Header data={data} template={template} currentBranch={currentBranch} />
+        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession}/>
 
         {/* Main Content Container */}
         <View
@@ -46,7 +46,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
             display: "flex",
             flexDirection: "column",
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
-            padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
+            padding: paddingTop, paddingRight, paddingBottom ,paddingLeft,
             flexGrow: 1,
           }}
         >

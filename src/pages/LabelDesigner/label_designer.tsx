@@ -246,6 +246,8 @@ const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
+    const newWidthPt = pxToPoint(size.width); // Convert pixels to points
+  const newHeightPt = pxToPoint(size.height);
     setTemplateData((prevData: TemplateState) => {
       const updated = {
         ...prevData,
@@ -253,8 +255,8 @@ const handleContentLabelResize = (
           ...prevData.barcodeState,
           labelState: {
             ...prevData?.barcodeState?.labelState,
-            labelWidth: size.width,
-            labelHeight: size.height,
+            labelWidth: newWidthPt,
+            labelHeight: newHeightPt,
           },
           placedComponents: prevData?.barcodeState?.placedComponents || [],
         },
@@ -262,11 +264,7 @@ const handleContentLabelResize = (
       return updated;
     });
   };
-useEffect(() => {
-  return () => {
 
-  };
-}, []);
 
 
   const handlePageResize = (
@@ -970,7 +968,7 @@ useEffect(() => {
       },
     }));
   }
-}, [forCustomRows, template, customTemplate, selectedPageSize?.width]);
+}, []);
 
   const handlePropertyChange = (
     property: keyof PlacedComponent,
@@ -1426,7 +1424,11 @@ useEffect(() => {
      
     }
   };
-
+  const pointToPx = (pt: number) => pt * (96 / 72);
+  const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
+  const labelHeightPt = templateData?.barcodeState?.labelState?.labelHeight ?? 200;
+  const labelWidthPx = pointToPx(labelWidthPt);
+  const labelHeightPx = pointToPx(labelHeightPt);
   return (
     <div
     className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
@@ -1546,14 +1548,14 @@ useEffect(() => {
           onDragOver={(e) => e.preventDefault()}
           style={{
             width:
-             ( templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
-             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
+             `${( templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)}pt`,
                 // : templateData?.propertiesState?.pageSize !== "Custom"
                 // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
                 // :"",
-            maxHeight:
-                 (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
-                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
+             maxHeight:`${  (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)}pt`
+               
                 // : templateData?.propertiesState?.pageSize !== "Custom"
                 // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
                 // :`` ,
@@ -1561,11 +1563,11 @@ useEffect(() => {
         >
           {/* {templateGroup === "barcode" ? ( */}
             <ResizableBox
-              width={ templateData?.barcodeState?.labelState?.labelWidth ?? 300}
-              height={templateData?.barcodeState?.labelState?.labelHeight ?? 200  }
+              width={labelWidthPx}
+              height={labelHeightPx}
 
-              minConstraints={[50, 50]}
-              maxConstraints={[1400, 1000]}
+              minConstraints={[pointToPx(50), pointToPx(50)]}
+              maxConstraints={[pointToPx(1200), pointToPx(800)]}
               resizeHandles={[forCustomRows?"s": templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handleContentLabelResize}

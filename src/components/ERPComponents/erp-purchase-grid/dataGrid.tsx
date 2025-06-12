@@ -148,7 +148,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
             >
               {column.dataField === "product" && !column.readOnly ? (
                 <ERPProductSearch
-                  noLabel
+                  noLabel={true}
                   showCheckBox={false}
                   contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}

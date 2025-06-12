@@ -530,20 +530,20 @@ const CreditPurchaseSummaryReport = () => {
      format:"dd-MMM-yyyy"
     },
   ];
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0"; // Ensure "0" is displayed when value is missing
-      }
-      return getFormattedValue(value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
-    };
-  }, []);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0"; // Ensure "0" is displayed when value is missing
+  //     }
+  //     return getFormattedValue(value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
+  //   };
+  // }, []);
   
 
   const summaryItems: SummaryConfig[] = [

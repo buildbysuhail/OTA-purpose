@@ -548,7 +548,7 @@ const Urls = {
     "/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
   vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic: "/Inventory/RptTAXReport/VatReturnFormArabic",
-  diagnosis_report: "/Inventory/RptAdvancedReport/DiagnosisReport/",
+  diagnosis_report: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",
   routewise_sales_collection: "/Inventory/RptAdvancedReport/RouteWiseSalesAndCollection/",
   branch_inventory_request_pending_order: "/Inventory/RptAdvancedReport/BranchInventoryRequestPendingOrder/",
   print_details: "/Inventory/RptAdvancedReport/PrintDetails/",

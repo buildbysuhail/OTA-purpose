@@ -4,8 +4,12 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 
-const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport');
+const DiscountReportCollectionFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
 
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -15,7 +19,9 @@ const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, form
             label={t("from_date")}
             {...getFieldProps("fromDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("fromDate", data.fromDate)
+            }
           />
         </div>
         <div className="col-span-1">
@@ -23,7 +29,9 @@ const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, form
             label={t("to_date")}
             {...getFieldProps("toDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("toDate", data.toDate)
+            }
           />
         </div>
       </div>
@@ -40,12 +48,15 @@ const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, form
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("routeID", data.value);
+              handleFieldChange({
+                routeID: data.value,
+                route: data.label,
+              });
             }}
           />
         </div>
 
-        <div className="col-span-1">
+        {/* <div className="col-span-1">
           <ERPDataCombobox
             label={t("salesman")}
             {...getFieldProps("salesmanID")}
@@ -75,7 +86,7 @@ const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, form
               handleFieldChange("counterID", data.value);
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -84,9 +95,7 @@ const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, form
 export default DiscountReportCollectionFilter;
 
 export const DiscountReportCollectionFilterInitialState = {
-  fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
+  fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   routeID: 0,
-  salesmanID: 0,
-  counterID: 0,
 };

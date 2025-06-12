@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
-  calculateTotal,
+  // calculateTotal,
   disableControlsFn,
+  getClosedDate,
   setUserRightsFn,
   validateTransactionDate,
 } from "./functions";
@@ -720,7 +721,7 @@ export const useTransaction = (
   }
 
   // Cost centre validation
-  if (applicationSettings.accountsSettings.maintainCostCenter && !master.costCentreID) {
+  if (applicationSettings.accountsSettings.maintainCostCenter && isNullOrUndefinedOrZero(master.costCentreID)) {
     await ERPAlert.show({
       icon: "error",
       title: t("validation_error"),
@@ -761,53 +762,55 @@ export const useTransaction = (
  
 
   // Day close check
-  // const closedDate = await getClosedDate("Purchase");
-  // if (new Date(closedDate) >= new Date(master.transactionDate)) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("invalid_transaction_date"),
-  //     text: t("day_closed"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+  const closedDate = await getClosedDate(api, formState.transactionType);
+  const tmpDate = new Date(master.transactionDate)
+  tmpDate.setHours(0, 0, 0, 0);
+  if (closedDate >= new Date(tmpDate)) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("invalid_transaction_date"),
+      text: t("day_closed"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-  // if (isEdit && new Date(closedDate) >= new Date(master.prevTransactionDate)) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("invalid_transaction_date"),
-  //     text: t("cannot_edit_day_closed"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+  if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("invalid_transaction_date"),
+      text: t("cannot_edit_day_closed"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-  // // Party selection check
-  // if (!master.partyId) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("invalid_party"),
-  //     text: t("select_cash_or_party"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+  // Party selection check
+  if (!master.ledgerID) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("invalid_party"),
+      text: t("select_cash_or_party"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-  // // Reference number validation
-  // if (
-  //   Settings.InventorySettings.IsReferenceNumberMandatoryInPurchase &&
-  //   !master.refNo
-  // ) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("reference_number_required"),
-  //     text: t("reference_number_not_entered"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+  // Reference number validation
+  if (
+    applicationSettings.inventorySettings.isReferenceNumberMandatoryInPurchase &&
+    !master.purchaseInvoiceNumber
+  ) {
+    await ERPAlert.show({
+      icon: "error",
+      title: t("reference_number_required"),
+      text: t("reference_number_not_entered"),
+      confirmButtonText: t("ok"),
+    });
+    return false;
+  }
 
-  // if (master.refNo) {
+  // if (master.purchaseInvoiceNumber) {
   //   const refExists = await checkReferenceNumberExists(master);
   //   if (refExists) {
   //     if (!isEdit || refExists.toString() !== master.voucherNumber) {
@@ -822,7 +825,7 @@ export const useTransaction = (
   //   }
   // }
 
-  // // Scheme discount account check
+  // Scheme discount account check
   // if (
   //   DBID_VALUE === "SAMAPLASTICS" &&
   //   getSchemeDiscount(details) > 0 &&
@@ -837,7 +840,7 @@ export const useTransaction = (
   //   return false;
   // }
 
-  // // Product validation
+  // Product validation
   // for (let i = 0; i < details.length; i++) {
   //   const row = details[i];
   //   if (!row.productBatchId || row.productBatchId === 0) {
@@ -869,7 +872,7 @@ export const useTransaction = (
   //   }
   // }
 
-  // // Gross amount zero validation
+  // Gross amount zero validation
   // for (let i = 0; i < details.length; i++) {
   //   const row = details[i];
   //   if (row.gross === 0) {
@@ -888,7 +891,7 @@ export const useTransaction = (
   //   }
   // }
 
-  // // Check no items after blank rows
+  // Check no items after blank rows
   // const firstFreeIndex = details.findIndex((x) => !x.productId);
   // for (let i = firstFreeIndex + 1; i < details.length; i++) {
   //   if (details[i].productId) {
@@ -902,7 +905,7 @@ export const useTransaction = (
   //   }
   // }
 
-  // // Finalize
+  // Finalize
   // calculateTotal();
   return true;
 }

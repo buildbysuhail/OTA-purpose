@@ -1,29 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../redux/gridId";
-import DiscountReportCollectionFilter, { DiscountReportCollectionFilterInitialState } from "./discount_report_collection-report-filter";
-
-interface DiscountReportCollectionInterface {
-  slNo: number;
-  date: string;
-  party: string;
-  address1: string;
-  mobilePhone: string;
-  vchPrefix: string;
-  vchNo: string;
-  vType: string;
-  discount: number;
-  routeName: string;
-}
-
+import DiscountReportCollectionFilter, {
+  DiscountReportCollectionFilterInitialState,
+} from "./discount_report_collection-report-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 const DiscountReportCollection = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -38,11 +29,12 @@ const DiscountReportCollection = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
+      format: "dd-MMM-yyyy",
       width: 70,
     },
     {
@@ -114,6 +106,29 @@ const DiscountReportCollection = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.discount == null
+              ? 0
+              : getFormattedValue(cellElement.data.discount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.discount == null
+            ? 0
+            : getFormattedValue(cellElement.data.discount, false, 4);
+        }
+      },
     },
     {
       dataField: "routeName",
@@ -124,24 +139,35 @@ const DiscountReportCollection = () => {
       allowSorting: true,
       visible: true,
       width: 150,
-    }
+    },
   ];
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
   const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
+    {
+      column: "address1",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -150,10 +176,14 @@ const DiscountReportCollection = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                filterText="{routeID > 0 && Route Name : [route]} Between : {fromDate} - {toDate}"
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
-                gridHeader={t("discount_report_collection")}
+                gridHeader={t("collection_discount_report")}
                 dataUrl={Urls.discount_report_collection}
                 hideGridAddButton={true}
                 enablefilter={true}

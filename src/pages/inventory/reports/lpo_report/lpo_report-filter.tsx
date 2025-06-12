@@ -1,10 +1,12 @@
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
-
-const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport');
-
+const LPOReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 items-end gap-4">
@@ -19,11 +21,13 @@ const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("supplierID", data.value);
+              handleFieldChange({
+                supplierID: data.value,
+                supplier: data.label,
+              });
             }}
           />
         </div>
-
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("product_category")}
@@ -35,11 +39,13 @@ const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("productCategoryID", data.value);
+              handleFieldChange({
+                productCategoryID: data.value,
+                productCategory: data.label,
+              });
             }}
           />
         </div>
-
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("product")}
@@ -51,11 +57,13 @@ const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("productID", data.value);
+              handleFieldChange({
+                productID: data.value,
+                product: data.label,
+              });
             }}
           />
         </div>
-
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("product_group")}
@@ -67,7 +75,10 @@ const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("productGroupID", data.value);
+              handleFieldChange({
+                productGroupID: data.value,
+                productGroup: data.label,
+              });
             }}
           />
         </div>
@@ -75,12 +86,10 @@ const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) =
     </div>
   );
 };
-
 export default LPOReportFilter;
-
 export const LPOReportFilterInitialState = {
-  supplierID: 0,
-  productID: 0,
-  productGroupID: 0,
-  productCategoryID: 0,
+  supplierID: -1,
+  productID: -1,
+  productGroupID: -1,
+  productCategoryID: -1,
 };

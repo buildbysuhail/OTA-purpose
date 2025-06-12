@@ -5,8 +5,12 @@ import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
 
-const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport')
+const BranchInventoryRequestPendingOrderFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -15,7 +19,9 @@ const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldCh
             label={t("from_date")}
             {...getFieldProps("fromDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("fromDate", data.fromDate)
+            }
           />
         </div>
         <div className="col-span-1">
@@ -23,7 +29,9 @@ const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldCh
             label={t("to_date")}
             {...getFieldProps("toDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("toDate", data.toDate)
+            }
           />
         </div>
       </div>
@@ -40,7 +48,10 @@ const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldCh
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("productID", data.value);
+              handleFieldChange({
+                productID: data.value,
+                product: data.label,
+              });
             }}
           />
         </div>
@@ -56,7 +67,10 @@ const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldCh
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("productGroupID", data.value);
+              handleFieldChange({
+                productGroupID: data.value,
+                productGroup: data.label,
+              });
             }}
           />
         </div>
@@ -64,19 +78,19 @@ const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldCh
 
       <div className="col-span-1">
         <ERPCheckbox
-          id="showPendingOnly"
           {...getFieldProps("showPendingOnly")}
           label={t("show_pending_only")}
-          checked={formState.showPendingOnly}
-          onChange={(e) => handleFieldChange("showPendingOnly", e.target.checked)}
+          onChangeData={(data) =>
+            handleFieldChange("showPendingOnly", data.showPendingOnly)
+          }
         />
       </div>
     </div>
   );
-}
+};
 export default BranchInventoryRequestPendingOrderFilter;
 export const BranchInventoryRequestPendingOrderFilterInitialState = {
-  fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
+  fromDate: moment().subtract(90, "days").toDate(),
   toDate: moment().local().toDate(),
   productID: 0,
   productGroupID: 0,

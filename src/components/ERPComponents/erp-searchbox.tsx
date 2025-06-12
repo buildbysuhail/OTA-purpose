@@ -337,6 +337,18 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             onEnterKeyDown={onEnterKeyDown}
             disableEnterNavigation
             ref={ref}
+            onFocus={(e) => {
+              if (rest.onFocus) {
+                rest.onFocus(e);
+              }
+              // console.log("Focused on ERPProductSearch input");
+            }}
+            onBlur={(e) => {
+              if (rest.onBlur) {
+                rest.onBlur(e);
+              }
+              // console.log("Blurred from ERPProductSearch input");
+            }}
           />
           {searchType === "grid" && (
             <>

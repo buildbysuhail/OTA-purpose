@@ -340,6 +340,23 @@ export interface LoadData {
   formType?: string;
   vPrefix?: string;
   vNumber?: string;}
+export interface SummaryItems {
+  qty: number;
+  gross: number;
+  netValue: number;
+  discount: number;
+  vatAmount: number;
+  cst: number;
+  total: number;
+  profit: number;
+  grossFc: number;
+  totalAddExpense: number;
+  nosQty: number;
+  pCode: string;
+  barCode: string;
+  margin: number;
+  salesPrice: string;
+}
 export interface TransactionFormState {
   store: any;
   formCode: string; 
@@ -354,6 +371,7 @@ export interface TransactionFormState {
   ledgerData: any;
   groupName: any;
   dtLedgerCodes: any[]; 
+  summary: SummaryItems,
   showPartySelection: boolean;
   showSaveDialog: boolean;
   customerType: string; 
@@ -385,6 +403,7 @@ export interface TransactionFormState {
   tmpVoucherNo?: number
   dummyCode?: any
   remarks?: string;
+  prevTransactionDate?: string;
   lb?: boolean;
   autoCalculation?: boolean;
   priceCategory: string;

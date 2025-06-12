@@ -8,7 +8,8 @@ export interface popupDataProps {
   reload?: boolean;
   id?:number;
   name?:string;
-  customTemplate?:any
+  customTemplate?:string;
+
 }
 interface popupData {
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }

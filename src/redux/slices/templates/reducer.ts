@@ -7,14 +7,15 @@ import {
   PropertiesState,
   TotalState,
   accTableState,
-  adviceTableState
+  adviceTableState,
+  CustomElementType,
+  TemplateState,
 } from "../../../pages/InvoiceDesigner/Designer/interfaces";
 import { templateInitialState } from "../../reducers/TemplateReducer";
 import { getTemplates } from "./thunk";
 import { convertFileToBase64 } from "../../../utilities/file-utils";
 
 // Helper function to handle file-to-base64 conversion
-
 
 const templateSlice = createSlice({
   name: "template",
@@ -24,14 +25,15 @@ const templateSlice = createSlice({
     builder.addCase(getTemplates?.fulfilled, (state, action) => {
       if (action.payload) {
         const { templateGroup } = action.meta.arg; // Extracting templateGroup from the action
-        
+
         // Filter out any existing templates with the same templateGroup
         state.templates = state.templates.filter(
-          (template) => template.propertiesState?.template_group !== templateGroup
+          (template) =>
+            template.propertiesState?.template_group !== templateGroup
         );
-        
+
         // Push the new data into the state
-        
+
         state.templates.push(action.payload as any);
       }
     });
@@ -46,19 +48,34 @@ const templateSlice = createSlice({
     ) => {
       state.activeTemplate.id = action.payload;
     },
-    setTemplateThumbImage: (state, action: PayloadAction<string | undefined>) => {
+    setTemplateThumbImage: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.activeTemplate.thumbImage = action.payload ?? "";
     },
-    setTemplateBackgroundImage: (state, action: PayloadAction<string | undefined>) => {
+    setTemplateBackgroundImage: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.activeTemplate.background_image = action.payload ?? "";
     },
-    setTemplateBackgroundImageHeader: (state, action: PayloadAction<string | undefined>) => {
+    setTemplateBackgroundImageHeader: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.activeTemplate.background_image_header = action.payload ?? "";
     },
-    setTemplateBackgroundImageFooter: (state, action: PayloadAction<string | undefined>) => {
+    setTemplateBackgroundImageFooter: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.activeTemplate.background_image_footer = action.payload ?? "";
     },
-    setTemplateSignatureImage: (state, action: PayloadAction<string | undefined>) => {
+    setTemplateSignatureImage: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.activeTemplate.signature_image = action.payload ?? "";
     },
     setTemplatePropertiesState: (
@@ -76,10 +93,7 @@ const templateSlice = createSlice({
     ) => {
       state.activeTemplate.itemTableState = action.payload;
     },
-    setTemplateAccTableState: (
-      state,
-      action: PayloadAction<accTableState>
-    ) => {
+    setTemplateAccTableState: (state, action: PayloadAction<accTableState>) => {
       state.activeTemplate.accTableState = action.payload;
     },
     setTemplateAdviceTableState: (
@@ -94,11 +108,32 @@ const templateSlice = createSlice({
     setTemplateFooterState: (state, action: PayloadAction<FooterState>) => {
       state.activeTemplate.footerState = action.payload;
     },
+
+    setTemplateCustomElements: (
+      state,
+      action: PayloadAction<{ payload: CustomElementType; field: string}>
+    ) => {
+      const { payload, field } = action.payload;
+      const fieldPath = field.split(".");
+
+      // Navigate to the nested object using the split field path
+      let target: any = state.activeTemplate;
+      for (let i = 0; i < fieldPath.length - 1; i++) {
+        target = target[fieldPath[i]];
+      }
+
+      // Set the value at the final property
+      target[fieldPath[fieldPath.length - 1]] = payload;
+    },
+
   },
 });
 
 // External handlers for file-to-Base64 conversion and dispatching
-export const handleSetTemplateThumbImage = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateThumbImage = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -110,7 +145,10 @@ export const handleSetTemplateThumbImage = (file: File | undefined, dispatch: an
   }
 };
 
-export const handleSetTemplateBarcodeLabelBackgroundImage = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateBarcodeLabelBackgroundImage = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -118,11 +156,14 @@ export const handleSetTemplateBarcodeLabelBackgroundImage = (file: File | undefi
       })
       .catch(console.error);
   } else {
-     return undefined;
+    return undefined;
   }
 };
 
-export const handleSetTemplateBackgroundImage = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateBackgroundImage = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -134,7 +175,10 @@ export const handleSetTemplateBackgroundImage = (file: File | undefined, dispatc
   }
 };
 
-export const handleSetTemplateBackgroundImageHeader = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateBackgroundImageHeader = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -146,7 +190,10 @@ export const handleSetTemplateBackgroundImageHeader = (file: File | undefined, d
   }
 };
 
-export const handleSetTemplateBackgroundImageFooter = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateBackgroundImageFooter = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -158,7 +205,10 @@ export const handleSetTemplateBackgroundImageFooter = (file: File | undefined, d
   }
 };
 
-export const handleSetTemplateSignatureImage = (file: File | undefined, dispatch: any) => {
+export const handleSetTemplateSignatureImage = (
+  file: File | undefined,
+  dispatch: any
+) => {
   if (file) {
     convertFileToBase64(file)
       .then((base64String) => {
@@ -185,6 +235,7 @@ export const {
   setTemplateAdviceTableState,
   setTemplateTotalState,
   setTemplateFooterState,
+  setTemplateCustomElements,
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

@@ -18,6 +18,7 @@ import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImag
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
+import CustomDesignerButton from "./customDesignerButton";
 
 
 interface TempImageProps {
@@ -39,7 +40,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
     const templateGroup = searchParams?.get("template_group");
     const [maxHeight, setMaxHeight] = useState<number>(500);
     const { t } = useTranslation('system');
-
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
     useEffect(() => {
         let wh = window.innerHeight;
         setMaxHeight(wh);
@@ -62,15 +63,18 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
         <ERPScrollArea
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
-                <h6 className="bg-[#80808012] p-[2px]">{t("header")}</h6>
-                <div>
-                    <ERPButton
-                      title={t("add_custom")}
-                      onClick={() => { dispatch(toggleCustomDesignerPopup({ isOpen: true,customTemplate:headerState.headerTopCustom })); }}
-                      variant="primary"
+                <div className="flex justify-between items-center  border-b  bg-[#80808012] p-2"> 
+                  <h6 className="">{t("header")}</h6>
+                   <CustomDesignerButton 
+                    LabelBefore="Add Before Header"
+                    LabelAfter="Add After Header"
+                    customFieldMaster={"headerState"}
+                    dispatch={dispatch}
+                    t={t}
+                    className=""
                     />
-                    
                 </div>
+
                 <ERPCheckbox
                     id="showHeader"
                     label={t("show_header")}
@@ -83,6 +87,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                     checked={headerState?.showLogo}
                     onChange={(e) => handleChange("header", "showLogo", e.target.checked)}
                 />
+
                 {headerState?.showLogo && userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined &&
                     userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== null && (
                         <div className="flex flex-col gap-2">

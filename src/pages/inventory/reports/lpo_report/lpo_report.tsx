@@ -1,31 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../redux/gridId";
-import LPOReportFilter, { LPOReportFilterInitialState } from "./lpo_report-filter";
-
-interface LPOReportInterface {
-  productCode: string;
-  autoBarcode: number;
-  mannualBarcode: string;
-  productName: string;
-  stock: number;
-  reOrderQty: number;
-  stockMin: number;
-  stockMax: number;
-  salesPrice: number;
-  purchasePrice: number;
-  mrp: number;
-  supplier: string;
-}
+import LPOReportFilter, {
+  LPOReportFilterInitialState,
+} from "./lpo_report-filter";
 
 const LPOReport = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "productCode",
@@ -76,6 +65,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stock == null
+              ? 0
+              : getFormattedValue(cellElement.data.stock, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stock == null
+            ? 0
+            : getFormattedValue(cellElement.data.stock, false, 4);
+        }
+      },
     },
     {
       dataField: "reOrderQty",
@@ -86,6 +98,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.reOrderQty == null
+              ? 0
+              : getFormattedValue(cellElement.data.reOrderQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.reOrderQty == null
+            ? 0
+            : getFormattedValue(cellElement.data.reOrderQty, false, 4);
+        }
+      },
     },
     {
       dataField: "stockMin",
@@ -96,6 +131,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stockMin == null
+              ? 0
+              : getFormattedValue(cellElement.data.stockMin, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stockMin == null
+            ? 0
+            : getFormattedValue(cellElement.data.stockMin, false, 4);
+        }
+      },
     },
     {
       dataField: "stockMax",
@@ -106,6 +164,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stockMax == null
+              ? 0
+              : getFormattedValue(cellElement.data.stockMax, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stockMax == null
+            ? 0
+            : getFormattedValue(cellElement.data.stockMax, false, 4);
+        }
+      },
     },
     {
       dataField: "salesPrice",
@@ -116,6 +197,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.salesPrice == null
+              ? 0
+              : getFormattedValue(cellElement.data.salesPrice, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.salesPrice == null
+            ? 0
+            : getFormattedValue(cellElement.data.salesPrice, false, 4);
+        }
+      },
     },
     {
       dataField: "purchasePrice",
@@ -126,6 +230,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.purchasePrice == null
+              ? 0
+              : getFormattedValue(cellElement.data.purchasePrice, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.purchasePrice == null
+            ? 0
+            : getFormattedValue(cellElement.data.purchasePrice, false, 4);
+        }
+      },
     },
     {
       dataField: "mrp",
@@ -136,6 +263,29 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.mrp == null
+              ? 0
+              : getFormattedValue(cellElement.data.mrp, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.mrp == null
+            ? 0
+            : getFormattedValue(cellElement.data.mrp, false, 4);
+        }
+      },
     },
     {
       dataField: "supplier",
@@ -146,24 +296,8 @@ const LPOReport = () => {
       allowSorting: true,
       visible: true,
       width: 150,
-    }
+    },
   ];
-
-  const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
-  ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -171,10 +305,20 @@ const LPOReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
+                filterText="{supplierID > 0 &&  Supplier : [supplier]}
+                {supplierID <= 0 &&  All Suppliers}
+                {productID > 0 &&   Product : [product]}
+                {productID <= 0 &&  All Products}
+                {productGroupID > 0 &&   Group : [productGroup]}
+                {productGroupID <= 0 &&   All Groups}
+                {productCategoryID > 0 &&   Category : [productCategory]}
+                {productCategoryID <= 0 &&    All Category}"
                 gridHeader={t("lpo_report")}
                 dataUrl={Urls.lpo_report}
                 hideGridAddButton={true}

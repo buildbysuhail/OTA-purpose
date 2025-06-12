@@ -283,6 +283,9 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
+  id?: string;
+  status?: string;
+  [key: string]: any;
 
 }
 export interface TransactionDetails2 {

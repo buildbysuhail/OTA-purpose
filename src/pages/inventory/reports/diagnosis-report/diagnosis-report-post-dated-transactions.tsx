@@ -5,14 +5,15 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import DiagnosisReportFilter, { DiagnosisReportFilterInitialState } from "./diagnosis-report-filter";
+import { FC } from "react";
 
-interface DiagnosisReportPostDatedTransaction {
-  voucher: string;
-  voucherNumber: string;
-  transactionDate: string;
+
+interface DiagnosisReportPostDatedTransactionProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
 }
-
-const DiagnosisReportPostDatedTransactions = () => {
+  const DiagnosisReportPostDatedTransactions: FC<DiagnosisReportPostDatedTransactionProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
     {

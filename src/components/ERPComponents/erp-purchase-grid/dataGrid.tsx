@@ -15,6 +15,16 @@ import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from
 
 type DataItem = Record<string, any>;
 
+interface SummaryConfig {
+  column: keyof TransactionDetail;
+  summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
+  valueFormat?: string;
+  displayFormat?: string;
+  showInColumn?: string;
+  alignment?: "center" | "left" | "right";
+  customizeText?: (itemInfo: { value: any }) => string;
+}
+
 interface DataGridProps<T extends DataItem> {
   columns?: DevGridColumn[];
   keyField: string;
@@ -25,15 +35,16 @@ interface DataGridProps<T extends DataItem> {
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
   allowColumnReordering?: boolean;
+  summaryConfig?: SummaryConfig[];
 }
 
 interface EditableCellProps {
   rowIndex: number;
   column: DevGridColumn;
   value: string | number;
+  onFocus: () => void;
+  onBlur: () => void;
 }
-
-
 
 interface DragState {
   isDragging: boolean;
@@ -44,15 +55,31 @@ interface DragState {
   startY: number;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) => {
+interface RowData {
+  details: TransactionDetail[];
+  columns: DevGridColumn[];
+  tableWidth: number;
+}
+
+const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value, onFocus, onBlur }) => {
   const dispatch = useAppDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocus = () => {
+    onFocus();
+  };
+
+  const handleBlur = () => {
+    onBlur();
+  };
+
   return (
     <Input
+      ref={inputRef}
       id={`${column.dataField}_${rowIndex}`}
       noLabel
       type={column.dataType === "number" ? "number" : "text"}
-      className="w-full h-[22px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
-      // contextClassName="h-[22px] text-sm px-1 py-0 border-none bg-transparent"
+      className="w-full !h-[20px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
       value={value}
       noBorder
       readOnly={column.readOnly}
@@ -65,20 +92,25 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value }) 
           })
         )
       }
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     />
   );
 };
 
-interface RowData {
-  details: TransactionDetail[];
-  columns: DevGridColumn[];
-  tableWidth: number;
-}
-
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
+  const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
   const item = data.details[index];
   const columns = data.columns;
   const tableWidth = data.tableWidth;
+
+  const handleFocus = (columnKey: string) => {
+    setFocusedColumn(columnKey);
+  };
+
+  const handleBlur = () => {
+    setFocusedColumn(null);
+  };
 
   return (
     <tr
@@ -92,59 +124,105 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
       key={`inv_transaction_grid_${index}`}
     >
       {columns
-        .filter((col) => col.visible)
+        .filter((col) => col.visible && col.dataField != null)
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const cellValue = item[fieldKey];
+          const isFocused = focusedColumn === column.dataField;
+
           return (
             <td
               key={column.dataField}
-              className={`px-1 py-0 border-r border-gray-300 last:border-r-0 ${column.cssClass || ""}`}
+              className={`px-0 py-0 last:border-r-0 ${column.cssClass || ""} ${
+                isFocused ? "!border-[#4447ef]" : "!border-gray-300"
+              }`}
               style={{
                 width: column.width ? `${column.width}px` : "150px",
                 minWidth: column.width ? `${column.width}px` : "150px",
                 textAlign: column.alignment || (column.dataType === "number" ? "right" : "left"),
                 boxSizing: "border-box",
-                height: "24px", // Uniform row height
+                height: "24px",
+                border: isFocused ? "2px solid #EF4444" : "1px solid #D1D5DB",
               }}
               role="gridcell"
             >
               {column.dataField === "product" && !column.readOnly ? (
                 <ERPProductSearch
-                  noLabel
+                  noLabel={true}
                   showCheckBox={false}
-                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent" 
+                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}
                   productDataUrl={Urls.load_product_details}
                   tabIndex={-1}
                   className="h-[22px] text-sm"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
                 />
-              ) : column.dataField === "slNo" || column.readOnly ? (
+              ) : column.dataField === "status" ? (
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    cellValue === "Active" ? "bg-[#dcfce7] text-[#166534]" : ""
+                  } ${cellValue === "Inactive" ? "bg-[#fee2e2] text-[#991b1b]" : ""} ${
+                    cellValue === "Pending" ? "bg-[#fef9c3] text-[#854d0e]" : ""
+                  }`}
+                >
+                  {cellValue}
+                </span>
+              ) : column.readOnly ? (
                 <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
-              ) : column.dataType === "string" ? (
-                column.dataField === "status" ? (
-                  <span
-                    className={`
-                      inline-flex px-2 py-1 text-xs font-medium rounded-full
-                      ${cellValue === "Active" ? "bg-green-100 text-green-800" : ""}
-                      ${cellValue === "Inactive" ? "bg-red-100 text-red-800" : ""}
-                      ${cellValue === "Pending" ? "bg-yellow-100 text-yellow-800" : ""}
-                    `}
-                  >
-                    {cellValue}
-                  </span>
-                ) : (
-                  <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
-                )
-              ) : column.allowEditing == true ? (
+              ) : (
                 <EditableCell
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
                 />
-              ) : (
-                <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
               )}
+            </td>
+          );
+        })}
+    </tr>
+  );
+};
+
+const SummaryRow: React.FC<{
+  columns: DevGridColumn[];
+  tableWidth: number;
+  summaryValues: Record<string, any>;
+  summaryConfig: SummaryConfig[];
+}> = ({ columns, tableWidth, summaryValues, summaryConfig }) => {
+  return (
+    <tr
+      className="flex bg-gray-100 border-t border-gray-300"
+      style={{ width: `${tableWidth}px`, boxSizing: "border-box" }}
+    >
+      {columns
+        .filter((col) => col.visible && col.dataField != null)
+        .map((column) => {
+          const summary = summaryConfig.find(
+            (s) => s.showInColumn === column.dataField || s.column === column.dataField
+          );
+          const value = summary ? summaryValues[summary.column] : null;
+          const formattedValue = summary?.customizeText
+            ? summary.customizeText({ value })
+            : summary?.valueFormat
+            ? new Intl.NumberFormat("en-US", { style: "decimal", minimumFractionDigits: 2 }).format(value)
+            : value;
+
+          return (
+            <td
+              key={`summary_${column.dataField}`}
+              className="px-1 py-1 border-r border-gray-300 last:border-r-0 text-sm font-medium text-gray-700"
+              style={{
+                width: column.width ? `${column.width}px` : "150px",
+                minWidth: column.width ? `${column.width}px` : "150px",
+                textAlign: summary?.alignment || column.alignment || (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "border-box",
+                height: "24px",
+              }}
+            >
+              {summary ? formattedValue : ""}
             </td>
           );
         })}
@@ -158,16 +236,14 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     keyField,
     gridId,
     className = "",
-    rowHeight = 24, // Adjusted to match image
+    rowHeight = 24,
     height = 800,
-    onAddData,
-    isLoading,
     allowColumnReordering = true,
+    summaryConfig = [],
   }: DataGridProps<T>,
-  ref: React.Ref<any>
+  ref: React.ForwardedRef<HTMLDivElement>
 ) {
   const listRef = useRef<List>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const dragPreviewRef = useRef<HTMLDivElement>(null);
@@ -179,10 +255,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useAppDispatch();
-  const [preferences, setPreferences] = useState<GridPreference>();
-  const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filterRange, setFilterRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
     draggedColumn: null,
@@ -192,14 +265,70 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     startY: 0,
   });
   const [dragPreviewPosition, setDragPreviewPosition] = useState({ x: 0, y: 0 });
-  const isDraggingRef = useRef(false);
 
   const calculateTotalWidth = () => {
-    const visibleColumns = formState.gridColumns?.filter((c) => c.visible) ?? [];
+    const visibleColumns = formState.gridColumns?.filter((c) => c.visible && c.dataField != null) ?? [];
     return visibleColumns.reduce((sum, col) => sum + (col.width || 150), 0);
   };
 
   const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
+
+  const calculateSummaryValues = useCallback(() => {
+    const details = formState.transaction?.details || [];
+    const summaryValues: Record<string, any> = {};
+
+    summaryConfig.forEach((config) => {
+      const { column, summaryType } = config;
+      let value: any;
+
+      switch (summaryType) {
+        case "sum":
+          value = details.reduce((sum, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? sum : sum + num;
+          }, 0);
+          break;
+        case "min":
+          value = details.reduce((min, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? min : Math.min(min, num);
+          }, Infinity);
+          break;
+        case "max":
+          value = details.reduce((max, item) => {
+            const val = item[column];
+            const num = typeof val === "number" ? val : parseFloat(String(val));
+            return isNaN(num) ? max : Math.max(max, num);
+          }, -Infinity);
+          break;
+        case "avg":
+          const validNumbers = details
+            .map((item) => {
+              const val = item[column];
+              return typeof val === "number" ? val : parseFloat(String(val));
+            })
+            .filter((num) => !isNaN(num));
+          value = validNumbers.length ? validNumbers.reduce((sum, num) => sum + num, 0) / validNumbers.length : 0;
+          break;
+        case "count":
+          value = details.length;
+          break;
+        case "custom":
+          value = config.customizeText ? config.customizeText({ value: details }) : 0;
+          break;
+        default:
+          value = 0;
+      }
+
+      summaryValues[column as string] = value;
+    });
+
+    return summaryValues;
+  }, [formState.transaction?.details, summaryConfig]);
+
+  const summaryValues = useMemo(() => calculateSummaryValues(), [calculateSummaryValues]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
@@ -217,212 +346,56 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      setPreferences(pref);
       const updated = applyGridColumnPreferences(columns, pref);
       dispatch(formStateHandleFieldChange({ fields: { gridColumns: updated } }));
     },
     [columns, dispatch]
   );
 
-  const resetDragState = useCallback(() => {
-    setDragState({
-      isDragging: false,
-      draggedColumn: null,
-      draggedIndex: null,
-      dropPosition: null,
-      startX: 0,
-      startY: 0,
-    });
-    isDraggingRef.current = false;
-  }, []);
-
-  const calculateDropPosition = useCallback((clientX: number): number => {
-    if (!gridRef.current) return -1;
-
-    const headerRow = gridRef.current.querySelector("thead tr");
-    if (!headerRow) return -1;
-
-    const headers = Array.from(headerRow.querySelectorAll("th"));
-    for (let i = 0; i < headers.length; i++) {
-      const headerRect = headers[i].getBoundingClientRect();
-      const centerX = headerRect.left + headerRect.width / 2;
-      if (clientX < centerX) {
-        return i;
-      }
-    }
-    return headers.length;
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
-
-      setDragPreviewPosition({
-        x: e.clientX + 10,
-        y: e.clientY - 10,
-      });
-
-      const newDropPosition = calculateDropPosition(e.clientX);
-      setDragState((prev) => ({
-        ...prev,
-        dropPosition: newDropPosition,
-      }));
-    },
-    [calculateDropPosition]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDraggingRef.current) return;
-
-    setDragState((currentDragState) => {
-      if (
-        currentDragState.draggedIndex !== null &&
-        currentDragState.dropPosition !== null &&
-        currentDragState.draggedIndex !== currentDragState.dropPosition
-      ) {
-        const columnsCopy = [...(formState.gridColumns || [])];
-        const draggedIndex = columnsCopy.findIndex((col) => col.dataField === currentDragState.draggedColumn);
-        let insertIndex = currentDragState.dropPosition!;
-        if (insertIndex > currentDragState.draggedIndex!) {
-          insertIndex--;
-        }
-        const [draggedCol] = columnsCopy.splice(draggedIndex, 1);
-        columnsCopy.splice(insertIndex, 0, draggedCol);
-
-        dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
-        preferenceChooserRef.current?.handleDropping(true);
-      }
-      return {
-        isDragging: false,
-        draggedColumn: null,
-        draggedIndex: null,
-        dropPosition: null,
-        startX: 0,
-        startY: 0,
-      };
-    });
-
-    isDraggingRef.current = false;
-  }, [dispatch, formState.gridColumns]);
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent, dataField: string) => {
-      if (!allowColumnReordering || !dataField) return;
-      e.preventDefault();
-      e.stopPropagation();
-
-      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
-      if (columnIndex === -1) return;
-
-      const rect = (e.target as HTMLElement).closest("th")?.getBoundingClientRect();
-      if (!rect) return;
-
-      isDraggingRef.current = true;
-
-      setDragState({
-        isDragging: true,
-        draggedColumn: dataField,
-        draggedIndex: columnIndex,
-        dropPosition: null,
-        startX: e.clientX,
-        startY: e.clientY,
-      });
-
-      setDragPreviewPosition({
-        x: e.clientX + 10,
-        y: e.clientY - 10,
-      });
-    },
-    [formState.gridColumns, allowColumnReordering]
-  );
-
-  // useEffect(() => {
-  //   if (dragState.isDragging) {
-  //     document.addEventListener("mousemove", handleMouseMove);
-  //     document.addEventListener("mouseup", handleMouseUp);
-  //     document.body.style.cursor = "grabbing";
-  //     document.body.style.userSelect = "none";
-
-  //     return () => {
-  //       document.removeEventListener("mousemove", handleMouseMove);
-  //       document.removeEventListener("mouseup", handleMouseUp);
-  //       document.body.style.cursor = "";
-  //       document.body.style.userSelect = "";
-  //     };
-  //   }
-  // }, [dragState.isDragging, handleMouseMove, handleMouseUp]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     document.body.style.cursor = "";
-  //     document.body.style.userSelect = "";
-  //   };
+  // const resetDragState = useCallback(() => {
+  //   setDragState({
+  //     isDragging: false,
+  //     draggedColumn: null,
+  //     draggedIndex: null,
+  //     dropPosition: null,
+  //     startX: 0,
+  //     startY: 0,
+  //   });
+  //   isDraggingRef.current = false;
   // }, []);
 
-  const handleColumnClick = (dataField: string) => {
-    setSelectedColumn(dataField);
-  };
+  // const calculateDropPosition = useCallback((clientX: number): number => {
+  //   if (!gridRef.current) return -1;
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+  //   const headerRow = gridRef.current.querySelector("thead tr");
+  //   if (!headerRow) return -1;
 
-  const handleFilter = (min: number | null, max: number | null) => {
-    setFilterRange({ min, max });
-  };
+  //   const headers = Array.from(headerRow.querySelectorAll("th"));
+  //   for (let i = 0; i < headers.length; i++) {
+  //     const headerRect = headers[i].getBoundingClientRect();
+  //     const centerX = headerRect.left + headerRect.width / 2;
+  //     if (clientX < centerX) {
+  //       return i;
+  //     }
+  //   }
+  //   return headers.length;
+  // }, []);
 
-  const handleDragStart = (e: React.DragEvent<HTMLTableCellElement>, dataField: string) => {
-    if (!allowColumnReordering || !dataField) return;
-    setDragState((prev) => ({ ...prev, draggedColumn: dataField }));
-    const target = e.currentTarget;
-    const rect = target.getBoundingClientRect();
-    setDragPreviewPosition({ x: e.clientX + 10, y: e.clientY - 10 });
-    e.dataTransfer.setData("text/plain", dataField);
-    e.dataTransfer.effectAllowed = "move";
-  };
 
-  const handleDragOver = (e: React.DragEvent<HTMLTableCellElement>) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
 
-  const handleDragEnter = (dataField: string) => {
-    if (allowColumnReordering && dragState.draggedColumn && dataField !== dragState.draggedColumn) {
-      const columnIndex = formState.gridColumns?.findIndex((col) => col.dataField === dataField) ?? -1;
-      setDragState((prev) => ({ ...prev, dropPosition: columnIndex }));
-    }
-  };
 
-  const handleDragLeave = () => {
-    setDragState((prev) => ({ ...prev, dropPosition: null }));
-  };
 
-  const handleDrop = (e: React.DragEvent<HTMLTableCellElement>, targetDataField: string) => {
-    e.preventDefault();
-    if (!allowColumnReordering || !dragState.draggedColumn || dragState.draggedColumn === targetDataField) return;
 
-    const columnsCopy = [...(formState.gridColumns || [])];
-    const draggedIndex = columnsCopy.findIndex((col) => col.dataField === dragState.draggedColumn);
-    const targetIndex = columnsCopy.findIndex((col) => col.dataField === targetDataField);
 
-    if (draggedIndex === -1 || targetIndex === -1) return;
 
-    const [draggedCol] = columnsCopy.splice(draggedIndex, 1);
-    columnsCopy.splice(targetIndex, 0, draggedCol);
 
-    dispatch(formStateHandleFieldChange({ fields: { gridColumns: columnsCopy } }));
 
-    resetDragState();
-    preferenceChooserRef.current?.handleDropping(true);
-  };
 
-  const handleDragEnd = () => {
-    resetDragState();
-    preferenceChooserRef.current?.handleDropping(true);
-  };
+
 
   return (
     <div
+      ref={ref}
       style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box" }}
       className="bg-white border border-gray-300 rounded-none shadow-none"
     >
@@ -477,20 +450,20 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                     <th
                       id={`${col.dataField}_${col.dataField}`}
                       key={col.dataField}
-                    className="relative !bg-[#f0f09285] px-1 py-1 text-left text-sm font-medium text-gray-700 border-r border-gray-300 last:border-r-0"
-                    style={{
-                      width: col.width ? `${col.width}px` : "150px",
-                      minWidth: col.width ? `${col.width}px` : "150px",
-                      textAlign:"center",
-                      boxSizing: "border-box",
-                    }}
-                    draggable={!col.isLocked}
-                    onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}
-                    onDragEnter={(e) => preferenceChooserRef.current?.handleDragEnd(e)}
-                    onDragEnd={() => preferenceChooserRef.current?.handleDropping(true)}
-                  >
-                    {col.caption}
-                  </th>
+                      className="relative !bg-[#f0f09285] px-1 py-1 text-left text-sm font-medium text-gray-700 border-r border-gray-300 last:border-r-0"
+                      style={{
+                        width: col.width ? `${col.width}px` : "150px",
+                        minWidth: col.width ? `${col.width}px` : "150px",
+                        textAlign: "center",
+                        boxSizing: "border-box",
+                      }}
+                      draggable={!col.isLocked}
+                      onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}
+                      onDragEnter={(e) => preferenceChooserRef.current?.handleDragEnd(e)}
+                      onDragEnd={() => preferenceChooserRef.current?.handleDropping(true)}
+                    >
+                      {col.caption}
+                    </th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -516,6 +489,16 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 {Row}
               </List>
             </tbody>
+            {summaryConfig.length > 0 && (
+              <tfoot>
+                <SummaryRow
+                  columns={formState.gridColumns || []}
+                  tableWidth={tableWidth}
+                  summaryValues={summaryValues}
+                  summaryConfig={summaryConfig}
+                />
+              </tfoot>
+            )}
           </table>
         </div>
       </div>
@@ -539,13 +522,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           </div>
         </div>
       )}
-
-      {/* <div className="px-1 py-1 bg-gray-100 border-t border-gray-300 text-sm text-gray-600">
-        <div className="flex justify-between items-center">
-          <span>Showing {formState.transaction?.details.length} records</span>
-          
-        </div>
-      </div> */}
     </div>
   );
 });

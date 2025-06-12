@@ -393,7 +393,8 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowEditing: true,
           allowFiltering: true,
-          width: 150,
+          width: 250,
+          format:"dd-MM-yyyy"
         },
         {
           dataField: "ledgerName",

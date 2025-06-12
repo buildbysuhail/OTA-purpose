@@ -637,34 +637,6 @@ export const ReportsMenuItems :NavigationParentItem[]= [
         routePath: ""
       },
       {
-        id: 165, element: <DiagnosisReport />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report`, type: 'link', active: false, selected: false, title: 'diagnosis_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 166, element: <DiagnosisReportZeroRateProductlist />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_zero_rate_productlist`, type: 'link', active: false, selected: false, title: 'diagnosis_report_zero_rate_productlist', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 167, element: <DiagnosisReportPostDatedTransactions />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_post_dated_transactions`, type: 'link', active: false, selected: false, title: 'diagnosis_report_post_dated_transactions', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 168, element: <DiagnosisReportSalesPriceLessThanLPCost />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_lp_cost`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_lp_cost', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 169, element: <DiagnosisReportSalesPriceLessthanPurchasePrice />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_purchase_price`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_purchase_price', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 170, element: <DiagnosisReportSalesPriceLessthanMSP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_msp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_msp', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 171, element: <DiagnosisReportSalesPriceGreaterthanMRP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_greater_than_mrp', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
         id: 172, element: <CustomerVisitTotalVisit />, formCode: "RPTTOTVIS", action: UserAction.Show, path: `/reports/_/inventory/customer_visit_total_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_total_visit', icon: PiPackageLight,
         routePath: ""
       },
@@ -713,6 +685,49 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 213,element:<PartyWiseReport dataUrl={urls.sales_transfer_partyWise_sales} gridHeader="sales_transfer_partyWise_sales" gridId="grd_sales_transfer_partyWise_sales" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_sales`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_transfer_partyWise_sales', icon: FaSackDollar },
       { id: 214,element:<SalesTransferMonthWiseSummaryReport dataUrl={urls.sales_transfer_monthWise_summary} gridHeader="sales_transfer_monthWise_summary" gridId="grd_sales_transfer_monthWise_summary" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_monthWise_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_transfer_monthWise_summary', icon: FaSackDollar },
       { id: 215,element:<PartyMonthwiseSummaryReport dataUrl={urls.sales_transfer_partyWise_summary} gridHeader="sales_transfer_partyWise_summary" gridId="grd_sales_transfer_partyWise_summary" />, formCode:"RPTSITRNRS", action: UserAction.Show,  path: `/reports/_/inventory/sales_transfer_partyWise_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_transfer_partyWise_summary', icon: FaSackDollar },
+    ]
+  },
+  {
+    icon: (<CircleUser className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'diagnosis_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      {
+        id: 165, element: <DiagnosisReport dataUrl={urls.diagnosis_report} gridHeader="diagnosis_report_of_zero_rate_product_list" gridId="grd_diagnosis_report_of_zero_rate_product_list" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_zero_rate_product_list`, type: 'link', active: false, selected: false, title: 'zero_rate_product_list', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 167, element: <DiagnosisReportPostDatedTransactions />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_post_dated_transactions`, type: 'link', active: false, selected: false, title: 'post_dated_transactions', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 166, element: <DiagnosisReportZeroRateProductlist />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_zero_rate_productlist`, type: 'link', active: false, selected: false, title: 'diagnosis_report_zero_rate_productlist', icon: PiPackageLight,
+        routePath: ""
+      },
+    
+      {
+        id: 168, element: <DiagnosisReportSalesPriceLessThanLPCost />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_lp_cost`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_lp_cost', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 169, element: <DiagnosisReportSalesPriceLessthanPurchasePrice />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_purchase_price`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_purchase_price', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 170, element: <DiagnosisReportSalesPriceLessthanMSP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_msp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_msp', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 171, element: <DiagnosisReportSalesPriceGreaterthanMRP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_greater_than_mrp', icon: PiPackageLight,
+        routePath: ""
+      },
     ]
   },
   {

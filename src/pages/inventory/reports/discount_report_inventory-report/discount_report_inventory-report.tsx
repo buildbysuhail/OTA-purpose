@@ -1,33 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
-import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../redux/gridId";
-import DiscountReportInventoryFilter, { DiscountReportInventoryFilterInitialState } from "./discount_report_inventory-report-filter";
-
-interface DiscountReportInventoryInterface {
-  slNo: number;
-  date: string;
-  party: string;
-  address1: string;
-  address2: string;
-  mobilePhone: string;
-  voucherPrefix: string;
-  voucherNumber: number;
-  voucherType: string;
-  voucherForm: string;
-  discountAmt: number;
-  billDiscount: number;
-  grandTotal: number;
-  totalDisc: number;
-}
+import DiscountReportInventoryFilter, {
+  DiscountReportInventoryFilterInitialState,
+} from "./discount_report_inventory-report-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 const DiscountReportInventory = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -42,12 +29,13 @@ const DiscountReportInventory = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 75,
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "party",
@@ -138,6 +126,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.discountAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.discountAmt, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.discountAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.discountAmt, false, 2);
+        }
+      },
     },
     {
       dataField: "billDiscount",
@@ -148,6 +159,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billDiscount == null
+              ? 0
+              : getFormattedValue(cellElement.data.billDiscount, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billDiscount == null
+            ? 0
+            : getFormattedValue(cellElement.data.billDiscount, false, 2);
+        }
+      },
     },
     {
       dataField: "grandTotal",
@@ -158,6 +192,29 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.grandTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.grandTotal, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.grandTotal == null
+            ? 0
+            : getFormattedValue(cellElement.data.grandTotal, false, 4);
+        }
+      },
     },
     {
       dataField: "totalDisc",
@@ -168,22 +225,115 @@ const DiscountReportInventory = () => {
       allowSorting: true,
       visible: true,
       width: 100,
-    }
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalDisc == null
+              ? 0
+              : getFormattedValue(cellElement.data.totalDisc, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalDisc == null
+            ? 0
+            : getFormattedValue(cellElement.data.totalDisc, false, 2);
+        }
+      },
+    },
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-    // Add summary items if needed
+    {
+      column: "address1",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
+    {
+      column: "discountAmt",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
+
+    {
+      column: "billDiscount",
+      summaryType: "sum",
+      valueFormat: "fixedPoint",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
+
+    {
+      column: "grandTotal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
+
+    {
+      column: "totalDisc",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
   ];
 
   return (
@@ -194,10 +344,13 @@ const DiscountReportInventory = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
-                gridHeader={t("discount_report_inventory")}
+                filterText="{voucherType =='SI' && Sales Discount Report} {voucherType =='PI'&& Purchase Discount Report} {voucherType =='SR'&& Sales Discount Report} {voucherType =='PR'&& Purchase Discount Report} {voucherType =='SO'&& Sales Order Discount Report} {voucherType =='SE' && Sales Estimate Discount Report} {voucherType =='SQ' && Sales Quotation Discount Report} {voucherType =='PE'&& Purchase Estimate Discount Report}{voucherType =='PO'&& Purchase Order Discount Report}{voucherType =='OS'&& Opening stock Discount Report}{salesRouteID > 0 && Route Name :[salesRoute]} Between : {fromDate} - {toDate}"
                 dataUrl={Urls.discount_report_inventory}
                 hideGridAddButton={true}
                 enablefilter={true}

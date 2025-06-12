@@ -4,8 +4,12 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import moment from "moment";
 import Urls from "../../../../redux/urls";
 
-const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport');
+const ItemUsedForServiceFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
 
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -15,7 +19,9 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
             label={t("from_date")}
             {...getFieldProps("fromDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("fromDate", data.fromDate)
+            }
           />
         </div>
         <div className="col-span-1">
@@ -23,7 +29,9 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
             label={t("to_date")}
             {...getFieldProps("toDate")}
             className="w-full"
-            onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+            onChangeData={(data: any) =>
+              handleFieldChange("toDate", data.toDate)
+            }
           />
         </div>
       </div>
@@ -85,9 +93,11 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
             <input
               type="radio"
               name="isWarrantyService"
-              value="Yes"
-              checked={formState.isWarrantyService === "Yes"}
-              onChange={(e) => handleFieldChange("isWarrantyService", e.target.value)}
+              value="Y"
+              checked={getFieldProps("isWarrantyService").value == "Y"}
+              onChange={(e) =>
+                handleFieldChange("isWarrantyService", e.target.value)
+              }
               className="form-radio"
             />
             <span className="ml-2">{t("yes")}</span>
@@ -96,9 +106,11 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
             <input
               type="radio"
               name="isWarrantyService"
-              value="No"
-              checked={formState.isWarrantyService === "No"}
-              onChange={(e) => handleFieldChange("isWarrantyService", e.target.value)}
+              value="N"
+              checked={getFieldProps("isWarrantyService").value == "N"}
+              onChange={(e) =>
+                handleFieldChange("isWarrantyService", e.target.value)
+              }
               className="form-radio"
             />
             <span className="ml-2">{t("no")}</span>
@@ -107,9 +119,11 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
             <input
               type="radio"
               name="isWarrantyService"
-              value="Both"
-              checked={formState.isWarrantyService === "Both"}
-              onChange={(e) => handleFieldChange("isWarrantyService", e.target.value)}
+              value="B"
+              checked={getFieldProps("isWarrantyService").value == "B"}
+              onChange={(e) =>
+                handleFieldChange("isWarrantyService", e.target.value)
+              }
               className="form-radio"
             />
             <span className="ml-2">{t("both")}</span>
@@ -123,10 +137,10 @@ const ItemUsedForServiceFilter = ({ getFieldProps, handleFieldChange, formState 
 export default ItemUsedForServiceFilter;
 
 export const ItemUsedForServiceFilterInitialState = {
-  fromDate: moment().subtract(3, 'months').startOf("day").toDate(),
+  fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  productID: 0,
-  productGroupID: 0,
-  serviceID: 0,
-  isWarrantyService: "Both",
+  productID: -1,
+  productGroupID: -1,
+  serviceID: -1,
+  isWarrantyService: "B",
 };

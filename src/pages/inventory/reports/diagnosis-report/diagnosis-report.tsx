@@ -7,24 +7,28 @@ import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import DiagnosisReportFilter, { DiagnosisReportFilterInitialState } from "./diagnosis-report-filter";
 import Urls from "../../../../redux/urls";
-
-const DiagnosisReport = () => {
+interface DiagnosisProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+  const DiagnosisReport: FC<DiagnosisProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(DiagnosisReportFilterInitialState);
+  // const [filter, setFilter] = useState<any>(DiagnosisReportFilterInitialState);
   const { getFormattedValue } = useNumberFormat();
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-      {
-        dataField: "slNo",
-        caption: t("sl_no"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 50,
-        showInPdf: true,
-      },
+      // {
+      //   dataField: "slNo",
+      //   caption: t("sl_no"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 50,
+      //   showInPdf: true,
+      // },
       {
         dataField: "code",
         caption: t("code"),
@@ -94,7 +98,7 @@ const DiagnosisReport = () => {
             const value =
               cellElement.data?.salesPrice == null
                 ? 0
-                : getFormattedValue(cellElement.data.salesPrice);
+                : getFormattedValue(cellElement.data.salesPrice,false,4);
             return {
               ...exportCell,
               text: value,
@@ -104,7 +108,7 @@ const DiagnosisReport = () => {
           } else {
             return cellElement.data?.salesPrice == null
               ? 0
-              : getFormattedValue(cellElement.data.salesPrice);
+              : getFormattedValue(cellElement.data.salesPrice,false,4);
           }
         },
       },
@@ -127,7 +131,7 @@ const DiagnosisReport = () => {
             const value =
               cellElement.data?.purchasePrice == null
                 ? 0
-                : getFormattedValue(cellElement.data.purchasePrice);
+                : getFormattedValue(cellElement.data.purchasePrice,false,4);
             return {
               ...exportCell,
               text: value,
@@ -137,7 +141,7 @@ const DiagnosisReport = () => {
           } else {
             return cellElement.data?.purchasePrice == null
               ? 0
-              : getFormattedValue(cellElement.data.purchasePrice);
+              : getFormattedValue(cellElement.data.purchasePrice,false,4);
           }
         },
       },
@@ -160,7 +164,7 @@ const DiagnosisReport = () => {
             const value =
               cellElement.data?.mrp == null
                 ? 0
-                : getFormattedValue(cellElement.data.mrp);
+                : getFormattedValue(cellElement.data.mrp,false,4);
             return {
               ...exportCell,
               text: value,
@@ -170,7 +174,7 @@ const DiagnosisReport = () => {
           } else {
             return cellElement.data?.mrp == null
               ? 0
-              : getFormattedValue(cellElement.data.mrp);
+              : getFormattedValue(cellElement.data.mrp,false,4);
           }
         },
       },
@@ -193,7 +197,7 @@ const DiagnosisReport = () => {
             const value =
               cellElement.data?.stock == null
                 ? 0
-                : getFormattedValue(cellElement.data.stock);
+                : getFormattedValue(cellElement.data.stock,false,4);
             return {
               ...exportCell,
               text: value,
@@ -203,58 +207,58 @@ const DiagnosisReport = () => {
           } else {
             return cellElement.data?.stock == null
               ? 0
-              : getFormattedValue(cellElement.data.stock);
+              : getFormattedValue(cellElement.data.stock,false,4);
           }
         },
       },
-      {
-        dataField: "cost",
-        caption: t("cost"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 100,
-        showInPdf: true,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.cost == null
-                ? 0
-                : getFormattedValue(cellElement.data.cost);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.cost == null
-              ? 0
-              : getFormattedValue(cellElement.data.cost);
-          }
-        },
-      },
+      // {
+      //   dataField: "cost",
+      //   caption: t("cost"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 100,
+      //   showInPdf: true,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.cost == null
+      //           ? 0
+      //           : getFormattedValue(cellElement.data.cost);
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.cost == null
+      //         ? 0
+      //         : getFormattedValue(cellElement.data.cost);
+      //     }
+      //   },
+      // },
     ];
 
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
-      if (
-        column.dataField == "slNo" ||
-        column.dataField == "code" ||
-        column.dataField == "autoBarcode" ||
-        column.dataField == "manualBarcode"
-      ) {
-        return filter.groupByProduct == false;
-      }
+      // if (
+      //   column.dataField == "slNo" ||
+      //   column.dataField == "code" ||
+      //   column.dataField == "autoBarcode" ||
+      //   column.dataField == "manualBarcode"
+      // ) {
+      //   return filter.groupByProduct == false;
+      // }
       return true;
     });
-  }, [t, filter]);
+  }, [t]);
 
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -304,12 +308,10 @@ const DiagnosisReport = () => {
         customizeText: customizeSummaryRow,
       },
     ];
-
     return _summaryItems.filter((column) => {
       return true;
     });
   }, [customizeSummaryRow]);
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -317,22 +319,21 @@ const DiagnosisReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: true, sorting: false, summary: true, }}
+                // summaryItems={summaryItems}
+                remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false }}
                 columns={columns}
-                
-                gridHeader={t("diagnosis_report")}
-                dataUrl={Urls.diagnosis_report}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
-                enablefilter={true}
-                showFilterInitially={true}
+                enablefilter={false}
+                // showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<DiagnosisReportFilter />}
+                // filterContent={<DiagnosisReportFilter />}
                 filterWidth={800}
                 filterHeight={560}
-                filterInitialData={DiagnosisReportFilterInitialState}
+                // filterInitialData={DiagnosisReportFilterInitialState}
                 reload={true}
-                gridId="grd_diagnosis_report"
+                gridId={gridId}
               />
             </div>
           </div>

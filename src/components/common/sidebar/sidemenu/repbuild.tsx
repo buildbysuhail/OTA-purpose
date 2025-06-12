@@ -111,12 +111,7 @@ const InventoryStatusReport = lazy(() => import("../../../../pages/inventory/rep
 const VoidReport = lazy(() => import("../../../../pages/inventory/reports/void-report/void-report"));
 const CounterReport = lazy(() => import("../../../../pages/inventory/reports/counter-report/counter-report"));
 const DiagnosisReport = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report"));
-const DiagnosisReportZeroRateProductlist = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-zero-rate-productlist"));
 const DiagnosisReportPostDatedTransactions = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-post-dated-transactions"));
-const DiagnosisReportSalesPriceLessThanLPCost = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-lp-cost"));
-const DiagnosisReportSalesPriceLessthanPurchasePrice = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price"));
-const DiagnosisReportSalesPriceLessthanMSP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp"));
-const DiagnosisReportSalesPriceGreaterthanMRP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp"));
 const CustomerVisitTotalVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report"));
 const CustomerVisitLastVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report"));
 const FOCRegisterReport = lazy(() => import("../../../../pages/inventory/reports/foc-register-report/foc-register-report"));

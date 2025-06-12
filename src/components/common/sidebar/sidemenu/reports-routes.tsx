@@ -111,12 +111,7 @@ const InventoryStatusReport = lazy(() => import("../../../../pages/inventory/rep
 const VoidReport = lazy(() => import("../../../../pages/inventory/reports/void-report/void-report"));
 const CounterReport = lazy(() => import("../../../../pages/inventory/reports/counter-report/counter-report"));
 const DiagnosisReport = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report"));
-const DiagnosisReportZeroRateProductlist = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-zero-rate-productlist"));
 const DiagnosisReportPostDatedTransactions = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-post-dated-transactions"));
-const DiagnosisReportSalesPriceLessThanLPCost = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-lp-cost"));
-const DiagnosisReportSalesPriceLessthanPurchasePrice = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-purchase-price"));
-const DiagnosisReportSalesPriceLessthanMSP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-less-than-msp"));
-const DiagnosisReportSalesPriceGreaterthanMRP = lazy(() => import("../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-sales-price-greater-than-mrp"));
 const CustomerVisitTotalVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-total-visit-report/customer-visit-total-visit-report"));
 const CustomerVisitLastVisit = lazy(() => import("../../../../pages/inventory/reports/customer-visit-last-visit-report/customer-visit-last-visit-report"));
 const FOCRegisterReport = lazy(() => import("../../../../pages/inventory/reports/foc-register-report/foc-register-report"));
@@ -155,6 +150,10 @@ import GridId from "../../../../redux/gridId";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
 import BranchTransferOutIn from "../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-out-in";
 import BranchTransferSummary from "../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-summary";
+import DiagnosisDynamicReport from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-dynamic";
+import DiagnosisReportDuplicateVouchers from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-duplicate-vouchers";
+import DiagnosisReportBarcodeRepeat from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-barcode-repeat";
+import DiagnosisReportInvalidProducts from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-invalid-products";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -411,54 +410,6 @@ export const ReportsMenuItems :NavigationParentItem[]= [
         routePath: ""
       },
       {
-        id: 711, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />, formCode: "OSRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 712, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />, formCode: "SUBRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 713, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_out_summary} gridHeader="itemwise_branch_transfer_out_summary" gridId="grd_itemwise_branch_transfer_out_summary" />, formCode: "BTORPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_out_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_out_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 714, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_in_summary} gridHeader="itemwise_branch_transfer_in_summary" gridId="grd_itemwise_branch_transfer_in_summary" />, formCode: "BTIRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_in_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_in_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 715, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_excess_summary} gridHeader="itemwise_excess_summary" gridId="grd_itemwise_excess_summary" />, formCode: "EXRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_excess_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_excess_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 716, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_shortage_summary} gridHeader="itemwise_shortage_summary" gridId="grd_itemwise_shortage_summary" />, formCode: "SHRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_shortage_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_shortage_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 717, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_damage_stock_summary} gridHeader="itemwise_damage_stock_summary" gridId="grd_itemwise_damage_stock_summary" />, formCode: "DMGRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_damage_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_damage_stock_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 718, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_summary} gridHeader="itemwise_goods_delivery_summary" gridId="grd_itemwise_goods_delivery_summary" />, formCode: "GDRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 719, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_return_summary} gridHeader="itemwise_goods_delivery_return_summary" gridId="grd_itemwise_goods_delivery_return_summary" />, formCode: "DRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_return_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 720, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_summary} gridHeader="itemwise_goods_receipt_summary" gridId="grd_itemwise_goods_receipt_summary" />, formCode: "GRNRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 721, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />, formCode: "GRRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 722, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />, formCode: "GR_RPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
         id: 723, element: <StockSummary />, formCode: "RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight,
         routePath: ""
       },
@@ -699,35 +650,75 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
+      { id: 800, element: <DiagnosisReport dataUrl={urls.diagnosis_report} gridHeader="diagnosis_report_of_zero_rate_product_list" gridId="grd_diagnosis_report_of_zero_rate_product_list" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_zero_rate_product_list`, type: 'link', active: false, selected: false, title: 'zero_rate_product_list', icon: PiPackageLight, routePath: "" },
+      { id: 801, element: <DiagnosisReportPostDatedTransactions dataUrl={urls.diagnosis_report_post_dated_transactions} gridHeader="diagnosis_report_of_post_dated_transactions" gridId="grd_diagnosis_report_of_post_dated_transactions"/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_post_dated_transactions`, type: 'link', active: false, selected: false, title: 'post_dated_transactions', icon: PiPackageLight, routePath: "" },
       {
-        id: 165, element: <DiagnosisReport dataUrl={urls.diagnosis_report} gridHeader="diagnosis_report_of_zero_rate_product_list" gridId="grd_diagnosis_report_of_zero_rate_product_list" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_zero_rate_product_list`, type: 'link', active: false, selected: false, title: 'zero_rate_product_list', icon: PiPackageLight,
+        id: 802, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_less_than_lp_cost} gridHeader="diagnosis_report_of_sales_price_less_than_cost" gridId="grd_diagnosis_report_of_sales_price_less_than_cost" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_lp_cost`, type: 'link', active: false, selected: false, title: 'sales_price_less_than_lp_cost', icon: PiPackageLight,
         routePath: ""
       },
       {
-        id: 167, element: <DiagnosisReportPostDatedTransactions />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_post_dated_transactions`, type: 'link', active: false, selected: false, title: 'post_dated_transactions', icon: PiPackageLight,
+        id: 803, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_less_than_purchase_price} gridHeader="diagnosis_report_sales_price_less_than_purchase_price" gridId="grd_diagnosis_report_sales_price_less_than_purchase_price" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_purchase_price`, type: 'link', active: false, selected: false, title: 'sales_price_less_than_purchase_price', icon: PiPackageLight,
         routePath: ""
       },
       {
-        id: 166, element: <DiagnosisReportZeroRateProductlist />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_zero_rate_productlist`, type: 'link', active: false, selected: false, title: 'diagnosis_report_zero_rate_productlist', icon: PiPackageLight,
+        id: 804, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_less_than_msp} gridHeader="diagnosis_report_sales_price_less_than_msp" gridId="grd_diagnosis_report_sales_price_less_than_msp" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_msp`, type: 'link', active: false, selected: false, title: 'sales_price_less_than_msp', icon: PiPackageLight,
         routePath: ""
       },
-    
+     
+       {
+        id: 805, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_greater_than_mrp} gridHeader="diagnosis_report_sales_price_greater_than_mrp" gridId="grd_diagnosis_report_sales_price_greater_than_mrp" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'sales_price_greater_than_mrp', icon: PiPackageLight,
+        routePath: ""
+      },
+       {
+        id: 806, element: <DiagnosisDynamicReport dataUrl={urls.diagnosis_report_sales_price_category_greater_than_mrp} gridHeader="diagnosis_report_sales_price_category_greater_than_mrp" gridId="grd_diagnosis_report_sales_price_category_greater_than_mrp" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_category_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'sales_price_category_greater_than_mrp', icon: PiPackageLight,
+        routePath: ""
+      },  
       {
-        id: 168, element: <DiagnosisReportSalesPriceLessThanLPCost />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_lp_cost`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_lp_cost', icon: PiPackageLight,
+        id: 807, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_equal_to_mrp} gridHeader="diagnosis_report_sales_price_equal_to_mrp" gridId="grd_diagnosis_report_sales_price_equal_to_mrp" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_equal_to_mrp`, type: 'link', active: false, selected: false, title: 'sales_price_equal_to_mrp', icon: PiPackageLight,
         routePath: ""
       },
       {
-        id: 169, element: <DiagnosisReportSalesPriceLessthanPurchasePrice />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_purchase_price`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_purchase_price', icon: PiPackageLight,
+        id: 808, element: <DiagnosisReport dataUrl={urls.diagnosis_report_zero_price_category_1} gridHeader="diagnosis_report_zero_price_category_1" gridId="grd_diagnosis_report_zero_price_category_1" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_zero_price_category_1`, type: 'link', active: false, selected: false, title: 'zero_price_category_1', icon: PiPackageLight,
         routePath: ""
       },
       {
-        id: 170, element: <DiagnosisReportSalesPriceLessthanMSP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_msp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_less_than_msp', icon: PiPackageLight,
+        id: 809, element: <DiagnosisReport dataUrl={urls.diagnosis_report_zero_price_category_2} gridHeader="diagnosis_report_zero_price_category_2" gridId="grd_diagnosis_report_zero_price_category_2" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_zero_price_category_2`, type: 'link', active: false, selected: false, title: 'zero_price_category_2', icon: PiPackageLight,
         routePath: ""
       },
       {
-        id: 171, element: <DiagnosisReportSalesPriceGreaterthanMRP />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_greater_than_mrp`, type: 'link', active: false, selected: false, title: 'diagnosis_report_sales_price_greater_than_mrp', icon: PiPackageLight,
+        id: 810, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_less_than_price_category_1} gridHeader="diagnosis_report_sales_price_less_than_price_category_1" gridId="grd_diagnosis_report_sales_price_less_than_price_category_1" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_price_category_1`, type: 'link', active: false, selected: false, title: 'sales_price_less_than_price_category_1', icon: PiPackageLight,
         routePath: ""
       },
+      {
+        id: 811, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_less_than_price_category_2} gridHeader="diagnosis_report_sales_price_less_than_price_category_2" gridId="grd_diagnosis_report_sales_price_less_than_price_category_2" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_less_than_price_category_2`, type: 'link', active: false, selected: false, title: 'sales_price_less_than_price_category_2', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 812, element: <DiagnosisReportPostDatedTransactions dataUrl={urls.diagnosis_report_invalid_ledger_or_related_ledger} gridHeader="diagnosis_report_invalid_ledger_or_related_ledger" gridId="grd_diagnosis_report_invalid_ledger_or_related_ledger"/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_invalid_ledger_or_related_ledger`, type: 'link', active: false, selected: false, title: 'invalid_ledger_or_related_ledger', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 813, element: <DiagnosisReportDuplicateVouchers/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_duplicate_vouchers`, type: 'link', active: false, selected: false, title: 'duplicate_vouchers', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 814, element: <DiagnosisReportBarcodeRepeat dataUrl={urls.diagnosis_report_of_barcode_repeat} gridHeader="diagnosis_report_of_barcode_repeat" gridId="grd_diagnosis_report_of_barcode_repeat"/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_barcode_repeat`, type: 'link', active: false, selected: false, title: 'barcode_repeat', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 815, element: <DiagnosisReportBarcodeRepeat dataUrl={urls.diagnosis_report_of_barcode_repeat_multi_units} gridHeader="diagnosis_report_of_barcode_repeat_multi_units" gridId="grd_diagnosis_report_of_barcode_repeat_multi_units"/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_barcode_repeat_multi_units`, type: 'link', active: false, selected: false, title: 'barcode_repeat_multi_units', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 816, element: <DiagnosisReportBarcodeRepeat dataUrl={urls.diagnosis_report_of_barcode_repeat_multi_barcodes} gridHeader="diagnosis_report_of_barcode_repeat_multi_barcodes" gridId="grd_diagnosis_report_of_barcode_repeat_multi_barcodes"/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_barcode_repeat_multi_barcodes`, type: 'link', active: false, selected: false, title: 'barcode_repeat_multi_barcodes', icon: PiPackageLight,
+        routePath: ""
+      },
+      { id: 817, element: <DiagnosisReport dataUrl={urls.diagnosis_report_sales_price_equal_to_purchase_price} gridHeader="diagnosis_report_sales_price_equal_to_purchase_price" gridId="grd_diagnosis_report_sales_price_equal_to_purchase_price" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_sales_price_equal_to_purchase_price`, type: 'link', active: false, selected: false, title: 'sales_price_equal_to_purchase_price', icon: PiPackageLight,  routePath: ""},
+      { id: 818, element: <DiagnosisReport dataUrl={urls.diagnosis_report_of_zero_purchase_rate_product_list} gridHeader="diagnosis_report_of_zero_purchase_rate_product_list" gridId="grd_diagnosis_report_of_zero_purchase_rate_product_list" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_zero_purchase_rate_product_list`, type: 'link', active: false, selected: false, title: 'zero_purchase_rate_product_list', icon: PiPackageLight,  routePath: ""},
+      { id: 819, element: <DiagnosisReport dataUrl={urls.diagnosis_report_of_inactive_products} gridHeader="diagnosis_report_of_inactive_products" gridId="grd_diagnosis_report_of_inactive_products" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_inactive_products`, type: 'link', active: false, selected: false, title: 'inactive_products', icon: PiPackageLight,  routePath: ""},
+      { id: 820, element: <DiagnosisReport dataUrl={urls.diagnosis_report_of_zero_mrp_product_list} gridHeader="diagnosis_report_of_zero_mrp_product_list" gridId="grd_diagnosis_report_of_zero_mrp_product_list" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_zero_mrp_product_list`, type: 'link', active: false, selected: false, title: 'zero_mrp_product_list', icon: PiPackageLight,routePath: ""},
+      { id: 821, element: <DiagnosisReportInvalidProducts/>, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_invalid_products`, type: 'link', active: false, selected: false, title: 'invalid_products', icon: PiPackageLight,  routePath: ""},
+      { id: 822, element: <DiagnosisReport dataUrl={urls.diagnosis_report_of_products_with_multi_batch} gridHeader="diagnosis_report_of_products_with_multi_batch" gridId="grd_diagnosis_report_of_products_with_multi_batch" />, formCode: "ADVDIGREPT", action: UserAction.Show, path: `/reports/_/inventory/diagnosis_report_of_products_with_multi_batch`, type: 'link', active: false, selected: false, title: 'products_with_multi_batch', icon: PiPackageLight,routePath: ""},
     ]
   },
   {
@@ -782,6 +773,48 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 409,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_quotation_summary} gridHeader="itemwise_sales_quotation_summary" gridId="grd_itemwise_sales_quotation_summary" />, formCode:"ITSQRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_quotation_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_quotation_summary', icon: PiPackageLight },
       { id: 410,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_estimate_summary} gridHeader="itemwise_sales_estimate_summary" gridId="grd_itemwise_sales_estimate_summary" />, formCode:"ITSERPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_estimate_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_estimate_summary', icon: PiPackageLight },
       { id: 411,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_and_sales_return_summary} gridHeader="itemwise_sales_and_sales_return_summary" gridId="grd_itemwise_sales_and_sales_return_summary" />, formCode:"ITSISRRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_and_sales_return_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_and_sales_return_summary', icon: PiPackageLight },
+      { id: 711,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />, formCode: "OSRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight,  routePath: ""},
+      { id: 712,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />, formCode: "SUBRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight,routePath: ""},
+      {
+        id: 713, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_out_summary} gridHeader="itemwise_branch_transfer_out_summary" gridId="grd_itemwise_branch_transfer_out_summary" />, formCode: "BTORPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_out_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_out_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 714, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_in_summary} gridHeader="itemwise_branch_transfer_in_summary" gridId="grd_itemwise_branch_transfer_in_summary" />, formCode: "BTIRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_in_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_in_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 715, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_excess_summary} gridHeader="itemwise_excess_summary" gridId="grd_itemwise_excess_summary" />, formCode: "EXRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_excess_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_excess_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 716, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_shortage_summary} gridHeader="itemwise_shortage_summary" gridId="grd_itemwise_shortage_summary" />, formCode: "SHRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_shortage_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_shortage_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 717, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_damage_stock_summary} gridHeader="itemwise_damage_stock_summary" gridId="grd_itemwise_damage_stock_summary" />, formCode: "DMGRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_damage_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_damage_stock_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 718, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_summary} gridHeader="itemwise_goods_delivery_summary" gridId="grd_itemwise_goods_delivery_summary" />, formCode: "GDRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 719, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_return_summary} gridHeader="itemwise_goods_delivery_return_summary" gridId="grd_itemwise_goods_delivery_return_summary" />, formCode: "DRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_return_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 720, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_summary} gridHeader="itemwise_goods_receipt_summary" gridId="grd_itemwise_goods_receipt_summary" />, formCode: "GRNRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 721, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />, formCode: "GRRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight,
+        routePath: ""
+      },
+      {
+        id: 722, element: <ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />, formCode: "GR_RPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight,
+        routePath: ""
+      },
     ]
   },
 

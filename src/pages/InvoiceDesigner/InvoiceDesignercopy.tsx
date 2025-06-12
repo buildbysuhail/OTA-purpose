@@ -9,7 +9,6 @@ import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
 import ItemTableDesigner from "./Designer/ItemTableDesigner";
 import PropertiesDesigner from "./Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
-import TransactionDetailsDesigner from "./Designer/TransactionDetailsDesigner";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../utilities/HandleResponse";
@@ -30,13 +29,13 @@ import AccountTransactionsVoucher from "./DownloadPreview/account/account_transa
 import { RootState } from "../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
-import AccountTransactionDetailsDesigner from "./Designer/accounts/accDetailsDesigner";
 import AccountTransactionsUniversal from "./DownloadPreview/account/account_transaction-universal";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "./DownloadPreview/advice-template";
 import AdviceTableDesigner from "./Designer/accounts/advice/adviceTableDesigner";
 import { accTransaction } from "./constants/TemplateCategories";
 import ChequeTemplate from "./DownloadPreview/cheque-template";
+
 
 interface DesignSectionType {
   id: number;
@@ -432,26 +431,26 @@ const InvoiceDesigner = () => {
           />
         }
 
-        {
+        {/* {
           currentSection.type === "transactions" &&
           (["SI", "SR"].includes(templateGroup) ? (
             <TransactionDetailsDesigner
               template={templateData?.activeTemplate}
               headerState={templateData?.activeTemplate?.headerState}
-              onChange={(headerState) =>
+              onChange={(headerState:any) =>
                 dispatch(setTemplateHeaderState(headerState))
               }
             />
           ) : (
             <AccountTransactionDetailsDesigner
             templateKind={templateKind}
-              template={templateData?.activeTemplate}
+              template={templateData.activeTemplate}
               onChange={(headerState) =>
                 dispatch(setTemplateHeaderState(headerState))
               }
             />
           ))
-        }
+        } */}
 
         {
           currentSection.type === "table" &&

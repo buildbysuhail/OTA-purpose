@@ -42,7 +42,7 @@ export interface TemplateState {
   background_image_footer?: string;
   signature_image?: string;
   propertiesState?: PropertiesState;
-  headerState?: HeaderState;
+  headerState: HeaderState;
   itemTableState?: ItemTableState;
   accTableState?:accTableState;
   adviceTableState?:adviceTableState;
@@ -62,9 +62,13 @@ export interface HistoryComponent {
   field: any;
   value: any
  }
+export interface CustomElementType {
+ height?: number;
+customElements: PlacedComponent[];
+ }
 export interface LabelState {
   columnsPerRow?: number;
-  rowsPerPage?: number;
+  rowsPerPage?: number
   labelHeight: number;
   labelWidth: number;
   background_image?: string;
@@ -383,8 +387,8 @@ export interface HeaderState {
   accountTransactionInfo?:accountTransactionInfo;
   adviceTransInfo?:adviceTransInfo;
 
-  headerTopCustom?:[],
-  headerBottomCustom?:[],
+  customTop:CustomElementType,
+  customBottom:CustomElementType,
 }
 export interface accountTransactionInfo {
 
@@ -780,7 +784,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       showReceivedFrom: false,
       showVender: false,
       venderNameFontSize: 11,
-      venderNameFontColor : "#000000",
+      venderNameFontColor: "#000000",
       receivedFromLabel: "",
       customerNameFontSize: 12,
       customerNameFontColor: "#000000",
@@ -862,7 +866,12 @@ export const initialTemplateState: ActionState<TemplateState> = {
         showBalanceDue: false,
         balanceDueLabel: "",
       },
-  
+      customTop: {
+      height: 0,customElements: [],
+     },
+      customBottom: {
+      height: 0,customElements: [],
+     },
     },
     itemTableState: {
       showTableRowBorder: false,
@@ -1098,16 +1107,166 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       template_group: "barcode",
       templateName: "Barcode 1",
       pageSize: "A4",
-      orientation:"portrait",
-      height:300,
-      width:300,
-      language_prefer:"Eng",
+      orientation: "portrait",
+      height: 300,
+      width: 300,
+      language_prefer: "Eng",
       padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
     },
     barcodeState: {
-       placedComponents:[],
-       labelState: {columnsPerRow:1, labelHeight:200,labelWidth:300, rowsPerPage: 1}
+      placedComponents: [],
+      labelState: { columnsPerRow: 1, labelHeight: 200, labelWidth: 300, rowsPerPage: 1 }
     },
+    headerState : {
+    showLogo: false,
+    logo: '',
+    logoSize: 50,
+    showOrgName: true,
+    showOrgAddress: true,
+    showDocTitle: true,
+    docTitle: 'Document Title',
+    docTitleUnderline: false,
+    showBalanceDue: false,
+
+    hasPhoneField: false,
+    phoneLabel: 'Phone',
+
+    hasfaxField: false,
+    faxLabel: 'Fax',
+
+    hasEmailField: false,
+    emailLabel: 'Email',
+
+    bgColor: '#ffffff',
+    isFirstOnly: false,
+    bg_image_header_position: 'center',
+    bg_image_header_objectFit: 'cover',
+    headerHeight: 100,
+    showHeader: true,
+
+    docTitleFontSize: 16,
+    docTitleFontColor: '#000000',
+
+    OrganizationFontSize: 14,
+    OrganizationFontColor: '#000000',
+    OrganizationPhone: '',
+    OrganizationFax: '',
+    show_balance_due: false,
+    showStatusStamp: false,
+
+    showReceivedFrom: false,
+    receivedFromLabel: 'Received From',
+
+    showVender: false,
+    venderNameFontSize: 12,
+    venderNameFontColor: '#000000',
+
+    customerNameFontSize: 12,
+    customerNameFontColor: '#000000',
+    hasBillTo: false,
+    billTo: '',
+    hasShipTo: false,
+    shipTo: '',
+
+    orgNameFontSize: 14,
+    orgNameFontColor: '#000000',
+
+    showNumberField: false,
+    numberField: 'Document Number',
+
+    showReasonField: false,
+    reasonLabel: 'Reason',
+    showAccountField: false,
+    accountLabel: 'Account',
+    showAdjTypeField: false,
+    adjTypeLabel: 'Adjustment Type',
+    showCreateUserField: false,
+    createUserLabel: 'Created By',
+    showBranchField: false,
+    branchLabel: 'Branch',
+
+    showNotesLabel: false,
+    notesLabel: 'Notes',
+    showAmount: false,
+    amountLabel: 'Amount',
+
+    showDateField: false,
+    dateField: 'Date',
+
+    showTerms: false,
+    terms: '',
+
+    showDueDate: false,
+    due_date: 'Due Date',
+
+    showReference: false,
+    reference: '',
+
+    showSalesPerson: false,
+    salesPerson: '',
+
+    showProject: false,
+    project: '',
+
+    showEWayBill: false,
+    eWayBill: '',
+
+    showPlaceOfSupply: false,
+    placeOfSupply: '',
+
+    showSubject: false,
+    subject: '',
+
+    showTransactionType: false,
+    transactionType: '',
+
+    showSupplyDate: false,
+    supplyDate: '',
+
+    showShipmentDate: false,
+    shipmentDateLabel: 'Shipment Date',
+
+    showAssociatedInvNo: false,
+    showAssociatedInvDate: false,
+
+    recieptInfo: {
+        showReceiptTable: false,
+        showReceiptNumber: false,
+        receiptNumberLabel: 'Receipt Number',
+        showReceiptDate: false,
+        receiptDateLabel: 'Receipt Date',
+        showReceiptReference: false,
+        receiptReferenceLabel: 'Reference',
+        showReceiptMode: false,
+        receiptModeLabel: 'Payment Mode',
+        showReceiptAmount: false,
+        receiptAmountLabel: 'Amount',
+        amtReceivedLabel: 'Amount Received',
+        currencySymbolPosition: 'before',
+        amtReceivedFontSize: 12,
+        amtReceivedFontColor: '#000000',
+        amtReceivedBgColor: '#ffffff',
+    },
+
+    accountSummary: {
+        showAccountSummary: false,
+        accountSummaryLabel: 'Account Summary',
+        showOpeningBalance: false,
+        openingBalanceLabel: 'Opening Balance',
+        showInvoicedAmount: false,
+        invoicedAmountLabel: 'Invoiced Amount',
+        showAmountPaid: false,
+        amountPaidLabel: 'Amount Paid',
+        showBalanceDue: false,
+        balanceDueLabel: 'Balance Due',
+    },
+
+    accountTransactionInfo: {},
+    adviceTransInfo: {},
+
+    customTop: { height: 0, customElements: [] },
+    customBottom:  { height: 0, customElements: [] },
+    }
   },
 };

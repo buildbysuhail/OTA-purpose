@@ -1,5 +1,5 @@
 import html2canvas from "html2canvas";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TableCellsIcon, BarsArrowUpIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowLeftIcon, TicketIcon, AdjustmentsHorizontalIcon, } from "@heroicons/react/24/outline";
@@ -9,14 +9,13 @@ import { DummyInvoiceData, DummyVoucherData } from "../constants/DummyData";
 import ItemTableDesigner from "../Designer/ItemTableDesigner";
 import PropertiesDesigner from "../Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "../Designer/HeaderFooterDesigner";
-import TransactionDetailsDesigner from "../Designer/TransactionDetailsDesigner";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
-import { setTemplate, setTemplateAccTableState, setTemplateAdviceTableState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState, } from "../../../redux/slices/templates/reducer";
+import { setTemplate, setTemplateAccTableState, setTemplateAdviceTableState, setTemplateCustomElements, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState, } from "../../../redux/slices/templates/reducer";
 import { APIClient } from "../../../helpers/api-client";
 import VoucherType from "../../../enums/voucher-types";
 import { TemplateDto, TemplateState } from "../Designer/interfaces";
@@ -30,7 +29,6 @@ import AccountTransactionsVoucher from "../DownloadPreview/account/account_trans
 import { RootState } from "../../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
-import AccountTransactionDetailsDesigner from "../Designer/accounts/accDetailsDesigner";
 import AccountTransactionsUniversal from "../DownloadPreview/account/account_transaction-universal";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "../DownloadPreview/advice-template";
@@ -97,16 +95,19 @@ const InvoiceDesigner = () => {
     <CustomerBalanceTemplateDesigner/>
     )}
 
-      <ERPModal
+       <ERPModal
             isForm={true}
             isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
             title={t("custom_designer")}
             closeModal={() => {dispatch(toggleCustomDesignerPopup({ isOpen: false })); }}
             width={5000}
             height={5000}
-            content={<PDFBarcodeDesigner 
+            content={
+            <PDFBarcodeDesigner 
             forCustomRows
             template={templateData?.activeTemplate}
+            customTemplate={rootState.PopupData.CustomDesignerPopup.customTemplate}
+            onSuccess={ useCallback(() => dispatch(toggleCustomDesignerPopup({ isOpen: false,customTemplate:""})), [dispatch])}
             />
           }
           /> 

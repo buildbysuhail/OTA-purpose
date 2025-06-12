@@ -1,10 +1,14 @@
-import { View, Text, Image, StyleSheet } from "@react-pdf/renderer"
-import type { TemplateState } from "../../../Designer/interfaces"
+import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { DesignerElementType, type PlacedComponent, type TemplateState } from "../../../Designer/interfaces";
+import { Style } from "exceljs";
+import { renderComponent } from "../../customElement";
 
 const styles = StyleSheet.create({
   headerContainer: {
     width: "100%",
     position: "relative",
+    flexDirection: "column",
+    flexWrap: "wrap",
   },
   companyInfo: {
     display: "flex",
@@ -36,7 +40,15 @@ const styles = StyleSheet.create({
     height: "100%",
     zIndex: -10,
   },
-})
+  headerTop: {
+    width: "100%",
+    position: "relative",
+  },
+  headerBottom: {
+    width: "100%",
+    position: "relative",
+  },
+});
 
 export const Header = ({
   data,
@@ -44,49 +56,61 @@ export const Header = ({
   currentBranch,
   docIDKey,
   currency,
-}: { data: any; template?: TemplateState; currentBranch: any; docIDKey?: string; currency?: string }) => {
-  const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5
-  const headerState = template?.headerState
-  const paddingLeft = template?.propertiesState?.padding?.left
-  const paddingRight = template?.propertiesState?.padding?.right
-  const paddingTop = template?.propertiesState?.padding?.top || 10
+  userSession
+}: {
+  data: any;
+  template?: TemplateState;
+  currentBranch: any;
+  docIDKey?: string;
+  currency?: string;
+  userSession?:any;
+}) => {
+  const logoWidthRatio = template?.headerState?.logoSize
+    ? template.headerState?.logoSize / 100
+    : 0.5;
+  const headerState = template?.headerState;
+   const customElements = headerState?.customTop?.customElements ?? [];
+  const customTopHeight = headerState?.customTop?.height ?? 0;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingTop = template?.propertiesState?.padding?.top || 10;
 
-  const fontFamily = template?.propertiesState?.font_family || "Roboto"
-  const fontSize = template?.propertiesState?.font_size || 12
-  const color = template?.propertiesState?.font_color || "#000"
-  const fontWeight = template?.propertiesState?.font_weight || 400
-  const fontStyle = template?.propertiesState?.fontStyle || "normal"
+  const fontFamily = template?.propertiesState?.font_family || "Roboto";
+  const fontSize = template?.propertiesState?.font_size || 12;
+  const color = template?.propertiesState?.font_color || "#000";
+  const fontWeight = template?.propertiesState?.font_weight || 400;
+  const fontStyle = template?.propertiesState?.fontStyle || "normal";
 
-  const orgNameFontColor = headerState?.OrganizationFontColor || "#000"
-  const orgNameFontSize = headerState?.OrganizationFontSize || 12
-
+  const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
+  const orgNameFontSize = headerState?.OrganizationFontSize || 12;
+  const pxToPt = (px: number) => px * (72 / 96);
   const fontStyles = {
     color,
     fontSize,
     fontWeight,
     fontStyle,
     fontFamily,
-  }
+  };
   const labelStyles = {
     color: template?.propertiesState?.label_font_color || "#000",
     fontSize: template?.propertiesState?.label_font_size || 12,
     fontWeight: template?.propertiesState?.label_font_weight || 400,
     fontStyle: template?.propertiesState?.label_font_style || "normal",
     fontFamily,
-  }
+  };
 
   const isValidLogo = (logo: any): boolean => {
-    if (!logo) return false
-    if (typeof logo !== "string") return false
-    if (logo.trim() === "") return false
-    return true
-  }
+    if (!logo) return false;
+    if (typeof logo !== "string") return false;
+    if (logo.trim() === "") return false;
+    return true;
+  };
 
   return (
     <View
       style={{
         ...styles.headerContainer,
-        height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
+        height:"auto",
         backgroundColor: template?.headerState?.bgColor || "#fff",
         padding: `${paddingTop}pt ${paddingRight}pt 0 ${paddingLeft}pt`,
       }}
@@ -96,9 +120,25 @@ export const Header = ({
       {template?.background_image_header && (
         <Image
           src={template?.background_image_header || "/placeholder.svg"}
-          style={[styles.bgImage, { objectPosition: headerState?.bg_image_header_position || "center" }]}
+          style={[
+            styles.bgImage,
+            {
+              objectPosition: headerState?.bg_image_header_position || "center",
+            },
+          ]}
         />
       )}
+      {/* headTop */}
+         {Array.isArray(customElements) && customElements.length > 0 && (
+        <View
+          style={[
+            styles.headerTop,
+            { minHeight: customTopHeight,height:"auto"},
+          ]}
+        >
+          {customElements?.map((component) => renderComponent(component,userSession?.headerFooter))}
+        </View>
+      )} 
 
       {/* Company Info */}
       <View style={[styles.companyInfo, { marginVertical: 4 }]}>
@@ -111,8 +151,12 @@ export const Header = ({
             paddingLeft: 8,
           }}
         >
+          
           {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
-            <Image src={currentBranch.logo || "/placeholder.svg"} style={{ width: 80 * logoWidthRatio }} />
+            <Image
+              src={currentBranch.logo || "/placeholder.svg"}
+              style={{ width: 80 * logoWidthRatio }}
+            />
           )}
           {headerState?.showOrgName && (
             <Text
@@ -138,25 +182,38 @@ export const Header = ({
             ))}
           {headerState?.hasPhoneField && (
             <View style={styles.otherInfo}>
-              <Text style={labelStyles}>{headerState?.phoneLabel || "Phone No"}:</Text>
-              <Text style={fontStyles}>{currentBranch?.phone || "1234567891"}</Text>
+              <Text style={labelStyles}>
+                {headerState?.phoneLabel || "Phone No"}:
+              </Text>
+              <Text style={fontStyles}>
+                {currentBranch?.phone || "1234567891"}
+              </Text>
             </View>
           )}
           {headerState?.hasfaxField && (
             <View style={styles.otherInfo}>
-              <Text style={labelStyles}>{headerState?.faxLabel || "Fax No"}:</Text>
-              <Text style={fontStyles}>{currentBranch?.fax || "##12344543"}</Text>
+              <Text style={labelStyles}>
+                {headerState?.faxLabel || "Fax No"}:
+              </Text>
+              <Text style={fontStyles}>
+                {currentBranch?.fax || "##12344543"}
+              </Text>
             </View>
           )}
           {headerState?.hasEmailField && (
             <View style={styles.otherInfo}>
-              <Text style={labelStyles}>{headerState?.emailLabel || "Email"}:</Text>
-              <Text style={fontStyles}>{currentBranch?.email || "accounts@companyName.com"}</Text>
+              <Text style={labelStyles}>
+                {headerState?.emailLabel || "Email"}:
+              </Text>
+              <Text style={fontStyles}>
+                {currentBranch?.email || "accounts@companyName.com"}
+              </Text>
             </View>
           )}
         </View>
       </View>
+      {/* headBottom */}
+      <View></View>
     </View>
-  )
-}
-
+  );
+};

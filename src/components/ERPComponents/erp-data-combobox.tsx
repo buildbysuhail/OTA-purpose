@@ -158,7 +158,8 @@ const mapItemsToOptions = (
   labelKey: string,
   valueKey: string,
   nameKey: string
-): Option[] => {
+): Option[] => { 
+  if (!items) return [];
   const itemsArray = Array.isArray(items) ? items : Object.values(items);
 return itemsArray.map((item: any) => ({
   label: getNestedValue(item, labelKey) || "",

@@ -81,7 +81,7 @@ import { getDetailAction } from "../../redux/slices/app-thunks";
 import { RootState } from "../../redux/store";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
-import { handleSetTemplateBarcodeLabelBackgroundImage } from "../../redux/slices/templates/reducer";
+import { handleSetTemplateBarcodeLabelBackgroundImage, setTemplateCustomElements } from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
@@ -94,6 +94,8 @@ import VoucherType from "../../enums/voucher-types";
 import { AccountMasterFields, fields } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { use } from "i18next";
+import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
+import { he } from "date-fns/locale";
 
 
 interface SaveDialogProps {
@@ -190,14 +192,16 @@ const imgContent = [
 const api = new APIClient();
 interface PDFBarcodeDesignerProps {
   forCustomRows?: boolean;
-   template?: TemplateState;
+  template?: TemplateState;
+  customTemplate?: any;
+ onSuccess?: () => void;
 }
 
-const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=false,template}) => {
+const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=false,template,customTemplate,onSuccess}) => {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get(
-    "template_group"
+   "template_group"
   )! as  VoucherType | string;
   const [selectedComponent, setSelectedComponent] =
     useState<PlacedComponent | null>(null);
@@ -229,11 +233,21 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const pxToPoint = (px: number) => px * (72 / 96);
  const { t } = useTranslation("labelDesigner");
+       const pageSize = template?.propertiesState?.pageSize ?? "A4"
 
-  const handleContentLabelResize = (
+      // Get the actual page dimensions based on the selected page size
+      const selectedPageSize = getPageDimensions(
+        pageSize,
+        template?.propertiesState?.width,
+        template?.propertiesState?.height,
+      )
+
+const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
+    const newWidthPt = pxToPoint(size.width); // Convert pixels to points
+  const newHeightPt = pxToPoint(size.height);
     setTemplateData((prevData: TemplateState) => {
       const updated = {
         ...prevData,
@@ -241,8 +255,8 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
           ...prevData.barcodeState,
           labelState: {
             ...prevData?.barcodeState?.labelState,
-            labelWidth: size.width,
-            labelHeight: size.height,
+            labelWidth: newWidthPt,
+            labelHeight: newHeightPt,
           },
           placedComponents: prevData?.barcodeState?.placedComponents || [],
         },
@@ -730,11 +744,23 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
     setDraggingComponent(null);
   };
 
-  const handleSave = async (dataUrl: string) => {
+  const handleSave = async (dataUrl?: string) => {
 
     setLoading(true);
     
     try {
+      debugger;
+      if(forCustomRows){
+        dispatch(setTemplateCustomElements({ 
+          payload:{
+         customElements :templateData.barcodeState?.placedComponents || [],
+         height:templateData.barcodeState?.labelState?.labelHeight,
+        },
+       field:customTemplate
+        }));
+        onSuccess?.()
+        return true
+      }
     const tmpTemplate = {
       ...templateData,
       propertiesState: {
@@ -771,9 +797,13 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
   
 
   const manageSaveTemplate = async () => {
-    if (!templateData?.propertiesState?.templateName) {
+    if(forCustomRows){
+      await handleSave()
+      return true;
+    }else{
+      if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
-    } else {
+      } else {
       const node = document.getElementById("teplate-container-base");
       if (node) {
         try {
@@ -785,6 +815,7 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
         }
       }
     }
+    } 
   };
 
 
@@ -916,11 +947,28 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
     if (id !== "new"&& !forCustomRows) getPDFTemplateData();
   }, []);
 
-  useEffect(() => {
-    if(forCustomRows && template){
-      setTemplateData(template);
+
+useEffect(() => {
+  if (forCustomRows && template) {
+    const fields = customTemplate?.split("."); // e.g., ["headerState", "customTop"]
+    let nestedValue: any = template; // Start from template, not prev
+    for (let i = 0; i < fields?.length; i++) {
+      nestedValue = nestedValue?.[fields[i]];
     }
-  }, [forCustomRows]);
+    setTemplateData((prev: TemplateState) => ({
+      ...prev, // Preserve existing templateData
+      barcodeState: {
+        ...prev.barcodeState, // Preserve other barcodeState properties
+        placedComponents: nestedValue?.customElements || [], // Load from template
+        labelState: {
+          ...prev.barcodeState?.labelState, // Preserve labelState
+          labelHeight: nestedValue?.height || 200,
+          labelWidth: selectedPageSize?.width,
+        },
+      },
+    }));
+  }
+}, []);
 
   const handlePropertyChange = (
     property: keyof PlacedComponent,
@@ -1376,7 +1424,11 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
      
     }
   };
-
+  const pointToPx = (pt: number) => pt * (96 / 72);
+  const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
+  const labelHeightPt = templateData?.barcodeState?.labelState?.labelHeight ?? 200;
+  const labelWidthPx = pointToPx(labelWidthPt);
+  const labelHeightPx = pointToPx(labelHeightPt);
   return (
     <div
     className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
@@ -1445,6 +1497,7 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
          
           </div>
           <div className="flex items-center gap-2">
+          
             <ERPButton
               title={t("clear")}
               onClick={() => {
@@ -1495,16 +1548,14 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
           onDragOver={(e) => e.preventDefault()}
           style={{
             width:
-             (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
-             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
+             `${( templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)}pt`,
                 // : templateData?.propertiesState?.pageSize !== "Custom"
                 // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
                 // :"",
-            maxHeight:
-              // templateGroup === "barcode"
-              //   ?
-                 (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
-                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
+             maxHeight:`${  (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)}pt`
+               
                 // : templateData?.propertiesState?.pageSize !== "Custom"
                 // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
                 // :`` ,
@@ -1512,13 +1563,12 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
         >
           {/* {templateGroup === "barcode" ? ( */}
             <ResizableBox
-              width={templateData?.barcodeState?.labelState?.labelWidth ?? 300}
-              height={
-                templateData?.barcodeState?.labelState?.labelHeight ?? 200
-              }
-              minConstraints={[50, 50]}
-              maxConstraints={[1400, 1000]}
-              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
+              width={labelWidthPx}
+              height={labelHeightPx}
+
+              minConstraints={[pointToPx(50), pointToPx(50)]}
+              maxConstraints={[pointToPx(1200), pointToPx(800)]}
+              resizeHandles={[forCustomRows?"s": templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handleContentLabelResize}
             >
@@ -3008,7 +3058,7 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
               </Box>
             )}
 
-            <Box hidden={activeTab !== "page"}>
+            <Box hidden={activeTab !== "page" || forCustomRows}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
                   <ERPInput

@@ -337,11 +337,23 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             onEnterKeyDown={onEnterKeyDown}
             disableEnterNavigation
             ref={ref}
+            onFocus={(e) => {
+              if (rest.onFocus) {
+                rest.onFocus(e);
+              }
+              // console.log("Focused on ERPProductSearch input");
+            }}
+            onBlur={(e) => {
+              if (rest.onBlur) {
+                rest.onBlur(e);
+              }
+              // console.log("Blurred from ERPProductSearch input");
+            }}
           />
           {searchType === "grid" && (
             <>
               {showProductGrid && (
-                <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h เด400px] shadow-lg bg-white">
+                <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h เด400px] shadow-lg bg-white">
                   <DataGrid
                     ref={dataGridRef}
                     loadPanel={{ enabled: false }}

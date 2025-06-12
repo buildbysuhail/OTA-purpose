@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems } from "./transaction-types";
 
 export interface TransactionData {
   master: TransactionMaster;
@@ -41,7 +41,23 @@ export const TransactionMaster3InitialData: TransactionMaster3 = {
   invTransactionMasterID: 0,
   branchID: 0
 }
-
+export const initialInventoryTotals: SummaryItems = {
+  qty: 0,
+  gross: 0,
+  netValue: 0,
+  discount: 0,
+  vatAmount: 0,
+  cst: 0,
+  total: 0,
+  profit: 0,
+  grossFc: 0,
+  totalAddExpense: 0,
+  nosQty: 0,
+  pCode: '',
+  barCode: '',
+  margin: 0,
+  salesPrice: ''
+};
 
 export const TransactionMasterInitialData: TransactionMaster = {
   invTransactionMasterID: 0,
@@ -378,6 +394,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   amountInWords: 'Zero Only',
   openUnsavedPrompt: false,
   priceCategory: "",
+  summary: initialInventoryTotals,
   remarks: "",
   userConfig: {
     clearDetailsAfterSaveAccounts: true,

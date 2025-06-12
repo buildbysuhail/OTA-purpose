@@ -218,7 +218,7 @@ function App() {
               <Route path="reports/_/*" element={<ReportsLayout setMyClass={setMyClass} />} />
               <Route path="invoice_designer/*" element={<TemplateDesignerLayout />} />
               <Route path="workspace-settings/*" element={<WorkspaceSettingsLayout setMyClass={setMyClass} />} />
-              <Route path="label-designer/:id" element={<PDFBarcodeDesigner />} />
+              <Route path="label-designer/:id" element={<PDFBarcodeDesigner forCustomRows={false} />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>

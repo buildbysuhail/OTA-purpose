@@ -1671,14 +1671,14 @@ const summaryConfig: SummaryConfig[] = [
     valueFormat: "decimal",
     showInColumn: "qty",
     alignment: "right",
-    customizeText: ({ value }) => `Total Quantity: ${value}`,
+    customizeText: ({ value }) => `${value}`,
   },
   {
     column: "unitPrice",
     summaryType: "avg",
     showInColumn: "unitPrice",
     alignment: "right",
-    customizeText: ({ value }) => `Average Price: ${value.toFixed(2)}`,
+    customizeText: ({ value }) => `${value}`,
   },
   {
     column: "discount",
@@ -1686,7 +1686,7 @@ const summaryConfig: SummaryConfig[] = [
     valueFormat: "currency",
     showInColumn: "discount",
     alignment: "right",
-    customizeText: ({ value }) => `Total Discount: ${value}`,
+    customizeText: ({ value }) => ` ${value}`,
   },
   {
     column: "netValue",
@@ -1694,7 +1694,7 @@ const summaryConfig: SummaryConfig[] = [
     valueFormat: "currency",
     showInColumn: "netValue",
     alignment: "right",
-    customizeText: ({ value }) => `Net Value: ${value}`,
+    customizeText: ({ value }) => `${value}`,
   },
 ];
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.

@@ -7,7 +7,7 @@ const PrintDetailsFilter = ({ getFieldProps, handleFieldChange, formState }: any
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden p-2">
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <ERPRadio
             id="startsWith"
             name="voucherType"
@@ -32,7 +32,7 @@ const PrintDetailsFilter = ({ getFieldProps, handleFieldChange, formState }: any
             checked={formState.voucherType === "exactMatch"}
             onChange={(e) => handleFieldChange("voucherType", e.target.value)}
           />
-        </div>
+        </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="col-span-1">
@@ -57,7 +57,7 @@ const PrintDetailsFilter = ({ getFieldProps, handleFieldChange, formState }: any
 }
 export default PrintDetailsFilter;
 export const PrintDetailsFilterInitialState = {
-  dateFrom: moment().local().toDate(),
+  dateFrom: moment().startOf('month').toDate(),
   dateTo: moment().local().toDate(),
-  voucherType: "startsWith",
+  voucherType: "SI",
 };

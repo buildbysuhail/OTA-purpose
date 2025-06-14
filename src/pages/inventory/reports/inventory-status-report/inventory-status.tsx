@@ -7,37 +7,7 @@ import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import InventoryStatusFilter, { InventoryStatusFilterInitialState } from "./inventory-status-filter";
-
-interface InventoryStatus {
-  si: number;
-  date: string;
-  vchNo: number;
-  form: string;
-  party: string;
-  address1: string;
-  address2: string;
-  gross: number;
-  disc: number;
-  billDiscount: number;
-  vat: number;
-  grandTotal: number;
-  converted: number;
-  isLocked: number;
-  refNo: string;
-  refDate: Date;
-  salesmanName: string;
-  warehouseName: string;
-  refNo2: string;
-  financialYearID: number;
-  mInvoiceNo: string;
-  masterID: string;
-  branch: string;
-  remarks: string;
-  branchID: number;
-  ledgerID: number;
-  routeName: string;
-  party_Name: string;
-}
+import moment from "moment";
 
 const InventoryStatusReport = () => {
   const { t } = useTranslation('accountsReport');
@@ -63,7 +33,15 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+     cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+         }
+       },
     {
       dataField: "vchNo",
       caption: t("vch_no"),
@@ -140,7 +118,30 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.gross == null
+                ? 0
+                : getFormattedValue(cellElement.data.gross, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.gross == null
+              ? 0
+              : getFormattedValue(cellElement.data.gross, false, 4);
+          }
+        },
+      },
     {
       dataField: "disc",
       caption: t("disc"),
@@ -151,7 +152,30 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+  cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.disc == null
+                ? 0
+                : getFormattedValue(cellElement.data.disc, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.disc == null
+              ? 0
+              : getFormattedValue(cellElement.data.disc, false, 4);
+          }
+        },
+      },
     {
       dataField: "billDiscount",
       caption: t("bill_discount"),
@@ -162,7 +186,30 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+  cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.billDiscount == null
+                ? 0
+                : getFormattedValue(cellElement.data.billDiscount, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.billDiscount == null
+              ? 0
+              : getFormattedValue(cellElement.data.billDiscount, false, 4);
+          }
+        },
+      },
     {
       dataField: "vat",
       caption: t("vat"),
@@ -173,7 +220,30 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.vat == null
+                ? 0
+                : getFormattedValue(cellElement.data.vat, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.vat == null
+              ? 0
+              : getFormattedValue(cellElement.data.vat, false, 4);
+          }
+        },
+      },
     {
       dataField: "grandTotal",
       caption: t("grand_total"),
@@ -184,11 +254,34 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+   cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.grandTotal == null
+                ? 0
+                : getFormattedValue(cellElement.data.grandTotal, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.grandTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.grandTotal, false, 4);
+          }
+        },
+      },
     {
       dataField: "converted",
       caption: t("converted"),
-      dataType: "number",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
@@ -199,7 +292,7 @@ const InventoryStatusReport = () => {
     {
       dataField: "isLocked",
       caption: t("is_locked"),
-      dataType: "number",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
@@ -228,7 +321,15 @@ const InventoryStatusReport = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+      cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            return (cellElement.data.refDate == null || cellElement.data.refDate == "" ? "" : moment(cellElement.data.refDate, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+          }
+        },
     {
       dataField: "salesmanName",
       caption: t("salesman_name"),
@@ -351,6 +452,31 @@ const InventoryStatusReport = () => {
       showInPdf: true,
     }
   ];
+  //check convert
+
+  //  if (UserRights.HasEditRight("INVSTATUSRPT")==false)
+  //           {
+  //               PolosysFrameWork.General.ShowMessageBox("No Rights to modify. Contact admin");
+  //           }
+  //           if (InvTransactionMasterID > 0)
+  //           {
+
+
+  //               if (PolosysFrameWork.General.ShowMessageBox("Are you sure to change the Converted status?", "Converted", MessageBoxButtons.YesNo) == DialogResult.Yes)
+  //               {
+
+  //chek locked
+  //  if (UserRights.HasEditRight("INVSTATUSRPT") == false)
+  //           {
+  //               PolosysFrameWork.General.ShowMessageBox("No Rights to modify. Contact admin");
+  //               return;
+  //           }
+  //           if (InvTransactionMasterID > 0)
+  //           {
+
+
+  //               if (PolosysFrameWork.General.ShowMessageBox("Are you sure to change the Locked status?", "Converted", MessageBoxButtons.YesNo) == DialogResult.Yes)
+             
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -361,40 +487,6 @@ const InventoryStatusReport = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "gross",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "disc",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "billDiscount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "vat",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "grandTotal",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    }
-  ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -402,10 +494,9 @@ const InventoryStatusReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                
+                        filterText=": {dateFrom} - {dateTo}"
                 gridHeader={t("inventory_status_report")}
                 dataUrl={Urls.inventory_status}
                 hideGridAddButton={true}

@@ -43,9 +43,14 @@ const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: 
           { value: "PO", label: "Purchase Order" },
           { value: "ILR", label: "Item Load Request" }
         ]}
+          field={{
+              id: "voucherType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
         className="max-w-[297px]"
         onSelectItem={(data) => {
-          handleFieldChange("voucherType", data.voucherType);
+          handleFieldChange("voucherType", data.value);
         }}
       />
     </div>

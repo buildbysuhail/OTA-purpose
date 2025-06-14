@@ -8,17 +8,6 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PrintDetailsFilter, { PrintDetailsFilterInitialState } from "./print-details-filter";
 
-interface PrintDetails {
-  partyName: string;
-  voucherNumber: string;
-  voucherType: string;
-  voucherForm: string;
-  grandTotal: number;
-  userName: string;
-  systemName: string;
-  printTime: Date;
-}
-
 const PrintDetails = () => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
@@ -76,7 +65,30 @@ const PrintDetails = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    },
+    cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.grandTotal == null
+                ? 0
+                : getFormattedValue(cellElement.data.grandTotal, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.grandTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.grandTotal, false, 4);
+          }
+        },
+      },
     {
       dataField: "userName",
       caption: t("user_name"),
@@ -141,8 +153,8 @@ const PrintDetails = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                
-                gridHeader={t("print_details_report")}
+                 filterText=": {dateFrom} - {dateTo}"
+                gridHeader={t("invoice_print_details_report")}
                 dataUrl={Urls.print_details}
                 hideGridAddButton={true}
                 enablefilter={true}

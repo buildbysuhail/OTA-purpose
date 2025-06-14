@@ -85,7 +85,7 @@ export default VoidReportFilter;
 export const VoidReportFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  counterID: 0,
-  userID: 0,
-  status: "",
+  counterID: -1,
+  userID: -1,
+  status: "All",
 };

@@ -8,22 +8,6 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import VoidReportFilter, { VoidReportFilterInitialState } from "./void-report-filter";
 
-interface VoidReport {
-  counter: string;
-  user: string;
-  date: string;
-  barcode: string;
-  product: string;
-  qty: number;
-  total: number;
-  status: string;
-  systemDate: Date;
-  systemName: string;
-  shiftName: string;
-  voucherNo: string;
-  prefix: string;
-}
-
 const VoidReport = () => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [

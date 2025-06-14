@@ -1,5 +1,9 @@
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
-import { DesignerElementType, type PlacedComponent, type TemplateState } from "../../../Designer/interfaces";
+import {
+  DesignerElementType,
+  type PlacedComponent,
+  type TemplateState,
+} from "../../../Designer/interfaces";
 import { Style } from "exceljs";
 import { renderComponent } from "../../customElement";
 
@@ -56,20 +60,20 @@ export const Header = ({
   currentBranch,
   docIDKey,
   currency,
-  userSession
+  userSession,
 }: {
   data: any;
   template?: TemplateState;
   currentBranch: any;
   docIDKey?: string;
   currency?: string;
-  userSession?:any;
+  userSession?: any;
 }) => {
   const logoWidthRatio = template?.headerState?.logoSize
     ? template.headerState?.logoSize / 100
     : 0.5;
   const headerState = template?.headerState;
-   const customElements = headerState?.customTop?.customElements ?? [];
+  const customElements = headerState?.customTop?.customElements ?? [];
   const customTopHeight = headerState?.customTop?.height ?? 0;
   const paddingLeft = template?.propertiesState?.padding?.left;
   const paddingRight = template?.propertiesState?.padding?.right;
@@ -110,9 +114,8 @@ export const Header = ({
     <View
       style={{
         ...styles.headerContainer,
-        height:"auto",
+        height: "auto",
         backgroundColor: template?.headerState?.bgColor || "#fff",
-        padding: `${paddingTop}pt ${paddingRight}pt 0 ${paddingLeft}pt`,
       }}
       fixed={!headerState?.isFirstOnly}
     >
@@ -129,19 +132,31 @@ export const Header = ({
         />
       )}
       {/* headTop */}
-         {Array.isArray(customElements) && customElements.length > 0 && (
+      {Array.isArray(customElements) && customElements.length > 0 && (
         <View
           style={[
             styles.headerTop,
-            { minHeight: customTopHeight,height:"auto"},
+            { minHeight: customTopHeight, height: "auto" },
           ]}
         >
-          {customElements?.map((component) => renderComponent(component,userSession?.headerFooter))}
+          {customElements?.map((component) =>
+            renderComponent(component, userSession?.headerFooter)
+          )}
         </View>
-      )} 
+      )}
 
       {/* Company Info */}
-      <View style={[styles.companyInfo, { marginVertical: 4 }]}>
+      <View
+        style={[
+          styles.companyInfo,
+          {
+            marginVertical: 4,
+            paddingTop: paddingTop,
+            paddingRight: paddingRight,
+            paddingLeft: paddingLeft,
+          },
+        ]}
+      >
         <View
           style={{
             display: "flex",
@@ -151,7 +166,6 @@ export const Header = ({
             paddingLeft: 8,
           }}
         >
-          
           {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
               src={currentBranch.logo || "/placeholder.svg"}

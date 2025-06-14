@@ -326,7 +326,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
             key={component.id} 
             style={{
               ...baseStyle,
-              width: component.lineHeight ? pxToPoint(component.lineHeight) : "100%",
+              width: component.lineWidth ? pxToPoint(component.lineWidth) : "100%",
               borderTop: `${component?.lineThickness || 1}px ${
                 component?.lineType || "solid"
               } ${component?.lineColor || "black"}`,

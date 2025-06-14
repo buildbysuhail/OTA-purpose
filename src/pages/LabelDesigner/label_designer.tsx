@@ -13,12 +13,12 @@ import {
   X,
   Image,
   Table,
-  SquareDashed ,
+  SquareDashed,
   QrCode as QrCodeIcon,
 } from "lucide-react";
 // Import the images
 
-import usFlag from "../../assets/images/flags/us_flag.png";//it use demo  remove when no need
+import usFlag from "../../assets/images/flags/us_flag.png"; //it use demo  remove when no need
 
 import JsBarcode from "jsbarcode";
 // import { ReactBarcode, Renderer } from 'react-jsbarcode';
@@ -81,7 +81,10 @@ import { getDetailAction } from "../../redux/slices/app-thunks";
 import { RootState } from "../../redux/store";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
-import { handleSetTemplateBarcodeLabelBackgroundImage, setTemplateCustomElements } from "../../redux/slices/templates/reducer";
+import {
+  handleSetTemplateBarcodeLabelBackgroundImage,
+  setTemplateCustomElements,
+} from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
@@ -96,7 +99,7 @@ import { customJsonParse } from "../../utilities/jsonConverter";
 import { use } from "i18next";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { he } from "date-fns/locale";
-
+import { QRCodeSVG } from "qrcode.react";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -183,26 +186,39 @@ const objectFitOptions = [
   { label: "Scale Down", value: "scale-down" },
 ];
 
-const imgContent = [
-  { label: "img1", value: usFlag },
-];
+const objectPosition = [
+  { label: "Top Left", value: "top left" },
+  { label: "Top Center", value: "top center" },
+  { label: "Top Right", value: "top right" },
+  { label: "Center Left", value: "center left" },
+  {label: "Center", value: "center center",},                   
+  { label: "Center Right", value: "center right" },
+  { label: "Bottom Left", value: "bottom left" },
+  { label: "Bottom Center", value: "bottom center",},
+  { label: "Bottom Right", value: "bottom right" },
+]
 
-
+const imgContent = [{ label: "img1", value: usFlag }];
 
 const api = new APIClient();
 interface PDFBarcodeDesignerProps {
   forCustomRows?: boolean;
   template?: TemplateState;
   customTemplate?: any;
- onSuccess?: () => void;
+  onSuccess?: () => void;
 }
 
-const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=false,template,customTemplate,onSuccess}) => {
+const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
+  forCustomRows = false,
+  template,
+  customTemplate,
+  onSuccess,
+}) => {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
-  const templateGroup = searchParams?.get(
-   "template_group"
-  )! as  VoucherType | string;
+  const templateGroup = searchParams?.get("template_group")! as
+    | VoucherType
+    | string;
   const [selectedComponent, setSelectedComponent] =
     useState<PlacedComponent | null>(null);
   const [nextId, setNextId] = useState(1);
@@ -223,6 +239,7 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
+  const inputImgFile = useRef<HTMLInputElement>(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -232,22 +249,22 @@ const  PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows=
   const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const pxToPoint = (px: number) => px * (72 / 96);
- const { t } = useTranslation("labelDesigner");
-       const pageSize = template?.propertiesState?.pageSize ?? "A4"
+  const { t } = useTranslation("labelDesigner");
+  const pageSize = template?.propertiesState?.pageSize ?? "A4";
 
-      // Get the actual page dimensions based on the selected page size
-      const selectedPageSize = getPageDimensions(
-        pageSize,
-        template?.propertiesState?.width,
-        template?.propertiesState?.height,
-      )
+  // Get the actual page dimensions based on the selected page size
+  const selectedPageSize = getPageDimensions(
+    pageSize,
+    template?.propertiesState?.width,
+    template?.propertiesState?.height
+  );
 
-const handleContentLabelResize = (
+  const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
     const newWidthPt = pxToPoint(size.width); // Convert pixels to points
-  const newHeightPt = pxToPoint(size.height);
+    const newHeightPt = pxToPoint(size.height);
     setTemplateData((prevData: TemplateState) => {
       const updated = {
         ...prevData,
@@ -264,8 +281,6 @@ const handleContentLabelResize = (
       return updated;
     });
   };
-
-
 
   const handlePageResize = (
     e: React.SyntheticEvent,
@@ -339,12 +354,12 @@ const handleContentLabelResize = (
     //   icon: <Table className="w-4 h-4" />,
     //   defaultContent: "Table",
     // },
-    // {
-    //   id: DesignerElementType.line,
-    //   label: "line",
-    //   icon: <Minus className="w-4 h-4" />,
-    //   defaultContent: "Line",
-    // },
+    {
+      id: DesignerElementType.line,
+      label: "line",
+      icon: <Minus className="w-4 h-4" />,
+      defaultContent: "Line",
+    },
     {
       id: DesignerElementType.image,
       label: "Image",
@@ -410,7 +425,7 @@ const handleContentLabelResize = (
               barWidth: 2,
               height: 75,
               margin: 0,
-              field:"",
+              field: "",
               background: "#FFFFFF",
               lineColor: "#000000",
               showText: true,
@@ -421,9 +436,9 @@ const handleContentLabelResize = (
               fontStyle: "normal",
             },
           }),
-          tableProps:{
+          tableProps: {
             showBorder: true,
-            columns: []
+            columns: [],
           },
           qrCodeProps: {
             value: "",
@@ -433,18 +448,18 @@ const handleContentLabelResize = (
             fgColor: "",
             marginSize: 0,
             imageSettings: {
-              src: '',
+              src: "",
               height: 16,
               width: 16,
               excavate: true,
-            }
+            },
           },
-          areaProps:{
+          areaProps: {
             bgColor: "#FFFFFF",
-            isRepeat:true,
-            width:300,
-            height:300,
-          }
+            isRepeat: true,
+            width: 300,
+            height: 300,
+          },
         };
 
         const placedComponents = [
@@ -466,7 +481,6 @@ const handleContentLabelResize = (
   const handleComponentClick = (component: PlacedComponent) => {
     setSelectedComponent(component);
     setActiveTab("element");
-
   };
 
   const handleBarcodePropertyChange = (
@@ -619,11 +633,7 @@ const handleContentLabelResize = (
     setEditingColumnData(undefined);
   };
 
-
-  const handleQRCodePropertyChange = (
-    property: any,
-    value: any
-  ) => {
+  const handleQRCodePropertyChange = (property: any, value: any) => {
     if (
       selectedComponent &&
       selectedComponent.type === DesignerElementType.qrCode &&
@@ -636,19 +646,19 @@ const handleContentLabelResize = (
           ...selectedComponent.qrCodeProps,
           imageSettings: {
             ...selectedComponent.qrCodeProps.imageSettings,
-            ...value
-          }
+            ...value,
+          },
         };
       } else {
         updatedQRCodeProps = {
           ...selectedComponent.qrCodeProps,
-          [property]: value
+          [property]: value,
         };
       }
 
       const updatedComponents =
         templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === selectedComponent.id 
+          comp.id === selectedComponent.id
             ? {
                 ...comp,
                 qrCodeProps: updatedQRCodeProps,
@@ -670,7 +680,7 @@ const handleContentLabelResize = (
       });
     }
   };
-  
+
   const handleAreaPropertyChange = (
     property: any,
     value: string | number | boolean
@@ -702,11 +712,10 @@ const handleContentLabelResize = (
       });
     }
   };
-  
+
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
-      
       setDraggingComponent(component);
       const offsetX = e.clientX - canvasRect.left - component.x;
       const offsetY = e.clientY - canvasRect.top - component.y;
@@ -745,45 +754,46 @@ const handleContentLabelResize = (
   };
 
   const handleSave = async (dataUrl?: string) => {
-
     setLoading(true);
-    
+
     try {
       debugger;
-      if(forCustomRows){
-        dispatch(setTemplateCustomElements({ 
-          payload:{
-         customElements :templateData.barcodeState?.placedComponents || [],
-         height:templateData.barcodeState?.labelState?.labelHeight,
+      if (forCustomRows) {
+        dispatch(
+          setTemplateCustomElements({
+            payload: {
+              customElements: templateData.barcodeState?.placedComponents || [],
+              height: templateData.barcodeState?.labelState?.labelHeight,
+            },
+            field: customTemplate,
+          })
+        );
+        onSuccess?.();
+        return true;
+      }
+      const tmpTemplate = {
+        ...templateData,
+        propertiesState: {
+          ...templateData.propertiesState,
+          template_group: templateGroup,
         },
-       field:customTemplate
-        }));
-        onSuccess?.()
-        return true
-      }
-    const tmpTemplate = {
-      ...templateData,
-      propertiesState: {
-        ...templateData.propertiesState,
-        template_group: templateGroup
-      }
-    }
-    const activeTemplate: TemplateDto = {
-      // ...templateData.activeTemplate,
-      id:id== "new" ? 0 : id,//temparary fix
-      templateType:tmpTemplate.propertiesState.template_type??"standard",
-      templateKind:tmpTemplate.propertiesState.template_kind??"standard",
-      templateGroup:tmpTemplate.propertiesState.template_group??"",
-      templateName: tmpTemplate.propertiesState?.templateName??"",
-      thumbImage: dataUrl,
-      content: JSON.stringify(tmpTemplate),
-      isCurrent:false,
-      backgroundImage:tmpTemplate.background_image??"",
-      backgroundImageHeader:tmpTemplate.background_image_header??"",
-      backgroundImageFooter:tmpTemplate.background_image_footer??"",
-      signatureImage:tmpTemplate.signature_image??"",
-      branchId:0
-    }
+      };
+      const activeTemplate: TemplateDto = {
+        // ...templateData.activeTemplate,
+        id: id == "new" ? 0 : id, //temparary fix
+        templateType: tmpTemplate.propertiesState.template_type ?? "standard",
+        templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
+        templateGroup: tmpTemplate.propertiesState.template_group ?? "",
+        templateName: tmpTemplate.propertiesState?.templateName ?? "",
+        thumbImage: dataUrl,
+        content: JSON.stringify(tmpTemplate),
+        isCurrent: false,
+        backgroundImage: tmpTemplate.background_image ?? "",
+        backgroundImageHeader: tmpTemplate.background_image_header ?? "",
+        backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
+        signatureImage: tmpTemplate.signature_image ?? "",
+        branchId: 0,
+      };
       const res = await api.postAsync(Urls.templates, activeTemplate);
       handleResponse(res, () => {
         navigate(`/templates?template_group=${templateGroup}`);
@@ -794,31 +804,28 @@ const handleContentLabelResize = (
       setLoading(false);
     }
   };
-  
 
   const manageSaveTemplate = async () => {
-    if(forCustomRows){
-      await handleSave()
+    if (forCustomRows) {
+      await handleSave();
       return true;
-    }else{
+    } else {
       if (!templateData?.propertiesState?.templateName) {
-      ERPToast.show("Template name is required", "error");
+        ERPToast.show("Template name is required", "error");
       } else {
-      const node = document.getElementById("teplate-container-base");
-      if (node) {
-        try {
-          const canvas = await html2canvas(node);
-          const dataUrl = canvas.toDataURL("image/png");
-          await handleSave(dataUrl);
-        } catch (error) {
-          console.error("Error capturing canvas:", error);
+        const node = document.getElementById("teplate-container-base");
+        if (node) {
+          try {
+            const canvas = await html2canvas(node);
+            const dataUrl = canvas.toDataURL("image/png");
+            await handleSave(dataUrl);
+          } catch (error) {
+            console.error("Error capturing canvas:", error);
+          }
         }
       }
     }
-    } 
   };
-
-
 
   const handlePagePropsChange = (
     property: keyof PropertiesState,
@@ -832,19 +839,25 @@ const handleContentLabelResize = (
 
   const handleImagePropsChange = async (property: any, value: any) => {
     if (!value) {
-      handleLabelPropsChange(property, null);
+      forCustomRows? handlePropertyChange(property,""): handleLabelPropsChange(property, null);
       return;
     }
     const imageData = await convertFileToBase64(value);
-
+     forCustomRows? handlePropertyChange(property,imageData ?? ''):
     handleLabelPropsChange(property, imageData ?? null);
   };
-  const handleRemoveImage = () => {
+  const handleRemoveBgImage = () => {
     handleImagePropsChange("background_image", "");
     if (inputFile.current) {
       inputFile.current.value = "";
     }
   };
+const handleRemoveImage =()=>{
+  handleImagePropsChange("content","")
+    if (inputImgFile.current) {
+      inputImgFile.current.value = "";
+    }
+}
   const handleLabelPropsChange = (property: any, value: any) => {
     setTemplateData((prev: any) => ({
       ...prev,
@@ -867,7 +880,6 @@ const handleContentLabelResize = (
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
     ) {
-      
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
         canvasElement.height = pxToPoint(component.height);
@@ -917,21 +929,27 @@ const handleContentLabelResize = (
 
   const getPDFTemplateData = async () => {
     const res = await api.getAsync(`${Urls.templates}${id}`);
-    let cc: TemplateState = customJsonParse(res.content)
+    let cc: TemplateState = customJsonParse(res.content);
     const _template = {
       ...cc,
       id: res.id,
       branchId: res.branchId,
       isCurrent: res.isCurrent,
-      background_image: res?.payload?.data?.background_image as string | undefined,
-      background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-      background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+      background_image: res?.payload?.data?.background_image as
+        | string
+        | undefined,
+      background_image_header: res?.payload?.data?.background_image_header as
+        | string
+        | undefined,
+      background_image_footer: res?.payload?.data?.background_image_footer as
+        | string
+        | undefined,
       templateGroup: res.templateGroup,
       templateKind: res.templateKind,
       templateName: res.templateName,
       templateType: res.templateType,
       thumbImage: res.thumbImage as string | undefined,
-  };
+    };
     setTemplateData(cc);
 
     if (cc && cc.barcodeState && cc.barcodeState.placedComponents) {
@@ -944,35 +962,34 @@ const handleContentLabelResize = (
   };
 
   useEffect(() => {
-    if (id !== "new"&& !forCustomRows) getPDFTemplateData();
+    if (id !== "new" && !forCustomRows) getPDFTemplateData();
   }, []);
 
-
-useEffect(() => {
-  if (forCustomRows && template) {
-    const fields = customTemplate?.split("."); // e.g., ["headerState", "customTop"]
-    let nestedValue: any = template; // Start from template, not prev
-    for (let i = 0; i < fields?.length; i++) {
-      nestedValue = nestedValue?.[fields[i]];
-    }
-    setTemplateData((prev: TemplateState) => ({
-      ...prev, // Preserve existing templateData
-      barcodeState: {
-        ...prev.barcodeState, // Preserve other barcodeState properties
-        placedComponents: nestedValue?.customElements || [], // Load from template
-        labelState: {
-          ...prev.barcodeState?.labelState, // Preserve labelState
-          labelHeight: nestedValue?.height || 200,
-          labelWidth: selectedPageSize?.width,
+  useEffect(() => {
+    if (forCustomRows && template) {
+      const fields = customTemplate?.split("."); // e.g., ["headerState", "customTop"]
+      let nestedValue: any = template; // Start from template, not prev
+      for (let i = 0; i < fields?.length; i++) {
+        nestedValue = nestedValue?.[fields[i]];
+      }
+      setTemplateData((prev: TemplateState) => ({
+        ...prev, // Preserve existing templateData
+        barcodeState: {
+          ...prev.barcodeState, // Preserve other barcodeState properties
+          placedComponents: nestedValue?.customElements || [], // Load from template
+          labelState: {
+            ...prev.barcodeState?.labelState, // Preserve labelState
+            labelHeight: nestedValue?.height || 200,
+            labelWidth: selectedPageSize?.width,
+          },
         },
-      },
-    }));
-  }
-}, []);
+      }));
+    }
+  }, []);
 
   const handlePropertyChange = (
     property: keyof PlacedComponent,
-    value: string | number,
+    value: string | number | boolean,
     id?: number | undefined,
     isUndoOrRedo?: boolean | false
   ) => {
@@ -980,10 +997,9 @@ useEffect(() => {
       {
         if (isUndoOrRedo == undefined || isUndoOrRedo == false)
           setHistoryData((prevHistory) => {
-            
             const isDuplicate = prevHistory.some((entry) => entry.id === id);
             const updHistory = prevHistory.slice(0, historyIndex + 1);
-            setHistoryIndex(updHistory.length)
+            setHistoryIndex(updHistory.length);
             const preEntry = {
               field: property,
               id: id ? id : selectedComponent.id,
@@ -997,10 +1013,10 @@ useEffect(() => {
               id: id ? id : selectedComponent.id,
               value: value,
             };
-            
+
             return isDuplicate
-            ? [...updHistory,newEntry] // Don't add the new entry if it's a duplicate
-            : [...updHistory,preEntry, newEntry]; // Add the new entry if it's not a duplicate
+              ? [...updHistory, newEntry] // Don't add the new entry if it's a duplicate
+              : [...updHistory, preEntry, newEntry]; // Add the new entry if it's not a duplicate
           });
       }
 
@@ -1022,10 +1038,12 @@ useEffect(() => {
     }
   };
 
-  const undoChanges = ( mode: "undo" | "redo" ) => {  
-    
+  const undoChanges = (mode: "undo" | "redo") => {
     if (historyData.length > 0) {
-      const lastHistory = mode == "undo" ? historyData[historyIndex] : historyData[historyIndex + 2];
+      const lastHistory =
+        mode == "undo"
+          ? historyData[historyIndex]
+          : historyData[historyIndex + 2];
       if (lastHistory) {
         const field = lastHistory.field;
         const idsd = lastHistory.id;
@@ -1038,7 +1056,8 @@ useEffect(() => {
           handlePropertyChange(
             field as keyof PlacedComponent,
             restoreValue ? restoreValue.value : value,
-            idsd,true
+            idsd,
+            true
           );
         } else if (splitData.length > 1) {
           // Nested property change
@@ -1062,10 +1081,8 @@ useEffect(() => {
         }
 
         setHistoryIndex((prev: number) => {
-          return  mode === "undo" ? prev - 1 : prev + 1;
-        })
-
-   
+          return mode === "undo" ? prev - 1 : prev + 1;
+        });
 
         // Update selected component if it was the one that changed
         if (selectedComponent && selectedComponent.id === idsd) {
@@ -1076,6 +1093,10 @@ useEffect(() => {
       }
     }
   };
+
+// useEffect(()=>{
+//   handlePropertyChange("content","")
+// },[selectedComponent?.imgFromDevice]);
 
   useEffect(() => {
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
@@ -1307,9 +1328,9 @@ useEffect(() => {
             id={`component-${component.id}`}
             style={{
               ...style,
-              width: `${component.lineHeight}px`,
-              height:'auto',
-              padding: 0,
+              width: `${component.lineWidth}px`,
+              height: "auto",
+              padding: 2,
               position: "relative",
               overflow: "visible",
               border:
@@ -1325,7 +1346,7 @@ useEffect(() => {
                 borderTop: `${component?.lineThickness || 1}px ${
                   component?.lineType || "solid"
                 } ${component?.lineColor || "black"}`,
-                width: `${component.lineHeight}px`,
+                width: `${component.lineWidth}px`,
                 margin: 0,
               }}
             />
@@ -1343,21 +1364,23 @@ useEffect(() => {
             id={`component-${component.id}`}
             style={{
               ...style,
-              border:  selectedComponent?.id === component.id
-              ? "2px solid #2196f3":"none",
+              border:
+                selectedComponent?.id === component.id
+                  ? "2px solid #2196f3"
+                  : "none",
             }}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-            
             <img
               src={component.content}
               alt="Component Image"
               style={{
-               
                 width: "100%",
                 height: "100%",
-                objectFit: component.imgFit as React.CSSProperties["objectFit"] || "cover",
+                objectFit:
+                  (component.imgFit as React.CSSProperties["objectFit"]) || "cover",
+               objectPosition: (component.imgPosition as React.CSSProperties["objectPosition"])  || "center center",
               }}
             />
             <DeleteButton
@@ -1368,28 +1391,31 @@ useEffect(() => {
           </div>
         );
       case DesignerElementType.qrCode:
-          return (
+        return (
           <div
             key={component.id}
             id={`component-${component.id}`}
             style={{
               ...style,
-            height:"auto",width:"auto",
-            border:selectedComponent?.id === component.id
-                  ? "2px solid #2196f3": "none",   
-          }}
+              height: "auto",
+              width: "auto",
+              border:
+                selectedComponent?.id === component.id
+                  ? "2px solid #2196f3"
+                  : "none",
+            }}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-            {/* <QRCodeSVG
+            <QRCodeSVG
               value={component.qrCodeProps?.value || "skjhgfhsdjhg"}
               size={component.qrCodeProps?.size || 150}
               level={component.qrCodeProps?.level || "M"}
               bgColor={component.qrCodeProps?.bgColor || "black"}
               fgColor={component.qrCodeProps?.fgColor || "white"}
-              // marginSize={component.qrCodeProps?.marginSize ||2}
+              marginSize={component.qrCodeProps?.marginSize ||2}
               imageSettings={component.qrCodeProps?.imageSettings}
-            /> */}
+            />
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
@@ -1398,22 +1424,21 @@ useEffect(() => {
           </div>
         );
 
-        case DesignerElementType.area:
-          return (
+      case DesignerElementType.area:
+        return (
           <div
             key={component.id}
             id={`component-${component.id}`}
             style={{
               ...style,
-              width: `${component.areaProps?.width??500}pt`,
-              overflow:"hidden",
-              height: `${component.areaProps?.height??500}pt`,
-              backgroundColor: `${component.areaProps?.bgColor??"white"}`,
-          }}
+              width: `${component.areaProps?.width ?? 500}pt`,
+              overflow: "hidden",
+              height: `${component.areaProps?.height ?? 500}pt`,
+              backgroundColor: `${component.areaProps?.bgColor ?? "white"}`,
+            }}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-           
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
@@ -1421,19 +1446,25 @@ useEffect(() => {
             />
           </div>
         );
-     
     }
   };
   const pointToPx = (pt: number) => pt * (96 / 72);
-  const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
-  const labelHeightPt = templateData?.barcodeState?.labelState?.labelHeight ?? 200;
+  const labelWidthPt =
+    templateData?.barcodeState?.labelState?.labelWidth ?? 300;
+  const labelHeightPt =
+    templateData?.barcodeState?.labelState?.labelHeight ?? 200;
   const labelWidthPx = pointToPx(labelWidthPt);
   const labelHeightPx = pointToPx(labelHeightPt);
   return (
     <div
-    className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
-       ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer ==="Arb" ?"dir-rtl":"dir-ltr"}`
-      }
+      className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
+       ${
+         templateData.propertiesState?.language_prefer === "Eng"
+           ? "dir-ltr"
+           : templateData.propertiesState?.language_prefer === "Arb"
+           ? "dir-rtl"
+           : "dir-ltr"
+       }`}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -1443,11 +1474,15 @@ useEffect(() => {
         height={Infinity}
         minConstraints={[150, Infinity]}
         maxConstraints={[400, Infinity]}
-        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e"]}
+        resizeHandles={[
+          templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e",
+        ]}
         handle={
           <div
             className={`custom-handle ${
-              templateData.propertiesState?.language_prefer === "Arb" ? "rtl" : "ltr"
+              templateData.propertiesState?.language_prefer === "Arb"
+                ? "rtl"
+                : "ltr"
             }`}
           />
         }
@@ -1458,25 +1493,29 @@ useEffect(() => {
             <h2 className="text-sm font-semibold text-gray-700">Components</h2>
           </div>
           <div className="space-y-2">
-            {components?.filter((x: any) => {
-              if(!forCustomRows) {
-               return [DesignerElementType.barcode,
-                DesignerElementType.field,DesignerElementType.text].includes(x.id)
-              }else {
-                return  ![DesignerElementType.barcode].includes(x.id)
-              }
-           
-            })?.map((component) => (
-              <div
-                key={component.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, component.id)}
-                className="flex items-center p-2 rounded hover:bg-gray-100 cursor-move"
-              >
-                {component.icon}
-                <span className="text-sm ml-2">{component.label}</span>
-              </div>
-            ))}
+            {components
+              ?.filter((x: any) => {
+                if (!forCustomRows) {
+                  return [
+                    DesignerElementType.barcode,
+                    DesignerElementType.field,
+                    DesignerElementType.text,
+                  ].includes(x.id);
+                } else {
+                  return ![DesignerElementType.barcode].includes(x.id);
+                }
+              })
+              ?.map((component) => (
+                <div
+                  key={component.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, component.id)}
+                  className="flex items-center p-2 rounded hover:bg-gray-100 cursor-move"
+                >
+                  {component.icon}
+                  <span className="text-sm ml-2">{component.label}</span>
+                </div>
+              ))}
           </div>
         </div>
       </ResizableBox>
@@ -1488,16 +1527,13 @@ useEffect(() => {
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center">
-            {!forCustomRows && 
-               <div className=" ">
-              <ERPPreviousUrlButton size="37px" />
-            </div>
-            }
-
-         
+            {!forCustomRows && (
+              <div className=" ">
+                <ERPPreviousUrlButton size="37px" />
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
-          
             <ERPButton
               title={t("clear")}
               onClick={() => {
@@ -1505,30 +1541,29 @@ useEffect(() => {
                   ...prev,
                   barcodeState: {
                     ...prev.barcodeState,
-                    placedComponents: [], 
+                    placedComponents: [],
                   },
                 }));
                 setSelectedComponent(null);
               }}
               variant="secondary"
             ></ERPButton>
-            {!forCustomRows&&
-            <>
+            {!forCustomRows && (
+              <>
                 <ERPButton
-              startIcon="ri-arrow-go-back-line"
-              title={t("undo")}
-              onClick={() => undoChanges("undo")}
-              variant="secondary"
-            ></ERPButton>
-            <ERPButton
-              startIcon="ri-arrow-go-forward-line"
-              title={t("redo")}
-              onClick={() => undoChanges("redo")}
-              variant="secondary"
-            ></ERPButton>
-            </>
-            }
-        
+                  startIcon="ri-arrow-go-back-line"
+                  title={t("undo")}
+                  onClick={() => undoChanges("undo")}
+                  variant="secondary"
+                ></ERPButton>
+                <ERPButton
+                  startIcon="ri-arrow-go-forward-line"
+                  title={t("redo")}
+                  onClick={() => undoChanges("redo")}
+                  variant="secondary"
+                ></ERPButton>
+              </>
+            )}
 
             <ERPButton
               title={t("save")}
@@ -1547,44 +1582,52 @@ useEffect(() => {
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           style={{
-            width:
-             `${( templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
-             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)}pt`,
-                // : templateData?.propertiesState?.pageSize !== "Custom"
-                // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
-                // :"",
-             maxHeight:`${  (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
-                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)}pt`
-               
-                // : templateData?.propertiesState?.pageSize !== "Custom"
-                // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
-                // :`` ,
+            width: `${
+              (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+              (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
+            }pt`,
+            // : templateData?.propertiesState?.pageSize !== "Custom"
+            // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight
+            // :"",
+            maxHeight: `${
+              (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+              (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
+            }pt`,
+
+            // : templateData?.propertiesState?.pageSize !== "Custom"
+            // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth
+            // :`` ,
           }}
         >
           {/* {templateGroup === "barcode" ? ( */}
-            <ResizableBox
-              width={labelWidthPx}
-              height={labelHeightPx}
-
-              minConstraints={[pointToPx(50), pointToPx(50)]}
-              maxConstraints={[pointToPx(1200), pointToPx(800)]}
-              resizeHandles={[forCustomRows?"s": templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
-              className="box"
-              onResize={handleContentLabelResize}
-            >
-              <div
-                ref={canvasRef}
-                id="teplate-container"
-                className="bg-white shadow-sm mx-auto overflow-hidden relative"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  transform: `scale(${zoom / 100})`,
-                  transformOrigin: "top center",
-                  border: "2px dashed #ccc",
-                  padding: `${
-                    templateData?.barcodeState?.labelState?.padding?.top ?? 0
-                  }pt 
+          <ResizableBox
+            width={labelWidthPx}
+            height={labelHeightPx}
+            minConstraints={[pointToPx(50), pointToPx(50)]}
+            maxConstraints={[pointToPx(1200), pointToPx(800)]}
+            resizeHandles={[
+              forCustomRows
+                ? "s"
+                : templateData.propertiesState?.language_prefer === "Arb"
+                ? "sw"
+                : "se",
+            ]}
+            className="box"
+            onResize={handleContentLabelResize}
+          >
+            <div
+              ref={canvasRef}
+              id="teplate-container"
+              className="bg-white shadow-sm mx-auto overflow-hidden relative"
+              style={{
+                width: "100%",
+                height: "100%",
+                transform: `scale(${zoom / 100})`,
+                transformOrigin: "top center",
+                border: "2px dashed #ccc",
+                padding: `${
+                  templateData?.barcodeState?.labelState?.padding?.top ?? 0
+                }pt 
                             ${
                               templateData?.barcodeState?.labelState?.padding
                                 ?.right ?? 0
@@ -1597,37 +1640,36 @@ useEffect(() => {
                               templateData?.barcodeState?.labelState?.padding
                                 ?.left ?? 0
                             }pt`,
-                  backgroundImage: templateData?.barcodeState?.labelState
-                    ?.background_image
-                    ? `url(${templateData?.barcodeState?.labelState?.background_image})`
-                    : "none",
-                  backgroundPosition: ["cover", "contain", "stretch"].includes(
-                    templateData?.barcodeState?.labelState?.bg_image_position ??
-                      ""
-                  )
-                    ? "center"
+                backgroundImage: templateData?.barcodeState?.labelState
+                  ?.background_image
+                  ? `url(${templateData?.barcodeState?.labelState?.background_image})`
+                  : "none",
+                backgroundPosition: ["cover", "contain", "stretch"].includes(
+                  templateData?.barcodeState?.labelState?.bg_image_position ??
+                    ""
+                )
+                  ? "center"
+                  : templateData?.barcodeState?.labelState?.bg_image_position ??
+                    "center",
+                backgroundSize:
+                  templateData?.barcodeState?.labelState?.bg_image_position ===
+                  "cover"
+                    ? "cover"
                     : templateData?.barcodeState?.labelState
-                        ?.bg_image_position ?? "center",
-                  backgroundSize:
-                    templateData?.barcodeState?.labelState
-                      ?.bg_image_position === "cover"
-                      ? "cover"
-                      : templateData?.barcodeState?.labelState
-                          ?.bg_image_position === "contain"
-                      ? "contain"
-                      : templateData?.barcodeState?.labelState
-                          ?.bg_image_position === "stretch"
-                      ? "100% 100%"
-                      : "auto",
-                  backgroundRepeat: "no-repeat",
-                }}
-              >
-                 
-                {templateData?.barcodeState?.placedComponents?.map(
-                  renderComponent
-                )}
-              </div>
-            </ResizableBox>
+                        ?.bg_image_position === "contain"
+                    ? "contain"
+                    : templateData?.barcodeState?.labelState
+                        ?.bg_image_position === "stretch"
+                    ? "100% 100%"
+                    : "auto",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              {templateData?.barcodeState?.placedComponents?.map(
+                renderComponent
+              )}
+            </div>
+          </ResizableBox>
 
           {/* ) : templateData?.propertiesState?.pageSize === "Custom" ? (
             <ResizableBox
@@ -1686,11 +1728,15 @@ useEffect(() => {
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
         maxConstraints={[400, Infinity]} // Maximum width
-        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ?  "e" : "w"]}
+        resizeHandles={[
+          templateData.propertiesState?.language_prefer === "Arb" ? "e" : "w",
+        ]}
         handle={
           <div
             className={`custom-handle ${
-              templateData.propertiesState?.language_prefer === "Arb" ?  "ltr" : "rtl"
+              templateData.propertiesState?.language_prefer === "Arb"
+                ? "ltr"
+                : "rtl"
             }`}
           />
         }
@@ -1708,11 +1754,9 @@ useEffect(() => {
               </button>
             </div>
             <Tabs value={activeTab} onChange={handleTabChange}>
-              {!forCustomRows &&(
-              <Tab label="Page" value="page" />
-              )}
+              {!forCustomRows && <Tab label="Page" value="page" />}
               <Tab label="Element" value="element" />
-              {templateGroup === "barcode" && !forCustomRows &&(
+              {templateGroup === "barcode" && !forCustomRows && (
                 <Tab label="Label" value="label" />
               )}
             </Tabs>
@@ -1733,37 +1777,39 @@ useEffect(() => {
                   className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
                   // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
-
                   {selectedComponent.type !== DesignerElementType.table &&
                     selectedComponent.type !== DesignerElementType.line &&
                     selectedComponent.type !== DesignerElementType.area &&
                     selectedComponent.type !== DesignerElementType.image && (
                       <Box sx={{ mb: 1 }}>
-                        {selectedComponent.type === DesignerElementType.field ? (
-                        
-                             <ERPDataCombobox
-                             id="content"
-                             data={selectedComponent}
-                             label="Content"
-                             field={{
-                               id: "content",
-                               valueKey: "value",
-                               labelKey: "label",
-                             }}
-                             options={fields.map((field) => ({ 
-                            value: field
-                              .replace(/[\[\]]/g, "") // Remove square brackets
-                              .replace(/([-_\s][a-z])/gi, (match) => match.toUpperCase().replace(/[-_\s]/g, "")) // Convert to camelCase
-                              .replace(/^[A-Z]/, (match) => match.toLowerCase()), // Ensure the first character is lowercase
-                            label: field.replace(/[\[\]]/g, ""), // Remove square brackets for the label
-                          }))}
-                             onChangeData={(data) =>
-                               handlePropertyChange("content", data.content)
-                             }
-                             />
-                       
-                       
-                        ) : selectedComponent.type === DesignerElementType.qrCode ? (
+                        {selectedComponent.type ===
+                        DesignerElementType.field ? (
+                          <ERPDataCombobox
+                            id="content"
+                            data={selectedComponent}
+                            label="Content"
+                            field={{
+                              id: "content",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={fields.map((field) => ({
+                              value: field
+                                .replace(/[\[\]]/g, "") // Remove square brackets
+                                .replace(/([-_\s][a-z])/gi, (match) =>
+                                  match.toUpperCase().replace(/[-_\s]/g, "")
+                                ) // Convert to camelCase
+                                .replace(/^[A-Z]/, (match) =>
+                                  match.toLowerCase()
+                                ), // Ensure the first character is lowercase
+                              label: field.replace(/[\[\]]/g, ""), // Remove square brackets for the label
+                            }))}
+                            onChangeData={(data) =>
+                              handlePropertyChange("content", data.content)
+                            }
+                          />
+                        ) : selectedComponent.type ===
+                          DesignerElementType.qrCode ? (
                           <ERPDataCombobox
                             id="value"
                             data={selectedComponent.qrCodeProps}
@@ -1773,16 +1819,18 @@ useEffect(() => {
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={AccountMasterFields?.map((field, index) => ({
-                              value: field,
-                              label: field,
-                            }))}
+                            options={AccountMasterFields?.map(
+                              (field, index) => ({
+                                value: field,
+                                label: field,
+                              })
+                            )}
                             onChangeData={(data) =>
                               handleQRCodePropertyChange("value", data.value)
                             }
                           />
                         ) : (
-                            <ERPInput
+                          <ERPInput
                             id="content"
                             label="Content"
                             value={selectedComponent.content}
@@ -1791,30 +1839,153 @@ useEffect(() => {
                               handlePropertyChange("content", e.target.value)
                             }
                           />
-                      
-                        )
-                    
-                      }
+                        )}
                       </Box>
                     )}
-                     <Box sx={{ mb: 1 }}>
-                          {selectedComponent.type === DesignerElementType.image && (
-                           <ERPDataCombobox
-                           id="content"
-                           data={selectedComponent}
-                           label="Content"
-                           field={{
-                             id: "content",
-                             valueKey: "value",
-                             labelKey: "label",
-                           }}
-                           options={imgContent}
-                           onChangeData={(data) =>
-                             handlePropertyChange("content", data.content)
-                           }
-                         />
-                        ) }
-                        </Box>
+
+                  {selectedComponent.type === DesignerElementType.image && (
+                    <Box sx={{ mb: 1 }} className="flex  gap-2  flex-col">
+                      <div className="text-xs">{t("select_image")}</div>
+                          <ERPCheckbox
+                            id="imgFromDevice"
+                            label={t("upload")}
+                            data={selectedComponent}
+                            checked={
+                              selectedComponent.imgFromDevice?? false
+                            }
+                            onChange={(e) =>
+                              handlePropertyChange(
+                                "imgFromDevice",
+                                e.target.checked
+                              )
+                            }
+                          />
+                          {!selectedComponent?.imgFromDevice && (
+                        <ERPDataCombobox
+                          id="content"
+                          data={selectedComponent}
+                          label="Content"
+                          field={{
+                            id: "content",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={imgContent}
+                          onChangeData={(data) => {
+                            handlePropertyChange("content", data.content);
+                   
+                          }}
+                        />
+                          )}
+                        
+                      {selectedComponent?.imgFromDevice &&(
+                        <>
+                        <ERPInput
+                        id="content"
+                        type="file"
+                        ref={inputImgFile}
+                        onChange={(e: any) => {
+                          if (e.target.files[0].size > 2097152) {
+                            ERPToast.showWith(
+                              "Maximum file size allowed is 2 MB, please try with different file.",
+                              "warning"
+                            );
+                          } else {
+                            handleImagePropsChange(
+                              "content",
+                              e.target.files[0]
+                            );
+                            // Set imgFromDevice to true when an image is selected from device
+                            // handlePropertyChange("imgFromDevice", true);
+                          }
+                        }}
+                        className={"hidden"}
+                        accept="image/png,image/jpeg"
+                        label="Image"
+                        placeholder=" "
+                      />
+                      <label htmlFor="content">
+                        <div
+                          onClick={() => inputImgFile?.current?.click()}
+                          className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${
+                            selectedComponent?.content
+                              ? "hidden"
+                              : ""
+                          }`}
+                        >
+                          Choose from Desktop
+                        </div>
+                      </label>
+
+                      {selectedComponent?.content && (
+                        <>
+                          <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
+                            Click Save to apply the selected background image
+                          </div>
+                       
+                            <img
+                              draggable={false}
+                              src={
+                                templateData?.barcodeState?.labelState
+                                  ?.background_image
+                              }
+                              alt="background_image"
+                              height={100}
+                              width={100}
+                              className="size-5"
+                            />
+                         
+                          <div
+                            className="text-accent text-xs cursor-pointer  max-w-min"
+                            onClick={handleRemoveImage}
+                          >
+                            Remove
+                          </div>
+                      
+                        
+                        </>
+                      )}
+
+                        </>
+                      )}
+                      {selectedComponent?.content &&(
+                        <>
+                         <ERPDataCombobox
+                          id="imgFit"
+                          data={selectedComponent}
+                          label="Image Fit"
+                          field={{
+                            id: "imgFit",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={objectFitOptions}
+                          onChangeData={(data) =>
+                            handlePropertyChange("imgFit", data.imgFit)
+                          }
+                        />
+                          <ERPDataCombobox
+                            noLabel
+                            id="imgPosition"
+                            data={selectedComponent}
+                            defaultValue={
+                           selectedComponent?.imgPosition ?? "center"
+                            }
+                             onChangeData={(data) =>
+                            handlePropertyChange("imgPosition", data.imgPosition)
+                          }
+                            field={{
+                              id: "imgPosition",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={objectPosition}
+                          />
+                        </>
+                      )}
+                     
+                    </Box>
+                  )}
 
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
@@ -1842,24 +2013,6 @@ useEffect(() => {
                     />
                   </Box>
 
-                  {selectedComponent && selectedComponent.type === DesignerElementType.image &&(
-                    <Box sx={{ mb: 1 }}>
-                    <ERPDataCombobox
-                    id="imgFit"
-                    data={selectedComponent}
-                    label="Image Fit"
-                    field={{
-                      id: "imgFit",
-                      valueKey: "value",
-                      labelKey: "label",
-                    }}
-                    options={objectFitOptions}
-                    onChangeData={(data) =>
-                      handlePropertyChange("imgFit", data.imgFit)
-                    }
-                  />
-                  </Box>
-                  )}
                   {selectedComponent &&
                     selectedComponent.type === DesignerElementType.table && (
                       <Button
@@ -1885,8 +2038,9 @@ useEffect(() => {
                     customStyle={{
                       position: "absolute",
                       top: `${100}px`,
-                         // Conditionally set left or right based on language preference
-                      ...(templateData.propertiesState?.language_prefer === "Arb"
+                      // Conditionally set left or right based on language preference
+                      ...(templateData.propertiesState?.language_prefer ===
+                      "Arb"
                         ? { left: `${10}px` }
                         : { right: `${10}px` }),
                       width: `${sidebarWidth - 40}px`,
@@ -1950,123 +2104,182 @@ useEffect(() => {
                     </Box>
                   )}
 
-                {selectedComponent && selectedComponent.type === DesignerElementType.qrCode && (
-                   <Box sx={{ mb: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Box>
-                        <ERPSlider
-                          label="QR Code Size"
-                          value={selectedComponent.qrCodeProps?.size || 128}
-                          onChange={(e) => handleQRCodePropertyChange("size", e.target.valueAsNumber)}
-                          min={64}
-                          max={512}
-                        />
-                      
-                      </Box>
-                      <Box>
-                        <ERPDataCombobox
-                          id="level"
-                          data={selectedComponent.qrCodeProps}
-                          label="Error Correction Level"
-                          field={{
-                            id: "level",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: "L", label: "Low" },
-                            { value: "M", label: "Medium" },
-                            { value: "Q", label: "Quartile" },
-                            { value: "H", label: "High" },
-                          ]}
-                          onChange={(e) => handleQRCodePropertyChange("level", e.value)}
-                        />
-                      </Box>
-                      <Box>
-                        <ERPInput
-                          id="bgColor"
-                          label="Background Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.bgColor || "#FFFFFF"}
-                          data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("bgColor", e.target.value)}
-                        />
-                      </Box>
-                      <Box>
-                        <ERPInput
-                          id="fgColor"
-                          label="Foreground Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.fgColor || "#000000"}
-                          data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("fgColor", e.target.value)}
-                        />
-                      </Box>
-                      <Box>
-                        <ERPInput
-                          id="logoUrl"
-                          label="Logo URL"
-                          value={selectedComponent.qrCodeProps?.imageSettings?.src || ""}
-                          data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("imageSettings", {
-                            ...selectedComponent.qrCodeProps?.imageSettings,
-                            src: e.target.value,
-                          })}
-                        />
-                      </Box>
-                      {selectedComponent.qrCodeProps?.imageSettings?.src && (
-                        <>
-                          <Box>
-                            <ERPSlider
-                              label={`Logo Width (${selectedComponent.qrCodeProps?.imageSettings?.width})`}
-                              value={selectedComponent.qrCodeProps?.imageSettings?.width}
-                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
+                  {selectedComponent &&
+                    selectedComponent.type === DesignerElementType.qrCode && (
+                      <Box
+                        sx={{
+                          mb: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        <Box>
+                          <ERPSlider
+                            label="QR Code Size"
+                            value={selectedComponent.qrCodeProps?.size || 128}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange(
+                                "size",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={64}
+                            max={512}
+                          />
+                        </Box>
+                        <Box>
+                          <ERPDataCombobox
+                            id="level"
+                            data={selectedComponent.qrCodeProps}
+                            label="Error Correction Level"
+                            field={{
+                              id: "level",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: "L", label: "Low" },
+                              { value: "M", label: "Medium" },
+                              { value: "Q", label: "Quartile" },
+                              { value: "H", label: "High" },
+                            ]}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange("level", e.value)
+                            }
+                          />
+                        </Box>
+                        <Box>
+                          <ERPInput
+                            id="bgColor"
+                            label="Background Color"
+                            type="color"
+                            value={
+                              selectedComponent.qrCodeProps?.bgColor ||
+                              "#FFFFFF"
+                            }
+                            data={selectedComponent.qrCodeProps}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange(
+                                "bgColor",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Box>
+                        <Box>
+                          <ERPInput
+                            id="fgColor"
+                            label="Foreground Color"
+                            type="color"
+                            value={
+                              selectedComponent.qrCodeProps?.fgColor ||
+                              "#000000"
+                            }
+                            data={selectedComponent.qrCodeProps}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange(
+                                "fgColor",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Box>
+                        <Box>
+                          <ERPInput
+                            id="logoUrl"
+                            label="Logo URL"
+                            value={
+                              selectedComponent.qrCodeProps?.imageSettings
+                                ?.src || ""
+                            }
+                            data={selectedComponent.qrCodeProps}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange("imageSettings", {
                                 ...selectedComponent.qrCodeProps?.imageSettings,
-                                width: e.target.valueAsNumber,
-                              })}
-                              min={10}
-                              max={30}
-                            />
-                          </Box>
-                          <Box>
-                            <ERPSlider
-                              label={`Logo Height (${selectedComponent.qrCodeProps?.imageSettings?.height})`}
-                              value={selectedComponent.qrCodeProps?.imageSettings?.height || 24}
-                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
-                                ...selectedComponent.qrCodeProps?.imageSettings,
-                                height: e.target.valueAsNumber,
-                              })}
-                              min={10}
-                              max={30}
-                            />
-                          </Box>
-                          <Box>
-                            <ERPCheckbox
-                              id="excavate"
-                              label="Excavate (Clear QR background under logo)"
-                              data={selectedComponent.qrCodeProps}
-                              checked={selectedComponent.qrCodeProps?.imageSettings?.excavate ?? false}
-                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
-                                ...selectedComponent.qrCodeProps?.imageSettings,
-                                excavate: e.target.checked,
-                              })}
-                            />
-                          </Box>
-                        </>
-                      )}
-                      <Box>
-                        <ERPInput
-                          id="marginSize"
-                          label="Margin Size"
-                          type="number"
-                          value={selectedComponent.qrCodeProps?.marginSize || 0}
-                          data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("marginSize", parseInt(e.target.value, 10))}
-                        />
+                                src: e.target.value,
+                              })
+                            }
+                          />
+                        </Box>
+                        {selectedComponent.qrCodeProps?.imageSettings?.src && (
+                          <>
+                            <Box>
+                              <ERPSlider
+                                label={`Logo Width (${selectedComponent.qrCodeProps?.imageSettings?.width})`}
+                                value={
+                                  selectedComponent.qrCodeProps?.imageSettings
+                                    ?.width
+                                }
+                                onChange={(e) =>
+                                  handleQRCodePropertyChange("imageSettings", {
+                                    ...selectedComponent.qrCodeProps
+                                      ?.imageSettings,
+                                    width: e.target.valueAsNumber,
+                                  })
+                                }
+                                min={10}
+                                max={30}
+                              />
+                            </Box>
+                            <Box>
+                              <ERPSlider
+                                label={`Logo Height (${selectedComponent.qrCodeProps?.imageSettings?.height})`}
+                                value={
+                                  selectedComponent.qrCodeProps?.imageSettings
+                                    ?.height || 24
+                                }
+                                onChange={(e) =>
+                                  handleQRCodePropertyChange("imageSettings", {
+                                    ...selectedComponent.qrCodeProps
+                                      ?.imageSettings,
+                                    height: e.target.valueAsNumber,
+                                  })
+                                }
+                                min={10}
+                                max={30}
+                              />
+                            </Box>
+                            <Box>
+                              <ERPCheckbox
+                                id="excavate"
+                                label="Excavate (Clear QR background under logo)"
+                                data={selectedComponent.qrCodeProps}
+                                checked={
+                                  selectedComponent.qrCodeProps?.imageSettings
+                                    ?.excavate ?? false
+                                }
+                                onChange={(e) =>
+                                  handleQRCodePropertyChange("imageSettings", {
+                                    ...selectedComponent.qrCodeProps
+                                      ?.imageSettings,
+                                    excavate: e.target.checked,
+                                  })
+                                }
+                              />
+                            </Box>
+                          </>
+                        )}
+                        <Box>
+                          <ERPInput
+                            id="marginSize"
+                            label="Margin Size"
+                            type="number"
+                            value={
+                              selectedComponent.qrCodeProps?.marginSize || 0
+                            }
+                            data={selectedComponent.qrCodeProps}
+                            onChange={(e) =>
+                              handleQRCodePropertyChange(
+                                "marginSize",
+                                parseInt(e.target.value, 10)
+                              )
+                            }
+                          />
+                        </Box>
                       </Box>
-                    
-                    </Box>
-                  )}
-                  
+                    )}
+
                   {selectedComponent.type === DesignerElementType.line ? (
                     <Box
                       sx={{ mb: 1 }}
@@ -2075,10 +2288,10 @@ useEffect(() => {
                       <Box className="basis-2/3">
                         <ERPSlider
                           label="Line Height"
-                          value={selectedComponent?.lineHeight}
+                          value={selectedComponent?.lineWidth}
                           onChange={(e) =>
                             handlePropertyChange(
-                              "lineHeight",
+                              "lineWidth",
                               e.target.valueAsNumber
                             )
                           }
@@ -2088,14 +2301,14 @@ useEffect(() => {
                       </Box>
                       <Box className="basis-1/3">
                         <ERPInput
-                          id="lineHeight"
+                          id="lineWidth"
                           type="number"
                           noLabel
-                          value={selectedComponent.lineHeight}
+                          value={selectedComponent.lineWidth}
                           data={selectedComponent}
                           onChange={(e) =>
                             handlePropertyChange(
-                              "lineHeight",
+                              "lineWidth",
                               parseInt(e.target.value, 10)
                             )
                           }
@@ -2103,8 +2316,9 @@ useEffect(() => {
                       </Box>
                     </Box>
                   ) : (
-                    (selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode && 
-                      selectedComponent.type !== DesignerElementType.area) && (
+                    selectedComponent.type !== DesignerElementType.table &&
+                    selectedComponent.type !== DesignerElementType.qrCode &&
+                    selectedComponent.type !== DesignerElementType.area && (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
@@ -2216,10 +2430,10 @@ useEffect(() => {
                     </div>
                   )}
 
-                  {(selectedComponent.type !== DesignerElementType.line &&
-                    selectedComponent.type !== DesignerElementType.table && 
-                    selectedComponent.type !== DesignerElementType.qrCode && selectedComponent.type !== DesignerElementType.area) &&  (
-                 
+                  {selectedComponent.type !== DesignerElementType.line &&
+                    selectedComponent.type !== DesignerElementType.table &&
+                    selectedComponent.type !== DesignerElementType.qrCode &&
+                    selectedComponent.type !== DesignerElementType.area && (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
@@ -2257,106 +2471,113 @@ useEffect(() => {
                       </Box>
                     )}
 
-                   {selectedComponent.type === DesignerElementType.area && selectedComponent.areaProps &&(
-                    <>
-                    
-                    <Box
-                        sx={{ mb: 1 }}
-                        className="flex justify-start gap-2 items-center"
-                      >
-                        <Box className="basis-2/3">
-                          <ERPSlider
-                            label="Height"
-                            value={selectedComponent.areaProps?.height}
-                            onChange={(e) =>
-                              handleAreaPropertyChange(
-                                "height", parseInt(e.target.value, 10)
-                              )
-                            }
-                            min={10}
-                            max={1400}
-                          />
+                  {selectedComponent.type === DesignerElementType.area &&
+                    selectedComponent.areaProps && (
+                      <>
+                        <Box
+                          sx={{ mb: 1 }}
+                          className="flex justify-start gap-2 items-center"
+                        >
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Height"
+                              value={selectedComponent.areaProps?.height}
+                              onChange={(e) =>
+                                handleAreaPropertyChange(
+                                  "height",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                              min={10}
+                              max={1400}
+                            />
+                          </Box>
+
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="height"
+                              type="number"
+                              noLabel
+                              value={selectedComponent.areaProps?.height}
+                              data={selectedComponent.areaProps}
+                              onChange={(e) =>
+                                handleAreaPropertyChange(
+                                  "height",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                            />
+                          </Box>
                         </Box>
 
-                        <Box className="basis-1/3">
+                        <Box
+                          sx={{ mb: 1 }}
+                          className="flex justify-start gap-2 items-center"
+                        >
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Width"
+                              value={selectedComponent.areaProps?.width}
+                              onChange={(e) =>
+                                handleAreaPropertyChange(
+                                  "width",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={10}
+                              max={1400}
+                            />
+                          </Box>
+
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="width"
+                              type="number"
+                              noLabel
+                              value={selectedComponent.areaProps?.width}
+                              data={selectedComponent.areaProps}
+                              onChange={(e) =>
+                                handleAreaPropertyChange(
+                                  "width",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                            />
+                          </Box>
+                        </Box>
+                        <Box sx={{ mb: 1 }}>
                           <ERPInput
-                            id="height"
-                            type="number"
-                            noLabel
-                            value={selectedComponent.areaProps?.height}
+                            id="bgColor"
+                            label="Background Color"
+                            type="color"
+                            value={selectedComponent.areaProps?.bgColor}
                             data={selectedComponent.areaProps}
                             onChange={(e) =>
                               handleAreaPropertyChange(
-                                "height",
-                                parseInt(e.target.value, 10)
+                                "bgColor",
+                                e.target.value
                               )
                             }
                           />
                         </Box>
-                      </Box>
-                    
-                      <Box
-                        sx={{ mb: 1 }}
-                        className="flex justify-start gap-2 items-center"
-                      >
-                        <Box className="basis-2/3">
-                          <ERPSlider
-                            label="Width"
-                            value={selectedComponent.areaProps?.width}
-                            onChange={(e) =>
-                              handleAreaPropertyChange(
-                                "width",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={10}
-                            max={1400}
-                          />
-                        </Box>
-
-                        <Box className="basis-1/3">
-                          <ERPInput
-                            id="width"
-                            type="number"
-                            noLabel
-                            value={selectedComponent.areaProps?.width}
+                        <Box sx={{ mb: 1 }}>
+                          <ERPCheckbox
+                            id="isRepeat"
+                            label="Repeat On Each Page"
                             data={selectedComponent.areaProps}
+                            checked={
+                              selectedComponent.areaProps?.isRepeat ?? true
+                            }
                             onChange={(e) =>
                               handleAreaPropertyChange(
-                                "width",
-                                parseInt(e.target.value, 10)
+                                "isRepeat",
+                                e.target.checked
                               )
                             }
                           />
                         </Box>
-                      </Box>
-                    <Box sx={{mb:1}}>
-                    <ERPInput
-                      id="bgColor"
-                      label="Background Color"
-                      type="color"
-                      value={selectedComponent.areaProps?.bgColor}
-                      data={selectedComponent.areaProps}
-                      onChange={(e) =>
-                        handleAreaPropertyChange(
-                          "bgColor",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </Box>
-                  <Box sx={{mb:1}}>
-                  <ERPCheckbox
-                    id="isRepeat"
-                    label="Repeat On Each Page"
-                    data={selectedComponent.areaProps}
-                    checked={selectedComponent.areaProps?.isRepeat ?? true}
-                    onChange={(e) => handleAreaPropertyChange("isRepeat", e.target.checked)}
-                  />
-                 </Box>
-                  </>
-                    
-                   )}
+                      </>
+                    )}
                   <Box sx={{ mb: 1 }}>
                     {(selectedComponent.type == DesignerElementType.text ||
                       selectedComponent.type == DesignerElementType.field) && (
@@ -2510,26 +2731,26 @@ useEffect(() => {
                   {selectedComponent.type === DesignerElementType.barcode &&
                     selectedComponent.barcodeProps && (
                       <div className="space-y-4">
-                          <Box>
+                        <Box>
                           <ERPDataCombobox
-                          id="field"
-                          label="Field"
-                          data={selectedComponent.barcodeProps}
-                          field={{
-                            id: "field",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={AccountMasterFields?.map((field) => ({
-                            value: field,
-                            label: field,
-                          }))}
-                          onChangeData={(data) =>
-                            handleBarcodePropertyChange("field", data.field)
-                          }
-                        />
-                          </Box>
-                       
+                            id="field"
+                            label="Field"
+                            data={selectedComponent.barcodeProps}
+                            field={{
+                              id: "field",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={AccountMasterFields?.map((field) => ({
+                              value: field,
+                              label: field,
+                            }))}
+                            onChangeData={(data) =>
+                              handleBarcodePropertyChange("field", data.field)
+                            }
+                          />
+                        </Box>
+
                         <Box>
                           <ERPDataCombobox
                             id="format"
@@ -2925,7 +3146,7 @@ useEffect(() => {
                         )}
                         <div
                           className="text-accent text-xs cursor-pointer  max-w-min"
-                          onClick={handleRemoveImage}
+                          onClick={handleRemoveBgImage}
                         >
                           Remove
                         </div>
@@ -3202,30 +3423,34 @@ useEffect(() => {
                     ))}
                   </Box>
                 </Box>
-               
+
                 <Box sx={{ mb: 1 }}>
-                <ERPDataCombobox
-                      defaultValue={ "Eng"}
-                      field={{
-                        id: "language_prefer",
-                        required: true,
-                        valueKey: "value",
-                        labelKey: "label",
-                      }}
-                      data={templateData?.propertiesState}
-                      value={templateData?.propertiesState?.language_prefer ?? "Eng"}
-                      onChangeData={(data: any) => {
-                        handlePagePropsChange("language_prefer", data.language_prefer);
-                      }}
-                      id="language_prefer"
-                      options={[
-                        { value: "Eng", label: "English" },
-                        { value: "Arb", label: "Arabic" },
-                       
-                      ]}
-                      label="Language Prefer"
-                    />
-                </Box> 
+                  <ERPDataCombobox
+                    defaultValue={"Eng"}
+                    field={{
+                      id: "language_prefer",
+                      required: true,
+                      valueKey: "value",
+                      labelKey: "label",
+                    }}
+                    data={templateData?.propertiesState}
+                    value={
+                      templateData?.propertiesState?.language_prefer ?? "Eng"
+                    }
+                    onChangeData={(data: any) => {
+                      handlePagePropsChange(
+                        "language_prefer",
+                        data.language_prefer
+                      );
+                    }}
+                    id="language_prefer"
+                    options={[
+                      { value: "Eng", label: "English" },
+                      { value: "Arb", label: "Arabic" },
+                    ]}
+                    label="Language Prefer"
+                  />
+                </Box>
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
                     id="printer"
@@ -3250,7 +3475,7 @@ useEffect(() => {
       </ResizableBox>
 
       {/* Save Dialog */}
-     
+
       {/* Preview Dialog */}
       <ERPModal
         title="Preview"
@@ -3279,5 +3504,5 @@ useEffect(() => {
       />
     </div>
   );
-}
+};
 export default PDFBarcodeDesigner;

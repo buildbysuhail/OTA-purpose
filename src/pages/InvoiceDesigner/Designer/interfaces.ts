@@ -115,9 +115,11 @@ export interface PlacedComponent {
   rotate:number;
   lineThickness?:string;
   lineColor?:string;
-  lineHeight?:number;
+  lineWidth?:number;
   lineType?:"solid"|"dotted"|"dashed";
   imgFit?:string;
+  imgPosition?:string;
+  imgFromDevice?:boolean;
   barcodeProps?: {
     format: string;
     field:string;

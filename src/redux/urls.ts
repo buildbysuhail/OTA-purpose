@@ -554,7 +554,7 @@ const Urls = {
   print_details: "/Inventory/RptAdvancedReport/PrintDetails/",
   inventory_status: "/Inventory/RptAdvancedReport/InventoryStatusReport/",
   void_report: "/Inventory/RptAdvancedReport/VoidReport/",
-  counter_report: "/Inventory/RptAdvancedReport/CounterReport/",
+  counter_report: "/Inventory/RptInventoryReport/CounterReport/",
   sales_return_estimate_register: "/Inventory/RptSalesReport/SalesReturnEstimateRegister/",
   diagnosis_report: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",
   diagnosis_report_zero_rate_productlist: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",

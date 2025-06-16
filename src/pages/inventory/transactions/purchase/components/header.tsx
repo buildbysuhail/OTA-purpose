@@ -329,9 +329,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {/* Settings Button */}
           <div>
             {phone ? (
-              <TransactionUserConfig phone={true} />
+              <TransactionUserConfig phone={true} transactionType={transactionType??""}/>
             ) : (
-              <TransactionUserConfig />
+              <TransactionUserConfig transactionType={transactionType??""} />
             )}
           </div>
 
@@ -702,9 +702,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {/* Settings Button */}
           <div>
             {phone ? (
-              <TransactionUserConfig phone={true} />
+              <TransactionUserConfig phone={true} transactionType={transactionType??""}/>
             ) : (
-              <TransactionUserConfig />
+              <TransactionUserConfig transactionType={transactionType??""}/>
             )}
           </div>
 

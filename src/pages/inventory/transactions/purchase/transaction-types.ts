@@ -105,7 +105,7 @@ export interface TransactionMaster {
   totalDiscount: number;
   billDiscount: number;
   grandTotal: number;
-  grandTotalFc: number;
+  grandTotalFc?: number;
   totalProfit: number;
   roundAmount: number;
   cashReceived: number;
@@ -283,9 +283,6 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
-  id?: string;
-  status?: string;
-  [key: string]: any;
 
 }
 export interface TransactionDetails2 {
@@ -360,6 +357,7 @@ export interface SummaryItems {
   margin: number;
   salesPrice: string;
 }
+
 export interface TransactionFormState {
   store: any;
   formCode: string; 

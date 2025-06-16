@@ -16,7 +16,10 @@ import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
 import VoucherType from "../../../enums/voucher-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
+import {
+  Countries,
+  UserModel,
+} from "../../../redux/slices/user-session/reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { calculateTotal, clearEntryControl } from "./functions";
@@ -59,9 +62,9 @@ const accTransactionSlice = createSlice({
         counterwiseCashLedgerId,
         allowSalesCounter,
         voucherNo,
-        rowOnly = false
+        rowOnly = false,
       } = action.payload;
-      (state.row.ledgerCode = "");
+      state.row.ledgerCode = "";
       state.row.ledgerID = null;
       state.row.ledgerName = "";
       state.row.accTransactionDetailID = 0;
@@ -82,7 +85,7 @@ const accTransactionSlice = createSlice({
       state.row.chequeNumber = "";
 
       state.row.bankCharge = 0;
-      state.row.paymentType ="";
+      state.row.paymentType = "";
       // state.masterAccountID = 0;
       state.row.costCentreID = defaultCostCenterID;
 
@@ -106,79 +109,77 @@ const accTransactionSlice = createSlice({
       }
       state.formElements.btnAdd.label = "Add";
       state.isRowEdit = false;
-      if(!rowOnly) {
-      state.isBahamdoonPOSReceipt = false;
-      (state.transaction.master.accTransactionMasterID = 0),
-      state.transaction.attachments = [];
-      state.transaction.master.remarks = "";
-      state.previousNarration = "";
-      state.transaction.master.currencyRate = 1;
-      state.transaction.master.referenceNumber = "";
-      state.transaction.master.commonNarration = "";
-      state.transaction.master.voucherNumber = voucherNo ?? 0;
-      state.transaction.master.transactionDate = moment(
-        softwareDate,
-        "DD/MM/YYYY"
-      )
-        .local()
-        .toISOString();
-        
+      if (!rowOnly) {
+        state.isBahamdoonPOSReceipt = false;
+        (state.transaction.master.accTransactionMasterID = 0),
+          (state.transaction.attachments = []);
+        state.transaction.master.remarks = "";
+        state.previousNarration = "";
+        state.transaction.master.currencyRate = 1;
+        state.transaction.master.referenceNumber = "";
+        state.transaction.master.commonNarration = "";
+        state.transaction.master.voucherNumber = voucherNo ?? 0;
+        state.transaction.master.transactionDate = moment(
+          softwareDate,
+          "DD/MM/YYYY"
+        )
+          .local()
+          .toISOString();
 
+        state.transaction.details = [];
+        state.isEdit = false;
+        state.printOnSave = true;
+        state.transaction.master.isLocked = false;
+        state.transaction.master.totalAmount = 0;
 
-      state.transaction.details = [];
-      state.isEdit = false;
-      state.printOnSave = true;
-      state.transaction.master.isLocked = false;
-      state.transaction.master.totalAmount = 0;
-
-      if (counterwiseCashLedgerId > 0 && allowSalesCounter) {
-        if (
-          state.transaction.master.voucherType == "CP" ||
-          state.transaction.master.voucherType == "CR"
-        ) {
-          state.masterAccountID = counterwiseCashLedgerId;
+        if (counterwiseCashLedgerId > 0 && allowSalesCounter) {
+          if (
+            state.transaction.master.voucherType == "CP" ||
+            state.transaction.master.voucherType == "CR"
+          ) {
+            state.masterAccountID = counterwiseCashLedgerId;
+          }
         }
-      }
 
-      state.transaction.master.employeeID =
-        userSession.employeeId > 0 ? userSession.employeeId : 0;
+        state.transaction.master.employeeID =
+          userSession.employeeId > 0 ? userSession.employeeId : 0;
 
-      state.formElements.ledgerID.reload = true;
-      state.formElements.costCentreID.reload = true;
-      state.formElements.amount.disabled = false;
-      state.formElements.pnlMasters.disabled = false;
-      state.formElements.employee.disabled = false;
-      state.formElements.jvDrCr.disabled = false;
-      state.formElements.masterAccount.disabled = false;
-      state.formElements.referenceDate.disabled = false;
-      state.formElements.referenceNumber.disabled = false;
-      state.formElements.transactionDate.disabled = false;
-      state.formElements.linkEdit.visible = false;
-      
-      state.formElements.masterAccount.disabled = (state.transaction.master.voucherType ==
-              VoucherType.CashPayment ||
-              state.transaction.master.voucherType ==
-                VoucherType.CashReceipt) &&
-            userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter &&
-            userSession?.counterAssignedCashLedgerId > 0
-              ? userSession.countryId == Countries.India
-                ? state.masterAccountActive == true
-                  ? false
-                  : true
-                : true
-              : false;
-
-      if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
-        state.formElements.costCentreID.disabled = true;
+        state.formElements.ledgerID.reload = true;
+        state.formElements.costCentreID.reload = true;
+        state.formElements.amount.disabled = false;
+        state.formElements.pnlMasters.disabled = false;
+        state.formElements.employee.disabled = false;
+        state.formElements.jvDrCr.disabled = false;
+        state.formElements.masterAccount.disabled = false;
+        state.formElements.referenceDate.disabled = false;
+        state.formElements.referenceNumber.disabled = false;
+        state.formElements.transactionDate.disabled = false;
         state.formElements.linkEdit.visible = false;
-      }
-      state.prev = modelToBase64Unicode(setTransactionForHistory({
-        transaction: { ...state.transaction },
-        row: { ...state.row },
-      }));
 
-    }
+        state.formElements.masterAccount.disabled =
+          (state.transaction.master.voucherType == VoucherType.CashPayment ||
+            state.transaction.master.voucherType == VoucherType.CashReceipt) &&
+          userSession?.counterwiseCashLedgerId > 0 &&
+          applicationSettings.accountsSettings?.allowSalesCounter &&
+          userSession?.counterAssignedCashLedgerId > 0
+            ? userSession.countryId == Countries.India
+              ? state.masterAccountActive == true
+                ? false
+                : true
+              : true
+            : false;
+
+        if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
+          state.formElements.costCentreID.disabled = true;
+          state.formElements.linkEdit.visible = false;
+        }
+        state.prev = modelToBase64Unicode(
+          setTransactionForHistory({
+            transaction: { ...state.transaction },
+            row: { ...state.row },
+          })
+        );
+      }
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (
@@ -187,9 +188,9 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionFormState]?: any };
       }>
     ) => {
-      console.log('accFormStateHandleFieldChange2');
-      console.log( action.payload?.fields?.row);
-      
+      console.log("accFormStateHandleFieldChange2");
+      console.log(action.payload?.fields?.row);
+
       const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       Object.keys(fields).forEach((key) => {
@@ -204,58 +205,391 @@ const accTransactionSlice = createSlice({
           isDateField ? new Date(fieldValue).toISOString() : fieldValue;
       });
     },
-accFormStateHandleFieldChangeKeysOnly: (
-  state,
-  action: PayloadAction<{
-    fields: { [fieldId in keyof AccTransactionFormState]?: any };
-  }>
-) => {
-  const { fields } = action.payload;
+    accFormStateHandleFieldChangeKeysOnly: (
+      state,
+      action: PayloadAction<{
+        fields: { [fieldId in keyof AccTransactionFormState]?: any };
+      }>
+    ) => {
+      try {
+        // Validate action payload
+        if (!action || typeof action !== "object") {
+          console.error(
+            "Invalid action provided to accFormStateHandleFieldChangeKeysOnly"
+          );
+          return;
+        }
 
-  (Object.keys(fields) as (keyof AccTransactionFormState)[]).forEach((key) => {
-    const fieldValue = fields[key];
+        if (!action.payload || typeof action.payload !== "object") {
+          console.error("Invalid payload in action");
+          return;
+        }
 
-    if (
-      fieldValue &&
-      typeof fieldValue === 'object' &&
-      !Array.isArray(fieldValue)
-    ) {
-      // Ensure nested object exists in state
-      if (!state[key]) {
-        (state[key] as any) = {};
+        const { fields } = action.payload;
+
+        // Validate fields
+        if (!fields || typeof fields !== "object") {
+          console.error("Invalid fields in payload");
+          return;
+        }
+
+        // Validate state
+        if (!state || typeof state !== "object") {
+          console.error("Invalid state provided");
+          return;
+        }
+
+        // Recursive function to handle nested objects with comprehensive error checking
+        const updateNestedField = (
+          target: any,
+          source: any,
+          path: string[] = []
+        ): boolean => {
+          try {
+            // Validate inputs
+            if (!target || typeof target !== "object") {
+              console.error(`Invalid target at path: ${path.join(".")}`);
+              return false;
+            }
+
+            if (!source || typeof source !== "object") {
+              console.error(`Invalid source at path: ${path.join(".")}`);
+              return false;
+            }
+
+            const sourceKeys = Object.keys(source);
+            if (sourceKeys.length === 0) {
+              console.warn(`Empty source object at path: ${path.join(".")}`);
+              return true;
+            }
+
+            sourceKeys.forEach((key) => {
+              try {
+                // Validate key
+                if (typeof key !== "string" || key.trim() === "") {
+                  console.error(
+                    `Invalid key "${key}" at path: ${path.join(".")}`
+                  );
+                  return;
+                }
+
+                const sourceValue = source[key];
+                const currentPath = [...path, key];
+
+                // Check for circular references
+                if (sourceValue === source) {
+                  console.error(
+                    `Circular reference detected at path: ${currentPath.join(
+                      "."
+                    )}`
+                  );
+                  return;
+                }
+
+                // Handle null and undefined values
+                if (sourceValue === null) {
+                  target[key] = null;
+                  return;
+                }
+
+                if (sourceValue === undefined) {
+                  console.warn(
+                    `Undefined value at path: ${currentPath.join(
+                      "."
+                    )}, skipping`
+                  );
+                  return;
+                }
+
+                // Check if sourceValue is a nested object (but not Date, Array, or other special objects)
+                const isNestedObject =
+                  sourceValue &&
+                  typeof sourceValue === "object" &&
+                  !Array.isArray(sourceValue) &&
+                  !(sourceValue instanceof Date) &&
+                  !(sourceValue instanceof RegExp) &&
+                  !(sourceValue instanceof Error) &&
+                  sourceValue.constructor === Object;
+
+                if (isNestedObject) {
+                  // Handle nested object
+                  try {
+                    // Ensure target has the nested property
+                    if (!target[key] || typeof target[key] !== "object") {
+                      target[key] = {};
+                    }
+
+                    // Recursively update nested fields
+                    if (
+                      !updateNestedField(target[key], sourceValue, currentPath)
+                    ) {
+                      console.error(
+                        `Failed to update nested field at path: ${currentPath.join(
+                          "."
+                        )}`
+                      );
+                    }
+                  } catch (nestedError) {
+                    console.error(
+                      `Error updating nested object at path ${currentPath.join(
+                        "."
+                      )}:`,
+                      nestedError
+                    );
+                  }
+                } else {
+                  // Handle primitive values, arrays, dates, and other objects
+                  try {
+                    const currentValue = target[key];
+                    const isCurrentValueDate = currentValue instanceof Date;
+
+                    if (isCurrentValueDate) {
+                      // Handle date conversion
+                      if (sourceValue === null) {
+                        target[key] = null;
+                      } else if (sourceValue instanceof Date) {
+                        target[key] = sourceValue.toISOString();
+                      } else if (
+                        typeof sourceValue === "string" ||
+                        typeof sourceValue === "number"
+                      ) {
+                        try {
+                          const dateValue = new Date(sourceValue);
+                          if (isNaN(dateValue.getTime())) {
+                            console.error(
+                              `Invalid date value "${sourceValue}" at path: ${currentPath.join(
+                                "."
+                              )}`
+                            );
+                            target[key] = sourceValue; // Keep original value if date conversion fails
+                          } else {
+                            target[key] = dateValue.toISOString();
+                          }
+                        } catch (dateError) {
+                          console.error(
+                            `Date conversion error at path ${currentPath.join(
+                              "."
+                            )}:`,
+                            dateError
+                          );
+                          target[key] = sourceValue; // Fallback to original value
+                        }
+                      } else {
+                        console.warn(
+                          `Non-date value "${sourceValue}" assigned to date field at path: ${currentPath.join(
+                            "."
+                          )}`
+                        );
+                        target[key] = sourceValue;
+                      }
+                    } else {
+                      // Handle non-date values
+                      if (Array.isArray(sourceValue)) {
+                        // Deep clone arrays to prevent reference issues
+                        try {
+                          target[key] = JSON.parse(JSON.stringify(sourceValue));
+                        } catch (cloneError) {
+                          console.error(
+                            `Error cloning array at path ${currentPath.join(
+                              "."
+                            )}:`,
+                            cloneError
+                          );
+                          target[key] = [...sourceValue]; // Fallback to shallow copy
+                        }
+                      } else {
+                        target[key] = sourceValue;
+                      }
+                    }
+                  } catch (assignError) {
+                    console.error(
+                      `Error assigning value at path ${currentPath.join(".")}:`,
+                      assignError
+                    );
+                  }
+                }
+              } catch (keyError) {
+                console.error(
+                  `Error processing key "${key}" at path ${path.join(".")}:`,
+                  keyError
+                );
+              }
+            });
+
+            return true;
+          } catch (updateError) {
+            console.error(
+              `Error in updateNestedField at path ${path.join(".")}:`,
+              updateError
+            );
+            return false;
+          }
+        };
+
+        // Process each top-level field with error handling
+        const fieldKeys = Object.keys(
+          fields
+        ) as (keyof AccTransactionFormState)[];
+
+        if (fieldKeys.length === 0) {
+          console.warn("No fields to update");
+          return;
+        }
+
+        fieldKeys.forEach((key) => {
+          try {
+            // Validate key
+            if (!key || typeof key !== "string") {
+              console.error(`Invalid field key: ${key}`);
+              return;
+            }
+
+            const fieldValue = fields[key];
+
+            // Handle null/undefined at top level
+            if (fieldValue === null) {
+              (state[key] as any) = null;
+              return;
+            }
+
+            if (fieldValue === undefined) {
+              console.warn(
+                `Undefined value for field "${String(key)}", skipping`
+              );
+              return;
+            }
+
+            // Check for circular reference at top level
+            if (fieldValue === fields) {
+              console.error(
+                `Circular reference detected for field "${String(key)}"`
+              );
+              return;
+            }
+
+            // Determine if this is a nested object
+            const isNestedObject =
+              fieldValue &&
+              typeof fieldValue === "object" &&
+              !Array.isArray(fieldValue) &&
+              !(fieldValue instanceof Date) &&
+              !(fieldValue instanceof RegExp) &&
+              !(fieldValue instanceof Error) &&
+              fieldValue.constructor === Object;
+
+            if (isNestedObject) {
+              // Handle nested object at top level
+              try {
+                // Ensure top-level object exists in state
+                if (!state[key] || typeof state[key] !== "object") {
+                  (state[key] as any) = {};
+                }
+
+                if (!updateNestedField(state[key], fieldValue, [String(key)])) {
+                  console.error(
+                    `Failed to update top-level nested field: ${String(key)}`
+                  );
+                }
+              } catch (topLevelNestedError) {
+                console.error(
+                  `Error updating top-level nested field "${String(key)}":`,
+                  topLevelNestedError
+                );
+              }
+            } else {
+              // Handle top-level primitive values, arrays, dates, etc.
+              try {
+                const currentValue = state[key];
+                const isCurrentValueDate = currentValue instanceof Date;
+
+                if (isCurrentValueDate) {
+                  // Handle date conversion at top level
+                  if (fieldValue instanceof Date) {
+                    (state[key] as any) = fieldValue.toISOString();
+                  } else if (
+                    typeof fieldValue === "string" ||
+                    typeof fieldValue === "number"
+                  ) {
+                    try {
+                      const dateValue = new Date(fieldValue);
+                      if (isNaN(dateValue.getTime())) {
+                        console.error(
+                          `Invalid date value "${fieldValue}" for field "${String(
+                            key
+                          )}"`
+                        );
+                        (state[key] as any) = fieldValue; // Keep original value
+                      } else {
+                        (state[key] as any) = dateValue.toISOString();
+                      }
+                    } catch (dateError) {
+                      console.error(
+                        `Date conversion error for field "${String(key)}":`,
+                        dateError
+                      );
+                      (state[key] as any) = fieldValue; // Fallback
+                    }
+                  } else {
+                    console.warn(
+                      `Non-date value assigned to date field "${String(key)}"`
+                    );
+                    (state[key] as any) = fieldValue;
+                  }
+                } else {
+                  // Handle non-date values at top level
+                  if (Array.isArray(fieldValue)) {
+                    // Deep clone arrays
+                    try {
+                      (state[key] as any) = JSON.parse(
+                        JSON.stringify(fieldValue)
+                      );
+                    } catch (cloneError) {
+                      console.error(
+                        `Error cloning array for field "${String(key)}":`,
+                        cloneError
+                      );
+                      (state[key] as any) = [...fieldValue]; // Fallback to shallow copy
+                    }
+                  } else {
+                    (state[key] as any) = fieldValue;
+                  }
+                }
+              } catch (topLevelAssignError) {
+                console.error(
+                  `Error assigning value to top-level field "${String(key)}":`,
+                  topLevelAssignError
+                );
+              }
+            }
+          } catch (fieldError) {
+            console.error(
+              `Error processing field "${String(key)}":`,
+              fieldError
+            );
+          }
+        });
+      } catch (mainError) {
+        console.error(
+          "Critical error in accFormStateHandleFieldChangeKeysOnly:",
+          mainError
+        );
+      }
+    },
+    // Inside the createSlice, update the reducer
+    acctemplatesData: (state, action: PayloadAction<TemplateState>) => {
+      if (!state.templatesData) {
+        state.templatesData = [];
       }
 
-      Object.keys(fieldValue).forEach((subKey) => {
-        const subValue = fieldValue[subKey];
-        const current = (state[key] as any)[subKey];
-        const isDateField = current instanceof Date;
-        (state[key] as any)[subKey] = isDateField
-          ? new Date(subValue).toISOString()
-          : subValue;
-      });
-    } else {
-      const current = state[key];
-      const isDateField = current instanceof Date;
-      (state[key] as any) = isDateField
-  ? new Date(fieldValue).toISOString()
-  : fieldValue;
-    }
-  });
-},
- // Inside the createSlice, update the reducer
-      acctemplatesData: (
-        state,
-        action: PayloadAction<TemplateState>
-      ) => {
-        if (!state.templatesData) {
-          state.templatesData = [];
-        }
-        
-        // Only add the template if it doesn't already exist
-        if (!state.templatesData.some(template => template.templateGroup === action.payload.templateGroup)) {
-          state.templatesData.push(action.payload);
-        }
-      },
+      // Only add the template if it doesn't already exist
+      if (
+        !state.templatesData.some(
+          (template) => template.templateGroup === action.payload.templateGroup
+        )
+      ) {
+        state.templatesData.push(action.payload);
+      }
+    },
     // Update a specific field in the transaction object
     accFormStateTransactionUpdate: (
       state,
@@ -347,7 +681,10 @@ accFormStateHandleFieldChangeKeysOnly: (
         ...data,
         chqDate: data.chqDate ? new Date(data.chqDate).toISOString() : "",
         bankDate: data.bankDate ? new Date(data.bankDate).toISOString() : "",
-        amount: state.isTaxOnExpense && (data.incentives??0) > 0 ? data.incentives: data.amount,
+        amount:
+          state.isTaxOnExpense && (data.incentives ?? 0) > 0
+            ? data.incentives
+            : data.amount,
         amountFC: data.amount,
         drCr: state.row.drCr,
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,
@@ -384,7 +721,6 @@ accFormStateHandleFieldChangeKeysOnly: (
       );
       state.row.billwiseDetails = "";
     },
-
 
     // Update a specific row in the transaction details
     accFormStateTransactionDetailsRowUpdate: (
@@ -429,7 +765,7 @@ accFormStateHandleFieldChangeKeysOnly: (
         );
         state.previousNarration = "";
         state.transaction.details.splice(index, 1);
-        
+
         state.transaction.master.totalAmount = calculateTotal(state);
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
@@ -491,7 +827,7 @@ accFormStateHandleFieldChangeKeysOnly: (
     accFormStateReset: () => {
       return accTransactionFormStateInitialData;
     },
-    
+
     updateFormElement: (
       state,
       action: PayloadAction<{
@@ -698,7 +1034,7 @@ accFormStateHandleFieldChangeKeysOnly: (
             case "CQR":
             case "PV":
             case "PBR":
-              state.masterAccountID = firstDetail.ledgerID??0;
+              state.masterAccountID = firstDetail.ledgerID ?? 0;
               break;
 
             case "JV":
@@ -706,7 +1042,7 @@ accFormStateHandleFieldChangeKeysOnly: (
                 payload.master.drCr === "Dr" ? "Debit" : "Credit";
               state.masterAccountID =
                 payload.master.drCr === "Dr"
-                  ? (firstDetail.ledgerID??0)
+                  ? firstDetail.ledgerID ?? 0
                   : firstDetail.relatedLedgerID;
               break;
           }
@@ -721,7 +1057,7 @@ accFormStateHandleFieldChangeKeysOnly: (
         state.transaction.master.totalAmount = calculateTotal(state);
       }
     });
-    
+
     builder.addCase(loadAccVoucher.rejected, (state) => {
       state.transactionLoading = false;
       state.transaction = accTransactionInitialData;
@@ -772,7 +1108,7 @@ export const {
   accFormStateTransactionAttachmentsRowAdd,
   accFormStateTransactionAttachmentsRowUpdate,
   accFormStateTransactionAttachmentsRowRemove,
-  accFormStateHandleFieldChangeKeysOnly
+  accFormStateHandleFieldChangeKeysOnly,
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

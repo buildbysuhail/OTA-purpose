@@ -10,7 +10,7 @@ import type { DevGridColumn, GridPreference } from "../../types/dev-grid-column"
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
-import type { TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
+import type { FormElementState, TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
 
 type DataItem = Record<string, any>;
@@ -59,6 +59,7 @@ interface RowData {
   details: TransactionDetail[];
   columns: DevGridColumn[];
   tableWidth: number;
+  txtData: Partial<FormElementState>;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value, onFocus, onBlur }) => {
@@ -103,6 +104,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   const item = data.details[index];
   const columns = data.columns;
   const tableWidth = data.tableWidth;
+  const txtData = data.txtData;
 
   const handleFocus = (columnKey: string) => {
     setFocusedColumn(columnKey);
@@ -168,7 +170,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                 >
                   {cellValue}
                 </span>
-              ) : column.readOnly ? (
+              ) : column.readOnly || txtData.visible != true ? (
                 <span className="text-sm text-gray-800 px-1 flex items-center h-[22px]">{cellValue}</span>
               ) : (
                 <EditableCell
@@ -477,7 +479,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 itemData={{
                   details: formState.transaction?.details || [],
                   columns: formState.gridColumns || [],
-                  tableWidth,
+                  tableWidth:tableWidth,
+                  txtData: formState.formElements
                 }}
                 itemKey={(index) => `${gridId}-${index}`}
                 className="bg-white"

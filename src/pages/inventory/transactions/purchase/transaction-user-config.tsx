@@ -26,9 +26,10 @@ interface pageBgColor {
 }
 interface TransactionUserConfigProps {
   phone?: boolean;
+  transactionType: string
 }
 
-export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false }) => {
+export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType }) => {
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
@@ -64,7 +65,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
   const postUserConfig = async () => {
     try {
-      const response = await api.post(`${Urls.post_acc_user_config}`, formState.userConfig);
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utInvc", base64);

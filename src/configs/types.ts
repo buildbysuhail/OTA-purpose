@@ -5,3 +5,6 @@ export type ApiEndpoint = {
     method?: ActionType;
     initialData?: any;
   };
+  export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};

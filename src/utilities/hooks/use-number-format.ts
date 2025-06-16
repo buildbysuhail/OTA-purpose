@@ -5,7 +5,7 @@ import { APIClient } from "../../helpers/api-client";
 import { RootState } from "../../redux/store";
 
 const api = new APIClient();
-export const useNumberFormat = () => {
+export const useNumberFormat = (): UseNumberFormatResult => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -40,11 +40,77 @@ export const useNumberFormat = () => {
         return '#,#0.00';
     }
   }
+  function formatNumber(value: number, format: string): string {
+    // Simple implementation - you might want to use a library like numeral.js for more complex formatting
+    const parts = format.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+    
+    let result = value.toFixed(decimalPart ? decimalPart.length : 0);
+    
+    // Add thousands separators if format includes them
+    if (integerPart.includes(',')) {
+        const [intPart, decPart] = result.split('.');
+        const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        result = decPart ? `${formattedInt}.${decPart}` : formattedInt;
+    }
+    
+    return result;
+}
+
   
   function roundTo(val: number, decimalPlaces: number): number {
     return parseFloat(val.toFixed(decimalPlaces));
   }
-  
+  function getFormattedValueIgnoreRoundingToNumber(val: number): number {
+    return parseFloat(getFormattedValueIgnoreRounding(val));
+  }
+  function getFormattedValueIgnoreRounding(val: number): string {
+    let decimalPoint: number;
+    let formattedVal: number = 0;
+    let formattedText: string = "";
+    
+    val = round(val,6); // Round to 6 decimal places
+    decimalPoint = applicationSettings.mainSettings.decimalPoints;
+    formattedText = formatNumber(val, getNumericFormat());
+    
+    if (round(val, 2) === val && decimalPoint === 2) {
+        formattedVal = round(val, 2);
+        formattedText = formatNumber(formattedVal, "#,#0.00");
+    }
+    else if (round(val, 3) === val) {
+        formattedVal = round(val, 3);
+        formattedText = formatNumber(formattedVal, "#,#0.000");
+    }
+    else if (round(val, 4) === val) {
+        formattedVal = round(val, 4);
+        formattedText = formatNumber(formattedVal, "#,#0.0000");
+    }
+    else if (round(val, 5) === val) {
+        formattedVal = round(val, 5);
+        formattedText = formatNumber(formattedVal, "#,#0.00000");
+    }
+    else if (round(val, 6) === val) {
+        formattedVal = round(val, 6);
+        formattedText = formatNumber(formattedVal, "#,#0.000000");
+    }
+    else {
+        if (decimalPoint === 3) {
+            formattedVal = round(val, 3);
+            formattedText = formatNumber(formattedVal, "#,#0.000");
+        }
+        else {
+            formattedVal = round(val, 2);
+            formattedText = formatNumber(formattedVal, "#,#0.00");
+        }
+    }
+    
+    return formattedText;
+}
+  function getFormattedValueToNumber(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
+  numberOfZero: number = 0): number {
+    return parseFloat(getFormattedValue(val,ignoreNullOrZero,decimalPoint,cuttingPoint,numberOfZero));
+  }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): string {
     
@@ -165,5 +231,26 @@ export const useNumberFormat = () => {
     return convertAmountToWords(amount.toString());
   }
   
-  return { getNumericFormat, getFormattedValue, getAmountInWords, round }
+  return { getNumericFormat, getFormattedValue, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding }
 };
+export interface UseNumberFormatResult {
+  getNumericFormat: () => string;
+  getFormattedValue: (
+    val: number,
+    ignoreNullOrZero?: boolean,
+    decimalPoint?: number,
+    cuttingPoint?: number,
+    numberOfZero?: number
+  ) => string;
+  getFormattedValueToNumber: (
+    val: number,
+    ignoreNullOrZero?: boolean,
+    decimalPoint?: number,
+    cuttingPoint?: number,
+    numberOfZero?: number
+  ) => number;
+  getAmountInWords: (amount: number) => string;
+  round: (value: number, decimalPoints?: number) => number;
+  getFormattedValueIgnoreRoundingToNumber: (val: number) => number;
+  getFormattedValueIgnoreRounding: (val: number) => string;
+}

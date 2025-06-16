@@ -480,7 +480,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   details: formState.transaction?.details || [],
                   columns: formState.gridColumns || [],
                   tableWidth:tableWidth,
-                  txtData: formState.formElements
+                  txtData: formState.formElements.txtData
                 }}
                 itemKey={(index) => `${gridId}-${index}`}
                 className="bg-white"

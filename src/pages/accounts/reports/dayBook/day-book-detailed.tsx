@@ -286,7 +286,7 @@ const DayBookDetailed = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterHeight={210}
-                  filterWidth={350}
+                  filterWidth={400}
                   filterContent={<DayBookReportFilter />}
                   filterInitialData={DayBookReportFilterInitialState}
                   hideGridAddButton={true}

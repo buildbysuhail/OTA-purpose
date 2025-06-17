@@ -63,15 +63,15 @@ const createStore = async (value: string, byCode: boolean, productDataUrl?: stri
         const result = response;
         return result !== undefined && result !== null
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
@@ -95,15 +95,15 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
         const result = response;
         return result !== undefined && result !== null
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         throw new Error("Batch Data Loading Error");
       }
@@ -128,15 +128,15 @@ const createModalStore = async (productDataUrl?: string) => {
         const result = response;
         return result !== undefined && result !== null
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
@@ -176,9 +176,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   });
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
+  const gridContainerRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation("inventory");
-  const [gridModal, setGridModal] = useState(false);
-
 
   useEffect(() => {
     setInputValue((prev) => ({
@@ -194,14 +193,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
         if (searchType === "modal") {
           const store = await createModalStore(productDataUrl);
           setModalStore(store);
-          setGridModal(true);
+          setShowProductGrid(true);
         } else if (searchType === "grid") {
           const store = await createStore(value, byCode, productDataUrl);
           setStore(store);
           const loadResult = await store.load() as LoadResult;
           setShowProductGrid(loadResult.totalCount > 0);
-        } else {
-          // Handle "normal" if needed
         }
       }, 200),
     [productDataUrl, inputValue.searchByCode, searchType]
@@ -215,7 +212,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
     }));
     setShowBatchGrid(false);
     if (value.length >= 3) {
-      // Only trigger debouncedFetch for non-modal search types
       if (searchType !== "modal") {
         debouncedFetch(value);
       }
@@ -237,6 +233,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 
   const handleGridKeyDown = useCallback(
     async (e: any) => {
+      console.log(`Grid key: ${e.event.key}`);
       if (e.event.key === 'Enter' || e.event.key === 'NumpadEnter') {
         const grid: any = dataGridRef.current?.instance();
         const selectedRowKeys = grid.getSelectedRowKeys();
@@ -250,18 +247,33 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               const batchStore = await createBatchStore(selectedRow.productID, batchDataUrl);
               setProductDetailStore(batchStore);
               setShowBatchGrid(true);
+              setShowProductGrid(false);
+            } else {
+              setShowProductGrid(false);
+              if (ref && 'current' in ref && ref.current) {
+                ref.current.focus();
+              }
             }
-            setShowProductGrid(false);
           } catch (err) {
-            setShowBatchGrid(false);
+            setShowProductGrid(false);
+            if (ref && 'current' in ref && ref.current) {
+              ref.current.focus();
+            }
           }
         }
+      } else if (e.event.key === 'Escape') {
+        setShowProductGrid(false);
+        if (ref && 'current' in ref && ref.current) {
+          ref.current.focus();
+        }
+        e.event.preventDefault();
       }
-    }, [batchDataUrl, onProductSelected]
+    }, [batchDataUrl, onProductSelected, ref]
   );
 
   const handleBatchGridKeyDown = useCallback(
     (e: any) => {
+      console.log(`Batch grid key: ${e.event.key}`);
       if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
         const selectedRow = e.component.getSelectedRowsData()[0];
         if (onRowSelected) {
@@ -269,14 +281,21 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
         }
         setShowBatchGrid(false);
         if (clearAfterSelection) {
-          // setInputValue((prev) => ({
-          //   ...prev,
-          //   searchValue: '',
-          // }));
+          setInputValue((prev) => ({
+            ...prev,
+            searchValue: '',
+          }));
         }
+        if (ref && 'current' in ref && ref.current) {
+          ref.current.focus();
+        }
+      } else if (e.event.key === 'Escape') {
+        setShowBatchGrid(false);
+        setShowProductGrid(true);
+        e.event.preventDefault();
       }
     },
-    [onRowSelected]
+    [onRowSelected, clearAfterSelection, ref]
   );
 
   const handleBatchContentReady = useCallback(() => {
@@ -286,44 +305,86 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       if (visibleRows.length > 0) {
         gridInstance.selectRowsByIndexes([0]);
         gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-        setTimeout(() => {
-          gridInstance.focus();
-        }, 100);
+        gridInstance.focus();
       }
     }
   }, []);
 
-
   const handleInputKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "ArrowDown" && showProductGrid && dataGridRef.current) {
-        const grid: any = dataGridRef.current.instance();
-        const rows = grid.getVisibleRows();
-        if (rows.length > 0) {
-          grid.selectRowsByIndexes([0]);
-          grid.navigateToRow(grid.getKeyByRowIndex(0));
-
-          setTimeout(() => {
+      console.log(`Input key: ${e.key}`);
+      if (showProductGrid && dataGridRef.current) {
+        if (e.key === "ArrowDown") {
+          const grid: any = dataGridRef.current.instance();
+          const rows = grid.getVisibleRows();
+          if (rows.length > 0) {
+            grid.selectRowsByIndexes([0]);
+            grid.navigateToRow(grid.getKeyByRowIndex(0));
             grid.focus();
-          }, 100);
+            e.preventDefault();
+          }
+        } else if (e.key === "ArrowUp") {
+          const grid: any = dataGridRef.current.instance();
+          const rows = grid.getVisibleRows();
+          if (rows.length > 0) {
+            grid.selectRowsByIndexes([rows.length - 1]);
+            grid.navigateToRow(grid.getKeyByRowIndex(rows.length - 1));
+            grid.focus();
+            e.preventDefault();
+          }
         }
-      } else if (
-        e.key === "Enter" &&
-        searchType === "modal" &&
-        inputValue.searchValue &&
-        inputValue.searchValue.length >= 3
-      ) {
-        // Trigger API call for modal search type when Enter is pressed and input length >= 3
+      } else if (e.key === "Enter" && searchType === "modal" && inputValue.searchValue && inputValue.searchValue.length >= 3) {
         debouncedFetch(inputValue.searchValue);
+        e.preventDefault();
+      } else if (e.key === "Escape" && showProductGrid) {
+        setShowProductGrid(false);
+        e.preventDefault();
+      } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+        const input = e.target as HTMLInputElement;
+        const { selectionStart, selectionEnd, value } = input;
+        let shouldNavigate = true;
+        if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
+          shouldNavigate = false;
+        } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
+          shouldNavigate = false;
+        }
+        if (shouldNavigate && rest.onKeyDown) {
+          rest.onKeyDown(e);
+          e.preventDefault();
+        }
       }
     },
-    [showProductGrid, inputValue.searchValue, searchType, debouncedFetch]
+    [showProductGrid, inputValue.searchValue, searchType, debouncedFetch, rest.onKeyDown]
   );
+
+  useEffect(() => {
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (!gridContainerRef.current || !showProductGrid) return;
+      const focusableElements = gridContainerRef.current.querySelectorAll('input, button, [tabindex]:not([tabindex="-1"])');
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleFocusTrap);
+    return () => document.removeEventListener('keydown', handleFocusTrap);
+  }, [showProductGrid]);
+
   return (
     <>
       <div className="flex items-center gap-4">
-        <div className="relative w-full">
+        <div className="relative w-full" ref={gridContainerRef}>
           <ERPInput
+            ignoreRandomId={true}
             noLabel={noLabel}
             label={label}
             type="text"
@@ -338,22 +399,22 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             disableEnterNavigation
             ref={ref}
             onFocus={(e) => {
+              console.log("Focused on ERPProductSearch input");
               if (rest.onFocus) {
                 rest.onFocus(e);
               }
-              // console.log("Focused on ERPProductSearch input");
             }}
             onBlur={(e) => {
+              console.log("Blurred from ERPProductSearch input");
               if (rest.onBlur) {
                 rest.onBlur(e);
               }
-              // console.log("Blurred from ERPProductSearch input");
             }}
           />
           {searchType === "grid" && (
             <>
               {showProductGrid && (
-                <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h เด400px] shadow-lg bg-white">
+                <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
                   <DataGrid
                     ref={dataGridRef}
                     loadPanel={{ enabled: false }}
@@ -364,6 +425,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
                     showRowLines={true}
                     remoteOperations={{ filtering: true, paging: true, sorting: true }}
                     onKeyDown={handleGridKeyDown}
+                    tabIndex={0}
                   >
                     <Selection mode="single" />
                     <Paging pageSize={30} />
@@ -375,7 +437,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
                   </DataGrid>
                 </div>
               )}
-
               {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
                 <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
                   <DataGrid
@@ -390,11 +451,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
                     remoteOperations={{ filtering: true, paging: true, sorting: true }}
                     onKeyDown={handleBatchGridKeyDown}
                     onContentReady={handleBatchContentReady}
+                    tabIndex={0}
                   >
                     <KeyboardNavigation
                       editOnKeyPress={false}
-                      enterKeyAction={"moveFocus"}
-                      enterKeyDirection={"row"}
+                      enterKeyDirection="row"
                     />
                     <Paging pageSize={10} />
                     <Selection mode="single" />
@@ -414,7 +475,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               )}
             </>
           )}
-
         </div>
         {showCheckBox && (
           <ERPCheckbox
@@ -427,12 +487,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       </div>
       {searchType === "modal" && (
         <ERPModal
-          isOpen={gridModal}
+          isOpen={showProductGrid}
           title={t("privilege_card")}
           width={1000}
           height={800}
           isForm={true}
-          closeModal={() => { setGridModal(false) }}
+          closeModal={() => { setShowProductGrid(false) }}
           content={
             <ProductModalGrid gridData={modalStore}
               initialSearchValue={inputValue.searchValue}
@@ -440,7 +500,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
         />
       )}
     </>
-
   );
 });
 

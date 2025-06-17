@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { TransactionProps } from "./transaction-types";
+import { TransactionDetail, TransactionProps } from "./transaction-types";
 import { TransactionData, TransactionFormState } from "./transaction-types";
 import {
   useAppDispatch,
@@ -45,10 +45,8 @@ import moment from "moment";
 import ERPAttachment from "../../../../components/ERPComponents/erp-attachment";
 import HistorySidebar from "./historySidebar";
 import UnsavedChangesModal from "./unsavedChangesModal";
-import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 import AccHeader from "./components/header";
 import Urls from "../../../../redux/urls";
-import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
@@ -57,7 +55,7 @@ import {
   TransactionFormStateInitialData,
   initialFormElements,
 } from "./transaction-type-data";
-import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import ErpPurchaseGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
@@ -650,37 +648,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     };
   }, []);
 
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "amount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "amountFC",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "debit",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "credit",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "discount",
-      summaryType: "sum",
-      customizeText: customizeSummaryRow,
-    },
-  ];
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
@@ -1664,39 +1631,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     []
   );
 
-const summaryConfig: SummaryConfig[] = [
-  {
-    column: "qty",
-    summaryType: "sum",
-    valueFormat: "decimal",
-    showInColumn: "qty",
-    alignment: "right",
-    customizeText: ({ value }) => `${value}`,
-  },
-  {
-    column: "unitPrice",
-    summaryType: "avg",
-    showInColumn: "unitPrice",
-    alignment: "right",
-    customizeText: ({ value }) => `${value}`,
-  },
-  {
-    column: "discount",
-    summaryType: "sum",
-    valueFormat: "currency",
-    showInColumn: "discount",
-    alignment: "right",
-    customizeText: ({ value }) => ` ${value}`,
-  },
-  {
-    column: "netValue",
-    summaryType: "sum",
-    valueFormat: "currency",
-    showInColumn: "netValue",
-    alignment: "right",
-    customizeText: ({ value }) => `${value}`,
-  },
-];
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1975,7 +1909,7 @@ const summaryConfig: SummaryConfig[] = [
               height={gridHeight}
               gridId={`${gridCode}-grid`}
               onAddData={handleAddData}
-              summaryConfig={summaryConfig}
+              summaryConfig={formState.summaryConfig}
             />
           </div>
           {formState.showSaveDialog && (
@@ -2081,7 +2015,7 @@ const summaryConfig: SummaryConfig[] = [
                     height={gridHeight}
                     gridId={`${gridCode}-grid`}
                     onAddData={handleAddData}
-                    summaryConfig={summaryConfig}
+                    summaryConfig={formState.summaryConfig as SummaryConfig<TransactionDetail>[]}
                   />
                    <TransactionFooter
                     formState={formState}

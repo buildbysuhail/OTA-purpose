@@ -11,10 +11,6 @@ export interface BranchSelectDto {
   logo?: string;
   isActive: boolean;
 }
-export enum Countries {
-  India = 48,
-  Saudi = 1,
-}
 export interface UserBranches {
   branches: BranchSelectDto[]
 }

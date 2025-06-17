@@ -24,6 +24,7 @@ interface Option {
 
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
+  ignoreRandomId?: boolean,
   data?: any;
   value?: any;
   defaultValue?: any;
@@ -81,6 +82,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
   (
     {
       id,
+      ignoreRandomId = false,
       onChangeData,
       onChange,
       onFocus,
@@ -516,7 +518,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const sizeStyles = getSizeStyles();
     const commonProps = {
-      id: `${id}_${Math.random()}`,
+      id: ignoreRandomId ? id : `${id}_${Math.random()}`,
       name: `input_${id}_${Math.random()}`,
       value: value === undefined ? "" : value,
       defaultValue,

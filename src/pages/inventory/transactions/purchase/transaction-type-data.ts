@@ -341,7 +341,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
  // productCombo: { visible: true, disabled: false, label: "product_combo" },
   progressBar1: { visible: false, disabled: false, label: "progressbar1" },
   //saveButton1: { visible: false, disabled: true, label: "save_button1" },
-  txtData: { visible: false, disabled: false, label: "txt_data" },
+  txtData: { visible: true, disabled: false, label: "txt_data" },
   txtDespatchNo: { visible: true, disabled: false, label: "despatch_no" },
   txtFilePath: { visible: true, disabled: true, label: "file_path" },
   txtFindBarcode: { visible: false, disabled: false, label: "find_barcode" },

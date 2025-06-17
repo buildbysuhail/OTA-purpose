@@ -1,26 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-interface CounterReport {
-  invType: string;
-  counterName: string;
-  cashSalesAmt: number;
-  cardSalesAmt: number;
-  saleReturnAmt: number;
-  netSales: number;
-  counterBalance: number;
-  counterID: number;
-  creditAmt: number;
-}
-
 const CounterReport = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "invType",
@@ -51,6 +41,29 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cashSalesAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.cashSalesAmt, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cashSalesAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.cashSalesAmt, false, 4);
+        }
+      },
     },
     {
       dataField: "cardSalesAmt",
@@ -61,6 +74,29 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cardSalesAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.cardSalesAmt, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cardSalesAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.cardSalesAmt, false, 4);
+        }
+      },
     },
     {
       dataField: "saleReturnAmt",
@@ -71,6 +107,29 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.saleReturnAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.saleReturnAmt, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.saleReturnAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.saleReturnAmt, false, 4);
+        }
+      },
     },
     {
       dataField: "netSales",
@@ -81,6 +140,29 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netSales == null
+              ? 0
+              : getFormattedValue(cellElement.data.netSales, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netSales == null
+            ? 0
+            : getFormattedValue(cellElement.data.netSales, false, 4);
+        }
+      },
     },
     {
       dataField: "counterBalance",
@@ -91,6 +173,29 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.counterBalance == null
+              ? 0
+              : getFormattedValue(cellElement.data.counterBalance, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.counterBalance == null
+            ? 0
+            : getFormattedValue(cellElement.data.counterBalance, false, 4);
+        }
+      },
     },
     {
       dataField: "counterID",
@@ -112,21 +217,55 @@ const CounterReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
-    }
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.creditAmt == null
+              ? 0
+              : getFormattedValue(cellElement.data.creditAmt, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.creditAmt == null
+            ? 0
+            : getFormattedValue(cellElement.data.creditAmt, false, 4);
+        }
+      },
+    },
   ];
-  
+
   const { getFormattedValue } = useNumberFormat();
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value, false, 2) || "0";
     };
   }, [getFormattedValue]);
 
   const summaryItems: SummaryConfig[] = [
+    {
+      column: "counterName",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
     {
       column: "cashSalesAmt",
       summaryType: "sum",
@@ -162,7 +301,7 @@ const CounterReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
   ];
 
   return (
@@ -173,14 +312,19 @@ const CounterReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
+                filterInitialData={{ asonDate: new Date() }}
                 gridHeader={t("counter_report")}
+                filterText="On : {asonDate}"
                 dataUrl={Urls.counter_report}
                 hideGridAddButton={true}
                 enablefilter={false}
-                method={ActionType.GET}
+                method={ActionType.POST}
                 reload={true}
                 gridId="grd_counter_report"
               />

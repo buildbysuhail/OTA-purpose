@@ -323,34 +323,13 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       {  id: 704, element: <StockJournalReport dataUrl={urls.shortage_stock} gridHeader="shortage_stock_report" gridId="grd_shortage_stock_journal" />, formCode: "SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight,  routePath: ""},
       {  id: 705, element: <BranchTransferOutIn dataUrl={urls.branch_transfer_out} gridHeader="branch_transfer_out_report" gridId="grd_branch_transfer_out"/>, formCode: "BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight,  routePath: ""},
       {  id: 706, element: <BranchTransferOutIn dataUrl={urls.branch_transfer_in} gridHeader="branch_transfer_in_report" gridId="grd_branch_transfer_in"/>, formCode: "BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight,  routePath: ""},
-      {
-        id: 707, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_out} gridHeader="branch_transfer_summary_out_report" gridId="grd_branch_transfer_summary_out"/>, formCode: "BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 708, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_in} gridHeader="branch_transfer_summary_in_report" gridId="grd_branch_transfer_summary_in"/>, formCode: "BTISRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 723, element: <StockSummary />, formCode: "RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 724, element: <StockLedger />, formCode: "RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList,
-        routePath: ""
-      },
-      {
-        id: 725, element: <ExpiryReport />, formCode: "EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList,
-        routePath: ""
-      },
-      {
-        id: 726, element: <TransactionAnalysisReport />, formCode: "TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics,
-        routePath: ""
-      },
-      {
-        id: 727, element: <StockFlow />, formCode: "RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip,
-        routePath: ""
-      },
+      {  id: 707, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_out} gridHeader="branch_transfer_summary_out_report" gridId="grd_branch_transfer_summary_out"/>, formCode: "BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight,  routePath: ""},
+      {  id: 708, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_in} gridHeader="branch_transfer_summary_in_report" gridId="grd_branch_transfer_summary_in"/>, formCode: "BTISRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight,  routePath: ""},
+      {  id: 723, element: <StockSummary />, formCode: "RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 724, element: <StockLedger />, formCode: "RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList,  routePath: ""},
+      {  id: 725, element: <ExpiryReport />, formCode: "EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList,  routePath: ""},
+      {  id: 726, element: <TransactionAnalysisReport />, formCode: "TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics,  routePath: ""},
+      {  id: 727, element: <StockFlow />, formCode: "RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip,  routePath: ""},
     ]
   },
   {

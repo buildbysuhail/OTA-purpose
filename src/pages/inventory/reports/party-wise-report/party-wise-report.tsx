@@ -1,14 +1,10 @@
 import { FC, Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {  SummaryConfig,} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PartyWiseReportFilter, {
-  PartyWiseReportFilterInitialState,
-} from "./party-wise-report-filter";
+import PartyWiseReportFilter, {  PartyWiseReportFilterInitialState,} from "./party-wise-report-filter";
 import moment from "moment";
 
 interface PartyWiseReportProps {
@@ -259,7 +255,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
                 method={ActionType.POST}
                 filterContent={<PartyWiseReportFilter />}
                 filterHeight={220}
-                filterWidth={450}
+                filterWidth={600}
                 filterInitialData={PartyWiseReportFilterInitialState}
                 onFilterChanged={(f: any) => {
                   setFilter(f);

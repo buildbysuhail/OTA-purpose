@@ -47,7 +47,7 @@ const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: 
               id: "voucherType",
               valueKey: "value",
               labelKey: "label",
-            }}
+            }}  
         className="max-w-[297px]"
         onSelectItem={(data) => {
           handleFieldChange("voucherType", data.value);

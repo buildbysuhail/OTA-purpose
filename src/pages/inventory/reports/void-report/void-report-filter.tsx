@@ -3,9 +3,14 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -28,6 +33,8 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-end gap-4">
+           {applicationSettings.accountsSettings?.allowSalesCounter == true && (
+     
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("counter")}
@@ -39,11 +46,14 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("counterID", data.value);
+             handleFieldChange({
+              counterID: data.value,
+              counter: data.label,
+            });
             }}
           />
         </div>
-
+           )}
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("user")}
@@ -55,7 +65,10 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("userID", data.value);
+            handleFieldChange({
+              userID: data.value,
+              user: data.label,
+            });
             }}
           />
         </div>
@@ -64,11 +77,15 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
           <ERPDataCombobox
             label={t("status")}
             {...getFieldProps("status")}
+                options={[
+          { value: "All", label: "All" },
+          { value: "Void", label: "Void" },
+          { value: "Cancel", label: "Cancel" },
+        ]}
             field={{
               id: "status",
-              // getListUrl: Urls.data_status,
-              valueKey: "id",
-              labelKey: "name",
+              valueKey: "value",
+              labelKey: "label",
             }}
             onSelectItem={(data) => {
               handleFieldChange("status", data.value);

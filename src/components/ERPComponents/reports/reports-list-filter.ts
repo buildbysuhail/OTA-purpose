@@ -18,7 +18,8 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
 
             "daily_summary_report",
             "billwise_profit_report",
-  
+            
+            "void_report",
           
           
           ];

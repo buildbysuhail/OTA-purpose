@@ -1,15 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import VoidReportFilter, { VoidReportFilterInitialState } from "./void-report-filter";
+import VoidReportFilter, {
+  VoidReportFilterInitialState,
+} from "./void-report-filter";
+import moment from "moment";
 
 const VoidReport = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "counter",
@@ -40,6 +45,17 @@ const VoidReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 75,
+      format: "dd-MMM-yyyy",
+      // cellRender: (
+      //   cellElement: any,
+      //   cellInfo: any,
+      //   filter: any,
+      //   exportCell: any
+      // ) => {
+      //   return cellElement.data.date == null || cellElement.data.date == ""
+      //     ? ""
+      //     : moment(cellElement.data.date, "YYYY-MM-DD").format("DD-MMM-YYYY");
+      // },
     },
     {
       dataField: "barcode",
@@ -70,6 +86,29 @@ const VoidReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 60,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.qty == null
+              ? 0
+              : getFormattedValue(cellElement.data.qty);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.qty == null
+            ? 0
+            : getFormattedValue(cellElement.data.qty);
+        }
+      },
     },
     {
       dataField: "total",
@@ -80,6 +119,29 @@ const VoidReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.total == null
+              ? 0
+              : getFormattedValue(cellElement.data.total);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.total == null
+            ? 0
+            : getFormattedValue(cellElement.data.total);
+        }
+      },
     },
     {
       dataField: "status",
@@ -94,12 +156,13 @@ const VoidReport = () => {
     {
       dataField: "systemDate",
       caption: t("system_date"),
-      dataType: "date",
+      dataType: "datetime",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       showInPdf: true,
       width: 110,
+      format: "dd-MMM-yyyy hh:mm a",
     },
     {
       dataField: "systemName",
@@ -140,14 +203,20 @@ const VoidReport = () => {
       allowSorting: true,
       showInPdf: true,
       width: 100,
-    }
+    },
   ];
-  
+
   const { getFormattedValue } = useNumberFormat();
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
@@ -155,6 +224,11 @@ const VoidReport = () => {
   }, [getFormattedValue]);
 
   const summaryItems: SummaryConfig[] = [
+    {
+      column: "product",
+      summaryType: "max",
+      customizeText: customizeTotal,
+    },
     {
       column: "total",
       summaryType: "sum",
@@ -166,7 +240,7 @@ const VoidReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
   ];
 
   return (
@@ -177,10 +251,14 @@ const VoidReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
-                
                 gridHeader={t("void_report")}
+                filterText="{counterID > 0 && , Counter : [counter]} {userID > 0 &&, User : [user]} From : {fromDate} To : {toDate}"
                 dataUrl={Urls.void_report}
                 hideGridAddButton={true}
                 enablefilter={true}

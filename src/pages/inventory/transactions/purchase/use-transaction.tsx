@@ -1,8 +1,13 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
+  attachDetails,
+  attachMaster,
+  calculateSummary,
+  calculateTotal,
   // calculateTotal,
   disableControlsFn,
+  refactorDetails,
   // getClosedDate,
   setUserRightsFn,
   validateTransactionDate,
@@ -56,8 +61,10 @@ import {
   Attachments,
   TransactionMaster,
   TransactionDetail,
+  SummaryItems,
 } from "./transaction-types";
 import {
+  initialInventoryTotals,
   initialTransactionDetailData,
   TransactionFormStateInitialData,
   transactionInitialData,
@@ -66,6 +73,8 @@ import {
   isDirtyTransaction,
   setTransactionForHistory,
 } from "../../../../helpers/transaction-modified-util";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { accFormStateHandleFieldChangeKeysOnly } from "../../../accounts/transactions/reducer";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -411,10 +420,20 @@ export const useTransaction = (
       details: refactorDetails(
         vch.details,
         vch.master.voucherType,
-        vch.master.voucherForm
+        vch.master.voucherForm,{result:{},useNumberFormat: useNumberFormat,accFormStateHandleFieldChangeKeysOnly, dispatch}, voucher,applicationSettings
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
+
+    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{},useNumberFormat: useNumberFormat,accFormStateHandleFieldChangeKeysOnly, dispatch})
+    voucher.summary = (summaryRes && summaryRes.summary
+  ? summaryRes.summary 
+  : initialInventoryTotals) as SummaryItems;
+
+  voucher =  calculateTotal(voucher.transaction.master, voucher.summary,voucher.formElements,
+    {result:voucher,useNumberFormat: useNumberFormat,accFormStateHandleFieldChangeKeysOnly, dispatch}
+  ) as TransactionFormState;
+
     voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0 ;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
@@ -469,189 +488,7 @@ export const useTransaction = (
       return baseDetail;
     });
   };
-  const refactorDetails = (details: any, vtype: string, formType: string) => {
-    // Pre-calculate constants and conditions
-    const isGRN = vtype === "GRN";
-    const isVAT = formType === "VAT";
-    const detailsLength = details.length;
-
-    // Pre-allocate array with known size to avoid dynamic resizing
-    const modifiedDetails: TransactionDetail[] = new Array(
-      Math.max(detailsLength, 50)
-    );
-
-    let validDetailsCount = 0;
-
-    // Single pass through details array
-    for (let i = 0; i < detailsLength; i++) {
-      const detail = details[i];
-      const slNo = i + 1;
-
-      // Parse numbers once and reuse
-      const quantity = detail.quantity ?? 0;
-      const xRate = detail.xRate ?? 0;
-      const unitPrice = detail.unitPrice ?? 0;
-      const costPerItem = detail.costPerItem ?? 0;
-      const additionalExpense = detail.additionalExpense ?? 0;
-      const grossValue = detail.grossValue ?? 0;
-      const discountPer1 = detail.discountPer1 ?? 0;
-      const discountAmt1 = detail.discountAmt1 ?? 0;
-      const schemeDiscAmt = detail.schemeDiscAmt ?? 0;
-      const netValue = detail.netValue ?? 0;
-      const netAmount = detail.netAmount ?? 0;
-      const stdSalesPrice = detail.stdSalesPrice ?? 0;
-      const minSalePrice = detail.minSalePrice ?? 0;
-      const multiFactor = detail.multiFactor ?? 1;
-
-      // Pre-calculate derived values
-      const grossFC = quantity * xRate;
-      const cost = costPerItem - additionalExpense;
-      const totalAddExpense = quantity * additionalExpense;
-      const calculatedMinSalePrice = minSalePrice * multiFactor;
-
-      // Handle conditional values efficiently
-      const vatPerc = isVAT ? detail.vatPercentage?.toString() || "0" : "0";
-      const vatAmount = isVAT
-        ? parseFloat(detail.totalVatAmount?.toString() || "0").toFixed(2)
-        : "0.00";
-      const finalUnitPrice = isGRN
-        ? unitPrice
-        : parseFloat(unitPrice.toFixed(2));
-
-      // Handle sales price fallback
-      const salesPrice =
-        stdSalesPrice || parseFloat(detail.stdSalesPricePB?.toString() || "0");
-
-      // Create object with direct property assignment (faster than spread)
-      const baseDetail: TransactionDetail = {
-        ...detail, // Keep original properties first
-        slNo: slNo + 1,
-        headerCell: (slNo + 1).toString(),
-        pCode: detail.productCode?.toString() || "",
-        productBatchID: detail.productBatchID?.toString() || "",
-        barCode: detail.autoBarcode?.toString() || "",
-        product: detail.productName?.toString() || "",
-        productID: detail.productID?.toString() || "",
-        brandID: detail.brandID?.toString() || "",
-        brand: detail.brandName?.toString() || "",
-        arabicName: detail.itemNameinSecondLanguage?.toString() || "",
-
-        // Pre-calculated quantities and pricing
-        free: parseFloat(detail.free?.toString() || "0").toFixed(4),
-        qty: quantity.toFixed(4),
-        nosQty: detail.qtyInNumbers?.toString() || "",
-
-        // Unit information
-        unit: detail.unitName?.toString() || "",
-        unitID: detail.unitID?.toString() || "",
-        unitPriceFC: xRate.toFixed(4),
-        grossFC: grossFC,
-        unitPrice: finalUnitPrice.toFixed(2),
-
-        // Pre-calculated cost
-        cost: cost.toString(),
-
-        // Tax information
-        cstPerc: detail.cstPerc?.toString() || "",
-        cst: detail.cst?.toString() || "",
-
-        // Product specifications
-        size: detail.specification?.toString() || "",
-        stickerQty: "0",
-        additionalExpense: additionalExpense.toString(),
-        colour: detail.colour?.toString() || detail.color?.toString() || "",
-        warranty: detail.warranty?.toString() || "",
-        totalAddExpense: totalAddExpense,
-
-        // Location and pricing
-        location: detail.location?.toString() || "",
-        profit: detail.totalProfit?.toString() || "",
-        salesPrice: salesPrice.toFixed(2),
-        ratePlusTax: parseFloat(detail.rateWithTax?.toString() || "0").toFixed(
-          2
-        ),
-        margin: detail.marginPer?.toString() || "",
-        stock: detail.stock?.toString() || "",
-        minSalePrice: calculatedMinSalePrice,
-
-        // Optimized date formatting
-        mfdDate: detail.mfgDate
-          ? new Date(detail.mfgDate).toLocaleDateString()
-          : "",
-        expDate: detail.expiryDate
-          ? new Date(detail.expiryDate).toLocaleDateString()
-          : "",
-
-        // Batch information
-        batchNo: detail.batchNo?.toString() || "",
-        manualBarCode: detail.mannualBarcode?.toString() || "",
-
-        // Pre-calculated financial values
-        gross: grossValue.toFixed(2),
-        discPerc: discountPer1.toFixed(2),
-        discount: discountAmt1.toFixed(2),
-        schemeDiscount: schemeDiscAmt.toFixed(2),
-
-        // Conditional VAT calculations
-        vatPerc: vatPerc,
-        vatAmount: vatAmount,
-
-        // Net values
-        netValue: netValue.toFixed(2),
-        total: netAmount.toFixed(2),
-        productDescription: detail.productDescription?.toString() || "",
-
-        // Additional unit information (batch converted)
-        unitID2: detail.unit2ID?.toString() || "",
-        unit2Qty: detail.unit2Qty?.toString() || "",
-        unit2MBarcode: detail.unit2Barcode?.toString() || "",
-        unit2SalesRate: detail.unit2SalesPrice?.toString() || "",
-        unit2MRP: detail.unit2MRP?.toString() || "",
-        unitID3: detail.unit3ID?.toString() || "",
-        unit3Qty: detail.unit3Qty?.toString() || "",
-        unit3MBarcode: detail.unit3Barcode?.toString() || "",
-        unit3SalesRate: detail.unit3SalesPrice?.toString() || "",
-        unit3MRP: detail.unit3MRP?.toString() || "",
-        memo: detail.memo?.toString() || "",
-
-        // Additional fields
-        supplierReferenceProductCode:
-          detail.supplierReferenceProductCode?.toString() || "",
-        warehouseID: detail.warehouseID?.toString() || "",
-        warehouse: detail.warehouse?.toString() || "",
-        barcodePrinted: "",
-        batchCreated: "Y",
-      };
-
-      modifiedDetails[i] = baseDetail;
-
-      // Count valid details (assuming productID exists and > 0)
-      const productID = baseDetail.productID;
-      if (!isNullOrUndefinedOrZero(baseDetail.productID) && productID > 0) {
-        validDetailsCount++;
-      }
-    }
-
-    // Calculate empty rows needed
-    const blankDetailsCount = detailsLength - validDetailsCount;
-    const emptyRowsNeeded = Math.max(0, 50 - blankDetailsCount);
-
-    // Fill remaining slots with empty rows if needed
-    if (emptyRowsNeeded > 0) {
-      for (let i = detailsLength; i < detailsLength + emptyRowsNeeded; i++) {
-        modifiedDetails[i] = {
-          ...initialTransactionDetailData,
-          slNo: i + 1,
-        };
-      }
-    }
-
-    // Return appropriately sized array
-    return modifiedDetails.slice(
-      0,
-      Math.max(detailsLength + emptyRowsNeeded, 50)
-    );
-  };
+  
 
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
@@ -967,186 +804,7 @@ export const useTransaction = (
 
     return { firstDebitLedgerID, firstCreditLedgerID };
   };
-  const attachDetails = () => {
-    // const details = JSON.parse(
-    //   JSON.stringify([...formState.transaction.details])
-    // );
-    // let updatedDetails = [];
-    // let debtorID = 0,
-    //   arra = 0,
-    //   detailID = 0;
-    // const { firstDebitLedgerID, firstCreditLedgerID } =
-    //   getFirstDebitCreditLedgerIDs(formState.transaction);
-    // for (let index = 0; index < details.length; index++) {
-    //   const element: any = details[index];
-    //   if (isNullOrUndefinedOrZero(element.ledgerID)) {
-    //     break;
-    //   }
-    //   element.adjAmount = 0;
-    //   element.checkBouncedDate = element.bankDate;
-    //   element.currencyID = 1;
-    //   element.exchangeRate = 1;
-    //   element.isDisplay = true;
-    //   element.isDr = true;
-    //   switch (formState.transaction.master.voucherType) {
-    //     case "CP":
-    //     case "BP":
-    //     case "CN":
-    //     case "SV":
-    //     case "CQP":
-    //     case "CQE":
-    //       element.ledgerID = element.ledgerID; // Preserve original ledgerID
-    //       element.relatedLedgerID = formState.masterAccountID;
-    //       break;
-    //     case "CR":
-    //     case "BR":
-    //     case "DN":
-    //     case "PV":
-    //     case "CQR":
-    //     case "CRE":
-    //       element.relatedLedgerID = element.ledgerID ?? 0;
-    //       element.ledgerID = formState.masterAccountID;
-    //       break;
-    //     case "JV":
-    //     case "JVSP":
-    //       if (formState.row.drCr === "Dr") {
-    //         element.relatedLedgerID = element.ledgerID ?? 0;
-    //         element.ledgerID = formState.masterAccountID;
-    //       } else {
-    //         element.ledgerID = element.ledgerID; // Preserve original ledgerID
-    //         element.relatedLedgerID = formState.masterAccountID;
-    //       }
-    //       break;
-    //     case "OB":
-    //       if (formState.row.drCr === "Dr") {
-    //         element.relatedLedgerID =
-    //           applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
-    //         element.ledgerID = element.ledgerID; // Keep original ledger ID
-    //       } else {
-    //         element.relatedLedgerID = element.ledgerID ?? 0;
-    //         element.ledgerID =
-    //           applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
-    //       }
-    //       break;
-    //     case "MJV":
-    //       if (element.drCr === "Dr") {
-    //         element.ledgerID = element.ledgerID; // Keep original ledger ID
-    //         element.relatedLedgerID = firstCreditLedgerID;
-    //         element.debit = element.amount;
-    //         element.credit = 0;
-    //       } else {
-    //         element.ledgerID = element.ledgerID; // Keep original ledger ID
-    //         element.relatedLedgerID = firstDebitLedgerID;
-    //         element.credit = element.amount;
-    //         element.debit = 0;
-    //       }
-    //       break;
-    //     case "CPT":
-    //     case "BPT":
-    //     case "CNT":
-    //     case "EXP":
-    //     case "TXP":
-    //       element.relatedLedgerID = formState.masterAccountID;
-    //       element.ledgerID = element.ledgerID;
-    //       break;
-    //     case "CRT":
-    //     case "BRT":
-    //     case "DNT":
-    //     case "INC":
-    //       element.relatedLedgerID = element.ledgerID ?? 0;
-    //       element.ledgerID = formState.masterAccountID;
-    //       break;
-    //   }
-    //   element.particularsLedgerId = element.relatedLedgerID;
-    //   element.voucherType = formState.transaction.master.voucherType;
-    //   element.chqDate =
-    //     element.chqDate == ""
-    //       ? moment().local().toISOString()
-    //       : element.chqDate;
-    //   element.bankDate =
-    //     element.bankDate == ""
-    //       ? moment().local().toISOString()
-    //       : element.bankDate;
-    //   element.checkBouncedDate =
-    //     element.checkBouncedDate == ""
-    //       ? moment().local().toISOString()
-    //       : element.checkBouncedDate;
-    //   if (
-    //     billWiseExcludedTransactions.includes(
-    //       formState.transaction.master.voucherType
-    //     )
-    //   ) {
-    //     element.billwiseDetails = "";
-    //     element.chequeStatus = "P";
-    //   }
-    //   element.invoiceDate =
-    //     element.invoiceDate == "" || element.invoiceDate == null
-    //       ? formState.transaction.master.transactionDate
-    //       : element.invoiceDate;
-    //   element.projectId =
-    //     (element.projectId ?? 0).toString() == "" ? 0 : element.projectId;
-    //   updatedDetails.push(element);
-    // }
-    // return updatedDetails;
-  };
-  const attachMaster = () => {
-    // const { firstDebitLedgerID, firstCreditLedgerID } =
-    //   getFirstDebitCreditLedgerIDs(formState.transaction);
-    // const master = {
-    //   ...formState.transaction.master,
-    //   particulars:
-    //     formState.transaction.master.voucherType != "MJV" &&
-    //     formState.transaction.master.voucherType != "OB"
-    //       ? dataContainer.ledgers?.find(
-    //           (x) => x.id == formState.masterAccountID
-    //         )?.name ?? ""
-    //       : formState.transaction.master.voucherType == "OB"
-    //       ? dataContainer.ledgers?.find(
-    //           (x) =>
-    //             x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
-    //         )?.name ?? ""
-    //       : formState.transaction.master.voucherType == "MJV"
-    //       ? dataContainer.ledgers?.find((x) => x.id == firstCreditLedgerID)
-    //           ?.name ?? ""
-    //       : "",
-    // };
-    // master.transactionMasterID = formState.isEdit
-    //   ? master.transactionMasterID
-    //   : 0;
-    // // master.bankDate = new Date().toISOString();
-    // master.checkBouncedDate = moment().local().toISOString();
-    // master.prevTransDate =
-    //   master.transactionDate == ""
-    //     ? moment().local().toISOString()
-    //     : master.prevTransDate;
-    // master.referenceDate =
-    //   master.referenceDate == ""
-    //     ? moment().local().toISOString()
-    //     : master.referenceDate;
-    // master.dueDate =
-    //   master.transactionDate == ""
-    //     ? moment().local().toISOString()
-    //     : master.transactionDate;
-    // const totalAmount = master.totalAmount || 0;
-    // if (master.drCr === "Cr") {
-    //   master.totalCredit = totalAmount;
-    //   master.totalDebit = 0;
-    // } else if (master.drCr === "Dr") {
-    //   master.totalDebit = totalAmount;
-    //   master.totalCredit = 0;
-    // } else {
-    //   master.totalDebit = master.totalCredit = totalAmount;
-    // }
-    // if (
-    //   master.voucherType === "JV" ||
-    //   master.voucherType === "MJV" ||
-    //   master.voucherType === "JVSP"
-    // ) {
-    //   master.totalDebit = master.totalCredit = totalAmount;
-    // }
-    // // dispatch(formStateTransactionUpdate({ key: "master", value: master }));
-    // return master;
-  };
+ 
   const preSave = async () => {
     if (
       formState.isEdit &&
@@ -1176,137 +834,81 @@ export const useTransaction = (
       })
     );
 
-    // const valid = validate();
+    const valid = await validate();
 
-    // if (valid == true) {
-    //   const master = attachMaster();
-    //   const attachments = formState.transaction.attachments
-    //     ?.filter((x) => x.id > 0)
-    //     ?.map((x) => ({
-    //       aType: x.aType,
-    //       attachmentId: x.id,
-    //       fileName: x.name,
-    //       key: x.key,
-    //       type: x.type,
-    //     }));
-    //   const params = {
-    //     master: {
-    //       ...master,
-    //       transactionDate:
-    //         master.transactionDate == "" ? null : master.transactionDate,
-    //     },
-    //     details: attachDetails(),
-    //     attachments: attachments,
-    //   };
+    if (valid == true) {
+const master = attachMaster(formState);
+      const attachments = formState.transaction.attachments
+        ?.filter((x) => x.id > 0)
+        ?.map((x) => ({
+          aType: x.aType,
+          attachmentId: x.id,
+          fileName: x.name,
+          key: x.key,
+          type: x.type,
+        }));
+        const dtils = attachDetails(formState.transaction.details,formState.transaction.master.voucherForm,formState.transaction.master.transactionDate, formState.transaction.master.ledgerID, formState.transaction.master.fromWarehouseID,formState.transaction.master.stockUpdate, applicationSettings);
+      const params = {
+        master: {
+          ...master,
+          transactionDate:
+            master.transactionDate == "" ? null : master.transactionDate,
+        },
+        details: dtils,
+        attachments: attachments,
+      };
 
-    //   const saveRes =
-    //     formState.transaction.master.transactionMasterID > 0
-    //       ? await api.putAsync(
-    //           `${Urls.acc_transaction_base}${transactionType}`,
-    //           params
-    //         )
-    //       : await api.postAsync(
-    //           `${Urls.acc_transaction_base}${transactionType}`,
-    //           params
-    //         );
-    //   if (saveRes.isOk == true) {
-    //     dispatch(
-    //       formStateTransactionUpdate({
-    //         key: "masterValidations",
-    //         value: undefined,
-    //       })
-    //     );
-    //     if (formState.printOnSave == true) {
-    //       if (
-    //         userSession.dbIdValue?.trim() == "BAHAMDOON" &&
-    //         formState.isBahamdoonPOSReceipt != true
-    //       ) {
-    //         printPaymentReceiptAdvice();
-    //       } else {
-    //         printVoucher();
-    //       }
-    //     }
-    //     if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
-    //       clearControls(
-    //         formState.isEdit,
-    //         formState.transaction.master.transactionMasterID
-    //       );
-    //     } else {
-    //       const isFinancialYearClosed =
-    //         userSession.financialYearStatus === "Closed";
-    //       const fieldsToUpdate: Record<string, any> = {
-    //         // employee: { disabled: false },
-    //         // jvDrCr: { disabled: false },
-    //         // masterAccount: { disabled: false },
-    //         // referenceDate: { disabled: false },
-    //         // referenceNumber: { disabled: false },
-    //         // transactionDate: { disabled: false },
-    //         // linkEdit: { visible: false },
+      const saveRes =
+        formState.transaction.master.invTransactionMasterID > 0
+          ? await api.putAsync(
+              `${Urls.acc_transaction_base}${transactionType}`,
+              params
+            )
+          : await api.postAsync(
+              `${Urls.acc_transaction_base}${transactionType}`,
+              params
+            );
+      if (saveRes.isOk == true) {
+        dispatch(
+          formStateTransactionUpdate({
+            key: "masterValidations",
+            value: undefined,
+          })
+        );
+        if (formState.printOnSave == true) {
+         printVoucher();
+        }
+       
+        ERPToast.show(saveRes.message, "success");
+      } else {
+        // dispatch(acc)
+        ERPAlert.show({
+          icon: "warning",
+          title: saveRes.message,
+        });
+        
+        dispatch(
+          formStateTransactionUpdate({
+            key: "attachments",
+            value: saveRes.item.attachments,
+          })
+        );
+        dispatch(
+          formStateTransactionUpdate({
+            key: "masterValidations",
+            value: saveRes.validations,
+          })
+        );
+      }
 
-    //         pnlMasters: { disabled: true },
-
-    //         linkEdit: { visible: false },
-    //         // dxGrid: { disabled: false },
-    //         // btnSave: { disabled: true },
-    //         // btnEdit: {
-    //         //   disabled:
-    //         //     !isFinancialYearClosed &&
-    //         //     hasRight(formState.formCode, UserAction.Edit)
-    //         //       ? false
-    //         //       : true,
-    //         // },
-    //         // btnDelete: { disabled: true },
-    //         // btnPrint: { disabled: true },
-    //       };
-
-    //       // Dispatch the update action with all the required fields
-    //       dispatch(updateFormElement({ fields: fieldsToUpdate }));
-    //     }
-    //     ERPToast.show(saveRes.message, "success");
-    //   } else {
-    //     // dispatch(acc)
-    //     ERPAlert.show({
-    //       icon: "warning",
-    //       title: saveRes.message,
-    //     });
-    //     dispatch(
-    //       formStateTransactionUpdate({
-    //         key: "details",
-    //         value: refactorDetails({
-    //           ...params,
-    //           master: {
-    //             ...params.master,
-    //             transactionDate:
-    //               params.master.transactionDate == null
-    //                 ? ""
-    //                 : params.master.transactionDate,
-    //           },
-    //           details: saveRes.item.details,
-    //         }),
-    //       })
-    //     );
-    //     dispatch(
-    //       formStateTransactionUpdate({
-    //         key: "attachments",
-    //         value: saveRes.item.attachments,
-    //       })
-    //     );
-    //     dispatch(
-    //       formStateTransactionUpdate({
-    //         key: "masterValidations",
-    //         value: saveRes.validations,
-    //       })
-    //     );
-    //   }
-
-    //   dispatch(
-    //     formStateHandleFieldChange({
-    //       fields: {
-    //         saving: false,
-    //       },
-    //     })
-    //   );
-    // }
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            saving: false,
+          },
+        })
+      );
+    }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
     await undoEditMode(isEdit, transactionMasterID);
@@ -2640,3 +2242,4 @@ export const useTransaction = (
     clearRow,
   };
 };
+

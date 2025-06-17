@@ -3,15 +3,8 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData } from "./transaction-types";
 
-export interface TransactionData {
-  master: TransactionMaster;
-  // master3: TransactionMaster3;
-  masterValidations?: TransactionValidationsData;
-  details: TransactionDetail[];
-  attachments: any[];
-}
 
 // Initial object with default values
 export const initialTransactionMasterValidations: TransactionValidationsData = {
@@ -173,7 +166,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   dueDays: 0
 }
 export const initialTransactionDetailData: TransactionDetail = {
-  slNo:0,
+  slNo: 0,
   pCode: '',
   mrp: 0,
   barCode: '',
@@ -259,15 +252,18 @@ export const initialTransactionDetailData: TransactionDetail = {
   actualSalesPrice: 0,
   unit2: '',
   unit3: '',
-  btnPrintBarcodeStd: ''
+  btnPrintBarcodeStd: '',
+  poTransDetailsIDTag: 0,
+  warehouseName: ""
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData,details: Array.from({ length: 200 }, (_, index) => ({
-  ...initialTransactionDetailData,
-  slNo: index + 1
-})),
+  master: TransactionMasterInitialData, details: Array.from({ length: 200 }, (_, index) => ({
+    ...initialTransactionDetailData,
+    slNo: index + 1
+  })),
   attachments: [],
-  masterValidations: initialTransactionMasterValidations
+  masterValidations: initialTransactionMasterValidations,
+  invAccTransactions: []
 };
 
 export const initialFormElements: { [key: string]: FormElementState } = {
@@ -481,5 +477,82 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   selectedRow: undefined,
   userRightsFormCode: "",
   isPostedTransaction: false,
-  isInv: false
+  isInv: false,
+  summaryConfig: [
+     {
+        column: "qty",
+        summaryType: "sum",
+        valueFormat: "decimal",
+      },
+      {
+        column: "gross",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "netValue",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "discount",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "vatAmount",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "cst",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "total",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "profit",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "grossFC",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "totalAddExpense",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "nosQty",
+        summaryType: "sum",
+        valueFormat: "decimal",
+      },
+      {
+        column: "pCode",
+        summaryType: "count",
+        valueFormat: "decimal",
+      },
+      {
+        column: "barCode",
+        summaryType: "count",
+        valueFormat: "decimal",
+      },
+      {
+        column: "margin",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+      {
+        column: "salesPrice",
+        summaryType: "sum",
+        valueFormat: "currency",
+      },
+  ]
 }

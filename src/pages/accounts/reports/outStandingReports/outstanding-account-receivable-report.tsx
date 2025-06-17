@@ -9,6 +9,9 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import OutstandingReceivableReportFilter, { OutstandingReceivableReportFilterInitialState } from "./outstanding-receivable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 
 interface OutstandingAccountReceivableReport {
   from: Date
@@ -22,6 +25,8 @@ const OutstandingAccountReceivableReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const isIndia = userSession.countryId === Countries.India;
   const { getFormattedValue } = useNumberFormat()
   const [filter, setFilter] = useState<OutstandingAccountReceivableReport>({ from: new Date() });
   const rootState = useRootState();
@@ -251,8 +256,8 @@ const OutstandingAccountReceivableReport = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterHeight={300}
-                  filterWidth={390}
+                  filterHeight={userSession.countryId == Countries.India ? 210 : 250}
+                  filterWidth={620}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<OutstandingReceivableReportFilter />}

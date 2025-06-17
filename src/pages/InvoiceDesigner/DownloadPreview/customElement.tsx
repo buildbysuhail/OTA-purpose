@@ -6,103 +6,11 @@ import {
   QRCodeProps,
 } from "../Designer/interfaces";
 import type { Style } from "@react-pdf/types";
-import { useEffect, useState } from "react";
-import { QRCodeSVG } from "qrcode.react";
-import { createRoot } from "react-dom/client";
+
 const pxToPt = (px: number) => px * (72 / 96);
 
-export const renderComponent = (component: PlacedComponent, data?: any) => {
-  const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>(
-    {}
-  );
+export const renderComponent = (component: PlacedComponent, data?: any,qrCodeImages?: { [key: string]: string }) => {
 
-  // Generate QR code image only for QR code components
-  useEffect(() => {
-    if (
-      component.type !== DesignerElementType.qrCode ||
-      qrCodeImages[component.id]
-    ) {
-      return; // Skip if not a QR code or image already generated
-    }
-
-    const generateQRCodeImage = async () => {
-      try {
-        const qrCodeProps = component.qrCodeProps as QRCodeProps;
-        const imageData = await convertQRToImage({
-          value: qrCodeProps.value || "",
-          size: component.width || 128,
-          level: qrCodeProps.level || "L",
-          marginSize: qrCodeProps?.marginSize || 1,
-          bgColor: qrCodeProps.bgColor || "#FFFFFF",
-          fgColor: qrCodeProps.fgColor || "#000000",
-          imageSettings: qrCodeProps?.imageSettings,
-        });
-        setQrCodeImages((prev) => ({ ...prev, [component.id]: imageData }));
-      } catch (error) {
-        console.error(
-          `Failed to generate QR code for component ${component.id}:`,
-          error
-        );
-        setQrCodeImages((prev) => ({ ...prev, [component.id]: "" })); // Empty string as fallback
-      }
-    };
-
-    generateQRCodeImage();
-  }, [component]);
-
-  // Convert QR code to image
-  const convertQRToImage = async (qrProps: any): Promise<string> => {
-    // Create a temporary div to render the QR code
-    const tempDiv = document.createElement("div");
-    document.body.appendChild(tempDiv);
-
-    // Render the QR code SVG
-    const qrElement = (
-      <QRCodeSVG
-        value={qrProps.value || ""}
-        size={qrProps.size || 128}
-        level={qrProps.level || "L"}
-        marginSize={qrProps.marginSize || 1}
-        bgColor={qrProps.bgColor || "#FFFFFF"}
-        fgColor={qrProps.fgColor || "#000000"}
-      />
-    );
-
-    // Create root and render
-    const root = createRoot(tempDiv);
-    root.render(qrElement);
-
-    // Convert SVG to canvas
-    const svgElement = tempDiv.querySelector("svg");
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    if (svgElement && ctx) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      // Use HTMLImageElement explicitly
-      const img = new window.Image();
-
-      return new Promise<string>((resolve) => {
-        img.onload = () => {
-          canvas.width = qrProps.size || 128;
-          canvas.height = qrProps.size || 128;
-          ctx.drawImage(img as CanvasImageSource, 0, 0);
-          const pngData = canvas.toDataURL("image/png");
-          // Clean up
-          root.unmount();
-          document.body.removeChild(tempDiv);
-          resolve(pngData);
-        };
-
-        img.src = "data:image/svg+xml;base64," + btoa(svgData);
-      });
-    }
-
-    // Clean up if we didn't create an image
-    root.unmount();
-    document.body.removeChild(tempDiv);
-    return "";
-  };
 
   const baseStyle: Style = {
     position: "absolute",
@@ -193,14 +101,18 @@ export const renderComponent = (component: PlacedComponent, data?: any) => {
       );
 
     case DesignerElementType.qrCode:
-      return qrCodeImages[component.id] ? (
-        <View key={component.id} style={baseStyle}>
+      return qrCodeImages && qrCodeImages[component.id] ? (
+        <View
+          key={component.id}
+          style={{
+            ...baseStyle,
+            width: component.qrCodeProps?.size || 128,
+            height: component.qrCodeProps?.size || 128,
+          }}
+        >
           <Image
             src={qrCodeImages[component.id]}
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
+            style={{ width: '100%', height: '100%' }}
           />
         </View>
       ) : null;

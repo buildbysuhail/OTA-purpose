@@ -283,7 +283,7 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
                  {currentSection.type == "total" &&
                   <TotalPremiumDesigner/>
                  }
-      </div>
+        </div>
               <PDFViewer
                     className="pdf-viewer"
                     width="100%"

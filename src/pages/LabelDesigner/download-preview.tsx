@@ -6,8 +6,7 @@ import JsBarcode from 'jsbarcode';
 import { DesignerElementType, PlacedComponent, QRCodeProps, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
 import { Style } from '@react-pdf/types';
 import FontRegistration from './fontRegister';
-import { QRCodeSVG } from "qrcode.react";
-import { createRoot } from 'react-dom/client';
+
 
 const styles = StyleSheet.create({
   page: {
@@ -118,86 +117,86 @@ export default function Component({ template, docTitle = "Document Preview", dat
   }, [template?.barcodeState?.placedComponents, data]);
 
   // Generate QR code images
-  useEffect(() => {
-    const generateQRCodeImages = async () => {
-      const images: { [key: string]: string } = {};
+  // useEffect(() => {
+  //   const generateQRCodeImages = async () => {
+  //     const images: { [key: string]: string } = {};
       
-      if (template?.barcodeState?.placedComponents) {
-        const qrComponents = template.barcodeState.placedComponents
-          .filter(x => x.type === DesignerElementType.qrCode);
+  //     if (template?.barcodeState?.placedComponents) {
+  //       const qrComponents = template.barcodeState.placedComponents
+  //         .filter(x => x.type === DesignerElementType.qrCode);
 
-        for (const component of qrComponents) {
-          const qrCodeProps = component.qrCodeProps as QRCodeProps;
-          const imageData = await convertQRToImage({
-            value: qrCodeProps.value || '',
-            size: component.width || 128,
-            level: qrCodeProps.level || 'L',
-            marginSize: qrCodeProps?.marginSize || 1,
-            bgColor: qrCodeProps.bgColor || '#FFFFFF',
-            fgColor: qrCodeProps.fgColor || '#000000',
-            imageSettings: qrCodeProps?.imageSettings
-          });
-          images[component.id] = imageData;
-        }
-      }
+  //       for (const component of qrComponents) {
+  //         const qrCodeProps = component.qrCodeProps as QRCodeProps;
+  //         const imageData = await convertQRToImage({
+  //           value: qrCodeProps.value || '',
+  //           size: component.width || 128,
+  //           level: qrCodeProps.level || 'L',
+  //           marginSize: qrCodeProps?.marginSize || 1,
+  //           bgColor: qrCodeProps.bgColor || '#FFFFFF',
+  //           fgColor: qrCodeProps.fgColor || '#000000',
+  //           imageSettings: qrCodeProps?.imageSettings
+  //         });
+  //         images[component.id] = imageData;
+  //       }
+  //     }
       
-      setQrCodeImages(images);
-    };
+  //     setQrCodeImages(images);
+  //   };
 
-    generateQRCodeImages();
-  }, [template?.barcodeState?.placedComponents]);
+  //   generateQRCodeImages();
+  // }, [template?.barcodeState?.placedComponents]);
 
   // Convert QR code to image
-  const convertQRToImage = async (qrProps: any): Promise<string> => {
-    // Create a temporary div to render the QR code
-    const tempDiv = document.createElement('div');
-    document.body.appendChild(tempDiv);
+  // const convertQRToImage = async (qrProps: any): Promise<string> => {
+  //   // Create a temporary div to render the QR code
+  //   const tempDiv = document.createElement('div');
+  //   document.body.appendChild(tempDiv);
   
-    // Render the QR code SVG
-    const qrElement = <QRCodeSVG 
-      value={qrProps.value || ''}
-      size={qrProps.size || 128}
-      level={qrProps.level || 'L'}
-      marginSize={qrProps.marginSize || 1}
-      bgColor={qrProps.bgColor || '#FFFFFF'}
-      fgColor={qrProps.fgColor || '#000000'}
-    />;
+  //   // Render the QR code SVG
+  //   const qrElement = <QRCodeSVG 
+  //     value={qrProps.value || ''}
+  //     size={qrProps.size || 128}
+  //     level={qrProps.level || 'L'}
+  //     marginSize={qrProps.marginSize || 1}
+  //     bgColor={qrProps.bgColor || '#FFFFFF'}
+  //     fgColor={qrProps.fgColor || '#000000'}
+  //   />;
   
-    // Create root and render
-    const root = createRoot(tempDiv);
-    root.render(qrElement);
+  //   // Create root and render
+  //   const root = createRoot(tempDiv);
+  //   root.render(qrElement);
   
-    // Convert SVG to canvas
-    const svgElement = tempDiv.querySelector('svg');
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+  //   // Convert SVG to canvas
+  //   const svgElement = tempDiv.querySelector('svg');
+  //   const canvas = document.createElement('canvas');
+  //   const ctx = canvas.getContext('2d');
     
-    if (svgElement && ctx) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      // Use HTMLImageElement explicitly
-      const img = new window.Image();
+  //   if (svgElement && ctx) {
+  //     const svgData = new XMLSerializer().serializeToString(svgElement);
+  //     // Use HTMLImageElement explicitly
+  //     const img = new window.Image();
       
-      return new Promise<string>((resolve) => {
-        img.onload = () => {
-          canvas.width = qrProps.size || 128;
-          canvas.height = qrProps.size || 128;
-          ctx.drawImage(img as CanvasImageSource, 0, 0);
-          const pngData = canvas.toDataURL('image/png');
-          // Clean up
-          root.unmount();
-          document.body.removeChild(tempDiv);
-          resolve(pngData);
-        };
+  //     return new Promise<string>((resolve) => {
+  //       img.onload = () => {
+  //         canvas.width = qrProps.size || 128;
+  //         canvas.height = qrProps.size || 128;
+  //         ctx.drawImage(img as CanvasImageSource, 0, 0);
+  //         const pngData = canvas.toDataURL('image/png');
+  //         // Clean up
+  //         root.unmount();
+  //         document.body.removeChild(tempDiv);
+  //         resolve(pngData);
+  //       };
         
-        img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
-      });
-    }
+  //       img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+  //     });
+  //   }
     
-    // Clean up if we didn't create an image
-    root.unmount();
-    document.body.removeChild(tempDiv);
-    return '';
-  };
+  //   // Clean up if we didn't create an image
+  //   root.unmount();
+  //   document.body.removeChild(tempDiv);
+  //   return '';
+  // };
 
   useEffect(() => {
     const generateBarcodeImage = (

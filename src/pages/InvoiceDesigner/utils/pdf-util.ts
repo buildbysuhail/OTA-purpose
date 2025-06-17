@@ -1,3 +1,5 @@
+import React from "react";
+
 // Standard page size dimensions in points
 export const PAGE_DIMENSIONS = {
     A4: { width: 595, height: 842 },
@@ -117,4 +119,12 @@ export const PAGE_DIMENSIONS = {
     return pages
   }
   
+  // src/utils/qrToSvg.ts
+
+
+
+
+
+
+
   

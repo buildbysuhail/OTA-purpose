@@ -60,8 +60,7 @@ import { useTranslation } from "react-i18next";
 import localData from "../../../enums/local-datas";
 import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
-import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
-import { UserModel } from "../../../redux/slices/user-session/reducer";
+import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 
 
 interface FormElementState {

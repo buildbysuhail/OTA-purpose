@@ -9,6 +9,9 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 
 interface OutstandingAccountPayableReport {
   from: Date
@@ -23,6 +26,8 @@ const OutstandingAccountPayableReport = () => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const isIndia = userSession.countryId === Countries.India;
   const [filter, setFilter] = useState<OutstandingAccountPayableReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -254,8 +259,8 @@ const OutstandingAccountPayableReport = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterHeight={300}
-                  filterWidth={390}
+                  filterHeight={userSession.countryId == Countries.India ? 210 : 250}
+                  filterWidth={620}
                   filterContent={<OutstandingPayableReportFilter />}
                   filterInitialData={OutstandingPayableReportFilterInitialState}>
                 </ErpDevGrid>

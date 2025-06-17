@@ -5,6 +5,7 @@ import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 
 // Transaction interface
 export interface TransactionProps {
@@ -26,7 +27,21 @@ export interface TransactionData {
   // master3: TransactionMaster3;
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
+  invAccTransactions: InvAccTransaction[];
   attachments: any[];
+}
+export interface InvAccTransaction {
+  invTransAccountsID: number;
+  invTransactionMasterID: number;
+  ledgerID: number;
+  debit: number;
+  credit: number;
+  remarks: string;
+  ledgerName: string;
+  amount: number;
+  amountFC: number;
+  isIncome: boolean;
+  slNo: number;
 }
 export interface Attachments {
   id?: string;
@@ -271,8 +286,10 @@ export interface TransactionDetail {
   arabicName: string;
   supplierReferenceProductCode: string;
   poTransDetailsID: number;
+  poTransDetailsIDTag: number;
   ratePlusTax: number;
   warehouseID: number;
+  warehouseName: string;
   sortOrder: number;
   profitPercentage: number;
   schemeDiscount: number;
@@ -418,6 +435,7 @@ export interface TransactionFormState {
   gridColumns?: DevGridColumn[];
   isPostedTransaction: boolean;
   isInv: boolean;
+  summaryConfig: SummaryConfig<TransactionDetail>[] ;
   
 }
 export interface PrintTransProps {

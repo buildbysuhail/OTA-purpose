@@ -89,17 +89,12 @@ import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
-// import QRCodeSVG from "qrcode.react";
-import LanguageSwitcher from "../../components/common/header/language-switcher";
-import { dir } from "i18next";
 import { useTranslation } from "react-i18next";
 import VoucherType from "../../enums/voucher-types";
 import { AccountMasterFields, fields } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
-import { use } from "i18next";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
-import { he } from "date-fns/locale";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeComponent } from "./QRCodeComponent";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -119,7 +114,7 @@ interface DeleteButtonProps {
   isSelected: boolean;
   handleDelete: (id: number) => void;
 }
-const DeleteButton: React.FC<DeleteButtonProps> = ({
+ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   id,
   isSelected,
   handleDelete,
@@ -251,7 +246,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const pxToPoint = (px: number) => px * (72 / 96);
   const { t } = useTranslation("labelDesigner");
   const pageSize = template?.propertiesState?.pageSize ?? "A4";
-
+    const qrCodeRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   // Get the actual page dimensions based on the selected page size
   const selectedPageSize = getPageDimensions(
     pageSize,
@@ -441,19 +436,19 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             columns: [],
           },
           qrCodeProps: {
-            value: "",
-            size: 0,
-            level: "M",
-            bgColor: "",
-            fgColor: "",
-            marginSize: 0,
-            imageSettings: {
-              src: "",
-              height: 16,
-              width: 16,
-              excavate: true,
-            },
-          },
+    value: "https://example.com", // Ensure a default value
+    size: 128,
+    level: "M",
+    bgColor: "#FFFFFF",
+    fgColor: "#000000",
+    marginSize: 0,
+    imageSettings: {
+      src: "",
+      height: 16,
+      width: 16,
+      excavate: true,
+    },
+  },
           areaProps: {
             bgColor: "#FFFFFF",
             isRepeat: true,
@@ -633,53 +628,21 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     setEditingColumnData(undefined);
   };
 
-  const handleQRCodePropertyChange = (property: any, value: any) => {
-    if (
-      selectedComponent &&
-      selectedComponent.type === DesignerElementType.qrCode &&
-      selectedComponent.qrCodeProps
-    ) {
-      let updatedQRCodeProps;
-
-      if (property === "imageSettings") {
-        updatedQRCodeProps = {
-          ...selectedComponent.qrCodeProps,
-          imageSettings: {
-            ...selectedComponent.qrCodeProps.imageSettings,
-            ...value,
-          },
-        };
-      } else {
-        updatedQRCodeProps = {
-          ...selectedComponent.qrCodeProps,
-          [property]: value,
-        };
-      }
-
-      const updatedComponents =
-        templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === selectedComponent.id
-            ? {
-                ...comp,
-                qrCodeProps: updatedQRCodeProps,
-              }
-            : comp
-        ) as PlacedComponent[];
-
-      setTemplateData((prev: TemplateState) => ({
-        ...prev,
-        barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: updatedComponents || [],
-        },
-      }));
-
-      setSelectedComponent({
-        ...selectedComponent,
-        qrCodeProps: updatedQRCodeProps,
-      });
-    }
-  };
+ const handleQRCodePropertyChange = (property: keyof QRCodeProps, value: any) => {
+  if (selectedComponent && selectedComponent.type === DesignerElementType.qrCode && selectedComponent.qrCodeProps) {
+    const updatedQRCodeProps = { ...selectedComponent.qrCodeProps, [property]: value };
+    console.log(`Updating QRCodeProps:`, updatedQRCodeProps); // Debug log
+    const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) =>
+      comp.id === selectedComponent.id ? { ...comp, qrCodeProps: updatedQRCodeProps } : comp
+    ) as PlacedComponent[];
+   
+    setTemplateData((prev: TemplateState) => {
+     const updated = { ...prev, barcodeState: { ...prev.barcodeState, placedComponents: updatedComponents || [] } };
+     return updated;
+    });
+    setSelectedComponent({ ...selectedComponent, qrCodeProps: updatedQRCodeProps });
+   }
+ };
 
   const handleAreaPropertyChange = (
     property: any,
@@ -1391,38 +1354,17 @@ const handleRemoveImage =()=>{
           </div>
         );
       case DesignerElementType.qrCode:
-        return (
-          <div
-            key={component.id}
-            id={`component-${component.id}`}
-            style={{
-              ...style,
-              height: "auto",
-              width: "auto",
-              border:
-                selectedComponent?.id === component.id
-                  ? "2px solid #2196f3"
-                  : "none",
-            }}
-            onClick={() => handleComponentClick(component)}
-            onMouseDown={(e) => handleMouseDown(e, component)}
-          >
-            <QRCodeSVG
-              value={component.qrCodeProps?.value || "skjhgfhsdjhg"}
-              size={component.qrCodeProps?.size || 150}
-              level={component.qrCodeProps?.level || "M"}
-              bgColor={component.qrCodeProps?.bgColor || "black"}
-              fgColor={component.qrCodeProps?.fgColor || "white"}
-              marginSize={component.qrCodeProps?.marginSize ||2}
-              imageSettings={component.qrCodeProps?.imageSettings}
-            />
-            <DeleteButton
-              id={component.id}
-              isSelected={isSelected}
-              handleDelete={handleDelete}
-            />
-          </div>
-        );
+       return (
+      <QRCodeComponent
+        component={component}
+        isSelected={isSelected}
+        style={style}
+        handleComponentClick={handleComponentClick}
+        handleMouseDown={handleMouseDown}
+        handleDelete={handleDelete}
+        qrCodeRefs={qrCodeRefs}
+      />
+    );
 
       case DesignerElementType.area:
         return (

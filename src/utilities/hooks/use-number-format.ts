@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "./useAppDispatch";
 import { APIClient } from "../../helpers/api-client";
 import { RootState } from "../../redux/store";
+import { Countries } from "../../redux/slices/user-session/reducer";
 
 const api = new APIClient();
 export const useNumberFormat = (): UseNumberFormatResult => {
@@ -223,15 +224,55 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   
     return `${result} Only`;
   }
-  function round(value: number, decimalPoints: number | undefined = undefined): number {
+  function round(value: number, decimalPoints: number | undefined = undefined,taxFormatted?: boolean): number {
+
+    taxFormatted = taxFormatted?? false;
+    if(taxFormatted && applicationSettings.branchSettings.countryName == Countries.Saudi) {
+      return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : 2));  
+    } 
     return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : applicationSettings.mainSettings?.decimalPoints));
   }
   function getAmountInWords(amount: number): string {
     
     return convertAmountToWords(amount.toString());
   }
+  function getTaxFormat(val: number): string {
+    let decimalPoint: number;
+    decimalPoint = applicationSettings.mainSettings.decimalPoints;
+
+    if(applicationSettings.branchSettings.countryName == Countries.Saudi) {
+      return "#0.00";
+    }
+     switch (decimalPoint)
+ {
+     case 0:
+         return "##0";
+
+     case 1:
+         return "##0.0";
+
+     case 2:
+         return "#0.00";
+
+     case 3:
+         return "##0.000";
+
+     case 4:
+         return "##0.0000";
+
+     case 5:
+         return "##0.00000";
+
+     case 6:
+         return "##0.000000";
+
+     default:
+         return "##0.00";
+
+ }
+}
   
-  return { getNumericFormat, getFormattedValue, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding }
+  return { getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding }
 };
 export interface UseNumberFormatResult {
   getNumericFormat: () => string;
@@ -250,7 +291,8 @@ export interface UseNumberFormatResult {
     numberOfZero?: number
   ) => number;
   getAmountInWords: (amount: number) => string;
-  round: (value: number, decimalPoints?: number) => number;
+  round: (value: number, decimalPoints?: number,taxFormatted?: boolean) => number;
   getFormattedValueIgnoreRoundingToNumber: (val: number) => number;
   getFormattedValueIgnoreRounding: (val: number) => string;
+  getTaxFormat: (val: number) => string;
 }

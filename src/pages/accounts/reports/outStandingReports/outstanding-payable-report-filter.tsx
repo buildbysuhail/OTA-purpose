@@ -15,11 +15,13 @@ const OutstandingPayableReportFilter = ({
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* As On Date */}
-      <ERPDateInput
-        {...getFieldProps("asonDate")}
-        label={t("as_on")}
-        onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
-      />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+        <ERPDateInput
+          {...getFieldProps("asonDate")}
+          label={t("as_on")}
+          onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
+        />
+      </div>
       {/* Due Period Dropdown */}
       {/* <ERPDataCombobox
         {...getFieldProps("duePeriod")}
@@ -66,13 +68,14 @@ const OutstandingPayableReportFilter = ({
               valueKey: "id",
               labelKey: "name",
             }}
+            className="w-full"
             onChangeData={(data) => handleFieldChange("costCentreID", data.costCentreID)}
           />
         )
         }
       </div>
       {/* Report Options */}
-      <div className="space-y-2 ps-1 text-left">
+      <div className="grid grid-cols-3 gap-2">
         <ERPCheckbox
           {...getFieldProps("showZeroBalance")}
           label={t("show/include_zero_balance_report")}

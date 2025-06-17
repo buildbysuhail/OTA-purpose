@@ -6,6 +6,8 @@ import {
 } from "../../../Designer/interfaces";
 import { Style } from "exceljs";
 import { renderComponent } from "../../customElement";
+import { useEffect, useState } from "react";
+import { generateQRCodeDataUrl } from "../../../utils/qrSvgToImg";
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -69,6 +71,30 @@ export const Header = ({
   currency?: string;
   userSession?: any;
 }) => {
+const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    debugger;
+    const generateQRCodes = async () => {
+      const images: { [key: string]: string } = {};
+      const qrComponents: PlacedComponent[] = [
+        ...(template?.headerState?.customTop?.customElements || []),
+        ...(template?.headerState?.customBottom?.customElements || []),
+      ].filter((comp) => comp.type === DesignerElementType.qrCode);
+
+      for (const component of qrComponents) {
+        if (component.qrCodeProps) {
+          const dataUrl = await generateQRCodeDataUrl(component.qrCodeProps);
+          images[component.id] = dataUrl;
+        }
+      }
+
+      setQrCodeImages(images);
+    };
+
+    generateQRCodes();
+  }, [template]);
+
   const logoWidthRatio = template?.headerState?.logoSize
     ? template.headerState?.logoSize / 100
     : 0.5;
@@ -140,7 +166,7 @@ export const Header = ({
           ]}
         >
           {customElements?.map((component) =>
-            renderComponent(component, userSession?.headerFooter)
+            renderComponent(component, userSession?.headerFooter,qrCodeImages)
           )}
         </View>
       )}

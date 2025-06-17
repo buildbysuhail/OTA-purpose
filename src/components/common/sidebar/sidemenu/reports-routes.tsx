@@ -154,6 +154,8 @@ import DiagnosisDynamicReport from "../../../../pages/inventory/reports/diagnosi
 import DiagnosisReportDuplicateVouchers from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-duplicate-vouchers";
 import DiagnosisReportBarcodeRepeat from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-barcode-repeat";
 import DiagnosisReportInvalidProducts from "../../../../pages/inventory/reports/diagnosis-report/diagnosis-report-invalid-products";
+import FastMovingProductsReport from "../../../../pages/inventory/reports/fast-moving-products/fast-moving-products";
+import UnsoldProductReport from "../../../../pages/inventory/reports/unsold-products/unsold-products";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -317,19 +319,19 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     columns: 2,
     children: [
       { id: 700,element:<StockJournalReport dataUrl={urls.opening_stock} gridHeader="opening_stock_report" gridId="grd_opening_stock_journal"/>, formCode:"OSRPT", action: UserAction.Show, path: `/reports/_/inventory/opening_stock_report`, type: 'link',routePath:'', active: false, selected: false, title: 'opening_stock', icon: PiPackageLight },
-      {  id: 701, element: <StockJournalReport dataUrl={urls.stock_transfer} gridHeader="stock_transfer_report" gridId="grd_stock_transfer_journal" />, formCode: "STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight,  routePath: ""},
-      {  id: 702, element: <StockJournalReport dataUrl={urls.damage_stock} gridHeader="damage_stock_report" gridId="grd_damage_stock_journal" />, formCode: "DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight,  routePath: ""},
-      {  id: 703, element: <StockJournalReport dataUrl={urls.excess_stock} gridHeader="excess_stock_report" gridId="grd_excess_stock_journal" />, formCode: "EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight,  routePath: ""},
-      {  id: 704, element: <StockJournalReport dataUrl={urls.shortage_stock} gridHeader="shortage_stock_report" gridId="grd_shortage_stock_journal" />, formCode: "SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight,  routePath: ""},
-      {  id: 705, element: <BranchTransferOutIn dataUrl={urls.branch_transfer_out} gridHeader="branch_transfer_out_report" gridId="grd_branch_transfer_out"/>, formCode: "BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight,  routePath: ""},
-      {  id: 706, element: <BranchTransferOutIn dataUrl={urls.branch_transfer_in} gridHeader="branch_transfer_in_report" gridId="grd_branch_transfer_in"/>, formCode: "BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight,  routePath: ""},
-      {  id: 707, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_out} gridHeader="branch_transfer_summary_out_report" gridId="grd_branch_transfer_summary_out"/>, formCode: "BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight,  routePath: ""},
-      {  id: 708, element: <BranchTransferSummary dataUrl={urls.branch_transfer_summary_in} gridHeader="branch_transfer_summary_in_report" gridId="grd_branch_transfer_summary_in"/>, formCode: "BTISRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight,  routePath: ""},
-      {  id: 723, element: <StockSummary />, formCode: "RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight,  routePath: ""},
-      {  id: 724, element: <StockLedger />, formCode: "RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList,  routePath: ""},
-      {  id: 725, element: <ExpiryReport />, formCode: "EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList,  routePath: ""},
-      {  id: 726, element: <TransactionAnalysisReport />, formCode: "TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics,  routePath: ""},
-      {  id: 727, element: <StockFlow />, formCode: "RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip,  routePath: ""},
+      { id: 701,element:<StockJournalReport dataUrl={urls.stock_transfer} gridHeader="stock_transfer_report" gridId="grd_stock_transfer_journal" />, formCode: "STRPT", action: UserAction.Show, path: `/reports/_/inventory/stock_transfer_report`, type: 'link', active: false, selected: false, title: 'stock_transfer', icon: PiPackageLight,  routePath: ""},
+      { id: 702,element:<StockJournalReport dataUrl={urls.damage_stock} gridHeader="damage_stock_report" gridId="grd_damage_stock_journal" />, formCode: "DMGRPT", action: UserAction.Show, path: `/reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight,  routePath: ""},
+      { id: 703,element:<StockJournalReport dataUrl={urls.excess_stock} gridHeader="excess_stock_report" gridId="grd_excess_stock_journal" />, formCode: "EXRPT", action: UserAction.Show, path: `/reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight,  routePath: ""},
+      { id: 704,element:<StockJournalReport dataUrl={urls.shortage_stock} gridHeader="shortage_stock_report" gridId="grd_shortage_stock_journal" />, formCode: "SHRPT", action: UserAction.Show, path: `/reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight,  routePath: ""},
+      { id: 705,element:<BranchTransferOutIn dataUrl={urls.branch_transfer_out} gridHeader="branch_transfer_out_report" gridId="grd_branch_transfer_out"/>, formCode: "BTORPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight,  routePath: ""},
+      { id: 706,element:<BranchTransferOutIn dataUrl={urls.branch_transfer_in} gridHeader="branch_transfer_in_report" gridId="grd_branch_transfer_in"/>, formCode: "BTIRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_in', icon: PiPackageLight,  routePath: ""},
+      { id: 707,element:<BranchTransferSummary dataUrl={urls.branch_transfer_summary_out} gridHeader="branch_transfer_summary_out_report" gridId="grd_branch_transfer_summary_out"/>, formCode: "BTOSRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_out_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_out', icon: PiPackageLight,  routePath: ""},
+      { id: 708,element:<BranchTransferSummary dataUrl={urls.branch_transfer_summary_in} gridHeader="branch_transfer_summary_in_report" gridId="grd_branch_transfer_summary_in"/>, formCode: "BTISRPT", action: UserAction.Show, path: `/reports/_/inventory/branch_transfer_summary_in_report`, type: 'link', active: false, selected: false, title: 'branch_transfer_summary_in', icon: PiPackageLight,  routePath: ""},
+      { id: 723,element:<StockSummary />, formCode: "RPTSTK", action: UserAction.Show, path: `/reports/_/inventory/stock_summary_report`, type: 'link', active: false, selected: false, title: 'stock_summary', icon: PiPackageLight,  routePath: ""},
+      { id: 724,element:<StockLedger />, formCode: "RPTSTKLED", action: UserAction.Show, path: `/reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger', icon: HiOutlineClipboardList,  routePath: ""},
+      { id: 725,element:<ExpiryReport />, formCode: "EXPIRYRPT", action: UserAction.Show, path: `/reports/_/inventory/expiry_report`, type: 'link', active: false, selected: false, title: 'expiry_report', icon: HiOutlineClipboardList,  routePath: ""},
+      { id: 726,element:<TransactionAnalysisReport />, formCode: "TARPT", action: UserAction.Show, path: `/reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis', icon: MdOutlineAnalytics,  routePath: ""},
+      { id: 727,element:<StockFlow />, formCode: "RPTSTKFL", action: UserAction.Show, path: `/reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip,  routePath: ""},
     ]
   },
   {
@@ -344,179 +346,35 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      {
-        id: 128, element: <SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />, formCode: "RPTSLSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_summary_report`, type: 'link', active: false, selected: false, title: 'sales_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 129, element: <RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />, formCode: "RPTSRSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_register_report`, type: 'link', active: false, selected: false, title: 'sales_register', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 130, element: <NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />, formCode: "RPTNTSI", action: UserAction.Show, path: `/reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 131, element: <PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />, formCode: "RPTPRTSL", action: UserAction.Show, path: `/reports/_/inventory/partywise_sales_report`, type: 'link', active: false, selected: false, title: 'partywise_sales', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 132, element: <TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />, formCode: "RPTSITAX", action: UserAction.Show, path: `/reports/_/inventory/sales_tax_report_summary`, type: 'link', active: false, selected: false, title: 'sales_tax_report_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 133, element: <TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />, formCode: "RPTSITAX", action: UserAction.Show, path: `/reports/_/inventory/sales_tax_report_detailed`, type: 'link', active: false, selected: false, title: 'sales_tax_report_detailed', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 134, element: <SummaryReport dataUrl={urls.sales_return_summary} gridHeader="sales_return_summary" gridId="grd_sales_return_summary" />, formCode: "RPTSRSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_return_summary`, type: 'link', active: false, selected: false, title: 'sales_return_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 135, element: <RegisterReport dataUrl={urls.sales_return_register} gridHeader="sales_return_register" gridId="grd_sales_return_register" />, formCode: "RPTSRREG", action: UserAction.Show, path: `/reports/_/inventory/sales_return_register`, type: 'link', active: false, selected: false, title: 'sales_return_register', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 136, element: <SalesAndSalesReturn />, formCode: "RPTSSR", action: UserAction.Show, path: `/reports/_/inventory/sales_and_sales_return_report`, type: 'link', active: false, selected: false, title: 'sales_and_sales_return', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 137, element: <SummaryReport dataUrl={urls.sales_order_summary} gridHeader="sales_order_summary" gridId="grd_sales_order_summary" />, formCode: "RPTORDSM", action: UserAction.Show, path: `/reports/_/inventory/sales_order_summary_report`, type: 'link', active: false, selected: false, title: 'sales_order_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 138, element: <SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />, formCode: "RPTSES", action: UserAction.Show, path: `/reports/_/inventory/sales_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'sales_estimate_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 139, element: <SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />, formCode: "RPTSQS", action: UserAction.Show, path: `/reports/_/inventory/sales_quotation_summary_report`, type: 'link', active: false, selected: false, title: 'sales_quotation_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 140, element: <SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />, formCode: "RPTSUB", action: UserAction.Show, path: `/reports/_/inventory/substitute_report`, type: 'link', active: false, selected: false, title: 'substitute_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 141, element: <DaywiseSummaryWithProfit />, formCode: "RPTSIDWSWP", action: UserAction.Show, path: `/reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 142, element: <GroupwiseSalesSummaryDevexpress />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_devexpress_report`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 143, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isGroupWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_groupwise`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 144, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isCategoryWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_categorywise`, type: 'link', active: false, selected: false, title: 'categorywise_sales_summary_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 145, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isSectionWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_sectionwise`, type: 'link', active: false, selected: false, title: 'sectionwise_sales_summary_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 146, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isBrandWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_brandwise`, type: 'link', active: false, selected: false, title: 'brandwise_sales_summary_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 147, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isProductCatWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_product_categorywise`, type: 'link', active: false, selected: false, title: 'product_categorywise_sales_summary_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 148, element: <SalesmanwiseSalesAndCollection />, formCode: "RPTSIMWSAC", action: UserAction.Show, path: `/reports/_/inventory/salesman_wise_sales_and_collection_report`, type: 'link', active: false, selected: false, title: 'salesman_wise_sales_and_collection', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 149, element: <NonInvoicedGoodsDelivery />, formCode: "RPTSINIGDR", action: UserAction.Show, path: `/reports/_/inventory/non_invoiced_goods_delivery_report`, type: 'link', active: false, selected: false, title: 'non_invoiced_goods_delivery', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 150, element: <SummaryReport dataUrl={urls.booking_summary} gridHeader="booking_summary" gridId="grd_booking_summary" />, formCode: "RPTBKSSUM", action: UserAction.Show, path: `/reports/_/inventory/booking_summary_report`, type: 'link', active: false, selected: false, title: 'booking_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 151, element: <PendingOrderReport />, formCode: "RPTPOR", action: UserAction.Show, path: `/reports/_/inventory/pending_order_report`, type: 'link', active: false, selected: false, title: 'pending_order', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 152, element: <PromotionalSalesReport />, formCode: "RPTPRMSIR", action: UserAction.Show, path: `/reports/_/inventory/promotional_sales_report`, type: 'link', active: false, selected: false, title: 'promotional_sales', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 153, element: <GroupedBrandwiseSales />, formCode: "RPTGRPBRDWSIR", action: UserAction.Show, path: `/reports/_/inventory/grouped_brandwise_sales_report`, type: 'link', active: false, selected: false, title: 'grouped_brandwise_sales', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 154, element: <PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />, formCode: "RPTPRTYMWSIS", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 155, element: <CouponReports />, formCode: "COUPSALRPT", action: UserAction.Show, path: `/reports/_/inventory/coupon_reports`, type: 'link', active: false, selected: false, title: 'coupon_reports', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 156, element: <SchemeWiseSales />, formCode: "ITMSCMSRPT", action: UserAction.Show, path: `/reports/_/inventory/scheme_wise_sales_report`, type: 'link', active: false, selected: false, title: 'scheme_wise_sales', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 158, element: <RouteWiseSalesAndCollection />, formCode: "ROUTWISE_SL_CR_1", action: UserAction.Show, path: `/reports/_/inventory/routewise_sales_collection_report`, type: 'link', active: false, selected: false, title: 'routewise_sales_collection', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 159, element: <BranchInventoryRequestPendingOrder />, formCode: "ADVBRNCHPEN", action: UserAction.Show, path: `/reports/_/inventory/branch_inventory_request_pending_order_report`, type: 'link', active: false, selected: false, title: 'branch_inventory_request_pending_order', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 160, element: <PrintDetails />, formCode: "ADVPRINT", action: UserAction.Show, path: `/reports/_/inventory/print_details_report`, type: 'link', active: false, selected: false, title: 'print_details', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 161, element: <InventoryStatusReport />, formCode: "INVSTATUSRPT", action: UserAction.Show, path: `/reports/_/inventory/inventory_status_report`, type: 'link', active: false, selected: false, title: 'inventory_status', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 162, element: <VoidReport />, formCode: "RPTADVOID", action: UserAction.Show, path: `/reports/_/inventory/void_report`, type: 'link', active: false, selected: false, title: 'void_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 163, element: <CounterReport />, formCode: "CNTRRPT", action: UserAction.Show, path: `/reports/_/inventory/counter_report`, type: 'link', active: false, selected: false, title: 'counter_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 164, element: <RegisterReport dataUrl={urls.sales_return_estimate_register} gridHeader="sales_return_estimate_register" gridId="grd_sales_return_estimate_register" />, formCode: "SREREGT", action: UserAction.Show, path: `/reports/_/inventory/sales_return_estimate_register_report`, type: 'link', active: false, selected: false, title: 'sales_return_estimate_register', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 172, element: <CustomerVisitTotalVisit />, formCode: "RPTTOTVIS", action: UserAction.Show, path: `/reports/_/inventory/customer_visit_total_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_total_visit', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 173, element: <CustomerVisitLastVisit />, formCode: "RPTLAVIDET", action: UserAction.Show, path: `/reports/_/inventory/customer_visit_last_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_last_visit', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 174, element: <FOCRegisterReport />, formCode: "RPTFOCREG", action: UserAction.Show, path: `/reports/_/inventory/foc_register_report`, type: 'link', active: false, selected: false, title: 'foc_register_report', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 175, element: <DiscountReportInventory />, formCode: "RPTINV", action: UserAction.Show, path: `/reports/_/inventory/discount_report_inventory`, type: 'link', active: false, selected: false, title: 'discount_report_inventory', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 176, element: <DiscountReportCollection />, formCode: "RPTCOL", action: UserAction.Show, path: `/reports/_/inventory/discount_report_collection`, type: 'link', active: false, selected: false, title: 'discount_report_collection', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 177, element: <ItemUsedForService />, formCode: "ITMSFORSRV", action: UserAction.Show, path: `/reports/_/inventory/item_used_for_service`, type: 'link', active: false, selected: false, title: 'item_used_for_service', icon: PiPackageLight,
-        routePath: ""
-      },
-      {
-        id: 178, element: <LPOReport />, formCode: "LPORPT", action: UserAction.Show, path: `/reports/_/inventory/lpo_report`, type: 'link', active: false, selected: false, title: 'lpo_report', icon: PiPackageLight,
-        routePath: ""
-      },
-
+      {  id: 128, element: <SummaryReport dataUrl={urls.sales_summary} gridHeader="sales_summary_report" gridId="grd_sales_summary" />, formCode: "RPTSLSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_summary_report`, type: 'link', active: false, selected: false, title: 'sales_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 129, element: <RegisterReport dataUrl={urls.sales_register} gridHeader="sales_register_report" gridId="grd_sales_register" />, formCode: "RPTSRSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_register_report`, type: 'link', active: false, selected: false, title: 'sales_register', icon: PiPackageLight,  routePath: ""},
+      {  id: 130, element: <NetSalesReport dataUrl={urls.net_sales} gridHeader="net_sales_report" gridId="grd_net_sales_report" />, formCode: "RPTNTSI", action: UserAction.Show, path: `/reports/_/inventory/net_sales_report`, type: 'link', active: false, selected: false, title: 'net_sales', icon: PiPackageLight,  routePath: ""},
+      {  id: 131, element: <PartyWiseReport dataUrl={urls.partywise_sales} gridHeader="partywise_sales" gridId="grd_partywise_sales" />, formCode: "RPTPRTSL", action: UserAction.Show, path: `/reports/_/inventory/partywise_sales_report`, type: 'link', active: false, selected: false, title: 'partywise_sales', icon: PiPackageLight,  routePath: ""},
+      {  id: 132, element: <TaxReportSummary dataUrl={urls.sales_tax_report_summary} gridHeader="sales_tax_report_summary" gridId="grd_sales_tax_summary" />, formCode: "RPTSITAX", action: UserAction.Show, path: `/reports/_/inventory/sales_tax_report_summary`, type: 'link', active: false, selected: false, title: 'sales_tax_report_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 133, element: <TaxReportDetailed dataUrl={urls.sales_tax_report_detailed} gridHeader="sales_tax_report_detailed" gridId="grd_sales_tax_report_detailed" />, formCode: "RPTSITAX", action: UserAction.Show, path: `/reports/_/inventory/sales_tax_report_detailed`, type: 'link', active: false, selected: false, title: 'sales_tax_report_detailed', icon: PiPackageLight,  routePath: ""},
+      {  id: 134, element: <SummaryReport dataUrl={urls.sales_return_summary} gridHeader="sales_return_summary" gridId="grd_sales_return_summary" />, formCode: "RPTSRSUM", action: UserAction.Show, path: `/reports/_/inventory/sales_return_summary`, type: 'link', active: false, selected: false, title: 'sales_return_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 135, element: <RegisterReport dataUrl={urls.sales_return_register} gridHeader="sales_return_register" gridId="grd_sales_return_register" />, formCode: "RPTSRREG", action: UserAction.Show, path: `/reports/_/inventory/sales_return_register`, type: 'link', active: false, selected: false, title: 'sales_return_register', icon: PiPackageLight,  routePath: ""},
+      {  id: 136, element: <SalesAndSalesReturn />, formCode: "RPTSSR", action: UserAction.Show, path: `/reports/_/inventory/sales_and_sales_return_report`, type: 'link', active: false, selected: false, title: 'sales_and_sales_return', icon: PiPackageLight,  routePath: ""},
+      {  id: 137, element: <SummaryReport dataUrl={urls.sales_order_summary} gridHeader="sales_order_summary" gridId="grd_sales_order_summary" />, formCode: "RPTORDSM", action: UserAction.Show, path: `/reports/_/inventory/sales_order_summary_report`, type: 'link', active: false, selected: false, title: 'sales_order_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 138, element: <SummaryReport dataUrl={urls.sales_estimate_summary} gridHeader="sales_estimate_summary" gridId="grd_sales_estimate_summary" />, formCode: "RPTSES", action: UserAction.Show, path: `/reports/_/inventory/sales_estimate_summary_report`, type: 'link', active: false, selected: false, title: 'sales_estimate_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 139, element: <SummaryReport dataUrl={urls.sales_quotation_summary} gridHeader="sales_quotation_summary" gridId="grd_sales_quotation_summary" />, formCode: "RPTSQS", action: UserAction.Show, path: `/reports/_/inventory/sales_quotation_summary_report`, type: 'link', active: false, selected: false, title: 'sales_quotation_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 140, element: <SummaryReport dataUrl={urls.substitute_report} gridHeader="substitute_report" gridId="grd_substitute_report" />, formCode: "RPTSUB", action: UserAction.Show, path: `/reports/_/inventory/substitute_report`, type: 'link', active: false, selected: false, title: 'substitute_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 141, element: <DaywiseSummaryWithProfit />, formCode: "RPTSIDWSWP", action: UserAction.Show, path: `/reports/_/inventory/daywise_summary_with_profit_report`, type: 'link', active: false, selected: false, title: 'daywise_summary_with_profit', icon: PiPackageLight,  routePath: ""},
+      {  id: 142, element: <GroupwiseSalesSummaryDevexpress />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_devexpress_report`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_devexpress', icon: PiPackageLight,  routePath: ""},
+      {  id: 143, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="groupwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_groupwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isGroupWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_groupwise`, type: 'link', active: false, selected: false, title: 'groupwise_sales_summary_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 144, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isCategoryWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_categorywise`, type: 'link', active: false, selected: false, title: 'categorywise_sales_summary_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 145, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="sectionwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_sectionwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isSectionWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_sectionwise`, type: 'link', active: false, selected: false, title: 'sectionwise_sales_summary_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 146, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="brandwise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_brandwise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isBrandWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_brandwise`, type: 'link', active: false, selected: false, title: 'brandwise_sales_summary_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 147, element: <GroupwiseSalesSummary dataUrl={urls.groupwise_sales_summary} gridHeader="product_categorywise_sales_summary_report" gridId="grd_groupwise_sales_summary_report_product_categorywise" filterInitialData={{ ...GroupwiseSalesSummaryFilterInitialState, isProductCatWise: true }} />, formCode: "GRPWSSLRPT", action: UserAction.Show, path: `/reports/_/inventory/groupwise_sales_summary_report_product_categorywise`, type: 'link', active: false, selected: false, title: 'product_categorywise_sales_summary_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 148, element: <SalesmanwiseSalesAndCollection />, formCode: "RPTSIMWSAC", action: UserAction.Show, path: `/reports/_/inventory/salesman_wise_sales_and_collection_report`, type: 'link', active: false, selected: false, title: 'salesman_wise_sales_and_collection', icon: PiPackageLight,  routePath: ""},
+      {  id: 149, element: <NonInvoicedGoodsDelivery />, formCode: "RPTSINIGDR", action: UserAction.Show, path: `/reports/_/inventory/non_invoiced_goods_delivery_report`, type: 'link', active: false, selected: false, title: 'non_invoiced_goods_delivery', icon: PiPackageLight,  routePath: ""},
+      {  id: 150, element: <SummaryReport dataUrl={urls.booking_summary} gridHeader="booking_summary" gridId="grd_booking_summary" />, formCode: "RPTBKSSUM", action: UserAction.Show, path: `/reports/_/inventory/booking_summary_report`, type: 'link', active: false, selected: false, title: 'booking_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 151, element: <PendingOrderReport />, formCode: "RPTPOR", action: UserAction.Show, path: `/reports/_/inventory/pending_order_report`, type: 'link', active: false, selected: false, title: 'pending_order', icon: PiPackageLight,  routePath: ""},
+      {  id: 152, element: <PromotionalSalesReport />, formCode: "RPTPRMSIR", action: UserAction.Show, path: `/reports/_/inventory/promotional_sales_report`, type: 'link', active: false, selected: false, title: 'promotional_sales', icon: PiPackageLight,  routePath: ""},
+      {  id: 153, element: <GroupedBrandwiseSales />, formCode: "RPTGRPBRDWSIR", action: UserAction.Show, path: `/reports/_/inventory/grouped_brandwise_sales_report`, type: 'link', active: false, selected: false, title: 'grouped_brandwise_sales', icon: PiPackageLight,  routePath: ""},
+      {  id: 154, element: <PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />, formCode: "RPTPRTYMWSIS", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight,  routePath: ""},
+      {  id: 155, element: <CouponReports />, formCode: "COUPSALRPT", action: UserAction.Show, path: `/reports/_/inventory/coupon_reports`, type: 'link', active: false, selected: false, title: 'coupon_reports', icon: PiPackageLight,  routePath: ""},
+      {  id: 156, element: <SchemeWiseSales />, formCode: "ITMSCMSRPT", action: UserAction.Show, path: `/reports/_/inventory/scheme_wise_sales_report`, type: 'link', active: false, selected: false, title: 'scheme_wise_sales', icon: PiPackageLight,  routePath: ""},
     ]
   },
   {
@@ -616,18 +474,19 @@ export const ReportsMenuItems :NavigationParentItem[]= [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { id: 400,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary" />, formCode:"ITPIRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_summary', icon: AiOutlineFileText },
-      { id: 401,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="itemwise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary" />, formCode:"ITPRRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_return_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_return_summary', icon: AiOutlineFileText },
-      { id: 402,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />, formCode:"ITPORPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_order_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_order_summary', icon: AiOutlineFileText },
-      { id: 403,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />, formCode:"ITPERPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_estimate_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_estimate_summary', icon: AiOutlineFileText },
-      { id: 404,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />, formCode:"PQRPTIWS", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_quotation_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_quotation_summary', icon: AiOutlineFileText },
-      { id: 405,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />, formCode:"PREITEM", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_return_estimate_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_return_estimate_summary', icon: AiOutlineFileText },
       { id: 406,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_summary} gridHeader="itemwise_sales_summary" gridId="grd_itemwise_sales_summary" />, formCode:"ITSIRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_summary', icon: PiPackageLight },
       { id: 407,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_return_summary} gridHeader="itemwise_sales_return_summary" gridId="grd_itemwise_sales_return_summary" />, formCode:"ITSRRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_return_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_return_summary', icon: PiPackageLight },
+      { id: 400,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary" />, formCode:"ITPIRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_summary', icon: AiOutlineFileText },
+      { id: 401,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="itemwise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary" />, formCode:"ITPRRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_return_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_return_summary', icon: AiOutlineFileText },
       { id: 408,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_order_summary} gridHeader="itemwise_sales_order_summary" gridId="grd_itemwise_sales_order_summary" />, formCode:"ITSORPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_order_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_order_summary', icon: PiPackageLight },
+    
+      { id: 402,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary" />, formCode:"ITPORPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_order_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_order_summary', icon: AiOutlineFileText },
       { id: 409,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_quotation_summary} gridHeader="itemwise_sales_quotation_summary" gridId="grd_itemwise_sales_quotation_summary" />, formCode:"ITSQRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_quotation_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_quotation_summary', icon: PiPackageLight },
-      { id: 410,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_estimate_summary} gridHeader="itemwise_sales_estimate_summary" gridId="grd_itemwise_sales_estimate_summary" />, formCode:"ITSERPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_estimate_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_estimate_summary', icon: PiPackageLight },
+       { id: 410,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_estimate_summary} gridHeader="itemwise_sales_estimate_summary" gridId="grd_itemwise_sales_estimate_summary" />, formCode:"ITSERPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_estimate_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_estimate_summary', icon: PiPackageLight },
       { id: 411,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_sales_and_sales_return_summary} gridHeader="itemwise_sales_and_sales_return_summary" gridId="grd_itemwise_sales_and_sales_return_summary" />, formCode:"ITSISRRPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_sales_and_sales_return_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_sales_and_sales_return_summary', icon: PiPackageLight },
+    
+      { id: 403,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary" gridId="grd_item_wise_purchase_estimate_summary" />, formCode:"ITPERPT", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_estimate_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_estimate_summary', icon: AiOutlineFileText },
+      { id: 404,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary" />, formCode:"PQRPTIWS", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_quotation_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_quotation_summary', icon: AiOutlineFileText },
       { id: 711,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_opening_stock_summary} gridHeader="itemwise_opening_stock_summary" gridId="grd_itemwise_opening_stock_summary" />, formCode: "OSRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_opening_stock_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_opening_stock_summary', icon: PiPackageLight,  routePath: ""},
       { id: 712,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_substitute_summary} gridHeader="itemwise_substitute_summary" gridId="grd_itemwise_substitute_summary" />, formCode: "SUBRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_substitute_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_substitute_summary', icon: PiPackageLight,routePath: ""},
       { id: 713,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_branch_transfer_out_summary} gridHeader="itemwise_branch_transfer_out_summary" gridId="grd_itemwise_branch_transfer_out_summary" />, formCode: "BTORPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_branch_transfer_out_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_branch_transfer_out_summary', icon: PiPackageLight,routePath: ""},
@@ -639,7 +498,10 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 719,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_delivery_return_summary} gridHeader="itemwise_goods_delivery_return_summary" gridId="grd_itemwise_goods_delivery_return_summary" />, formCode: "DRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_delivery_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_delivery_return_summary', icon: PiPackageLight,  routePath: ""},
       { id: 720,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_summary} gridHeader="itemwise_goods_receipt_summary" gridId="grd_itemwise_goods_receipt_summary" />, formCode: "GRNRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_summary', icon: PiPackageLight,  routePath: ""},
       { id: 721,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_receipt_return_summary} gridHeader="itemwise_goods_receipt_return_summary" gridId="grd_itemwise_goods_receipt_return_summary" />, formCode: "GRRRPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_receipt_return_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_receipt_return_summary', icon: PiPackageLight,  routePath: ""},
+    
       { id: 722,element:<ItemWiseSummaryReport dataUrl={urls.itemwise_goods_request_summary} gridHeader="itemwise_goods_request_summary" gridId="grd_itemwise_goods_request_summary" />, formCode: "GR_RPTIWS", action: UserAction.Show, path: `/reports/_/inventory/itemwise_goods_request_summary_report`, type: 'link', active: false, selected: false, title: 'itemwise_goods_request_summary', icon: PiPackageLight,  routePath: ""},
+     { id: 405,element:<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_estimate_summary} gridHeader="itemwise_purchase_return_estimate_summary" gridId="grd_itemwise_purchase_return_estimate_summary" />, formCode:"PREITEM", action: UserAction.Show,  path: `/reports/_/inventory/itemwise_purchase_return_estimate_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'itemwise_purchase_return_estimate_summary', icon: AiOutlineFileText },
+    
     ]
   },
 
@@ -683,6 +545,37 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 507,element:<SalesmanIncentiveReport />, formCode:"RPTSLIC", action: UserAction.Show,  path: `/reports/_/inventory/salesman_incentive_report`, type: 'link', routePath:'', active: false, selected: false, title: 'salesman_incentive_report', icon: PiPackageLight },
       { id: 508,element:<PrivilegeCardReport />, formCode:"RPTPRCRD", action: UserAction.Show,  path: `/reports/_/inventory/privilege_card_report`, type: 'link', routePath:'', active: false, selected: false, title: 'privilege_card', icon: PiPackageLight },
     ]
+  },
+   {
+    icon: (<CircleUser className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'advanced_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+
+      {  id: 158, element: <RouteWiseSalesAndCollection />, formCode: "ROUTWISE_SL_CR_1", action: UserAction.Show, path: `/reports/_/inventory/routewise_sales_collection_report`, type: 'link', active: false, selected: false, title: 'routewise_sales_collection', icon: PiPackageLight,  routePath: ""},
+      {  id: 159, element: <BranchInventoryRequestPendingOrder />, formCode: "ADVBRNCHPEN", action: UserAction.Show, path: `/reports/_/inventory/branch_inventory_request_pending_order_report`, type: 'link', active: false, selected: false, title: 'branch_inventory_request_pending_order', icon: PiPackageLight,  routePath: ""},
+      {  id: 160, element: <PrintDetails />, formCode: "ADVPRINT", action: UserAction.Show, path: `/reports/_/inventory/print_details_report`, type: 'link', active: false, selected: false, title: 'print_details', icon: PiPackageLight,  routePath: ""},
+      {  id: 161, element: <InventoryStatusReport />, formCode: "INVSTATUSRPT", action: UserAction.Show, path: `/reports/_/inventory/inventory_status_report`, type: 'link', active: false, selected: false, title: 'inventory_status', icon: PiPackageLight,  routePath: ""},
+      {  id: 162, element: <VoidReport />, formCode: "RPTADVOID", action: UserAction.Show, path: `/reports/_/inventory/void_report`, type: 'link', active: false, selected: false, title: 'void_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 163, element: <CounterReport />, formCode: "CNTRRPT", action: UserAction.Show, path: `/reports/_/inventory/counter_report`, type: 'link', active: false, selected: false, title: 'counter_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 164, element: <RegisterReport dataUrl={urls.sales_return_estimate_register} gridHeader="sales_return_estimate_register" gridId="grd_sales_return_estimate_register" />, formCode: "SREREGT", action: UserAction.Show, path: `/reports/_/inventory/sales_return_estimate_register_report`, type: 'link', active: false, selected: false, title: 'sales_return_estimate_register', icon: PiPackageLight,  routePath: ""},
+      {  id: 172, element: <CustomerVisitTotalVisit />, formCode: "RPTTOTVIS", action: UserAction.Show, path: `/reports/_/inventory/customer_visit_total_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_total_visit', icon: PiPackageLight,  routePath: ""},
+      {  id: 173, element: <CustomerVisitLastVisit />, formCode: "RPTLAVIDET", action: UserAction.Show, path: `/reports/_/inventory/customer_visit_last_visit`, type: 'link', active: false, selected: false, title: 'customer_visit_last_visit', icon: PiPackageLight,  routePath: ""},
+      {  id: 174, element: <FOCRegisterReport />, formCode: "RPTFOCREG", action: UserAction.Show, path: `/reports/_/inventory/foc_register_report`, type: 'link', active: false, selected: false, title: 'foc_register_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 175, element: <DiscountReportInventory />, formCode: "RPTINV", action: UserAction.Show, path: `/reports/_/inventory/discount_report_inventory`, type: 'link', active: false, selected: false, title: 'discount_report_inventory', icon: PiPackageLight,  routePath: ""},
+      {  id: 176, element: <DiscountReportCollection />, formCode: "RPTCOL", action: UserAction.Show, path: `/reports/_/inventory/discount_report_collection`, type: 'link', active: false, selected: false, title: 'discount_report_collection', icon: PiPackageLight,  routePath: ""},
+      {  id: 177, element: <ItemUsedForService />, formCode: "ITMSFORSRV", action: UserAction.Show, path: `/reports/_/inventory/item_used_for_service`, type: 'link', active: false, selected: false, title: 'item_used_for_service', icon: PiPackageLight,  routePath: ""},
+      {  id: 178, element: <LPOReport />, formCode: "LPORPT", action: UserAction.Show, path: `/reports/_/inventory/lpo_report`, type: 'link', active: false, selected: false, title: 'lpo_report', icon: PiPackageLight,  routePath: ""},
+      {  id: 179, element: <FastMovingProductsReport />, formCode: "FMVGRPT", action: UserAction.Show, path: `/reports/_/inventory/fast_moving_products_report`, type: 'link', active: false, selected: false, title: 'fast_moving_products', icon: PiPackageLight,  routePath: ""},
+      {  id: 180, element: <UnsoldProductReport />, formCode: "UNSLDPRD", action: UserAction.Show, path: `/reports/_/inventory/unsoled_products`, type: 'link', active: false, selected: false, title: 'unsoled_products', icon: PiPackageLight,  routePath: ""},
+     ]
   },
 
 ];

@@ -64,7 +64,8 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     return parseFloat(val.toFixed(decimalPlaces));
   }
   function getFormattedValueIgnoreRoundingToNumber(val: number): number {
-    return parseFloat(getFormattedValueIgnoreRounding(val));
+    const cleaned = getFormattedValueIgnoreRounding(val).replace(/,/g, '');
+    return parseFloat(cleaned);
   }
   function getFormattedValueIgnoreRounding(val: number): string {
     let decimalPoint: number;
@@ -110,7 +111,8 @@ export const useNumberFormat = (): UseNumberFormatResult => {
 }
   function getFormattedValueToNumber(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): number {
-    return parseFloat(getFormattedValue(val,ignoreNullOrZero,decimalPoint,cuttingPoint,numberOfZero));
+    const cleaned = getFormattedValue(val,ignoreNullOrZero,decimalPoint,cuttingPoint,numberOfZero).replace(/,/g, '');
+    return parseFloat(cleaned);
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): string {

@@ -28,7 +28,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   };
 
   useEffect(() => {
-    debugger;
+    
     const container = qrCodeRefs.current[component.id];
     if (!container || !component.qrCodeProps) return;
 

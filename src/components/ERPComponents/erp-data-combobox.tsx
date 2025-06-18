@@ -242,7 +242,7 @@ const Row = ({
         return `relative cursor-pointer select-none w-full rounded-sm
                 ${hoverBgClass} ${hoverTextClass}
                 ${
-                  active || isActive
+                   isActive
                     ? "bg-primary text-white"
                     : item.is_active === false
                     ? "bg-gray-200 text-gray-400"
@@ -317,6 +317,7 @@ const ComboboxList = React.forwardRef<
       itemData={itemData}
       className={`scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400`}
       style={{ direction: appState }}
+      itemKey={(index, data) => String(data.items[index].value)} // Add this line
     >
       {Row}
     </List>
@@ -387,7 +388,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   ) => {
     const { t } = useTranslation("main");
     const [isOpen, setIsOpen] = useState(false);
-    const [lcct, setLcct] = useState<string>("");
+    // const [lcct, setLcct] = useState<string>("");
+    const lcct = useRef(localStorage.getItem("lcct") ?? "");
     const [getListUrl, setGetListUrl] = useState<string>("");
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<Option[]>([]);
@@ -433,16 +435,17 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       set_reload(reload);
     }, [reload]);
     
-    useEffect(() => {
-      
-    }, []);
     useEffect(() => { 
-      if (isOpen){
-        const _lcct = localStorage.getItem("lcct");
-        if(lcct != _lcct) {
-          loadData();
+     const run = async () => {
+        if (isOpen) {
+          const _lcct = localStorage.getItem("lcct") ?? "";
+          if (lcct.current !== _lcct) {
+            await loadData(); // Await here
+          }
         }
-      }
+      };
+
+      run();
       const handleScroll = () => {
         if (isOpen && comboboxRef.current) {
           const rect = comboboxRef.current.getBoundingClientRect();
@@ -669,13 +672,18 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
-      if (_reload !== undefined && _reload !== true) {
+      const run = async () => {
+   if (_reload !== undefined && _reload !== true) {
         return;
       }
       setGetListUrl(`${field?.getListUrl??""}${field?.params??""}`)
       if (!disabledApiCall && field?.freezeDataLoad !== true) {
-        loadData();
+       await loadData();
       }
+  };
+
+  run();
+      
     }, [
       field?.getListUrl,
       field?.getListUrlDynamic,
@@ -683,7 +691,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       field?.freezeDataLoad,
       _reload,
       disabledApiCall,
-options
+      options
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
@@ -854,7 +862,9 @@ useEffect(() => {
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setLcct(localStorage.getItem("lcct")??"")
+        // setLcct(localStorage.getItem("lcct")??"")
+        
+      lcct.current = localStorage.getItem("lcct") ?? "";
         if (_reload === true) {
           changeReload && changeReload(false);
         }
@@ -989,10 +999,8 @@ useEffect(() => {
             }
             current = current[key];
           }
-    
           current[keys[keys.length - 1]] = value.value;
         }
-    
         onChangeData(updatedData);
       }
       // onChangeData &&
@@ -1005,10 +1013,6 @@ useEffect(() => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      //  const _lcct = localStorage.getItem("lcct");
-      //   if(lcct != _lcct) {
-      //     loadData();
-      //   }
       const value = event.target.value;
       setInputValue(value);
       setQuery(value);
@@ -1062,12 +1066,10 @@ useEffect(() => {
     };
 
     const handleAddNewClick = (e: React.MouseEvent) => {
-      console.log("Add New button clicked"); // Debug log
       e.stopPropagation();
       e.preventDefault();
     
       if (addNewOptionCobonent?.popupAction) {
-        console.log("Dispatching popup action"); // Debug log
         dispatch(addNewOptionCobonent.popupAction({ isOpen: true }));
       }
       setIsOpen(false);
@@ -1879,6 +1881,7 @@ useEffect(() => {
                   ) : (
                     <>
                     <ComboboxList
+                      key={initial?.value || "default"}
                       ref={listRef}
                       items={filteredItems}
                       selectedValue={initial}
@@ -1887,28 +1890,18 @@ useEffect(() => {
                       customSize={_customSize}
                       appState={appState.dir}
                     />
-                    {/* {addNewOption && (
-                      <div className="">
-                        <ERPButton
-                          type="button"
-                          variant="primary"
-                          onClick={handleAddNewClick}
-                          title={t("add_new")}
-                          className="w-full text-sm"
-                        />
-                      </div>
-                     )}  */}
+
                      {addNewOption && (
-  <div className="p-2 border-t">
-    <button
-      type="button"
-      onClick={handleAddNewClick}
-      className="w-full bg-slate-800 text-white py-1 px-3 rounded text-sm"
-    >
-      {t("add_new")}
-    </button>
-  </div>
-)}
+                        <div className="p-2 border-t">
+                          <button
+                            type="button"
+                            onClick={handleAddNewClick}
+                            className="w-full bg-slate-800 text-white py-1 px-3 rounded text-sm"
+                          >
+                            {t("add_new")}
+                          </button>
+                        </div>
+                      )}
 
                   </>
                
@@ -1941,14 +1934,12 @@ useEffect(() => {
                   width={addNewOptionCobonent.width || 600}
                   height={addNewOptionCobonent.height || 350}
                   isForm={true}
-                  // closeModal={handleCloseModal}
                   closeModal={() => {
                     if (addNewOptionCobonent.closeModal) {
                       addNewOptionCobonent.closeModal();
                     }
                   }}
                   content={addNewOptionCobonent.content}
-                  disableOutsideClickClose={true}
                 />
                
               )}

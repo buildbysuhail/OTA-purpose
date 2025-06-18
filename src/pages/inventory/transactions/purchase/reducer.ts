@@ -10,7 +10,6 @@ import {
   LoadData,
   TransactionValidationsData,
 } from "./transaction-types";
-import { clearEntryControl, disableControlsFn, setUserRightsFn } from "./functions";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
@@ -224,6 +223,7 @@ const InvTransactionSlice = createSlice({
         exchangeRate: number;
         applicationSettings: ApplicationSettingsType;
         userSession: UserModel;
+        clearEntryControl:  (state: TransactionFormState, defaultCostCenterID: number) => TransactionFormState
       }>
     ) => {
       const data = initialTransactionDetailData;
@@ -249,7 +249,7 @@ const InvTransactionSlice = createSlice({
         slNo: index + 1, // Reset slNo to start from 1
       }));
 
-      state = clearEntryControl(
+      state = action.payload.clearEntryControl(
         state,
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
@@ -324,11 +324,12 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{
         index: number;
         applicationSettings?: ApplicationSettingsType;
+        clearEntryControl:  (state: TransactionFormState, defaultCostCenterID: number) => TransactionFormState
       }>
     ) => {
       const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
-        state = clearEntryControl(
+        state = action.payload.clearEntryControl(
           state,
           action.payload.applicationSettings?.accountsSettings
             ?.defaultCostCenterID ?? 0
@@ -428,10 +429,11 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{
         userSession: UserModel;
         hasRight: (formCode: string, action: UserAction) => boolean;
+        setUserRightsFn: (state: TransactionFormState, userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean) => TransactionFormState
       }>
     ) => {
       const { userSession, hasRight } = action.payload;
-      state = setUserRightsFn(state, userSession, hasRight);      
+      state = action.payload.setUserRightsFn(state, userSession, hasRight);      
     },
     updateFormElement: (
       state,
@@ -500,8 +502,11 @@ const InvTransactionSlice = createSlice({
       state.formElements.pnlMasters.disabled = false;
       state.formElements.dxGrid.disabled = false;
     },
-    disableControls: (state) => {
-     state = disableControlsFn(state);
+    disableControls: (state,
+      action: PayloadAction<{
+        disableControlsFn: (state: TransactionFormState) => TransactionFormState
+      }>) => {
+     state = action.payload.disableControlsFn(state);
     },
   },
 });

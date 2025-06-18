@@ -9,7 +9,6 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleProducts } from "../../../../redux/slices/popup-reducer";
 import { productDto, ProductLocalConfig } from "./products-type";
 import initialProductData from "./products-data";
-import { Countries } from "../../../../redux/slices/user-session/user-branches-reducer";
 import ProductDetailsIndia from "./products-india/product-details-india";
 import ProductManageIndia from "./products-india/products-manage-india";
 import ProductManageGcc from "./products-gcc/products-manage-gcc";
@@ -44,6 +43,7 @@ import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-but
 import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
 import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 import { loadMultiRateToGrid } from "./helper";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
 
 export interface MultiBarcodeState {
   open: boolean;

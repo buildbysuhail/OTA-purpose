@@ -92,7 +92,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
           {/* {isOpen && */}
           <ERPDevGrid 
             columns={columns}
-            dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
+            dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
             method={ActionType.GET}
             // postData={{voucherType: voucherType, transactionType: transactionType}}
             gridHeader={t("transactions")}

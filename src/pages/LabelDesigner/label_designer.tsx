@@ -720,7 +720,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     setLoading(true);
 
     try {
-      debugger;
+      
       if (forCustomRows) {
         dispatch(
           setTemplateCustomElements({

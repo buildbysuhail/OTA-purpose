@@ -213,7 +213,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
-    debugger;
+    
     const target = e.target as HTMLElement;
     if (!target.id) return;
 

@@ -74,7 +74,7 @@ export const Header = ({
 const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    debugger;
+    
     const generateQRCodes = async () => {
       const images: { [key: string]: string } = {};
       const qrComponents: PlacedComponent[] = [

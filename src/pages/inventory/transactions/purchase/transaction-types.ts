@@ -1,6 +1,6 @@
 import moment from "moment";
 import { Dispatch } from "react";
-import { AnyAction } from "redux";
+import { AnyAction, DeepPartial } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
@@ -210,6 +210,10 @@ export interface TransactionMaster3Validations {
 export interface TransactionMasterValidations {
   
 }
+export interface CommonParams {
+    result: DeepPartial<TransactionFormState>;
+    accFormStateHandleFieldChangeKeysOnly?: any;
+  }
 export interface TransactionDetail { 
   slNo: number;
   pCode: string;
@@ -225,6 +229,7 @@ export interface TransactionDetail {
   unit: string;
   unitID: number;
   unitPrice: number;
+  unitPriceTag: number;
   gross: number;
   discPerc: number;
   discount: number;
@@ -348,6 +353,8 @@ export interface UserConfig {
   dummyProducts?: boolean;
   duplicationMessage?: boolean;
   setDefaultQuantity?: boolean;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
 }
 
 export type FormElementsState = {

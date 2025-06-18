@@ -252,19 +252,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 />
               )}
               {formState.formElements.cbVatAccount?.visible && (
-                <ERPDataCombobox
+                <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
-                  enableClearOption={false}
                   id="tokenNumber"
+                  label={t(formState.formElements.chkVat.label)}
                   className="min-w-[180px] !m-0"
                   // label={t(formState.formElements.cbVatAccount.label)}
                   noLabel={true}
                   data={formState.transaction.master}
-                  onSelectItem={(e) => {
+                  onChange={(e) => {
                     dispatch(
                       formStateMasterHandleFieldChange({
                         fields: {
-                          tokenNumber: e.value,
+                          tokenNumber: e.target.value,
                         },
                       })
                     );
@@ -272,15 +272,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleFieldKeyDown("tokenNumber", "Enter");
                   }}
                   value={formState.transaction.master.tokenNumber}
-                  field={{
-                    id: "tokenNumber",
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_employees,
-                    params: `ledgerType=${formState.formElements?.cbVatAccount?.accLedgerType ||
-                      LedgerType.All
-                      }`,
-                  }}
                   disabled={
                     formState.formElements.cbVatAccount.disabled ||
                     formState.enableTaxNumber === false ||
@@ -333,7 +324,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   id: "labelDesignID",
                   valueKey: "id",
                   labelKey: "name",
-                  // getListUrl: Urls.data_label_designs,
+                  getListUrl: Urls.data_templates,
                 }}
                 disabled={
                   formState.formElements.cbLabelDesign.disabled ||

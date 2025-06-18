@@ -339,14 +339,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       } else if (e.key === "Escape" && showProductGrid) {
         setShowProductGrid(false);
         e.preventDefault();
-      } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+      } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
         const input = e.target as HTMLInputElement;
         const { selectionStart, selectionEnd, value } = input;
         let shouldNavigate = true;
-        if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
-          shouldNavigate = false;
-        } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
-          shouldNavigate = false;
+        if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+          if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
+            shouldNavigate = false;
+          } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
+            shouldNavigate = false;
+          }
         }
         if (shouldNavigate && rest.onKeyDown) {
           rest.onKeyDown(e);

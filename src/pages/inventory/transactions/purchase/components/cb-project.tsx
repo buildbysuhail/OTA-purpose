@@ -3,6 +3,7 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import Urls from "../../../../../redux/urls";
+import { isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
 
 interface ProjectProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
@@ -17,7 +18,7 @@ const Project = React.forwardRef<HTMLInputElement, ProjectProps>(({
 }, ref) => {
   return (
     <>
-      {formState.formElements.cbProject.visible && (
+      {formState.formElements.cbProject.visible && !isNullOrUndefinedOrZero(formState.transaction.master.ledgerID) && (
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           enableClearOption={false}
@@ -41,7 +42,8 @@ const Project = React.forwardRef<HTMLInputElement, ProjectProps>(({
             id: "projectID",
             valueKey: "id",
             labelKey: "name",
-            getListUrl: Urls.data_projects,
+             getListUrl: Urls.data_projects_by_ledgerid,
+            params: `LedgerID=${formState.transaction.master.ledgerID}`,
           }}
           disabled={
             formState.formElements.cbProject.disabled ||

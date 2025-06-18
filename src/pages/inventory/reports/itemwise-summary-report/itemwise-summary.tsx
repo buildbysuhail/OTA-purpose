@@ -576,6 +576,13 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
+                 childPopupProps={{
+                    content: null,
+                    title: "",
+                    isForm: false,
+                    isTransactionScreen: true,
+                    drillDownCells: "vchNo,",
+                  }}
               />
             </div>
           </div>

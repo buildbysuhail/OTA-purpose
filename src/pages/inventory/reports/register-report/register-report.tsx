@@ -1939,6 +1939,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
+                 childPopupProps={{
+                    content: null,
+                    title: "",
+                    isForm: false,
+                    isTransactionScreen: true,
+                    drillDownCells: "vchNo,",
+                  }}
               />
             </div>
           </div>

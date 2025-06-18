@@ -1116,8 +1116,14 @@ export const userRights: UserRight[] = [
 // Goods Request nodes
 { id: 2030523, headId: 20305, name: "NdGoodsRequestItem", fullName: "Goods Request", formCode: "GR_RPTIWS", treeNode: 3, description: "Manage Goods Request Itemwsie" },
 { id: 203052301, headId: 2030523, name: "NdGoodsRequestItem_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Goods Request Itemwsie Print" },
+//#region not in 1050
+// Brand Wise Sales Report nodes
+{ id: 2030524, headId: 20305, name: "NdBrandWiseSalesReport", fullName: "Brand Wise Sales Report", formCode: "STMRYBRD", treeNode: 3, description: "Manage Brand Wise Sales Report" },
+{ id: 203052401, headId: 2030524, name: "NdBrandWiseSalesReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Brand Wise Sales Report Print" },
+{ id: 203052402, headId: 2030524, name: "NdBrandWiseSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Brand Wise Sales Report Settings" },
+{ id: 203052403, headId: 2030524, name: "NdBrandWiseSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Brand Wise Sales Report Export" },
 
-
+//#endregion not in 1050
   // Transaction Summary - Already provided in your example
   { id: 20306, headId: 203, name: "TransactionSummary", fullName: "Transaction Summary", formCode: "INVTRSUM", treeNode: 3, description: "Manage Transaction Summary" },
   { id: 2030601, headId: 20306, name: "TransactionSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Transaction Summary Print" },

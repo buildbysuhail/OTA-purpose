@@ -52,6 +52,8 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "billwise_profit_report___",
             "daily_summary_report___",
 
+            "sales_return_estimate_register",
+
             "purchase_estimate_register_report",
             "purchase_return_estimate_register_report",
             "purchase_return_estimate_summary_report",
@@ -90,7 +92,11 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "sales_transfer_partyWise_sales",
             "sales_transfer_monthWise_summary",
             "sales_transfer_partyWise_summary",
-       
+            
+            
+            "sales_price_category_greater_than_mrp___",
+            "products_with_price_categories",
+            "zero_mrp_product_list___"
           ];
           st = st
             .filter((parent: any) => !excluded.includes(parent.title))

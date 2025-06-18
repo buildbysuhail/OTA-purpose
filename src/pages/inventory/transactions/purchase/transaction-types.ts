@@ -353,6 +353,8 @@ export interface UserConfig {
   dummyProducts?: boolean;
   duplicationMessage?: boolean;
   setDefaultQuantity?: boolean;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
 }
 
 export type FormElementsState = {

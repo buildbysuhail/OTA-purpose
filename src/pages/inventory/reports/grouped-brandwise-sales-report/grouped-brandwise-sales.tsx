@@ -154,7 +154,7 @@ const GroupedBrandwiseSales = () => {
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total);
+              : getFormattedValue(cellElement.data.total, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -164,7 +164,7 @@ const GroupedBrandwiseSales = () => {
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total));
+            : getFormattedValue(parseFloat(cellElement.data.total), false, 4);
         }
       },
     },
@@ -217,7 +217,7 @@ const GroupedBrandwiseSales = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              filterText=": {fromDate} - {toDate}"
+                filterText=": {fromDate} - {toDate}"
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -225,8 +225,7 @@ const GroupedBrandwiseSales = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                
-                gridHeader={t("grouped_brandwise_sales")}
+                gridHeader={t("sales_report_value_based")}
                 dataUrl={Urls.grouped_brandwise_sales}
                 hideGridAddButton={true}
                 enablefilter={true}

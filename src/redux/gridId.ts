@@ -17,6 +17,8 @@ const GridId = {
   discount_report_collection: "discount_report_collection",
   item_used_for_service: "item_used_for_service",
   lpo_report: "lpo_report",
+  fast_moving_products_report: "fast_moving_products_report",
+  unsold_products_report: "unsold_products_report",
 
 };
 

@@ -387,7 +387,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   ) => {
     const { t } = useTranslation("main");
     const [isOpen, setIsOpen] = useState(false);
-    const [lcct, setLcct] = useState<string>("");
+    // const [lcct, setLcct] = useState<string>("");
+    const lcct = useRef(localStorage.getItem("lcct") ?? "");
     const [getListUrl, setGetListUrl] = useState<string>("");
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<Option[]>([]);
@@ -437,12 +438,16 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       
     }, []);
     useEffect(() => { 
-      if (isOpen){
-        const _lcct = localStorage.getItem("lcct");
-        if(lcct != _lcct) {
-          loadData();
+     const run = async () => {
+        if (isOpen) {
+          const _lcct = localStorage.getItem("lcct") ?? "";
+          if (lcct.current !== _lcct) {
+            await loadData(); // Await here
+          }
         }
-      }
+      };
+
+      run();
       const handleScroll = () => {
         if (isOpen && comboboxRef.current) {
           const rect = comboboxRef.current.getBoundingClientRect();
@@ -669,13 +674,18 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
-      if (_reload !== undefined && _reload !== true) {
+      const run = async () => {
+   if (_reload !== undefined && _reload !== true) {
         return;
       }
       setGetListUrl(`${field?.getListUrl??""}${field?.params??""}`)
       if (!disabledApiCall && field?.freezeDataLoad !== true) {
-        loadData();
+       await loadData();
       }
+  };
+
+  run();
+      
     }, [
       field?.getListUrl,
       field?.getListUrlDynamic,
@@ -683,7 +693,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       field?.freezeDataLoad,
       _reload,
       disabledApiCall,
-options
+      options
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
@@ -854,7 +864,9 @@ useEffect(() => {
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setLcct(localStorage.getItem("lcct")??"")
+        // setLcct(localStorage.getItem("lcct")??"")
+        
+      lcct.current = localStorage.getItem("lcct") ?? "";
         if (_reload === true) {
           changeReload && changeReload(false);
         }
@@ -1005,10 +1017,6 @@ useEffect(() => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      //  const _lcct = localStorage.getItem("lcct");
-      //   if(lcct != _lcct) {
-      //     loadData();
-      //   }
       const value = event.target.value;
       setInputValue(value);
       setQuery(value);

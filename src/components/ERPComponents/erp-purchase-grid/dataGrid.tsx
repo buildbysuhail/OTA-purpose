@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback, forwardRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, forwardRef, useMemo } from "react";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
@@ -34,7 +34,7 @@ interface DataGridProps<T extends DataItem> {
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
   allowColumnReordering?: boolean;
-    summaryConfig?: SummaryConfig<TransactionDetail>[];
+  summaryConfig?: SummaryConfig<TransactionDetail>[];
 }
 
 interface EditableCellProps {
@@ -66,7 +66,7 @@ interface RowData {
   itemCount: number;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
+const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -104,9 +104,9 @@ const EditableCell: React.FC<EditableCellProps> = ({ rowIndex, column, value, on
       tabIndex={0}
     />
   );
-};
+});
 
-const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
+const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
   const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
   const item = data.details[index];
   const columns = data.columns;
@@ -118,19 +118,19 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
   const rowRef = useRef<HTMLTableRowElement>(null);
   const dispatch = useAppDispatch();
 
-  const handleFocus = (columnKey: string) => {
+  const handleFocus = useCallback((columnKey: string) => {
     setFocusedColumn(columnKey);
     console.log(`Focus on column: ${columnKey}, row: ${index}`);
-  };
+  }, [index]);
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     if (document.activeElement?.closest(".dx-datagrid")) {
       console.log("Blur skipped: Focus within ERPProductSearch dropdown");
       return;
     }
     setFocusedColumn(null);
     console.log("Blur: Cleared focused column");
-  };
+  }, []);
 
   const handleProductSelected = (selectedRow: any) => {
     console.log(`Product selected: ${JSON.stringify(selectedRow)}`);
@@ -162,7 +162,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
 
       if (listRef.current && targetRow !== index) {
         listRef.current.scrollToItem(targetRow, "smart");
-        console.log(`Scrolled to row: ${ targetRow}`);
+        console.log(`Scrolled to row: ${targetRow}`);
       }
 
       const attemptFocus = () => {
@@ -212,8 +212,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
     [columns, gridId, index, itemCount, listRef]
   );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
-    debugger;
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
     const target = e.target as HTMLElement;
     if (!target.id) return;
 
@@ -264,7 +263,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         focusCell(index + 1, currentColumnIndex);
         break;
     }
-  };
+  }, [columns, index, itemCount, focusCell]);
 
   return (
     <tr
@@ -304,7 +303,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
             >
               {column.dataField === "product" && !column.readOnly ? (
                 <ERPProductSearch
-                  id={cellId}                  
+                  id={cellId}
                   inputId={`${gridId}_${column.dataField}_${index}`}
                   noLabel={true}
                   showCheckBox={false}
@@ -315,9 +314,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
                   className="h-[22px] text-sm"
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
-                  // isGridCell={true}
                   onKeyDown={(e) => handleKeyDown(e, column)}
-                  // onProductSelected={handleProductSelected}
                 />
               ) : column.dataField === "status" ? (
                 <span
@@ -361,7 +358,7 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
         })}
     </tr>
   );
-};
+});
 
 const SummaryRow: React.FC<{
   columns: DevGridColumn[];
@@ -380,7 +377,7 @@ const SummaryRow: React.FC<{
           const summary = summaryConfig.find(
             (s) => s.showInColumn === column.dataField || s.column === column.dataField
           );
-           const value = summary ? summaryValues[summary.column as string] : null;
+          const value = summary ? summaryValues[summary.column as string] : null;
           const formattedValue = summary?.customizeText
             ? summary.customizeText({ value })
             : value;
@@ -503,6 +500,16 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     return summaryValues;
   }, [formState.transaction?.details, summaryConfig]);
 
+  const itemData = useMemo(() => ({
+    details: formState.transaction?.details || [],
+    columns: formState.gridColumns || [],
+    tableWidth: tableWidth,
+    txtData: formState.formElements.txtData,
+    gridId: gridId,
+    listRef: listRef,
+    itemCount: formState.transaction?.details.length || 0,
+  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);
+
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
   }, [formState.gridColumns]);
@@ -609,15 +616,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 itemSize={rowHeight}
                 width={tableWidth + 1}
                 outerRef={outerRef}
-                itemData={{
-                  details: formState.transaction?.details || [],
-                  columns: formState.gridColumns || [],
-                  tableWidth: tableWidth,
-                  txtData: formState.formElements.txtData,
-                  gridId: gridId,
-                  listRef: listRef,
-                  itemCount: formState.transaction?.details.length || 0,
-                }}
+                itemData={itemData}
                 itemKey={(index) => `${gridId}-${index}`}
                 className="bg-white"
                 style={{ direction: appState?.dir, overflowX: "hidden" }}

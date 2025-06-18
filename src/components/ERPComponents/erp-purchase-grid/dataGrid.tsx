@@ -64,6 +64,7 @@ interface RowData {
   gridId: string;
   listRef: React.RefObject<List>;
   itemCount: number;
+  gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
@@ -115,6 +116,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
   const gridId = data.gridId;
   const listRef = data.listRef;
   const itemCount = data.itemCount;
+  const gridRef = data.gridRef;
   const rowRef = useRef<HTMLTableRowElement>(null);
   const dispatch = useAppDispatch();
 
@@ -195,6 +197,21 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
         return false;
       };
 
+      if (attemptFocus()) {
+        const targetCell = document.getElementById(targetCellId) as HTMLElement;
+        if (gridRef.current && targetCell) {
+          const cellRect = targetCell.getBoundingClientRect();
+          const gridRect = gridRef.current.getBoundingClientRect();
+          const scrollLeft = gridRef.current.scrollLeft;
+
+          if (cellRect.left < gridRect.left) {
+            gridRef.current.scrollLeft = scrollLeft + (cellRect.left - gridRect.left);
+          } else if (cellRect.right > gridRect.right) {
+            gridRef.current.scrollLeft = scrollLeft + (cellRect.right - gridRect.right);
+          }
+        }
+      }
+
       if (attemptFocus()) return;
 
       const maxAttempts = 5;
@@ -212,58 +229,63 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
     [columns, gridId, index, itemCount, listRef]
   );
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
-    const target = e.target as HTMLElement;
-    if (!target.id) return;
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
+      const target = e.target as HTMLElement;
+      if (!target.id) return;
 
-    const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
-    const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
-    console.log(`Key down: ${e.key}, column: ${column.dataField}, row: ${index}`);
+      const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
+      const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
 
-    if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-      return;
-    }
+      if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
+        return;
+      }
 
-    let shouldNavigate = true;
-    if (target.tagName === "INPUT" || target.querySelector("input")) {
-      const input = target.tagName === "INPUT"
-        ? target as HTMLInputElement
-        : target.querySelector("input") as HTMLInputElement | null;
-      if (input) {
-        const { selectionStart, selectionEnd, value } = input;
-        if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
-          shouldNavigate = false;
-        } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
-          shouldNavigate = false;
+      let shouldNavigate = true;
+      if (target.tagName === "INPUT" || target.querySelector("input")) {
+        const input = target.tagName === "INPUT"
+          ? target as HTMLInputElement
+          : target.querySelector("input") as HTMLInputElement | null;
+        if (input && input.type !== "number") { // Skip cursor check for number inputs
+          const { selectionStart, selectionEnd, value } = input;
+          const effectiveValue = value || "";
+          const effectiveStart = selectionStart ?? 0;
+          const effectiveEnd = selectionEnd ?? 0;
+          if (e.key === "ArrowRight" && (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)) {
+            shouldNavigate = false;
+          } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
+            shouldNavigate = false;
+          }
         }
       }
-    }
 
-    if (!shouldNavigate) {
-      console.log(`Navigation skipped: Cursor not at boundary`);
-      return;
-    }
+      if (!shouldNavigate) {
+        console.log(`Navigation skipped: Cursor not at boundary`);
+        return;
+      }
 
-    e.preventDefault();
-    switch (e.key) {
-      case "ArrowRight":
-        if (currentColumnIndex < visibleColumns.length - 1) {
-          focusCell(index, currentColumnIndex + 1);
-        }
-        break;
-      case "ArrowLeft":
-        if (currentColumnIndex > 0) {
-          focusCell(index, currentColumnIndex - 1);
-        }
-        break;
-      case "ArrowUp":
-        focusCell(index - 1, currentColumnIndex);
-        break;
-      case "ArrowDown":
-        focusCell(index + 1, currentColumnIndex);
-        break;
-    }
-  }, [columns, index, itemCount, focusCell]);
+      e.preventDefault(); // Prevent default browser behavior (e.g., increment/decrement in number inputs)
+      switch (e.key) {
+        case "ArrowRight":
+          if (currentColumnIndex < visibleColumns.length - 1) {
+            focusCell(index, currentColumnIndex + 1);
+          }
+          break;
+        case "ArrowLeft":
+          if (currentColumnIndex > 0) {
+            focusCell(index, currentColumnIndex - 1);
+          }
+          break;
+        case "ArrowUp":
+          focusCell(index - 1, currentColumnIndex);
+          break;
+        case "ArrowDown":
+          focusCell(index + 1, currentColumnIndex);
+          break;
+      }
+    },
+    [columns, index, itemCount, focusCell]
+  );
 
   return (
     <tr
@@ -508,6 +530,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     gridId: gridId,
     listRef: listRef,
     itemCount: formState.transaction?.details.length || 0,
+    gridRef: gridRef,
   }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);
 
   useEffect(() => {

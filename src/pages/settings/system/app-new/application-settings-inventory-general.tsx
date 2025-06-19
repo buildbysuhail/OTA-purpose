@@ -469,6 +469,24 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
         />
       ),
     },
+    {
+      condition: filterComponent([t("block_unit_on_decimal_point")], filterText),
+      element: (
+        <ERPCheckbox
+          id="blockUnitOnDecimalPoint"
+          checked={settings?.inventorySettings?.blockUnitOnDecimalPoint}
+          data={settings?.inventorySettings}
+          label={t("block_unit_on_decimal_point")}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "inventorySettings",
+              "blockUnitOnDecimalPoint",
+              data.blockUnitOnDecimalPoint
+            )
+          }
+        />
+      ),
+    },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

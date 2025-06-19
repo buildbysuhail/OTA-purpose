@@ -53,6 +53,7 @@ export interface ApplicationInventorySettings {
     showAccountPayableInSales: boolean;
     holdSalesMan: boolean;
     mobileNumberMandotryInSales: boolean;
+    blockUnitOnDecimalPoint:boolean
   }
   export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
       defaultSalesAcc: 1,
@@ -109,4 +110,5 @@ export interface ApplicationInventorySettings {
       showAccountPayableInSales: false,
       holdSalesMan: false,
       mobileNumberMandotryInSales: false,
+      blockUnitOnDecimalPoint:false,
     };

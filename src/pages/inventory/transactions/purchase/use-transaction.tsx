@@ -2369,88 +2369,16 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
    }
 
    // Dispatch the updated state
-   accFormStateHandleFieldChangeKeysOnly &&
-     dispatch &&
-     dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+  //  accFormStateHandleFieldChangeKeysOnly &&
+  //    dispatch &&
+  //    dispatch(accFormStateHandleFieldChangeKeysOnly(result));
 
  } catch (error) {
    console.error('Error in handleTextDataChange:', error);
  } finally {
    return result;
  }
-};
-const handleTextDataKeyPress = (
- key: string,
- columnName: string,
- currentText: string,
- selectionStart: number,
- rowIndex: number,
- formState: TransactionFormState,
- applicationSettings: ApplicationSettingsType
-): { handled: boolean; error?: string } => {
- try {
-   switch (columnName) {
-     // Numeric columns with unit decimal restrictions
-     case "salesPrice":
-     case "margin":
-     case "qty":
-       if (applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint === true) {
-         const detail = formState.transaction.details[rowIndex];
-         const unitId = Number(detail?.unitID || 0);
-         
-         // Get decimal places for the unit (would need to implement this service call)
-         const decimalCount = detail?.unitDecimalPoint;
-         
-         if (decimalCount === 0) {
-           if (key === '.') {
-             return { handled: true };
-           }
-         } else {
-           if (currentText.includes('.')) {
-             const decimalIndex = currentText.indexOf('.');
-             if (selectionStart > decimalIndex && key !== 'Backspace') {
-               let count = 1;
-               for (let i = decimalIndex + 1; i < currentText.length; i++) {
-                 if (decimalCount === count) {
-                   return { handled: true };
-                 }
-                 count++;
-               }
-             }
-           }
-         }
-       }
-       break;
-
-     // Standard numeric columns
-     case "unitPrice":
-     case "discount":
-     case "discPerc":
-     case "vatPerc":
-     case "vatAmount":
-     case "stickerQty":
-     case "total":
-     case "netValue":
-     case "gross":
-     case "unitPriceFC":
-       return isNumericInput(key, currentText, selectionStart);
-
-     default:
-       // Allow all characters for non-numeric columns
-       return { handled: false };
-   }
-
-   return { handled: false };
-
- } catch (error) {
-   console.error('Error in handleTextDataKeyPress:', error);
-   return { 
-     handled: true, 
-     error: 'Error processing key input. Please try again.' 
-   };
- }
-};
-
+}
 
 
   return {

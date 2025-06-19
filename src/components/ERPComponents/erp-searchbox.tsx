@@ -32,6 +32,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   labelDirection?: "horizontal" | "vertical";
   contextClassNametwo?: string;
   noLabel?: boolean;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
+  advancedProductSearching?: boolean;
+  searchKey?: string;
 }
 
 interface LoadResult {
@@ -43,7 +47,7 @@ interface LoadResult {
 
 const api = new APIClient();
 
-const createStore = async (value: string, byCode: boolean, productDataUrl?: string) => {
+const createStore = async (value: string, payload: any, productDataUrl?: string) => {
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
@@ -54,10 +58,7 @@ const createStore = async (value: string, byCode: boolean, productDataUrl?: stri
         .join("&");
 
       try {
-        const payload = {
-          productName: value,
-          searchByCode: byCode,
-        };
+        
         const url = productDataUrl || "";
         const response = await api.postAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`, payload);
         const result = response;
@@ -163,6 +164,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   clearAfterSelection = true,
   showCheckBox = true,
   searchType = "grid",
+  useInSearch= false,
+  useCodeSearch= false,
+  advancedProductSearching= false,
+  searchKey= "",
   ...rest
 }, ref) => {
   const [store, setStore] = useState<any>();
@@ -189,13 +194,59 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   const debouncedFetch = useMemo(
     () =>
       debounce(async (value: string) => {
+        
+            if (value.trim() == "" || value.trim() == "%") { 
+            }
         let byCode = inputValue.searchByCode;
+        let payload: any = {}
         if (searchType === "modal") {
           const store = await createModalStore(productDataUrl);
           setModalStore(store);
           setShowProductGrid(true);
         } else if (searchType === "grid") {
-          const store = await createStore(value, byCode, productDataUrl);
+          if(searchKey == "pCode") {
+            payload.searchByCode = true;
+           payload.searchByCodeAndName = false;
+             if (value.trim() === "%") {
+             return null;
+           }
+           
+           let searchText = "";
+           
+           if (useInSearch && value.length > 2) {
+             searchText = "%" + value;
+           } else {
+             searchText = value;
+           }
+           payload.searchText = searchText;
+          } else if(searchKey == "product") {
+           payload.searchByCodeAndName = true;
+           payload.searchByCode = false;
+           if (value.trim() === "%") {
+             return null;
+           }
+           
+           let searchText = "";
+           
+           if (useInSearch && value.length > 2) {
+             searchText = "%" + value;
+           } else {
+             searchText = value;
+           }
+           
+           if (advancedProductSearching) {
+             searchText = searchText.replace(/ /g, "%");
+           }
+           payload.searchText = searchText;
+        } else {
+          
+           payload.searchText = value;
+           payload.searchByCode = byCode;
+          payload.productName = value;
+        }
+
+          
+          const store = await createStore(value, payload, productDataUrl);
           setStore(store);
           const loadResult = await store.load() as LoadResult;
           setShowProductGrid(loadResult.totalCount > 0);

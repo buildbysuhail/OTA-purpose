@@ -67,6 +67,9 @@ interface RowData {
   itemCount: number;
   gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData  
   onQPressed: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail) => void;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
+  advancedProductSearching?: boolean;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
@@ -330,7 +333,7 @@ debugger;
               }}
               role="gridcell"
             >
-              {column.dataField === "product" && !column.readOnly ? (
+               {column.dataField === "product" && !column.readOnly ? (
                 <ERPProductSearch
                   id={cellId}
                   inputId={`${gridId}_${column.dataField}_${index}`}
@@ -344,6 +347,29 @@ debugger;
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(e, column)}
+                  searchKey="product"
+                  advancedProductSearching ={data.advancedProductSearching}
+                  useInSearch = {data.useInSearch}
+                  useCodeSearch = {data.useCodeSearch}
+                />
+              ) :column.dataField === "pCode" && !column.readOnly ? (
+                <ERPProductSearch
+                  id={cellId}
+                  inputId={`${gridId}_${column.dataField}_${index}`}
+                  noLabel={true}
+                  showCheckBox={false}
+                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
+                  value={(cellValue as string) || ""}
+                  productDataUrl={Urls.load_product_details}
+                  tabIndex={0}
+                  className="h-[22px] text-sm"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(e, column)}
+                  searchKey="pCode"
+                  advancedProductSearching ={data.advancedProductSearching}
+                  useInSearch = {data.useInSearch}
+                  useCodeSearch = {data.useCodeSearch}
                 />
               ) : column.dataField === "status" ? (
                 <span

@@ -70,22 +70,140 @@ interface RowData {
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [localValue, setLocalValue] = useState<string>(value.toString());
+
+  useEffect(() => {
+    setLocalValue(value.toString());
+  }, [value]);
+
+  const validateNumberInput = (value: string) => {
+    // Allow empty input during typing
+    if (value === "") return true;
+
+    // Split the value into parts before and after the decimal point
+    const parts = value.split('.');
+
+    // Check for multiple decimal points
+    if (parts.length > 2) return false;
+
+    // Check the part before the decimal point (should be digits only, or minus sign)
+    if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
+
+    // Check the part after the decimal point (should be 0, 1, or 2 digits)
+    if (parts.length === 2) {
+      if (parts[1].length > 2) return false;
+      if (!/^\d*$/.test(parts[1])) return false;
+    }
+
+    return true;
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+    let inputValue = e.currentTarget.value;
+
+    // Check if the input is just a dot (and nothing else)
+    if (column.dataType === "number" && inputValue === '.') {
+      inputValue = '0.';
+      e.currentTarget.value = inputValue;
+    }
+
+    // Check if the input starts with a dot followed by digits (e.g., .2)
+    if (column.dataType === "number" && inputValue.startsWith('.') && inputValue.length > 1) {
+      // Check if the second character is a digit
+      const secondChar = inputValue.charAt(1);
+      if (/^\d$/.test(secondChar)) {
+        inputValue = '0' + inputValue;
+        e.currentTarget.value = inputValue;
+      }
+    }
+
+    if (column.dataType === "number" && !validateNumberInput(inputValue)) {
+      // Revert to the previous valid value
+      e.currentTarget.value = localValue;
+      return;
+    }
+
+    setLocalValue(inputValue);
+
+    // Dispatch the update with the string value to preserve the exact format
+    dispatch(
+      formStateTransactionDetailsRowUpdate({
+        index: rowIndex,
+        key: column.dataField as keyof TransactionDetail,
+        value: column.dataType === "number" ? inputValue : inputValue,
+      })
+    );
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (column.dataType === "number") {
+      const pastedText = e.clipboardData.getData('text');
+      const currentValue = localValue;
+      const startPos = inputRef.current?.selectionStart || 0;
+      const endPos = inputRef.current?.selectionEnd || 0;
+      const newValue = currentValue.substring(0, startPos) + pastedText + currentValue.substring(endPos);
+      if (!validateNumberInput(newValue)) {
+        e.preventDefault();
+      }
+    }
+  };
 
   const handleFocus = () => {
     onFocus();
     inputRef.current?.select();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = column.dataType === "number" ? parseFloat(e.target.value) || 0 : e.target.value;
-    console.log(`EditableCell [${gridId}_${column.dataField}_${rowIndex}]: value=${newValue}, readOnly=${column.readOnly}`);
-    dispatch(
-      formStateTransactionDetailsRowUpdate({
-        index: rowIndex,
-        key: column.dataField as keyof TransactionDetail,
-        value: newValue,
-      })
-    );
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" || e.key === "Delete") {
+      return;
+    }
+
+    if (column.dataType === "number") {
+      const key = e.key;
+      const inputElement = inputRef.current;
+      const currentValue = localValue;
+      const cursorPosition = inputElement?.selectionStart || 0;
+      const beforeCursor = currentValue.substring(0, cursorPosition);
+
+      // If the key is a dot and the input is empty or cursor is at position 0
+      if (key === '.') {
+        // Check if we're at the start of the input or after a minus sign
+        if (cursorPosition === 0 || beforeCursor === '-') {
+          e.preventDefault();
+          const newValue = beforeCursor === '-' ? '-0.' : '0.';
+
+          if (inputElement) {
+            // Insert the new value at cursor position
+            const afterCursor = currentValue.substring(cursorPosition);
+            const fullNewValue = beforeCursor + newValue + afterCursor;
+
+            inputElement.value = fullNewValue;
+
+            // Set the cursor position right after the decimal point
+            setTimeout(() => {
+              if (inputElement) {
+                const newCursorPosition = cursorPosition + (beforeCursor === '-' ? 3 : 2); // For "-0." or "0."
+                inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
+              }
+            }, 0);
+          }
+
+          // Update local state and dispatch
+          const finalNewValue = beforeCursor === '-' ? '-0.' + currentValue.substring(cursorPosition) : '0.' + currentValue.substring(cursorPosition);
+          setLocalValue(finalNewValue);
+          dispatch(
+            formStateTransactionDetailsRowUpdate({
+              index: rowIndex,
+              key: column.dataField as keyof TransactionDetail,
+              value: finalNewValue, // Store the string value to preserve the decimal point
+            })
+          );
+        }
+      }
+    }
+
+    // Call the original onKeyDown for navigation, etc.
+    onKeyDown(e, column);
   };
 
   return (
@@ -93,19 +211,29 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
       ref={inputRef}
       id={`${gridId}_${column.dataField}_${rowIndex}`}
       noLabel
-      type={column.dataType === "number" ? "number" : "text"}
+      // type={column.dataType === "number" ? "number" : "text"}
+      type={column.dataType === "number" ? "text" : "text"}
       className="w-full !h-[20px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
-      value={value}
+      value={localValue}
       noBorder
       readOnly={column.readOnly}
-      onChange={handleChange}
+      onInput={handleInput}
       onFocus={handleFocus}
       onBlur={onBlur}
-      onKeyDown={(e) => onKeyDown(e, column)}
+      onKeyDown={handleKeyDown}
+      onPaste={handlePaste}
       tabIndex={0}
     />
   );
 });
+
+
+
+
+
+
+
+
 
 const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
   const [focusedColumn, setFocusedColumn] = useState<string | null>(null);

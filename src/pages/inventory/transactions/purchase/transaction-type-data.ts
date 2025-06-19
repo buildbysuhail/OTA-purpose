@@ -254,7 +254,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   unit3: '',
   btnPrintBarcodeStd: '',
   poTransDetailsIDTag: 0,
-  warehouseName: ""
+  warehouseName: "",
+  unitPriceTag: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 200 }, (_, index) => ({
@@ -317,8 +318,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   chkSelectDebitAccount: { visible: true, disabled: true, label: "select_debit_account" },
   chkTemporaryVATNumber: { visible: true, disabled: false, label: "temporary_vat_number" },
   dgvInventory: { visible: true, disabled: false, label: "" },
-  dgvProduct: { visible: true, disabled: false, label: "" },
-  dgvProductBatches: { visible: true, disabled: false, label: "" },
+  dgvProduct: { visible: false, disabled: false, label: "",params: "" },
+  dgvProductBatches: { visible: false, disabled: false, label: "",params: "" },
   //editButton1: { visible: false, disabled: false, label: "editbutton1" },
   lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },

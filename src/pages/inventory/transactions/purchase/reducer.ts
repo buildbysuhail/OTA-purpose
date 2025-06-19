@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, DeepPartial, PayloadAction } from "@reduxjs/toolkit";
 import {
   TransactionFormState,
   TransactionData,
@@ -223,7 +223,10 @@ const InvTransactionSlice = createSlice({
         exchangeRate: number;
         applicationSettings: ApplicationSettingsType;
         userSession: UserModel;
-        clearEntryControl:  (state: TransactionFormState, defaultCostCenterID: number) => TransactionFormState
+        clearEntryControl: (
+          state: TransactionFormState,
+          defaultCostCenterID: number
+        ) => TransactionFormState;
       }>
     ) => {
       const data = initialTransactionDetailData;
@@ -281,10 +284,10 @@ const InvTransactionSlice = createSlice({
         : [action.payload];
 
       for (const { index, key, value } of updates) {
-       const row = state.transaction.details[index];
-      if (row) {
-        (state.transaction.details[index][key] as typeof value) = value;
-      }
+        const row = state.transaction.details[index];
+        if (row) {
+          (state.transaction.details[index][key] as typeof value) = value;
+        }
       }
     },
 
@@ -324,7 +327,10 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{
         index: number;
         applicationSettings?: ApplicationSettingsType;
-        clearEntryControl:  (state: TransactionFormState, defaultCostCenterID: number) => TransactionFormState
+        clearEntryControl: (
+          state: TransactionFormState,
+          defaultCostCenterID: number
+        ) => TransactionFormState;
       }>
     ) => {
       const index = action.payload.index;
@@ -429,11 +435,15 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{
         userSession: UserModel;
         hasRight: (formCode: string, action: UserAction) => boolean;
-        setUserRightsFn: (state: TransactionFormState, userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean) => TransactionFormState
+        setUserRightsFn: (
+          state: TransactionFormState,
+          userSession: UserModel,
+          hasRight: (formCode: string, action: UserAction) => boolean
+        ) => TransactionFormState;
       }>
     ) => {
       const { userSession, hasRight } = action.payload;
-      state = action.payload.setUserRightsFn(state, userSession, hasRight);      
+      state = action.payload.setUserRightsFn(state, userSession, hasRight);
     },
     updateFormElement: (
       state,
@@ -502,11 +512,172 @@ const InvTransactionSlice = createSlice({
       state.formElements.pnlMasters.disabled = false;
       state.formElements.dxGrid.disabled = false;
     },
-    disableControls: (state,
+    disableControls: (
+      state,
       action: PayloadAction<{
-        disableControlsFn: (state: TransactionFormState) => TransactionFormState
-      }>) => {
-     state = action.payload.disableControlsFn(state);
+        disableControlsFn: (
+          state: TransactionFormState
+        ) => TransactionFormState;
+      }>
+    ) => {
+      state = action.payload.disableControlsFn(state);
+    },
+    formStateHandleFieldChangeKeysOnly: (
+      state: TransactionFormState,
+      action: PayloadAction<{
+        fields: { [fieldId in keyof DeepPartial<TransactionFormState>]?: any };
+        updateOnlyGivenDetailsColumns?: boolean;
+      }>
+    ) => {
+      const { fields, updateOnlyGivenDetailsColumns = false } =
+        action.payload || {};
+
+      if (!fields || typeof fields !== "object") {
+        console.error("Invalid fields in payload");
+        return;
+      }
+
+      // Helper function to update nested objects
+      const updateNested = (
+        target: Record<string, any>,
+        source: Record<string, any>
+      ): void => {
+        Object.keys(source).forEach((key: string) => {
+          const value = source[key];
+
+          if (value === null || value === undefined) {
+            target[key] = value;
+            return;
+          }
+
+          // Check if it's a plain object (not Array, Date, etc.)
+          const isPlainObject = value?.constructor === Object;
+
+          if (isPlainObject) {
+            if (!target[key] || typeof target[key] !== "object") {
+              target[key] = {};
+            }
+            updateNested(
+              target[key] as Record<string, any>,
+              value as Record<string, any>
+            );
+          } else {
+            // Handle arrays, primitives, dates, etc.
+            if (Array.isArray(value)) {
+              target[key] = [...value];
+            } else if (value instanceof Date) {
+              target[key] = value.toISOString();
+            } else {
+              target[key] = value;
+            }
+          }
+        });
+      };
+
+      // Update each field
+      Object.keys(fields).forEach((key: string) => {
+        const fieldValue = fields[key as keyof TransactionFormState];
+
+        // Special handling for transaction.details array
+        if (
+          key === "transaction" &&
+          fieldValue &&
+          typeof fieldValue === "object"
+        ) {
+          const transactionValue = fieldValue as TransactionData;
+
+          if (
+            transactionValue.details &&
+            Array.isArray(transactionValue.details)
+          ) {
+            // Ensure state.transaction exists
+            if (!state.transaction || typeof state.transaction !== "object") {
+              (state as any).transaction = {};
+            }
+
+            // Ensure state.transaction.details exists
+            if (!Array.isArray((state as any).transaction.details)) {
+              (state as any).transaction.details = [];
+            }
+
+            transactionValue.details.forEach(
+              (detailItem: TransactionDetail, index: number) => {
+                if (updateOnlyGivenDetailsColumns === true) {
+                  // Update only specific columns in the row
+                  if (!state.transaction.details[index]) {
+                    state.transaction.details[index] = {} as TransactionDetail;
+                  }
+
+                  // Batch assign instead of individual property updates
+                  Object.assign(state.transaction.details[index], detailItem);
+                } else {
+                  // Replace the entire row
+                  (state as any).transaction.details[index] = { ...detailItem };
+                }
+              }
+            );
+          }
+
+          // Handle other transaction fields (non-details)
+          Object.keys(transactionValue).forEach((transactionKey: string) => {
+            if (transactionKey !== "details") {
+              (state as any).transaction[transactionKey] =
+                transactionValue[transactionKey as keyof TransactionData];
+            }
+          });
+
+          return;
+        }
+
+        // // Handle details array directly (if fields.details is provided)
+        // if (key === 'details' && Array.isArray(fieldValue)) {
+        //   const detailsArray = fieldValue as DetailItem[];
+
+        //   if (!Array.isArray((state as any).details)) {
+        //     (state as any).details = [];
+        //   }
+
+        //   detailsArray.forEach((detailItem: DetailItem, index: number) => {
+        //     if (updateOnlyGivenDetailsColumns === true) {
+        //       // Update only specific columns in the row
+        //       if (!(state as any).details[index]) {
+        //         (state as any).details[index] = {};
+        //       }
+        //       Object.keys(detailItem).forEach((column: string) => {
+        //         (state as any).details[index][column] = detailItem[column];
+        //       });
+        //     } else {
+        //       // Replace the entire row
+        //       (state as any).details[index] = { ...detailItem };
+        //     }
+        //   });
+
+        //   return;
+        // }
+
+        // Standard field handling
+        if (fieldValue === null || fieldValue === undefined) {
+          (state as any)[key] = fieldValue;
+        } else if (fieldValue?.constructor === Object) {
+          // Nested object
+          if (!(state as any)[key] || typeof (state as any)[key] !== "object") {
+            (state as any)[key] = {};
+          }
+          updateNested(
+            (state as any)[key] as Record<string, any>,
+            fieldValue as Record<string, any>
+          );
+        } else {
+          // Primitive, array, or other object type
+          if (Array.isArray(fieldValue)) {
+            (state as any)[key] = [...fieldValue];
+          } else if (fieldValue instanceof Date) {
+            (state as any)[key] = fieldValue.toISOString();
+          } else {
+            (state as any)[key] = fieldValue;
+          }
+        }
+      });
     },
   },
 });
@@ -515,6 +686,7 @@ export const {
   formStateSet,
   templatesData,
   formStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
   formStateTransactionUpdate,
   formStateTransactionMasterHandleFieldChange,
   formStateTransactionDetailsRowAdd,

@@ -28,14 +28,19 @@ import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
-    const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-    const userSession = useAppSelector((state: RootState) => state.UserSession);
-    const clientSession = useAppSelector((state: RootState) => state.ClientSession);
-    const softwareDate = useAppSelector(
-      (state: RootState) => state.ClientSession.softwareDate
-    );
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const clientSession = useAppSelector(
+    (state: RootState) => state.ClientSession
+  );
+  const softwareDate = useAppSelector(
+    (state: RootState) => state.ClientSession.softwareDate
+  );
 
   const {
     round,
@@ -193,7 +198,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     return { valid: isValid, message };
   };
-  
+
   const getClosedDate = async (api: APIClient, transactionType: string) => {
     const date = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/getClosedDate/`
@@ -212,10 +217,7 @@ export const useTransactionHelper = (transactionType: string) => {
     formElements: FormElementsState,
     commonParams: CommonParams
   ) => {
-    let {
-      result,
-      accFormStateHandleFieldChangeKeysOnly,
-    } = commonParams;
+    let { result } = commonParams;
     result = result
       ? result
       : {
@@ -273,9 +275,9 @@ export const useTransactionHelper = (transactionType: string) => {
       if (exchangeRate > 0) {
         result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
       }
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
     }
     return result;
   };
@@ -287,21 +289,15 @@ export const useTransactionHelper = (transactionType: string) => {
     ignoreCalculateTotal?: boolean
   ): DeepPartial<TransactionFormState> => {
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
-    let {
-      result,
-      accFormStateHandleFieldChangeKeysOnly,
-    } = commonParams;
+    let { result } = commonParams;
 
-    result = result
-      ? result
-      : {
-          transaction: {
-            details: [],
-          },
-        };
-    const detail = { ...transactionDetail };
+    result = result || { transaction: { details: [] } };
+    result.transaction ??= { details: [] };
+    result.transaction.details ??= [];
+    
+    const detail = { ...result.transaction.details[0] };
     // Early return if no product selected
-    if (!(transactionDetail.productID>0)) {
+    if (!(transactionDetail.productID > 0)) {
       return result;
     }
 
@@ -320,6 +316,7 @@ export const useTransactionHelper = (transactionType: string) => {
       let cost = 0;
       let unitPrice = Number(transactionDetail.unitPrice || 0);
 
+      detail.unitPrice = transactionDetail.unitPrice;
       // Handle RatePlusTax visibility and calculation
       if (
         transactionDetail.ratePlusTax !== undefined &&
@@ -384,8 +381,6 @@ export const useTransactionHelper = (transactionType: string) => {
       // Calculate total additional expense
       detail.totalAddExpense = round(addAmt * qty);
 
-      // Recalculate VAT percentage (in case it was updated)
-      vatPerc = Number(detail.vatPerc || 0);
 
       // Calculate VAT amount
       let vat = round((netValue * vatPerc) / 100, 4);
@@ -420,16 +415,16 @@ export const useTransactionHelper = (transactionType: string) => {
           qty,
           salesPrice: transactionDetail.salesPrice,
         },
-        formState,
+        formState
       );
-      detail.salesPrice = sp_margin ?? detail.salesPrice;
+      detail.salesPrice = sp_margin ?? transactionDetail.salesPrice;
 
       // Calculate profit and profit percentage
       let sp = Number(detail.salesPrice || 0);
 
       // Use actual sales price if available
-      if (Number(detail.actualSalesPrice || 0) > 0) {
-        sp = Number(detail.actualSalesPrice || 0);
+      if (Number(transactionDetail.actualSalesPrice || 0) > 0) {
+        sp = Number(transactionDetail.actualSalesPrice || 0);
       }
 
       // Adjust sales price if showing rate before tax
@@ -454,9 +449,6 @@ export const useTransactionHelper = (transactionType: string) => {
       //   calculateAutoSummary(formState);
       //   calculateTotal(formState);
       // }
-      if (!result.transaction) {
-        result.transaction = { details: [] };
-      }
 
       result.transaction.details = [detail];
 
@@ -467,13 +459,12 @@ export const useTransactionHelper = (transactionType: string) => {
           formState.formElements,
           {
             result,
-            accFormStateHandleFieldChangeKeysOnly,
           }
         );
       }
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result,updateOnlyGivenDetailsColumns: true }));
     } catch (error) {
       console.error("Error in calculateRowAmount:", error);
       // Handle error gracefully - could set default values or show user message
@@ -483,7 +474,7 @@ export const useTransactionHelper = (transactionType: string) => {
   };
   const calculateMarginPerRow = (
     detail: { total: number; qty: number; margin: number; salesPrice: number },
-    formState: TransactionFormState,
+    formState: TransactionFormState
   ): number | undefined => {
     try {
       // Initialize variables
@@ -543,10 +534,7 @@ export const useTransactionHelper = (transactionType: string) => {
     commonParams: CommonParams
   ): void => {
     try {
-      let {
-        result,
-        accFormStateHandleFieldChangeKeysOnly,
-      } = commonParams;
+      let { result } = commonParams;
 
       const detail = formState.transaction.details[rowIndex];
       const formType = formState.transaction.master.voucherForm;
@@ -618,16 +606,15 @@ export const useTransactionHelper = (transactionType: string) => {
           }
         }
       }
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in changeGrossToUnitRate:", error);
     }
   };
   const enableControls = (commonParams: CommonParams) => {
-    let { result,  accFormStateHandleFieldChangeKeysOnly } =
-      commonParams;
+    let { result } = commonParams;
 
     try {
       if (!result.formElements) {
@@ -656,9 +643,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Dispatch the updated state
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in enableControls:", error);
     } finally {
@@ -667,8 +654,7 @@ export const useTransactionHelper = (transactionType: string) => {
   };
 
   const disableControls = (commonParams: CommonParams) => {
-    let { result, accFormStateHandleFieldChangeKeysOnly } =
-      commonParams;
+    let { result } = commonParams;
 
     try {
       if (!result.formElements) {
@@ -711,9 +697,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Dispatch the updated state
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in disableControls:", error);
     } finally {
@@ -863,10 +849,7 @@ export const useTransactionHelper = (transactionType: string) => {
     formState: TransactionFormState,
     commonParams: CommonParams
   ) => {
-    let {
-      result,
-      accFormStateHandleFieldChangeKeysOnly,
-    } = commonParams;
+    let { result } = commonParams;
 
     try {
       let tot = 0;
@@ -904,9 +887,9 @@ export const useTransactionHelper = (transactionType: string) => {
       });
 
       // Dispatch the updated state
-      accFormStateHandleFieldChangeKeysOnly &&
+      formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in calculateSummary:", error);
     } finally {
@@ -919,13 +902,8 @@ export const useTransactionHelper = (transactionType: string) => {
     vType: string,
     formType: string,
     commonParams: CommonParams,
-    formState: TransactionFormState,
+    formState: TransactionFormState
   ) => {
-    let {
-      result,
-      accFormStateHandleFieldChangeKeysOnly,
-    } = commonParams;
-
     const detailsLength = details.length;
 
     let validDetailsCount = 0;
@@ -1025,7 +1003,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       detail.batchNo = row.batchNo;
       detail.manualBarcode = row.manualBarcode;
-debugger;
+      debugger;
       // Financial calculations
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
@@ -1143,7 +1121,7 @@ debugger;
     transDate: string,
     supplierLedgerId: number,
     warehouseId: number,
-    allowStockUpdate: boolean,
+    allowStockUpdate: boolean
   ) => {
     debugger;
     const outputDetails: TransactionDetail[] = [];
@@ -1155,7 +1133,7 @@ debugger;
       const rowNumber = i + 1;
 
       // Check if row is empty - break if product is empty (matching C# logic)
-      if (!(detail.productID>0)) {
+      if (!(detail.productID > 0)) {
         break;
       }
 
@@ -1219,7 +1197,7 @@ debugger;
         hasError = true;
         errors.push(`Row ${rowNumber}, Unit Column: Invalid Unit Selected`);
       }
-debugger;
+      debugger;
       if (
         Math.abs(
           outputRow.grossValue - outputRow.quantity * outputRow.unitPrice
@@ -1349,7 +1327,7 @@ debugger;
       errors,
     };
   };
-  
+
   const attachMaster = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,

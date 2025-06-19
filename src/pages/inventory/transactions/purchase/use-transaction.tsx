@@ -2193,13 +2193,15 @@ const master = attachMaster(formState);
  rowIndex: number,
  formState: TransactionFormState,
 ) => {
-let result: DeepPartial<TransactionFormState> = {};
+let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] } };
+
  try {
    if (!formState.transaction?.details?.[rowIndex]) {
      return false;
    }
 
    const detail = formState.transaction.details[0];
+   const outDetail:DeepPartial<TransactionDetail> = {};
    if(detail == undefined) {
     return;
    }
@@ -2207,32 +2209,37 @@ let result: DeepPartial<TransactionFormState> = {};
    switch (columnName) {
      case "unitPriceFC":
        if (formState.transaction.master.voucherForm === "Import") {
-         detail.unitPriceFC = text;
+         outDetail.unitPriceFC = text;
          const unitPriceFC = Number(detail.unitPriceFC || 0);
          const qty = Number(detail.qty || 0);
          const exchangeRate = Number(formState.transaction.master.exchangeRate || 1);
          
-         detail.unitPrice = round((unitPriceFC * exchangeRate),4);
-         detail.grossFC = round((unitPriceFC * qty), 3);
+         outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
+         outDetail.grossFC = round((unitPriceFC * qty), 3);
+         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
        }
        break;
 
      case "qty":
      case "unitPrice":
-       detail[columnName] = text;
+       outDetail[columnName] = text;
        // Calculate row amount
-       result = calculateRowAmount(detail , columnName, formState, {result:{}}, false);
+       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
        
        break;
 
      case "margin":
-       detail.margin = text;
+       outDetail.margin = text;
        break;
 
      case "salesPrice":
        {
-         detail.salesPrice = text;
-         const sp = Number(detail.salesPrice || 0);
+         outDetail.salesPrice = text;
+         const sp = Number(outDetail.salesPrice || 0);
          const netAmount = Number(detail.total || 0);
          let qty = Number(detail.qty || 0);
          
@@ -2244,7 +2251,8 @@ let result: DeepPartial<TransactionFormState> = {};
            marginPerc = ((sp / cost) - 1) * 100;
          }
          
-         detail.margin = round(marginPerc, 6);
+         outDetail.margin = round(marginPerc, 6);
+         result.transaction!.details = [outDetail]
        }
        break;
 
@@ -2254,8 +2262,8 @@ let result: DeepPartial<TransactionFormState> = {};
            return null;
          }
          
+           outDetail.product = text;
          if (text.trim() !== "") {
-           detail.product = text;
            
            if (text.trim() === "%") {
              return null;
@@ -2276,40 +2284,45 @@ let result: DeepPartial<TransactionFormState> = {};
            }
            
            // Set search parameters for product lookup
-           result.ui = {
-             ...result.ui,
-             productSearch: {
+           const params = JSON.stringify({
                searchText,
-               useCodeAndName: useCodeSearch,
-               showPanel: true,
-               position: {
-                 top: 0, // Calculate based on current cell position
-                 left: 0
-               }
-             }
-           };
+               searchByCode: false,
+               searchByCodeAndName: useCodeSearch,
+           })
+           result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {params, visible: true},
+              dgvProductBatches: {params, visible: false}
+            }
+           }
          } else {
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               showPanel: false
-             }
-           };
+           result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {visible: true},
+              dgvProductBatches: {visible: false}
+            }
+           }
          }
        }
        break;
 
      case "pCode":
        {
-         if (applicationSettings?.inventorySettings?.usePopupWindowForItemSearch) {
+         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
            return result;
          }
          
-         detail.pCode = text;
+         outDetail.pCode = text;
          
          if (text !== "" && text !== "%") {
            let searchText = "";
-           const useInSearch = formState.ui?.searchSettings?.inSearch || false;
+           const useInSearch = formState.userConfig?.useInSearch || false;
            
            if (useInSearch) {
              searchText = "%" + text;
@@ -2318,35 +2331,41 @@ let result: DeepPartial<TransactionFormState> = {};
            }
            
            // Set search parameters for product code lookup
-           result.ui = {
-             ...result.ui,
-             productSearch: {
+           const params = JSON.stringify({
                searchText,
                searchByCode: true,
-               showPanel: true,
-               position: {
-                 top: 0, // Calculate based on current cell position
-                 left: 0
-               }
-             }
-           };
+               searchByCodeAndName: false,
+           })
+            result ={
+              transaction:{
+                details: [outDetail]
+              },
+              formElements:{
+                dgvProduct: {params, visible: true},
+                dgvProductBatches: {params, visible: false}
+              }
+            }
+
          } else {
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               showPanel: false
-             }
-           };
+          result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {visible: true},
+              dgvProductBatches: {visible: false}
+            }
+           }
          }
        }
        break;
 
-     default:
-       // Handle other columns
-       if (detail.hasOwnProperty(columnName)) {
-         detail[columnName] = text;
-       }
-       break;
+    //  default:
+    //    // Handle other columns
+    //    if (detail.hasOwnProperty(columnName)) {
+    //      detail[columnName as keyof TransactionDetail] = text;
+    //    }
+    //    break;
    }
 
    // Dispatch the updated state
@@ -2360,6 +2379,78 @@ let result: DeepPartial<TransactionFormState> = {};
    return result;
  }
 };
+const handleTextDataKeyPress = (
+ key: string,
+ columnName: string,
+ currentText: string,
+ selectionStart: number,
+ rowIndex: number,
+ formState: TransactionFormState,
+ applicationSettings: ApplicationSettingsType
+): { handled: boolean; error?: string } => {
+ try {
+   switch (columnName) {
+     // Numeric columns with unit decimal restrictions
+     case "salesPrice":
+     case "margin":
+     case "qty":
+       if (applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint === true) {
+         const detail = formState.transaction.details[rowIndex];
+         const unitId = Number(detail?.unitID || 0);
+         
+         // Get decimal places for the unit (would need to implement this service call)
+         const decimalCount = detail?.unitDecimalPoint;
+         
+         if (decimalCount === 0) {
+           if (key === '.') {
+             return { handled: true };
+           }
+         } else {
+           if (currentText.includes('.')) {
+             const decimalIndex = currentText.indexOf('.');
+             if (selectionStart > decimalIndex && key !== 'Backspace') {
+               let count = 1;
+               for (let i = decimalIndex + 1; i < currentText.length; i++) {
+                 if (decimalCount === count) {
+                   return { handled: true };
+                 }
+                 count++;
+               }
+             }
+           }
+         }
+       }
+       break;
+
+     // Standard numeric columns
+     case "unitPrice":
+     case "discount":
+     case "discPerc":
+     case "vatPerc":
+     case "vatAmount":
+     case "stickerQty":
+     case "total":
+     case "netValue":
+     case "gross":
+     case "unitPriceFC":
+       return isNumericInput(key, currentText, selectionStart);
+
+     default:
+       // Allow all characters for non-numeric columns
+       return { handled: false };
+   }
+
+   return { handled: false };
+
+ } catch (error) {
+   console.error('Error in handleTextDataKeyPress:', error);
+   return { 
+     handled: true, 
+     error: 'Error processing key input. Please try again.' 
+   };
+ }
+};
+
 
 
   return {

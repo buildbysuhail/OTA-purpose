@@ -228,6 +228,7 @@ export interface TransactionDetail {
   free: number;
   unit: string;
   unitID: number;
+  unitDecimalPoint: number;
   unitPrice: number;
   unitPriceTag: number;
   gross: number;

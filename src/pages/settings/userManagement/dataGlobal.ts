@@ -965,7 +965,7 @@ export const userRights: UserRight[] = [
 { id: 203020402, headId: 2030204, name: "NdTaxReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Tax Report Settings" },
 { id: 203020403, headId: 2030204, name: "NdTaxReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Tax Report Export" },
 
-{ id: 2030205, headId: 20302, name: "NdSalesReturnSummary", fullName: "Sales Return Summary", formCode: "RPTSRSUM", treeNode: 3, description: "Manage Sales Return Summary" },
+{ id: 2030205, headId: 20302, name: "NdSalesReturnSummary", fullName: "Sales Return Summary", formCode: "RPTSRSM", treeNode: 3, description: "Manage Sales Return Summary" },
 { id: 203020501, headId: 2030205, name: "NdSalesReturnSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Sales Return Summary Print" },
 { id: 203020502, headId: 2030205, name: "NdSalesReturnSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Sales Return Summary Settings" },
 { id: 203020503, headId: 2030205, name: "NdSalesReturnSummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Sales Return Summary Export" },
@@ -1075,6 +1075,11 @@ export const userRights: UserRight[] = [
 { id: 203022601, headId: 2030226, name: "NdSalesTransferReports_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Sales Transfer Reports" },
 { id: 203022602, headId: 2030226, name: "NdSalesTransferReports_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Sales Transfer Reports" },
 { id: 203022603, headId: 2030226, name: "NdSalesTransferReports_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Sales Transfer Reports" },
+
+{ id: 2030227, headId: 20302, name: "NdSalesEstimateRegisterReports", fullName: "Sales Estimate Register Report", formCode: "RPTSERGSTR", treeNode: 3, description: "Manage Sales Estimate Register Report" },
+{ id: 203022701, headId: 2030227, name: "NdSalesEstimateRegisterReports_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Sales Estimate Register Report" },
+{ id: 203022702, headId: 2030227, name: "NdSalesEstimateRegisterReports_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Sales Estimate Register Report" },
+{ id: 203022703, headId: 2030227, name: "NdSalesEstimateRegisterReports_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Sales Estimate Register Report" },
 
 
 //#endregion NOT IN 1050
@@ -1354,7 +1359,7 @@ export const userRights: UserRight[] = [
 { id: 203052902, headId: 2030529, name: "NdBrandWiseSalesReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Brand Wise Sales Report Settings" },
 { id: 203052903, headId: 2030529, name: "NdBrandWiseSalesReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Brand Wise Sales Report Export" },
 
-  // Transaction Summary - Already provided in your example
+  //#endregion Itemwise Report
   { id: 20306, headId: 203, name: "TransactionSummary", fullName: "Transaction Summary", formCode: "INVTRSUM", treeNode: 3, description: "Manage Transaction Summary" },
   { id: 2030601, headId: 20306, name: "TransactionSummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Transaction Summary Print" },
   { id: 2030602, headId: 20306, name: "TransactionSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Transaction Summary Settings" },
@@ -1682,7 +1687,7 @@ export const userRights: UserRight[] = [
 
 
 
-  //#endregion Itemwise Report
+
 
 
 

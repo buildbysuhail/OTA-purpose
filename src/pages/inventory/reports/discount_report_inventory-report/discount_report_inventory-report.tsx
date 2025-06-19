@@ -350,7 +350,7 @@ const DiscountReportInventory = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                filterText="{voucherType =='SI' && Sales Discount Report} {voucherType =='PI'&& Purchase Discount Report} {voucherType =='SR'&& Sales Discount Report} {voucherType =='PR'&& Purchase Discount Report} {voucherType =='SO'&& Sales Order Discount Report} {voucherType =='SE' && Sales Estimate Discount Report} {voucherType =='SQ' && Sales Quotation Discount Report} {voucherType =='PE'&& Purchase Estimate Discount Report}{voucherType =='PO'&& Purchase Order Discount Report}{voucherType =='OS'&& Opening stock Discount Report}{salesRouteID > 0 && Route Name :[salesRoute]} Between : {fromDate} - {toDate}"
+                filterText="{voucherType =='SI' && Sales Discount Report} {voucherType =='PI' && Purchase Discount Report} {voucherType =='SR' && Sales Discount Report} {voucherType =='PR' && Purchase Discount Report} {voucherType =='SO' && Sales Order Discount Report} {voucherType =='SE' && Sales Estimate Discount Report} {voucherType =='SQ' && Sales Quotation Discount Report} {voucherType =='PE' && Purchase Estimate Discount Report}{voucherType =='PO' && Purchase Order Discount Report}{voucherType =='OS' && Opening stock Discount Report}{salesRouteID > 0 && Route Name :[salesRoute]} Between : {fromDate} - {toDate}"
                 dataUrl={Urls.discount_report_inventory}
                 hideGridAddButton={true}
                 enablefilter={true}

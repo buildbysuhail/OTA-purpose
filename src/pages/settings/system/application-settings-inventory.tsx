@@ -946,6 +946,19 @@ const InventorySettingsForm = () => {
                   )
                 }
               />
+
+              <ERPCheckbox
+                id="blockUnitOnDecimalPoint"
+                checked={formState.blockUnitOnDecimalPoint}
+                data={formState}
+                label={t("block_unit_on_decimal_point")}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "blockUnitOnDecimalPoint",
+                    data.blockUnitOnDecimalPoint
+                  )
+                }
+              />
             </div>
           </div>
           {/* <div className="flex justify-end">

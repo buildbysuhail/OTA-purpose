@@ -292,5 +292,6 @@
     "main_settings": "الإعدادات الرئيسية",
     "accounts_settings": "إعدادات الحسابات",
     "inventory_settings": "إعدادات المخزون",
-    "taxes": "الضرائب"
+    "taxes": "الضرائب",
+    "block_unit_on_decimal_point": "حظر الوحدة على النقطة العشرية"
 }

@@ -74,7 +74,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       console.error("Error post System Code settings:", error);
     } finally {
       setIsOpen(false);
-    } 
+    }
   };
 
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
@@ -147,109 +147,127 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             <div className="grid grid-rows-3 gap-6 p-4">
 
               <div className="grid grid-cols-3 gap-3">
-              <ERPCheckbox
-                id="useBarcode"
-                label={t("use_barcode")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useBarcode}
-                onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
-              />
-
-              <ERPCheckbox
-                id="resizeGrid"
-                label={t("resize_grid")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.resizeGrid}
-                onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
-              />
-
-              <ERPCheckbox
-                id="showProductInfoPopup"
-                label={t("show_product_info_popup")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.showProductInfoPopup}
-                onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
-              />
-
-              <ERPCheckbox
-                id="showPurchaserOnly"
-                label={t("show_purchaser_only")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.showPurchaserOnly}
-                onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
-              />
                 <ERPCheckbox
-                id="useSupplierProductCode"
-                label={t("use_supplier_product_code")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useSupplierProductCode}
-                onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
-              />
-
-              <ERPCheckbox
-                id="enableItemCodeSearchInNameColumn"
-                label={t("enable_item_code_search_in_name_column")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
-                onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
-              />
-
-              <ERPCheckbox
-                id="holdSameCode"
-                label={t("hold_same_code")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.holdSameCode}
-                onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
-              />
-                <ERPCheckbox
-                id="printPreview"
-                label={t("print_preview")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.printPreview}
-                onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-              />
-
-              <ERPCheckbox
-                id="dummyProducts"
-                label={t("dummy_products")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.dummyProducts}
-                onChangeData={(e) => handleFieldChange("dummyProducts", e.dummyProducts)}
-              />
-
-              <ERPCheckbox
-                id="duplicationMessage"
-                label={t("duplication_message")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.duplicationMessage}
-                onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
-              />
-                 <ERPCheckbox
-                id="setDefaultQuantity"
-                label={t("set_default_quantity")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.setDefaultQuantity}
-                onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
-              /> 
-
-              <div className="flex items-center justify-end"> 
-                 <ERPButton
-                  // startIcon="ri-arrow-go-back-line"
-                  title="Undo Edit Mode"
-                  variant={"secondary"}
-                  className=" w-36 h-8"
-                  onClick={resetThemeChange}
+                  id="useBarcode"
+                  label={t("use_barcode")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.useBarcode}
+                  onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
                 />
-                 {/* <button
+
+                <ERPCheckbox
+                  id="resizeGrid"
+                  label={t("resize_grid")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.resizeGrid}
+                  onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
+                />
+
+                <ERPCheckbox
+                  id="showProductInfoPopup"
+                  label={t("show_product_info_popup")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.showProductInfoPopup}
+                  onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
+                />
+
+                <ERPCheckbox
+                  id="showPurchaserOnly"
+                  label={t("show_purchaser_only")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.showPurchaserOnly}
+                  onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
+                />
+                <ERPCheckbox
+                  id="useSupplierProductCode"
+                  label={t("use_supplier_product_code")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.useSupplierProductCode}
+                  onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
+                />
+
+                <ERPCheckbox
+                  id="enableItemCodeSearchInNameColumn"
+                  label={t("enable_item_code_search_in_name_column")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
+                  onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
+                />
+
+                <ERPCheckbox
+                  id="holdSameCode"
+                  label={t("hold_same_code")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.holdSameCode}
+                  onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
+                />
+
+                <ERPCheckbox
+                  id="printPreview"
+                  label={t("print_preview")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.printPreview}
+                  onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+                />
+
+                <ERPCheckbox
+                  id="dummyProducts"
+                  label={t("dummy_products")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.dummyProducts}
+                  onChangeData={(e) => handleFieldChange("dummyProducts", e.dummyProducts)}
+                />
+
+                <ERPCheckbox
+                  id="duplicationMessage"
+                  label={t("duplication_message")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.duplicationMessage}
+                  onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
+                />
+
+                <ERPCheckbox
+                  id="setDefaultQuantity"
+                  label={t("set_default_quantity")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.setDefaultQuantity}
+                  onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
+                />
+
+                <ERPCheckbox
+                  id="useInSearch"
+                  label={t("use_in_search")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.useInSearch}
+                  onChangeData={(e) => handleFieldChange("useInSearch", e.useInSearch)}
+                />
+                
+                <ERPCheckbox
+                  id="useCodeSearch"
+                  label={t("use_code_search")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.useCodeSearch}
+                  onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
+                />
+
+                <div className="flex items-center justify-end">
+                  <ERPButton
+                    // startIcon="ri-arrow-go-back-line"
+                    title="Undo Edit Mode"
+                    variant={"secondary"}
+                    className=" w-36 h-8"
+                    onClick={resetThemeChange}
+                  />
+                  {/* <button
                   // onClick={}
                  className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
                   <RotateCcw className="w-4 h-4" />  
                 </button> */}
-              </div>
-                
+                </div>
+
 
               </div>
-            
+
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}

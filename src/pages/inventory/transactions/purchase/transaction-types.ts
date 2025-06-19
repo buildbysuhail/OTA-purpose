@@ -228,6 +228,7 @@ export interface TransactionDetail {
   free: number;
   unit: string;
   unitID: number;
+  unitDecimalPoint: number;
   unitPrice: number;
   unitPriceTag: number;
   gross: number;
@@ -353,6 +354,8 @@ export interface UserConfig {
   dummyProducts?: boolean;
   duplicationMessage?: boolean;
   setDefaultQuantity?: boolean;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
 }
 
 export type FormElementsState = {
@@ -441,6 +444,7 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[] ;
+  showQuantityFactors: boolean;
   
 }
 export interface PrintTransProps {

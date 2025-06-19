@@ -11,11 +11,9 @@ import DailyBalanceReportFilter, {
 } from "./daily-balance-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-const DailyBalanceAmount = () => {
-  const dispatch = useAppDispatch();
+const DailyBalanceReport = () => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "customer",
@@ -191,4 +189,4 @@ const DailyBalanceAmount = () => {
     </Fragment>
   );
 };
-export default DailyBalanceAmount;
+export default DailyBalanceReport;

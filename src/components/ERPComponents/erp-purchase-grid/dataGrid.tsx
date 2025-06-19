@@ -11,7 +11,7 @@ import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
 import type { FormElementState, TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
-import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -35,6 +35,7 @@ interface DataGridProps<T extends DataItem> {
   onAddData?: (newItem: T) => void;
   allowColumnReordering?: boolean;
   summaryConfig?: SummaryConfig<TransactionDetail>[];
+
 }
 
 interface EditableCellProps {
@@ -64,7 +65,8 @@ interface RowData {
   gridId: string;
   listRef: React.RefObject<List>;
   itemCount: number;
-  gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData
+  gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData  
+  onQPressed: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
@@ -216,6 +218,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
       className="w-full !h-[20px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
       value={localValue}
       noBorder
+
       readOnly={column.readOnly}
       onInput={handleInput}
       onFocus={handleFocus}
@@ -364,7 +367,11 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
 
       const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
       const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
-
+debugger;
+      if (["Q", "q"].includes(e.key) && column.dataField == "qty") {
+        data.onQPressed(e, column.dataField as keyof TransactionDetail)
+        return;
+      }
       if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
         return;
       }
@@ -659,6 +666,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     listRef: listRef,
     itemCount: formState.transaction?.details.length || 0,
     gridRef: gridRef,
+    onQPressed: (e: any, column: keyof TransactionDetail) =>{
+      debugger;
+      dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
+    }
   }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);
 
   useEffect(() => {

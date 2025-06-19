@@ -403,6 +403,8 @@ const Urls = {
     "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
   item_wise_purchase_return_estimate_summary:
     "/Inventory/RptItemwiseReport/ItemwisePurchaseReturnEstimate/",
+      itemwise_grouped_brandwise_sales:
+    "/Inventory/RptItemwiseReport/GroupedBrandWiseSales/",
   product_summary_transaction:
     "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/",
   product_summary_basic_info:
@@ -420,13 +422,15 @@ const Urls = {
   branch_transfer_in: "/Inventory/RptStockReport/BranchTransferIn/",
   branch_transfer_summary_out:
     "/Inventory/RptStockReport/BranchTransferSummaryOut/",
-  branch_transfer_summary_in:
-    "/Inventory/RptStockReport/BranchTransferSummaryIn/",
+  branch_transfer_summary_in: "/Inventory/RptStockReport/BranchTransferSummaryIn/",
+  stock_journal_excess_stock_sp: "/Inventory/RptStockReport/ExcessStockSPReport/",
+  stock_journal_shortage_stock_sp: "/Inventory/RptStockReport/ShortageStockSPReport/",
   sales_summary: "/Inventory/RptSalesReport/SalesSummary/",
   sales_tax_report_summary: "/Inventory/RptSalesReport/TaxReportSalesSummary/",
   sales_tax_report_detailed:
     "/Inventory/RptSalesReport/TaxReportSalesDetailed/",
   sales_return_summary: "/Inventory/RptSalesReport/SalesReturnSummary/",
+  sales_return_estimate_summary: "/Inventory/RptSalesReport/SalesReturnEstimateSummary/",
   sales_return_register: "/Inventory/RptSalesReport/SalesReturnRegister/",
   sales_and_sales_return:
     "/Inventory/RptSalesReport/SalesAndSalesReturnReport/",
@@ -466,14 +470,15 @@ const Urls = {
   ksa_e_invoice_detailed:
     "/Inventory/RptTAXReport/KSAEinvoiceStatusReportDetailed/",
   itemwise_sales_summary: "/Inventory/RptItemwiseReport/ItemwiseSalesSummary/",
+  itemwise_sales_transfer_summary: "/Inventory/RptItemwiseReport/ItemwiseSalesTransfer/",
   itemwise_sales_return_summary:
     "/Inventory/RptItemwiseReport/ItemwiseSalesReturnSummary/",
   itemwise_sales_order_summary:
     "/Inventory/RptItemwiseReport/ItemwiseSalesOrderSummary/",
   itemwise_sales_quotation_summary:
     "/Inventory/RptItemwiseReport/ItemwiseSalesQuotationSummary/",
-  itemwise_sales_estimate_summary:
-    "/Inventory/RptItemwiseReport/ItemwiseSalesEstimateSummary/",
+  itemwise_sales_estimate_summary: "/Inventory/RptItemwiseReport/ItemwiseSalesEstimateSummary/",
+  itemwise_sales_return_estimate_summary: "/Inventory/RptItemwiseReport/ItemwiseSalesReturnEstimate/",
   itemwise_sales_and_sales_return_summary:
     "/Inventory/RptItemwiseReport/ItemwiseSalesAndSalesReturnSummary/",
   itemwise_opening_stock_summary:
@@ -498,8 +503,9 @@ const Urls = {
     "/Inventory/RptItemwiseReport/ItemwiseGoodsReceiptSummary/",
   itemwise_goods_receipt_return_summary:
     "/Inventory/RptItemwiseReport/ItemwiseGoodsReceiptReturnSummary/",
-  itemwise_goods_request_summary:
-    "/Inventory/RptItemwiseReport/ItemwiseGoodsRequestSummary/",
+  itemwise_goods_request_summary: "/Inventory/RptItemwiseReport/ItemwiseGoodsRequestSummary/",
+  itemwise_excess_stock_sp: "/Inventory/RptItemwiseReport/ItemwiseExcessStockSP/",
+  itemwise_shortage_stock_sp: "/Inventory/RptItemwiseReport/ItemwiseShoratageStockSP/",
   transaction_summary: "/Inventory/RptInventoryReport/TransactionSummary/",
   inventory_transaction_register:
     "/Inventory/RptInventoryReport/InventoryTransactionRegister/",
@@ -562,6 +568,7 @@ const Urls = {
   void_report: "/Inventory/RptAdvancedReport/VoidReport/",
   counter_report: "/Inventory/RptInventoryReport/CounterReport/",
   sales_return_estimate_register: "/Inventory/RptSalesReport/SalesReturnEstimateRegister/",
+  sales_estimate_register: "/Inventory/RptSalesReport/SalesEstimateRegister/",
   diagnosis_report: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",
   diagnosis_report_zero_rate_productlist: "/Inventory/RptAdvancedReport/DiagnosisReportZeroRateProductlist/",
   diagnosis_report_post_dated_transactions: "/Inventory/RptAdvancedReport/DiagnosisReportPostDatedTransactions/",
@@ -586,6 +593,8 @@ const Urls = {
   diagnosis_report_of_zero_mrp_product_list: "/Inventory/RptAdvancedReport/DiagnosisReportZeroMRPProductList/",
   diagnosis_report_of_invalid_products: "/Inventory/RptAdvancedReport/DiagnosisReportInvalidProducts/",
   diagnosis_report_of_products_with_multi_batch: "/Inventory/RptAdvancedReport/DiagnosisReportProductsWithMultiBatch/",
+
+  inventory_price_report_products_with_price_category: "/Inventory/RptInventoryReport/ProductsWithPriceCategoryReport/",
 
 
   customer_visit_total_visit: "/Inventory/RptCustomerVisitReport/CustomerVisitTotalVisit",

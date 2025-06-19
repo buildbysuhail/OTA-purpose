@@ -65,6 +65,7 @@ import {
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { accFormStateHandleFieldChangeKeysOnly } from "../../../accounts/transactions/reducer";
 import { useTransactionHelper } from "./use-transaction-helper";
+import { DeepPartial } from "redux";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -2186,7 +2187,271 @@ const master = attachMaster(formState);
   //       break;
   //   }
   // };
- 
+  const handleTextDataChange = (
+ text: any,
+ columnName: string,
+ rowIndex: number,
+ formState: TransactionFormState,
+) => {
+let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] } };
+
+ try {
+   if (!formState.transaction?.details?.[rowIndex]) {
+     return false;
+   }
+
+   const detail = formState.transaction.details[0];
+   const outDetail:DeepPartial<TransactionDetail> = {};
+   if(detail == undefined) {
+    return;
+   }
+   
+   switch (columnName) {
+     case "unitPriceFC":
+       if (formState.transaction.master.voucherForm === "Import") {
+         outDetail.unitPriceFC = text;
+         const unitPriceFC = Number(detail.unitPriceFC || 0);
+         const qty = Number(detail.qty || 0);
+         const exchangeRate = Number(formState.transaction.master.exchangeRate || 1);
+         
+         outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
+         outDetail.grossFC = round((unitPriceFC * qty), 3);
+         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
+       }
+       break;
+
+     case "qty":
+     case "unitPrice":
+       outDetail[columnName] = text;
+       // Calculate row amount
+       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
+       
+       break;
+
+     case "margin":
+       outDetail.margin = text;
+       break;
+
+     case "salesPrice":
+       {
+         outDetail.salesPrice = text;
+         const sp = Number(outDetail.salesPrice || 0);
+         const netAmount = Number(detail.total || 0);
+         let qty = Number(detail.qty || 0);
+         
+         if (qty === 0) qty = 1;
+         const cost = netAmount / qty;
+         
+         let marginPerc = 0;
+         if (cost !== 0) {
+           marginPerc = ((sp / cost) - 1) * 100;
+         }
+         
+         outDetail.margin = round(marginPerc, 6);
+         result.transaction!.details = [outDetail]
+       }
+       break;
+
+     case "product":
+       {
+         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
+           return null;
+         }
+         
+           outDetail.product = text;
+         if (text.trim() !== "") {
+           
+           if (text.trim() === "%") {
+             return null;
+           }
+           
+           let searchText = "";
+           const useInSearch = formState.userConfig?.useInSearch || false;
+           const useCodeSearch = formState.userConfig?.useCodeSearch || false;
+           
+           if (useInSearch && text.length > 2) {
+             searchText = "%" + text;
+           } else {
+             searchText = text;
+           }
+           
+           if (applicationSettings?.productsSettings?.advancedProductSearching) {
+             searchText = searchText.replace(/ /g, "%");
+           }
+           
+           // Set search parameters for product lookup
+           const params = JSON.stringify({
+               searchText,
+               searchByCode: false,
+               searchByCodeAndName: useCodeSearch,
+           })
+           result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {params, visible: true},
+              dgvProductBatches: {params, visible: false}
+            }
+           }
+         } else {
+           result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {visible: true},
+              dgvProductBatches: {visible: false}
+            }
+           }
+         }
+       }
+       break;
+
+     case "pCode":
+       {
+         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
+           return result;
+         }
+         
+         outDetail.pCode = text;
+         
+         if (text !== "" && text !== "%") {
+           let searchText = "";
+           const useInSearch = formState.userConfig?.useInSearch || false;
+           
+           if (useInSearch) {
+             searchText = "%" + text;
+           } else {
+             searchText = text;
+           }
+           
+           // Set search parameters for product code lookup
+           const params = JSON.stringify({
+               searchText,
+               searchByCode: true,
+               searchByCodeAndName: false,
+           })
+            result ={
+              transaction:{
+                details: [outDetail]
+              },
+              formElements:{
+                dgvProduct: {params, visible: true},
+                dgvProductBatches: {params, visible: false}
+              }
+            }
+
+         } else {
+          result ={
+            transaction:{
+              details: [outDetail]
+            },
+            formElements:{
+              dgvProduct: {visible: true},
+              dgvProductBatches: {visible: false}
+            }
+           }
+         }
+       }
+       break;
+
+    //  default:
+    //    // Handle other columns
+    //    if (detail.hasOwnProperty(columnName)) {
+    //      detail[columnName as keyof TransactionDetail] = text;
+    //    }
+    //    break;
+   }
+
+   // Dispatch the updated state
+   accFormStateHandleFieldChangeKeysOnly &&
+     dispatch &&
+     dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+
+ } catch (error) {
+   console.error('Error in handleTextDataChange:', error);
+ } finally {
+   return result;
+ }
+};
+const handleTextDataKeyPress = (
+ key: string,
+ columnName: string,
+ currentText: string,
+ selectionStart: number,
+ rowIndex: number,
+ formState: TransactionFormState,
+ applicationSettings: ApplicationSettingsType
+): { handled: boolean; error?: string } => {
+ try {
+   switch (columnName) {
+     // Numeric columns with unit decimal restrictions
+     case "salesPrice":
+     case "margin":
+     case "qty":
+       if (applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint === true) {
+         const detail = formState.transaction.details[rowIndex];
+         const unitId = Number(detail?.unitID || 0);
+         
+         // Get decimal places for the unit (would need to implement this service call)
+         const decimalCount = detail?.unitDecimalPoint;
+         
+         if (decimalCount === 0) {
+           if (key === '.') {
+             return { handled: true };
+           }
+         } else {
+           if (currentText.includes('.')) {
+             const decimalIndex = currentText.indexOf('.');
+             if (selectionStart > decimalIndex && key !== 'Backspace') {
+               let count = 1;
+               for (let i = decimalIndex + 1; i < currentText.length; i++) {
+                 if (decimalCount === count) {
+                   return { handled: true };
+                 }
+                 count++;
+               }
+             }
+           }
+         }
+       }
+       break;
+
+     // Standard numeric columns
+     case "unitPrice":
+     case "discount":
+     case "discPerc":
+     case "vatPerc":
+     case "vatAmount":
+     case "stickerQty":
+     case "total":
+     case "netValue":
+     case "gross":
+     case "unitPriceFC":
+       return isNumericInput(key, currentText, selectionStart);
+
+     default:
+       // Allow all characters for non-numeric columns
+       return { handled: false };
+   }
+
+   return { handled: false };
+
+ } catch (error) {
+   console.error('Error in handleTextDataKeyPress:', error);
+   return { 
+     handled: true, 
+     error: 'Error processing key input. Please try again.' 
+   };
+ }
+};
+
+
 
   return {
     undoEditMode,

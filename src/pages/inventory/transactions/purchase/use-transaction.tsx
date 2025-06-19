@@ -2256,109 +2256,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
        }
        break;
 
-     case "product":
-       {
-         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
-           return null;
-         }
-         
-           outDetail.product = text;
-         if (text.trim() !== "") {
-           
-           if (text.trim() === "%") {
-             return null;
-           }
-           
-           let searchText = "";
-           const useInSearch = formState.userConfig?.useInSearch || false;
-           const useCodeSearch = formState.userConfig?.useCodeSearch || false;
-           
-           if (useInSearch && text.length > 2) {
-             searchText = "%" + text;
-           } else {
-             searchText = text;
-           }
-           
-           if (applicationSettings?.productsSettings?.advancedProductSearching) {
-             searchText = searchText.replace(/ /g, "%");
-           }
-           
-           // Set search parameters for product lookup
-           const params = JSON.stringify({
-               searchText,
-               searchByCode: false,
-               searchByCodeAndName: useCodeSearch,
-           })
-           result ={
-            transaction:{
-              details: [outDetail]
-            },
-            formElements:{
-              dgvProduct: {params, visible: true},
-              dgvProductBatches: {params, visible: false}
-            }
-           }
-         } else {
-           result ={
-            transaction:{
-              details: [outDetail]
-            },
-            formElements:{
-              dgvProduct: {visible: true},
-              dgvProductBatches: {visible: false}
-            }
-           }
-         }
-       }
-       break;
-
-     case "pCode":
-       {
-         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
-           return result;
-         }
-         
-         outDetail.pCode = text;
-         
-         if (text !== "" && text !== "%") {
-           let searchText = "";
-           const useInSearch = formState.userConfig?.useInSearch || false;
-           
-           if (useInSearch) {
-             searchText = "%" + text;
-           } else {
-             searchText = text;
-           }
-           
-           // Set search parameters for product code lookup
-           const params = JSON.stringify({
-               searchText,
-               searchByCode: true,
-               searchByCodeAndName: false,
-           })
-            result ={
-              transaction:{
-                details: [outDetail]
-              },
-              formElements:{
-                dgvProduct: {params, visible: true},
-                dgvProductBatches: {params, visible: false}
-              }
-            }
-
-         } else {
-          result ={
-            transaction:{
-              details: [outDetail]
-            },
-            formElements:{
-              dgvProduct: {visible: true},
-              dgvProductBatches: {visible: false}
-            }
-           }
-         }
-       }
-       break;
+     
 
     //  default:
     //    // Handle other columns
@@ -2369,9 +2267,9 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
    }
 
    // Dispatch the updated state
-  //  accFormStateHandleFieldChangeKeysOnly &&
-  //    dispatch &&
-  //    dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+   accFormStateHandleFieldChangeKeysOnly &&
+     dispatch &&
+     dispatch(accFormStateHandleFieldChangeKeysOnly({fields:result}));
 
  } catch (error) {
    console.error('Error in handleTextDataChange:', error);

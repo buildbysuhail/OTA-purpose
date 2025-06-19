@@ -478,7 +478,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-        debugger;
+        
         _formState = await loadTransVoucher(
           false,
           voucherNo,
@@ -489,7 +489,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
-        debugger;
+        
        _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
 
       _formState = {

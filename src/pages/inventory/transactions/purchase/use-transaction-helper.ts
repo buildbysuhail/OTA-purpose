@@ -1003,7 +1003,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       detail.batchNo = row.batchNo;
       detail.manualBarcode = row.manualBarcode;
-      debugger;
+      
       // Financial calculations
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
@@ -1123,7 +1123,7 @@ export const useTransactionHelper = (transactionType: string) => {
     warehouseId: number,
     allowStockUpdate: boolean
   ) => {
-    debugger;
+    
     const outputDetails: TransactionDetail[] = [];
     const errors: string[] = [];
     let hasError = false;
@@ -1197,7 +1197,7 @@ export const useTransactionHelper = (transactionType: string) => {
         hasError = true;
         errors.push(`Row ${rowNumber}, Unit Column: Invalid Unit Selected`);
       }
-      debugger;
+      
       if (
         Math.abs(
           outputRow.grossValue - outputRow.quantity * outputRow.unitPrice

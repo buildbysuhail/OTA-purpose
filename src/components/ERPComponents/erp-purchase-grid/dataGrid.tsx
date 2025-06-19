@@ -105,7 +105,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
 
   const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     let inputValue = e.currentTarget.value;
-
+debugger;
     // Check if the input is just a dot (and nothing else)
     if (column.dataType === "number" && inputValue === '.') {
       inputValue = '0.';
@@ -140,19 +140,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
     );
   };
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    if (column.dataType === "number") {
-      const pastedText = e.clipboardData.getData('text');
-      const currentValue = localValue;
-      const startPos = inputRef.current?.selectionStart || 0;
-      const endPos = inputRef.current?.selectionEnd || 0;
-      const newValue = currentValue.substring(0, startPos) + pastedText + currentValue.substring(endPos);
-      if (!validateNumberInput(newValue)) {
-        e.preventDefault();
-      }
-    }
-  };
-
+  
   const handleFocus = () => {
     onFocus();
     inputRef.current?.select();
@@ -170,41 +158,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
       const cursorPosition = inputElement?.selectionStart || 0;
       const beforeCursor = currentValue.substring(0, cursorPosition);
 
-      // If the key is a dot and the input is empty or cursor is at position 0
-      if (key === '.') {
-        // Check if we're at the start of the input or after a minus sign
-        if (cursorPosition === 0 || beforeCursor === '-') {
-          e.preventDefault();
-          const newValue = beforeCursor === '-' ? '-0.' : '0.';
-
-          if (inputElement) {
-            // Insert the new value at cursor position
-            const afterCursor = currentValue.substring(cursorPosition);
-            const fullNewValue = beforeCursor + newValue + afterCursor;
-
-            inputElement.value = fullNewValue;
-
-            // Set the cursor position right after the decimal point
-            setTimeout(() => {
-              if (inputElement) {
-                const newCursorPosition = cursorPosition + (beforeCursor === '-' ? 3 : 2); // For "-0." or "0."
-                inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
-              }
-            }, 0);
-          }
-
-          // Update local state and dispatch
-          const finalNewValue = beforeCursor === '-' ? '-0.' + currentValue.substring(cursorPosition) : '0.' + currentValue.substring(cursorPosition);
-          setLocalValue(finalNewValue);
-          dispatch(
-            formStateTransactionDetailsRowUpdate({
-              index: rowIndex,
-              key: column.dataField as keyof TransactionDetail,
-              value: finalNewValue, // Store the string value to preserve the decimal point
-            })
-          );
-        }
-      }
     }
 
     // Call the original onKeyDown for navigation, etc.
@@ -227,7 +180,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
       onFocus={handleFocus}
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
-      onPaste={handlePaste}
       tabIndex={0}
     />
   );
@@ -370,7 +322,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
 
       const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
       const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
-debugger;
+
       if (["Q", "q"].includes(e.key) && column.dataField == "qty") {
         data.onQPressed(e, column.dataField as keyof TransactionDetail)
         return;
@@ -693,7 +645,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     itemCount: formState.transaction?.details.length || 0,
     gridRef: gridRef,
     onQPressed: (e: any, column: keyof TransactionDetail) =>{
-      debugger;
+      
       dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
     }
   }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);

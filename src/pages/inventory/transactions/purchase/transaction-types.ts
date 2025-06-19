@@ -444,6 +444,7 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[] ;
+  showQuantityFactors: boolean;
   
 }
 export interface PrintTransProps {

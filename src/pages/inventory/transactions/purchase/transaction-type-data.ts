@@ -255,7 +255,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   btnPrintBarcodeStd: '',
   poTransDetailsIDTag: 0,
   warehouseName: "",
-  unitPriceTag: 0
+  unitPriceTag: 0,
+  unitDecimalPoint: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 200 }, (_, index) => ({
@@ -480,80 +481,81 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   isPostedTransaction: false,
   isInv: false,
   summaryConfig: [
-     {
-        column: "qty",
-        summaryType: "sum",
-        valueFormat: "decimal",
-      },
-      {
-        column: "gross",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "netValue",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "discount",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "vatAmount",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "cst",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "total",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "profit",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "grossFC",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "totalAddExpense",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "nosQty",
-        summaryType: "sum",
-        valueFormat: "decimal",
-      },
-      {
-        column: "pCode",
-        summaryType: "count",
-        valueFormat: "decimal",
-      },
-      {
-        column: "barCode",
-        summaryType: "count",
-        valueFormat: "decimal",
-      },
-      {
-        column: "margin",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-      {
-        column: "salesPrice",
-        summaryType: "sum",
-        valueFormat: "currency",
-      },
-  ]
+    {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "decimal",
+    },
+    {
+      column: "gross",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "netValue",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "vatAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "cst",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "profit",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "grossFC",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "totalAddExpense",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "nosQty",
+      summaryType: "sum",
+      valueFormat: "decimal",
+    },
+    {
+      column: "pCode",
+      summaryType: "count",
+      valueFormat: "decimal",
+    },
+    {
+      column: "barCode",
+      summaryType: "count",
+      valueFormat: "decimal",
+    },
+    {
+      column: "margin",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "salesPrice",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+  ],
+  showQuantityFactors: false
 }

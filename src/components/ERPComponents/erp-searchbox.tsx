@@ -182,6 +182,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
   const gridContainerRef = useRef<HTMLDivElement>(null);
+   const InputRef =ref?ref:useRef<HTMLInputElement>(null);
   const { t } = useTranslation("inventory");
 
   useEffect(() => {
@@ -301,25 +302,25 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               setShowProductGrid(false);
             } else {
               setShowProductGrid(false);
-              if (ref && 'current' in ref && ref.current) {
-                ref.current.focus();
+              if (InputRef && 'current' in InputRef && InputRef.current) {
+                InputRef.current.focus();
               }
             }
           } catch (err) {
             setShowProductGrid(false);
-            if (ref && 'current' in ref && ref.current) {
-              ref.current.focus();
+            if (InputRef && 'current' in InputRef && InputRef.current) {
+              InputRef.current.focus();
             }
           }
         }
       } else if (e.event.key === 'Escape') {
         setShowProductGrid(false);
-        if (ref && 'current' in ref && ref.current) {
-          ref.current.focus();
+        if (InputRef && 'current' in InputRef && InputRef.current) {
+          InputRef.current.focus();
         }
         e.event.preventDefault();
       }
-    }, [batchDataUrl, onProductSelected, ref]
+    }, [batchDataUrl, onProductSelected, InputRef]
   );
 
   const handleBatchGridKeyDown = useCallback(
@@ -337,16 +338,24 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             searchValue: '',
           }));
         }
-        if (ref && 'current' in ref && ref.current) {
-          ref.current.focus();
+        if (InputRef && 'current' in InputRef && InputRef.current) {
+          InputRef.current.focus();
         }
-      } else if (e.event.key === 'Escape') {
-        setShowBatchGrid(false);
-        setShowProductGrid(true);
-        e.event.preventDefault();
+      } 
+      // else if (e.event.key === 'Escape') {
+      //   setShowBatchGrid(false);
+      //   setShowProductGrid(true);
+      //   e.event.preventDefault();
+      // }
+      else if (e.event.key === 'Escape') {
+      setShowBatchGrid(false);
+      if (InputRef && 'current' in InputRef && InputRef.current) {
+        InputRef.current.focus();
       }
+      e.event.preventDefault();
+    }
     },
-    [onRowSelected, clearAfterSelection, ref]
+    [onRowSelected, clearAfterSelection, InputRef]
   );
 
   const handleBatchContentReady = useCallback(() => {
@@ -450,7 +459,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             onKeyDown={handleInputKeyDown}
             onEnterKeyDown={onEnterKeyDown}
             disableEnterNavigation
-            ref={ref}
+            ref={InputRef}
             onFocus={(e) => {
               console.log("Focused on ERPProductSearch input");
               if (rest.onFocus) {

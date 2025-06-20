@@ -2278,7 +2278,6 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
  }
 }
 
-
   return {
     undoEditMode,
     getNextVoucherNumber,

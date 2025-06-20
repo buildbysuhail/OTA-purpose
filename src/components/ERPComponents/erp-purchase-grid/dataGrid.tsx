@@ -46,6 +46,8 @@ interface EditableCellProps {
   onBlur: () => void;
   gridId: string;
   onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => void;
+  blockUnitOnDecimalPoint: boolean;
+  decimalLimit: number;
 }
 
 interface DragState {
@@ -74,7 +76,7 @@ interface RowData {
   blockUnitOnDecimalPoint: boolean;
 }
 
-const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
+const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, blockUnitOnDecimalPoint, rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState<string>(value.toString());
@@ -97,12 +99,12 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
     if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
 
     // Check the part after the decimal point (should be 0, 1, or 2 digits)
-  //   if(blockUnitOnDecimalPoint) {
-  //   if (parts.length === 2) {
-  //     if (parts[1].length > decimalLimit) return false;
-  //     if (!/^\d*$/.test(parts[1])) return false;
-  //   }
-  // }
+    if(blockUnitOnDecimalPoint) {
+    if (parts.length === 2) {
+      if (parts[1].length > decimalLimit) return false;
+      if (!/^\d*$/.test(parts[1])) return false;
+    }
+  }
 
     return true;
   };
@@ -498,9 +500,9 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 </span>
               ) : (
                 <EditableCell
-                // blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
-                // decimalLimit={2}
-                // decimalLimit={item.unitDecimalPoint}
+                  blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                  decimalLimit={2}
+                  // decimalLimit={item.unitDecimalPoint}
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}

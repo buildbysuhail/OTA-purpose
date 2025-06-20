@@ -13,7 +13,6 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
     if (preference) {
       return {
         ...column,
-        caption: preference.caption,
         width: preference.width,
         alignment: preference.alignment,
         visible: preference.visible,

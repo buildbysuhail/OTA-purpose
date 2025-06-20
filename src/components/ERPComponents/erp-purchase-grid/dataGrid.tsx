@@ -436,6 +436,21 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   advancedProductSearching ={data.advancedProductSearching}
                   useInSearch = {data.useInSearch}
                   useCodeSearch = {data.useCodeSearch}
+                  onRowSelected={(data: any) => {
+                      const res = {
+                        transaction:{
+                          details:[{
+                            
+                            productBatchID: data.productBatchID,
+                          autoBarcode: data.autoBarcode,
+                          productCode: data.productCode,
+                          useProductCode: false
+                          }]
+                        },
+                        key:crypto.randomUUID()
+                      }
+                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
+                    }}
                 />
               ) :column.dataField === "pCode" && !column.readOnly ? (
                 <ERPProductSearch
@@ -445,13 +460,13 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   showCheckBox={false}
                   onRowSelected={(data: any) => {
                       const res = {
-                        transaction:{
-                          details:[{
+                        detail:{
+                            slNo: item.slNo,
                             productBatchID: data.productBatchID,
                           autoBarcode: data.autoBarcode,
-                          productCode: data.productCode
-                          }]
-                        },
+                          productCode: data.productCode,
+                          useProductCode: false
+                          },
                         key:crypto.randomUUID()
                       }
                       formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})

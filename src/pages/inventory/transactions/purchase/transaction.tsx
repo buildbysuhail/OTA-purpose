@@ -97,15 +97,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
 
-  useEffect(() => {
-    if (triggerEffect) {
-      const timer = setTimeout(() => {
-        setTriggerEffect(false);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [triggerEffect]);
-
   const handleClearControls = () => {
     clearControls(
       formState.isEdit,
@@ -171,6 +162,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const SIDEBAR_WIDTH = "196px";
 
   const [hasAnimated, setHasAnimated] = useState(false);
+
+  
+  useEffect(() => {
+    if (formState.batchSelectionData != "") {
+      
+    }
+  }, [formState.batchSelectionData]);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {

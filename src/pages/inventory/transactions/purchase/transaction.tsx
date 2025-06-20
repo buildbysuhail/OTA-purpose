@@ -1905,6 +1905,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
+              t={t}
               columns={purchaseGridCol}
               keyField={"productID"}
               height={gridHeight}
@@ -2011,6 +2012,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 
               </div>
                   <ErpPurchaseGrid
+                  t={t}
                     columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}

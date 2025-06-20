@@ -436,19 +436,35 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             columns: [],
           },
           qrCodeProps: {
-    value: "https://example.com", // Ensure a default value
-    size: 128,
-    level: "M",
-    bgColor: "#FFFFFF",
-    fgColor: "#000000",
-    marginSize: 0,
-    imageSettings: {
-      src: "",
-      height: 16,
-      width: 16,
-      excavate: true,
-    },
-  },
+            value: "https://example.com",
+              width: 150,
+              height: 150,
+              level: "M",
+              type: "svg",
+              margin: 10,
+              image: "",
+              imageOptions: {
+                hideBackgroundDots: true,
+                imageSize: 0.2,
+                margin: 5,
+                crossOrigin: "anonymous",
+              },
+              dotsOptions: {
+                color: "#333",
+                type: "extra-rounded",
+              },
+              backgroundOptions: {
+                color: "#fafafa",
+              },
+              cornersSquareOptions: {
+                color: "#ff0000",
+                type: "classy",
+              },
+              cornersDotOptions: {
+                color: "#ff0000",
+                type: "dot",
+              },
+          },
           areaProps: {
             bgColor: "#FFFFFF",
             isRepeat: true,
@@ -628,21 +644,59 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     setEditingColumnData(undefined);
   };
 
- const handleQRCodePropertyChange = (property: keyof QRCodeProps, value: any) => {
-  if (selectedComponent && selectedComponent.type === DesignerElementType.qrCode && selectedComponent.qrCodeProps) {
-    const updatedQRCodeProps = { ...selectedComponent.qrCodeProps, [property]: value };
-    console.log(`Updating QRCodeProps:`, updatedQRCodeProps); // Debug log
-    const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) =>
-      comp.id === selectedComponent.id ? { ...comp, qrCodeProps: updatedQRCodeProps } : comp
+
+const handleQRCodePropertyChange = (
+  property: string,
+  value: any,
+  nestedPath?: keyof QRCodeProps
+) => {
+  if (
+    selectedComponent &&
+    selectedComponent.type === DesignerElementType.qrCode &&
+    selectedComponent.qrCodeProps
+  ) {
+    // make a shallow copy
+    const updatedQRCodeProps: QRCodeProps = {
+      ...selectedComponent.qrCodeProps,
+    };
+
+    if (nestedPath) {
+      // dynamic nested merge
+      // 1) grab existing sub-object (or {})
+      const existingSub = (updatedQRCodeProps[nestedPath] as any) || {};
+      // 2) merge in the new property
+      const newSub = {
+        ...existingSub,
+        [property]: value,
+      };
+      // 3) assign it back (cast to any to satisfy TS)
+      (updatedQRCodeProps as any)[nestedPath] = newSub;
+    } else {
+      // top-level assignment (keyof QRCodeProps)
+      (updatedQRCodeProps as any)[property] = value;
+    }
+
+    // now update your template and selected state
+    const updatedComponents = (templateData?.barcodeState?.placedComponents || []).map(
+      (comp) =>
+        comp.id === selectedComponent.id
+          ? { ...comp, qrCodeProps: updatedQRCodeProps }
+          : comp
     ) as PlacedComponent[];
-   
-    setTemplateData((prev: TemplateState) => {
-     const updated = { ...prev, barcodeState: { ...prev.barcodeState, placedComponents: updatedComponents || [] } };
-     return updated;
+
+    setTemplateData((prev: TemplateState) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents: updatedComponents || [],
+      },
+    }));
+    setSelectedComponent({
+      ...selectedComponent,
+      qrCodeProps: updatedQRCodeProps,
     });
-    setSelectedComponent({ ...selectedComponent, qrCodeProps: updatedQRCodeProps });
-   }
- };
+  }
+};
 
   const handleAreaPropertyChange = (
     property: any,
@@ -1081,11 +1135,13 @@ const handleRemoveImage =()=>{
 
   const renderComponent = (component: PlacedComponent) => {
     const isSelected = selectedComponent?.id === component.id;
-    const style: React.CSSProperties = {
+    const  style: React.CSSProperties = {
       position: "absolute",
       left: `${component.x}pt`,
       top: `${component.y}pt`,
       padding: "0pt",
+       boxSizing: "border-box", 
+       zIndex:1,
       alignContent: "center",
       width:
         component.type == DesignerElementType.barcode
@@ -1142,6 +1198,7 @@ const handleRemoveImage =()=>{
                   ref={(el) => (barcodeRefs.current[component.id] = el)}
                   width={`${component.width}pt`}
                   height={`${component.height}pt`}
+                  style={{overflow:"hidden",zIndex: 2,}}
                 />
               </>
             ) : (
@@ -1149,6 +1206,7 @@ const handleRemoveImage =()=>{
                 ref={(el) => (barcodeRefs.current[component.id] = el)}
                 width={`${component.width}pt`}
                 height={`${component.height}pt`}
+                style={{overflow:"hidden",zIndex: 2,}}
               />
             )}
             <DeleteButton
@@ -2048,178 +2106,154 @@ const handleRemoveImage =()=>{
 
                   {selectedComponent &&
                     selectedComponent.type === DesignerElementType.qrCode && (
-                      <Box
-                        sx={{
-                          mb: 1,
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 1,
-                        }}
-                      >
-                        <Box>
-                          <ERPSlider
-                            label="QR Code Size"
-                            value={selectedComponent.qrCodeProps?.size || 128}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange(
-                                "size",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={64}
-                            max={512}
-                          />
-                        </Box>
-                        <Box>
-                          <ERPDataCombobox
-                            id="level"
-                            data={selectedComponent.qrCodeProps}
-                            label="Error Correction Level"
-                            field={{
-                              id: "level",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={[
-                              { value: "L", label: "Low" },
-                              { value: "M", label: "Medium" },
-                              { value: "Q", label: "Quartile" },
-                              { value: "H", label: "High" },
-                            ]}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange("level", e.value)
-                            }
-                          />
-                        </Box>
-                        <Box>
-                          <ERPInput
-                            id="bgColor"
-                            label="Background Color"
-                            type="color"
-                            value={
-                              selectedComponent.qrCodeProps?.bgColor ||
-                              "#FFFFFF"
-                            }
-                            data={selectedComponent.qrCodeProps}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange(
-                                "bgColor",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Box>
-                        <Box>
-                          <ERPInput
-                            id="fgColor"
-                            label="Foreground Color"
-                            type="color"
-                            value={
-                              selectedComponent.qrCodeProps?.fgColor ||
-                              "#000000"
-                            }
-                            data={selectedComponent.qrCodeProps}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange(
-                                "fgColor",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Box>
-                        <Box>
-                          <ERPInput
-                            id="logoUrl"
-                            label="Logo URL"
-                            value={
-                              selectedComponent.qrCodeProps?.imageSettings
-                                ?.src || ""
-                            }
-                            data={selectedComponent.qrCodeProps}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange("imageSettings", {
-                                ...selectedComponent.qrCodeProps?.imageSettings,
-                                src: e.target.value,
-                              })
-                            }
-                          />
-                        </Box>
-                        {selectedComponent.qrCodeProps?.imageSettings?.src && (
-                          <>
-                            <Box>
-                              <ERPSlider
-                                label={`Logo Width (${selectedComponent.qrCodeProps?.imageSettings?.width})`}
-                                value={
-                                  selectedComponent.qrCodeProps?.imageSettings
-                                    ?.width
-                                }
-                                onChange={(e) =>
-                                  handleQRCodePropertyChange("imageSettings", {
-                                    ...selectedComponent.qrCodeProps
-                                      ?.imageSettings,
-                                    width: e.target.valueAsNumber,
-                                  })
-                                }
-                                min={10}
-                                max={30}
-                              />
-                            </Box>
-                            <Box>
-                              <ERPSlider
-                                label={`Logo Height (${selectedComponent.qrCodeProps?.imageSettings?.height})`}
-                                value={
-                                  selectedComponent.qrCodeProps?.imageSettings
-                                    ?.height || 24
-                                }
-                                onChange={(e) =>
-                                  handleQRCodePropertyChange("imageSettings", {
-                                    ...selectedComponent.qrCodeProps
-                                      ?.imageSettings,
-                                    height: e.target.valueAsNumber,
-                                  })
-                                }
-                                min={10}
-                                max={30}
-                              />
-                            </Box>
-                            <Box>
-                              <ERPCheckbox
-                                id="excavate"
-                                label="Excavate (Clear QR background under logo)"
-                                data={selectedComponent.qrCodeProps}
-                                checked={
-                                  selectedComponent.qrCodeProps?.imageSettings
-                                    ?.excavate ?? false
-                                }
-                                onChange={(e) =>
-                                  handleQRCodePropertyChange("imageSettings", {
-                                    ...selectedComponent.qrCodeProps
-                                      ?.imageSettings,
-                                    excavate: e.target.checked,
-                                  })
-                                }
-                              />
-                            </Box>
-                          </>
-                        )}
-                        <Box>
-                          <ERPInput
-                            id="marginSize"
-                            label="Margin Size"
-                            type="number"
-                            value={
-                              selectedComponent.qrCodeProps?.marginSize || 0
-                            }
-                            data={selectedComponent.qrCodeProps}
-                            onChange={(e) =>
-                              handleQRCodePropertyChange(
-                                "marginSize",
-                                parseInt(e.target.value, 10)
-                              )
-                            }
-                          />
-                        </Box>
-                      </Box>
+                       <Box sx={{ mb: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+
+                    {/* === Base === */}
+                    <ERPSlider
+                      label={`Width (${selectedComponent.qrCodeProps?.width || 128})`}
+                      min={30}
+                      step={10}
+                      max={300}
+                      value={selectedComponent.qrCodeProps?.width || 128}
+                      onChange={(e) => handleQRCodePropertyChange('width', e.target.valueAsNumber)}
+                    />
+                    <ERPSlider
+                      label={`Height (${selectedComponent.qrCodeProps?.height || 128})`}
+                      min={30}
+                      step={10}
+                      max={300}
+                      value={selectedComponent.qrCodeProps?.height || 128}
+                      onChange={(e) => handleQRCodePropertyChange('height', e.target.valueAsNumber)}
+                    />
+
+                    <ERPDataCombobox
+                      id="type"
+                      label="Output Type"
+                      options={[
+                        { value: "canvas", label: "Canvas" },
+                        { value: "svg", label: "SVG" }
+                      ]}
+                      value={selectedComponent.qrCodeProps?.type || "canvas"}
+                      onChange={(e) => handleQRCodePropertyChange('type', e.value)}
+                    />
+
+                    <ERPSlider
+                      label={`Margin (${selectedComponent.qrCodeProps?.margin || 0})`}
+                      min={0}
+                      max={20}
+                      value={selectedComponent.qrCodeProps?.margin || 0}
+                      onChange={(e) => handleQRCodePropertyChange('margin', e.target.valueAsNumber)}
+                    />
+
+                    {/* === QR Options === */}
+                    <ERPDataCombobox
+                      id="level"
+                      label="Error Correction Level"
+                      options={[
+                        { value: "L", label: "Low" },
+                        { value: "M", label: "Medium" },
+                        { value: "Q", label: "Quartile" },
+                        { value: "H", label: "High" }
+                      ]}
+                      value={selectedComponent.qrCodeProps?.level || "M"}
+                      onChange={(e) => handleQRCodePropertyChange('level', e.value)}
+                    />
+
+                    {/* === Dots Options === */}
+                    <ERPInput
+                      id="dotsColor"
+                      label="Dots Color"
+                      type="color"
+                      value={selectedComponent.qrCodeProps?.dotsOptions?.color || "#000000"}
+                      onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'dotsOptions')}
+                    />
+                    <ERPDataCombobox
+                      id="dotsType"
+                      label="Dots Shape"
+                      options={[
+                        { value: "square", label: "Square" },
+                        { value: "rounded", label: "Rounded" },
+                        { value: "extra-rounded", label: "Extra Rounded" }
+                      ]}
+                      value={selectedComponent.qrCodeProps?.dotsOptions?.type || "square"}
+                      onChange={(e) => handleQRCodePropertyChange('type', e.value, 'dotsOptions')}
+                    />
+
+                    {/* === Background Options === */}
+                    <ERPInput
+                      id="bgColor"
+                      label="Background Color"
+                      type="color"
+                      value={selectedComponent.qrCodeProps?.backgroundOptions?.color || "#ffffff"}
+                      onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'backgroundOptions')}
+                    />
+
+                    {/* === Corners Square Options === */}
+                    <ERPInput
+                      id="cornersSquareColor"
+                      label="Corner Square Color"
+                      type="color"
+                      value={selectedComponent.qrCodeProps?.cornersSquareOptions?.color || "#000000"}
+                      onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersSquareOptions')}
+                    />
+                    <ERPDataCombobox
+                      id="cornersSquareType"
+                      label="Corner Square Type"
+                      options={[
+                        { value: "square", label: "Square" },
+                        { value: "extra-rounded", label: "Extra Rounded" }
+                      ]}
+                      value={selectedComponent.qrCodeProps?.cornersSquareOptions?.type || "square"}
+                      onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersSquareOptions')}
+                    />
+
+                    {/* === Corners Dot Options === */}
+                    <ERPInput
+                      id="cornersDotColor"
+                      label="Corner Dot Color"
+                      type="color"
+                      value={selectedComponent.qrCodeProps?.cornersDotOptions?.color || "#000000"}
+                      onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersDotOptions')}
+                    />
+                    <ERPDataCombobox
+                      id="cornersDotType"
+                      label="Corner Dot Type"
+                      options={[
+                        { value: "square", label: "Square" },
+                        { value: "dot", label: "Dot" }
+                      ]}
+                      value={selectedComponent.qrCodeProps?.cornersDotOptions?.type || "square"}
+                      onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersDotOptions')}
+                    />
+
+                    {/* === Image Options === */}
+                    <ERPInput
+                      id="imageSrc"
+                      label="Image URL"
+                      value={selectedComponent.qrCodeProps?.image || ""}
+                      onChange={(e) => handleQRCodePropertyChange('image', e.target.value)}
+                    />
+                    {selectedComponent.qrCodeProps?.image && (
+                      <>
+                      <ERPSlider
+                      label={`Image Size (${selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2})`}
+                      min={0.05}
+                      max={1}
+                      step={0.05}
+                      value={selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2}
+                      onChange={(e) => handleQRCodePropertyChange('imageSize', e.target.valueAsNumber, 'imageOptions')}
+                    />
+                    <ERPCheckbox
+                      id="hideBackgroundDots"
+                      label="Hide Background Dots under Image"
+                      checked={selectedComponent.qrCodeProps?.imageOptions?.hideBackgroundDots || false}
+                      onChange={(e) => handleQRCodePropertyChange('hideBackgroundDots', e.target.checked, 'imageOptions')}
+                    />
+                      </>
+                    )}
+                    
+
+                  </Box>
                     )}
 
                   {selectedComponent.type === DesignerElementType.line ? (

@@ -100,22 +100,30 @@ export const renderComponent = (component: PlacedComponent, data?: any,qrCodeIma
         />
       );
 
-    case DesignerElementType.qrCode:
-      return qrCodeImages && qrCodeImages[component.id] ? (
-        <View
-          key={component.id}
-          style={{
-            ...baseStyle,
-            width: component.qrCodeProps?.size || 128,
-            height: component.qrCodeProps?.size || 128,
-          }}
-        >
-          <Image
-            src={qrCodeImages[component.id]}
-            style={{ width: '100%', height: '100%' }}
-          />
-        </View>
-      ) : null;
+  case DesignerElementType.qrCode:
+  const wPx = component.qrCodeProps?.width  || 128;
+  const hPx = component.qrCodeProps?.height || 128;
+
+  return qrCodeImages?.[component.id] ? (
+    <View
+      key={component.id}
+      style={{
+        ...baseStyle,
+        // convert px → pt here:
+        width:  pxToPt(wPx),
+        height: pxToPt(hPx),
+      }}
+    >
+      <Image
+        src={qrCodeImages[component.id]}
+        // and again on the Image itself:
+        style={{
+          width:  pxToPt(wPx),
+          height: pxToPt(hPx),
+        }}
+      />
+    </View>
+  ) : null;
 
     default:
       console.warn(`Unsupported component type: ${component.type}`);

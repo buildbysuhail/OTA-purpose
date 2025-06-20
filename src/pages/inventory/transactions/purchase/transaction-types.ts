@@ -445,6 +445,7 @@ export interface TransactionFormState {
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[] ;
   showQuantityFactors: boolean;
+  batchSelectionData: string;
   
 }
 export interface PrintTransProps {

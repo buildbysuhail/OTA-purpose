@@ -70,6 +70,8 @@ interface RowData {
   useInSearch?: boolean;
   useCodeSearch?: boolean;
   advancedProductSearching?: boolean;
+  transactionType?: string;
+  blockUnitOnDecimalPoint: boolean;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
@@ -95,10 +97,12 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
     if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
 
     // Check the part after the decimal point (should be 0, 1, or 2 digits)
-    if (parts.length === 2) {
-      if (parts[1].length > 2) return false;
-      if (!/^\d*$/.test(parts[1])) return false;
-    }
+  //   if(blockUnitOnDecimalPoint) {
+  //   if (parts.length === 2) {
+  //     if (parts[1].length > decimalLimit) return false;
+  //     if (!/^\d*$/.test(parts[1])) return false;
+  //   }
+  // }
 
     return true;
   };
@@ -421,7 +425,8 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   showCheckBox={false}
                   contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}
-                  productDataUrl={Urls.load_product_details}
+                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
                   tabIndex={0}
                   className="h-[22px] text-sm"
                   onFocus={() => handleFocus(column.dataField!)}
@@ -438,9 +443,23 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   inputId={`${gridId}_${column.dataField}_${index}`}
                   noLabel={true}
                   showCheckBox={false}
+                  onRowSelected={(data: any) => {
+                      const res = {
+                        transaction:{
+                          details:[{
+                            productBatchID: data.productBatchID,
+                          autoBarcode: data.autoBarcode,
+                          productCode: data.productCode
+                          }]
+                        },
+                        key:crypto.randomUUID()
+                      }
+                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
+                    }}
                   contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}
-                  productDataUrl={Urls.load_product_details}
+                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
                   tabIndex={0}
                   className="h-[22px] text-sm"
                   onFocus={() => handleFocus(column.dataField!)}
@@ -479,6 +498,9 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 </span>
               ) : (
                 <EditableCell
+                // blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                // decimalLimit={2}
+                // decimalLimit={item.unitDecimalPoint}
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}
@@ -561,6 +583,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   }>(null);
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const applicationState = useAppSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
 
   const [dragState, setDragState] = useState<DragState>({
@@ -647,8 +670,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     onQPressed: (e: any, column: keyof TransactionDetail) =>{
       
       dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
-    }
-  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);
+    },
+    transactionType: formState.transactionType,
+    blockUnitOnDecimalPoint: applicationState.inventorySettings.blockUnitOnDecimalPoint
+  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());

@@ -557,5 +557,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       valueFormat: "currency",
     },
   ],
-  showQuantityFactors: false
+  showQuantityFactors: false,
+  batchSelectionData: ""
 }

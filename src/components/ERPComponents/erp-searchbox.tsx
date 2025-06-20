@@ -58,7 +58,7 @@ const createStore = async (value: string, payload: any, productDataUrl?: string)
         .join("&");
 
       try {
-        
+        debugger;
         const url = productDataUrl || "";
         const response = await api.postAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`, payload);
         const result = response;
@@ -247,9 +247,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 
           
           const store = await createStore(value, payload, productDataUrl);
+          debugger;
           setStore(store);
-          const loadResult = await store.load() as LoadResult;
-          setShowProductGrid(loadResult.totalCount > 0);
+          setShowProductGrid(true);
         }
       }, 200),
     [productDataUrl, inputValue.searchByCode, searchType]
@@ -476,7 +476,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
                     keyExpr={"productID"}
                     showBorders={true}
                     showRowLines={true}
-                    remoteOperations={{ filtering: true, paging: true, sorting: true }}
+                    remoteOperations={{ filtering: true, paging: true, sorting: true, grouping: false, summary: false,groupPaging: false }}
                     onKeyDown={handleGridKeyDown}
                     tabIndex={0}
                   >

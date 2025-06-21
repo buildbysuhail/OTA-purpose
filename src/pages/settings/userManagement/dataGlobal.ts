@@ -1081,6 +1081,15 @@ export const userRights: UserRight[] = [
 { id: 203022702, headId: 2030227, name: "NdSalesEstimateRegisterReports_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Sales Estimate Register Report" },
 { id: 203022703, headId: 2030227, name: "NdSalesEstimateRegisterReports_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Sales Estimate Register Report" },
 
+{ id: 2030228, headId: 20302, name: "NdSalesTaxReportGST", fullName: "Sales Tax Report", formCode: "RPTSITAXGSTR", treeNode: 3, description: "Manage Sales Tax Report" },
+{ id: 203022801, headId: 2030228, name: "NdSalesTaxReportGST_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Sales Tax Report Print" },
+{ id: 203022802, headId: 2030228, name: "NdSalesTaxReportGST_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Sales Tax Report Settings" },
+{ id: 203022803, headId: 2030228, name: "NdSalesTaxReportGST_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Sales Tax Report Export" },
+
+{ id: 2030229, headId: 20302, name: "NdSalesReturnTaxReportGST", fullName: "Sales Return Tax Report", formCode: "RPTSRTAXGSTR", treeNode: 3, description: "Manage Sales Return Tax Report" },
+{ id: 203022901, headId: 2030229, name: "NdSalesReturnTaxReportGST_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Sales Return Tax Report Print" },
+{ id: 203022902, headId: 2030229, name: "NdSalesReturnTaxReportGST_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Sales Return Tax Report Settings" },
+{ id: 203022903, headId: 2030229, name: "NdSalesReturnTaxReportGST_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Sales Return Tax Report Export" },
 
 //#endregion NOT IN 1050
 //#endregion Sales Report sepearte Menu

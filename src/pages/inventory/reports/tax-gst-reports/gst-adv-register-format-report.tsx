@@ -6,16 +6,17 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "./purchase-tax-gst-report-filter";
+import PurchaseGstReportFilter, { GstReportFilterInitialState} from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
-interface PurchaseTaxGSTAdvRegisterFormatProps {
+import GstReportFilter from "./gst-report-filter";
+interface GSTAdvRegisterFormatProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId }) => {
+const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -1434,10 +1435,10 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilter />}
+                filterContent={<GstReportFilter />}
                 filterHeight={220}
                 filterWidth={600}
-                filterInitialData={PurchaseGstReportFilterInitialState}
+                filterInitialData={GstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
@@ -1450,4 +1451,4 @@ const PurchaseTaxGSTAdvRegisterFormat: FC<PurchaseTaxGSTAdvRegisterFormatProps> 
   );
 };
 
-export default PurchaseTaxGSTAdvRegisterFormat;
+export default GSTAdvRegisterFormat;

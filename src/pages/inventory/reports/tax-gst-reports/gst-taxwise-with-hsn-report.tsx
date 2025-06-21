@@ -1,134 +1,38 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import PurchaseGstReportFilter, { GstReportFilterInitialState } from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
-import PurchaseGstReportFilterGstCat, { PurchaseGstReportFilterGstCatInitialState } from "./purchase-tax-gst-report-filter-gst";
-interface PurchaseTaxGSTTaxwiseProps {
+import GstReportFilter from "./gst-report-filter";
+interface GSTTaxwiseWithHSNProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterGstCatInitialState);
+const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
+  const [filter, setFilter] = useState<any>(
+    GstReportFilterInitialState
+  );
   const columns: DevGridColumn[] = [
     {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "vchNo",
-      caption: t("voucher_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 75,
-      showInPdf: true,
-    },
-  
-    {
-      dataField: "gstin",
-      caption: t("gst_in"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 75,
-      showInPdf: true,
-    },
-    {
-      dataField: "party",
-      caption: t("party"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "address1",
-      caption: t("address1"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "address2",
-      caption: t("address2"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "id",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "financialYearID",
-      caption: t("financial_year_id"),
+      dataField: "gstPercentage",
+      caption: t("gst_percentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-    },
-    {
-      dataField: "productName",
-      caption: t("product"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "groupName",
-      caption: t("group"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "refNumber",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "remarks",
-      caption: t("remarks"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
+      groupIndex: 0,
     },
     {
       dataField: "form",
@@ -145,7 +49,6 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-
     },
     {
       dataField: "qty",
@@ -154,6 +57,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -162,9 +66,9 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cgstPerc == null
+            cellElement.data?.qty == null
               ? ""
-              : getFormattedValue(cellElement.data.cgstPerc);
+              : getFormattedValue(cellElement.data.qty);
           return {
             ...exportCell,
             text: value,
@@ -172,11 +76,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cgstPerc == null
+          return cellElement.data?.qty == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+            : getFormattedValue(parseFloat(cellElement.data.qty));
         }
-      }
+      },
     },
     {
       dataField: "unit",
@@ -217,11 +121,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
-      }
+      },
     },
     {
       dataField: "cgstPerc",
-      caption: t("cgstperc"),
+      caption: t("cgst_perc"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -249,7 +153,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "cgst",
@@ -281,11 +185,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cgst));
         }
-      }
+      },
     },
     {
       dataField: "sgstPerc",
-      caption: t("sgstperc"),
+      caption: t("sgst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -313,7 +217,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
         }
-      }
+      },
     },
     {
       dataField: "sgst",
@@ -345,11 +249,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.sgst));
         }
-      }
+      },
     },
     {
       dataField: "igstPerc",
-      caption: t("igstperc"),
+      caption: t("igst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -377,7 +281,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igstPerc));
         }
-      }
+      },
     },
     {
       dataField: "igst",
@@ -409,11 +313,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.igst));
         }
-      }
+      },
     },
     {
       dataField: "cessPerc",
-      caption: t("cessperc"),
+      caption: t("cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -441,7 +345,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.cessPerc));
         }
-      }
+      },
     },
     {
       dataField: "cessAmt",
@@ -477,7 +381,7 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
     },
     {
       dataField: "addCessPerc",
-      caption: t("addcessperc"),
+      caption: t("add_cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -505,11 +409,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
             ? ""
             : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
         }
-      }
+      },
     },
     {
       dataField: "addCess",
-      caption: t("addcess_amount"),
+      caption: t("add_cess_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -572,20 +476,29 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       },
     },
     {
-      dataField: "gstPercentage",
-      caption: t("gstpercentage"),
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
       showInPdf: true,
-      groupIndex: 0
     },
+    // {
+    //   dataField: "groupName",
+    //   caption: t("group_name"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    //   showInPdf: true,
+    // },
   ];
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
       console.log(itemInfo);
       const value = itemInfo.value;
       if (
@@ -599,12 +512,11 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       return getFormattedValue(value) || "0";
     };
   }, []);
-
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const customizeDateGroup = (itemInfo: any) => `Group Total`;
   const _summaryItems: SummaryConfig[] = [
     {
-      column: "party",
+      column: "form",
       summaryType: "custom",
       customizeText: customizeDate,
     },
@@ -657,13 +569,13 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
       customizeText: customizeSummaryRow,
     },
     {
-      column: "party",
+      column: "form",
       summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeDateGroup,
     },
-     {
+    {
       column: "qty",
       summaryType: "sum",
       isGroupItem: true,
@@ -731,9 +643,8 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
-
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -757,10 +668,10 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilterGstCat />}
+                filterContent={<GstReportFilter />}
                 filterHeight={220}
-                filterWidth={790}
-                filterInitialData={PurchaseGstReportFilterGstCatInitialState}
+                filterWidth={600}
+                filterInitialData={GstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
@@ -773,4 +684,4 @@ const PurchaseTaxGSTTaxwise: FC<PurchaseTaxGSTTaxwiseProps> = ({ gridHeader, dat
   );
 };
 
-export default PurchaseTaxGSTTaxwise;
+export default GSTTaxwiseWithHSN;

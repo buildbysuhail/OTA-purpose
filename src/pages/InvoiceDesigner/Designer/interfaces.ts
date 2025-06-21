@@ -143,17 +143,81 @@ export interface PlacedComponent {
   areaProps:AreaProps;
 }
 export type QRCodeProps = {
+  // Core data
   value: string;
-  size: number;
-  level: "L" | "M" | "Q" | "H";
-  bgColor: string;
-  fgColor: string;
-  marginSize: number;
-  imageSettings?: {
-    src: string;
-    height: number;
-    width: number;
-    excavate: boolean;
+
+  // Size & padding
+  width?: number;
+  height?: number;
+  margin?: number; // pixel margin
+
+  // Error correction
+  level?: "L" | "M" | "Q" | "H";
+
+  // Output options
+  image?: string; // Logo/image source
+  imageOptions?: {
+    hideBackgroundDots?: boolean;
+    imageSize?: number;
+    margin?: number;
+    crossOrigin?: "anonymous" | "use-credentials";
+  };
+  type?: "canvas" | "svg";
+
+  // Base dot style
+  dotsOptions?: {
+    color?: string;
+    gradient?: {
+      type?: "linear" | "radial";
+      rotation?: number;
+      colorStops: { offset: number; color: string }[];
+    };
+    type?:
+      | "rounded"
+      | "dots"
+      | "classy"
+      | "classy-rounded"
+      | "square"
+      | "extra-rounded";
+  };
+
+  // Background style
+  backgroundOptions?: {
+    color?: string;
+    gradient?: {
+      type?: "linear" | "radial";
+      rotation?: number;
+      colorStops: { offset: number; color: string }[];
+    };
+  };
+
+  // Corner squares (outer corner shapes)
+  cornersSquareOptions?: {
+    color?: string;
+    gradient?: {
+      type?: "linear" | "radial";
+      rotation?: number;
+      colorStops: { offset: number; color: string }[];
+    };
+    type?:
+      | "square"
+      | "extra-rounded"
+      | "dot"
+      | "classy"
+      | "classy-rounded";
+  };
+
+  // Corner dots (inner shapes inside corner squares)
+  cornersDotOptions?: {
+    color?: string;
+    gradient?: {
+      type?: "linear" | "radial";
+      rotation?: number;
+      colorStops: { offset: number; color: string }[];
+    };
+    type?:
+      | "square"
+      | "dot";
   };
 };
 

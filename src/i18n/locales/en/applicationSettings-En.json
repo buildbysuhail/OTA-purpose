@@ -292,5 +292,6 @@
   "main_settings":"Main settings",
   "accounts_settings":"Accounts settings",
   "inventory_settings":"Inventory settings",
-  "taxes":"Taxes"
+  "taxes":"Taxes",
+  "block_unit_on_decimal_point":"Block unit on decimal point"
 }

@@ -228,6 +228,7 @@ export interface TransactionDetail {
   free: number;
   unit: string;
   unitID: number;
+  unitDecimalPoint: number;
   unitPrice: number;
   unitPriceTag: number;
   gross: number;
@@ -443,6 +444,8 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[] ;
+  showQuantityFactors: boolean;
+  batchSelectionData: string;
   
 }
 export interface PrintTransProps {

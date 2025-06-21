@@ -11,7 +11,7 @@ import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
 import type { FormElementState, TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
-import { formStateHandleFieldChange, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -35,6 +35,7 @@ interface DataGridProps<T extends DataItem> {
   onAddData?: (newItem: T) => void;
   allowColumnReordering?: boolean;
   summaryConfig?: SummaryConfig<TransactionDetail>[];
+
 }
 
 interface EditableCellProps {
@@ -45,6 +46,8 @@ interface EditableCellProps {
   onBlur: () => void;
   gridId: string;
   onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => void;
+  blockUnitOnDecimalPoint: boolean;
+  decimalLimit: number;
 }
 
 interface DragState {
@@ -64,28 +67,107 @@ interface RowData {
   gridId: string;
   listRef: React.RefObject<List>;
   itemCount: number;
-  gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData
+  gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData  
+  onQPressed: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail) => void;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
+  advancedProductSearching?: boolean;
+  transactionType?: string;
+  blockUnitOnDecimalPoint: boolean;
 }
 
-const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
+const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, blockUnitOnDecimalPoint, rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [localValue, setLocalValue] = useState<string>(value.toString());
 
+  useEffect(() => {
+    setLocalValue(value.toString());
+  }, [value]);
+
+  const validateNumberInput = (value: string) => {
+    // Allow empty input during typing
+    if (value === "") return true;
+
+    // Split the value into parts before and after the decimal point
+    const parts = value.split('.');
+
+    // Check for multiple decimal points
+    if (parts.length > 2) return false;
+
+    // Check the part before the decimal point (should be digits only, or minus sign)
+    if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
+
+    // Check the part after the decimal point (should be 0, 1, or 2 digits)
+    if(blockUnitOnDecimalPoint) {
+    if (parts.length === 2) {
+      if (parts[1].length > decimalLimit) return false;
+      if (!/^\d*$/.test(parts[1])) return false;
+    }
+  }
+
+    return true;
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+    let inputValue = e.currentTarget.value;
+debugger;
+    // Check if the input is just a dot (and nothing else)
+    if (column.dataType === "number" && inputValue === '.') {
+      inputValue = '0.';
+      e.currentTarget.value = inputValue;
+    }
+
+    // Check if the input starts with a dot followed by digits (e.g., .2)
+    if (column.dataType === "number" && inputValue.startsWith('.') && inputValue.length > 1) {
+      // Check if the second character is a digit
+      const secondChar = inputValue.charAt(1);
+      if (/^\d$/.test(secondChar)) {
+        inputValue = '0' + inputValue;
+        e.currentTarget.value = inputValue;
+      }
+    }
+
+    if (column.dataType === "number" && !validateNumberInput(inputValue)) {
+      // Revert to the previous valid value
+      e.currentTarget.value = localValue;
+      return;
+    }
+
+    setLocalValue(inputValue);
+
+    // Dispatch the update with the string value to preserve the exact format
+    dispatch(
+      formStateTransactionDetailsRowUpdate({
+        index: rowIndex,
+        key: column.dataField as keyof TransactionDetail,
+        value: column.dataType === "number" ? inputValue : inputValue,
+      })
+    );
+  };
+
+  
   const handleFocus = () => {
     onFocus();
     inputRef.current?.select();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = column.dataType === "number" ? parseFloat(e.target.value) || 0 : e.target.value;
-    console.log(`EditableCell [${gridId}_${column.dataField}_${rowIndex}]: value=${newValue}, readOnly=${column.readOnly}`);
-    dispatch(
-      formStateTransactionDetailsRowUpdate({
-        index: rowIndex,
-        key: column.dataField as keyof TransactionDetail,
-        value: newValue,
-      })
-    );
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" || e.key === "Delete") {
+      return;
+    }
+
+    if (column.dataType === "number") {
+      const key = e.key;
+      const inputElement = inputRef.current;
+      const currentValue = localValue;
+      const cursorPosition = inputElement?.selectionStart || 0;
+      const beforeCursor = currentValue.substring(0, cursorPosition);
+
+    }
+
+    // Call the original onKeyDown for navigation, etc.
+    onKeyDown(e, column);
   };
 
   return (
@@ -93,19 +175,29 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ rowIndex, column
       ref={inputRef}
       id={`${gridId}_${column.dataField}_${rowIndex}`}
       noLabel
-      type={column.dataType === "number" ? "number" : "text"}
+      // type={column.dataType === "number" ? "number" : "text"}
+      type={column.dataType === "number" ? "text" : "text"}
       className="w-full !h-[20px] text-sm text-gray-800 bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
-      value={value}
+      value={localValue}
       noBorder
+
       readOnly={column.readOnly}
-      onChange={handleChange}
+      onInput={handleInput}
       onFocus={handleFocus}
       onBlur={onBlur}
-      onKeyDown={(e) => onKeyDown(e, column)}
+      onKeyDown={handleKeyDown}
       tabIndex={0}
     />
   );
 });
+
+
+
+
+
+
+
+
 
 const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
   const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
@@ -237,6 +329,10 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
       const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
       const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
 
+      if (["Q", "q"].includes(e.key) && column.dataField == "qty") {
+        data.onQPressed(e, column.dataField as keyof TransactionDetail)
+        return;
+      }
       if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
         return;
       }
@@ -323,7 +419,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
               }}
               role="gridcell"
             >
-              {column.dataField === "product" && !column.readOnly ? (
+               {column.dataField === "product" && !column.readOnly ? (
                 <ERPProductSearch
                   id={cellId}
                   inputId={`${gridId}_${column.dataField}_${index}`}
@@ -331,12 +427,65 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   showCheckBox={false}
                   contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
                   value={(cellValue as string) || ""}
-                  productDataUrl={Urls.load_product_details}
+                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
                   tabIndex={0}
                   className="h-[22px] text-sm"
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(e, column)}
+                  searchKey="product"
+                  advancedProductSearching ={data.advancedProductSearching}
+                  useInSearch = {data.useInSearch}
+                  useCodeSearch = {data.useCodeSearch}
+                  onRowSelected={(data: any) => {
+                      const res = {
+                        transaction:{
+                          details:[{
+                            
+                            productBatchID: data.productBatchID,
+                          autoBarcode: data.autoBarcode,
+                          productCode: data.productCode,
+                          useProductCode: false
+                          }]
+                        },
+                        key:crypto.randomUUID()
+                      }
+                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
+                    }}
+                />
+              ) :column.dataField === "pCode" && !column.readOnly ? (
+                <ERPProductSearch
+                  id={cellId}
+                  inputId={`${gridId}_${column.dataField}_${index}`}
+                  noLabel={true}
+                  showCheckBox={false}
+                  onRowSelected={(data: any) => {
+                      const res = {
+                        detail:{
+                            slNo: item.slNo,
+                            productBatchID: data.productBatchID,
+                          autoBarcode: data.autoBarcode,
+                          productCode: data.productCode,
+                          useProductCode: false
+                          },
+                        key:crypto.randomUUID()
+                      }
+                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
+                    }}
+                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
+                  value={(cellValue as string) || ""}
+                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
+                  tabIndex={0}
+                  className="h-[22px] text-sm"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(e, column)}
+                  searchKey="pCode"
+                  advancedProductSearching ={data.advancedProductSearching}
+                  useInSearch = {data.useInSearch}
+                  useCodeSearch = {data.useCodeSearch}
                 />
               ) : column.dataField === "status" ? (
                 <span
@@ -366,6 +515,9 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 </span>
               ) : (
                 <EditableCell
+                  blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                  decimalLimit={2}
+                  // decimalLimit={item.unitDecimalPoint}
                   rowIndex={index}
                   column={column}
                   value={cellValue as string | number}
@@ -448,6 +600,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   }>(null);
   const appState = useAppSelector((state: RootState) => state.AppState?.appState);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const applicationState = useAppSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
 
   const [dragState, setDragState] = useState<DragState>({
@@ -531,7 +684,13 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     listRef: listRef,
     itemCount: formState.transaction?.details.length || 0,
     gridRef: gridRef,
-  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId]);
+    onQPressed: (e: any, column: keyof TransactionDetail) =>{
+      
+      dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
+    },
+    transactionType: formState.transactionType,
+    blockUnitOnDecimalPoint: applicationState.inventorySettings.blockUnitOnDecimalPoint
+  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());

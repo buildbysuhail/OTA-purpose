@@ -26,40 +26,57 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   const containerRef = (el: HTMLDivElement | null) => {
     qrCodeRefs.current[component.id] = el;
   };
-
+  const props = component.qrCodeProps;
   useEffect(() => {
     
     const container = qrCodeRefs.current[component.id];
     if (!container || !component.qrCodeProps) return;
-
-    const qrCode = new QRCodeStyling({
-      width: component.qrCodeProps.size || 128,
-      height: component.qrCodeProps.size || 128,
-      margin: component.qrCodeProps.marginSize || 0,
-      type: "svg",               // canvas output
-      data: component.qrCodeProps.value || "https://example.com",
+   
+      const qrCode = new QRCodeStyling({
+      width: props.width ||128,
+      height: props.height || 128,
+      data: props.value || "https://example.com",
+      type: props.type || "svg",
+      margin: props.margin ?? 0,
       qrOptions: {
-        errorCorrectionLevel: component.qrCodeProps.level || "M",
-        
+        errorCorrectionLevel: props.level || "M",
       },
-      dotsOptions: {
-        color: component.qrCodeProps.fgColor || "#000000",
-        type: "square",
-      },
-      backgroundOptions: {
-        color: component.qrCodeProps.bgColor || "#FFFFFF",
-      },
-      
-      imageOptions: {
-        crossOrigin: "anonymous",
-        hideBackgroundDots: component.qrCodeProps.imageSettings?.excavate ?? true,
-        imageSize: 0.2,
-        margin:10
-        // imageSize:
-        //   (component.qrCodeProps.imageSettings?.width || 16) /
-        //   (component.qrCodeProps.size || 128)    
-      },
-         image:component.qrCodeProps.imageSettings?.src,
+      image: props.image ?props.image :undefined,
+      imageOptions: props.imageOptions
+        ? {
+            crossOrigin: props.imageOptions.crossOrigin || "anonymous",
+            hideBackgroundDots: props.imageOptions.hideBackgroundDots,
+            imageSize: props.imageOptions.imageSize,
+            margin: props.imageOptions.margin,
+          }
+        : undefined,
+      backgroundOptions: props.backgroundOptions
+        ? {
+            color: props.backgroundOptions.color,
+            gradient: props.backgroundOptions.gradient,
+          }
+        : undefined,
+      dotsOptions: props.dotsOptions
+        ? {
+            color: props.dotsOptions.color,
+            gradient: props.dotsOptions.gradient,
+            type: props.dotsOptions.type,
+          }
+        : undefined,
+      cornersSquareOptions: props.cornersSquareOptions
+        ? {
+            color: props.cornersSquareOptions.color,
+            gradient: props.cornersSquareOptions.gradient,
+            type: props.cornersSquareOptions.type,
+          }
+        : undefined,
+      cornersDotOptions: props.cornersDotOptions
+        ? {
+            color: props.cornersDotOptions.color,
+            gradient: props.cornersDotOptions.gradient,
+            type: props.cornersDotOptions.type,
+          }
+        : undefined,
     } as QROptions);
 
     // 3) Mount it into the DIV
@@ -77,20 +94,34 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   ]);
 
   // 5) Render a DIV container instead of a canvas tag
-  return (
+ return (
     <div
       id={`component-${component.id}`}
       style={{
         ...style,
-        height: component.qrCodeProps?.size || 128,
-        width: component.qrCodeProps?.size || 128,
+        boxSizing: "border-box", // Ensure padding and border are included in width/height
+        height: (component.qrCodeProps?.height || 128),
+        width: (component.qrCodeProps?.width || 128) ,
         border: isSelected ? "2px solid #2196f3" : "none",
+        zIndex: 1, // Ensure parent is above other elements
       }}
       onClick={() => handleComponentClick(component)}
       onMouseDown={(e) => handleMouseDown(e, component)}
     >
-      <div ref={containerRef} />
-      <DeleteButton id={component.id} isSelected={isSelected} handleDelete={handleDelete} />
+      <div
+        ref={containerRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden", 
+          zIndex: 2, 
+        }}
+      />
+      <DeleteButton
+        id={component.id}
+        isSelected={isSelected}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };

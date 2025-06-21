@@ -2193,13 +2193,15 @@ const master = attachMaster(formState);
  rowIndex: number,
  formState: TransactionFormState,
 ) => {
-let result: DeepPartial<TransactionFormState> = {};
+let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] } };
+
  try {
    if (!formState.transaction?.details?.[rowIndex]) {
      return false;
    }
 
    const detail = formState.transaction.details[0];
+   const outDetail:DeepPartial<TransactionDetail> = {};
    if(detail == undefined) {
     return;
    }
@@ -2207,32 +2209,37 @@ let result: DeepPartial<TransactionFormState> = {};
    switch (columnName) {
      case "unitPriceFC":
        if (formState.transaction.master.voucherForm === "Import") {
-         detail.unitPriceFC = text;
+         outDetail.unitPriceFC = text;
          const unitPriceFC = Number(detail.unitPriceFC || 0);
          const qty = Number(detail.qty || 0);
          const exchangeRate = Number(formState.transaction.master.exchangeRate || 1);
          
-         detail.unitPrice = round((unitPriceFC * exchangeRate),4);
-         detail.grossFC = round((unitPriceFC * qty), 3);
+         outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
+         outDetail.grossFC = round((unitPriceFC * qty), 3);
+         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
        }
        break;
 
      case "qty":
      case "unitPrice":
-       detail[columnName] = text;
+       outDetail[columnName] = text;
        // Calculate row amount
-       result = calculateRowAmount(detail , columnName, formState, {result:{}}, false);
+       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+        details:[outDetail]
+       }}}, true);
        
        break;
 
      case "margin":
-       detail.margin = text;
+       outDetail.margin = text;
        break;
 
      case "salesPrice":
        {
-         detail.salesPrice = text;
-         const sp = Number(detail.salesPrice || 0);
+         outDetail.salesPrice = text;
+         const sp = Number(outDetail.salesPrice || 0);
          const netAmount = Number(detail.total || 0);
          let qty = Number(detail.qty || 0);
          
@@ -2244,123 +2251,32 @@ let result: DeepPartial<TransactionFormState> = {};
            marginPerc = ((sp / cost) - 1) * 100;
          }
          
-         detail.margin = round(marginPerc, 6);
+         outDetail.margin = round(marginPerc, 6);
+         result.transaction!.details = [outDetail]
        }
        break;
 
-     case "product":
-       {
-         if (applicationSettings?.productsSettings?.usePopupWindowForItemSearch) {
-           return null;
-         }
-         
-         if (text.trim() !== "") {
-           detail.product = text;
-           
-           if (text.trim() === "%") {
-             return null;
-           }
-           
-           let searchText = "";
-           const useInSearch = formState.userConfig?.useInSearch || false;
-           const useCodeSearch = formState.userConfig?.useCodeSearch || false;
-           
-           if (useInSearch && text.length > 2) {
-             searchText = "%" + text;
-           } else {
-             searchText = text;
-           }
-           
-           if (applicationSettings?.productsSettings?.advancedProductSearching) {
-             searchText = searchText.replace(/ /g, "%");
-           }
-           
-           // Set search parameters for product lookup
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               searchText,
-               useCodeAndName: useCodeSearch,
-               showPanel: true,
-               position: {
-                 top: 0, // Calculate based on current cell position
-                 left: 0
-               }
-             }
-           };
-         } else {
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               showPanel: false
-             }
-           };
-         }
-       }
-       break;
+     
 
-     case "pCode":
-       {
-         if (applicationSettings?.inventorySettings?.usePopupWindowForItemSearch) {
-           return result;
-         }
-         
-         detail.pCode = text;
-         
-         if (text !== "" && text !== "%") {
-           let searchText = "";
-           const useInSearch = formState.ui?.searchSettings?.inSearch || false;
-           
-           if (useInSearch) {
-             searchText = "%" + text;
-           } else {
-             searchText = text;
-           }
-           
-           // Set search parameters for product code lookup
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               searchText,
-               searchByCode: true,
-               showPanel: true,
-               position: {
-                 top: 0, // Calculate based on current cell position
-                 left: 0
-               }
-             }
-           };
-         } else {
-           result.ui = {
-             ...result.ui,
-             productSearch: {
-               showPanel: false
-             }
-           };
-         }
-       }
-       break;
-
-     default:
-       // Handle other columns
-       if (detail.hasOwnProperty(columnName)) {
-         detail[columnName] = text;
-       }
-       break;
+    //  default:
+    //    // Handle other columns
+    //    if (detail.hasOwnProperty(columnName)) {
+    //      detail[columnName as keyof TransactionDetail] = text;
+    //    }
+    //    break;
    }
 
    // Dispatch the updated state
    accFormStateHandleFieldChangeKeysOnly &&
      dispatch &&
-     dispatch(accFormStateHandleFieldChangeKeysOnly(result));
+     dispatch(accFormStateHandleFieldChangeKeysOnly({fields:result}));
 
  } catch (error) {
    console.error('Error in handleTextDataChange:', error);
  } finally {
    return result;
  }
-};
-
+}
 
   return {
     undoEditMode,

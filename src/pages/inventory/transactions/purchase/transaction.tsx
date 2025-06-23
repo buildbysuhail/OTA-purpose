@@ -717,7 +717,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       },
       {
         dataField: "barCode",
-        caption: t("bar_code"),
+        caption: t("barcode"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,

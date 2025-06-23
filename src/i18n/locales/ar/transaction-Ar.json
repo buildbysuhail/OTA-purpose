@@ -541,5 +541,11 @@
   "party_wise_summary": "ملخص حسب الطرف",
 
   "grn_number": "رقم إيصال استلام البضاعة",
-  "more_options": "المزيد من الخيارات"
+  "more_options": "المزيد من الخيارات",
+  "width": "العرض",
+  "height": "الارتفاع",
+  "nos": "الأعداد",
+  "qty_factors": "عوامل الكمية",
+  "multiple_rows": "صفوف متعددة",
+  "apply": "تطبيق"
 }

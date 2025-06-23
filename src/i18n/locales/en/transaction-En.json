@@ -541,5 +541,11 @@
   "party_wise_summary": "Party wise summary",
 
   "grn_number": "GRN Number",
-  "more_options": "More Options"
+  "more_options": "More Options",
+  "width": "Width",
+  "height": "Height",
+  "nos": "NOS",
+  "qty_factors": "Qty Factors",
+  "multiple_rows": "Multiple rows",
+  "apply": "Apply"
 }

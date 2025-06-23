@@ -216,23 +216,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-    handleFieldKeyDown(
-      field,
-      e?.key ?? e?.event?.originalEvent?.key,
-      erpGridRef,
-      applicationSettings
-    );
-    switch (e.key) {
-      case "pCode":
-        const data = formState.transaction.details[rowIndex];
-        const value = data?.pCode;
-        if(!isNullOrUndefinedOrEmpty(value)) {
-          loadProductDetailsByAutoBarcode({},{result:{}, formStateHandleFieldChangeKeysOnly:formStateHandleFieldChangeKeysOnly})
-        } else {
-          focusToNextColumn(rowIndex, field);
-        }
-
-    }
+          debugger;
+    
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
@@ -1855,7 +1840,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 <AccHeader
                   formState={formState}
                   dispatch={dispatch}
-                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
                   t={t} // Replace with your translation function
                   loadTemporaryRows={loadTemporaryRows}
                   deleteTransVoucher={deleteTransVoucher}
@@ -1904,6 +1889,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
+            t={t}
             onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
               handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
             transactionType={transactionType}
@@ -1960,7 +1946,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
            <AccHeader
                   formState={formState}
                   dispatch={dispatch}
-                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
                   t={t} // Replace with your translation function
                   loadTemporaryRows={loadTemporaryRows}
                   deleteTransVoucher={deleteTransVoucher}
@@ -2013,6 +1999,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 
               </div>
                   <ErpPurchaseGrid
+                  t={t}
             onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
              handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
                     columns={purchaseGridCol}

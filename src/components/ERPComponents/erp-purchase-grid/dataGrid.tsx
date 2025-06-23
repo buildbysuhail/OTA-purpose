@@ -28,6 +28,7 @@ export interface SummaryConfig<T = any> {
 interface DataGridProps<T extends DataItem> {
   columns?: DevGridColumn[];
   keyField: string;
+  t: any;
   gridId: string;
   className?: string;
   transactionType?: string;
@@ -195,13 +196,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, bl
     />
   );
 });
-
-
-
-
-
-
-
 
 
 const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
@@ -565,6 +559,7 @@ const SummaryRow: React.FC<{
 const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
     columns = [],
+    t,
     keyField,
     transactionType,
     onKeyDown,
@@ -683,22 +678,23 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     setTableWidth(calculateTotalWidth());
   }, [formState.gridColumns]);
 
-  useEffect(() => {
-    dispatch(formStateHandleFieldChange({ fields: { gridColumns: columns } }));
-  }, [columns, dispatch]);
+  // useEffect(() => {
+  //   dispatch(formStateHandleFieldChange({ fields: { gridColumns: columns } }));
+  // }, [columns, dispatch]);
 
   useEffect(() => {
     if (gridId && columns) {
       onApplyPreferences(getInitialPreference(gridId, columns));
     }
-  }, [gridId, columns]);
+  }, [gridId, columns, t]);
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
       const updated = applyGridColumnPreferences(columns, pref);
+      
       dispatch(formStateHandleFieldChange({ fields: { gridColumns: updated } }));
     },
-    [columns, dispatch]
+    [columns, dispatch, t]
   );
 
   return (
@@ -707,6 +703,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       style={{ width: `${tableWidth}px`, maxWidth: "100%", overflow: "hidden", boxSizing: "border-box" }}
       className="bg-white border border-gray-300 rounded-none shadow-none"
     >
+      {/* {JSON.stringify(formState.gridColumns)} */}
       <div className={`relative ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           <GridPreferenceChooser

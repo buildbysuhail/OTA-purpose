@@ -307,9 +307,10 @@ const ComboboxList = React.forwardRef<
 
   };
 
+    const dynamicHeight = Math.min(items.length * ITEM_HEIGHT, LIST_HEIGHT);
   return (
     <List
-      height={LIST_HEIGHT}
+      height={dynamicHeight}
       itemCount={items?.length}
       itemSize={ITEM_HEIGHT}
       width="100%"
@@ -1637,7 +1638,7 @@ useEffect(() => {
           }
             ${
               labelDirection === "vertical"
-                ? "flex flex-col space-y-1"
+                ? "flex flex-col"
                 : "flex items-center space-x-2"
             }`}
           ref={componentRef}
@@ -1683,7 +1684,7 @@ useEffect(() => {
               </label>
             )}
             <div
-              className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-end p-1 "
+              className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-end"
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"

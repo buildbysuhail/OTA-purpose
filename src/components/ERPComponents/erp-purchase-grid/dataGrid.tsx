@@ -80,6 +80,7 @@ interface RowData {
   blockUnitOnDecimalPoint: boolean;
   focusCell: (targetRow: number, targetColumnIndex: number) => void;
   nextCellFind: (rowIndex: number, column: string) => void;
+  currentCell?: {column: string, rowIndex: number};
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, blockUnitOnDecimalPoint, rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown, productId }) => {
@@ -322,8 +323,8 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
             title={JSON.stringify({
         dataField: column.dataField,
         readOnly: column.readOnly,
-        currentCellColumn: formState.currentCell?.column,
-        currentCellRowIndex: formState.currentCell?.rowIndex,
+        currentCellColumn: data.currentCell?.column,
+        currentCellRowIndex: data.currentCell?.rowIndex,
         currentRowIndex: index,
         cellId,
         gridId
@@ -344,12 +345,14 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
               role="gridcell"
               onClick={(e) => {
                 e.preventDefault();
+                
                 dispatch(formStateHandleFieldChange({fields: {currentCell : {column: column.dataField, rowIndex: index}}}))
 
               }}
             >
              
-               {(column.dataField === "product" || column.dataField === "pCode") && !column.readOnly && formState.currentCell?.column == column.dataField && formState.currentCell?.rowIndex == index ? (
+               {(column.dataField === "product" || column.dataField === "pCode") && !column.readOnly 
+               && data.currentCell?.column == column.dataField && data.currentCell?.rowIndex == index ? (
                     <ERPProductSearch
                       id={cellId}
                       inputId={`${gridId}_${column.dataField}_${index}`}
@@ -385,7 +388,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                         dispatch(formStateHandleFieldChange({fields: {batchSelectionData: JSON.stringify(res)}}))
                       }}
                     />
-                  ) : column.dataField === "product" && !column.readOnly ? (
+                     ) : column.dataField === "product" && !column.readOnly ? (
                     <span
                       id={cellId}
                       tabIndex={0}
@@ -413,7 +416,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 </span>
               )  : column.allowEditing && ( !column.readOnly && txtData.visible == true) ?
               (
- <EditableCell
+            <EditableCell
                 productId={productId}
                 blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
                 decimalLimit={2}
@@ -738,7 +741,8 @@ const itemData = useMemo(() => ({
   blockUnitOnDecimalPoint: applicationState.inventorySettings.blockUnitOnDecimalPoint,
   focusCell: focusCell,
   nextCellFind: nextCellFind,
-}), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType, focusCell, nextCellFind]);
+  currentCell: formState.currentCell
+}), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType, focusCell, nextCellFind, formState.currentCell]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());

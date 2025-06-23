@@ -183,7 +183,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   const dataGridRef = useRef<any>(null);
   const batchGridRef = useRef<any>(null);
   const gridContainerRef = useRef<HTMLDivElement>(null);
-   const InputRef =ref?ref:useRef<HTMLInputElement>(null);
+  const internalRef = useRef<HTMLInputElement>(null);
+  const inputRef = ref || internalRef;
   const { t } = useTranslation("inventory");
   const dispatch = useDispatch();
 
@@ -287,11 +288,13 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
     debouncedFetch.cancel();
   }, [debouncedFetch]);
 
-  useEffect(() => () => {
-    if(InputRef && (InputRef as any).current) {
-      (InputRef as any).current.focus()
+  useEffect(() =>{
+    debugger;
+    if(inputRef && 'current' in inputRef && inputRef.current) {
+      inputRef.current.focus()
+      inputRef.current.select();
     }
-  }, [InputRef]);
+  }, [inputRef]);
 
   const handleGridKeyDown = useCallback(
     async (e: any) => {
@@ -312,25 +315,25 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
             } else {
               dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-              if (InputRef && 'current' in InputRef && InputRef.current) {
-                InputRef.current.focus();
+              if (inputRef && 'current' in inputRef && inputRef.current) {
+                inputRef.current.focus();
               }
             }
           } catch (err) {
             dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-            if (InputRef && 'current' in InputRef && InputRef.current) {
-              InputRef.current.focus();
+            if (inputRef && 'current' in inputRef && inputRef.current) {
+              inputRef.current.focus();
             }
           }
         }
       } else if (e.event.key === 'Escape') {
         dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-        if (InputRef && 'current' in InputRef && InputRef.current) {
-          InputRef.current.focus();
+        if (inputRef && 'current' in inputRef && inputRef.current) {
+          inputRef.current.focus();
         }
         e.event.preventDefault();
       }
-    }, [batchDataUrl, onProductSelected, InputRef]
+    }, [batchDataUrl, onProductSelected, inputRef]
   );
 
   const handleBatchGridKeyDown = useCallback(
@@ -349,8 +352,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             searchValue: '',
           }));
         }
-        if (InputRef && 'current' in InputRef && InputRef.current) {
-          InputRef.current.focus();
+        if (inputRef && 'current' in inputRef && inputRef.current) {
+          inputRef.current.focus();
         }
       } 
       // else if (e.event.key === 'Escape') {
@@ -360,13 +363,13 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       // }
       else if (e.event.key === 'Escape') {
       dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
-      if (InputRef && 'current' in InputRef && InputRef.current) {
-        InputRef.current.focus();
+      if (inputRef && 'current' in inputRef && inputRef.current) {
+        inputRef.current.focus();
       }
       e.event.preventDefault();
     }
     },
-    [onRowSelected, clearAfterSelection, InputRef]
+    [onRowSelected, clearAfterSelection, inputRef]
   );
 
   const handleBatchContentReady = useCallback(() => {
@@ -476,7 +479,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             onKeyDown={handleInputKeyDown}
             onEnterKeyDown={onEnterKeyDown}
             disableEnterNavigation
-            ref={InputRef}
+            ref={inputRef}
             onFocus={(e) => {
               console.log("Focused on ERPProductSearch input");
               if (rest.onFocus) {

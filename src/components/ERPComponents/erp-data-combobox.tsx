@@ -1648,7 +1648,7 @@ useEffect(() => {
           }
             ${
               labelDirection === "vertical"
-                ? "flex flex-col"
+                ? "flex flex-col space-y-1"
                 : "flex items-center space-x-2"
             }`}
           ref={componentRef}

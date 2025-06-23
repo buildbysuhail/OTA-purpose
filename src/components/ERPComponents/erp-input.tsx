@@ -724,7 +724,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       return (
         <div
           className={`${className} ${labelDirection === "vertical"
-            ? `flex flex-col ${noLabel && "space-y-0"}`
+            ? `flex flex-col ${noLabel ? "space-y-0" : "space-y-1"}`
             : "flex items-center space-x-2"
             }`}
           style={{

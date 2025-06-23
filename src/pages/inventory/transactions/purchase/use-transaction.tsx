@@ -85,6 +85,7 @@ export const useTransaction = (
   transactionType: string,
   btnSaveRef: any,
   btnAddRef: any,
+  focusToNextColumn:(rowIndex: number, column: string) => void,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
   masterAccountRef?: any,
@@ -99,7 +100,7 @@ export const useTransaction = (
   taxableAmountRef?: any,
   refNoRef?: any,
   discountRef?: any,
-  chequeStatusRef?: any
+  chequeStatusRef?: any,
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -2587,7 +2588,8 @@ const handleTextDataKeyDown = async (
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode({},{result:{}, formStateHandleFieldChangeKeysOnly:formStateHandleFieldChangeKeysOnly})
                } else {
-                 focusToNextColumn(rowIndex, field);
+                debugger;
+                 focusToNextColumn(rowIndex, "pCode");
                }
         }
 

@@ -289,7 +289,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 
   useEffect(() => () => {
     if(InputRef && (InputRef as any).current) {
-      // (InputRef as any).current.focus()
+      (InputRef as any).current.focus()
     }
   }, [InputRef]);
 

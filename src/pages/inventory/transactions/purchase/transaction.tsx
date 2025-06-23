@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import {
   formStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
   formStateSet,
   setUserRight,
@@ -31,7 +32,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
@@ -61,6 +62,7 @@ import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
 import ObjectViewer from "./components/fomstate-view";
 import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
+import QtyFactorsModal from "./qty-factors";
 
 interface BilledItem {
   id?: number;
@@ -146,6 +148,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false); 
 
+  const purchaseGridRef = useRef<{
+     focusCell: (targetRow: number, targetColumnIndex: number) => void;
+     nextCellFind: (rowIndex: number, column: string) => void;
+  }>(null);
   
   const toggleHeaderDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -164,12 +170,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [hasAnimated, setHasAnimated] = useState(false);
 
   
-  useEffect(() => {
-    if (formState.batchSelectionData != "") {
-      
-    }
-  }, [formState.batchSelectionData]);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -220,39 +220,22 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
     }
   };
-  const handleKeyDown = (e: any, field: string) => {
-    handleFieldKeyDown(
-      field,
-      e?.key ?? e?.event?.originalEvent?.key,
-      erpGridRef,
-      applicationSettings
-    );
-    if (e.key === "Enter") {
-      if (field === "ledgerCode") {
-        const ledgerCodeExists =
-          formState.partyId && formState.partyId.trim() !== "";
-        if (!ledgerCodeExists) {
-          try {
-            const id = Number.parseInt(formState.partyId ?? "");
-          } catch (error) {}
-        } else {
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: { ledgerID: 0, partyName: "" },
-            })
-          );
-        }
-      }
-      handleFieldKeyDown(field, e.key, erpGridRef, applicationSettings);
-    }
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => {
+          debugger;
+    
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
+  const focusToNextColumn = (rowIndex: number, column: string) => {
+  purchaseGridRef.current?.nextCellFind(rowIndex,column)
+}
+
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
     getNextVoucherNumber,
     loadAndSetTransVoucher,
+    handleTextDataKeyDown,
     loadTransVoucher,
     setTransVoucher,
     deleteTransVoucher,
@@ -280,14 +263,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
     focusRefNo,
     focusAmount,
     focusDiscount,
-    // showBillwise,
-    // billWiseExcludedTransactions,
+    loadProductDetailsByAutoBarcode,
     getDrCr,
     clearRow,
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
     btnAddRef,
+    focusToNextColumn,
     ledgerCodeRef,
     ledgerIdRef,
     masterAccountRef,
@@ -304,6 +287,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     discountRef,
     chequeStatusRef
   );
+
+  
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -688,6 +673,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setData((prev) => [...prev, newItem]);
   };
 
+  
+  useEffect(() => {
+                        
+    if (formState.batchSelectionData != "") {
+      const data = JSON.parse(formState.batchSelectionData);
+      loadProductDetailsByAutoBarcode(data?.transaction?.details ? data?.transaction?.details[0]:{},{result:{},formStateHandleFieldChangeKeysOnly})
+    }
+  }, [formState.batchSelectionData]);
+
   const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
       {
@@ -699,35 +693,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 70,
         isLocked: true,
-        readOnly: true,
+        visible: true,
         alignment: 'right'
       },
       {
         dataField: "pCode",
         caption: t("p_code"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
+        visible: true,
         width: 150,
-        readOnly: true,
         alignment: 'left'
       },
       {
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 100,
-        visible: false,
-        readOnly: true,
+        visible: true,
+        readOnly: false,
         alignment: 'right'
       },
       {
         dataField: "barCode",
-        caption: t("bar_code"),
+        caption: t("barcode"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -1856,7 +1846,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 <AccHeader
                   formState={formState}
                   dispatch={dispatch}
-                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
                   t={t} // Replace with your translation function
                   loadTemporaryRows={loadTemporaryRows}
                   deleteTransVoucher={deleteTransVoucher}
@@ -1905,6 +1895,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
+              ref={purchaseGridRef}
+              onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+              handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+              transactionType={transactionType}
               columns={purchaseGridCol}
               keyField={"productID"}
               height={gridHeight}
@@ -1958,7 +1952,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
            <AccHeader
                   formState={formState}
                   dispatch={dispatch}
-                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
                   t={t} // Replace with your translation function
                   loadTemporaryRows={loadTemporaryRows}
                   deleteTransVoucher={deleteTransVoucher}
@@ -2011,6 +2005,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 
               </div>
                   <ErpPurchaseGrid
+               ref={purchaseGridRef}
+            onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+             handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
                     columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}
@@ -2263,6 +2260,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           onClose={() => setIsHistorySidebarOpen(false)}
         />
       )}
+       {formState.showQuantityFactors && (
+        <QtyFactorsModal
+          isOpen={formState.showQuantityFactors}
+          onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showQuantityFactors: false } }))}
+          t={t}
+        />
+      )}    
     </div>
   );
 };

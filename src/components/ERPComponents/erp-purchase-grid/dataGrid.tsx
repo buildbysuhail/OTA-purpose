@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback, forwardRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, forwardRef, useMemo, Ref } from "react";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
@@ -12,6 +12,7 @@ import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences, getInitialPreference } from "../../../utilities/dx-grid-preference-updater";
 import type { FormElementState, TransactionDetail } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowUpdate } from "../../../pages/inventory/transactions/purchase/reducer";
+import { useSelector } from "react-redux";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -29,10 +30,12 @@ interface DataGridProps<T extends DataItem> {
   keyField: string;
   gridId: string;
   className?: string;
+  transactionType?: string;
   rowHeight?: number;
   height?: number;
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail, rowIndex: number) => void;
   allowColumnReordering?: boolean;
   summaryConfig?: SummaryConfig<TransactionDetail>[];
 
@@ -45,9 +48,10 @@ interface EditableCellProps {
   onFocus: () => void;
   onBlur: () => void;
   gridId: string;
-  onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => void;
+ onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn, rowIndex: number) => void;
   blockUnitOnDecimalPoint: boolean;
   decimalLimit: number;
+  productId: number;
 }
 
 interface DragState {
@@ -68,21 +72,25 @@ interface RowData {
   listRef: React.RefObject<List>;
   itemCount: number;
   gridRef: React.RefObject<HTMLDivElement>; // Added gridRef to RowData  
-  onQPressed: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail, rowIndex: number) => void;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
+  focusCell: (targetRow: number, targetColumnIndex: number) => void;
+  nextCellFind: (rowIndex: number, column: string) => void;
+  currentCell?: {column: string, rowIndex: number};
 }
 
-const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, blockUnitOnDecimalPoint, rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown }) => {
+const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, blockUnitOnDecimalPoint, rowIndex, column, value, onFocus, onBlur, gridId, onKeyDown, productId }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [localValue, setLocalValue] = useState<string>(value.toString());
+  
+  const [localValue, setLocalValue] = useState<string>(productId > 0 ?value?.toString(): '');
 
   useEffect(() => {
-    setLocalValue(value.toString());
+    setLocalValue(value?.toString());
   }, [value]);
 
   const validateNumberInput = (value: string) => {
@@ -111,7 +119,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(({ decimalLimit, bl
 
   const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     let inputValue = e.currentTarget.value;
-debugger;
+
     // Check if the input is just a dot (and nothing else)
     if (column.dataType === "number" && inputValue === '.') {
       inputValue = '0.';
@@ -156,7 +164,6 @@ debugger;
     if (e.key === "Backspace" || e.key === "Delete") {
       return;
     }
-
     if (column.dataType === "number") {
       const key = e.key;
       const inputElement = inputRef.current;
@@ -165,9 +172,8 @@ debugger;
       const beforeCursor = currentValue.substring(0, cursorPosition);
 
     }
-
     // Call the original onKeyDown for navigation, etc.
-    onKeyDown(e, column);
+    onKeyDown(e, column, rowIndex);
   };
 
   return (
@@ -193,12 +199,6 @@ debugger;
 
 
 
-
-
-
-
-
-
 const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
   const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
   const item = data.details[index];
@@ -211,6 +211,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
   const gridRef = data.gridRef;
   const rowRef = useRef<HTMLTableRowElement>(null);
   const dispatch = useAppDispatch();
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
 
   const handleFocus = useCallback((columnKey: string) => {
     setFocusedColumn(columnKey);
@@ -237,154 +238,67 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
     );
   };
 
-  const focusCell = useCallback(
-    (targetRow: number, targetColumnIndex: number) => {
-      if (
-        targetRow < 0 ||
-        targetRow >= itemCount ||
-        targetColumnIndex < 0 ||
-        targetColumnIndex >= columns.filter((col) => col.visible && col.dataField != null).length
-      ) {
-        console.log(`Invalid navigation: row=${targetRow}, colIndex=${targetColumnIndex}`);
-        return;
-      }
-
-      const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
-      const targetColumn = visibleColumns[targetColumnIndex];
-      const targetCellId = `${gridId}_${targetColumn.dataField}_${targetRow}`;
-      console.log(`Attempting to focus cell: ${targetCellId}`);
-
-      if (listRef.current && targetRow !== index) {
-        listRef.current.scrollToItem(targetRow, "smart");
-        console.log(`Scrolled to row: ${targetRow}`);
-      }
-
-      const attemptFocus = () => {
-        const targetCell = document.getElementById(targetCellId) as HTMLElement | null;
-        if (targetCell) {
-          if (targetColumn.dataField === "product") {
-            const erpSearchInput = targetCell.querySelector(`input[id="${targetCellId}"]`) as HTMLInputElement | null;
-            if (erpSearchInput) {
-              erpSearchInput.focus();
-              erpSearchInput.select();
-              console.log(`Focused ERPProductSearch input: ${targetCellId}`);
-              return true;
-            } else {
-              console.log(`ERPProductSearch input not found for ${targetCellId}`);
-            }
-          }
-          targetCell.focus();
-          const input = targetCell.tagName === "INPUT"
-            ? targetCell as HTMLInputElement
-            : targetCell.querySelector("input") as HTMLInputElement | null;
-          if (input) {
-            input.select();
-            console.log(`Focused input: ${targetCellId}`);
-          } else {
-            console.log(`No input found in cell: ${targetCellId}`);
-          }
-          return true;
-        }
-        console.log(`Cell not found: ${targetCellId}`);
-        return false;
-      };
-
-      if (attemptFocus()) {
-        const targetCell = document.getElementById(targetCellId) as HTMLElement;
-        if (gridRef.current && targetCell) {
-          const cellRect = targetCell.getBoundingClientRect();
-          const gridRect = gridRef.current.getBoundingClientRect();
-          const scrollLeft = gridRef.current.scrollLeft;
-
-          if (cellRect.left < gridRect.left) {
-            gridRef.current.scrollLeft = scrollLeft + (cellRect.left - gridRect.left);
-          } else if (cellRect.right > gridRect.right) {
-            gridRef.current.scrollLeft = scrollLeft + (cellRect.right - gridRect.right);
-          }
-        }
-      }
-
-      if (attemptFocus()) return;
-
-      const maxAttempts = 5;
-      let attempts = 0;
-      const interval = setInterval(() => {
-        if (attemptFocus() || attempts >= maxAttempts) {
-          clearInterval(interval);
-          if (attempts >= maxAttempts) {
-            console.log(`Failed to focus cell after ${maxAttempts} attempts: ${targetCellId}`);
-          }
-        }
-        attempts++;
-      }, 50);
-    },
-    [columns, gridId, index, itemCount, listRef]
-  );
-
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn) => {
-      const target = e.target as HTMLElement;
-      if (!target.id) return;
+  (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn, rowIndex: number) => {
+    const target = e.target as HTMLElement;
+    if (!target.id) return;
 
-      const visibleColumns = columns.filter((col) => col.visible && col.dataField != null);
-      const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
+    const visibleColumns = data.columns.filter((col) => col.visible && col.dataField != null);
+    const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
 
-      if (["Q", "q"].includes(e.key) && column.dataField == "qty") {
-        data.onQPressed(e, column.dataField as keyof TransactionDetail)
-        return;
-      }
-      if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-        return;
-      }
+    if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
+      data.onKeyDown(e, column.dataField as keyof TransactionDetail, rowIndex);
+      return;
+    }
 
-      let shouldNavigate = true;
-      if (target.tagName === "INPUT" || target.querySelector("input")) {
-        const input = target.tagName === "INPUT"
-          ? target as HTMLInputElement
-          : target.querySelector("input") as HTMLInputElement | null;
-        if (input && input.type !== "number") { // Skip cursor check for number inputs
-          const { selectionStart, selectionEnd, value } = input;
-          const effectiveValue = value || "";
-          const effectiveStart = selectionStart ?? 0;
-          const effectiveEnd = selectionEnd ?? 0;
-          if (e.key === "ArrowRight" && (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)) {
-            shouldNavigate = false;
-          } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
-            shouldNavigate = false;
-          }
+    let shouldNavigate = true;
+    if (target.tagName === "INPUT" || target.querySelector("input")) {
+      const input = target.tagName === "INPUT"
+        ? target as HTMLInputElement
+        : target.querySelector("input") as HTMLInputElement | null;
+      if (input && input.type !== "number") { // Skip cursor check for number inputs
+        const { selectionStart, selectionEnd, value } = input;
+        const effectiveValue = value || "";
+        const effectiveStart = selectionStart ?? 0;
+        const effectiveEnd = selectionEnd ?? 0;
+        if (e.key === "ArrowRight" && (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)) {
+          shouldNavigate = false;
+        } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
+          shouldNavigate = false;
         }
       }
+    }
 
-      if (!shouldNavigate) {
-        console.log(`Navigation skipped: Cursor not at boundary`);
-        return;
-      }
+    if (!shouldNavigate) {
+      console.log(`Navigation skipped: Cursor not at boundary`);
+      return;
+    }
 
-      e.preventDefault(); // Prevent default browser behavior (e.g., increment/decrement in number inputs)
+   e.preventDefault(); // Prevent default browser behavior (e.g., increment/decrement in number inputs)
       switch (e.key) {
         case "ArrowRight":
           if (currentColumnIndex < visibleColumns.length - 1) {
-            focusCell(index, currentColumnIndex + 1);
+            data.focusCell(index, currentColumnIndex + 1);
           }
           break;
         case "ArrowLeft":
           if (currentColumnIndex > 0) {
-            focusCell(index, currentColumnIndex - 1);
+            data.focusCell(index, currentColumnIndex - 1);
           }
           break;
         case "ArrowUp":
-          focusCell(index - 1, currentColumnIndex);
+          data.focusCell(index - 1, currentColumnIndex);
           break;
         case "ArrowDown":
-          focusCell(index + 1, currentColumnIndex);
+          data.focusCell(index + 1, currentColumnIndex);
           break;
       }
-    },
-    [columns, index, itemCount, focusCell]
-  );
+  },
+  [data]
+);
 
   return (
-    <tr
+   <tr
       ref={rowRef}
       style={{
         ...style,
@@ -399,12 +313,23 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
         .filter((col) => col.visible && col.dataField != null)
         .map((column) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
+          const productId = item.productID;
           const cellValue = item[fieldKey];
           const isFocused = focusedColumn === column.dataField;
           const cellId = `${gridId}_${column.dataField}_${index}`;
 
           return (
             <td
+            title={JSON.stringify({
+        dataField: column.dataField,
+        readOnly: column.readOnly,
+        currentCellColumn: data.currentCell?.column,
+        currentCellRowIndex: data.currentCell?.rowIndex,
+        currentRowIndex: index,
+        cellId,
+        gridId
+      })}
+
               key={column.dataField}
               className={`px-0 py-0 last:border-r-0 ${column.cssClass || ""} ${
                 isFocused ? "!border-[#4447ef]" : "!border-gray-300"
@@ -418,76 +343,63 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 border: isFocused ? "2px solid #EF4444" : "1px solid #D1D5DB",
               }}
               role="gridcell"
+              onClick={(e) => {
+                e.preventDefault();
+                
+                dispatch(formStateHandleFieldChange({fields: {currentCell : {column: column.dataField, rowIndex: index}}}))
+
+              }}
             >
-               {column.dataField === "product" && !column.readOnly ? (
-                <ERPProductSearch
-                  id={cellId}
-                  inputId={`${gridId}_${column.dataField}_${index}`}
-                  noLabel={true}
-                  showCheckBox={false}
-                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
-                  value={(cellValue as string) || ""}
-                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
-                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
-                  tabIndex={0}
-                  className="h-[22px] text-sm"
-                  onFocus={() => handleFocus(column.dataField!)}
-                  onBlur={handleBlur}
-                  onKeyDown={(e) => handleKeyDown(e, column)}
-                  searchKey="product"
-                  advancedProductSearching ={data.advancedProductSearching}
-                  useInSearch = {data.useInSearch}
-                  useCodeSearch = {data.useCodeSearch}
-                  onRowSelected={(data: any) => {
-                      const res = {
-                        transaction:{
-                          details:[{
-                            
-                            productBatchID: data.productBatchID,
-                          autoBarcode: data.autoBarcode,
-                          productCode: data.productCode,
-                          useProductCode: false
-                          }]
-                        },
-                        key:crypto.randomUUID()
-                      }
-                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
-                    }}
-                />
-              ) :column.dataField === "pCode" && !column.readOnly ? (
-                <ERPProductSearch
-                  id={cellId}
-                  inputId={`${gridId}_${column.dataField}_${index}`}
-                  noLabel={true}
-                  showCheckBox={false}
-                  onRowSelected={(data: any) => {
-                      const res = {
-                        detail:{
-                            slNo: item.slNo,
-                            productBatchID: data.productBatchID,
-                          autoBarcode: data.autoBarcode,
-                          productCode: data.productCode,
-                          useProductCode: false
+             
+               {(column.dataField === "product" || column.dataField === "pCode") && !column.readOnly 
+               && data.currentCell?.column == column.dataField && data.currentCell?.rowIndex == index ? (
+                    <ERPProductSearch
+                      id={cellId}
+                      inputId={`${gridId}_${column.dataField}_${index}`}
+                      noLabel={true}
+                      showCheckBox={false}
+                      contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
+                      value={(cellValue as string) || ""}
+                      productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                      batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
+                      tabIndex={0}
+                      className="h-[22px] text-sm"
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) => handleKeyDown(e, column, index)}
+                      searchKey={column.dataField} // Uses "product" or "pCode" dynamically
+                      advancedProductSearching={data.advancedProductSearching}
+                      useInSearch={data.useInSearch}
+                      useCodeSearch={data.useCodeSearch}
+                      onRowSelected={(data: any, rowValue?: string) => {
+                        const res = {
+                          transaction: {
+                            details: [{
+                              slNo: item.slNo,
+                              productBatchID: data.productBatchID,
+                              autoBarcode: data.autoBarcode,
+                              productCode: data.productCode,
+                              useProductCode: false,
+                              searchText: rowValue
+                            }]
                           },
-                        key:crypto.randomUUID()
-                      }
-                      formStateHandleFieldChange({fields: {batchSelectionData : JSON.stringify(res)}})
-                    }}
-                  contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
-                  value={(cellValue as string) || ""}
-                  productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
-                  batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
-                  tabIndex={0}
-                  className="h-[22px] text-sm"
-                  onFocus={() => handleFocus(column.dataField!)}
-                  onBlur={handleBlur}
-                  onKeyDown={(e) => handleKeyDown(e, column)}
-                  searchKey="pCode"
-                  advancedProductSearching ={data.advancedProductSearching}
-                  useInSearch = {data.useInSearch}
-                  useCodeSearch = {data.useCodeSearch}
-                />
-              ) : column.dataField === "status" ? (
+                          key: crypto.randomUUID()
+                        }
+                        dispatch(formStateHandleFieldChange({fields: {batchSelectionData: JSON.stringify(res)}}))
+                      }}
+                    />
+                     ) : column.dataField === "product" && !column.readOnly ? (
+                    <span
+                      id={cellId}
+                      tabIndex={0}
+                      className="text-sm text-gray-800 px-1 flex items-center h-[22px] cursor-default"
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) => handleKeyDown(e, column,index)}
+                    >
+                      {productId > 0 ? cellValue : ''}
+                    </span>
+                  ) : column.dataField === "status" ? (
                 <span
                   id={cellId}
                   tabIndex={0}
@@ -498,34 +410,37 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                   }`}
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
-                  onKeyDown={(e) => handleKeyDown(e, column)}
+                  onKeyDown={(e) => handleKeyDown(e, column,index)}
                 >
-                  {cellValue}
+                  {productId > 0 ?cellValue : ''}
                 </span>
-              ) : column.readOnly || txtData.visible !== true ? (
+              )  : column.allowEditing && ( !column.readOnly && txtData.visible == true) ?
+              (
+            <EditableCell
+                productId={productId}
+                blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                decimalLimit={2}
+                // decimalLimit={item.unitDecimalPoint}
+                rowIndex={index}
+                column={column}
+                value={cellValue as string | number}
+                onFocus={() => handleFocus(column.dataField!)}
+                onBlur={handleBlur}
+                gridId={gridId}
+                onKeyDown={(e) => handleKeyDown(e, column,index)}
+                />
+              )
+              : (
                 <span
                   id={cellId}
                   tabIndex={0}
                   className="text-sm text-gray-800 px-1 flex items-center h-[22px] cursor-default"
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
-                  onKeyDown={(e) => handleKeyDown(e, column)}
+                  onKeyDown={(e) => handleKeyDown(e, column,index)}
                 >
-                  {cellValue}
+                  {productId > 0 ?cellValue : ''}
                 </span>
-              ) : (
-                <EditableCell
-                  blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
-                  decimalLimit={2}
-                  // decimalLimit={item.unitDecimalPoint}
-                  rowIndex={index}
-                  column={column}
-                  value={cellValue as string | number}
-                  onFocus={() => handleFocus(column.dataField!)}
-                  onBlur={handleBlur}
-                  gridId={gridId}
-                  onKeyDown={handleKeyDown}
-                />
               )}
             </td>
           );
@@ -580,6 +495,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
     columns = [],
     keyField,
+    transactionType,
+    onKeyDown,
     gridId,
     className = "",
     rowHeight = 24,
@@ -587,7 +504,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     allowColumnReordering = true,
     summaryConfig = [],
   }: DataGridProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
+  ref: Ref<any>
 ) {
   const listRef = useRef<List>(null);
   const outerRef = useRef<HTMLDivElement>(null);
@@ -675,30 +592,165 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     return summaryValues;
   }, [formState.transaction?.details, summaryConfig]);
 
-  const itemData = useMemo(() => ({
-    details: formState.transaction?.details || [],
-    columns: formState.gridColumns || [],
-    tableWidth: tableWidth,
-    txtData: formState.formElements.txtData,
-    gridId: gridId,
-    listRef: listRef,
-    itemCount: formState.transaction?.details.length || 0,
-    gridRef: gridRef,
-    onQPressed: (e: any, column: keyof TransactionDetail) =>{
-      
-      dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
-    },
-    transactionType: formState.transactionType,
-    blockUnitOnDecimalPoint: applicationState.inventorySettings.blockUnitOnDecimalPoint
-  }), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType]);
+const focusCell = useCallback(
+  (targetRow: number, targetColumnIndex: number) => {
+    const visibleColumns = formState.gridColumns?.filter((col) => col.visible && col.dataField != null) ?? [];
+    const itemCount = formState.transaction?.details.length || 0;
+    if (
+      targetRow < 0 ||
+      targetRow >= itemCount ||
+      targetColumnIndex < 0 ||
+      targetColumnIndex >= visibleColumns.length
+    ) {
+      console.log(`Invalid navigation: row=${targetRow}, colIndex=${targetColumnIndex}`);
+      return;
+    }
+
+    const targetColumn = visibleColumns[targetColumnIndex];
+    const targetCellId = `${gridId}_${targetColumn.dataField}_${targetRow}`;
+    console.log(`Attempting to focus cell: ${targetCellId}`);
+
+    if (listRef.current) {
+      listRef.current.scrollToItem(targetRow, "smart");
+      console.log(`Scrolled to row: ${targetRow}`);
+    }
+
+    const attemptFocus = () => {
+      const targetCell = document.getElementById(targetCellId) as HTMLElement | null;
+      if (targetCell) {
+        if (targetColumn.dataField === "product") {
+          const erpSearchInput = targetCell.querySelector(`input[id="${targetCellId}"]`) as HTMLInputElement | null;
+          if (erpSearchInput) {
+            erpSearchInput.focus();
+            erpSearchInput.select();
+            console.log(`Focused ERPProductSearch input: ${targetCellId}`);
+            return true;
+          } else {
+            console.log(`ERPProductSearch input not found for ${targetCellId}`);
+          }
+        }
+        targetCell.focus();
+        const input = targetCell.tagName === "INPUT"
+          ? targetCell as HTMLInputElement
+          : targetCell.querySelector("input") as HTMLInputElement | null;
+        if (input) {
+          input.select();
+          console.log(`Focused input: ${targetCellId}`);
+        } else {
+          console.log(`No input found in cell: ${targetCellId}`);
+        }
+        return true;
+      }
+      console.log(`Cell not found: ${targetCellId}`);
+      return false;
+    };
+
+    if (attemptFocus()) {
+      const targetCell = document.getElementById(targetCellId) as HTMLElement;
+      if (gridRef.current && targetCell) {
+        const cellRect = targetCell.getBoundingClientRect();
+        const gridRect = gridRef.current.getBoundingClientRect();
+        const scrollLeft = gridRef.current.scrollLeft;
+
+        if (cellRect.left < gridRect.left) {
+          gridRef.current.scrollLeft = scrollLeft + (cellRect.left - gridRect.left);
+        } else if (cellRect.right > gridRect.right) {
+          gridRef.current.scrollLeft = scrollLeft + (cellRect.right - gridRect.right);
+        }
+      }
+    }
+
+    if (attemptFocus()) return;
+
+    const maxAttempts = 5;
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (attemptFocus() || attempts >= maxAttempts) {
+        clearInterval(interval);
+        if (attempts >= maxAttempts) {
+          console.log(`Failed to focus cell after ${maxAttempts} attempts: ${targetCellId}`);
+        }
+      }
+      attempts++;
+    }, 50);
+  },
+  [formState.gridColumns, formState.transaction?.details.length, gridId, listRef, gridRef]
+);
+
+const nextCellFind = useCallback(
+  (rowIndex: number, column: string) => {
+    const visibleColumns = columns.filter(
+      (col) => col.visible && col.dataField != null
+    );
+
+    const editableColumns = visibleColumns.filter(
+      (col) => col.allowEditing && col.readOnly !== true
+    );
+
+    if (editableColumns.length === 0) {
+      return; // No editable columns, exit early
+    }
+
+    const currentEditableIndex = editableColumns.findIndex(
+      (col) => col.dataField === column
+    );
+
+    let targetRow = rowIndex;
+    let targetColumnIndex = -1;
+
+    if (currentEditableIndex >= 0 && currentEditableIndex < editableColumns.length - 1) {
+      // Next editable column in the same row
+      const nextEditable = editableColumns[currentEditableIndex + 1];
+      targetColumnIndex = visibleColumns.findIndex(
+        (col) => col.dataField === nextEditable.dataField
+      );
+    } else {
+      // Move to the first editable column of the next row
+      targetRow += 1;
+      const firstEditable = editableColumns[0];
+      targetColumnIndex = visibleColumns.findIndex(
+        (col) => col.dataField === firstEditable.dataField
+      );
+    }
+
+    if (targetColumnIndex >= 0) {
+      focusCell(targetRow, targetColumnIndex);
+    }
+  },
+  [columns, focusCell]
+);
+
+  React.useImperativeHandle(ref, () => ({
+    focusCell,
+    nextCellFind
+  }));
+
+const itemData = useMemo(() => ({
+  details: formState.transaction?.details || [],
+  columns: formState.gridColumns || [],
+  tableWidth: tableWidth,
+  txtData: formState.formElements.txtData,
+  gridId: gridId,
+  listRef: listRef,
+  itemCount: formState.transaction?.details.length || 0,
+  gridRef: gridRef,
+  onKeyDown: (e: any, column: keyof TransactionDetail, rowIndex: number) => {
+    onKeyDown(e, column, rowIndex);
+  },
+  transactionType: transactionType ?? formState.transactionType,
+  blockUnitOnDecimalPoint: applicationState.inventorySettings.blockUnitOnDecimalPoint,
+  focusCell: focusCell,
+  nextCellFind: nextCellFind,
+  currentCell: formState.currentCell
+}), [formState.transaction?.details, formState.gridColumns, tableWidth, formState.formElements.txtData, gridId, formState.transactionType, focusCell, nextCellFind, formState.currentCell]);
 
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
   }, [formState.gridColumns]);
 
-  useEffect(() => {
-    dispatch(formStateHandleFieldChange({ fields: { gridColumns: columns } }));
-  }, [columns, dispatch]);
+  // useEffect(() => {
+  //   dispatch(formStateHandleFieldChange({ fields: { gridColumns: columns } }));
+  // }, [columns, dispatch]);
 
   useEffect(() => {
     if (gridId && columns) {

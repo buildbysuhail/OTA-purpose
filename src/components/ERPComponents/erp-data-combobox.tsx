@@ -180,13 +180,8 @@ const getSizeClasses = (
         label: "text-[10px]",
         options: "text-xs",
         icons: "h-4 w-4",
-      };
-    case "lg":
-      return {
-        input: "h-11 text-sm px-4",
-        label: "text-[14px]",
-        options: "text-sm",
-        icons: "h-6 w-6",
+        buttonPadding: "p-[0.2rem]",
+        buttonBorderRadius: "rounded",
       };
     case "md":
       return {
@@ -194,6 +189,17 @@ const getSizeClasses = (
         label: "text-[12px]",
         options: "text-xs",
         icons: "h-5 w-5",
+        buttonPadding: "p-[0.3rem]",
+        buttonBorderRadius: "rounded-md",
+      };
+    case "lg":
+      return {
+        input: "h-11 text-sm px-4",
+        label: "text-[14px]",
+        options: "text-sm",
+        icons: "h-6 w-6",
+        buttonPadding: "p-[0.4rem]",
+        buttonBorderRadius: "rounded-md",
       };
     case "customize":
       return {
@@ -201,6 +207,8 @@ const getSizeClasses = (
         label: "text-[12px]",
         options: "text-xs",
         icons: "h-5 w-5",
+        buttonPadding: "p-[0.3rem]",
+        buttonBorderRadius: `rounded-[${appState?.inputBox?.borderRadius ?? 5}px]`,
       };
     default:
       return {
@@ -208,6 +216,8 @@ const getSizeClasses = (
         label: "text-[12px]",
         options: "text-xs",
         icons: "h-5 w-5",
+        buttonPadding: "p-[0.3rem]",
+        buttonBorderRadius: "rounded-md",
       };
   }
 };
@@ -307,9 +317,10 @@ const ComboboxList = React.forwardRef<
 
   };
 
+    const dynamicHeight = Math.min(items.length * ITEM_HEIGHT, LIST_HEIGHT);
   return (
     <List
-      height={LIST_HEIGHT}
+      height={dynamicHeight}
       itemCount={items?.length}
       itemSize={ITEM_HEIGHT}
       width="100%"
@@ -1683,7 +1694,7 @@ useEffect(() => {
               </label>
             )}
             <div
-              className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-end p-1 "
+              className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-end"
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
@@ -1812,30 +1823,35 @@ useEffect(() => {
                         clearSelection();
                         setIsOpen(false);
                       }}
-                      className={`p-1 ${
-                        !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
-                      } rounded-full`}
+                      className="h-full flex items-center justify-center"
                       aria-label="Clear selection"
                     >
-                      <XMarkIcon
-                        className={`${sizeClasses?.icons} text-gray-400 ${
-                          !disabled ? "hover:text-gray-500" : ""
-                        } transition-transform duration-200 ${
-                          isOpen ? "transform rotate-180" : ""
+                      <div
+                        className={`h-full flex items-center justify-center ${sizeClasses.buttonPadding} ${sizeClasses.buttonBorderRadius} ${
+                          !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
                         }`}
-                        aria-hidden="true"
-                      />
+                      >
+                        <XMarkIcon
+                          className={`${sizeClasses?.icons} text-gray-400 ${
+                            !disabled ? "hover:text-gray-500" : ""
+                          } transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
+                          aria-hidden="true"
+                        />
+                      </div>
                     </button>
                   )}
                 <Combobox.Button
-                  className={`p-1 ${
-                    !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
-                  } rounded-full`}
+                  className="h-full flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation();
                     !disabled && setIsOpen(!isOpen);
                   }}
                 >
+                   <div
+                        className={`h-full flex items-center justify-center ${sizeClasses.buttonPadding} ${sizeClasses.buttonBorderRadius} ${
+                          !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
+                        }`}
+                      >
                   <ChevronDownIcon
                     className={`${sizeClasses?.icons} text-gray-400 ${
                       !disabled ? "hover:text-gray-500" : ""
@@ -1844,6 +1860,7 @@ useEffect(() => {
                     }`}
                     aria-hidden="true"
                   />
+                  </div>
                 </Combobox.Button>
               </div>
             </div>

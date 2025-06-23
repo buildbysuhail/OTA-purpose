@@ -62,6 +62,7 @@ import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
 import ObjectViewer from "./components/fomstate-view";
 import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
+import QtyFactorsModal from "./qty-factors";
 
 interface BilledItem {
   id?: number;
@@ -2254,6 +2255,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
           onClose={() => setIsHistorySidebarOpen(false)}
         />
       )}
+       {formState.showQuantityFactors && (
+        <QtyFactorsModal
+          isOpen={formState.showQuantityFactors}
+          onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showQuantityFactors: false } }))}
+          t={t}
+        />
+      )}    
     </div>
   );
 };

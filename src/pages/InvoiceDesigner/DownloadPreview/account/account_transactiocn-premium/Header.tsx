@@ -73,8 +73,7 @@ export const Header = ({
 }) => {
 const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
 
-  useEffect(() => {
-    
+  useEffect(() => { 
     const generateQRCodes = async () => {
       const images: { [key: string]: string } = {};
       const qrComponents: PlacedComponent[] = [
@@ -88,12 +87,10 @@ const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
           images[component.id] = dataUrl;
         }
       }
-
       setQrCodeImages(images);
     };
-
     generateQRCodes();
-  }, [template]);
+  },[template]);
 
   const logoWidthRatio = template?.headerState?.logoSize
     ? template.headerState?.logoSize / 100

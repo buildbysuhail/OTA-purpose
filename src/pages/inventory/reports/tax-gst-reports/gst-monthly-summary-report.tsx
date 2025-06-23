@@ -1,31 +1,57 @@
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseGstReportFilter, { PurchaseGstReportFilterInitialState } from "../purchase-tax-gst-reports/purchase-tax-gst-report-filter";
-
-const PurchaseReturnTaxGSTSalesAndReturn = () => {
+import { useLocation } from "react-router-dom";
+import PurchaseGstReportFilterGstCat, { GstReportFilterGstCatInitialState} from "./gst-report-filter-gst";
+import GstReportFilterGstCat from "./gst-report-filter-gst";
+interface GSTMonthlySummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+  gridId: string;
+}
+const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(PurchaseGstReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
     {
-      dataField: "hsn",
-      caption: t("hsn_code"),
+      dataField: "date",
+      caption: t("date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf: true,
     },
     {
-      dataField: "qty",
-      caption: t("quantity"),
+      dataField: "vchNos",
+      caption: t("voucher_number"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 75,
+      showInPdf: true,
+    },
+    {
+      dataField: "form",
+      caption: t("form"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      showInPdf: true,
+    },
+    {
+      dataField: "gstPercentage",
+      caption: t("gstpercentage"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -34,9 +60,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.qty == null
+            cellElement.data?.gstPercentage == null
               ? ""
-              : getFormattedValue(cellElement.data.qty,false,4);
+              : getFormattedValue(cellElement.data.gstPercentage);
           return {
             ...exportCell,
             text: value,
@@ -44,9 +70,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.qty == null
+          return cellElement.data?.gstPercentage == null
             ? ""
-            : getFormattedValue(cellElement.data.qty,false,4);
+            : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
         }
       },
     },
@@ -57,6 +83,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -67,7 +94,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
           const value =
             cellElement.data?.taxableValue == null
               ? ""
-              : getFormattedValue(cellElement.data.taxableValue,false,4);
+              : getFormattedValue(cellElement.data.taxableValue);
           return {
             ...exportCell,
             text: value,
@@ -77,17 +104,18 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue),false,4);
+            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
       },
     },
     {
-      dataField: "cgst",
-      caption: t("cgst"),
+      dataField: "totalGST",
+      caption: t("total_gst"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -96,9 +124,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cgst == null
+            cellElement.data?.totalGST == null
               ? ""
-              : getFormattedValue(cellElement.data.cgst);
+              : getFormattedValue(cellElement.data.totalGST);
           return {
             ...exportCell,
             text: value,
@@ -106,81 +134,20 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cgst == null
+          return cellElement.data?.totalGST == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgst));
-        }
-      },
-    },
-    {
-      dataField: "sgst",
-      caption: t("sgst"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.sgst == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgst);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.sgst == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgst));
-        }
-      },
-    },
-    {
-      dataField: "igst",
-      caption: t("igst"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.igst == null
-              ? ""
-              : getFormattedValue(cellElement.data.igst);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.igst == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igst));
+            : getFormattedValue(parseFloat(cellElement.data.totalGST));
         }
       },
     },
     {
       dataField: "cess",
-      caption: t("cess"),
+      caption: t("cess_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -207,11 +174,12 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
     },
     {
       dataField: "addCess",
-      caption: t("addcess"),
+      caption: t("addcess_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -243,6 +211,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -266,16 +235,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
             : getFormattedValue(cellElement.data.total);
         }
       },
-    },
-    {
-      dataField: "financialYearID",
-      caption: t("financial_year_id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible:false
-    },
+    }
   ];
 
   const { getFormattedValue } = useNumberFormat();
@@ -300,15 +260,9 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
-      column: "hsn",
+      column: "form",
       summaryType: "custom",
       customizeText: customizeDate,
-    },
-      {
-      column: "qty",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
     },
     {
       column: "taxableValue",
@@ -317,19 +271,7 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       customizeText: customizeSummaryRow,
     },
     {
-      column: "cgst",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "sgst",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "igst",
+      column: "totalGST",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -352,8 +294,13 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
-  ];
 
+  ];
+  const location = useLocation();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+      setKey((prev: any) => prev+1)
+  },[location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -369,24 +316,21 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="of From Date : {fromDate} To Date : {toDate}
-               {gstPercValue != '' && , Gst Percentage : [gstPercValue]}
-               {taxCategoryID > 0 && , GST Category : [taxCategoryName]} 
-               {formType > 0 && , Form Type : [formType]}"
+                filterText="of From Date : {fromDate} To Date : {toDate}"
                 moreOption
-                gridHeader={t("purchase_return_gst_report")}
-                dataUrl={Urls.purchase_return_gst_sales_and_return}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilter />}
+                filterContent={<GstReportFilterGstCat />}
                 filterHeight={220}
-                filterWidth={600}
-                filterInitialData={PurchaseGstReportFilterInitialState}
+                filterWidth={790}
+                filterInitialData={GstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_return_gst_sales_and_return_report"
+                gridId={gridId}
               />
             </div>
           </div>
@@ -396,4 +340,4 @@ const PurchaseReturnTaxGSTSalesAndReturn = () => {
   );
 };
 
-export default PurchaseReturnTaxGSTSalesAndReturn;
+export default GSTMonthlySummary;

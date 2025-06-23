@@ -6,7 +6,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 
-const PurchaseGstReportFilter = ({
+const GstReportFilter = ({
   getFieldProps,
   handleFieldChange,
   formState,
@@ -115,9 +115,9 @@ const PurchaseGstReportFilter = ({
   );
 };
 
-export default PurchaseGstReportFilter;
+export default GstReportFilter;
 
-export const PurchaseGstReportFilterInitialState = {
+export const GstReportFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   gSTPerc: null,

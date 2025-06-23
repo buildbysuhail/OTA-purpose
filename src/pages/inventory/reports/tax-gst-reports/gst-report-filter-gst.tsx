@@ -7,7 +7,7 @@ import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select";
 
-const PurchaseGstReportFilterGstCat = ({
+const GstReportFilterGstCat = ({
   getFieldProps,
   handleFieldChange,
   formState,
@@ -114,23 +114,24 @@ const PurchaseGstReportFilterGstCat = ({
           }
         />
         <ERPMultiSelect
-          {...getFieldProps("taxCategoryID")}
-          label={t("branches")}
+          {...getFieldProps("taxCategory")}
+          label={t("gst_category")}
           optionUrl={Urls.data_taxCategory}
           selectedValues={getFieldProps("taxCategoryID").value}
           onChange={(data) => handleFieldChange("taxCategoryID", data)}
-          placeholder={t("select_branches")}
-          searchPlaceholder={t("search_branches")}
+          placeholder={t("select_gst_category")}
+          searchPlaceholder={t("search_gst_category")}
           outputFormat="array"
+          //@TaxCategory=N'2, 9, 4'
         />
       </div>
     </div>
   );
 };
 
-export default PurchaseGstReportFilterGstCat;
+export default GstReportFilterGstCat;
 
-export const PurchaseGstReportFilterGstCatInitialState = {
+export const GstReportFilterGstCatInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   gSTPerc: null,

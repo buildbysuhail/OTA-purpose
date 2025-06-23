@@ -6,24 +6,25 @@ import ErpDevGrid, {
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import PurchaseGstReportFilter, {
-  PurchaseGstReportFilterInitialState,
-} from "./purchase-tax-gst-report-filter";
+import {
+  GstReportFilterInitialState,
+} from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
+import GstReportFilter from "./gst-report-filter";
 
-interface PurchaseTaxGSTRegisterFormatProps {
+interface GSTRegisterFormatProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
+const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
   gridHeader,
   dataUrl,
   gridId,
 }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(
-    PurchaseGstReportFilterInitialState
+    GstReportFilterInitialState
   );
   const columns: DevGridColumn[] = [
     {
@@ -1372,10 +1373,10 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseGstReportFilter />}
+                filterContent={<GstReportFilter />}
                 filterHeight={220}
                 filterWidth={600}
-                filterInitialData={PurchaseGstReportFilterInitialState}
+                filterInitialData={GstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
@@ -1388,4 +1389,4 @@ const PurchaseTaxGSTRegisterFormat: FC<PurchaseTaxGSTRegisterFormatProps> = ({
   );
 };
 
-export default PurchaseTaxGSTRegisterFormat;
+export default GSTRegisterFormat;

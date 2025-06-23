@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import {
   formStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
   formStateSet,
   setUserRight,
@@ -31,7 +32,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
@@ -164,12 +165,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [hasAnimated, setHasAnimated] = useState(false);
 
   
-  useEffect(() => {
-    if (formState.batchSelectionData != "") {
-      
-    }
-  }, [formState.batchSelectionData]);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -220,30 +215,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
     }
   };
-  const handleKeyDown = (e: any, field: string) => {
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => {
     handleFieldKeyDown(
       field,
       e?.key ?? e?.event?.originalEvent?.key,
       erpGridRef,
       applicationSettings
     );
-    if (e.key === "Enter") {
-      if (field === "ledgerCode") {
-        const ledgerCodeExists =
-          formState.partyId && formState.partyId.trim() !== "";
-        if (!ledgerCodeExists) {
-          try {
-            const id = Number.parseInt(formState.partyId ?? "");
-          } catch (error) {}
+    switch (e.key) {
+      case "pCode":
+        const data = formState.transaction.details[rowIndex];
+        const value = data?.pCode;
+        if(!isNullOrUndefinedOrEmpty(value)) {
+          loadProductDetailsByAutoBarcode({},{result:{}, formStateHandleFieldChangeKeysOnly:formStateHandleFieldChangeKeysOnly})
         } else {
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: { ledgerID: 0, partyName: "" },
-            })
-          );
+          focusToNextColumn(rowIndex, field);
         }
-      }
-      handleFieldKeyDown(field, e.key, erpGridRef, applicationSettings);
+
     }
   };
 
@@ -253,6 +241,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     undoEditMode,
     getNextVoucherNumber,
     loadAndSetTransVoucher,
+    handleTextDataKeyDown,
     loadTransVoucher,
     setTransVoucher,
     deleteTransVoucher,
@@ -280,8 +269,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     focusRefNo,
     focusAmount,
     focusDiscount,
-    // showBillwise,
-    // billWiseExcludedTransactions,
+    loadProductDetailsByAutoBarcode,
     getDrCr,
     clearRow,
   } = useTransaction(
@@ -304,6 +292,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     discountRef,
     chequeStatusRef
   );
+
+  
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -687,6 +677,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleAddData = (newItem: any) => {
     setData((prev) => [...prev, newItem]);
   };
+
+  
+  useEffect(() => {
+                        
+    if (formState.batchSelectionData != "") {
+      const data = JSON.parse(formState.batchSelectionData);
+      loadProductDetailsByAutoBarcode(data?.transaction?.details ? data?.transaction?.details[0]:{},{result:{},formStateHandleFieldChangeKeysOnly})
+    }
+  }, [formState.batchSelectionData]);
 
   const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
@@ -1905,7 +1904,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
-              t={t}
+            onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+              handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+            transactionType={transactionType}
               columns={purchaseGridCol}
               keyField={"productID"}
               height={gridHeight}
@@ -2012,7 +2013,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 
               </div>
                   <ErpPurchaseGrid
-                  t={t}
+            onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+             handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
                     columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}

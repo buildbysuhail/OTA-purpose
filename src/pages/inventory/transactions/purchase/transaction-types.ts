@@ -212,7 +212,7 @@ export interface TransactionMasterValidations {
 }
 export interface CommonParams {
     result: DeepPartial<TransactionFormState>;
-    accFormStateHandleFieldChangeKeysOnly?: any;
+    formStateHandleFieldChangeKeysOnly?: any;
   }
 export interface TransactionDetail { 
   slNo: number;
@@ -446,6 +446,8 @@ export interface TransactionFormState {
   summaryConfig: SummaryConfig<TransactionDetail>[] ;
   showQuantityFactors: boolean;
   batchSelectionData: string;
+  currentCell?: {column: string, rowIndex: number};
+  batchesUnits?: [];
   
 }
 export interface PrintTransProps {

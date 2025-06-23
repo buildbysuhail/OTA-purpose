@@ -684,7 +684,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 70,
         isLocked: true,
-        readOnly: true,
         alignment: 'right'
       },
       {
@@ -695,19 +694,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        readOnly: true,
         alignment: 'left'
       },
       {
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 100,
-        visible: false,
-        readOnly: true,
+        visible: true,
+        readOnly: false,
         alignment: 'right'
       },
       {

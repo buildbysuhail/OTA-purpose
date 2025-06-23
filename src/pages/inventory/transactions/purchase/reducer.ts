@@ -529,6 +529,7 @@ const InvTransactionSlice = createSlice({
         updateOnlyGivenDetailsColumns?: boolean;
       }>
     ) => {
+      
       const { fields, updateOnlyGivenDetailsColumns = false } =
         action.payload || {};
 
@@ -602,17 +603,18 @@ const InvTransactionSlice = createSlice({
 
             transactionValue.details.forEach(
               (detailItem: TransactionDetail, index: number) => {
+                const toIndex = (state as any).transaction.details.findIndex((x: TransactionDetail) => x.slNo == detailItem.slNo)
                 if (updateOnlyGivenDetailsColumns === true) {
                   // Update only specific columns in the row
-                  if (!state.transaction.details[index]) {
-                    state.transaction.details[index] = {} as TransactionDetail;
+                  if (!state.transaction.details[toIndex]) {
+                    state.transaction.details[toIndex] = {} as TransactionDetail;
                   }
 
                   // Batch assign instead of individual property updates
-                  Object.assign(state.transaction.details[index], detailItem);
+                  Object.assign(state.transaction.details[toIndex], detailItem);
                 } else {
                   // Replace the entire row
-                  (state as any).transaction.details[index] = { ...detailItem };
+                  (state as any).transaction.details[toIndex] = { ...detailItem };
                 }
               }
             );

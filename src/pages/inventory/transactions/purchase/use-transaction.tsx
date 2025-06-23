@@ -39,6 +39,7 @@ import {
   formStateMasterHandleFieldChange,
   loadTempRows,
   formStateTransactionDetailsRowUpdate,
+  formStateHandleFieldChangeKeysOnly,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -63,7 +64,6 @@ import {
   setTransactionForHistory,
 } from "../../../../helpers/transaction-modified-util";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import { accFormStateHandleFieldChangeKeysOnly } from "../../../accounts/transactions/reducer";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 // export interface UserConfig {
@@ -427,18 +427,18 @@ export const useTransaction = (
       details: refactorDetails(
         vch.details,
         vch.master.voucherType,
-        vch.master.voucherForm,{result:{},accFormStateHandleFieldChangeKeysOnly}, voucher
+        vch.master.voucherForm,{result:{},formStateHandleFieldChangeKeysOnly}, voucher
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
 
-    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{},accFormStateHandleFieldChangeKeysOnly})
+    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{},formStateHandleFieldChangeKeysOnly})
     voucher.summary = (summaryRes && summaryRes.summary
   ? summaryRes.summary 
   : initialInventoryTotals) as SummaryItems;
 
   voucher =  calculateTotal(voucher.transaction.master, voucher.summary,voucher.formElements,
-    {result:voucher,accFormStateHandleFieldChangeKeysOnly}
+    {result:voucher,formStateHandleFieldChangeKeysOnly}
   ) as TransactionFormState;
 
     voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0 ;
@@ -2267,9 +2267,9 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
    }
 
    // Dispatch the updated state
-   accFormStateHandleFieldChangeKeysOnly &&
+   formStateHandleFieldChangeKeysOnly &&
      dispatch &&
-     dispatch(accFormStateHandleFieldChangeKeysOnly({fields:result}));
+     dispatch(formStateHandleFieldChangeKeysOnly({fields:result}));
 
  } catch (error) {
    console.error('Error in handleTextDataChange:', error);
@@ -2277,9 +2277,418 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
    return result;
  }
 }
+const loadProductDetailsByAutoBarcode = async (
+ data: {
+  slNo: number;
+  productBatchID: number;
+  autoBarcode: string;
+  productCode: number;
+  useProductCode: boolean;
+  searchText: string;
+},
+ commonParams: CommonParams
+): Promise<DeepPartial<TransactionFormState>> => {
+ let {
+   result,
+   formStateHandleFieldChangeKeysOnly,
+ } = commonParams;
+
+ try {
+  let detail = {...formState.transaction?.details?.find(x => x?.slNo == data.slNo)};
+  let outDetail: DeepPartial<TransactionDetail> = {};
+  
+  outDetail.slNo = data.slNo;
+  outDetail.warehouseID = detail.warehouseID
+  outDetail.salesPrice = detail.salesPrice
+  outDetail.unitID = detail.unitID
+  outDetail.productBatchID = detail.productBatchID
+   if (!detail) {
+     return {};
+   }
+    let warehouseId = 1;
+   if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
+     warehouseId = formState.transaction.master.fromWarehouseID;
+   }
+   if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
+     const detailWarehouseId = outDetail.warehouseID;
+     if (detailWarehouseId??0 > 0) {
+       warehouseId = detailWarehouseId??0;
+     }
+   }
+   const _lastSelectedWarehouseIDOfItemPopupsSearch = (() => {
+  try {
+    const stored = localStorage.getItem("lastSelectedWarehouseIDOfItemPopupsSearch");
+    return stored ? Number(stored) || 0 : 0;
+  } catch (error) {
+    console.warn("Failed to read from localStorage:", error);
+    return 0;
+  }
+})();
+   let payload = {
+  useProductCode: data.useProductCode,
+  productCode: data.productCode,
+  barCode: data.autoBarcode,
+  wareHouseId: warehouseId,
+  txtData: data.searchText,
+  partyId: formState.transaction.master.ledgerID,
+  isCheckUseSupplierProductCode: formState.userConfig?.useSupplierProductCode,
+  isActualPriceVisible: formState.gridColumns?.find(x => x.dataField == "actualSalesPrice")?.visible,
+  isStockDetailsVisible: formState.gridColumns?.find(x => x.dataField == "stockDetails")?.visible,
+  lastSelectedWareHouseIdOfItemPopUpsSearch: _lastSelectedWarehouseIDOfItemPopupsSearch
+};
+const queryParams = new URLSearchParams();
+Object.entries(payload).forEach(([key, value]) => {
+  if (value !== null && value !== undefined && value !== '') {
+    queryParams.append(key, value);
+  }
+});
+   const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
+
+    if (res?.isShowItemPopUp) {
+      // Show popup
+    } else if (res?.products?.length === 1) {
+    let product = res.products[0]
+     outDetail.pCode = product.productCode;
+   outDetail.product = product.productName;
+   outDetail.productID = product.productID;
+   outDetail.barCode = product.autoBarcode;
+   outDetail.manualBarcode = product.mannualBarcode;
+   outDetail.productBatchID = product.productBatchID;
+
+   // Set default quantity if configured
+   if (applicationSettings?.productsSettings?.setDefaultQty1) {
+     outDetail.qty = 1;
+   }
+
+   outDetail.unit = product.unitName;
+   outDetail.unitID = product.basicUnitID;
+   outDetail.brandID = product.brandID;
+   outDetail.brand = product.brandName;
+   outDetail.size = product.specification;
+   outDetail.batchNo = product.batchNo;
+   outDetail.expDate = product.expiryDate;
+   outDetail.expDays = 100;
+   outDetail.mfdDate = product.mfgDate;
+   outDetail.lpc = round(product.lastPurchaseCost || 0);
+   outDetail.lpr = round(product.lastPurchaseRate || 0);
+   outDetail.stock = product.stock;
+   outDetail.productDescription = product.serialNumber;
+   outDetail.warranty = product.warranty;
+   outDetail.location = product.location;
+   outDetail.arabicName = product.itemNameInSecondLanguage;
+   outDetail.colour = product.colour;
+   // Handle Unit2 barcode
+   if (product.isUnit2Barcode) {
+     outDetail.unit = product.unit2;
+     outDetail.unitID = product.unit2ID;
+     product.multiFactor = Number(product.unit2Qty || 0);
+     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+   }
+
+   // Handle Unit3 barcode
+   if (product.isUnit3Barcode) {
+     outDetail.unit = product.unit3;
+     outDetail.unitID = product.unit3ID;
+     product.multiFactor = Number(product.unit3Qty || 0);
+     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+   }
+
+   // Unit 2 information
+   outDetail.unitID2 = product.unit2ID;
+   outDetail.unit2Qty = product.unit2Qty;
+   outDetail.unit2MBarcode = product.unit2Barcode;
+   outDetail.unit2SalesRate = product.unit2SalesPrice;
+   outDetail.unit2MRP = product.unit2MRP;
+
+   // Unit 3 information
+   outDetail.unitID3 = product.unit3ID;
+   outDetail.unit3Qty = product.unit3Qty;
+   outDetail.unit3MBarcode = product.unit3Barcode;
+   outDetail.unit3SalesRate = product.unit3SalesPrice;
+   outDetail.unit3MRP = product.unit3MRP;
+
+   // Handle supplier reference code
+   if (formState.userConfig?.useSupplierProductCode) {
+     outDetail.supplierReferenceProductCode = product.SupplierReferenceProductCode;
+   }
+
+   // Handle default purchase unit
+   if (Number(product.defPurchaseUnitID || 0) > 0 && 
+       !product.multiUnitBarcode && 
+       product.basicUnitID !== product.defPurchaseUnitID && 
+       product.basicUnitBarcode) {
+     
+     if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
+       outDetail.unit = product.defUnitName;
+       product.multiFactor = product.defUnitMultiFactor ;
+     }
+     outDetail.unitID = product.defPurchaseUnitID;
+   }
+
+   // Handle stock details if visible
+   if (payload.isStockDetailsVisible) {
+     outDetail.stockDetails = product.stockDetails;
+   }
+
+   
+   // Set MRP
+   outDetail.mrp = round(product.mrp);
+
+   // Calculate pricing based on multi-factor
+   if (product.multiFactor > 0) {
+     const pPrice = Number(product.stdPurchasePrice || 0);
+     outDetail.unitPrice = pPrice * product.multiFactor;
+
+     const sPrice = Number(product.stdSalesPrice || 0);
+     outDetail.salesPrice = sPrice * product.multiFactor;
+
+     const minSPrice = Number(product.minSalePrice || 0);
+     outDetail.minSalePrice = minSPrice * product.multiFactor;
+   } else {
+     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+     outDetail.salesPrice = round(product.stdSalesPrice || 0);
+     outDetail.minSalePrice = Number(product.minSalePrice || 0);
+   }
+
+   // Handle actual sales price if column is visible
+   if (payload.isActualPriceVisible) {
+     outDetail.actualSalesPrice = product.actualSalesPrice;
+   }
+
+
+   // Handle listed product prices
+   if (product.listedProductPrice != -10000) {
+    outDetail.unitPrice = product.listedProductPrice;
+   }
+
+   // Handle VAT and CST based on form type
+   if (formState.transaction.master.voucherForm === "VAT") {
+     outDetail.vatPerc = Number(product.pVatPerc || 0);
+     outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
+   } else {
+     outDetail.vatPerc = 0;
+     outDetail.cstPerc = 0;
+   }
+
+   // Special handling for meter units
+   const unitName = product.unitName?.toUpperCase().trim();
+   if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
+     outDetail.stickerQty = 4;
+   }
+
+   // Handle empty form type
+   if (formState.transaction.master.voucherForm == "") {
+     outDetail.vatPerc = 0;
+   }
+
+   // Set row header
+   outDetail.unitPriceTag = outDetail.unitPrice;
+   if(!result.transaction) {result.transaction = {}}
+   result.transaction.details = [outDetail];
+
+   // Update UI state for button enabling
+   result.formElements = {
+     ...result.formElements,
+       btnSave: { 
+         disabled: !hasRight(formState.userRightsFormCode, UserAction.Add) || applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
+       },
+       btnEdit: { 
+         disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
+       },
+       btnDelete: { 
+         disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
+       }
+   };
+
+    } else if (res?.products?.length > 1) {
+      // Multiple products
+    } else {
+      // No products or error
+    }
+     
+
+
+     // Dispatch changes
+     formStateHandleFieldChangeKeysOnly &&
+       dispatch &&
+       dispatch(formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
+
+     return result;
+
+ } catch(err) {
+  return {}
+ } 
+};
+
+const handleTextDataKeyDown = async (
+ event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
+ columnName: string,
+ rowIndex: number,
+ commonParams: CommonParams,
+): Promise<{
+ handled: boolean;
+ preventDefault?: boolean;
+ shouldReturn?: boolean;
+ focusAction?: string;
+ showDialog?: boolean;
+}> => {
+ let {
+   result,
+   formStateHandleFieldChangeKeysOnly,
+ } = commonParams;
+
+ try {
+  debugger;
+   const key = event.key;
+   const isShiftPressed = event.shiftKey;
+
+
+   if(!result.formElements) {
+    result.formElements = {};
+   }
+   switch (key) {
+     
+
+     case 'Escape':
+     case 'escape':
+        (result.formElements.dgvProduct ??= {}).visible = false;
+        (result.formElements.dgvProductBatches ??= {}).visible = false;
+
+        
+       break;
+
+     case 'q':
+     case 'Q':
+       if (columnName === "qty") {
+        dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
+       }
+       break;
+
+     case ' ': // Space key
+       if (columnName === "qty") {
+         await handleUnitCycling(detail, rowIndex, commonParams, applicationSettings);
+         return { handled: true };
+       }
+       break;
+
+     case 'F2':
+       if (isShiftPressed) {
+         if (columnName === "barCode" || columnName === "pCode") {
+           uiCallbacks.onShowItemListSearch(columnName);
+           return { handled: true };
+         }
+       }
+       break;
+
+     case 'Enter':
+       if(columnName == "pCode") {
+               const data = formState.transaction.details[rowIndex];
+               const value = data?.pCode;
+               if(!isNullOrUndefinedOrEmpty(value)) {
+                 loadProductDetailsByAutoBarcode({},{result:{}, formStateHandleFieldChangeKeysOnly:formStateHandleFieldChangeKeysOnly})
+               } else {
+                 focusToNextColumn(rowIndex, field);
+               }
+        }
+
+     default:
+      break
+   }
+
+   // Dispatch changes if any state was modified
+   if (result) {
+    console.log(result);
+    
+     formStateHandleFieldChangeKeysOnly &&
+       dispatch &&
+       dispatch(formStateHandleFieldChangeKeysOnly({fields: result}));
+   }
+
+   return { handled: false };
+
+ } catch (error) {
+   console.error('Error in handleTextDataKeyDown:', error);
+   return { handled: true, shouldReturn: true };
+ }
+};
+
+// Handle unit cycling when space is pressed on quantity column
+const handleUnitCycling = async (
+ detail: any
+) => {
+
+ try {
+   const productBatchId = Number(detail.productBatchId || 0);
+   const currentUnitId = Number(detail.unitId || 0);
+
+   const batches = formState.batchesUnits?.filter((x: any) => x.productBatchID == productBatchId); 
+
+   // Get next unit ID (this would be an API call)
+   const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
+
+   if (currentUnitId !== nextUnitId) {
+     // Update unit information
+     const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
+     
+     if (unitDetails) {
+       detail.unitId = nextUnitId;
+       detail.unit = unitDetails.unitName;
+       detail.unitPrice = unitDetails.standardPurchasePrice;
+       detail.unitPriceTag = unitDetails.standardPurchasePrice;
+       detail.salesPrice = unitDetails.standardSalesPrice;
+       detail.minSalePrice = unitDetails.standardMinSalePrice;
+
+       // Handle actual sales price if visible
+       if (result.ui?.visibleColumns?.includes('actualSalesPrice')) {
+         detail.actualSalesPrice = detail.salesPrice;
+         
+         try {
+           const otherUnitPrice = await getProductOtherUnitPrice(
+             productBatchId,
+             nextUnitId
+           );
+           if (otherUnitPrice > 0) {
+             detail.actualSalesPrice = otherUnitPrice;
+           }
+         } catch (error) {
+           console.error('Error getting other unit price:', error);
+         }
+       }
+
+       // Handle price category pricing
+       try {
+         const priceCategoryId = result.ui?.selectedPriceCategory || 0;
+         const priceCategoryPrice = await getProductPriceCategoryPurchasePrice(
+           productBatchId,
+           priceCategoryId,
+           nextUnitId
+         );
+         if (priceCategoryPrice !== 0) {
+           detail.unitPrice = priceCategoryPrice;
+         }
+       } catch (error) {
+         console.error('Error getting price category price:', error);
+       }
+
+       // Calculate row amounts
+       const calculateResult = calculateRowAmount(detail, "slNo", formState, applicationSettings, commonParams, true);
+       if (calculateResult?.transaction?.details?.[0]) {
+         result.transaction.details[rowIndex] = calculateResult.transaction.details[0];
+       }
+     }
+   }
+
+ } catch (error) {
+   console.error('Error in handleUnitCycling:', error);
+ }
+};
+
+// Handle Enter key press
+
 
   return {
     undoEditMode,
+    handleTextDataKeyDown,
     getNextVoucherNumber,
     loadAndSetTransVoucher,
     loadTransVoucher,
@@ -2310,8 +2719,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
     focusRefNo,
     focusAmount,
     focusDiscount,
-    // showBillwise,
-    // billWiseExcludedTransactions,
+    loadProductDetailsByAutoBarcode,
     getDrCr,
     clearRow,
   };

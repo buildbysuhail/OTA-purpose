@@ -75,18 +75,6 @@ const TaxReportSummary = lazy(() => import("../../../../pages/inventory/reports/
 const CreditPurchaseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report"));
 const PartyMonthwiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report"));
 const PurchaseOrderTransitReport = lazy(() => import("../../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report"));
-const PurchaseTaxGSTDailySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report"));
-const PurchaseTaxGSTAdvRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-adv-register-format-report"));
-const PurchaseTaxGSTRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-register-format-report"));
-const PurchaseTaxGSTDetailed = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-detailed-report"));
-const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-monthly-summary-report"));
-const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
-const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
-const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
-const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-out-in"));
-// const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
-const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-summary"));
-// const BranchTransferSummaryIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in"));
 const ItemWiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/itemwise-summary-report/itemwise-summary"));
 const StockSummary = lazy(() => import("../../../../pages/inventory/reports/stock-summary-report/stock-summary"));
 const StockLedger = lazy(() => import("../../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -137,7 +125,6 @@ const GSTR3BReport = lazy(() => import("../../../../pages/inventory/reports/GSTR
 const DailyStatementReport = lazy(() => import("../../../../pages/inventory/reports/daily-statement-report/daily-statement-report"));
 const DailyStatementAllReport = lazy(() => import("../../../../pages/inventory/reports/daily-statement-report/daily-statement-all-report "));
 const PriceList = lazy(() => import("../../../../pages/inventory/reports/price-list/price-list-report"));
-const DailyBalanceAmount = lazy(() => import("../../../../pages/inventory/reports/daily-balance/daily-balance-report"));
 const ProductSummaryMaster = lazy(() => import("../../../../pages/inventory/reports/product-summary/product-summary-master"));
 const InventorySummaryReport = lazy(() => import("../../../../pages/inventory/reports/inventory-summary-report/inventory-summary-report"));
 const ServiceReport = lazy(() => import("../../../../pages/inventory/reports/service-report/service-report"));
@@ -158,6 +145,14 @@ import FastMovingProductsReport from "../../../../pages/inventory/reports/fast-m
 import UnsoldProductReport from "../../../../pages/inventory/reports/unsold-products/unsold-products";
 import ItemWiseGroupedBrandwiseSales from "../../../../pages/inventory/reports/itemwise-grouped-brandwise-sales/itemwise-grouped-brandwise-sales";
 import DailyBalanceReport from "../../../../pages/inventory/reports/daily-balance/daily-balance-report";
+import GSTDailySummary from "../../../../pages/inventory/reports/tax-gst-reports/gst-daily-summary-report";
+import ReturnTaxGSTSalesAndReturn from "../../../../pages/inventory/reports/tax-gst-reports/return-tax-gst-sales-and-return-report";
+import GSTTaxwise from "../../../../pages/inventory/reports/tax-gst-reports/gst-taxwise-report";
+import GSTTaxwiseWithHSN from "../../../../pages/inventory/reports/tax-gst-reports/gst-taxwise-with-hsn-report";
+import GSTMonthlySummary from "../../../../pages/inventory/reports/tax-gst-reports/gst-monthly-summary-report";
+import GSTDetailed from "../../../../pages/inventory/reports/tax-gst-reports/gst-detailed-report";
+import GSTRegisterFormat from "../../../../pages/inventory/reports/tax-gst-reports/gst-register-format-report";
+import GSTAdvRegisterFormat from "../../../../pages/inventory/reports/tax-gst-reports/gst-adv-register-format-report";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -335,26 +330,6 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 326, element: <PromotionalSalesReport />, formCode: "RPTPRMSIR", action: UserAction.Show, path: `/reports/_/inventory/promotional_sales_report`, type: 'link', active: false, selected: false, title: 'promotional_sales', icon: PiPackageLight,  routePath: ""},
       { id: 327, element: <GroupedBrandwiseSales />, formCode: "RPTGRPBRDWSIR", action: UserAction.Show, path: `/reports/_/inventory/grouped_brandwise_sales_report`, type: 'link', active: false, selected: false, title: 'grouped_brandwise_sales', icon: PiPackageLight,  routePath: ""},
       { id: 328, element: <PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_sales_summary} gridHeader="party_monthwise_sales_summary" gridId="grd_party_monthwise_sales_summary" />, formCode: "RPTPRTYMWSIS", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_sales_summary_report`, type: 'link', active: false, selected: false, title: 'party_monthwise_sales_summary', icon: PiPackageLight,  routePath: ""},
-      //#region global
-      //sales Tax
-      { id: 329,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_daily_summary_report" gridId="grd_purchase_gst_daily_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 330,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_sales_and_return_report', icon: AiOutlineFileText },
-      { id: 331,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_taxwise_report" gridId="grd_purchase_gst_taxwise_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 332,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_taxwise_with_hsn_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 333,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_monthly_summary_report" gridId="grd_purchase_gst_monthly_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 334,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_detailed_report" gridId="grd_purchase_gst_detailed_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 335,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_register_format_report" gridId="grd_purchase_gst_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 336,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_advanced_register_format_report" gridId="grd_purchase_gst_adv_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_gst_advance_register_format_report', icon: AiOutlineFileText },
-      //sales return Tax
-      { id: 337,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 338,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_sales_and_return_report', icon: AiOutlineFileText },
-      { id: 339,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 340,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 341,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 342,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_detailed_report" gridId="grd_purchase_return_gst_detailed_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 343,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_register_format_report" gridId="grd_purchase_return_gst_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 344,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_advanced_register_format_report" gridId="grd_purchase_return_gst_adv_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_return_gst_adv_register_format_report', icon: AiOutlineFileText },
-     //#endregion global
     ]
   },
 
@@ -389,25 +364,6 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 512,element:<CreditPurchaseSummaryReport />, formCode:"RPTCPIS", action: UserAction.Show, path: `/reports/_/inventory/credit_purchase_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'credit_purchase_summary', icon: AiOutlineFileText },
       { id: 513,element:<PartyMonthwiseSummaryReport dataUrl={urls.party_monthwise_purchase_summary} gridHeader="party_monthwise_purchase_summary" gridId="grd_party_monthwise_purchase_summary" />, formCode:"RPTPMPIS", action: UserAction.Show, path: `/reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', routePath:'', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
       { id: 514,element:<PurchaseOrderTransitReport />, formCode:"RPTPIOT", action: UserAction.Show, path: `/reports/_/inventory/purchase_order_transit_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_order_transit_report', icon: AiOutlineFileText },
-      //#region global
-      //purchase Tax
-      { id: 515,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_daily_summary_report" gridId="grd_purchase_gst_daily_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 516,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_taxwise_report" gridId="grd_purchase_gst_taxwise_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 517,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_taxwise_with_hsn_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 518,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_monthly_summary_report" gridId="grd_purchase_gst_monthly_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 519,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_detailed_report" gridId="grd_purchase_gst_detailed_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 520,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_register_format_report" gridId="grd_purchase_gst_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 521,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_advanced_register_format_report" gridId="grd_purchase_gst_adv_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_gst_advance_register_format_report', icon: AiOutlineFileText },
-      //purchase return Tax
-      { id: 522,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 523,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
-      { id: 524,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_taxwise_report', icon: AiOutlineFileText },
-      { id: 525,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
-      { id: 526,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_monthly_summary_report', icon: AiOutlineFileText },
-      { id: 527,element:<PurchaseTaxGSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_detailed_report" gridId="grd_purchase_return_gst_detailed_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_detailed_report', icon: AiOutlineFileText },
-      { id: 528,element:<PurchaseTaxGSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_register_format_report" gridId="grd_purchase_return_gst_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_register_format_report', icon: AiOutlineFileText },
-      { id: 529,element:<PurchaseTaxGSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_advanced_register_format_report" gridId="grd_purchase_return_gst_adv_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_adv_register_format_report', icon: AiOutlineFileText },
-     //#endregion global
     ]
   },
  {
@@ -500,7 +456,106 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       //#endregion global
     ]
   },
-    {
+  {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'sales_tax_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      //#region global
+      //sales Tax
+      { id: 1700,element:<GSTDailySummary dataUrl={urls.sales_gst_daily_summary} gridHeader="gst_sales_daily_summary_report" gridId="grd_sales_gst_daily_summary_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'daily_summary', icon: AiOutlineFileText },
+      { id: 1701,element:<ReturnTaxGSTSalesAndReturn dataUrl={urls.sales_gst_sales_and_return} gridHeader="gst_sales_report" gridId="grd_sales_gst_sales_and_return"/>, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_sales_and_return`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_and_return', icon: AiOutlineFileText },
+      { id: 1702,element:<GSTTaxwise dataUrl={urls.sales_gst_taxwise} gridHeader="sales_gst_taxwise_report" gridId="grd_sales_gst_taxwise_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise', icon: AiOutlineFileText },
+      { id: 1703,element:<GSTTaxwiseWithHSN dataUrl={urls.sales_gst_taxwise_with_hsn} gridHeader="sales_gst_taxwise_with_hsn_report" gridId="grd_sales_gst_taxwise_with_hsn_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise_with_hsn', icon: AiOutlineFileText },
+      { id: 1704,element:<GSTMonthlySummary dataUrl={urls.sales_gst_monthly_summary} gridHeader="sales_gst_monthly_summary_report" gridId="grd_sales_gst_monthly_summary_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'monthly_summary', icon: AiOutlineFileText },
+      { id: 1705,element:<GSTDetailed dataUrl={urls.sales_gst_detailed} gridHeader="sales_gst_detailed_report" gridId="grd_sales_gst_detailed_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'detailed', icon: AiOutlineFileText },
+      { id: 1706,element:<GSTRegisterFormat dataUrl={urls.sales_gst_register_format} gridHeader="sales_gst_register_format_report" gridId="grd_sales_gst_register_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'register_format', icon: AiOutlineFileText },
+      { id: 1707,element:<GSTAdvRegisterFormat dataUrl={urls.sales_gst_adv_register_format} gridHeader="sales_gst_advanced_register_format_report" gridId="grd_sales_gst_adv_register_report" />, formCode:"RPTSITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'advance_register_format', icon: AiOutlineFileText },
+     //#endregion global  
+      ]
+  },
+   {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'sales_return_tax_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      //#region global
+      //sales return Tax
+      { id: 1800,element:<GSTDailySummary dataUrl={urls.sales_return_gst_daily_summary} gridHeader="sales_return_gst_daily_summary_report" gridId="grd_sales_return_gst_daily_summary_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'daily_summary', icon: AiOutlineFileText },
+      { id: 1801,element:<ReturnTaxGSTSalesAndReturn dataUrl={urls.sales_return_gst_sales_and_return} gridHeader="sales_return_gst_report" gridId="grd_sales_return_gst_sales_and_return"/>, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_sales_and_return`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_and_return', icon: AiOutlineFileText },
+      { id: 1802,element:<GSTTaxwise dataUrl={urls.sales_return_gst_taxwise} gridHeader="sales_return_gst_taxwise_report" gridId="grd_sales_return_gst_taxwise_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise', icon: AiOutlineFileText },
+      { id: 1803,element:<GSTTaxwiseWithHSN dataUrl={urls.sales_return_gst_taxwise_with_hsn} gridHeader="sales_return_gst_taxwise_with_hsn_report" gridId="grd_sales_return_gst_taxwise_with_hsn_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise_with_hsn', icon: AiOutlineFileText },
+      { id: 1804,element:<GSTMonthlySummary dataUrl={urls.sales_return_gst_monthly_summary} gridHeader="sales_return_gst_monthly_summary_report" gridId="grd_sales_return_gst_monthly_summary_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'monthly_summary', icon: AiOutlineFileText },
+      { id: 1805,element:<GSTDetailed dataUrl={urls.sales_return_gst_detailed} gridHeader="sales_return_gst_detailed_report" gridId="grd_sales_return_gst_detailed_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'detailed', icon: AiOutlineFileText },
+      { id: 1806,element:<GSTRegisterFormat dataUrl={urls.sales_return_gst_register_format} gridHeader="sales_return_gst_register_format_report" gridId="grd_sales_return_gst_register_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'register_format', icon: AiOutlineFileText },
+      { id: 1807,element:<GSTAdvRegisterFormat dataUrl={urls.sales_return_gst_adv_register_format} gridHeader="sales_return_gst_advanced_register_format_report" gridId="grd_sales_return_gst_adv_register_report" />, formCode:"RPTSRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/sales_return_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'adv_register_format', icon: AiOutlineFileText },
+     //#endregion global  
+      ]
+  },
+  {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'purchase_tax_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      //#region global
+      //purchase Tax
+      { id: 1900,element:<GSTDailySummary dataUrl={urls.purchase_gst_daily_summary} gridHeader="purchase_gst_daily_summary_report" gridId="grd_purchase_gst_daily_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'daily_summary', icon: AiOutlineFileText },
+      { id: 1901,element:<GSTTaxwise dataUrl={urls.purchase_gst_taxwise} gridHeader="purchase_gst_taxwise_report" gridId="grd_purchase_gst_taxwise_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise', icon: AiOutlineFileText },
+      { id: 1902,element:<GSTTaxwiseWithHSN dataUrl={urls.purchase_gst_taxwise_with_hsn} gridHeader="purchase_gst_taxwise_with_hsn_report" gridId="grd_purchase_gst_taxwise_with_hsn_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise_with_hsn', icon: AiOutlineFileText },
+      { id: 1903,element:<GSTMonthlySummary dataUrl={urls.purchase_gst_monthly_summary} gridHeader="purchase_gst_monthly_summary_report" gridId="grd_purchase_gst_monthly_summary_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'monthly_summary', icon: AiOutlineFileText },
+      { id: 1904,element:<GSTDetailed dataUrl={urls.purchase_gst_detailed} gridHeader="purchase_gst_detailed_report" gridId="grd_purchase_gst_detailed_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'detailed', icon: AiOutlineFileText },
+      { id: 1905,element:<GSTRegisterFormat dataUrl={urls.purchase_gst_register_format} gridHeader="purchase_gst_register_format_report" gridId="grd_purchase_gst_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'register_format', icon: AiOutlineFileText },
+      { id: 1906,element:<GSTAdvRegisterFormat dataUrl={urls.purchase_gst_adv_register_format} gridHeader="purchase_gst_advanced_register_format_report" gridId="grd_purchase_gst_adv_register_report" />, formCode:"RPTPITAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'advance_register_format', icon: AiOutlineFileText },
+    //#endregion global  
+      ]
+  },
+ {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'purchase_return_tax_reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      //#region global
+      //purchase return Tax
+      { id: 2000,element:<GSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'daily_summary', icon: AiOutlineFileText },
+      { id: 2001,element:<ReturnTaxGSTSalesAndReturn dataUrl={urls.purchase_return_gst_sales_and_return} gridHeader="gst_purchase_return_report" gridId="grd_purchase_return_gst_sales_and_return_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'sales_and_return', icon: AiOutlineFileText },
+      { id: 2002,element:<GSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise', icon: AiOutlineFileText },
+      { id: 2003,element:<GSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'taxwise_with_hsn', icon: AiOutlineFileText },
+      { id: 2004,element:<GSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'monthly_summary', icon: AiOutlineFileText },
+      { id: 2005,element:<GSTDetailed dataUrl={urls.purchase_return_gst_detailed} gridHeader="purchase_return_gst_detailed_report" gridId="grd_purchase_return_gst_detailed_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_detailed_report`, type: 'link', routePath:'', active: false, selected: false, title: 'detailed', icon: AiOutlineFileText },
+      { id: 2006,element:<GSTRegisterFormat dataUrl={urls.purchase_return_gst_register_format} gridHeader="purchase_return_gst_register_format_report" gridId="grd_purchase_return_gst_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'register_format', icon: AiOutlineFileText },
+      { id: 2007,element:<GSTAdvRegisterFormat dataUrl={urls.purchase_return_gst_adv_register_format} gridHeader="purchase_return_gst_advanced_register_format_report" gridId="grd_purchase_return_gst_adv_register_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_adv_register_format_report`, type: 'link', routePath:'', active: false, selected: false, title: 'adv_register_format', icon: AiOutlineFileText },
+     //#endregion global
+      ]
+  },
+  {
     icon: (<Boxes className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',
@@ -612,7 +667,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
       { id: 1600, element: <CouponReports />, formCode: "COUPSALRPT", action: UserAction.Show, path: `/reports/_/inventory/coupon_reports`, type: 'link', active: false, selected: false, title: 'coupon_reports', icon: PiPackageLight,  routePath: ""},
       { id: 1601, element: <SchemeWiseSales />, formCode: "ITMSCMSRPT", action: UserAction.Show, path: `/reports/_/inventory/scheme_wise_sales_report`, type: 'link', active: false, selected: false, title: 'scheme_wise_sales', icon: PiPackageLight,  routePath: ""},
      ]
- },
+  },
   {
     icon: (<Boxes className="side-menu__icon side-menu" />),
     type: 'sub',

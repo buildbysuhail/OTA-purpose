@@ -75,14 +75,14 @@ const TaxReportSummary = lazy(() => import("../../../../pages/inventory/reports/
 const CreditPurchaseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/credit-purchase-summary-report/credit-purchase-summary-report"));
 const PartyMonthwiseSummaryReport = lazy(() => import("../../../../pages/inventory/reports/Party-monthwise-purchase-summary-report/Party-monthwise-purchase-summary-report"));
 const PurchaseOrderTransitReport = lazy(() => import("../../../../pages/inventory/reports/Purchase-order-transit-report/Purchase-order-transit-report"));
-const PurchaseTaxGSTDailySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-daily-summary-report"));
-const PurchaseTaxGSTAdvRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-adv-register-format-report"));
-const PurchaseTaxGSTRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-register-format-report"));
-const PurchaseTaxGSTDetailed = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-detailed-report"));
-const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-monthly-summary-report"));
-const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-with-hsn-report"));
-const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/purchase-tax-gst-reports/purchase-tax-gst-taxwise-report"));
-const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/purchase-return-tax-gst-reports/purchase-return-tax-gst-sales-and-return-report"));
+const PurchaseTaxGSTDailySummary = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-daily-summary-report"));
+const PurchaseTaxGSTAdvRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-adv-register-format-report"));
+const PurchaseTaxGSTRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-register-format-report"));
+const PurchaseTaxGSTDetailed = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-detailed-report"));
+const PurchaseTaxGSTMonthlySummary = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-monthly-summary-report"));
+const PurchaseTaxGSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-taxwise-with-hsn-report"));
+const PurchaseTaxGSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/gst-taxwise-report"));
+const PurchaseReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/tax-gst-reports/return-tax-gst-sales-and-return-report"));
 const BranchTransferOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-out-in"));
 // const BranchTransferIn = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in"));
 const BranchTransferSummaryOut = lazy(() => import("../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-summary"));
@@ -150,6 +150,7 @@ import GridId from "../../../../redux/gridId";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/groupwise-sales-summary/groupwise-sales-summary-filter";
 import BranchTransferOutIn from "../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-out-in";
 import BranchTransferSummary from "../../../../pages/inventory/reports/branch-transfer-reports/branch-tranfer-summary";
+import ReturnTaxGSTSalesAndReturn from "../../../../pages/inventory/reports/tax-gst-reports/return-tax-gst-sales-and-return-report";
 export interface NavigationItem {
   id: number;
   path: string;
@@ -350,7 +351,7 @@ export const ReportsMenuItems :NavigationParentItem[]= [
 
       //purchase return Tax
       { id: 93,element:<PurchaseTaxGSTDailySummary dataUrl={urls.purchase_return_gst_daily_summary} gridHeader="purchase_return_gst_daily_summary_report" gridId="grd_purchase_return_gst_daily_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_daily_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_daily_summary_report', icon: AiOutlineFileText },
-      { id: 97,element:<PurchaseReturnTaxGSTSalesAndReturn />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
+      { id: 97,element:<ReturnTaxGSTSalesAndReturn dataUrl={urls.purchase_return_gst_sales_and_return} gridHeader="gst_purchase_return_report" gridId="grd_purchase_return_gst_sales_and_return_report"/>, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_sales_and_return_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_sales_and_return_report', icon: AiOutlineFileText },
       { id: 98,element:<PurchaseTaxGSTTaxwise dataUrl={urls.purchase_return_gst_taxwise} gridHeader="purchase_return_gst_taxwise_report" gridId="grd_purchase_return_gst_taxwise_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_taxwise_report', icon: AiOutlineFileText },
       { id: 99,element:<PurchaseTaxGSTTaxwiseWithHSN dataUrl={urls.purchase_return_gst_taxwise_with_hsn} gridHeader="purchase_return_gst_taxwise_with_hsn_report" gridId="grd_purchase_return_gst_taxwise_with_hsn_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_taxwise_with_hsn_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_taxwise_with_hsn_report', icon: AiOutlineFileText },
       { id: 95,element:<PurchaseTaxGSTMonthlySummary dataUrl={urls.purchase_return_gst_monthly_summary} gridHeader="purchase_return_gst_monthly_summary_report" gridId="grd_purchase_return_gst_monthly_summary_report" />, formCode:"RPTPRTAXGSTR", action: UserAction.Show, path: `/reports/_/inventory/purchase_return_gst_monthly_summary_report`, type: 'link', routePath:'', active: false, selected: false, title: 'purchase_return_gst_monthly_summary_report', icon: AiOutlineFileText },

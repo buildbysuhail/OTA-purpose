@@ -524,34 +524,41 @@ const Urls = {
   sales_register: "/Inventory/RptSalesReport/SalesRegister/",
   net_sales: "/Inventory/RptSalesReport/NetSalesReport/",
   partywise_sales: "/Inventory/RptSalesReport/PartywiseSales/",
-  purchase_gst_daily_summary:
-    "/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
+  purchase_gst_daily_summary: "/Inventory/RptGSTReport/PurchaseTaxDailySummaryReport",
+  sales_gst_daily_summary: "/Inventory/RptGSTReport/SalesTaxDailySummaryReport",
   purchase_gst_taxwise: "/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseReport",
-  purchase_gst_taxwise_with_hsn:
-    "/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
-  purchase_gst_monthly_summary:
-    "/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
+ sales_gst_taxwise: "/Inventory/RptGSTReport/SalesTaxGSTTaxWiseReport",
+  purchase_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseTaxGSTTaxWiseWithHSNReport",
+  sales_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/SalesTaxGSTTaxWiseWithHSNReport",
+  purchase_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseTaxGSTMonthlySummaryReport",
+  sales_gst_monthly_summary:"/Inventory/RptGSTReport/SalesTaxGSTMonthlySummaryReport",
   purchase_gst_detailed: "/Inventory/RptGSTReport/PurchaseTaxGSTDetailedReport",
-  purchase_gst_register_format:
-    "/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
-  purchase_gst_adv_register_format:
-    "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
-  purchase_return_gst_daily_summary:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
-  purchase_return_gst_taxwise:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
-  purchase_return_gst_taxwise_with_hsn:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
-  purchase_return_gst_monthly_summary:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
-  purchase_return_gst_detailed:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
-  purchase_return_gst_register_format:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
-  purchase_return_gst_adv_register_format:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxAdvRegisterFormatReport",
-  purchase_return_gst_sales_and_return:
-    "/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
+  sales_gst_detailed: "/Inventory/RptGSTReport/SalesTaxGSTDetailedReport",
+  purchase_gst_register_format: "/Inventory/RptGSTReport/PurchaseTaxRegisterFormatReport",
+  sales_gst_register_format: "/Inventory/RptGSTReport/SalesTaxRegisterFormatReport",
+  purchase_gst_adv_register_format: "/Inventory/RptGSTReport/PurchaseTaxAdvRegisterFormatReport",
+  sales_gst_adv_register_format: "/Inventory/RptGSTReport/SalesTaxAdvRegisterFormatReport",
+
+  sales_return_gst_daily_summary:"/Inventory/RptGSTReport/SalesReturnTaxDailySummaryReport",
+  sales_return_gst_sales_and_return:"/Inventory/RptGSTReport/SalesReturnTaxSalesAndSalesReturn",
+  sales_return_gst_taxwise:"/Inventory/RptGSTReport/SalesReturnTaxGSTTaxWiseReport",
+  sales_return_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/SalesReturnTaxGSTTaxWiseWithHSNReport",
+  sales_return_gst_monthly_summary:"/Inventory/RptGSTReport/SalesReturnTaxGSTMonthlySummaryReport",
+  sales_return_gst_detailed: "/Inventory/RptGSTReport/SalesReturnTaxGSTDetailedReport",
+  sales_return_gst_register_format:"/Inventory/RptGSTReport/SalesReturnTaxRegisterFormatReport",
+  sales_return_gst_adv_register_format:"/Inventory/RptGSTReport/SalesReturnTaxAdvRegisterFormatReport",
+
+  purchase_return_gst_daily_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxDailySummaryReport",
+  purchase_return_gst_sales_and_return:"/Inventory/RptGSTReport/PurchaseReturnTaxSalesAndSalesReturn",
+  purchase_return_gst_taxwise:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseReport",
+  purchase_return_gst_taxwise_with_hsn:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTTaxWiseWithHSNReport",
+  purchase_return_gst_monthly_summary:"/Inventory/RptGSTReport/PurchaseReturnTaxGSTMonthlySummaryReport",
+  purchase_return_gst_detailed: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
+  purchase_return_gst_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
+  purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxAdvRegisterFormatReport",
+
+  sales_gst_sales_and_return:"/Inventory/RptGSTReport/SalesTaxSalesAndSalesReturn",
+
   vat_return_form: "/Inventory/RptTAXReport/VatReturnForm",
   vat_return_form_arabic: "/Inventory/RptTAXReport/VatReturnFormArabic",
 

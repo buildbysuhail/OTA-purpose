@@ -388,7 +388,7 @@ interface ReturnTaxGSTProps {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GstReportFilter />}
-                filterHeight={220}
+                filterHeight={270}
                 filterWidth={600}
                 filterInitialData={GstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

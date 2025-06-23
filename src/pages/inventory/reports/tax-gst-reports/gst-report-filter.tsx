@@ -5,6 +5,7 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
+import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 
 const GstReportFilter = ({
   getFieldProps,
@@ -38,7 +39,7 @@ const GstReportFilter = ({
 
           <ERPCheckbox
             {...getFieldProps("isTransactionDate")}
-            label={t("Transaction Date")}
+            label={t("trans_date")}
             datatype="number"
             className="min-w-[150px]"
             onChangeData={(data) =>
@@ -57,7 +58,56 @@ const GstReportFilter = ({
           datatype="number"
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
-
+        {(location.pathname.includes("inventory/sales_gst_sales_and_return") ||
+          location.pathname.includes(
+            "inventory/sales_gst_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_gst_adv_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_sales_and_return"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_adv_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_gst_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_gst_adv_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_sales_and_return_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_register_format_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_adv_register_format_report"
+          )) && (
+          <div className="grid grid-cols-1 gap-4">
+            <ERPRadio
+              id="rdbCash"
+              name="cashBank"
+              value="rdbCash"
+              label={t("cash")}
+              checked={getFieldProps("cashBank").value == true}
+              onChange={(e) => handleFieldChange("cashBank", e.target.value)}
+            />
+            <ERPRadio
+              id="rdbBank"
+              name="cashBank"
+              value="rdbBank"
+              label={t("bank")}
+              checked={getFieldProps("cashBank").value == true}
+              onChange={(e) => handleFieldChange("cashBank", e.target.value)}
+            />
+          </div>
+        )}
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")}
           field={{

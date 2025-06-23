@@ -357,7 +357,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GstReportFilterGstCat />}
-                filterHeight={220}
+                filterHeight={290}
                 filterWidth={790}
                 filterInitialData={GstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

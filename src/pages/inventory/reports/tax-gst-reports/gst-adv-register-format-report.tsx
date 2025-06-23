@@ -16,8 +16,10 @@ interface GSTAdvRegisterFormatProps {
 }
 const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
+    const location = useLocation();
   const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
     {
       dataField: "date",
       caption: t("date"),
@@ -1188,7 +1190,23 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       showInPdf: true,
     },
   ];
-
+    return baseColumns.filter((column) => {
+      if(location.pathname.includes(
+          "inventory/sales_return_gst_adv_register_format_report"
+        )){
+          if(["voucherPrefix", "invoiceNo"].includes(column.dataField??"")) {
+            return true;
+          } else if(["voucherNo", "refNumber", "refDate", "party", "address", "gstin"].includes(column.dataField??"")) {
+            return false;
+          }
+        } else {
+           if(["voucherPrefix", "invoiceNo"].includes(column.dataField??"")) {
+            return false;
+          }
+        }
+      return true;
+    });
+  }, [t, filter, location.pathname]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
@@ -1212,6 +1230,12 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       column: "form",
       summaryType: "custom",
       customizeText: customizeDate,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     },
     {
       column: "cess",
@@ -1407,7 +1431,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       customizeText: customizeSummaryRow,
     },
   ];
-  const location = useLocation();
+
   const [key, setKey] = useState(1);
   useEffect(() => {
       setKey((prev: any) => prev+1)
@@ -1419,6 +1443,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+              key={key}
                 summaryItems={_summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -1436,7 +1461,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GstReportFilter />}
-                filterHeight={220}
+                filterHeight={270}
                 filterWidth={600}
                 filterInitialData={GstReportFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

@@ -126,7 +126,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("siNo"),
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -183,14 +183,14 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
             <button
               onClick={() => handleEditClick(params.data)}
               className="p-1 hover:bg-[#DBEAFE] !rounded"
-              title="Edit"
+              title={t("edit")}
             >
               <Edit size={16} className="text-[#2563EB]" />
             </button>
             <button
               onClick={() => handleDelete(params.data)}
               className="p-1 hover:bg-[#FEE2E2] !rounded"
-              title="Delete"
+              title={t("delete")}
             >
               <Trash2 size={16} className="text-[#DC2626]" />
             </button>
@@ -204,9 +204,9 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
     <ERPModal
       isOpen={isOpen}
       closeModal={onClose}
-      title="Qty Factors"
-      width={600}
-      height={600}
+      title={t("qty_factors")}
+      width={550}
+      height={660}
       content={
         <>
           <div className="flex items-end gap-2">
@@ -214,6 +214,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
               id="width"
               type="number"
               label={t("width")}
+              className='w-28'
               value={qtyFactors.width}
               onChange={(e) => handleQtyFactors('width', parseFloat(e.target.value) || 0)}
             />
@@ -221,6 +222,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
               id="height"
               type="number"
               label={t("height")}
+              className='w-28'
               value={qtyFactors.height}
               onChange={(e) => handleQtyFactors('height', parseFloat(e.target.value) || 0)}
             />
@@ -228,6 +230,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
               id="nos"
               type="number"
               label={t("nos")}
+              className='w-28'
               value={qtyFactors.nos}
               onChange={(e) => handleQtyFactors('nos', parseFloat(e.target.value) || 0)}
             />
@@ -260,6 +263,17 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
             ShowGridPreferenceChooser={false}
             showPrintButton={false}
           />
+          <div className='flex items-center justify-end gap-2 mt-2'>
+            <ERPButton
+              title={t('cancel')}
+              variant='secondary'
+              onClick={onClose}
+            />
+            <ERPButton
+              title={t('apply')}
+              variant='primary'
+            />
+          </div>
         </>
       }
     />

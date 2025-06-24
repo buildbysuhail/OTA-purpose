@@ -6,13 +6,14 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select";
+import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 
 const GstReportFilterGstCat = ({
   getFieldProps,
   handleFieldChange,
   formState,
 }: any) => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
 
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -40,7 +41,7 @@ const GstReportFilterGstCat = ({
 
           <ERPCheckbox
             {...getFieldProps("isTransactionDate")}
-            label={t("transaction_date")}
+            label={t("trans_date")}
             datatype="number"
             className="min-w-[150px]"
             onChangeData={(data) =>
@@ -59,7 +60,59 @@ const GstReportFilterGstCat = ({
           datatype="number"
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
-
+        {(location.pathname.includes(
+          "inventory/sales_gst_daily_summary_report"
+        ) ||
+          location.pathname.includes("inventory/sales_gst_detailed_report") ||
+          location.pathname.includes(
+            "inventory/sales_gst_monthly_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_daily_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_detailed_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/sales_return_gst_monthly_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_gst_daily_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_gst_detailed_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_gst_monthly_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_daily_summary_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_detailed_report"
+          ) ||
+          location.pathname.includes(
+            "inventory/purchase_return_gst_monthly_summary_report"
+          )) && (
+          <div className="grid grid-cols-1 gap-4">
+            <ERPRadio
+              id="rdbCash"
+              name="cashBank"
+              value="rdbCash"
+              label={t("cash")}
+              checked={getFieldProps("cashBank").value == "rdbCash"}
+              onChange={(e) => handleFieldChange("cashBank", "rdbCash")}
+            />
+            <ERPRadio
+              id="rdbBank"
+              name="cashBank"
+              value="rdbBank"
+              label={t("bank")}
+              checked={getFieldProps("cashBank").value == "rdbBank"}
+              onChange={(e) => handleFieldChange("cashBank", "rdbBank")}
+            />
+          </div>
+        )}
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")} 
           label="taxCategory"
@@ -117,11 +170,11 @@ const GstReportFilterGstCat = ({
           {...getFieldProps("taxCategory")}
           label={t("gst_category")}
           optionUrl={Urls.data_taxCategory}
-          selectedValues={getFieldProps("taxCategoryID").value}
-          onChange={(data) => handleFieldChange("taxCategoryID", data)}
+          selectedValues={getFieldProps("taxCategory").value}
+          onChange={(data) => handleFieldChange("taxCategory", data)}
           placeholder={t("select_gst_category")}
           searchPlaceholder={t("search_gst_category")}
-          outputFormat="array"
+          outputFormat="string"
           //@TaxCategory=N'2, 9, 4'
         />
       </div>

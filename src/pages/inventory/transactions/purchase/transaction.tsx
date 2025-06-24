@@ -148,6 +148,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false); 
 
+  const purchaseGridRef = useRef<{
+     focusCell: (targetRow: number, targetColumnIndex: number) => void;
+     nextCellFind: (rowIndex: number, column: string) => void;
+  }>(null);
   
   const toggleHeaderDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -222,6 +226,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
+  const focusToNextColumn = (rowIndex: number, column: string) => {
+  purchaseGridRef.current?.nextCellFind(rowIndex,column)
+}
+
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
@@ -262,6 +270,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     transactionType ?? "",
     btnSaveRef,
     btnAddRef,
+    focusToNextColumn,
     ledgerCodeRef,
     ledgerIdRef,
     masterAccountRef,
@@ -684,35 +693,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 70,
         isLocked: true,
-        readOnly: true,
+        visible: true,
         alignment: 'right'
       },
       {
         dataField: "pCode",
         caption: t("p_code"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
+        visible: true,
         width: 150,
-        readOnly: true,
         alignment: 'left'
       },
       {
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 100,
-        visible: false,
-        readOnly: true,
+        visible: true,
+        readOnly: false,
         alignment: 'right'
       },
       {
         dataField: "barCode",
-        caption: t("bar_code"),
+        caption: t("barcode"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -1890,10 +1895,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
-            t={t}
-            onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+              ref={purchaseGridRef}
+              onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
               handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
-            transactionType={transactionType}
+              transactionType={transactionType}
               columns={purchaseGridCol}
               keyField={"productID"}
               height={gridHeight}
@@ -2000,7 +2005,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 
               </div>
                   <ErpPurchaseGrid
-                  t={t}
+               ref={purchaseGridRef}
             onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
              handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
                     columns={purchaseGridCol}

@@ -32,7 +32,6 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
-  accFormStateHandleFieldChangeKeysOnly,
   accFormStateRowHandleFieldChange,
   updateFormElement,
 } from "./reducer";
@@ -400,7 +399,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
 
           dispatch(
-            accFormStateHandleFieldChangeKeysOnly({
+            accFormStateHandleFieldChange({
               fields: {
                 ledgerBalance,
                 groupName: ledgerData?.accGroupName,

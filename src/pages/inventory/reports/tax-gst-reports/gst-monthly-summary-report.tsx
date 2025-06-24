@@ -28,7 +28,7 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
     },
     {
       dataField: "vchNos",
-      caption: t("voucher_number"),
+      caption: t("voucher_numbers"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -325,7 +325,7 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GstReportFilterGstCat />}
-                filterHeight={220}
+                filterHeight={290}
                 filterWidth={790}
                 filterInitialData={GstReportFilterGstCatInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

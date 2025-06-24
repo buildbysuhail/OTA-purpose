@@ -172,7 +172,7 @@ const BackupSettingsForm: React.FC = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange(
                     "backupDuration",
-                    parseFloat(data.backupDuration)
+                    (data.backupDuration)
                   )
                 }
               />

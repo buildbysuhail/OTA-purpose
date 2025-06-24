@@ -24,7 +24,7 @@ interface Option {
 
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
-  ignoreRandomId?: boolean,
+  ignoreRandomId?: boolean;
   data?: any;
   value?: any;
   defaultValue?: any;
@@ -517,6 +517,28 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
 
     const sizeStyles = getSizeStyles();
+
+    const getInputHeight = () => {
+      if (_useMUI) {
+        const muiStyles = sizeStyles.mui as any;
+        return muiStyles['& .MuiInputBase-root']?.height || '2.5rem';
+      }
+      return sizeStyles.regular.height || '2rem';
+    };
+    // const inputHeight = getInputHeight();
+    // const inputHeight = getInputHeight() - 2.1;
+
+    const remToPx = (rem: number) => 
+    {
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
+      return rem * rootFontSize;
+    };
+
+  const rawRem = parseFloat(getInputHeight()); // removes "rem" from e.g., "2.1rem"
+  const inputHeight = remToPx(rawRem) - 2.1;
+ 
+    
+
     const commonProps = {
       id: ignoreRandomId ? id : `${id}_${Math.random()}`,
       name: `input_${id}_${Math.random()}`,
@@ -568,25 +590,24 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               )}
               {showCustomNumberChanger && (
                 <div
-                  className="absolute right-0 top-0 h-full flex flex-col"
+                  className="absolute right-0 top-0  h-full flex flex-col border-l dark:border-dark-border border-gray-300"
                   style={{
+                    // height: inputHeight,
+                    // width: `max(calc(${inputHeight} / 2), 1rem)`,
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                      }
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                       : {
-                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                      }),
-                  }}>
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
+                  }}
+                >
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue =
@@ -606,19 +627,24 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }
+                            borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }
                         : {
-                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }),
-                    }}>
-                    <ChevronUp className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
+                            borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }),
+                    }}
+                  >
+                    <ChevronUp
+                      className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
+                      style={{
+                        height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      }}
+                    />
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 border-t dark:border-dark-border border-gray-300 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue =
@@ -638,15 +664,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }
+                            borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }
                         : {
-                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }),
-                    }}>
-                    <ChevronDown className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
+                            borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }),
+                    }}
+                  >
+                    <ChevronDown
+                      className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
+                      style={{
+                        height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        // marginTop: "1px",
+                        // width:"13px"
+                      }}
+                    />
                   </button>
                 </div>
               )}
@@ -850,13 +883,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   backgroundColor: bgColor,
                   textAlign: type === "number" ? "right" : "left",
                   paddingRight:
-                    type === "number" && showCustomNumberChanger == true
-                      ? "2rem"
+                    type === "number" && showCustomNumberChanger
+                      ? "16px"
                       : undefined,
                   ...(!prefix &&
                     !suffix && {
-                    borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                  }),
+                      borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                    }),
                 }}
                 className={`form-control ${contextClassName || ""} !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
                   }`} 
@@ -894,29 +927,28 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
               {showCustomNumberChanger && (
                 <div
-                  className="absolute right-0 top-0 h-[91%] flex flex-col border-l dark:!border-dark-border  border-gray-300 m-[2px]"
+                  className="absolute right-0 top-0 flex flex-col border-l dark:border-dark-border border-gray-300 m-[2px]"
                   style={{
-                    // background:
-                    //   initial?.value !== undefined && initial?.value !== null && initial?.value !== ""
-                    //     ? `rgb(${inputBoxState?.selectColor})`
-                    //     : "#f9f9f9",
+                    height: inputHeight,
+                    marginTop: "1px",
+                    width:"13px",
+                    marginInlineEnd: "1px",
+                    // width: `max(calc(${inputHeight} / 2), 1rem)`,
+                    // margin: `calc(${inputHeight} / 20)`,
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                      }
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                       : {
-                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
-                          }px`,
-                      }),
-                  }}>
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
+                  }}
+                >
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-full  dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue =
@@ -936,19 +968,25 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }
+                            borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }
                         : {
-                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }),
-                    }}>
-                    <ChevronUp className="h-4 w-4 text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                            borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }),
+                    }}
+                  >
+                    
+                    <ChevronUp
+                      className="h-4 w-4 text-gray-600 dark:text-gray-400 hover:text-gray-700  dark:hover:text-gray-500 transition-colors"
+                      // style={{
+                      //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      // }}
+                    />
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 border-t dark:!border-dark-border border-gray-300 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 border-t dark:border-dark-border border-gray-300 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue =
@@ -968,15 +1006,20 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }
+                            borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }
                         : {
-                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
-                            }px`,
-                        }),
-                    }}>
-                    <ChevronDown className="h-4 w-4  text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                            borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                          }),
+                    }}
+                  >
+                    <ChevronDown
+                      className="h-4 w-4 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
+                      // style={{
+                      //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      // }}
+                    />
                   </button>
                 </div>
               )}

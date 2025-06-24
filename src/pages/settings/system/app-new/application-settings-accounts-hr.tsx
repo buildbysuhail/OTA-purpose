@@ -96,6 +96,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         <ERPInput
           id="salesmanIncentive"
           min={0}
+          // min={5}
           value={settings?.miscellaneousSettings?.salesmanIncentive}
           data={settings?.miscellaneousSettings}
           type="number"
@@ -104,7 +105,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             handleFieldChange(
               "miscellaneousSettings",
               "salesmanIncentive",
-              parseFloat(data.salesmanIncentive)
+              (data.salesmanIncentive)
             )
           }
         />

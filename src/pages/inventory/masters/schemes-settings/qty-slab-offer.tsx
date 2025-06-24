@@ -355,7 +355,7 @@ export const QuantitySlabOffer: React.FC = () => {
           type="number"
           disabled={loadAllSlabs}
           onChangeData={(data: any) =>
-            handleFieldChange("value", parseFloat(data.value))
+            handleFieldChange("value", (data.value))
           }
         />
 
@@ -365,7 +365,7 @@ export const QuantitySlabOffer: React.FC = () => {
           type="number"
           disabled={loadAllSlabs}
           onChangeData={(data: any) =>
-            handleFieldChange("qtyFrom", parseFloat(data.qtyFrom))
+            handleFieldChange("qtyFrom", (data.qtyFrom))
           }
         />
 
@@ -375,7 +375,7 @@ export const QuantitySlabOffer: React.FC = () => {
           type="number"
           disabled={loadAllSlabs}
           onChangeData={(data: any) =>
-            handleFieldChange("qtyTo", parseFloat(data.qtyTo))
+            handleFieldChange("qtyTo", (data.qtyTo))
           }
         />
       </div>

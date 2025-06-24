@@ -208,7 +208,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
             handleFieldChange(
               "branchSettings",
               "syncIntervals",
-              parseFloat(data.syncIntervals)
+              (data.syncIntervals)
             )
           }
         />

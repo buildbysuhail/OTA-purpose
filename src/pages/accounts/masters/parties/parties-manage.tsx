@@ -440,7 +440,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               placeholder={t("credit_amount")}
               required={false}
               onChangeData={(data: any) =>
-                handleFieldChange("creditAmount", parseFloat(data.creditAmount))
+                handleFieldChange("creditAmount", (data.creditAmount))
               }
             />
 
@@ -454,7 +454,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 placeholder={t("op_balance")}
                 required={false}
                 onChangeData={(data: any) =>
-                  handleFieldChange("opBalance", parseFloat(data.opBalance))
+                  handleFieldChange("opBalance", (data.opBalance))
                 }
               />
 

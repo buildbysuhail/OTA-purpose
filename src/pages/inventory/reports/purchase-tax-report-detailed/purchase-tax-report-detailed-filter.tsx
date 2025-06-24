@@ -47,7 +47,7 @@ const PurchaseTaxReportDetailedFilter = ({
           min="0"
           disabled={!getFieldProps("vatPercentageEnabled").value}
           onChangeData={(data: any) =>
-            handleFieldChange("vatPercentage", parseFloat(data.vatPercentage))
+            handleFieldChange("vatPercentage", (data.vatPercentage))
           }
         />
       </div>

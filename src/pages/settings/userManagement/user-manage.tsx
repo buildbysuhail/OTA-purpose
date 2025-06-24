@@ -144,7 +144,7 @@ export const UserManage: React.FC = React.memo(() => {
           min={0}
           placeholder={t("max_dis%")}
           required={false}
-          onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}
+          onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", (data.maxDiscPercAllowed))}
         />
 
         {

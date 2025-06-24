@@ -116,7 +116,7 @@ const MainBackupFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             handleFieldChange(
               "backUPSettings",
               "backupDuration",
-              parseFloat(data.backupDuration)
+              (data.backupDuration)
             )
           }
         />

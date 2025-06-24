@@ -613,7 +613,7 @@ const InventorySettingsForm = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange(
                     "discontAuthorizationIfDiscountAbove",
-                    parseFloat(data.discontAuthorizationIfDiscountAbove)
+                    (data.discontAuthorizationIfDiscountAbove)
                   )
                 }
               />

@@ -140,10 +140,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <div className="z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2"
           style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
           <div className="relative w-full">
-            <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
+            <div className="absolute left-1/2 transform -translate-x-1/2 top-[-22px]">
               <button onClick={toggleDropup}
-                className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "bg-gray-100" : ""}`}
-                style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
+                className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "bg-gray-100" : ""}`}
+                style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}>
                 <ChevronUp
                   className={`mx-2 transition-transform duration-500 ${isDropUpOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`}
                   size={24}
@@ -163,15 +163,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     t={t}
                     handleKeyDown={handleKeyDown}
                     handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <RemarksInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
                   />
                 </div>
 
@@ -256,7 +247,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
 
           <div className="flex items-end justify-between">
-            <div className="flex items-end gap-1">
+            <div className="flex flex-col gap-2">
+              <div className="w-full">
+                  <RemarksInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                  />
+                </div>
+              <div className="flex items-end gap-1">
               <div className="flex items-center gap-1">
                 <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
                   <button className="text-blue-600">
@@ -297,9 +297,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
             </div>
+            </div>
 
             <div className="flex items-end gap-4">
-              <div className="grid grid-cols-1 gap-1">
+              <div className="grid grid-cols-1 gap-1 w-64">
                 <NetAmountInput
                   formState={formState}
                   dispatch={dispatch}

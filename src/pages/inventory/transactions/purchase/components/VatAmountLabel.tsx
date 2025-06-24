@@ -1,5 +1,4 @@
 import React from "react";
-import ERPLabel from "../../../../../components/ERPComponents/erp-label";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 
 interface VatAmountLabelProps extends VoucherElementProps {
@@ -21,8 +20,8 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     //   showDropdown={true}
     //   dropdownData={taxData}
     // />
-    <div className="flex items-center justify-between">
-      <span>{t(formState.formElements.totTax.label)}</span>
+    <div className="flex items-center">
+      <span className="w-20">{t(formState.formElements.totTax.label)}</span>
       <span>:{formState.transaction.master.vatAmount}</span>
     </div>
   );

@@ -49,7 +49,7 @@ import UnsavedChangesModal from "./unsavedChangesModal";
 import AccHeader from "./components/header";
 import Urls from "../../../../redux/urls";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
-import ProductSummaryMaster from "../../reports/product-summary/product-summary-master";
+import ProductSummaryMaster from "../../reports/other-inventory-reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
 import {
   transactionInitialData,

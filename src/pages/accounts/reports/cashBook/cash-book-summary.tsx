@@ -246,6 +246,7 @@ const CashBookSummary = () => {
                   }}
                   postData={
                     { ...filter }}
+                    
                 />
               </div>
             </div>

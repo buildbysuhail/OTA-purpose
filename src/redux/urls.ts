@@ -438,8 +438,8 @@ const Urls = {
   sales_estimate_summary: "/Inventory/RptSalesReport/SalesEstimateSummary/",
   sales_quotation_summary: "/Inventory/RptSalesReport/SalesQuotationSummary/",
   substitute_report: "/Inventory/RptSalesReport/SubstituteSummary/",
-  daywise_summary_with_profit:
-    "/Inventory/RptSalesReport/DaywiseSalesSummaryWithProfit/",
+  daywise_summary_with_profit:"/Inventory/RptSalesReport/DaywiseSalesSummaryWithProfit/",
+  daywise_summary_with_profit_by_date:"/Inventory/RptSalesReport/DaywiseSalesSummaryProfitReportByDate/",
   groupwise_sales_summary_devexpress:
     "/Inventory/RptSalesReport/GroupWiseSalesDevexpress/",
   groupwise_sales_summary: "/Inventory/RptSalesReport/GroupWiseSales/",

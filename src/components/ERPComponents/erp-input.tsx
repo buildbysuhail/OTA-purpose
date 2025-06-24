@@ -173,7 +173,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         const value = e.target.value;
         // Allow empty string, decimal point, or valid numbers
         if (value === "" || /^\d*\.?\d*$/.test(value)) {
-          if (ds !== undefined && ds >= 0 && sd < 0) return;
+          if (ds !== undefined && ds >= 0 && sd < ds) return;
           onChangeData && data && onChangeData(setNestedValue(data, id, value));
           onChange && onChange(e);
         }

@@ -1,5 +1,4 @@
 import React from "react";
-import ERPLabel from "../../../../../components/ERPComponents/erp-label";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 
 const GrandTotalLabel: React.FC<VoucherElementProps> = ({ formState, t, }) => {
@@ -13,8 +12,8 @@ const GrandTotalLabel: React.FC<VoucherElementProps> = ({ formState, t, }) => {
     //   boxed
     //   textAlign="right"
     // />
-    <div className="flex items-center justify-between">
-      <span>{t(formState.formElements.grandTotal.label)}</span>
+    <div className="flex items-center">
+      <span className="w-20">{t(formState.formElements.grandTotal.label)}</span>
       <span>:{formState.transaction.master.billDiscount}</span>
     </div>
   );

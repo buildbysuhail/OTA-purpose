@@ -138,7 +138,7 @@ export const AccountLedgerManage = () => {
                     min={0}
                     placeholder={t('opening_balance')}
                     type="number"
-                    onChangeData={(data: any) => handleFieldChange("opBalance", parseFloat(data.opBalance))}
+                    onChangeData={(data: any) => handleFieldChange("opBalance", (data.opBalance))}
                   />
                 </div>
                 <div className="">

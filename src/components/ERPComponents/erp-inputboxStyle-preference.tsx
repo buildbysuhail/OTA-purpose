@@ -393,7 +393,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                   className="bg-slate-300"
                   value={inputBox?.inputHeight}
                   onChange={(e) => { const newValue = parseFloat(e.target?.value); onInputBoxChange("inputHeight", newValue); }}
-                  min={0}
+                  min={1.2}
                   max={5}
                   step={0.1}
                 />

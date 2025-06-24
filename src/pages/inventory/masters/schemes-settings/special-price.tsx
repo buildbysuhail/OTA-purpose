@@ -358,7 +358,7 @@ export const SpecialPrice: React.FC = () => {
                     type="number"
                     className="w-full"
                     onChangeData={(data: any) =>
-                      handleFieldChange("salesPrice", parseFloat(data.salesPrice))
+                      handleFieldChange("salesPrice", (data.salesPrice))
                     }
                   /> */}
 
@@ -430,7 +430,7 @@ export const SpecialPrice: React.FC = () => {
                     type="number"
                     className="w-full"
                     onChangeData={(data: any) =>
-                      handleFieldChange("groupPrice", parseFloat(data.groupPrice))
+                      handleFieldChange("groupPrice", (data.groupPrice))
                     }
                   /> */}
 

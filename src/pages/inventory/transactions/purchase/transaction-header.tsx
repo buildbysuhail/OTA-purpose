@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EllipsisVertical, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -115,6 +115,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   return (
     <div>
+      {isDropDownOpen && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropdown} />
+      )}
+
       {!deviceInfo?.isMobile && (
         <div className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}>
           <div className="flex items-end gap-1 relative px-2 !pb-3">
@@ -451,25 +455,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
           {/* Chevron button - moves with dropdown content */}
           <div className="relative w-full">
-            <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
+            <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""}`}
+                className={`flex items-center justify-center bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""}`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
                 }}
               >
-                <ChevronDown
-                  className={`mx-2 transition-transform duration-500 ${isDropDownOpen
-                    ? "transform rotate-180"
-                    : hasAnimated
-                      ? ""
-                      : "animate-[bounce_2s_1]"
-                    }`}
-                  size={24}
-                />
+                <ChevronDown className={`mx-2 transition-transform duration-500 ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
           </div>
@@ -832,25 +828,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Chevron button - moves with dropdown content */}
           <div className="relative w-full">
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
-              <button
-                onClick={toggleDropdown}
-                className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""
-                  }`}
+              <button onClick={toggleDropdown}
+                className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""}`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
                 }}
               >
-                <ChevronDown
-                  className={`mx-2 transition-transform duration-500 ${isDropDownOpen
-                    ? "transform rotate-180"
-                    : hasAnimated
-                      ? ""
-                      : "animate-[bounce_2s_1]"
-                    }`}
-                  size={24}
-                />
+                <ChevronDown className={`mx-2 transition-transform duration-500 ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
           </div>

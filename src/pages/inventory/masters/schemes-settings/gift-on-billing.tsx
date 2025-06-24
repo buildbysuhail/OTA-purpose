@@ -402,7 +402,7 @@ export const GiftOnBilling: React.FC = () => {
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "totalBillRangeFrom",
-                  parseFloat(data.totalBillRangeFrom)
+                  (data.totalBillRangeFrom)
                 )
               }
             />
@@ -417,7 +417,7 @@ export const GiftOnBilling: React.FC = () => {
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "totalBillRangeTo",
-                  parseFloat(data.totalBillRangeTo)
+                  (data.totalBillRangeTo)
                 )
               }
             />
@@ -476,7 +476,7 @@ export const GiftOnBilling: React.FC = () => {
               className="max-w-[150px]"
               disabled={isFormDisabled}
               onChangeData={(data: any) =>
-                handleFieldChange("quantity", parseFloat(data.quantity))
+                handleFieldChange("quantity", (data.quantity))
               }
             />
 
@@ -487,7 +487,7 @@ export const GiftOnBilling: React.FC = () => {
               className="max-w-[150px]"
               disabled={isFormDisabled}
               onChangeData={(data: any) =>
-                handleFieldChange("price", parseFloat(data.price))
+                handleFieldChange("price", (data.price))
               }
             />
           </div>

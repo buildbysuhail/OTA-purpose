@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
@@ -13,6 +14,7 @@ import StockSummaryFilter, {
 import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import StockSummaryLedgerReport from "./stock-summary-ledger-report";
 
 const StockSummary = () => {
   const { t } = useTranslation("accountsReport");
@@ -21,6 +23,7 @@ const StockSummary = () => {
   );
   const [filter, setFilter] = useState<any>(StockSummaryFilterInitialState);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
+  const userSession = useSelector((state: RootState) => state.UserSession);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -43,7 +46,15 @@ const StockSummary = () => {
         allowSorting: true,
         width: 150,
         showInPdf: true,
+        cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="product"
+          ></DrillDownCellTemplate>
+        )
       },
+    },
       {
         dataField: "stock",
         caption: t("stock"),
@@ -526,6 +537,9 @@ const StockSummary = () => {
                 filterContent={<StockSummaryFilter />}
                 filterWidth={790}
                 filterHeight={630}
+                  onFilterChanged={(filter: any) => {
+                  setFilter(filter);
+                }}
                 filterInitialData={{
                   ...StockSummaryFilterInitialState,
                   showBatchWise:
@@ -534,8 +548,20 @@ const StockSummary = () => {
                       : false,
                       valuationUsing:clientSession.isAppGlobal?"APC":"SPP",
                 }}
+
                 reload={true}
                 gridId="grd_stock_summary"
+                 childPopupProps={{
+                  content: <StockSummaryLedgerReport />,
+                  title: "Stock Ledger Report",
+                  isForm: false,
+                  width: 1000,
+                  drillDownCells: "product",
+                  bodyProps: "id",
+                  enableFn: (data: any) => data?.id != 0,
+                  // origin: filter.showSalesReturn ? "return" : "sales",
+                }}
+                postData={{ ...filter,fromDate:userSession.finFrom,toDate:filter.asOnDate }}
               />
             </div>
           </div>

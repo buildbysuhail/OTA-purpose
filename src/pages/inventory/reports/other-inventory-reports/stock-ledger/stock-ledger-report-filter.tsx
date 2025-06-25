@@ -43,16 +43,16 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
         <ERPDataCombobox
           label={t("product")}
-          {...getFieldProps("productID")}
+          {...getFieldProps("id")}
           field={{
-            id: "productID",
+            id: "id",
             getListUrl: Urls.data_products,
             valueKey: "id",
             labelKey: "name",
           }}
           onSelectItem={(data) => {
             handleFieldChange({
-              productID: data.value,
+              id: data.value,
               product: data.label,
             });
           }}
@@ -103,7 +103,7 @@ export default StockLedgerFilter;
 export const StockLedgerFilterInitialState = {
   fromDate: new Date(),
   toDate:new Date(),
-  productID: 0,
+  id: 0,
   warehouseID: 0,
   isBatchwise: false,
   autobarcode: 0,

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
@@ -20,20 +21,25 @@ interface DaywiseSummaryWithProfitProps {
   rowData?: any;
   origin?: any;
 }
-  const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({ postData, contentProps, rowData,origin }) => {
-  
+const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
+  postData,
+  contentProps,
+  rowData,
+  origin,
+}) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "date",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      format: "dd-MMM-yyyy",
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -91,7 +97,7 @@ interface DaywiseSummaryWithProfitProps {
                   : ""
               }`}
             >
-              {filter.showSalesReturn == true
+              {/* {filter.showSalesReturn == true
                 ? moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
                   ? moment(cellElement.data.date, "DD/MM/YYYY").format(
                       "DD-MMM-YYYY"
@@ -105,10 +111,27 @@ interface DaywiseSummaryWithProfitProps {
                 ? moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss").format(
                     "DD-MMM-YYYY"
                   )
-                : cellElement.data.date}
+                : cellElement.data.date} */}
+              {cellElement.data.date}
             </span>
           );
         }
+      },
+    },
+     {
+      dataField: "voucherNumber",
+      caption: t("voucher_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+     cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="voucherNumber"
+          ></DrillDownCellTemplate>
+        )
       },
     },
     {
@@ -611,14 +634,7 @@ interface DaywiseSummaryWithProfitProps {
         }
       },
     },
-    {
-      dataField: "voucherNumber",
-      caption: t("voucher_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
+   
     {
       dataField: "voucherType",
       caption: t("voucher_type"),
@@ -634,7 +650,6 @@ interface DaywiseSummaryWithProfitProps {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
-              {origin}
               <ErpDevGrid
                 // summaryItems={summaryItems}
                 remoteOperations={{
@@ -644,18 +659,24 @@ interface DaywiseSummaryWithProfitProps {
                   summary: false,
                 }}
                 columns={columns}
-                 postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}   
-                     filterText={`{${origin == "return" ? '{**** Day wise Sales and Return Summary with Profit On : (date)}' : '{**** Day wise Sales Summary with Profit On : (date)}'}`}
-                         
-                // filterText="{{**** (showSalesReturn) == true} && ,Day wise Sales and Return Summary with Profit On : {**** (date)}}} 
-                //  {{**** (showSalesReturn) == false} && , Day wise Sales Summary with Profit On : {**** (date)}}"
-                // // gridHeader={t("day_wise")}
+                postData={mergeObjectsRemovingIdenticalKeys(
+                  postData,
+                  contentProps
+                )}
+                filterText={`Day wise Sales${origin == "return" ? " and Return" : ""} Summary with Profit On : {**** (date)}`}
                 dataUrl={Urls.daywise_summary_with_profit_by_date}
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}
                 gridId="grd_daywise_summary_with_profit_by_date"
-               rowData={rowData}
+                rowData={rowData}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "voucherNumber,",
+                }}
               />
             </div>
           </div>

@@ -208,7 +208,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
             handleFieldChange(
               "branchSettings",
               "maximum_Allowed_LineItem_Amount",
-              parseFloat(data.maximum_Allowed_LineItem_Amount)
+              (data.maximum_Allowed_LineItem_Amount)
             )
           }
         />

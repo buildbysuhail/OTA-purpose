@@ -416,3 +416,26 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
 
   position: relative;
 }
+
+.number-input-spinner::-webkit-inner-spin-button,
+.number-input-spinner::-webkit-outer-spin-button {
+  width: 13px !important; 
+  /* height: 100% !important;  */
+  height: 100%;
+  top: 51%; 
+  transform: translateY(-50%);
+  position: absolute !important; 
+  right: 0 !important; 
+  margin: 0 !important; 
+  /* padding-right: 3px !important; */
+  /* margin-bottom: 1px !important; */
+}
+
+/* .number-input-spinner::-webkit-inner-spin-button,
+.number-input-spinner::-webkit-outer-spin-button {
+  height: 50%; 
+  top: 25%; 
+  position: relative; 
+  margin: 0;
+  transform: translateY(-50%);
+} */

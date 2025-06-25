@@ -67,7 +67,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   const postUserConfig = async () => {
     try {
       setIsLoading(true);
-      const response = await api.post(`${Urls.post_acc_user_config}`, formState.userConfig);
+       const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utc", base64);
@@ -100,7 +100,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         confirmButtonText: t("reset_now"),
         cancelButtonText: t("cancel"),
         onConfirm: async (result: any) => {
-          const res = await api.postAsync(Urls.reset_user_settings, {});
+          const res = await api.postAsync(`${Urls.acc_transaction_base}${formState.transactionType}/ResetLocalSettings`, formState.userConfig);
           handleResponse(res, () => {
             const st = atob(res.item);
             localStorage.setItem("utc", res.item);

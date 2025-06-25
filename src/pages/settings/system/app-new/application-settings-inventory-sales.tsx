@@ -224,7 +224,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
             handleFieldChange(
               "inventorySettings",
               "discontAuthorizationIfDiscountAbove",
-              parseFloat(data.discontAuthorizationIfDiscountAbove)
+              (data.discontAuthorizationIfDiscountAbove)
             )
           }
         />

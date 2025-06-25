@@ -109,12 +109,12 @@ import GeneralMaster from "../../../pages/inventory/masters/general-master";
 import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
 import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
 
-const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
-const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
-const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
+const PriceList = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/price-list/price-list-report"));
+const StockLedger = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/stock-ledger/stock-ledger-report"));
+const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/daily-balance/daily-balance-report"));
 // const OpeningStock = lazy(() => import("../../../pages/inventory/reports/opening-stock-report/opening-stock"));
-const StockFlow = lazy(() => import("../../../pages/inventory/reports/stock-flow/stock-flow-report"));
-const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report"));
+const StockFlow = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/stock-flow/stock-flow-report"));
+const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/transaction-analysis-report/transaction-analysis-report"));
 
 interface ContentProps { }
 const loading = (

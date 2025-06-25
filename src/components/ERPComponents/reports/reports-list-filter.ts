@@ -57,25 +57,27 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "purchase_estimate_register_report",
             "purchase_return_estimate_register_report",
             "purchase_return_estimate_summary_report",
-  
-            "purchase_gst_daily_summary_report",
-             "purchase_gst_taxwise_report",
-            "purchase_gst_taxwise_with_hsn_report",
-            "purchase_gst_monthly_summary_report",
-            "purchase_gst_detailed_report",
-            "purchase_gst_register_format_report",
-            "purchase_gst_advance_register_format_report",
-            
-            "purchase_return_gst_daily_summary_report",
-            "purchase_return_gst_sales_and_return_report",
-            "purchase_return_gst_taxwise_report",
-            "purchase_return_gst_taxwise_with_hsn_report",
-            "purchase_return_gst_monthly_summary_report",
-            "purchase_return_gst_detailed_report",
-            "purchase_return_gst_register_format_report",
-            "purchase_return_gst_adv_register_format_report",
+            "sales_return_estimate_register",
+            "sales_return_estimate_summary",
+            "sales_estimate_register",
+            "purchase_estimate_register_report",
+            "purchase_return_estimate_register_report",
+            "purchase_return_estimate_summary_report",
+
+            "itemwise_sales_transfer_summary",
+            "itemwise_sales_return_estimate_summary",
             "itemwise_purchase_return_estimate_summary",
-  
+            "excess_stock_sp",
+            "shortage_stock_sp",
+
+            "daily_summary",
+            "sales_and_return",
+             "taxwise",
+            "taxwise_with_hsn",
+            "monthly_summary",
+            "detailed",
+            "register_format",
+            "adv_register_format",
   
             "gstr1_b2b",
             "gstr1_b2cLarge",
@@ -92,7 +94,6 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "sales_transfer_partyWise_sales",
             "sales_transfer_monthWise_summary",
             "sales_transfer_partyWise_summary",
-            
             
             "sales_price_category_greater_than_mrp___",
             "products_with_price_categories",

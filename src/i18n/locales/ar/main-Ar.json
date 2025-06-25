@@ -173,7 +173,7 @@
   "cheque_payment": "دفع الشيك",
   "cheque_receipt": "إيصال الشيك",
   "apply": "تطبيق",
-  
+
   "dashboard": "لوحة التحكم",
   "sales": "المبيعات",
   "vat_sales_invoice": "فاتورة مبيعات ضريبة القيمة المضافة",
@@ -465,7 +465,7 @@
   "final_reports": "التقارير النهائية",
   "income_and_expense": "الدخل والمصروفات",
   "cash_summary_ledgerwise_report": "تقرير ملخص النقد حسب دفتر الأستاذ",
-  
+
   "inventory_masters": "أساتذة المخزون",
   "products": "المنتجات",
   "product_group": "مجموعة المنتجات",
@@ -595,5 +595,17 @@
   "sales_transfer_partyWise_sales": "تحويل المبيعات حسب الطرف",
   "net_sales_transfer_report": "تقرير صافي تحويل المبيعات",
   "sales_transfer_monthWise_summary": "تقرير ملخص تحويل المبيعات حسب الشهر",
-  "sales_transfer_partyWise_summary": "تقرير ملخص تحويل المبيعات حسب الطرف"
+  "sales_transfer_partyWise_summary": "تقرير ملخص تحويل المبيعات حسب الطرف",
+
+  "focus_button_color": "لون زر التركيز",
+  "purchase_return_VAT": "مرتجع شراء ضريبة القيمة المضافة",
+  "VAT_purchase_invoice": "فاتورة شراء ضريبة القيمة المضافة",
+
+  "live_preview": "معاينة مباشرة",
+  "input_style": "نمط الإدخال",
+  "input_size": "حجم الإدخال",
+  "basic_adjustments": "تعديلات أساسية",
+  "advanced_customization": "تخصيص متقدم",
+  "color_customization": "تخصيص اللون",
+  "size_options": "خيارات الحجم"
 }

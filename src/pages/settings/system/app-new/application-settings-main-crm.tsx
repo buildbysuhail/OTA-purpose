@@ -67,7 +67,7 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               handleFieldChange(
                 "mainSettings",
                 "previlegeCardPerc",
-                parseFloat(data.previlegeCardPerc)
+                (data.previlegeCardPerc)
               )
             }
           />

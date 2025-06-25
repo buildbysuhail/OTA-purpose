@@ -1,7 +1,5 @@
 import React from "react";
-import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange } from "../reducer";
 
 interface NetAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
@@ -38,8 +36,8 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     //     formState.formElements.pnlMasters?.disabled
     //   }
     // />
-    <div className="flex items-center justify-between">
-      <span>{t(formState.formElements.netAmount.label)}</span>
+    <div className="flex items-center">
+      <span className="w-20">{t(formState.formElements.netAmount.label)}</span>
       <span>:{formState.netAmount}</span>
     </div>
   );

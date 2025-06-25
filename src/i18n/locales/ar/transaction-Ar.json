@@ -547,5 +547,22 @@
   "nos": "الأعداد",
   "qty_factors": "عوامل الكمية",
   "multiple_rows": "صفوف متعددة",
-  "apply": "تطبيق"
+  "apply": "تطبيق",
+
+  "view_settings": "إعدادات العرض",
+  "choose_between_compact_or_expanded_view": "الاختيار بين العرض المضغوط أو الموسع",
+  "configuration_options": "خيارات التكوين",
+  "cost_center_settings": "إعدادات مركز التكلفة",
+  "layout_dimensions": "أبعاد التخطيط",
+  "alignment": "المحاذاة",
+  "color_theme_settings": "إعدادات نسق الألوان",
+  "grid_settings": "إعدادات الشبكة",
+  "font_size": "حجم الخط",
+  "bold": "عريض",
+  "row_height": "ارتفاع الصف",
+  "reset_settings": "إعادة ضبط الإعدادات",
+  "reset_all_settings_to_default": "إعادة ضبط جميع الإعدادات إلى الافتراضي",
+  "reset_to_default": "إعادة ضبط إلى الافتراضي",
+  "reset_all": "إعادة ضبط الكل",
+  "choose_content_alignment_preference": "اختر تفضيل محاذاة المحتوى"
 }

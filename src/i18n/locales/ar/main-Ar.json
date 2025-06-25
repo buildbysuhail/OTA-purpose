@@ -599,5 +599,13 @@
 
   "focus_button_color": "لون زر التركيز",
   "purchase_return_VAT": "مرتجع شراء ضريبة القيمة المضافة",
-  "VAT_purchase_invoice": "فاتورة شراء ضريبة القيمة المضافة"
+  "VAT_purchase_invoice": "فاتورة شراء ضريبة القيمة المضافة",
+
+  "live_preview": "معاينة مباشرة",
+  "input_style": "نمط الإدخال",
+  "input_size": "حجم الإدخال",
+  "basic_adjustments": "تعديلات أساسية",
+  "advanced_customization": "تخصيص متقدم",
+  "color_customization": "تخصيص اللون",
+  "size_options": "خيارات الحجم"
 }

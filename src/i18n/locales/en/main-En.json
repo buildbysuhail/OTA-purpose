@@ -602,5 +602,13 @@
 
   "focus_button_color": "Focus button color",
   "purchase_return_VAT": "Purchase Return VAT",
-  "VAT_purchase_invoice": "VAT Purchase Invoice"
+  "VAT_purchase_invoice": "VAT Purchase Invoice",
+
+  "live_preview": "Live Preview",
+  "input_style": "Input Style",
+  "input_size": "Input Size",
+  "basic_adjustments": "Basic Adjustments",
+  "advanced_customization": "Advanced Customization",
+  "color_customization": "Color Customization",
+  "size_options": "Size options"
 }

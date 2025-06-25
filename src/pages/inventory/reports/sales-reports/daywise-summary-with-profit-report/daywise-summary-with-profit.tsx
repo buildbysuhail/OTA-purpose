@@ -25,12 +25,13 @@ const DaywiseSummaryWithProfit = () => {
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "date",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      format:"dd-MMM-yyyy",
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -91,7 +92,8 @@ const DaywiseSummaryWithProfit = () => {
                   : ""
               }`}
             >
-              {filter.showSalesReturn == true
+              {cellElement.data.date}
+              {/* {filter.showSalesReturn == true
                 ? moment(cellElement.data.date, "DD/MM/YYYY", false).isValid()
                   ? moment(cellElement.data.date, "DD/MM/YYYY").format(
                       "DD-MMM-YYYY"
@@ -105,7 +107,7 @@ const DaywiseSummaryWithProfit = () => {
                 ? moment(cellElement.data.date, "MM/DD/YYYY HH:mm:ss").format(
                     "DD-MMM-YYYY"
                   )
-                : cellElement.data.date}
+                : cellElement.data.date} */}
             </span>
           ) : (
             <DrillDownCellTemplate data={cellElement} field="date" />
@@ -773,13 +775,15 @@ const DaywiseSummaryWithProfit = () => {
                 gridId="grd_daywise_summary_with_profit"
                 childPopupProps={{
                   content: <DaywiseSummaryWithProfitDrillDown />,
-                  title:filter.showSalesReturn? t("Day wise Sales and Return Summary with Profit On :"):t("Day wise Sales Summary with Profit On :"),
+                  title: filter.showSalesReturn
+                    ? t("Day wise Sales and Return Summary with Profit")
+                    : t("Day wise Sales Summary with Profit"),
                   isForm: false,
                   width: 1000,
                   drillDownCells: "date,",
                   bodyProps: "date",
-                  enableFn: (data: any) => data?.ledgerID != 0,
-                   origin: filter.showSalesReturn?"retrun":"sales",
+                  enableFn: (data: any) => data?.date != null||data?.date != "",
+                  origin: filter.showSalesReturn ? "return" : "sales",
                 }}
                 postData={{ ...filter }}
               />

@@ -321,7 +321,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   dgvInventory: { visible: true, disabled: false, label: "" },
   dgvProduct: { visible: false, disabled: false, label: "",params: "" },
   dgvProductBatches: { visible: false, disabled: false, label: "",params: "" },
-  //editButton1: { visible: false, disabled: false, label: "editbutton1" },
+  productSearchPopupWindow: { visible: false, disabled: false, label: "ProductSearchPopupWindow",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
   lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },

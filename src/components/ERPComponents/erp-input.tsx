@@ -563,7 +563,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
 
     const numberInputProps = type === "number" ? {
-      type: "tel", // Use tel instead of number to have more control
+      type: "number", // Use tel instead of number to have more control
       inputMode: "decimal" as const, // Shows numeric keyboard with decimal support
       pattern: "[0-9]*\\.?[0-9]*", // Allows numbers and decimal point
     } : {
@@ -704,24 +704,25 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             pattern: "[0-9]*\\.?[0-9]*",
           }),
         },
-        sx: {
-          ...sizeStyles.mui,
-          "& .MuiInputBase-input.Mui-disabled": {
-            "-webkit-text-fill-color": "#606060 !important",
-            color: "#606060 !important",
-          },
-          "& .Mui-disabled input": {
-            "-webkit-text-fill-color": "#606060 !important",
-            color: "#606060 !important",
-          },
-          "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-          {
+       sx: {
+        ...sizeStyles.mui,
+        "& .MuiInputBase-input.Mui-disabled": {
+          "-webkit-text-fill-color": "#606060 !important",
+          color: "#606060 !important",
+        },
+        "& .Mui-disabled input": {
+          "-webkit-text-fill-color": "#606060 !important",
+          color: "#606060 !important",
+        },
+        ...(showCustomNumberChanger && {
+          "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
             appearance: "none",
           },
           "& input[type=number]": {
             appearance: "textfield",
           },
-        },
+        }),
+      },
         onKeyDown: (e) =>
           disableEnterNavigation == true
             ? onKeyDown != undefined
@@ -885,14 +886,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   paddingRight:
                     type === "number" && showCustomNumberChanger
                       ? "16px"
-                      : undefined,
+                      : type === "number"?"20px":undefined,
+                      ...(type === "number" && {
+                        "-moz-appearance": "number-input", // Firefox
+                        "-webkit-appearance": "number-input", // WebKit (though limited effect)
+                      }),
                   ...(!prefix &&
                     !suffix && {
                       borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                     }),
                 }}
-                className={`form-control ${contextClassName || ""} !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
-                  }`} 
+                className={`form-control ${contextClassName || ""} !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize ${
+                  showCustomNumberChanger
+                    ? "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    : "number-input-spinner"
+                } ${disabled ? "border-dashed !#606060" : ""}`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();

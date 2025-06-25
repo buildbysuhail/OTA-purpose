@@ -1,21 +1,33 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
-import { APIClient } from '../../helpers/api-client';
-import debounce from 'lodash/debounce';
-import { DataGrid } from 'devextreme-react';
-import { Column, KeyboardNavigation, Paging, Scrolling, Selection } from 'devextreme-react/cjs/data-grid';
-import { useTranslation } from 'react-i18next';
-import CustomStore from 'devextreme/data/custom_store';
-import ERPInput from "../../components/ERPComponents/erp-input";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  forwardRef,
+} from "react";
+import { APIClient } from "../../helpers/api-client";
+import debounce from "lodash/debounce";
+import { DataGrid } from "devextreme-react";
 import {
-  isNullOrUndefinedOrEmpty,
-} from "../../utilities/Utils";
-import ERPCheckbox from './erp-checkbox';
-import ERPModal from './erp-modal';
-import { set } from 'lodash';
-import ProductModalGrid from './erp-searchbox-modalContent';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { formStateHandleFieldChangeKeysOnly } from '../../pages/inventory/transactions/purchase/reducer';
+  Column,
+  KeyboardNavigation,
+  Paging,
+  Scrolling,
+  Selection,
+} from "devextreme-react/cjs/data-grid";
+import { useTranslation } from "react-i18next";
+import CustomStore from "devextreme/data/custom_store";
+import ERPInput from "../../components/ERPComponents/erp-input";
+import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils";
+import ERPCheckbox from "./erp-checkbox";
+import ERPModal from "./erp-modal";
+import { set } from "lodash";
+import ProductModalGrid from "./erp-searchbox-modalContent";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
+import Urls from "../../redux/urls";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputId?: string;
@@ -50,20 +62,42 @@ interface LoadResult {
 
 const api = new APIClient();
 
-const createStore = async (value: string, payload: any, productDataUrl?: string) => {
+const createStore = async (
+  value: string,
+  payload: any,
+  productDataUrl?: string
+) => {
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
       const queryString = paramNames
-        .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
-        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
         .join("&");
 
       try {
-        
         const url = productDataUrl || "";
-        const response = await api.postAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`, payload);
+        const response = await api.postAsync(
+          queryString && queryString !== ""
+            ? `${url}?${queryString}`
+            : `${url}?skip=0`,
+          payload
+        );
         const result = response;
         return result !== undefined && result !== null
           ? {
@@ -87,15 +121,33 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   return new CustomStore({
     key: "productBatchID",
     async load(loadOptions: any) {
-      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
       const queryString = paramNames
-        .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
-        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
         .join("&");
 
       try {
         const url = `${batchDataUrl}${productID}` || "";
-        const response = await api.getAsync(queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`);
+        const response = await api.getAsync(
+          queryString && queryString !== ""
+            ? `${url}?${queryString}`
+            : `${url}?skip=0`
+        );
         const result = response;
         return result !== undefined && result !== null
           ? {
@@ -119,10 +171,24 @@ const createModalStore = async (productDataUrl?: string) => {
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
       const queryString = paramNames
-        .filter((paramName) => loadOptions[paramName] !== undefined && loadOptions[paramName] !== null && loadOptions[paramName] !== "")
-        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
         .join("&");
 
       const url = `${productDataUrl}?${queryString}`;
@@ -188,105 +254,120 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   const { t } = useTranslation("inventory");
   const dispatch = useDispatch();
 
-  const formState = useSelector((state: RootState) => state.InventoryTransaction);
-  useEffect(() => {
-    setInputValue((prev) => ({
-      ...prev,
-      searchValue: value,
-    }));
-  }, [value]);
+    const formState = useSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
+    useEffect(() => {
+      setInputValue((prev) => ({
+        ...prev,
+        searchValue: value,
+      }));
+    }, [value]);
 
-  const debouncedFetch = useMemo(
-    () =>
-      debounce(async (value: string) => {
-        
-            if (value.trim() == "" || value.trim() == "%") { 
+    const debouncedFetch = useMemo(
+      () =>
+        debounce(async (value: string) => {
+          if (value.trim() == "" || value.trim() == "%") {
+          }
+          let byCode = inputValue.searchByCode;
+          let payload: any = {};
+          if (searchType === "modal") {
+           
+            // dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
+          } else if (searchType === "grid") {
+            if (searchKey == "pCode") {
+              payload.searchByCode = true;
+              payload.searchByCodeAndName = false;
+              if (value.trim() === "%") {
+                return null;
+              }
+
+              let searchText = "";
+
+              if (useInSearch && value.length > 2) {
+                searchText = "%" + value;
+              } else {
+                searchText = value;
+              }
+              payload.searchText = searchText;
+            } else if (searchKey == "product") {
+              payload.searchByCodeAndName = true;
+              payload.searchByCode = false;
+              if (value.trim() === "%") {
+                return null;
+              }
+
+              let searchText = "";
+
+              if (useInSearch && value.length > 2) {
+                searchText = "%" + value;
+              } else {
+                searchText = value;
+              }
+
+              if (advancedProductSearching) {
+                searchText = searchText.replace(/ /g, "%");
+              }
+              payload.searchText = searchText;
+            } else {
+              payload.searchText = value;
+              payload.searchByCode = byCode;
+              payload.productName = value;
             }
-        let byCode = inputValue.searchByCode;
-        let payload: any = {}
-        if (searchType === "modal") {
-          const store = await createModalStore(productDataUrl);
-          setModalStore(store);
-          dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
-        } else if (searchType === "grid") {
-          if(searchKey == "pCode") {
-            payload.searchByCode = true;
-           payload.searchByCodeAndName = false;
-             if (value.trim() === "%") {
-             return null;
-           }
-           
-           let searchText = "";
-           
-           if (useInSearch && value.length > 2) {
-             searchText = "%" + value;
-           } else {
-             searchText = value;
-           }
-           payload.searchText = searchText;
-          } else if(searchKey == "product") {
-           payload.searchByCodeAndName = true;
-           payload.searchByCode = false;
-           if (value.trim() === "%") {
-             return null;
-           }
-           
-           let searchText = "";
-           
-           if (useInSearch && value.length > 2) {
-             searchText = "%" + value;
-           } else {
-             searchText = value;
-           }
-           
-           if (advancedProductSearching) {
-             searchText = searchText.replace(/ /g, "%");
-           }
-           payload.searchText = searchText;
-        } else {
-          
-           payload.searchText = value;
-           payload.searchByCode = byCode;
-          payload.productName = value;
-        }
 
-          
-          const store = await createStore(value, payload, productDataUrl);
-          
-          setStore(store);
-          dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
-          
-        }
-      }, 200),
-    [productDataUrl, inputValue.searchByCode, searchType]
-  );
+            const store = await createStore(value, payload, productDataUrl);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue((prev) => ({
-      ...prev,
-      searchValue: value,
-    }));
-    dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
-    if (value.length >= 3) {
-      if (searchType !== "modal") {
-        debouncedFetch(value);
+            setStore(store);
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: { formElements: { dgvProduct: { visible: true } } },
+              })
+            );
+          }
+        }, 200),
+      [productDataUrl, inputValue.searchByCode, searchType]
+    );
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setInputValue((prev) => ({
+        ...prev,
+        searchValue: value,
+      }));
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: { formElements: { dgvProductBatches: { visible: false } } },
+        })
+      );
+      if (value.length >= 3) {
+        if (searchType !== "modal") {
+          debouncedFetch(value);
+        }
+      } else {
+        setStore({
+          data: [],
+          totalCount: 0,
+          summary: {},
+          groupCount: 0,
+        });
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: { formElements: { dgvProduct: { visible: false } } },
+          })
+        );
       }
-    } else {
-      setStore({
-        data: [],
-        totalCount: 0,
-        summary: {},
-        groupCount: 0,
-      });
-      dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-    }
-    if (onChange) onChange(e);
-  };
+      if (onChange) onChange(e);
+    };
 
-  useEffect(() => () => {
-    debouncedFetch.cancel();
-  }, [debouncedFetch]);
+    useEffect(
+      () => () => {
+        debouncedFetch.cancel();
+      },
+      [debouncedFetch]
+    );
 
   useEffect(() =>{
     debugger;
@@ -372,94 +453,151 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
     [onRowSelected, clearAfterSelection, inputRef]
   );
 
-  const handleBatchContentReady = useCallback(() => {
-    if (batchGridRef.current) {
-      const gridInstance = batchGridRef.current.instance();
-      const visibleRows = gridInstance.getVisibleRows();
-      if (visibleRows.length > 0) {
-        gridInstance.selectRowsByIndexes([0]);
-        gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-        gridInstance.focus();
+    const handleBatchContentReady = useCallback(() => {
+      if (batchGridRef.current) {
+        const gridInstance = batchGridRef.current.instance();
+        const visibleRows = gridInstance.getVisibleRows();
+        if (visibleRows.length > 0) {
+          gridInstance.selectRowsByIndexes([0]);
+          gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+          gridInstance.focus();
+        }
       }
-    }
-  }, []);
+    }, []);
 
-  const handleInputKeyDown = useCallback(
-    async (e: React.KeyboardEvent<HTMLInputElement>) => {
-      console.log(`Input key: ${e.key}`);
-      if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
-        if (e.key === "ArrowDown") {
-          const grid: any = dataGridRef.current.instance();
-          const rows = grid.getVisibleRows();
-          if (rows.length > 0) {
-            grid.selectRowsByIndexes([0]);
-            grid.navigateToRow(grid.getKeyByRowIndex(0));
-            grid.focus();
-            e.preventDefault();
+    const handleInputKeyDown = useCallback(
+      async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log(`Input key: ${e.key}`);
+        if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
+          if (e.key === "ArrowDown") {
+            const grid: any = dataGridRef.current.instance();
+            const rows = grid.getVisibleRows();
+            if (rows.length > 0) {
+              grid.selectRowsByIndexes([0]);
+              grid.navigateToRow(grid.getKeyByRowIndex(0));
+              grid.focus();
+              e.preventDefault();
+            }
+          } else if (e.key === "ArrowUp") {
+            const grid: any = dataGridRef.current.instance();
+            const rows = grid.getVisibleRows();
+            if (rows.length > 0) {
+              grid.selectRowsByIndexes([rows.length - 1]);
+              grid.navigateToRow(grid.getKeyByRowIndex(rows.length - 1));
+              grid.focus();
+              e.preventDefault();
+            }
+          } else {
+            rest?.onKeyDown && rest?.onKeyDown(e);
           }
-        } else if (e.key === "ArrowUp") {
-          const grid: any = dataGridRef.current.instance();
-          const rows = grid.getVisibleRows();
-          if (rows.length > 0) {
-            grid.selectRowsByIndexes([rows.length - 1]);
-            grid.navigateToRow(grid.getKeyByRowIndex(rows.length - 1));
-            grid.focus();
+        } else if (
+          e.key === "Enter" &&
+          searchType === "modal" &&
+          inputValue.searchValue &&
+          inputValue.searchValue.length >= 3
+        ) {  
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                formElements: {
+                  productSearchPopupWindow: {
+                    visible: true,
+                    data: {
+                      searchCriteria: searchKey,
+                      searchText: e.currentTarget.value,
+                      voucherType: formState.transaction.master.voucherType,
+                      warehouseId: applicationSettings.productsSettings.enableMultiWarehouseBilling ? 0 : 
+                        (() => { try { const val = Number(formState.transaction.master.fromWarehouseID); return isNaN(val) ? -1 : Math.min(Math.max(val, -1), 2147483647); } catch { return -1; } })(),
+                      inSearch: formState.inSearch,
+                    },
+                  },
+                },
+              },
+            })
+          );
+          e.preventDefault();
+        } else if (
+          e.key === "Escape" &&
+          formState.formElements.dgvProduct.visible
+        ) {
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                formElements: {
+                  dgvProduct: { visible: false },
+                  dgvProductBatches: { visible: false },
+                },
+              },
+            })
+          );
+          e.preventDefault();
+        } else if (
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)
+        ) {
+          const input = e.target as HTMLInputElement;
+          const { selectionStart, selectionEnd, value } = input;
+          let shouldNavigate = true;
+          if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+            if (
+              e.key === "ArrowRight" &&
+              (selectionStart !== value.length || selectionEnd !== value.length)
+            ) {
+              shouldNavigate = false;
+            } else if (
+              e.key === "ArrowLeft" &&
+              (selectionStart !== 0 || selectionEnd !== 0)
+            ) {
+              shouldNavigate = false;
+            }
+          }
+          if (shouldNavigate && rest.onKeyDown) {
+            rest.onKeyDown(e);
             e.preventDefault();
           }
         } else {
-          rest?.onKeyDown && rest?.onKeyDown(e);        
-        }
-      } else if (e.key === "Enter" && searchType === "modal" && inputValue.searchValue && inputValue.searchValue.length >= 3) {
-        debouncedFetch(inputValue.searchValue);
-        e.preventDefault();
-      } else if (e.key === "Escape" && formState.formElements.dgvProduct.visible) {
-        dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}, dgvProductBatches: {visible: false}}}}));
-        e.preventDefault();
-      } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
-        const input = e.target as HTMLInputElement;
-        const { selectionStart, selectionEnd, value } = input;
-        let shouldNavigate = true;
-        if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-          if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
-            shouldNavigate = false;
-          } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
-            shouldNavigate = false;
+          if (rest.onKeyDown) {
+            rest.onKeyDown(e);
           }
         }
-        if (shouldNavigate && rest.onKeyDown) {
-          rest.onKeyDown(e);
-          e.preventDefault();
-        }
-      } else {
-         if (rest.onKeyDown) {
-          rest.onKeyDown(e);
-        }
-      }
-    },
-    [formState.formElements.dgvProduct.visible, inputValue.searchValue, searchType, debouncedFetch, rest.onKeyDown]
-  );
+      },
+      [
+        formState.formElements.dgvProduct.visible,
+        inputValue.searchValue,
+        searchType,
+        debouncedFetch,
+        rest.onKeyDown,
+      ]
+    );
 
-  useEffect(() => {
-    const handleFocusTrap = (e: KeyboardEvent) => {
-      if (!gridContainerRef.current || !formState.formElements.dgvProduct.visible) return;
-      const focusableElements = gridContainerRef.current.querySelectorAll('input, button, [tabindex]:not([tabindex="-1"])');
-      const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    useEffect(() => {
+      const handleFocusTrap = (e: KeyboardEvent) => {
+        if (
+          !gridContainerRef.current ||
+          !formState.formElements.dgvProduct.visible
+        )
+          return;
+        const focusableElements = gridContainerRef.current.querySelectorAll(
+          'input, button, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement;
 
-      if (e.key === 'Tab') {
-        if (e.shiftKey && document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
+        if (e.key === "Tab") {
+          if (e.shiftKey && document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
         }
-      }
-    };
+      };
 
-    document.addEventListener('keydown', handleFocusTrap);
-    return () => document.removeEventListener('keydown', handleFocusTrap);
-  }, [formState.formElements.dgvProduct.visible]);
+      document.addEventListener("keydown", handleFocusTrap);
+      return () => document.removeEventListener("keydown", handleFocusTrap);
+    }, [formState.formElements.dgvProduct.visible]);
 
   return (
     <>
@@ -567,20 +705,38 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           />
         )}
       </div>
-      {searchType === "modal" && (
-        <ERPModal
-          isOpen={formState.formElements.dgvProduct.visible}
-          title={t("privilege_card")}
-          width={1000}
-          height={800}
-          isForm={true}
-          closeModal={() => { dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}})); }}
-          content={
-            <ProductModalGrid gridData={modalStore}
-              initialSearchValue={inputValue.searchValue}
-            />}
-        />
-      )}
+       {formState.formElements.productSearchPopupWindow.visible &&
+          searchType === "modal" && (
+            <ERPModal
+              isOpen={formState.formElements.productSearchPopupWindow.visible}
+              title={t("privilege_card")}
+              width={1000}
+              height={800}
+              isForm={true}
+              closeModal={() => {
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: {
+                        productSearchPopupWindow: { visible: false },
+                      },
+                    },
+                  })
+                );
+              }}
+              content={
+                <ProductModalGrid
+                popupSearchUrl = {`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
+                  gridData={modalStore}
+                  searchCriteria={formState.formElements.productSearchPopupWindow.data.searchCriteria}
+searchText={formState.formElements.productSearchPopupWindow.data.searchText}
+voucherType={formState.formElements.productSearchPopupWindow.data.voucherType}
+warehouseId={formState.formElements.productSearchPopupWindow.data.warehouseId}
+inSearch={formState.formElements.productSearchPopupWindow.data.inSearch}
+                />
+              }
+            />
+          )}
     </>
   );
 });

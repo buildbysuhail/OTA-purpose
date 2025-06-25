@@ -167,52 +167,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-const createModalStore = async (productDataUrl?: string) => {
-  return new CustomStore({
-    key: "productID",
-    async load(loadOptions: any) {
-      const paramNames = [
-        "skip",
-        "take",
-        "requireTotalCount",
-        "sort",
-        "filter",
-      ];
-      const queryString = paramNames
-        .filter(
-          (paramName) =>
-            loadOptions[paramName] !== undefined &&
-            loadOptions[paramName] !== null &&
-            loadOptions[paramName] !== ""
-        )
-        .map(
-          (paramName) =>
-            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
-        )
-        .join("&");
 
-      const url = `${productDataUrl}?${queryString}`;
-
-      try {
-        const response = await api.getAsync(url);
-        const result = response;
-        return result !== undefined && result !== null
-          ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
-          : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
-      } catch (err) {
-        throw new Error("Data Loading Error");
-      }
-    },
-  });
-};
 
 const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   inputId,
@@ -241,7 +196,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 }, ref) => {
   const [store, setStore] = useState<any>();
   const [productDetailStore, setProductDetailStore] = useState<any>();
-  const [modalStore, setModalStore] = useState<any>(null);
   const [inputValue, setInputValue] = useState({
     searchValue: value,
     searchByCode: false,
@@ -726,13 +680,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               }}
               content={
                 <ProductModalGrid
-                popupSearchUrl = {`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
-                  gridData={modalStore}
+                  popupSearchUrl = {`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
                   searchCriteria={formState.formElements.productSearchPopupWindow.data.searchCriteria}
-searchText={formState.formElements.productSearchPopupWindow.data.searchText}
-voucherType={formState.formElements.productSearchPopupWindow.data.voucherType}
-warehouseId={formState.formElements.productSearchPopupWindow.data.warehouseId}
-inSearch={formState.formElements.productSearchPopupWindow.data.inSearch}
+                  searchText={formState.formElements.productSearchPopupWindow.data.searchText}
+                  voucherType={formState.formElements.productSearchPopupWindow.data.voucherType}
+                  warehouseId={formState.formElements.productSearchPopupWindow.data.warehouseId}
+                  inSearch={formState.formElements.productSearchPopupWindow.data.inSearch}
                 />
               }
             />

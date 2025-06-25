@@ -212,7 +212,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
   const rowRef = useRef<HTMLTableRowElement>(null);
   const dispatch = useAppDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const handleFocus = useCallback((columnKey: string) => {
     setFocusedColumn(columnKey);
     console.log(`Focus on column: ${columnKey}, row: ${index}`);
@@ -356,6 +356,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                     <ERPProductSearch
                       id={cellId}
                       inputId={`${gridId}_${column.dataField}_${index}`}
+                      searchType={applicationSettings.productsSettings.usePopupWindowForItemSearch ? "modal" : "grid"}
                       noLabel={true}
                       showCheckBox={false}
                       contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"

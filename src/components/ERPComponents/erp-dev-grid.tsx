@@ -162,6 +162,7 @@ interface ERPDevGridProps {
     field: string;
     value: any;
     operation: FilterOperation;
+    initialFocus?: boolean;
   }>;
   allowSorting?: boolean;
   keyboardNavigation?: KeyboardNavigationProps;

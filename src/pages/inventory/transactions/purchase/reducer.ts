@@ -19,6 +19,7 @@ import {
   initialTransactionDetailData,
   TransactionFormStateInitialData,
 } from "./transaction-type-data";
+import { generateUniqueKey } from "../../../../utilities/Utils";
 
 const InvTransactionSlice = createSlice({
   name: "invTransaction",
@@ -195,7 +196,7 @@ const InvTransactionSlice = createSlice({
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
             ...x,
-            slNo: index + 1, // Reset slNo to start from 1
+            slNo: generateUniqueKey(), // Reset slNo to start from 1
           })
         );
       }
@@ -249,7 +250,7 @@ const InvTransactionSlice = createSlice({
       }
       state.transaction.details = state.transaction.details.map((x, index) => ({
         ...x,
-        slNo: index + 1, // Reset slNo to start from 1
+        slNo: generateUniqueKey(), // Reset slNo to start from 1
       }));
 
       state = action.payload.clearEntryControl(
@@ -346,7 +347,7 @@ const InvTransactionSlice = createSlice({
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
             ...x,
-            slNo: index + 1, // Reset slNo to start from 1
+            slNo: generateUniqueKey(), // Reset slNo to start from 1
           })
         );
 
@@ -527,10 +528,12 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{
         fields: { [fieldId in keyof DeepPartial<TransactionFormState>]?: any };
         updateOnlyGivenDetailsColumns?: boolean;
+        rowIndex?: number;
+        itemsToAddToDetails?: TransactionDetail[];
       }>
     ) => {
-      
-      const { fields, updateOnlyGivenDetailsColumns = false } =
+      debugger;
+      const { fields, updateOnlyGivenDetailsColumns = false, itemsToAddToDetails = undefined, rowIndex = -1 } =
         action.payload || {};
 
       if (!fields || typeof fields !== "object") {
@@ -680,6 +683,10 @@ const InvTransactionSlice = createSlice({
           }
         }
       });
+
+      if(itemsToAddToDetails && itemsToAddToDetails.length > 0 && rowIndex >= 0) {
+        state.transaction.details.splice(rowIndex + 1, 0, ...itemsToAddToDetails);
+      }
     },
   },
 });

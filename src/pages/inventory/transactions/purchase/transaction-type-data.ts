@@ -4,6 +4,7 @@ import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData } from "./transaction-types";
+import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
 // Initial object with default values
@@ -166,7 +167,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   dueDays: 0
 }
 export const initialTransactionDetailData: TransactionDetail = {
-  slNo: 0,
+  slNo: "",
   pCode: '',
   mrp: 0,
   barCode: '',
@@ -259,9 +260,9 @@ export const initialTransactionDetailData: TransactionDetail = {
   unitDecimalPoint: 0
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData, details: Array.from({ length: 200 }, (_, index) => ({
+  master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
     ...initialTransactionDetailData,
-    slNo: index + 1
+    slNo: generateUniqueKey()
   })),
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
@@ -557,6 +558,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       valueFormat: "currency",
     },
   ],
-  showQuantityFactors: false,
-  batchSelectionData: ""
+  showQuantityFactors: { visible: false, rowIndex: 0 },
+  batchSelectionData: "",
+  showPcode: false,
+  quantityFactorData: ""
 }

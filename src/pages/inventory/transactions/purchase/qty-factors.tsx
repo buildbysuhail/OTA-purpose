@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -6,6 +6,12 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { Edit, Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { useDispatch, useSelector } from 'react-redux';
+import { formStateHandleFieldChangeKeysOnly } from './reducer';
+import { RootState } from '../../../../redux/store';
+import { DeepPartial } from 'redux';
+import { GridQtyFactors, TransactionFormState } from './transaction-types';
+import { toast } from 'react-toastify';
 
 interface QtyFactors {
   width: number;
@@ -14,22 +20,17 @@ interface QtyFactors {
   multipleRows: boolean;
 }
 
-interface GridQtyFactors {
-  id: string;
-  slNo: number;
-  width: number;
-  height: number;
-  nos: number;
-  total: number;
-}
+
 
 interface QtyFactorsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  rowIndex: number;
   t: (key: string) => string;
 }
 
-const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t }) => {
+const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, rowIndex }) => {
+  const dispatch = useDispatch();
   const [qtyFactors, setQtyFactors] = useState<QtyFactors>({
     width: 0,
     height: 0,
@@ -40,7 +41,6 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
   const [gridData, setGridData] = useState<GridQtyFactors[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
-
   const handleQtyFactors = (field: keyof QtyFactors, value: number | boolean) => {
     setQtyFactors(prev => ({
       ...prev,
@@ -123,6 +123,17 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
     }
   };
 
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const handleApplyClick = useCallback(() => {
+    if (gridData && gridData.length > 0) {
+      dispatch(formStateHandleFieldChangeKeysOnly({
+        fields: { quantityFactorData: JSON.stringify({ rowIndex: rowIndex, data: gridData }) }
+      }));
+    } else {
+      toast.warning("Please add at least one item before applying.");
+    }
+  }, [dispatch, rowIndex, gridData, formState.transaction.details]);
+
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -131,7 +142,8 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 45
+      width: 45,
+      alignment: 'left'
     },
     {
       dataField: "width",
@@ -271,6 +283,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t })
             />
             <ERPButton
               title={t('apply')}
+              onClick={() => { handleApplyClick() }}
               variant='primary'
             />
           </div>

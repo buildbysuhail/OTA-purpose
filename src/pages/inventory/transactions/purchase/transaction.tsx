@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { TransactionDetail, TransactionProps } from "./transaction-types";
+import { GridQtyFactors, SummaryItems, TransactionDetail, TransactionProps } from "./transaction-types";
 import { TransactionData, TransactionFormState } from "./transaction-types";
 import {
   useAppDispatch,
@@ -32,7 +32,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import { generateUniqueKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
@@ -63,6 +63,8 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import ObjectViewer from "./components/fomstate-view";
 import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
 import QtyFactorsModal from "./qty-factors";
+import ItemListModal from "./item-list";
+import { DeepPartial } from "redux";
 
 interface BilledItem {
   id?: number;
@@ -146,30 +148,30 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const contentRef = useRef(null);
 
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [isDropUpOpen, setIsDropUpOpen] = useState(false); 
+  const [isDropUpOpen, setIsDropUpOpen] = useState(false);
 
   const purchaseGridRef = useRef<{
      focusCell: (targetRow: number, targetColumnIndex: number) => void;
      nextCellFind: (rowIndex: number, column: string,focus?:boolean) => void;
   }>(null);
-  
+
   const toggleHeaderDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
-    setIsDropUpOpen(false); 
+    setIsDropUpOpen(false);
   };
 
   const toggleFooterDropup = () => {
     setIsDropUpOpen((prev) => !prev);
-    setIsDropDownOpen(false); 
+    setIsDropDownOpen(false);
   };
 
- 
+
 
   const SIDEBAR_WIDTH = "196px";
 
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -221,13 +223,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-          debugger;
-    
+    debugger;
+
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => {
-  purchaseGridRef.current?.nextCellFind(rowIndex,column,true);
+  purchaseGridRef.current?.nextCellFind(rowIndex,column)
 }
 
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
@@ -266,6 +268,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadProductDetailsByAutoBarcode,
     getDrCr,
     clearRow,
+    calculateRowAmount,
+    calculateSummary,
+    calculateTotal
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -288,7 +293,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef
   );
 
-  
+
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -302,7 +307,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [window.innerHeight]);
 
   console.log( "transaction mj23", {setGridHeight});
-  
+
 
   useEffect(() => {
     dispatch(
@@ -403,12 +408,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadLedgerData();
   }, [formState.transaction.master.ledgerID]);
 
-   useEffect(() => {
+  useEffect(() => {
     const initializeFormElements = async () => {
-      
+
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
-     
+
       const softwareDate = moment(
         clientSession.softwareDate,
         "DD/MM/YYYY"
@@ -426,7 +431,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         employeeID = userSession.employeeId ?? -2;
       }
-      
+
       const templates = formState.templates;
       const templatesData = formState.templatesData;
       const template = formState.template;
@@ -462,7 +467,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-        
+
         _formState = await loadTransVoucher(
           false,
           voucherNo,
@@ -473,8 +478,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
-        
-       _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
+
+      _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
 
       _formState = {
         ..._formState,
@@ -531,15 +536,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
-       _formState.transaction.master.fromWarehouseID =
-              applicationSettings.inventorySettings.defaultWareHouse;
+      _formState.transaction.master.fromWarehouseID =
+        applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
-         _formState.formElements.cbWarehouse.visible = true;
+        _formState.formElements.cbWarehouse.visible = true;
 
         if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
           _formState.transaction.master.fromWarehouseID =
             _formState.userConfig?.presetWarehouseId ?? 0;
-           _formState.formElements.cbWarehouse.disabled = true;
+          _formState.formElements.cbWarehouse.disabled = true;
         } else {
           if (
             applicationSettings.accountsSettings.allowSalesCounter &&
@@ -673,14 +678,57 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setData((prev) => [...prev, newItem]);
   };
 
-  
+
   useEffect(() => {
-                        
+
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
-      loadProductDetailsByAutoBarcode(data?.transaction?.details ? data?.transaction?.details[0]:{},{result:{},formStateHandleFieldChangeKeysOnly})
+      loadProductDetailsByAutoBarcode(data?.transaction?.details ? data?.transaction?.details[0] : {}, { result: {}, formStateHandleFieldChangeKeysOnly })
     }
   }, [formState.batchSelectionData]);
+
+  useEffect(() => {
+    debugger;
+    if (formState.quantityFactorData != "") {
+      const data = JSON.parse(formState.quantityFactorData);
+      const rowIndex = data.rowIndex
+      const quantityFactor = data.data
+      const baseRowData = formState.transaction.details[rowIndex];
+      let currentDetails = [...formState.transaction.details.filter(x => x.productID > 0)];
+          let res: DeepPartial<TransactionFormState> = {}
+          let addDetails: TransactionDetail[] = [];
+          quantityFactor.forEach((value:GridQtyFactors, index: number) => {
+            
+            if(index  == 0 ) {
+              const rowData = {...baseRowData,  qty: value.total};
+              currentDetails[rowIndex] = rowData
+              res = calculateRowAmount(rowData, "qty", {result: {}},true)
+              res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`
+            } else {
+              const rowData = {...baseRowData,  qty: value.total, slNo: generateUniqueKey(), productDescription:  `${value.width} X ${value.height} X ${value.nos}`}
+              addDetails.push(rowData);
+            }
+          });
+
+          
+          
+          let final = [
+            ...currentDetails,
+            ...addDetails
+          ]
+          const summaryRes = calculateSummary(final,formState, {result: {}})
+
+          const totalRes = calculateTotal(formState.transaction.master, summaryRes.summary as SummaryItems,formState.formElements, {result: {}})
+          dispatch(formStateHandleFieldChangeKeysOnly(
+            { fields: {...totalRes, 
+              summary: summaryRes,
+              showQuantityFactors:{visible: false, rowIndex: -1},
+              transaction: {...totalRes.transaction,
+                details: res.transaction?.details
+              },
+            }, updateOnlyGivenDetailsColumns: true, rowIndex:rowIndex, itemsToAddToDetails: addDetails }));
+    }
+  }, [formState.quantityFactorData]);
 
   const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
@@ -700,7 +748,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "pCode",
         caption: t("p_code"),
         dataType: "string",
-        allowEditing: true,
+        // allowEditing: true,
         visible: true,
         width: 150,
         alignment: 'left'
@@ -709,7 +757,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-        allowEditing: true,
+        // allowEditing: true,
         width: 100,
         visible: true,
         readOnly: false,
@@ -1888,7 +1936,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             ledgerCodeRef={ledgerCodeRef}
             voucherNumberRef={voucherNumberRef}
             refNoRef={refNoRef}
-            isDropDownOpen={isDropDownOpen} 
+            isDropDownOpen={isDropDownOpen}
             toggleDropdown={toggleHeaderDropdown}
           />
           {/* header ends here */}
@@ -1905,6 +1953,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
               gridId={`${gridCode}-grid`}
               onAddData={handleAddData}
               summaryConfig={formState.summaryConfig}
+              gridFontSize={formState.userConfig?.gridFontSize}
+              gridIsBold={formState.userConfig?.gridIsBold}
+              rowHeight={formState.userConfig?.gridRowHeight}
+              gridBorderColor={formState.userConfig?.gridBorderColor}
             />
           </div>
           {formState.showSaveDialog && (
@@ -1935,7 +1987,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         </div>
       )}
 
-           {deviceInfo?.isMobile && (
+      {deviceInfo?.isMobile && (
         <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
           {/* Sale Header */}
           <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
@@ -1949,32 +2001,32 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           {/* Main Content */}
           <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
-           <AccHeader
-                  formState={formState}
-                  dispatch={dispatch}
-                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-                  t={t} // Replace with your translation function
-                  loadTemporaryRows={loadTemporaryRows}
-                  deleteTransVoucher={deleteTransVoucher}
-                  handleRefresh={handleRefresh}
-                  createNewVoucher={createNewVoucher}
-                  handleEdit={handleEdit}
-                  printVoucher={printVoucher}
-                  handleClearControls={handleClearControls}
-                  handleHistoryClick={handleHistoryClick}
-                  setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-                  transactionType={formState.transactionType} // Replace with your actual transaction type
-                  voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-                  userSession={userSession} // Replace with your actual user session object
-                  unlockVoucher={unlockVoucher}
-                  setShowValidation={setShowValidation}
-                  showValidation={showValidation}
-                  selectTemplates={selectTemplates}
-                  goToPreviousPage={goToPreviousPage}
-                  isHistorySidebarOpen={isHistorySidebarOpen}
-                  setIsPrintModalOpen={setIsPrintModalOpen}
-                  printPaymentReceiptAdvice={printPaymentReceiptAdvice}
-                />
+            <AccHeader
+              formState={formState}
+              dispatch={dispatch}
+              // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+              t={t} // Replace with your translation function
+              loadTemporaryRows={loadTemporaryRows}
+              deleteTransVoucher={deleteTransVoucher}
+              handleRefresh={handleRefresh}
+              createNewVoucher={createNewVoucher}
+              handleEdit={handleEdit}
+              printVoucher={printVoucher}
+              handleClearControls={handleClearControls}
+              handleHistoryClick={handleHistoryClick}
+              setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+              transactionType={formState.transactionType} // Replace with your actual transaction type
+              voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+              userSession={userSession} // Replace with your actual user session object
+              unlockVoucher={unlockVoucher}
+              setShowValidation={setShowValidation}
+              showValidation={showValidation}
+              selectTemplates={selectTemplates}
+              goToPreviousPage={goToPreviousPage}
+              isHistorySidebarOpen={isHistorySidebarOpen}
+              setIsPrintModalOpen={setIsPrintModalOpen}
+              printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+            />
 
             {/* Voucher Info */}
             <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
@@ -1993,7 +2045,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   ledgerCodeRef={ledgerCodeRef}
                   voucherNumberRef={voucherNumberRef}
                   refNoRef={refNoRef}
-                  isDropDownOpen={isDropDownOpen} 
+                  isDropDownOpen={isDropDownOpen}
                   toggleDropdown={toggleHeaderDropdown}
                 />
               </div>
@@ -2002,33 +2054,33 @@ const TransactionForm: React.FC<TransactionProps> = ({
             {/* Form Section */}
             <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
               <div className="space-y-2">
-                
+
               </div>
-                  <ErpPurchaseGrid
-               ref={purchaseGridRef}
-            onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
-             handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
-                    columns={purchaseGridCol}
-                    keyField={"productID"}
-                    height={gridHeight}
-                    gridId={`${gridCode}-grid`}
-                    onAddData={handleAddData}
-                    summaryConfig={formState.summaryConfig as SummaryConfig<TransactionDetail>[]}
-                  />
-                   <TransactionFooter
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                    focusDiscount={focusDiscount}
-                    focusAmount={focusAmount}
-                    goToPreviousPage={goToPreviousPage}
-                    save={save}
-                    selectAttachment={selectAttachment}
-                    isDropUpOpen={isDropUpOpen} 
-                    toggleDropup={toggleFooterDropup}
-                  />
+              <ErpPurchaseGrid
+                ref={purchaseGridRef}
+                onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+                handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+                columns={purchaseGridCol}
+                keyField={"productID"}
+                height={gridHeight}
+                gridId={`${gridCode}-grid`}
+                onAddData={handleAddData}
+                summaryConfig={formState.summaryConfig as SummaryConfig<TransactionDetail>[]}
+              />
+              <TransactionFooter
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                handleFieldKeyDown={handleFieldKeyDown}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+                goToPreviousPage={goToPreviousPage}
+                save={save}
+                selectAttachment={selectAttachment}
+                isDropUpOpen={isDropUpOpen}
+                toggleDropup={toggleFooterDropup}
+              />
 
               {/* Total Summary */}
               {/* <div className="bg-white shadow-md p-[10px] rounded-lg mt-0">
@@ -2063,7 +2115,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         goToPreviousPage={goToPreviousPage}
         save={save}
         selectAttachment={selectAttachment}
-        isDropUpOpen={isDropUpOpen} 
+        isDropUpOpen={isDropUpOpen}
         toggleDropup={toggleFooterDropup}
       />
       {/* footer ends here */}
@@ -2260,13 +2312,21 @@ const TransactionForm: React.FC<TransactionProps> = ({
           onClose={() => setIsHistorySidebarOpen(false)}
         />
       )}
-       {formState.showQuantityFactors && (
+      {formState.showQuantityFactors.visible && (
         <QtyFactorsModal
-          isOpen={formState.showQuantityFactors}
+          isOpen={formState.showQuantityFactors.visible}
+          rowIndex={formState.showQuantityFactors.rowIndex}
           onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showQuantityFactors: false } }))}
           t={t}
         />
-      )}    
+      )}
+      {formState.showPcode && (
+        <ItemListModal
+          isOpen={formState.showPcode}
+          onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showPcode: false } }))}
+          t={t}
+        />
+      )}
     </div>
   );
 };

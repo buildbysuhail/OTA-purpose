@@ -177,30 +177,30 @@ export interface TransactionMaster {
   hasroundOff: boolean;//new
   supplyType: string;//new
   other: TransactionMaster3;
-  labelDesignID:number;
-  prevTransDate:string;
-  oldLedgerID:number;
-  dueDays:number;
+  labelDesignID: number;
+  prevTransDate: string;
+  oldLedgerID: number;
+  dueDays: number;
 }
 export interface TransactionMaster3 {
-  invTransactionMasterID: number; 
-  branchID: number; 
-  totSchemeDiscount: number; 
-  totSGST: number; 
-  totCGST: number; 
-  totIGST: number; 
-  totCess: number; 
-  totAdditionalCess: number; 
-  totCalamityCess: number; 
-  totTCS: number; 
-  totTDS: number; 
+  invTransactionMasterID: number;
+  branchID: number;
+  totSchemeDiscount: number;
+  totSGST: number;
+  totCGST: number;
+  totIGST: number;
+  totCess: number;
+  totAdditionalCess: number;
+  totCalamityCess: number;
+  totTCS: number;
+  totTDS: number;
   shipLegalName: string;
   shipTradeName: string;
-  shipGstIn: string; 
-  shipPinCode: number; 
-  shipAddress1: string; 
-  shipAddress2: string; 
-  shipLocation: string; 
+  shipGstIn: string;
+  shipPinCode: number;
+  shipAddress1: string;
+  shipAddress2: string;
+  shipLocation: string;
   shipStateCode: number;
 }
 
@@ -208,14 +208,14 @@ export interface TransactionMaster3Validations {
 
 }
 export interface TransactionMasterValidations {
-  
+
 }
 export interface CommonParams {
-    result: DeepPartial<TransactionFormState>;
-    formStateHandleFieldChangeKeysOnly?: any;
-  }
-export interface TransactionDetail { 
-  slNo: number;
+  result: DeepPartial<TransactionFormState>;
+  formStateHandleFieldChangeKeysOnly?: any;
+}
+export interface TransactionDetail {
+  slNo: string;
   pCode: string;
   mrp: number;
   barCode: string;
@@ -312,16 +312,16 @@ export interface TransactionDetails2 {
   invTransactionDetailID: number;
   branchID: number;
   cessPerc: number;
-  cessAmt: number; 
-  sgstPerc: number; 
-  sgst: number; 
-  cgstPerc: number; 
-  cgst: number; 
-  igstPerc: number; 
+  cessAmt: number;
+  sgstPerc: number;
+  sgst: number;
+  cgstPerc: number;
+  cgst: number;
+  igstPerc: number;
   igst: number;
-  calamityCessPerc: number; 
-  calamityCess: number; 
-  additionalCessPerc: number; 
+  calamityCessPerc: number;
+  calamityCess: number;
+  additionalCessPerc: number;
   additionalCess: number;
 }
 
@@ -356,6 +356,10 @@ export interface UserConfig {
   setDefaultQuantity?: boolean;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
+  gridFontSize?: number;
+  gridIsBold?: boolean;
+  gridRowHeight?: number;
+  gridBorderColor?: string;
 }
 
 export type FormElementsState = {
@@ -364,7 +368,8 @@ export type FormElementsState = {
 export interface LoadData {
   formType?: string;
   vPrefix?: string;
-  vNumber?: string;}
+  vNumber?: string;
+}
 export interface SummaryItems {
   qty: number;
   gross: number;
@@ -385,24 +390,24 @@ export interface SummaryItems {
 
 export interface TransactionFormState {
   store: any;
-  formCode: string; 
-  userRightsFormCode: string; 
-  isEntryControl: boolean; 
-  isEdit: boolean; 
-  isRowEdit: boolean; 
+  formCode: string;
+  userRightsFormCode: string;
+  isEntryControl: boolean;
+  isEdit: boolean;
+  isRowEdit: boolean;
   ledgerDataLoading: boolean;
   saving: boolean;
   ledgerBalanceLoading: boolean;
   ledgerBalance: number;
   ledgerData: any;
   groupName: any;
-  dtLedgerCodes: any[]; 
+  dtLedgerCodes: any[];
   summary: SummaryItems,
   showPartySelection: boolean;
   showSaveDialog: boolean;
-  customerType: string; 
+  customerType: string;
   isInvoker: boolean;
-  title: string; 
+  title: string;
   partyId?: string;
   prev: string;
   rowProcessing: boolean;
@@ -424,7 +429,7 @@ export interface TransactionFormState {
   openUnsavedPrompt?: boolean
   foreignCurrency: boolean
   enableDebitAccount: boolean
-  inSearch:boolean;
+  inSearch: boolean;
   enableTaxNumber: boolean
   tmpVoucherNo?: number
   dummyCode?: any
@@ -443,12 +448,14 @@ export interface TransactionFormState {
   gridColumns?: DevGridColumn[];
   isPostedTransaction: boolean;
   isInv: boolean;
-  summaryConfig: SummaryConfig<TransactionDetail>[] ;
-  showQuantityFactors: boolean;
-  batchSelectionData: string;
-  currentCell?: {column: string, rowIndex: number};
+  summaryConfig: SummaryConfig<TransactionDetail>[];
+  showQuantityFactors: {visible: boolean, rowIndex: number};
+  showPcode:boolean;
+  batchSelectionData: string;  
+  quantityFactorData: string;
+  currentCell?: { column: string, rowIndex: number };
   batchesUnits?: [];
-  
+
 }
 export interface PrintTransProps {
   masterAccount: string;
@@ -464,4 +471,13 @@ export interface VoucherElementProps {
   dispatch: Dispatch<AnyAction>;
   handleKeyDown?: (e: any, field: string) => void;
   t: any;
+}
+
+export interface GridQtyFactors {
+  id: string;
+  slNo: number;
+  width: number;
+  height: number;
+  nos: number;
+  total: number;
 }

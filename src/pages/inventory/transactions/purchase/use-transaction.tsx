@@ -39,7 +39,6 @@ import {
   formStateMasterHandleFieldChange,
   loadTempRows,
   formStateTransactionDetailsRowUpdate,
-  formStateHandleFieldChangeKeysOnly,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -428,18 +427,18 @@ export const useTransaction = (
       details: refactorDetails(
         vch.details,
         vch.master.voucherType,
-        vch.master.voucherForm,{result:{},formStateHandleFieldChangeKeysOnly}, voucher
+        vch.master.voucherForm,{result:{}}, voucher
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
 
-    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{},formStateHandleFieldChangeKeysOnly})
+    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{}})
     voucher.summary = (summaryRes && summaryRes.summary
   ? summaryRes.summary 
   : initialInventoryTotals) as SummaryItems;
 
   voucher =  calculateTotal(voucher.transaction.master, voucher.summary,voucher.formElements,
-    {result:voucher,formStateHandleFieldChangeKeysOnly}
+    {result:voucher}
   ) as TransactionFormState;
 
     voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0 ;
@@ -2283,7 +2282,7 @@ const loadProductDetailsByAutoBarcode = async (
   slNo: string;
   productBatchID: number;
   autoBarcode: string;
-  productCode: number;
+  productCode: string;
   useProductCode: boolean;
   searchText: string;
 },
@@ -2291,7 +2290,6 @@ const loadProductDetailsByAutoBarcode = async (
 ): Promise<DeepPartial<TransactionFormState>> => {
  let {
    result,
-   formStateHandleFieldChangeKeysOnly,
  } = commonParams;
 
  try {
@@ -2340,7 +2338,7 @@ const loadProductDetailsByAutoBarcode = async (
 const queryParams = new URLSearchParams();
 Object.entries(payload).forEach(([key, value]) => {
   if (value !== null && value !== undefined && value !== '') {
-    queryParams.append(key, value);
+    queryParams.append(key, value as any);
   }
 });
    const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
@@ -2510,9 +2508,9 @@ Object.entries(payload).forEach(([key, value]) => {
 
 
      // Dispatch changes
-     formStateHandleFieldChangeKeysOnly &&
+     commonParams.formStateHandleFieldChangeKeysOnly &&
        dispatch &&
-       dispatch(formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
+       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
 
      return result;
 
@@ -2535,7 +2533,6 @@ const handleTextDataKeyDown = async (
 }> => {
  let {
    result,
-   formStateHandleFieldChangeKeysOnly,
  } = commonParams;
 
  try {
@@ -2561,7 +2558,7 @@ const handleTextDataKeyDown = async (
      case 'q':
      case 'Q':
        if (columnName === "qty") {
-        dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: {visible: true, rowIndex:rowIndex }}}))
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: {visible: true, rowIndex:rowIndex }}}))
        }
        break;
 
@@ -2575,7 +2572,7 @@ const handleTextDataKeyDown = async (
      case 'F2':
        if (isShiftPressed) {
          if (columnName === "barCode" || columnName === "pCode") {
-          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showPcode: true } }));
+          dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: { showPcode: true } }));
            uiCallbacks.onShowItemListSearch(columnName);
            return { handled: true };
          }
@@ -2584,10 +2581,11 @@ const handleTextDataKeyDown = async (
 
      case 'Enter':
        if(columnName == "pCode") {
+        debugger;
                const data = formState.transaction.details[rowIndex];
                const value = data?.pCode;
                if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({},{result:{}, formStateHandleFieldChangeKeysOnly:formStateHandleFieldChangeKeysOnly})
+                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
                } else {
                 debugger;
                  focusToNextColumn(rowIndex, "pCode");
@@ -2602,9 +2600,9 @@ const handleTextDataKeyDown = async (
    if (result) {
     console.log(result);
     
-     formStateHandleFieldChangeKeysOnly &&
+     commonParams.formStateHandleFieldChangeKeysOnly &&
        dispatch &&
-       dispatch(formStateHandleFieldChangeKeysOnly({fields: result}));
+       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result}));
    }
 
    return { handled: false };

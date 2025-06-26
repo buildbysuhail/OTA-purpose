@@ -1,11 +1,7 @@
 import moment from "moment";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import VoucherType from "../../../../enums/voucher-types";
 import { UserAction } from "../../../../helpers/user-right-helper";
-import { ClientSessionModel } from "../../../../redux/slices/client-session/reducer";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
-import { modelToBase64Unicode } from "../../../../utilities/jsonConverter";
-import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import {
   CommonParams,
   FormElementsState,
@@ -14,15 +10,14 @@ import {
   TransactionFormState,
   TransactionMaster,
 } from "./transaction-types";
-import {
-  useNumberFormat,
-  UseNumberFormatResult,
-} from "../../../../utilities/hooks/use-number-format";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
-import { ApplicationInventorySettings } from "../../../settings/system/application-settings-types/application-settings-types-inventory";
-import { AnyAction, DeepPartial, Dispatch } from "redux";
-import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import { DeepPartial } from "redux";
+import {
+  generateUniqueKey,
+  isNullOrUndefinedOrZero,
+} from "../../../../utilities/Utils";
 import { initialTransactionDetailData } from "./transaction-type-data";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
@@ -38,8 +33,8 @@ export const useTransactionHelper = (transactionType: string) => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const softwareDate = useAppSelector(
-    (state: RootState) => state.ClientSession.softwareDate
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
   );
 
   const {
@@ -284,7 +279,6 @@ export const useTransactionHelper = (transactionType: string) => {
   const calculateRowAmount = (
     transactionDetail: TransactionDetail,
     currentColumn: keyof TransactionDetail,
-    formState: TransactionFormState,
     commonParams: CommonParams,
     ignoreCalculateTotal?: boolean
   ): DeepPartial<TransactionFormState> => {
@@ -294,7 +288,7 @@ export const useTransactionHelper = (transactionType: string) => {
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
-    
+
     const detail = { ...result.transaction.details[0] };
     // Early return if no product selected
     if (!(transactionDetail.productID > 0)) {
@@ -381,7 +375,6 @@ export const useTransactionHelper = (transactionType: string) => {
       // Calculate total additional expense
       detail.totalAddExpense = round(addAmt * qty);
 
-
       // Calculate VAT amount
       let vat = round((netValue * vatPerc) / 100, 4);
 
@@ -464,7 +457,12 @@ export const useTransactionHelper = (transactionType: string) => {
       }
       formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result,updateOnlyGivenDetailsColumns: true }));
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: result,
+            updateOnlyGivenDetailsColumns: true,
+          })
+        );
     } catch (error) {
       console.error("Error in calculateRowAmount:", error);
       // Handle error gracefully - could set default values or show user message
@@ -568,12 +566,7 @@ export const useTransactionHelper = (transactionType: string) => {
             const unitPrice = round(uRate, 4);
 
             // Recalculate row amounts
-            result = calculateRowAmount(
-              detail,
-              currentColumn,
-              formState,
-              commonParams
-            );
+            result = calculateRowAmount(detail, currentColumn, commonParams);
             result.transaction!.details!.find(
               (x) => x?.slNo == detail.slNo
             )!.unitPrice = unitPrice;
@@ -594,12 +587,7 @@ export const useTransactionHelper = (transactionType: string) => {
             const unitPrice = round(uRate, 4);
 
             // Recalculate row amounts
-            result = calculateRowAmount(
-              detail,
-              currentColumn,
-              formState,
-              commonParams
-            );
+            result = calculateRowAmount(detail, currentColumn, commonParams);
             result.transaction!.details!.find(
               (x) => x?.slNo == detail.slNo
             )!.unitPrice = unitPrice;
@@ -915,7 +903,7 @@ export const useTransactionHelper = (transactionType: string) => {
       }
       validDetailsCount++;
       // Set row header/index
-      detail.slNo = i + 1;
+      detail.slNo = generateUniqueKey();
 
       // Basic product information
       detail.pCode = row.productCode;
@@ -1003,7 +991,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       detail.batchNo = row.batchNo;
       detail.manualBarcode = row.manualBarcode;
-      
+
       // Financial calculations
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
@@ -1079,7 +1067,6 @@ export const useTransactionHelper = (transactionType: string) => {
       const res = calculateRowAmount(
         detail,
         "slNo",
-        formState,
         {
           ...commonParams,
           result: {
@@ -1123,7 +1110,6 @@ export const useTransactionHelper = (transactionType: string) => {
     warehouseId: number,
     allowStockUpdate: boolean
   ) => {
-    
     const outputDetails: TransactionDetail[] = [];
     const errors: string[] = [];
     let hasError = false;
@@ -1197,7 +1183,7 @@ export const useTransactionHelper = (transactionType: string) => {
         hasError = true;
         errors.push(`Row ${rowNumber}, Unit Column: Invalid Unit Selected`);
       }
-      
+
       if (
         Math.abs(
           outputRow.grossValue - outputRow.quantity * outputRow.unitPrice

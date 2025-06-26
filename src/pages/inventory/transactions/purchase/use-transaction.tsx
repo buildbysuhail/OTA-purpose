@@ -2217,7 +2217,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
          
          outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
          outDetail.grossFC = round((unitPriceFC * qty), 3);
-         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
         details:[outDetail]
        }}}, true);
        }
@@ -2227,7 +2227,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
      case "unitPrice":
        outDetail[columnName] = text;
        // Calculate row amount
-       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, formState, {result:{transaction:{
+       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
         details:[outDetail]
        }}}, true);
        
@@ -2280,7 +2280,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
 }
 const loadProductDetailsByAutoBarcode = async (
  data: {
-  slNo: number;
+  slNo: string;
   productBatchID: number;
   autoBarcode: string;
   productCode: number;
@@ -2561,7 +2561,7 @@ const handleTextDataKeyDown = async (
      case 'q':
      case 'Q':
        if (columnName === "qty") {
-        dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: true}}))
+        dispatch(formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: {visible: true, rowIndex:rowIndex }}}))
        }
        break;
 
@@ -2575,6 +2575,7 @@ const handleTextDataKeyDown = async (
      case 'F2':
        if (isShiftPressed) {
          if (columnName === "barCode" || columnName === "pCode") {
+          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showPcode: true } }));
            uiCallbacks.onShowItemListSearch(columnName);
            return { handled: true };
          }
@@ -2673,7 +2674,7 @@ const handleUnitCycling = async (
        }
 
        // Calculate row amounts
-       const calculateResult = calculateRowAmount(detail, "slNo", formState, applicationSettings, commonParams, true);
+       const calculateResult = calculateRowAmount(detail, "slNo", applicationSettings, commonParams, true);
        if (calculateResult?.transaction?.details?.[0]) {
          result.transaction.details[rowIndex] = calculateResult.transaction.details[0];
        }
@@ -2724,6 +2725,9 @@ const handleUnitCycling = async (
     loadProductDetailsByAutoBarcode,
     getDrCr,
     clearRow,
+    calculateRowAmount,
+    calculateSummary,
+    calculateTotal
   };
 };
 

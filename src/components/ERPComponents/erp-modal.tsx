@@ -336,7 +336,7 @@ const ERPModal = React.memo(
                       className="pointer-events-auto bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
                     >
                       <DialogPanel
-                        className={`erp-modal w-full h-full flex flex-col overflow-hidden pb-10`}
+                        className={`erp-modal w-full h-full flex flex-col overflow-hidden`}
                       >
                         <DialogTitle
                           as="h3"

@@ -879,3 +879,8 @@ export const calculateSalesPrice = (purchasePriceInput: number,
 
   return pp > 0 ? isNaN(sp) ? 0 : sp : 0;
 }
+export const generateUniqueKey = (): string => {
+  const uuid = crypto.randomUUID();
+  const timestamp = Date.now();
+  return `${uuid}_${timestamp}`;
+};

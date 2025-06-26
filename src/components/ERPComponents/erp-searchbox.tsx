@@ -446,6 +446,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           }
         } else if (
           e.key === "Enter" &&
+          searchType !== "modal")
+          {
+            onEnterKeyDown && onEnterKeyDown()
+          } else if (
+          e.key === "Enter" &&
           searchType === "modal" &&
           inputValue.searchValue &&
           inputValue.searchValue.length >= 3
@@ -569,7 +574,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             value={inputValue.searchValue}
             onChange={handleChange}
             onKeyDown={handleInputKeyDown}
-            onEnterKeyDown={onEnterKeyDown}
+            // onEnterKeyDown={onEnterKeyDown}
             disableEnterNavigation
             ref={inputRef}
             onFocus={(e) => {

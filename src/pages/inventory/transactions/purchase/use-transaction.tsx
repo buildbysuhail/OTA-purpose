@@ -2287,7 +2287,7 @@ const loadProductDetailsByAutoBarcode = async (
   searchText: string;
 },
  commonParams: CommonParams
-): Promise<DeepPartial<TransactionFormState>> => {
+): Promise<DeepPartial<TransactionFormState> | null> => {
  let {
    result,
  } = commonParams;
@@ -2499,18 +2499,15 @@ Object.entries(payload).forEach(([key, value]) => {
        }
    };
 
+    commonParams.formStateHandleFieldChangeKeysOnly &&
+       dispatch &&
+       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
+       return result;
     } else if (res?.products?.length > 1) {
       // Multiple products
     } else {
-      // No products or error
+     return null;
     }
-     
-
-
-     // Dispatch changes
-     commonParams.formStateHandleFieldChangeKeysOnly &&
-       dispatch &&
-       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
 
      return result;
 

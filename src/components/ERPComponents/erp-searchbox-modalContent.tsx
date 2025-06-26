@@ -74,6 +74,7 @@ const columns: DevGridColumn[] = useMemo(() => [
           <ErpDevGrid
              hideGridAddButton={true}
              enableScrollButton={false}
+             pageSize={30}
             columns={columns}
             heightToAdjustOnWindowsInModal={gridHeight.windows}
             gridHeader={"Item Search"}

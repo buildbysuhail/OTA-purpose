@@ -23,7 +23,6 @@ import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -270,9 +269,9 @@ export const useTransactionHelper = (transactionType: string) => {
       if (exchangeRate > 0) {
         result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
       }
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
     }
     return result;
   };
@@ -455,10 +454,10 @@ export const useTransactionHelper = (transactionType: string) => {
           }
         );
       }
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
         dispatch(
-          formStateHandleFieldChangeKeysOnly({
+          commonParams.formStateHandleFieldChangeKeysOnly({
             fields: result,
             updateOnlyGivenDetailsColumns: true,
           })
@@ -594,9 +593,9 @@ export const useTransactionHelper = (transactionType: string) => {
           }
         }
       }
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in changeGrossToUnitRate:", error);
     }
@@ -631,9 +630,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Dispatch the updated state
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in enableControls:", error);
     } finally {
@@ -685,9 +684,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Dispatch the updated state
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in disableControls:", error);
     } finally {
@@ -875,9 +874,9 @@ export const useTransactionHelper = (transactionType: string) => {
       });
 
       // Dispatch the updated state
-      formStateHandleFieldChangeKeysOnly &&
+      commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
     } catch (error) {
       console.error("Error in calculateSummary:", error);
     } finally {

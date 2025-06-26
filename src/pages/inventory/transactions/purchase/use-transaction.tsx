@@ -2576,7 +2576,7 @@ const handleTextDataKeyDown = async (
            uiCallbacks.onShowItemListSearch(columnName);
            return { handled: true };
          }
-       }
+       } 
        break;
 
      case 'Enter':

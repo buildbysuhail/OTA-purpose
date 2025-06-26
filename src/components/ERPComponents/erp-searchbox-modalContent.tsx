@@ -47,7 +47,7 @@ const columns: DevGridColumn[] = useMemo(() => [
     caption: t("product_code"),
     dataType: "string",
     width: 100,
-    allowFiltering: false,
+    allowFiltering: true,
   },
   {
     dataField: "productID",
@@ -72,6 +72,8 @@ const columns: DevGridColumn[] = useMemo(() => [
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="grid grid-cols-1 gap-3">
           <ErpDevGrid
+             hideGridAddButton={true}
+             enableScrollButton={false}
             columns={columns}
             heightToAdjustOnWindowsInModal={gridHeight.windows}
             gridHeader={"Item Search"}
@@ -80,14 +82,20 @@ const columns: DevGridColumn[] = useMemo(() => [
             gridAddButtonType="popup"
             reload={true}
             gridAddButtonIcon="ri-add-line"
-            loadPanelEnabled={false}
+            selectionMode="multiple"
             initialFilters={
               [
                 {
-                  field: "productName",
-                  value: searchText,
+                  field: "productCode",
+                  value: searchCriteria=="pCode" ?searchText:"",
                   operation: "startswith",
-                  initialFocus: true,
+                  initialFocus: searchCriteria=="pCode" ? true : false,
+                },
+                {
+                  field: "productName",
+                  value: searchCriteria=="product" ? searchText:"",
+                  operation: "startswith",
+                  initialFocus: searchCriteria=="product" ? true : false,
                 }
              ]
             }

@@ -325,6 +325,7 @@ const createStore = async (
   onInitialDataLoad?: (e: any) => void,
   onDataChanged?: (e: any) => void
 ) => {
+  let isInitialLoad = true; // Track initial load
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
@@ -332,7 +333,7 @@ const createStore = async (
       if (!loadOptions.sort || (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)) {
         loadOptions.sort = initialSort;
       }
-      if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
+      if (initialFilters && initialFilters.length > 0 && isInitialLoad && !loadOptions.filter) {
         loadOptions.filter = initialFilters.map((f) => {
           if (f.value instanceof Date) {
             // Format the date as ISO string
@@ -465,6 +466,7 @@ const createStore = async (
         if (onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
           onInitialDataLoad(data.data);
         }
+        isInitialLoad = false; // Set to false after first load
         return data;
       } catch (err) {
         console.error("Load failed:", err);
@@ -622,16 +624,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     },
     ref
   ) => {
-    // Determine the Actionswidth value
-    // const actionsWidth = childPopupPropsDynamic
-    //   ? childPopupPropsDynamic().Actionswidth
-    //   : childPopupProps.Actionswidth;
-
-    // const gridStyle: React.CSSProperties = {
-    //   ["--actions-width" as any]: `${actionsWidth || 123}px`, // Default to 100 if not set
-    // };
-
-    // Get Actionswidth from the column configuration
     const totalRowCountDisplayRef = useRef<HTMLSpanElement>(null);
     const totalRowCountRef = useRef<number>(0);
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
@@ -639,32 +631,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
     const [clickedItem, setClickedItem] = useState<string | null>(null);
-
+    const [hasAutofocused , setHasAutofocused] = useState(false);
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
-
-    //  // Determine the Actionswidth value
-    //  const actionsWidth = childPopupPropsDynamic
-    //   ? childPopupPropsDynamic().Actionswidth
-    //   : childPopupProps.Actionswidth;
-
-    // const gridStyle: React.CSSProperties = {
-    //   ["--popup-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
-    //   ["--actions-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
-    // };
 
     const gridRef = useRef<any>(null); // Use `any` for the instance
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
     }));
-
-    // CSS Variable for Width
-    // const gridStyle: React.CSSProperties = {
-    //   ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
-    //   // Add this line for actions width
-    //   ["--actions-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
-    // };
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
@@ -1864,6 +1839,42 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         totalRowCountRef.current = (memoizedStore as any).totalCount || 0;
       }
     }, [memoizedStore]);
+
+
+useEffect(() => {
+  debugger;
+if (!gridRef.current || !initialFilters?.length) return;
+     const dataGrid = gridRef.current.instance();
+      dataGrid.option("filterRow.visible", true);
+    initialFilters.forEach((filter:any) => {
+      dataGrid.columnOption(filter.field, "filterValue", filter.value);
+      dataGrid.columnOption(filter.field, "selectedFilterOperation", filter.operation);
+    });
+
+},[store, initialFilters]);
+
+const focusColumn = initialFilters?.find((filter:any) => filter.initialFocus);
+const handleCellPrepared = (e: any) => {
+  if (
+    e.rowType === "filter" &&
+    e.column.dataField === focusColumn?.field
+  ) {
+    // e.cellElement is the <td> container for that filter cell
+    const input = e.cellElement.querySelector(
+      "input.dx-texteditor-input"
+    ) as HTMLInputElement | null;
+
+    if (input) {
+
+      setTimeout(() => {
+        input.focus();
+        input.select();
+      }, 500);
+    }
+  }
+  props.onCellPrepared?.(e);
+};
+
     const handleOptionChanged = (e: any) => {
       if (e.fullName?.startsWith("columns")) {
         if (e.fullName.endsWith("visibleIndex")) {
@@ -1873,7 +1884,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           
           preferenceChooserRef.current?.handleColumnPreferenceChange(gridCols[index].dataField ?? "", "width", e.value, true)
         }
-      }
+      }  
     };
     return (
       <Fragment>
@@ -1912,6 +1923,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             columnAutoWidth={columnAutoWidth}
             onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
+           
             // columns={gridCols}
             onRowClick={(e) =>
               onClickByRootState != undefined
@@ -1937,6 +1949,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   }
                 }
               }
+ 
               onContentReady && onContentReady(e);
             }}
             showColumnLines={showColumnLines}
@@ -1945,7 +1958,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             showColumnHeaders={showColumnHeaders}
             onCellClick={handleCellClick}
             onRowDblClick={onRowDblClick}
-            onCellPrepared={onCellPrepared}
+            onCellPrepared={handleCellPrepared}
+
             columnResizingMode="widget"
             // columnRenderingMode={columnRenderingMode}
             // rowRenderingMode={rowRenderingMode}
@@ -1987,18 +2001,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               <Paging defaultPageSize={pageSize} pageSize={pageSize} />
             )}
 
-            {allowFiltering && (
-              <FilterRow visible={false}>
-                {initialFilters.map((filter: any, index: any) => (
-                  <Column
-                    key={index}
-                    dataField={filter.field}
-                    filterValue={filter.value}
-                    selectedFilterOperation={filter.operation}
-                  />
-                ))}
-              </FilterRow>
-            )}
+       
 
             {allowSearching && <SearchPanel visible={true} />}
             {KeyboardNavigation && (

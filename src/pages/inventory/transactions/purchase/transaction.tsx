@@ -150,7 +150,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const purchaseGridRef = useRef<{
      focusCell: (targetRow: number, targetColumnIndex: number) => void;
-     nextCellFind: (rowIndex: number, column: string) => void;
+     nextCellFind: (rowIndex: number, column: string,focus?:boolean) => void;
   }>(null);
   
   const toggleHeaderDropdown = () => {
@@ -227,7 +227,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => {
-  purchaseGridRef.current?.nextCellFind(rowIndex,column)
+  purchaseGridRef.current?.nextCellFind(rowIndex,column,true);
 }
 
   const { getFormattedValue, getAmountInWords } = useNumberFormat();

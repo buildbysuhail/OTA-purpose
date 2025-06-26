@@ -79,7 +79,7 @@ interface RowData {
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
   focusCell: (targetRow: number, targetColumnIndex: number) => void;
-  nextCellFind: (rowIndex: number, column: string) => void;
+  nextCellFind: (rowIndex: number, column: string,focus?:boolean) => void;
   currentCell?: {column: string, rowIndex: number};
 }
 
@@ -679,7 +679,7 @@ const focusCell = useCallback(
 );
 
 const nextCellFind = useCallback(
-  (rowIndex: number, column: string) => {
+  (rowIndex: number, column: string,focus?:boolean) => {
     const visibleColumns = columns.filter(
       (col) => col.visible && col.dataField != null
     );
@@ -714,9 +714,12 @@ const nextCellFind = useCallback(
       );
     }
 
-    if (targetColumnIndex >= 0) {
+    if (targetColumnIndex >= 0 && focus) {
       focusCell(targetRow, targetColumnIndex);
     }
+    return {
+      targetRow, targetColumnIndex
+    };
   },
   [columns, focusCell]
 );

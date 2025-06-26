@@ -730,7 +730,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.quantityFactorData]);
 
-  const purchaseGridCol: DevGridColumn[] = useMemo(
+ const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
       {
         dataField: "slNo",
@@ -748,7 +748,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "pCode",
         caption: t("p_code"),
         dataType: "string",
-        // allowEditing: true,
+        allowEditing: true,
         visible: true,
         width: 150,
         alignment: 'left'
@@ -757,7 +757,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-        // allowEditing: true,
+        allowEditing: true,
         width: 100,
         visible: true,
         readOnly: false,
@@ -767,9 +767,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "barCode",
         caption: t("barcode"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 150,
         alignment: 'left'
       },
@@ -788,9 +786,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "product",
         caption: t("product"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         minWidth: 200,
         alignment: 'left'
       },
@@ -830,9 +826,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "qty",
         caption: t("qty"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 100,
         alignment: 'right'
       },
@@ -840,9 +834,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "free",
         caption: t("free"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 100,
         alignment: 'right'
       },
@@ -870,9 +862,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "unitPrice",
         caption: t("unit_price"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 130,
         alignment: 'right'
       },
@@ -1669,7 +1659,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ],
     []
   );
-
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 

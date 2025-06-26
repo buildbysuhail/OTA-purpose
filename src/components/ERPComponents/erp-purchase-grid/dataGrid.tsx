@@ -205,7 +205,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
     (e: React.KeyboardEvent<HTMLElement>, column: DevGridColumn, rowIndex: number) => {
       const target = e.target as HTMLElement;
       if (!target.id) return;
-      const visibleColumns = data.columns.filter((col) => col.visible && col.dataField != null);
+      const visibleColumns = data.columns.filter((col) => col.visible != false && col.dataField != null);
       const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField);
 
       if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
@@ -264,7 +264,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
       key={`inv_transaction_grid_${index}`}
     >
       {columns
-        .filter((col) => col.visible && col.dataField != null)
+        .filter((col) => col.visible != false && col.dataField != null)
         .map((column, columnIndex) => {
           const fieldKey = column.dataField as keyof TransactionDetail;
           const productId = item.productID;
@@ -293,7 +293,7 @@ const Row = React.memo(({ index, style, data }: ListChildComponentProps<RowData>
                 borderTop: isFocused ? '2px solid #EF4444' : `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})`,
                 borderBottom: isFocused ? '2px solid #EF4444' : `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})`,
                 borderLeft: isFocused ? '2px solid #EF4444' : `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})`,
-                borderRight: isFocused ? '2px solid #EF4444' : (columnIndex < columns.filter(col => col.visible && col.dataField != null).length - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none'),
+                borderRight: isFocused ? '2px solid #EF4444' : (columnIndex < columns.filter(col => col.visible != false && col.dataField != null).length - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none'),
               }}
               role="gridcell"
               onClick={(e) => {
@@ -417,7 +417,7 @@ const SummaryRow: React.FC<{
       }}
     >
       {columns
-        .filter((col) => col.visible && col.dataField != null)
+        .filter((col) => col.visible != false && col.dataField != null)
         .map((column, index) => {
           const summary = summaryConfig.find(
             (s) => s.showInColumn === column.dataField || s.column === column.dataField
@@ -436,7 +436,7 @@ const SummaryRow: React.FC<{
                 minWidth: column.width ? `${column.width}px` : "150px",
                 textAlign: summary?.alignment || column.alignment || (column.dataType === "number" ? "right" : "left"),
                 boxSizing: "border-box",
-                borderRight: index < columns.filter(col => col.visible && col.dataField != null).length - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none',
+                borderRight: index < columns.filter(col => col.visible != false && col.dataField != null).length - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none',
               }}
             >
               {summary ? formattedValue : ""}
@@ -489,7 +489,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const [dragPreviewPosition, setDragPreviewPosition] = useState({ x: 0, y: 0 });
 
   const calculateTotalWidth = () => {
-    const visibleColumns = formState.gridColumns?.filter((c) => c.visible && c.dataField != null) ?? [];
+    const visibleColumns = formState.gridColumns?.filter((c) => c.visible != false && c.dataField != null) ?? [];
     return visibleColumns.reduce((sum, col) => sum + (col.width || 150), 0);
   };
 
@@ -551,7 +551,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const focusCell = useCallback(
     (targetRow: number, targetColumnIndex: number) => {
-      const visibleColumns = formState.gridColumns?.filter((col) => col.visible && col.dataField != null) ?? [];
+      const visibleColumns = formState.gridColumns?.filter((col) => col.visible != false && col.dataField != null) ?? [];
       const itemCount = formState.transaction?.details.length || 0;
       if (targetRow < 0 || targetRow >= itemCount || targetColumnIndex < 0 || targetColumnIndex >= visibleColumns.length) return;
 
@@ -608,7 +608,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 const nextCellFind = useCallback(
   (rowIndex: number, column: string) => {
     const visibleColumns = columns.filter(
-      (col) => col.visible && col.dataField != null
+      (col) => col.visible != false && col.dataField != null
     );
 
     const editableColumns = visibleColumns.filter(
@@ -723,22 +723,22 @@ const nextCellFind = useCallback(
                   borderBottom: `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})`,
                 }}
               >
-                {formState.gridColumns?.filter((c) => c.visible).map((col, index) => (
+                {formState.gridColumns?.filter((c) => c.visible != false).map((col, index) => (
                   <React.Fragment key={col.dataField}>
                     {dragState.dropPosition === index && (
                       <div
                         className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 shadow-lg z-10"
                         style={{
                           left: appState.dir === "ltr"
-                            ? `${(formState.gridColumns ?? []).filter((c) => c.visible).slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
+                            ? `${(formState.gridColumns ?? []).filter((c) => c.visible != false).slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
                             : undefined,
                           right: appState.dir === "rtl"
-                            ? `${(formState.gridColumns ?? []).filter((c) => c.visible).slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
+                            ? `${(formState.gridColumns ?? []).filter((c) => c.visible != false).slice(0, index).reduce((sum, c) => sum + (c.width || 150), 0)}px`
                             : undefined,
                         }}
                       />
                     )}
-                    {dragState.dropPosition === (formState.gridColumns?.filter((c) => c.visible).length ?? 0) && index === (formState.gridColumns?.filter((c) => c.visible).length ?? 0) - 1 && (
+                    {dragState.dropPosition === (formState.gridColumns?.filter((c) => c.visible != false).length ?? 0) && index === (formState.gridColumns?.filter((c) => c.visible != false).length ?? 0) - 1 && (
                       <div
                         className="absolute right-0 top-0 bottom-0 w-0.5 bg-blue-500 shadow-lg z-10"
                         style={{ right: appState.dir === "ltr" ? 0 : undefined, left: appState.dir === "rtl" ? 0 : undefined }}
@@ -755,7 +755,7 @@ const nextCellFind = useCallback(
                         minWidth: col.width ? `${col.width}px` : "150px",
                         textAlign: "center",
                         boxSizing: "border-box",
-                        borderRight: index < (formState.gridColumns?.filter((c) => c.visible).length ?? 0) - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none',
+                        borderRight: index < (formState.gridColumns?.filter((c) => c.visible != false).length ?? 0) - 1 ? `1px solid rgb(${formState.userConfig?.gridBorderColor || '209,213,219'})` : 'none',
                       }}
                       draggable={!col.isLocked}
                       onDragStart={(e) => preferenceChooserRef.current?.handleDragStart(e)}

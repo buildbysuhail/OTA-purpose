@@ -2591,6 +2591,28 @@ const handleTextDataKeyDown = async (
                  focusToNextColumn(rowIndex, "pCode");
                }
         }
+       if(columnName == "Product") {
+        debugger;
+               const data = formState.transaction.details[rowIndex];
+               const value = data?.pCode;
+               if(!isNullOrUndefinedOrEmpty(value)) {
+                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
+               } else {
+                debugger;
+                 focusToNextColumn(rowIndex, "pCode");
+               }
+        }
+       if(columnName == "BarCode") {
+        debugger;
+               const data = formState.transaction.details[rowIndex];
+               const value = data?.pCode;
+               if(!isNullOrUndefinedOrEmpty(value)) {
+                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
+               } else {
+                debugger;
+                 focusToNextColumn(rowIndex, "pCode");
+               }
+        }
 
      default:
       break

@@ -65,35 +65,35 @@ export function getInitialPreference(gridId: any, columns: any) {
       const mergedPreferences = new Array<ColumnPreference>();
       
       // Create a mapping of columns by their `dataField` for easy lookup
-      const columnMap = new Map<string, DevGridColumn>();
-      columns?.forEach((column: any) => {
-        const dataField = column.dataField ?? removeSpacesAndCapitalize(column.caption ?? "");
-        columnMap.set(dataField, column);
-      });
+      // const columnMap = new Map<string, DevGridColumn>();
+      // columns?.forEach((column: any) => {
+      //   const dataField = column.dataField ?? removeSpacesAndCapitalize(column.caption ?? "");
+      //   columnMap.set(dataField, column);
+      // });
       
       // Go through parsedPreferences.columnPreferences to preserve the order
-      parsedPreferences.columnPreferences?.forEach((savedPreference) => {
-        const column = columnMap.get(savedPreference.dataField);
-        debugger;
-        if (column) {
-          mergedPreferences.push({
-            ...savedPreference,
-            dataField: savedPreference.dataField,
-          });
-          columnMap.delete(savedPreference.dataField); // Remove the matched column
-        }
-      });
+      // parsedPreferences.columnPreferences?.forEach((savedPreference) => {
+      //   const column = columnMap.get(savedPreference.dataField);
+      //   debugger;
+      //   if (column) {
+      //     mergedPreferences.push({
+      //       ...savedPreference,
+      //       dataField: savedPreference.dataField,
+      //     });
+      //     columnMap.delete(savedPreference.dataField); // Remove the matched column
+      //   }
+      // });
       
       // Add any remaining columns that weren't in parsedPreferences.columnPreferences
       columns?.forEach((column: any, index: any) => {
-        if (columnMap.has(column.dataField)) {
+        // if (columnMap.has(column.dataField)) {
            let colPreference = parsedPreferences.columnPreferences.find(x => x.dataField == column.dataField);
           colPreference =  colPreference == undefined ? getDefaultColumnPreference(column, index) : colPreference;
           mergedPreferences.push({
             ...colPreference,
             dataField: column.dataField ?? removeSpacesAndCapitalize(column.caption ?? ""),
           });
-        }
+        // }
       });
       
       updatedPreferences = {

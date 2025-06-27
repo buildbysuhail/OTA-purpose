@@ -317,6 +317,7 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
+              {origin}
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{
@@ -324,9 +325,7 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
                   paging: false,
                   sorting: false,
                 }}
-                filterText="abc"
-                // filterText="'___(product)' '___(warehouse)'
-                //  Date From :{**** (fromDate)} To {**** (toDate)}"
+                filterText={`of product: {${origin == "stockflow" ? '___(productName)' : '[___(code)] ___(product) ___(wareHouse)'}} Date From :{**** (fromDate)} To {**** (toDate)}`}
                 columns={columns}
                 gridHeader={t("stock_ledger_report")}
                 dataUrl={Urls.stock_ledger}
@@ -344,6 +343,7 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
                   isForm: false,
                   isTransactionScreen: true,
                   drillDownCells: "voucherNo,",
+                  // enableFn: (data: any) => data?.voucherNo != 0
                 }}
               />
             </div>

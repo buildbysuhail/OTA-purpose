@@ -47,14 +47,14 @@ const StockSummary = () => {
         width: 150,
         showInPdf: true,
         cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="product"
-          ></DrillDownCellTemplate>
-        )
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="product"
+            ></DrillDownCellTemplate>
+          );
+        },
       },
-    },
       {
         dataField: "stock",
         caption: t("stock"),
@@ -316,7 +316,7 @@ const StockSummary = () => {
         allowSorting: true,
         width: 80,
         showInPdf: true,
-       cellRender: (
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -324,7 +324,8 @@ const StockSummary = () => {
         ) => {
           if (exportCell != undefined) {
             const value =
-              cellElement.data?.reOrderQty == null || cellElement.data?.reOrderQty == 0
+              cellElement.data?.reOrderQty == null ||
+              cellElement.data?.reOrderQty == 0
                 ? ""
                 : cellElement.data.reOrderQty;
             return {
@@ -334,7 +335,8 @@ const StockSummary = () => {
               alignmentExcel: { horizontal: "right" },
             };
           } else {
-            return cellElement.data?.reOrderQty == null || cellElement.data?.reOrderQty == 0
+            return cellElement.data?.reOrderQty == null ||
+              cellElement.data?.reOrderQty == 0
               ? ""
               : cellElement.data.reOrderQty;
           }
@@ -515,7 +517,7 @@ const StockSummary = () => {
                   paging: false,
                   sorting: false,
                 }}
-                 filterText="{showBatchWise == true && , (Batchwise) } 
+                filterText="{showBatchWise == true && , (Batchwise) } 
                 {productID > 0 || productGroupID > 0 || brandID > 0 || productCategoryID > 0 || wareHouseID > 0 && ,  Stock Report of } 
                 {productID <= 0 || productGroupID <= 0 || brandID <= 0 || productCategoryID <= 0 || wareHouseID <= 0 && , Stock Report of All Products } 
                 {productID > 0 && ,   Product :[product]} 
@@ -537,7 +539,7 @@ const StockSummary = () => {
                 filterContent={<StockSummaryFilter />}
                 filterWidth={790}
                 filterHeight={630}
-                  onFilterChanged={(filter: any) => {
+                onFilterChanged={(filter: any) => {
                   setFilter(filter);
                 }}
                 filterInitialData={{
@@ -546,22 +548,25 @@ const StockSummary = () => {
                     applicationSettings.productsSettings.batchCriteria == "NB"
                       ? true
                       : false,
-                      valuationUsing:clientSession.isAppGlobal?"APC":"SPP",
+                  valuationUsing: clientSession.isAppGlobal ? "APC" : "SPP",
                 }}
-
                 reload={true}
                 gridId="grd_stock_summary"
-                 childPopupProps={{
+                childPopupProps={{
                   content: <StockSummaryLedgerReport />,
                   title: "Stock Ledger Report",
                   isForm: false,
                   width: 1000,
                   drillDownCells: "product",
-                  bodyProps: "id",
+                  bodyProps: "code,product,id,autoBarcode",
                   enableFn: (data: any) => data?.id != 0,
-                  // origin: filter.showSalesReturn ? "return" : "sales",
+                  origin: "abc",
                 }}
-                postData={{ ...filter,fromDate:userSession.finFrom,toDate:filter.asOnDate }}
+                postData={{
+                  ...filter,
+                  fromDate: userSession.finFrom,
+                  toDate: filter.asOnDate,
+                }}
               />
             </div>
           </div>

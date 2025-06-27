@@ -326,7 +326,7 @@ const StockLedger = () => {
                 method={ActionType.POST}
                 filterContent={<StockLedgerFilter />}
                 filterWidth={790}
-                filterHeight={270}
+                filterHeight={305}
                 filterInitialData={StockLedgerFilterInitialState}
                 reload={true}
                 gridId="grd_stock_ledger"

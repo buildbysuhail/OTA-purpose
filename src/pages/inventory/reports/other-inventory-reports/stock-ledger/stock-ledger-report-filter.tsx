@@ -7,8 +7,12 @@ import moment from "moment";
 import Urls from "../../../../../redux/urls";
 import ErpInput from "../../../../../components/ERPComponents/erp-input";
 
-const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-  const { t } = useTranslation('accountsReport')
+const StockLedgerFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
 
   const handleSetDate = () => {
     const today = moment().local();
@@ -23,7 +27,9 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
           label={t("from_date")}
           {...getFieldProps("fromDate")}
           className="max-w-[150px]"
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+          onChangeData={(data: any) =>
+            handleFieldChange("fromDate", data.fromDate)
+          }
         />
         <ERPDateInput
           label={t("to_date")}
@@ -76,36 +82,49 @@ const StockLedgerFilter = ({ getFieldProps, handleFieldChange, formState }: any)
           }}
           className="w-full"
         />
-
+         <div>
+        <ERPCheckbox
+          id="showBatchWise"
+          {...getFieldProps("showBatchWise")}
+          label={t("batchwise")}
+          onChangeData={(data) =>
+            handleFieldChange("showBatchWise", data.showBatchWise)
+          }
+        />
         <ErpInput
-          label={t("batchwiseBarcode")}
-          {...getFieldProps("batchwiseBarcode")}
+         noLabel={true}
+          type="number"
+          placeholder={t("auto_barcode")}
+          disabled={getFieldProps("showBatchWise").value != true}
+          {...getFieldProps("autobarcode")}
           onChange={(e: any) => {
-            handleFieldChange("batchwiseBarcode", e.target.value);
+            handleFieldChange("autobarcode", e.target.value);
           }}
         />
       </div>
-
+      </div>
+     
       <div className="grid grid-cols-1 gap-2">
         <ERPCheckbox
           id="showOpeningStock"
           {...getFieldProps("showOpeningStock")}
           label={t("show_opening_stock")}
-          onChangeData={(data) => handleFieldChange("showOpeningStock", data.showOpeningStock)}
+          onChangeData={(data) =>
+            handleFieldChange("showOpeningStock", data.showOpeningStock)
+          }
         />
       </div>
     </div>
   );
-}
-
+};
 
 export default StockLedgerFilter;
 export const StockLedgerFilterInitialState = {
   fromDate: new Date(),
-  toDate:new Date(),
+  toDate: new Date(),
   id: 0,
-  warehouseID: 0,
-  isBatchwise: false,
-  autobarcode: 0,
-  showOpeningStock: false
+  warehouseID: -1,
+  showBatchWise: false,
+  autobarcode: "",
+  showOpeningStock: true,
 };

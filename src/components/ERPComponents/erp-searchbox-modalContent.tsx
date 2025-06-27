@@ -6,6 +6,7 @@ import { APIClient } from "../../helpers/api-client";
 import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../types/dev-grid-column";
 import Urls from "../../redux/urls";
+import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 
 
 const isNotEmpty = (value: any) =>
@@ -20,6 +21,8 @@ interface ProductModalGridProps {
     warehouseId: number;
     inSearch: boolean;
     popupSearchUrl: string;
+      searchColumn: keyof TransactionDetail,
+                            rowIndex: number,
 }
 
 const ProductModalGrid = ({ modalHeight, isMaximized,
@@ -28,6 +31,8 @@ const ProductModalGrid = ({ modalHeight, isMaximized,
     voucherType,
     warehouseId,
     inSearch,
+      searchColumn,
+                            rowIndex,
   popupSearchUrl}: ProductModalGridProps) => {
 const { t } = useTranslation('inventory');
 

@@ -609,6 +609,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   productCode: data.productCode,
                   useProductCode: false,
                   searchText: rowValue,
+                  searchColumn: column.dataField 
                 }],
               },
               key: crypto.randomUUID(),

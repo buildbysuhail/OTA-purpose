@@ -481,3 +481,14 @@ export interface GridQtyFactors {
   nos: number;
   total: number;
 }
+export interface LoadProductDetailsByAutoBarcode {
+  slNo: string;
+    productBatchID: number;
+    autoBarcode: string;
+    productCode: string;
+    useProductCode: boolean;
+    searchText: string;
+    searchColumn: string;
+    rowIndex: number;
+    setFocusToNextColumn: boolean;
+}

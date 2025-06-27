@@ -51,6 +51,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   useCodeSearch?: boolean;
   advancedProductSearching?: boolean;
   searchKey?: string;
+  rowIndex?: number;
 }
 
 interface LoadResult {
@@ -192,6 +193,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
   useCodeSearch= false,
   advancedProductSearching= false,
   searchKey= "",
+  rowIndex,
   ...rest
 }, ref) => {
   const [store, setStore] = useState<any>();
@@ -445,16 +447,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             rest?.onKeyDown && rest?.onKeyDown(e);
           }
         } else if (
-          e.key === "Enter" &&
-          searchType !== "modal")
+          e.key === "Enter"){
+            if(searchType !== "modal")
           {
             onEnterKeyDown && onEnterKeyDown()
-          } else if (
-          e.key === "Enter" &&
-          searchType === "modal" &&
-          inputValue.searchValue &&
-          inputValue.searchValue.length >= 3
-        ) {  
+          } else {
+            if (inputValue.searchValue && inputValue.searchValue.length >= 0) 
+          {
+            if(searchKey == "product") {
+              {  
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
@@ -462,6 +463,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
                   productSearchPopupWindow: {
                     visible: true,
                     data: {
+                       searchColumn: searchKey,
+                            rowIndex: rowIndex,
                       searchCriteria: searchKey,
                       searchText: e.currentTarget.value,
                       voucherType: formState.transaction.master.voucherType,
@@ -475,7 +478,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
             })
           );
           e.preventDefault();
-        } else if (
+        }
+            }
+            else{
+               onEnterKeyDown && onEnterKeyDown()
+            }
+          }
+        }
+          } 
+           else if (
           e.key === "Escape" &&
           formState.formElements.dgvProduct.visible
         ) {
@@ -685,12 +696,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               }}
               content={
                 <ProductModalGrid
+                rowIndex={formState.formElements.productSearchPopupWindow.data.rowIndex}
+                searchColumn={formState.formElements.productSearchPopupWindow.data.searchColumn}
                   popupSearchUrl = {`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
                   searchCriteria={formState.formElements.productSearchPopupWindow.data.searchCriteria}
                   searchText={formState.formElements.productSearchPopupWindow.data.searchText}
                   voucherType={formState.formElements.productSearchPopupWindow.data.voucherType}
                   warehouseId={formState.formElements.productSearchPopupWindow.data.warehouseId}
                   inSearch={formState.formElements.productSearchPopupWindow.data.inSearch}
+
                 />
               }
             />

@@ -39,6 +39,7 @@ import {
   formStateMasterHandleFieldChange,
   loadTempRows,
   formStateTransactionDetailsRowUpdate,
+  formStateHandleFieldChangeKeysOnly,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -51,6 +52,7 @@ import {
   TransactionDetail,
   SummaryItems,
   CommonParams,
+  LoadProductDetailsByAutoBarcode,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -2278,14 +2280,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
  }
 }
 const loadProductDetailsByAutoBarcode = async (
- data: {
-  slNo: string;
-  productBatchID: number;
-  autoBarcode: string;
-  productCode: string;
-  useProductCode: boolean;
-  searchText: string;
-},
+ data: LoadProductDetailsByAutoBarcode,
  commonParams: CommonParams
 ): Promise<DeepPartial<TransactionFormState> | null> => {
  let {
@@ -2344,7 +2339,27 @@ Object.entries(payload).forEach(([key, value]) => {
    const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
 
     if (res?.isShowItemPopUp) {
-      // Show popup
+       dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: {
+                        productSearchPopupWindow: {
+                          visible: true,
+                          data: {
+                            searchColumn: data.searchColumn,
+                            rowIndex: data.rowIndex,
+                            searchCriteria: data.useProductCode ? "pCode": "product",
+                            searchText: data.searchText,
+                            voucherType: formState.transaction.master.voucherType,
+                            warehouseId: applicationSettings.productsSettings.enableMultiWarehouseBilling ? 0 : 
+                              (() => { try { const val = Number(formState.transaction.master.fromWarehouseID); return isNaN(val) ? -1 : Math.min(Math.max(val, -1), 2147483647); } catch { return -1; } })(),
+                            inSearch: formState.inSearch,
+                          },
+                        },
+                      },
+                    },
+                  })
+                );
     } else if (res?.products?.length === 1) {
     let product = res.products[0]
      outDetail.pCode = product.productCode;
@@ -2588,17 +2603,7 @@ const handleTextDataKeyDown = async (
                  focusToNextColumn(rowIndex, "pCode");
                }
         }
-       if(columnName == "Product") {
-        debugger;
-               const data = formState.transaction.details[rowIndex];
-               const value = data?.pCode;
-               if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
-               } else {
-                debugger;
-                 focusToNextColumn(rowIndex, "pCode");
-               }
-        }
+       
        if(columnName == "BarCode") {
         debugger;
                const data = formState.transaction.details[rowIndex];

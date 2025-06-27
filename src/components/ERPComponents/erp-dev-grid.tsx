@@ -1842,7 +1842,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
 
 useEffect(() => {
-  debugger;
+  //
 if (!gridRef.current || !initialFilters?.length) return;
      const dataGrid = gridRef.current.instance();
       dataGrid.option("filterRow.visible", true);

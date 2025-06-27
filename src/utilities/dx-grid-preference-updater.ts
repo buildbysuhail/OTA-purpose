@@ -54,6 +54,8 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     }
   };
 export function getInitialPreference(gridId: any, columns: any) {
+  
+    debugger
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
     
     let updatedPreferences: GridPreference;
@@ -72,6 +74,7 @@ export function getInitialPreference(gridId: any, columns: any) {
       // Go through parsedPreferences.columnPreferences to preserve the order
       parsedPreferences.columnPreferences?.forEach((savedPreference) => {
         const column = columnMap.get(savedPreference.dataField);
+        debugger;
         if (column) {
           mergedPreferences.push({
             ...savedPreference,
@@ -84,9 +87,10 @@ export function getInitialPreference(gridId: any, columns: any) {
       // Add any remaining columns that weren't in parsedPreferences.columnPreferences
       columns?.forEach((column: any, index: any) => {
         if (columnMap.has(column.dataField)) {
-          const defaultPreference = getDefaultColumnPreference(column, index);
+           let colPreference = parsedPreferences.columnPreferences.find(x => x.dataField == column.dataField);
+          colPreference =  colPreference == undefined ? getDefaultColumnPreference(column, index) : colPreference;
           mergedPreferences.push({
-            ...defaultPreference,
+            ...colPreference,
             dataField: column.dataField ?? removeSpacesAndCapitalize(column.caption ?? ""),
           });
         }

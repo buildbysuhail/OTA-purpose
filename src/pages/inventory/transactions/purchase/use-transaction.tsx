@@ -2280,7 +2280,7 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
  }
 }
 const loadProductDetailsByAutoBarcode = async (
- data: LoadProductDetailsByAutoBarcode,
+ data: LoadProductDetailsByAutoBarcodeProps,
  commonParams: CommonParams
 ): Promise<DeepPartial<TransactionFormState> | null> => {
  let {
@@ -2337,7 +2337,7 @@ Object.entries(payload).forEach(([key, value]) => {
   }
 });
    const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
-
+debugger;
     if (res?.isShowItemPopUp) {
        dispatch(
                   formStateHandleFieldChangeKeysOnly({
@@ -2548,7 +2548,7 @@ const handleTextDataKeyDown = async (
  } = commonParams;
 
  try {
- debugger;
+
    const key = event.key;
    const isShiftPressed = event.shiftKey;
 
@@ -2592,27 +2592,29 @@ const handleTextDataKeyDown = async (
        break;
 
      case 'Enter':
+      debugger;
        if(columnName == "pCode") {
        
                const data = formState.transaction.details[rowIndex];
                const value = data?.pCode;
                if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
+                 loadProductDetailsByAutoBarcode(
+                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
                } else {
                
-                 focusToNextColumn(rowIndex, "pCode");
+                 focusToNextColumn(rowIndex, columnName);
                }
         }
        
-       else if(columnName == "BarCode") {
+       else if(columnName == "barCode") {
        
                const data = formState.transaction.details[rowIndex];
-               const value = data?.pCode;
+               const value = data?.barCode;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
                } else {
                
-                 focusToNextColumn(rowIndex, "pCode");
+                 focusToNextColumn(rowIndex, columnName);
                }
         } else {
           focusToNextColumn(rowIndex, columnName);

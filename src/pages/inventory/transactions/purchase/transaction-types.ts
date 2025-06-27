@@ -481,7 +481,7 @@ export interface GridQtyFactors {
   nos: number;
   total: number;
 }
-export interface LoadProductDetailsByAutoBarcode {
+export interface LoadProductDetailsByAutoBarcodeProps {
   slNo: string;
     productBatchID: number;
     autoBarcode: string;

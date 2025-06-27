@@ -87,6 +87,7 @@ import {
 import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
 import { useReportPrint } from "./reports/use-reports-print";
+import { KeyUpEvent } from "devextreme/ui/text_box";
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -1904,8 +1905,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [store, initialFilters]);
 
-    const focusColumn = initialFilters?.find((filter: any) => filter.initialFocus);
-   
+    const focusColumn = initialFilters?.find( (filter: any) => filter.initialFocus);
+
     const handleCellPrepared = (e: any) => {
       if (e.rowType === "filter" && e.column.dataField === focusColumn?.field) {
         const input = e.cellElement.querySelector(
@@ -1943,6 +1944,36 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         }
       }
     };
+const FilterRowKeyDown = (e: any) => {
+  const gridEl = e.component?.element?.();
+  if (!gridEl) return;
+
+  // Query all filter inputs in the filter row
+  const filterInputs = gridEl.querySelectorAll('.dx-datagrid-filter-row input');
+
+  filterInputs.forEach((el:any) => {
+    const input = el as HTMLInputElement;
+    // Clear previous listener to avoid duplicates
+    input.onkeydown = null;
+
+    input.addEventListener('keydown', (evt: KeyboardEvent) => {
+      if (evt.key === 'ArrowDown') {
+        evt.preventDefault();
+
+        // Focus the checkbox cell in the first data row
+        const elCheckbox = gridEl.querySelector('.dx-data-row:first-child .dx-select-checkbox');
+        const firstCheckbox = elCheckbox as HTMLElement | null;
+        if (firstCheckbox) {
+          firstCheckbox.tabIndex = 0; // Make it focusable
+          firstCheckbox.focus();
+        }
+      }
+    });
+  });
+};
+
+
+
     return (
       <Fragment>
         {showChooserOnGridHead && (
@@ -2006,6 +2037,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       totalRowCountRef.current.toString();
                   }
                 }
+                if(selectionMode === "multiple") {
+                  FilterRowKeyDown(e)
+                }
+              
               }
 
               onContentReady && onContentReady(e);

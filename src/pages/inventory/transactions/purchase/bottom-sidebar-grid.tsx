@@ -197,15 +197,7 @@ export const BottomSidebarGrid: React.FC<BottomSidebarGridProps> = ({ sidebarHei
         showInPdf: true,
         visible: false,
       },
-      {
-        dataField: "refNo",
-        caption: "RefNo",
-        dataType: "string",
-        width: 100,
-        alignment: "left", 
-        showInPdf: true,
-        visible: false,
-      },
+
     ], []);
 
     const columnsright: DevGridColumn[] = useMemo(() => [

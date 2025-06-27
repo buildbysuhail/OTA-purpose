@@ -39,6 +39,7 @@ import {
   formStateTransactionDetailsRowUpdate,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
+import useDebounce from "./useDebounce";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -164,7 +165,18 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       }
       return true;
     };
-
+const debouncedDispatch = useDebounce(
+      (index: number, key: keyof TransactionDetail, value: string) => {
+        dispatch(
+          formStateTransactionDetailsRowUpdate({
+            index,
+            key,
+            value: column.dataType === "number" ? parseFloat(value) || 0 : value,
+          })
+        );
+      },
+      300 // 300ms debounce delay
+    );
     const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
       let inputValue = e.currentTarget.value;
       if (column.dataType === "number" && inputValue === ".") {
@@ -187,13 +199,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         return;
       }
       setLocalValue(inputValue);
-      dispatch(
-        formStateTransactionDetailsRowUpdate({
-          index: rowIndex,
-          key: column.dataField as keyof TransactionDetail,
-          value: column.dataType === "number" ? inputValue : inputValue,
-        })
-      );
+    debouncedDispatch(rowIndex, column.dataField as keyof TransactionDetail, inputValue);
     };
 
     const handleFocus = () => {

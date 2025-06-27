@@ -89,7 +89,7 @@ const useVirtualScrolling = (
   
 
   const onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    debugger;
+   
     const scrollTop = e.currentTarget.scrollTop;
      const newScrollLeft = e.currentTarget.scrollLeft;
 

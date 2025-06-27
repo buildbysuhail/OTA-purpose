@@ -532,7 +532,7 @@ const InvTransactionSlice = createSlice({
         itemsToAddToDetails?: TransactionDetail[];
       }>
     ) => {
-      debugger;
+     
       const { fields, updateOnlyGivenDetailsColumns = false, itemsToAddToDetails = undefined, rowIndex = -1 } =
         action.payload || {};
 

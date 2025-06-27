@@ -223,7 +223,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-    debugger;
+   
 
   };
 
@@ -688,7 +688,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.batchSelectionData]);
 
   useEffect(() => {
-    debugger;
+   
     if (formState.quantityFactorData != "") {
       const data = JSON.parse(formState.quantityFactorData);
       const rowIndex = data.rowIndex

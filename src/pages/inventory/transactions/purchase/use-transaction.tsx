@@ -2548,7 +2548,7 @@ const handleTextDataKeyDown = async (
  } = commonParams;
 
  try {
-  debugger;
+ debugger;
    const key = event.key;
    const isShiftPressed = event.shiftKey;
 
@@ -2593,27 +2593,29 @@ const handleTextDataKeyDown = async (
 
      case 'Enter':
        if(columnName == "pCode") {
-        debugger;
+       
                const data = formState.transaction.details[rowIndex];
                const value = data?.pCode;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
                } else {
-                debugger;
+               
                  focusToNextColumn(rowIndex, "pCode");
                }
         }
        
-       if(columnName == "BarCode") {
-        debugger;
+       else if(columnName == "BarCode") {
+       
                const data = formState.transaction.details[rowIndex];
                const value = data?.pCode;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
                } else {
-                debugger;
+               
                  focusToNextColumn(rowIndex, "pCode");
                }
+        } else {
+          focusToNextColumn(rowIndex, columnName);
         }
 
      default:

@@ -168,47 +168,49 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
   });
 };
 
-
-
-const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
-  inputId,
-  label,
-  productDataUrl,
-  batchDataUrl,
-  keyId,
-  onRowSelected,
-  onProductSelected,
-  onEnterKeyDown,
-  checkboxLabel,
-  onChange,
-  value,
-  placeholder,
-  noLabel,
-  labelDirection = "vertical",
-  contextClassNametwo,
-  clearAfterSelection = true,
-  showCheckBox = true,
-  searchType = "grid",
-  useInSearch= false,
-  useCodeSearch= false,
-  advancedProductSearching= false,
-  searchKey= "",
-  rowIndex,
-  ...rest
-}, ref) => {
-  const [store, setStore] = useState<any>();
-  const [productDetailStore, setProductDetailStore] = useState<any>();
-  const [inputValue, setInputValue] = useState({
-    searchValue: value,
-    searchByCode: false,
-  });
-  const dataGridRef = useRef<any>(null);
-  const batchGridRef = useRef<any>(null);
-  const gridContainerRef = useRef<HTMLDivElement>(null);
-  const internalRef = useRef<HTMLInputElement>(null);
-  const inputRef = ref || internalRef;
-  const { t } = useTranslation("inventory");
-  const dispatch = useDispatch();
+const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      inputId,
+      label,
+      productDataUrl,
+      batchDataUrl,
+      keyId,
+      onRowSelected,
+      onProductSelected,
+      onEnterKeyDown,
+      checkboxLabel,
+      onChange,
+      value,
+      placeholder,
+      noLabel,
+      labelDirection = "vertical",
+      contextClassNametwo,
+      clearAfterSelection = true,
+      showCheckBox = true,
+      searchType = "grid",
+      useInSearch = false,
+      useCodeSearch = false,
+      advancedProductSearching = false,
+      searchKey = "",
+      rowIndex,
+      ...rest
+    },
+    ref
+  ) => {
+    const [store, setStore] = useState<any>();
+    const [productDetailStore, setProductDetailStore] = useState<any>();
+    const [inputValue, setInputValue] = useState({
+      searchValue: value,
+      searchByCode: false,
+    });
+    const dataGridRef = useRef<any>(null);
+    const batchGridRef = useRef<any>(null);
+    const gridContainerRef = useRef<HTMLDivElement>(null);
+    const internalRef = useRef<HTMLInputElement>(null);
+    const inputRef = ref || internalRef;
+    const { t } = useTranslation("inventory");
+    const dispatch = useDispatch();
 
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
@@ -231,7 +233,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           let byCode = inputValue.searchByCode;
           let payload: any = {};
           if (searchType === "modal") {
-           
             // dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
           } else if (searchType === "grid") {
             if (searchKey == "pCode") {
@@ -325,89 +326,133 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       [debouncedFetch]
     );
 
-  useEffect(() =>{
-    debugger;
-    if(inputRef && 'current' in inputRef && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select();
-    }
-  }, [inputRef]);
+    useEffect(() => {
+     
+      if (inputRef && "current" in inputRef && inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.select();
+      }
+    }, [inputRef]);
 
-  const handleGridKeyDown = useCallback(
-    async (e: any) => {
-      console.log(`Grid key: ${e.event.key}`);
-      if (e.event.key === 'Enter' || e.event.key === 'NumpadEnter') {
-        const grid: any = dataGridRef.current?.instance();
-        const selectedRowKeys = grid.getSelectedRowKeys();
-        if (selectedRowKeys.length > 0) {
-          const selectedRow = grid.getSelectedRowsData()[0];
-          if (onProductSelected) {
-            onProductSelected(selectedRow);
-          }
-          try {
-            if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
-              const batchStore = await createBatchStore(selectedRow.productID, batchDataUrl);
-              setProductDetailStore(batchStore);
-              dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: true}}}}));
-              dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-            } else {
-              dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-              if (inputRef && 'current' in inputRef && inputRef.current) {
+    const handleGridKeyDown = useCallback(
+      async (e: any) => {
+        console.log(`Grid key: ${e.event.key}`);
+        if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
+          const grid: any = dataGridRef.current?.instance();
+          const selectedRowKeys = grid.getSelectedRowKeys();
+          if (selectedRowKeys.length > 0) {
+            const selectedRow = grid.getSelectedRowsData()[0];
+            if (onProductSelected) {
+              onProductSelected(selectedRow);
+            }
+            try {
+              if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
+                const batchStore = await createBatchStore(
+                  selectedRow.productID,
+                  batchDataUrl
+                );
+                setProductDetailStore(batchStore);
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: { dgvProductBatches: { visible: true } },
+                    },
+                  })
+                );
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: { dgvProduct: { visible: false } },
+                    },
+                  })
+                );
+              } else {
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: { dgvProduct: { visible: false } },
+                    },
+                  })
+                );
+                if (inputRef && "current" in inputRef && inputRef.current) {
+                  inputRef.current.focus();
+                }
+              }
+            } catch (err) {
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { formElements: { dgvProduct: { visible: false } } },
+                })
+              );
+              if (inputRef && "current" in inputRef && inputRef.current) {
                 inputRef.current.focus();
               }
             }
-          } catch (err) {
-            dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-            if (inputRef && 'current' in inputRef && inputRef.current) {
-              inputRef.current.focus();
-            }
+          }
+        } else if (e.event.key === "Escape") {
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: { formElements: { dgvProduct: { visible: false } } },
+            })
+          );
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+          e.event.preventDefault();
+        }
+      },
+      [batchDataUrl, onProductSelected, inputRef]
+    );
+
+    const handleBatchGridKeyDown = useCallback(
+      (e: any) => {
+        console.log(`Batch grid key: ${e.event.key}`);
+        if (
+          e.event.key === "Enter" &&
+          e.component.getSelectedRowKeys().length > 0
+        ) {
+          const selectedRow = e.component.getSelectedRowsData()[0];
+          if (onRowSelected) {
+            onRowSelected(selectedRow, inputValue.searchValue);
+          }
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                formElements: { dgvProductBatches: { visible: false } },
+              },
+            })
+          );
+          if (clearAfterSelection) {
+            setInputValue((prev) => ({
+              ...prev,
+              searchValue: "",
+            }));
+          }
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
           }
         }
-      } else if (e.event.key === 'Escape') {
-        dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: false}}}}));
-        if (inputRef && 'current' in inputRef && inputRef.current) {
-          inputRef.current.focus();
+        // else if (e.event.key === 'Escape') {
+        //   dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
+        //   setShowProductGrid(true);
+        //   e.event.preventDefault();
+        // }
+        else if (e.event.key === "Escape") {
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                formElements: { dgvProductBatches: { visible: false } },
+              },
+            })
+          );
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+          e.event.preventDefault();
         }
-        e.event.preventDefault();
-      }
-    }, [batchDataUrl, onProductSelected, inputRef]
-  );
-
-  const handleBatchGridKeyDown = useCallback(
-    (e: any) => {
-      
-      console.log(`Batch grid key: ${e.event.key}`);
-      if (e.event.key === 'Enter' && e.component.getSelectedRowKeys().length > 0) {
-        const selectedRow = e.component.getSelectedRowsData()[0];
-        if (onRowSelected) {
-          onRowSelected(selectedRow, inputValue.searchValue);
-        }
-        dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
-        if (clearAfterSelection) {
-          setInputValue((prev) => ({
-            ...prev,
-            searchValue: '',
-          }));
-        }
-        if (inputRef && 'current' in inputRef && inputRef.current) {
-          inputRef.current.focus();
-        }
-      } 
-      // else if (e.event.key === 'Escape') {
-      //   dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
-      //   setShowProductGrid(true);
-      //   e.event.preventDefault();
-      // }
-      else if (e.event.key === 'Escape') {
-      dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
-      if (inputRef && 'current' in inputRef && inputRef.current) {
-        inputRef.current.focus();
-      }
-      e.event.preventDefault();
-    }
-    },
-    [onRowSelected, clearAfterSelection, inputRef]
-  );
+      },
+      [onRowSelected, clearAfterSelection, inputRef]
+    );
 
     const handleBatchContentReady = useCallback(() => {
       if (batchGridRef.current) {
@@ -423,6 +468,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        debugger;
         console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
           if (e.key === "ArrowDown") {
@@ -446,47 +492,61 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
           } else {
             rest?.onKeyDown && rest?.onKeyDown(e);
           }
-        } else if (
-          e.key === "Enter"){
-            if(searchType !== "modal")
-          {
-            onEnterKeyDown && onEnterKeyDown()
-          } else {
-            if (inputValue.searchValue && inputValue.searchValue.length >= 0) 
-          {
-            if(searchKey == "product") {
-              {  
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                formElements: {
-                  productSearchPopupWindow: {
-                    visible: true,
-                    data: {
-                       searchColumn: searchKey,
-                            rowIndex: rowIndex,
-                      searchCriteria: searchKey,
-                      searchText: e.currentTarget.value,
-                      voucherType: formState.transaction.master.voucherType,
-                      warehouseId: applicationSettings.productsSettings.enableMultiWarehouseBilling ? 0 : 
-                        (() => { try { const val = Number(formState.transaction.master.fromWarehouseID); return isNaN(val) ? -1 : Math.min(Math.max(val, -1), 2147483647); } catch { return -1; } })(),
-                      inSearch: formState.inSearch,
-                    },
-                  },
-                },
-              },
-            })
-          );
-          e.preventDefault();
-        }
-            }
-            else{
-               onEnterKeyDown && onEnterKeyDown()
+        } else if (e.key === "Enter") {
+          if (searchType !== "modal") {
+            rest?.onKeyDown && rest?.onKeyDown(e);
+          } 
+          else {
+            if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+              if (searchKey == "product" ) 
+                {
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        formElements: {
+                          productSearchPopupWindow: {
+                            visible: true,
+                            data: {
+                              searchColumn: searchKey,
+                              rowIndex: rowIndex,
+                              searchCriteria: searchKey,
+                              searchText: e.currentTarget.value,
+                              voucherType:
+                                formState.transaction.master.voucherType,
+                              warehouseId: applicationSettings.productsSettings
+                                .enableMultiWarehouseBilling
+                                ? 0
+                                : (() => {
+                                    try {
+                                      const val = Number(
+                                        formState.transaction.master
+                                          .fromWarehouseID
+                                      );
+                                      return isNaN(val)
+                                        ? -1
+                                        : Math.min(
+                                            Math.max(val, -1),
+                                            2147483647
+                                          );
+                                    } catch {
+                                      return -1;
+                                    }
+                                  })(),
+                              inSearch: formState.inSearch,
+                            },
+                          },
+                        },
+                      },
+                    })
+                  );
+                  e.preventDefault();
+                } 
+              } else {
+                rest?.onKeyDown && rest?.onKeyDown(e);
+              }
             }
           }
-        }
-          } 
-           else if (
+         else if (
           e.key === "Escape" &&
           formState.formElements.dgvProduct.visible
         ) {
@@ -569,113 +629,204 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
       return () => document.removeEventListener("keydown", handleFocusTrap);
     }, [formState.formElements.dgvProduct.visible]);
 
-  return (
-    <>
-      <div className="flex items-center gap-4">
-        <div className="relative w-full" ref={gridContainerRef}>
-          <ERPInput
-            ignoreRandomId={true}
-            noLabel={noLabel}
-            label={label}
-            type="text"
-            id={inputId || "test"}
-            placeholder={placeholder}
-            labelDirection={labelDirection}
-            contextClassName={contextClassNametwo}
-            value={inputValue.searchValue}
-            onChange={handleChange}
-            onKeyDown={handleInputKeyDown}
-            // onEnterKeyDown={onEnterKeyDown}
-            disableEnterNavigation
-            ref={inputRef}
-            onFocus={(e) => {
-              console.log("Focused on ERPProductSearch input");
-              if (rest.onFocus) {
-                rest.onFocus(e);
+    return (
+      <>
+        <div className="flex items-center gap-4">
+          <div className="relative w-full" ref={gridContainerRef}>
+            <ERPInput
+              ignoreRandomId={true}
+              noLabel={noLabel}
+              label={label}
+              type="text"
+              id={inputId || "test"}
+              placeholder={placeholder}
+              labelDirection={labelDirection}
+              contextClassName={contextClassNametwo}
+              value={inputValue.searchValue}
+              onChange={handleChange}
+              onKeyDown={handleInputKeyDown}
+              // onEnterKeyDown={onEnterKeyDown}
+              disableEnterNavigation
+              ref={inputRef}
+              onFocus={(e) => {
+                console.log("Focused on ERPProductSearch input");
+                if (rest.onFocus) {
+                  rest.onFocus(e);
+                }
+              }}
+              onBlur={(e) => {
+                console.log("Blurred from ERPProductSearch input");
+                if (rest.onBlur) {
+                  rest.onBlur(e);
+                }
+              }}
+            />
+            {searchType === "grid" && (
+              <>
+                {formState.formElements.dgvProduct.visible && (
+                  <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+                    <DataGrid
+                      ref={dataGridRef}
+                      loadPanel={{ enabled: false }}
+                      dataSource={store}
+                      height={300}
+                      keyExpr={"productID"}
+                      showBorders={true}
+                      showRowLines={true}
+                      remoteOperations={{
+                        filtering: true,
+                        paging: true,
+                        sorting: true,
+                        grouping: false,
+                        summary: false,
+                        groupPaging: false,
+                      }}
+                      onKeyDown={handleGridKeyDown}
+                      tabIndex={0}
+                    >
+                      <Selection mode="single" />
+                      <Paging pageSize={30} />
+                      <Scrolling mode="virtual" />
+                      <KeyboardNavigation
+                        enabled={true}
+                        editOnKeyPress={false}
+                        enterKeyDirection="row"
+                      />
+                      <Column
+                        dataField="productCode"
+                        caption={t("product_code")}
+                        dataType="string"
+                        width={100}
+                      />
+                      <Column
+                        dataField="productID"
+                        caption={t("productID")}
+                        dataType="number"
+                        visible={false}
+                      />
+                      <Column
+                        dataField="productName"
+                        caption={t("ProductName")}
+                        dataType="string"
+                        minWidth={150}
+                      />
+                    </DataGrid>
+                  </div>
+                )}
+                {formState.formElements.dgvProductBatches.visible &&
+                  !isNullOrUndefinedOrEmpty(batchDataUrl) && (
+                    <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+                      <DataGrid
+                        ref={batchGridRef}
+                        loadPanel={{ enabled: false }}
+                        className="custom-data-grid-dark-only"
+                        dataSource={productDetailStore}
+                        height={300}
+                        keyExpr={"productBatchID"}
+                        showBorders={true}
+                        showRowLines={true}
+                        remoteOperations={{
+                          filtering: true,
+                          paging: true,
+                          sorting: true,
+                        }}
+                        onKeyDown={handleBatchGridKeyDown}
+                        onContentReady={handleBatchContentReady}
+                        tabIndex={0}
+                      >
+                        <KeyboardNavigation
+                          editOnKeyPress={false}
+                          enterKeyDirection="row"
+                        />
+                        <Paging pageSize={10} />
+                        <Selection mode="single" />
+                        <Column
+                          dataField="productBatchID"
+                          caption={t("productBatchID")}
+                          dataType="number"
+                          width={150}
+                        />
+                        <Column
+                          dataField="productCode"
+                          caption={t("productCode")}
+                          dataType="string"
+                          width={150}
+                        />
+                        <Column
+                          dataField="autoBarcode"
+                          caption={t("autoBarcode")}
+                          dataType="string"
+                          width={150}
+                        />
+                        <Column
+                          dataField="sPrice"
+                          caption={t("sprice")}
+                          dataType="number"
+                          width={100}
+                        />
+                        <Column
+                          dataField="pPrice"
+                          caption={t("pPrice")}
+                          dataType="number"
+                          width={100}
+                        />
+                        <Column
+                          dataField="mrp"
+                          caption={t("mrp")}
+                          dataType="number"
+                          width={100}
+                        />
+                        <Column
+                          dataField="stock"
+                          caption={t("stock")}
+                          dataType="number"
+                          width={100}
+                        />
+                        <Column
+                          dataField="unitID"
+                          caption={t("unitID")}
+                          dataType="number"
+                          minWidth={100}
+                        />
+                        <Column
+                          dataField="unit"
+                          caption={t("unit")}
+                          dataType="string"
+                          minWidth={100}
+                        />
+                        <Column
+                          dataField="brandID"
+                          caption={t("brandID")}
+                          dataType="number"
+                          minWidth={100}
+                        />
+                        <Column
+                          dataField="brandName"
+                          caption={t("brandName")}
+                          dataType="string"
+                          minWidth={100}
+                        />
+                      </DataGrid>
+                    </div>
+                  )}
+              </>
+            )}
+          </div>
+          {showCheckBox && (
+            <ERPCheckbox
+              id="searchByCode"
+              checked={inputValue.searchByCode}
+              label={checkboxLabel || t("Code")}
+              onChange={(e) =>
+                setInputValue((prev) => ({
+                  ...prev,
+                  searchByCode: e.target.checked,
+                }))
               }
-            }}
-            onBlur={(e) => {
-              console.log("Blurred from ERPProductSearch input");
-              if (rest.onBlur) {
-                rest.onBlur(e);
-              }
-            }}
-          />
-          {searchType === "grid" && (
-            <>
-              {formState.formElements.dgvProduct.visible && (
-                <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
-                  <DataGrid
-                    ref={dataGridRef}
-                    loadPanel={{ enabled: false }}
-                    dataSource={store}
-                    height={300}
-                    keyExpr={"productID"}
-                    showBorders={true}
-                    showRowLines={true}
-                    remoteOperations={{ filtering: true, paging: true, sorting: true, grouping: false, summary: false,groupPaging: false }}
-                    onKeyDown={handleGridKeyDown}
-                    tabIndex={0}
-                  >
-                    <Selection mode="single" />
-                    <Paging pageSize={30} />
-                    <Scrolling mode="virtual" />
-                    <KeyboardNavigation enabled={true} editOnKeyPress={false} enterKeyDirection="row" />
-                    <Column dataField="productCode" caption={t("product_code")} dataType="string" width={100} />
-                    <Column dataField="productID" caption={t("productID")} dataType="number" visible={false} />
-                    <Column dataField="productName" caption={t("ProductName")} dataType="string" minWidth={150} />
-                  </DataGrid>
-                </div>
-              )}
-              {formState.formElements.dgvProductBatches.visible && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
-                <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
-                  <DataGrid
-                    ref={batchGridRef}
-                    loadPanel={{ enabled: false }}
-                    className='custom-data-grid-dark-only'
-                    dataSource={productDetailStore}
-                    height={300}
-                    keyExpr={"productBatchID"}
-                    showBorders={true}
-                    showRowLines={true}
-                    remoteOperations={{ filtering: true, paging: true, sorting: true }}
-                    onKeyDown={handleBatchGridKeyDown}
-                    onContentReady={handleBatchContentReady}
-                    tabIndex={0}
-                  >
-                    <KeyboardNavigation
-                      editOnKeyPress={false}
-                      enterKeyDirection="row"
-                    />
-                    <Paging pageSize={10} />
-                    <Selection mode="single" />
-                    <Column dataField="productBatchID" caption={t("productBatchID")} dataType="number" width={150} />
-                    <Column dataField="productCode" caption={t("productCode")} dataType="string" width={150} />
-                    <Column dataField="autoBarcode" caption={t("autoBarcode")} dataType="string" width={150} />
-                    <Column dataField="sPrice" caption={t("sprice")} dataType="number" width={100} />
-                    <Column dataField="pPrice" caption={t("pPrice")} dataType="number" width={100} />
-                    <Column dataField="mrp" caption={t("mrp")} dataType="number" width={100} />
-                    <Column dataField="stock" caption={t("stock")} dataType="number" width={100} />
-                    <Column dataField="unitID" caption={t("unitID")} dataType="number" minWidth={100} />
-                    <Column dataField="unit" caption={t("unit")} dataType="string" minWidth={100} />
-                    <Column dataField="brandID" caption={t("brandID")} dataType="number" minWidth={100} />
-                    <Column dataField="brandName" caption={t("brandName")} dataType="string" minWidth={100} />
-                  </DataGrid>
-                </div>
-              )}
-            </>
+            />
           )}
         </div>
-        {showCheckBox && (
-          <ERPCheckbox
-            id='searchByCode'
-            checked={inputValue.searchByCode}
-            label={checkboxLabel || t('Code')}
-            onChange={e => setInputValue(prev => ({ ...prev, searchByCode: e.target.checked }))}
-          />
-        )}
-      </div>
-       {formState.formElements.productSearchPopupWindow.visible &&
+        {formState.formElements.productSearchPopupWindow.visible &&
           searchType === "modal" && (
             <ERPModal
               isOpen={formState.formElements.productSearchPopupWindow.visible}
@@ -696,21 +847,42 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(({
               }}
               content={
                 <ProductModalGrid
-                rowIndex={formState.formElements.productSearchPopupWindow.data.rowIndex}
-                searchColumn={formState.formElements.productSearchPopupWindow.data.searchColumn}
-                  popupSearchUrl = {`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
-                  searchCriteria={formState.formElements.productSearchPopupWindow.data.searchCriteria}
-                  searchText={formState.formElements.productSearchPopupWindow.data.searchText}
-                  voucherType={formState.formElements.productSearchPopupWindow.data.voucherType}
-                  warehouseId={formState.formElements.productSearchPopupWindow.data.warehouseId}
-                  inSearch={formState.formElements.productSearchPopupWindow.data.inSearch}
-
+                  rowIndex={
+                    formState.formElements.productSearchPopupWindow.data
+                      .rowIndex
+                  }
+                  searchColumn={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchColumn
+                  }
+                  popupSearchUrl={`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
+                  searchCriteria={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchCriteria
+                  }
+                  searchText={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchText
+                  }
+                  voucherType={
+                    formState.formElements.productSearchPopupWindow.data
+                      .voucherType
+                  }
+                  warehouseId={
+                    formState.formElements.productSearchPopupWindow.data
+                      .warehouseId
+                  }
+                  inSearch={
+                    formState.formElements.productSearchPopupWindow.data
+                      .inSearch
+                  }
                 />
               }
             />
           )}
-    </>
-  );
-});
+      </>
+    );
+  }
+);
 
 export default React.memo(ERPProductSearch);

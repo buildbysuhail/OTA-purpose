@@ -886,7 +886,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const onGridReady = (e: any) => {
       setGridInst(e.component);
     };
-
+   
     const formatStringWithConditions = (
       formatString: string,
       formState: any
@@ -910,39 +910,50 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           return false; // Return false in case of error
         }
       };
+ function processConditionalPlaceholder(
+      placeholder: string,
+      data: Record<string, any>
+    ): string {
+      if (!placeholder.includes("&&")) {
+        return placeholder; // or throw an error if strictly meant for "&&" processing
+      }
 
+      const [condition, trueValue] = placeholder.split("&&");
+      const conditionResult = evaluateExpression(condition.trim(), data);
+
+      if (!conditionResult) {
+        return "";
+      }
+
+      const result = trueValue.replace(
+        /\[([^\]]+)\]/g,
+        (innerMatch: string, innerPlaceholder: string) => {
+          if (
+            innerPlaceholder.toLowerCase().includes("date")
+          ) {
+            return appFormatDate(data[innerPlaceholder]);
+          }
+          return data[innerPlaceholder] ?? "N/A";
+        }
+      );
+
+      return result;
+    }
+      debugger;
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
         // Handle conditional expressions using '&&'
-        if (placeholder.includes("&&")) {
-          const [condition, trueValue] = placeholder.split("&&");
-          const conditionResult = evaluateExpression(
-            condition.trim(),
-            formState
-          );
-          const result = conditionResult
-            ? trueValue.replace(
-                /\[([^\]]+)\]/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(formState[innerPlaceholder]);
-                  }
-                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
-                }
-              )
-            : "";
-
-          return result;
-        } else if (placeholder.includes("___")) {
+         if (placeholder.includes("___")) {
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
                 /\(([^\]]+)\)/g,
                 (innerMatch: any, innerPlaceholder: any) => {
+
+                  if (innerPlaceholder.includes("&&")) {
+                    return processConditionalPlaceholder(innerPlaceholder,rowData); 
+                  }
+
                   if (
                     innerPlaceholder.includes("date") ||
                     innerPlaceholder.includes("Date")
@@ -966,6 +977,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             ? r.replace(
                 /\(([^\]]+)\)/g,
                 (innerMatch: any, innerPlaceholder: any) => {
+
+                  if (innerPlaceholder.includes("&&")) {
+                    return processConditionalPlaceholder(innerPlaceholder,postData); 
+                  }
+                  
                   if (
                     innerPlaceholder.includes("date") ||
                     innerPlaceholder.includes("Date")
@@ -987,6 +1003,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             ? r.replace(
                 /\(([^\]]+)\)/g,
                 (innerMatch: any, innerPlaceholder: any) => {
+
+                  if (innerPlaceholder.includes("&&")) {
+                    return processConditionalPlaceholder(innerPlaceholder,userSession); 
+                  }
+                  
                   if (
                     innerPlaceholder.includes("date") ||
                     innerPlaceholder.includes("Date") ||
@@ -1003,13 +1024,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               )
             : "";
           return result;
-        } else if (formState[placeholder] !== undefined) {
-          // Handle regular placeholders
+        } else if (formState !== undefined) {
+
+          if (placeholder.includes("&&")) {
+            return processConditionalPlaceholder(placeholder,formState); 
+          }
+          
+          else{
+            if (formState[placeholder] !== undefined) {
+            // Handle regular placeholders
           if (placeholder.includes("date") || placeholder.includes("Date")) {
             // If the placeholder is a date, format it
             return appFormatDate(formState[placeholder]);
           }
           return formState[placeholder] || "N/A";
+          }
+          }
         }
         return "N/A";
       });

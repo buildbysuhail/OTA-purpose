@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import StockFlowReportFilter, {
   StockFlowReportFilterInitialState,
@@ -13,10 +14,12 @@ import StockFlowReportFilter, {
 import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import StockSummaryLedgerReport from "../stock-summary-report/stock-summary-ledger-report";
 
 const StockFlowReport = () => {
   const { t } = useTranslation("accountsReport");
   const clientSession = useSelector((state: RootState) => state.ClientSession);
+  const [filter, setFilter] = useState<any>(StockFlowReportFilterInitialState);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -48,6 +51,14 @@ const StockFlowReport = () => {
         allowSorting: true,
         width: 130,
         showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="productName"
+            ></DrillDownCellTemplate>
+          );
+        },
       },
       {
         dataField: "opStk",
@@ -1016,9 +1027,27 @@ const StockFlowReport = () => {
                 filterContent={<StockFlowReportFilter />}
                 filterWidth={790}
                 filterHeight={340}
+                  onFilterChanged={(filter: any) => {
+                  setFilter(filter);
+                }}
                 filterInitialData={StockFlowReportFilterInitialState}
                 reload={true}
                 gridId="grd_stock_flow_report"
+                 childPopupProps={{
+                  content: <StockSummaryLedgerReport />,
+                  title: "Stock Ledger Report",
+                  isForm: false,
+                  width: 1000,
+                  drillDownCells: "productName",
+                  bodyProps: "productID",
+                  enableFn: (data: any) => data?.productID != 0,
+                  origin:"stockflow"
+                }}
+                postData={{
+                  ...filter,
+                  fromDate: filter.dateFrom,
+                  toDate: filter.dateTo,
+                }}
               />
             </div>
           </div>

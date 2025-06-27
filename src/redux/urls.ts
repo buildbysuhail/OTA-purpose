@@ -514,8 +514,9 @@ const Urls = {
   expiry_report: "/Inventory/RptInventoryReport/ExpiryReport/",
   transaction_analysis: "/Inventory/RptInventoryReport/TransactionAnalysis/",
   stock_flow_report: "/Inventory/RptInventoryReport/StockFlowReport/",
-  inventory_summary_report:
-    "/Inventory/RptInventoryReport/InventorySummaryReport/",
+  inventory_summary_report:"/Inventory/RptInventoryReport/InventorySummaryReport/",
+  inventory_summary_report_monthwise:"/Inventory/RptInventoryReport/InventorySummaryReportMonthwsie/",
+  inventory_summary_report_detailed: "/Inventory/RptInventoryReport/InventorySummaryReportDetailed/",
   service_report: "/Inventory/RptInventoryReport/ServiceReport/",
   salesman_incentive_report:
     "/Inventory/RptInventoryReport/SalesManIncentiveReport/",

@@ -46,15 +46,6 @@ const CashBookSummary = () => {
             bold: true,
             alignment: "right",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#DC143C' : '',
-            // font: {
-            //   ...exportCell.font,
-            //   // color: isDebit ? "#129151" : "#DC143C",
-            //   color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
-            //   size: 10,
-            //   style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
-            //   bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
-            // }
-
           } : undefined;
         }
         else {

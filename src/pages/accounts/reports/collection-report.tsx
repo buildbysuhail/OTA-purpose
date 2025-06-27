@@ -39,7 +39,6 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 100,
       format: "dd-MMM-yyyy",
-      // groupIndex: 0,
       showInPdf: true,
 
     },

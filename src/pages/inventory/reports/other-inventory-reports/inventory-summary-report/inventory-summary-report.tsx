@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import InventorySummaryReportFilter, {
   InventorySummaryReportFilterInitialState,
@@ -13,8 +14,10 @@ import InventorySummaryReportFilter, {
 import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import InventorySummaryReportMonthwise from "./inventory-summary-report-monthwise";
 
 const InventorySummaryReport = () => {
+   const[filter, setFilter] = useState<any>(InventorySummaryReportFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const { t } = useTranslation("accountsReport");
@@ -29,6 +32,14 @@ const InventorySummaryReport = () => {
         allowSorting: true,
         width: 250,
         showInPdf: true,
+         cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherTypeName"
+            ></DrillDownCellTemplate>
+          );
+        },
       },
       {
         dataField: "formType",
@@ -205,7 +216,24 @@ const InventorySummaryReport = () => {
                       : userSession.currentBranchId,
                 }}
                 reload={true}
+                                onFilterChanged={(filter: any) => {
+                  setFilter(filter);
+                }}
                 gridId="grd_inventory_summary_report"
+                 childPopupProps={{
+                  content: <InventorySummaryReportMonthwise />,
+                  title: "Inventory Report (Month View)",
+                  isForm: false,
+                  width: 1000,
+                  drillDownCells: "voucherTypeName",
+                  bodyProps: "voucherType,branchID,formType,voucherTypeName,branchName",
+                  // origin:{da}
+                }}
+                postData={{
+                  ...filter,
+                  toDate: filter.asonDate,
+                  fromDate:userSession.finFrom
+                }}
               />
             </div>
           </div>

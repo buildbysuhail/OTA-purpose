@@ -1,25 +1,26 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
-import { SummaryFilterInitialState } from "./summary-report-filter";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import SummaryFilter from "./summary-report-filter";
 import { useLocation } from "react-router-dom";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
-interface SummaryProps {
-  gridHeader: string;
-  dataUrl: string;
-  gridId: string;
+import { isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import Urls from "../../../../../redux/urls";
+interface InventorySummaryReportDetailedProps {
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
+  rowData?: any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
-
-const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
+const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
+  // const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
@@ -61,6 +62,14 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 50,
         showInPdf: true,
+     cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            ></DrillDownCellTemplate>
+          );
+        },
       },
       {
         dataField: "form",
@@ -981,23 +990,24 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         }
         return true;
       })
-      .map((column) => {
-        if (column.dataField == "upi" && !clientSession.isAppGlobal) {
-          return {
-            ...column,
-            caption: t("qr_pay"),
-          };
-        }
-        if (column.dataField == "exchangeRate") {
-          return {
-            ...column,
-            visible: filter.voucher_form == "Import",
-          };
-          // return filter.voucher_form !== "Import";
-        }
-        return column;
-      });
-  }, [t, filter, userSession.dbIdValue]);
+      // .map((column) => {
+      //   if (column.dataField == "upi" && !clientSession.isAppGlobal) {
+      //     return {
+      //       ...column,
+      //       caption: t("qr_pay"),
+      //     };
+      //   }
+      //   if (column.dataField == "exchangeRate") {
+      //     return {
+      //       ...column,
+      //       visible: filter.voucher_form == "Import",
+      //     };
+      //     // return filter.voucher_form !== "Import";
+      //   }
+      //   return column;
+      // });
+      // filter,
+  }, [t,  userSession.dbIdValue]);
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -1172,20 +1182,14 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (column.column == "srAmount") {
         return (
           userSession.dbIdValue !== "489995732270" &&
-          userSession.dbIdValue !== "543140180640" &&
-          !filter.IsInactive
+          userSession.dbIdValue !== "543140180640"
         );
       }
-      if (column.column == "couponAmt") {
-        return userSession.dbIdValue !== "543140180640" && !filter.IsInactive;
-      }
-      // if (column.column == "roundAmount") {
-      //   return !filter.IsInactive;
-      // }
+   
 
       return true;
     });
-  }, [t, filter, userSession.dbIdValue]);
+  }, [t, userSession.dbIdValue]);
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
@@ -1200,7 +1204,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
               <ErpDevGrid
                 key={key}
                 groupPanelVisible={true}
-                // autoExpandAll={true}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -1209,57 +1212,15 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                   summary: false,
                 }}
                 columns={columns}
-                // moreOption
-                // {productID > 0 && , Product Name : [productName]} removed always visible false in 1050
-                //condition in case of sales
-                //  case "SI":
-                //     this.Text = lblReportTitle.Text = "Sales Summary Report";
-                //     if (CashSales)
-                //     {
-                //         lblReportTitle.Text = lblReportTitle.Text + " of Cash:";
-                //         this.Text = this.Text + lblReportTitle.Text;
-                //     }
-                //     else if(CreditSales)
-
-                //     {
-                //         lblReportTitle.Text = lblReportTitle.Text + " of Credit:";
-                //         this.Text = this.Text + lblReportTitle.Text;
-
-                //     }
-                //     else if (CardSales)
-
-                //     {
-                //         lblReportTitle.Text = lblReportTitle.Text + " of Card/Bank:";
-                //         this.Text = this.Text + lblReportTitle.Text;
-                //     }
-                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} {salesRouteID > 0 && , Route Name : [routeName]} 
-                {counterID > 0 && , Counter : [counterName]} 
-                {salesmanID > 0 && , Sales Man : [salesMan]} 
-                From Date : {fromDate} To Date : {toDate} 
-                {isTimeBased == true &&  , Time between  :
-                 [fromTime] And [toTime]}"
-                gridHeader={t(gridHeader)}
-                dataUrl={dataUrl}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                                
+                filterText="
+                From Date : {**** (fromDate) }To Date : {**** (toDate)} {{**** (voucherType)}=='SI' && 'Sales'}"
+                dataUrl={Urls.inventory_summary_report_detailed}
                 hideGridAddButton={true}
-                enablefilter={true}
-                showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<SummaryFilter />}
-                // columnResizingMode={"widget"}
-                filterHeight={350}
-                filterWidth={790}
-                filterInitialData={{
-                  ...SummaryFilterInitialState,
-                  fromDate: moment(
-                    clientSession.softwareDate,
-                    "DD/MM/YYYY"
-                  ).local(),
-                }}
-                onFilterChanged={(f: any) => {
-                  setFilter(f);
-                }}
                 reload={true}
-                gridId={gridId}
+                gridId="grd_inventory_summary_drilldown"
                    childPopupProps={{
                     content: null,
                     title: "",
@@ -1276,4 +1237,4 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   );
 };
 
-export default SummaryReport;
+export default InventorySummaryReportDetailed;

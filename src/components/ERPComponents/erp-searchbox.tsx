@@ -468,7 +468,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        debugger;
+       
         console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
           if (e.key === "ArrowDown") {

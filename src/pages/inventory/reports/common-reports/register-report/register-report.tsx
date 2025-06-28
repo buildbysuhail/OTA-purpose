@@ -1,6 +1,7 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
@@ -74,6 +75,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 50,
         showInPdf: true,
+       cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            ></DrillDownCellTemplate>
+          );
+        },
       },
       {
         dataField: "form",

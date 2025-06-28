@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
@@ -89,7 +90,15 @@ const NonInvoicedGoodsDelivery = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherNumber"
+            ></DrillDownCellTemplate>
+          );
+        },
+      },
     {
       dataField: "partyName",
       caption: t("party_name"),

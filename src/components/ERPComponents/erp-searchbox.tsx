@@ -59,6 +59,7 @@ interface InputProps {
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
+  onNextCellFind?: (rowIndex: number, column: string) => void;
 }
 
 interface LoadResult {
@@ -203,6 +204,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       advancedProductSearching = false,
       searchKey = "",
       rowIndex,
+      onNextCellFind,
       ...rest
     },
     ref
@@ -220,7 +222,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const inputRef = ref || internalRef;
     const { t } = useTranslation("inventory");
     const dispatch = useDispatch();
-
+  
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -623,7 +625,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       document.addEventListener("keydown", handleFocusTrap);
       return () => document.removeEventListener("keydown", handleFocusTrap);
     }, [formState.formElements.dgvProduct.visible]);
-  const onClose = useCallback(() => {
+  
+    const onClose = useCallback(() => {
     dispatch(
                   formStateHandleFieldChangeKeysOnly({
                     fields: {
@@ -634,6 +637,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   })
                 );
   }, []);
+
     return (
       <>
         <div className="flex items-center gap-4">
@@ -842,6 +846,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               closeModal={onClose}
               content={
                 <ProductModalGrid
+                onNextCellFind={onNextCellFind}
                 onClose={onClose}
                   rowIndex={
                     formState.formElements.productSearchPopupWindow.data

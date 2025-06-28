@@ -472,6 +472,7 @@ const Row = React.memo(
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
                     useCodeSearch={data.useCodeSearch}
+                    onNextCellFind={data.nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
                       const res = {
                         transaction: {

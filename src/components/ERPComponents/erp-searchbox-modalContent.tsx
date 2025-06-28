@@ -24,6 +24,8 @@ interface ProductModalGridProps {
       searchColumn: keyof TransactionDetail,
                             rowIndex: number,
                             onClose?: () => void;
+                            onNextCellFind?: (rowIndex: number, column: string) => void;
+
 }
 
 const ProductModalGrid = ({ modalHeight, isMaximized,
@@ -35,6 +37,7 @@ const ProductModalGrid = ({ modalHeight, isMaximized,
       searchColumn,
                             rowIndex,
 onClose,
+onNextCellFind,
   popupSearchUrl}: ProductModalGridProps) => {
 const { t } = useTranslation('inventory');
 
@@ -57,6 +60,7 @@ const { t } = useTranslation('inventory');
       setSelectedRows(selectedRowsData); 
       if (onClose) {
         console.log("Selected Rows:", selectedRowsData);
+        onNextCellFind?.(rowIndex, searchColumn);
         onClose(); 
       }
     }

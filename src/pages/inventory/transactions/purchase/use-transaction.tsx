@@ -53,6 +53,7 @@ import {
   SummaryItems,
   CommonParams,
   LoadProductDetailsByAutoBarcode,
+  LoadProductDetailsByAutoBarcodeProps,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -2288,6 +2289,7 @@ const loadProductDetailsByAutoBarcode = async (
  } = commonParams;
 
  try {
+  debugger;
   let detail = {...formState.transaction?.details?.find(x => x?.slNo == data.slNo)};
   let outDetail: DeepPartial<TransactionDetail> = {};
   
@@ -2594,11 +2596,11 @@ const handleTextDataKeyDown = async (
       debugger;
        if(columnName == "pCode") {
        
-               const data = formState.transaction.details[rowIndex];
-               const value = data?.pCode;
+               let data = {...formState.transaction.details[rowIndex]};
+               data.pCode = value;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode(
-                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
+                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.pCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
                } else {
                
                  focusToNextColumn(rowIndex, columnName);
@@ -2607,10 +2609,10 @@ const handleTextDataKeyDown = async (
        
        else if(columnName == "barCode") {
        
-               const data = formState.transaction.details[rowIndex];
-               const value = data?.barCode;
+               let data = {...formState.transaction.details[rowIndex]};
+               data.barCode = value;
                if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true},{result:{}})
+                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
                } else {
                
                  focusToNextColumn(rowIndex, columnName);
@@ -2618,19 +2620,22 @@ const handleTextDataKeyDown = async (
         } else if(columnName == "unitPriceFC") {
           if ((() => { try { return parseFloat(value ?? "0"); } catch { return 0; } })() === 0) { 
             debugger;
-            const confirm = await ERPAlert.show({
-      icon: "info",
-      title: t("stock_update_warning"),
-      text: t("stock_already_updated_warning"),
-      confirmButtonText: t("yes"),
-      cancelButtonText: t("no"),
-      showCancelButton: true,
-      onCancel: () =>{return false },
-      onConfirm: () => {
-        focusToNextColumn(rowIndex, columnName);
-        return true;
-      }
-    });
+            event.preventDefault()
+             const confirm = await ERPAlert.show({
+              icon: "info",
+              title: t("stock_update_warning"),
+              text: t("stock_already_updated_warning"),
+              confirmButtonText: t("yes"),
+              cancelButtonText: t("no"),
+              showCancelButton: true,
+              onCancel: () =>{return false},
+            });
+            if (confirm) {
+              focusToNextColumn(rowIndex, columnName);
+              break
+            } else {
+
+            }
           }
         } else {
           focusToNextColumn(rowIndex, columnName);

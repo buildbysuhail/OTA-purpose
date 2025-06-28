@@ -164,7 +164,7 @@ const InventorySummaryReportMonthwise: FC<
                 )}
                  childPopupProps={{
                     content: <InventorySummaryReportDetailed postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
-                    title: t("summary_report"),
+                    title: t("inventory_summary_report"),
                     isForm: false,
                     width: 1300,
                     drillDownCells: "month",

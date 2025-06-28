@@ -186,7 +186,7 @@ const InventorySummaryReport = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
-              {userSession.userTypeCode}
+              {/* {userSession.userTypeCode} */}
               {/* {clientSession.isAppGlobal.toString()} */}
               <ErpDevGrid
                 // summaryItems={summaryItems}
@@ -227,7 +227,6 @@ const InventorySummaryReport = () => {
                   width: 1000,
                   drillDownCells: "voucherTypeName",
                   bodyProps: "voucherType,branchID,formType,voucherTypeName,branchName",
-                  // origin:{da}
                 }}
                 postData={{
                   ...filter,

@@ -1039,7 +1039,7 @@ const StockFlowReport = () => {
                   isForm: false,
                   width: 1000,
                   drillDownCells: "productName",
-                  bodyProps: "productID",
+                  bodyProps: "productID,productName",
                   enableFn: (data: any) => data?.productID != 0,
                   origin:"stockflow"
                 }}

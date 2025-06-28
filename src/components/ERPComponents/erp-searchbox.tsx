@@ -478,7 +478,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
        debugger;
-        const value = formState.transaction.details[rowIndex??-1] != undefined ? formState.transaction.details[rowIndex??-1][searchKey as keyof TransactionDetail] : undefined;
+        const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
           if (e.key === "ArrowDown") {
@@ -533,6 +533,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   );
                   e.preventDefault();
                 } 
+                else {
+                rest?.onKeyDown && rest?.onKeyDown(value,e);
+              }
               } else {
                 rest?.onKeyDown && rest?.onKeyDown(value,e);
               }

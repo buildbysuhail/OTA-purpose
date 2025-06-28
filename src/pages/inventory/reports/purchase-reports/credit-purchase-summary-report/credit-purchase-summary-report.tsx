@@ -6,6 +6,7 @@ import CreditPurchaseSummaryReportFilter, {
 } from "./credit-purchase-summary-report-filter ";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
+  DrillDownCellTemplate,
   SummaryConfig,
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import GridId from "../../../../../redux/gridId";
@@ -61,7 +62,15 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-    },
+     cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            ></DrillDownCellTemplate>
+          );
+        },
+      },
     {
       dataField: "form",
       caption: t("form"),

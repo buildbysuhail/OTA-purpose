@@ -523,25 +523,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                               searchText: e.currentTarget.value,
                               voucherType:
                                 formState.transaction.master.voucherType,
-                              warehouseId: applicationSettings.productsSettings
-                                .enableMultiWarehouseBilling
-                                ? 0
-                                : (() => {
-                                    try {
-                                      const val = Number(
-                                        formState.transaction.master
-                                          .fromWarehouseID
-                                      );
-                                      return isNaN(val)
-                                        ? -1
-                                        : Math.min(
-                                            Math.max(val, -1),
-                                            2147483647
-                                          );
-                                    } catch {
-                                      return -1;
-                                    }
-                                  })(),
+                              warehouseId: 1,
                               inSearch: formState.inSearch,
                             },
                           },
@@ -638,7 +620,17 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       document.addEventListener("keydown", handleFocusTrap);
       return () => document.removeEventListener("keydown", handleFocusTrap);
     }, [formState.formElements.dgvProduct.visible]);
-
+  const onClose = useCallback(() => {
+    dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: {
+                        productSearchPopupWindow: { visible: false },
+                      },
+                    },
+                  })
+                );
+  }, []);
     return (
       <>
         <div className="flex items-center gap-4">
@@ -844,19 +836,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               width={1000}
               height={800}
               isForm={true}
-              closeModal={() => {
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: {
-                        productSearchPopupWindow: { visible: false },
-                      },
-                    },
-                  })
-                );
-              }}
+              closeModal={onClose}
               content={
                 <ProductModalGrid
+                onClose={onClose}
                   rowIndex={
                     formState.formElements.productSearchPopupWindow.data
                       .rowIndex

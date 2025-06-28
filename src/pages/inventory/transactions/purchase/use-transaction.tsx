@@ -2351,9 +2351,7 @@ debugger;
                             searchCriteria: data.useProductCode ? "pCode": "product",
                             searchText: data.searchText,
                             voucherType: formState.transaction.master.voucherType,
-                            warehouseId: applicationSettings.productsSettings.enableMultiWarehouseBilling ? 0 : 
-                              (() => { try { const val = Number(formState.transaction.master.fromWarehouseID); return isNaN(val) ? -1 : Math.min(Math.max(val, -1), 2147483647); } catch { return -1; } })(),
-                            inSearch: formState.inSearch,
+                            warehouseId: 1,
                           },
                         },
                       },

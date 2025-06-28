@@ -23,6 +23,7 @@ interface ProductModalGridProps {
     popupSearchUrl: string;
       searchColumn: keyof TransactionDetail,
                             rowIndex: number,
+                            onClose?: () => void;
 }
 
 const ProductModalGrid = ({ modalHeight, isMaximized,
@@ -33,18 +34,35 @@ const ProductModalGrid = ({ modalHeight, isMaximized,
     inSearch,
       searchColumn,
                             rowIndex,
+onClose,
   popupSearchUrl}: ProductModalGridProps) => {
 const { t } = useTranslation('inventory');
 
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-
+  const [selectedRows, setSelectedRows] = useState<TransactionDetail[]>([]); 
+  const gridRef = useRef<any>(null); 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
     let gridHeightWindows = modalHeight - 120;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
-
+ const handleEnterKeyDown =(e:any) => {
+ if(e.event.key === "Enter") {
+  e.event?.preventDefault();
+  const gridInstance = gridRef.current?.instance();
+  if(gridInstance) {
+    const selectedRowsData = gridInstance.getSelectedRowsData();
+    if (selectedRowsData.length > 0) {
+      setSelectedRows(selectedRowsData); 
+      if (onClose) {
+        console.log("Selected Rows:", selectedRowsData);
+        onClose(); 
+      }
+    }
+  }
+ }
+ }
 
 const columns: DevGridColumn[] = useMemo(() => [
   {
@@ -77,6 +95,7 @@ const columns: DevGridColumn[] = useMemo(() => [
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="grid grid-cols-1 gap-3">
           <ErpDevGrid
+            ref={gridRef}
              hideGridAddButton={true}
              enableScrollButton={false}
              pageSize={30}
@@ -89,6 +108,7 @@ const columns: DevGridColumn[] = useMemo(() => [
             reload={true}
             gridAddButtonIcon="ri-add-line"
             selectionMode="multiple"
+            onKeyDown={(e: any) => {handleEnterKeyDown(e)}}
             initialFilters={
               [
                 {

@@ -195,22 +195,22 @@ const Users = () => {
                 reload={rootState?.PopupData?.user?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
-                       initialFilters={
-              [
-                {
-                  field: "user",
-                  value: "a",
-                  operation: "startswith",
-                  initialFocus: true,
-                },
-                  {
-                  field: "counter",
-                  value: "d",
-                  operation: "startswith",
+            //            initialFilters={
+            //   [
+            //     {
+            //       field: "user",
+            //       value: "a",
+            //       operation: "startswith",
+            //       initialFocus: true,
+            //     },
+            //       {
+            //       field: "counter",
+            //       value: "d",
+            //       operation: "startswith",
                   
-                }
-             ]
-            }
+            //     }
+            //  ]
+            // }
               />
             </div>
           </div>

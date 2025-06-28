@@ -867,6 +867,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
         alignment: 'right'
       },
       {
+        dataField: "unitPriceFC",
+        caption: t("unit_price_fc"),
+        dataType: "number",
+        allowEditing: true,
+        width: 150,
+        readOnly: false,
+        alignment: 'right'
+      },
+      {
         dataField: "gross",
         caption: t("gross"),
         dataType: "number",
@@ -1210,15 +1219,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 250,
-        readOnly: true,
-        alignment: 'right'
-      },
-      {
-        dataField: "unitPriceFC",
-        caption: t("unit_price_fc"),
-        dataType: "number",
-        allowEditing: true,
-        width: 150,
         readOnly: true,
         alignment: 'right'
       },

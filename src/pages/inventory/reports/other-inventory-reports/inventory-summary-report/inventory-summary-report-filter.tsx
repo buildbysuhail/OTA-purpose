@@ -29,13 +29,13 @@ const InventorySummaryReportFilter = ({
         <ERPDataCombobox
           label={t("branch")}
           {...getFieldProps("branchID")}
-          //  disabled={userSession.userTypeCode!="CA"}
-           
+            readonly={userSession.userTypeCode!="CA"}
           field={{
             id: "branchID",
             getListUrl: Urls.data_acc_Branches_All,
             valueKey: "id",
             labelKey: "name",
+            dataNameField: "branch",
           }}
           onSelectItem={(data) => {
             handleFieldChange({

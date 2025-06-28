@@ -2532,6 +2532,7 @@ debugger;
 };
 
 const handleTextDataKeyDown = async (
+  value: any,
  event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
  columnName: string,
  rowIndex: number,
@@ -2616,6 +2617,23 @@ const handleTextDataKeyDown = async (
                
                  focusToNextColumn(rowIndex, columnName);
                }
+        } else if(columnName == "unitPriceFC") {
+          if ((() => { try { return parseFloat(value ?? "0"); } catch { return 0; } })() === 0) { 
+            debugger;
+            const confirm = await ERPAlert.show({
+      icon: "info",
+      title: t("stock_update_warning"),
+      text: t("stock_already_updated_warning"),
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+      showCancelButton: true,
+      onCancel: () =>{return false },
+      onConfirm: () => {
+        focusToNextColumn(rowIndex, columnName);
+        return true;
+      }
+    });
+          }
         } else {
           focusToNextColumn(rowIndex, columnName);
         }

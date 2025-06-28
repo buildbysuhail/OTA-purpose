@@ -20,6 +20,7 @@ import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import {
   getApLocalData,
+  isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
   setFgAccordingToBgPrimary,
 } from "../../utilities/Utils";
@@ -84,6 +85,7 @@ interface ERPDataComboboxProps {
     freezeDataLoad?: boolean | false;
     params?: any;
     required?: boolean;
+    dataNameField?: string;
   };
   defaultData?: any;
   data?: any;
@@ -915,6 +917,7 @@ useEffect(() => {
     );
 
       useEffect(() => {
+        debugger;
         const fieldKey = field?.id?.replaceAll("_id", "");
         const defaultValueKey = getNestedValue(
           defaultData?.[fieldKey ?? ""],
@@ -925,13 +928,24 @@ useEffect(() => {
         
         const x = getListUrl;
         const y = `${field?.getListUrl??""}${field?.params??""}`;
+        
+        if(field?.dataNameField != undefined && field?.dataNameField != "") {
+          const dataNameFieldValue = data[field.dataNameField]
+          if(isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
+            const dfo = items.find(x => x.value == value); // Select first item
+            if(dfo) {
+              handleItemClick(dfo);
+              return;
+            }          
+          }
+        }
         if (value === -2 && x== y) {
           if(items.length == 0) {
             return;
           }
           final = items[0]; // Select first item
           handleItemClick(final);
-        } else {
+        } else  {
           const _default = items?.find(
             (option) => option.value === defaultValueKey
           );

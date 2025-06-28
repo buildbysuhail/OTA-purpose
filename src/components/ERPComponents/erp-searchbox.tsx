@@ -28,8 +28,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
 import Urls from "../../redux/urls";
+import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps {
+  id: string,
   inputId?: string;
   label?: string;
   productDataUrl?: string;
@@ -38,6 +40,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onProductSelected?: (data: any) => void;
   onRowSelected?: (data: any, rowValue?: string) => void;
   onEnterKeyDown?: () => void;
+  onChange?: (e: any) => void;
+  onKeyDown?: (value: any,e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    className: string;
   checkboxLabel?: string;
   value?: string;
   clearAfterSelection?: boolean;
@@ -171,6 +178,8 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
 const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      className,
+      id,
       inputId,
       label,
       productDataUrl,
@@ -468,8 +477,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
-       
-        console.log(`Input key: ${e.key}`);
+       debugger;
+        const value = formState.transaction.details[rowIndex??-1] != undefined ? formState.transaction.details[rowIndex??-1][searchKey as keyof TransactionDetail] : undefined;
+        // console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
           if (e.key === "ArrowDown") {
             const grid: any = dataGridRef.current.instance();
@@ -490,11 +500,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               e.preventDefault();
             }
           } else {
-            rest?.onKeyDown && rest?.onKeyDown(e);
+            // rest?.onKeyDown && rest?.onKeyDown(e, e.target.);
           }
         } else if (e.key === "Enter") {
           if (searchType !== "modal") {
-            rest?.onKeyDown && rest?.onKeyDown(e);
+            rest?.onKeyDown && rest?.onKeyDown(value,e);
           } 
           else {
             if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
@@ -542,7 +552,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   e.preventDefault();
                 } 
               } else {
-                rest?.onKeyDown && rest?.onKeyDown(e);
+                rest?.onKeyDown && rest?.onKeyDown(value,e);
               }
             }
           }
@@ -581,12 +591,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             }
           }
           if (shouldNavigate && rest.onKeyDown) {
-            rest.onKeyDown(e);
+            rest?.onKeyDown(value,e);
             e.preventDefault();
           }
         } else {
           if (rest.onKeyDown) {
-            rest.onKeyDown(e);
+            rest?.onKeyDown(value,e);
           }
         }
       },

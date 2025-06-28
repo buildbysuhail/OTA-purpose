@@ -63,6 +63,7 @@ interface DataGridProps<T extends DataItem> {
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
   onKeyDown: (
+    value: any,
     e: React.KeyboardEvent<HTMLElement>,
     column: keyof TransactionDetail,
     rowIndex: number
@@ -112,6 +113,7 @@ interface RowData {
   itemCount: number;
   gridRef: React.RefObject<HTMLDivElement>;
   onKeyDown: (
+    value: any,
     e: React.KeyboardEvent<HTMLElement>,
     column: keyof TransactionDetail,
     rowIndex: number
@@ -276,10 +278,12 @@ const Row = React.memo(
 
     const handleKeyDown = useCallback(
       (
+        value: any,
         e: React.KeyboardEvent<HTMLElement>,
         column: DevGridColumn,
         rowIndex: number
       ) => {
+        debugger;
         const target = e.target as HTMLElement;
         if (!target.id) return;
         const visibleColumns = data.columns.filter(
@@ -293,6 +297,7 @@ const Row = React.memo(
           !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)
         ) {
           data.onKeyDown(
+            value,
             e,
             column.dataField as keyof TransactionDetail,
             rowIndex
@@ -457,11 +462,11 @@ const Row = React.memo(
                     value={(cellValue as string) || ""}
                     productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
                     batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
-                    tabIndex={0}
+                    // tabIndex={0}
                     className="h-[22px] text-sm"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(e, column, index)}
+                    onKeyDown={(value,e) => handleKeyDown(value, e, column, index)}
                     searchKey={column.dataField}
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
@@ -500,7 +505,7 @@ const Row = React.memo(
                     className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -527,7 +532,7 @@ const Row = React.memo(
                     }`}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -544,7 +549,7 @@ const Row = React.memo(
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     gridId={gridId}
-                    onKeyDown={(e) => handleKeyDown(e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
                     gridFontSize={data.gridFontSize}
                     gridIsBold={data.gridIsBold}
                   />
@@ -559,7 +564,7 @@ const Row = React.memo(
                     className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -911,11 +916,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       itemCount: formState.transaction?.details.length || 0,
       gridRef: gridRef,
       onKeyDown: (
+        value: any,
         e: any,
         column: keyof TransactionDetail,
         rowIndex: number
       ) => {
-        onKeyDown(e, column, rowIndex);
+        onKeyDown(value, e, column, rowIndex);
       },
       transactionType: transactionType ?? formState.transactionType,
       blockUnitOnDecimalPoint:

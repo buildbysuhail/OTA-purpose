@@ -1217,9 +1217,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "unitPriceFC",
         caption: t("unit_price_fc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowEditing: true,
         width: 150,
         readOnly: true,
         alignment: 'right'
@@ -1933,8 +1931,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
               ref={purchaseGridRef}
-              onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
-              handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+              onKeyDown={(value: any, e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+              handleTextDataKeyDown(value,e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
               transactionType={transactionType}
               columns={purchaseGridCol}
               keyField={"productID"}
@@ -2047,8 +2045,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
               </div>
               <ErpPurchaseGrid
                 ref={purchaseGridRef}
-                onKeyDown={(e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
-                handleTextDataKeyDown(e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+                onKeyDown={(value: any,e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
+                handleTextDataKeyDown(value,e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
                 columns={purchaseGridCol}
                 keyField={"productID"}
                 height={gridHeight}

@@ -84,6 +84,7 @@ interface ERPDataComboboxProps {
     freezeDataLoad?: boolean | false;
     params?: any;
     required?: boolean;
+    dataNameField?: string;
   };
   defaultData?: any;
   data?: any;
@@ -915,6 +916,7 @@ useEffect(() => {
     );
 
       useEffect(() => {
+        debugger;
         const fieldKey = field?.id?.replaceAll("_id", "");
         const defaultValueKey = getNestedValue(
           defaultData?.[fieldKey ?? ""],
@@ -925,12 +927,15 @@ useEffect(() => {
         
         const x = getListUrl;
         const y = `${field?.getListUrl??""}${field?.params??""}`;
+        const dataNameFieldValue = data[field]
         if (value === -2 && x== y) {
           if(items.length == 0) {
             return;
           }
           final = items[0]; // Select first item
           handleItemClick(final);
+        } else if(field?.dataNameField != undefined && field?.dataNameField != "") {
+
         } else {
           const _default = items?.find(
             (option) => option.value === defaultValueKey

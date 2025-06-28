@@ -83,7 +83,7 @@ const columns: DevGridColumn[] = useMemo(() => [
             columns={columns}
             heightToAdjustOnWindowsInModal={gridHeight.windows}
             gridHeader={"Item Search"}
-            dataUrl={`${popupSearchUrl}/${1}`}
+            dataUrl={`${popupSearchUrl}/${warehouseId}/${true}`}
             gridId="grd_acc_group"
             gridAddButtonType="popup"
             reload={true}

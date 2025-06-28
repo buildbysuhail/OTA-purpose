@@ -2602,7 +2602,7 @@ const handleTextDataKeyDown = async (
                data.pCode = value;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode(
-                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
+                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.pCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
                } else {
                
                  focusToNextColumn(rowIndex, columnName);

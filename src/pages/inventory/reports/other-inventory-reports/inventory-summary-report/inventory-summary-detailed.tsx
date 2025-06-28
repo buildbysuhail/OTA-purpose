@@ -1,6 +1,9 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
@@ -8,22 +11,29 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { useLocation } from "react-router-dom";
-import { isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import {
+  isNullOrUndefinedOrEmpty,
+  mergeObjectsRemovingIdenticalKeys,
+} from "../../../../../utilities/Utils";
 import Urls from "../../../../../redux/urls";
 interface InventorySummaryReportDetailedProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
   rowData?: any;
-  isMaximized?: boolean; 
-  modalHeight?:any
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
+const InventorySummaryReportDetailed: FC<
+  InventorySummaryReportDetailedProps
+> = ({ postData, contentProps, rowData, isMaximized, modalHeight }) => {
   const { t } = useTranslation("accountsReport");
   // const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -62,7 +72,7 @@ const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = 
         allowFiltering: true,
         width: 50,
         showInPdf: true,
-     cellRender: (cellElement: any, cellInfo: any) => {
+        cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <DrillDownCellTemplate
               data={cellElement}
@@ -964,50 +974,49 @@ const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = 
       },
     ];
     // Filter columns based on the `visible` property
-    return baseColumns
-      .filter((column) => {
-        if (
-          column.dataField == "salesAmount" ||
-          column.dataField == "totalProfit"
-        ) {
-          return userSession.dbIdValue == "489995732270";
-        }
-        if (column.dataField == "upi" || column.dataField == "cardAmt") {
-          return applicationSettings.accountsSettings.allowMultiPayments;
-        }
-        if (column.dataField == "printCount") {
-          return userSession.dbIdValue == "543140180640";
-        }
-        if (
-          column.dataField == "mobileNumber" ||
-          column.dataField == "totalExciseTax" ||
-          column.dataField == "toWarehouseName"
-        ) {
-          return (
-            clientSession.isAppGlobal &&
-            !applicationSettings.accountsSettings.allowMultiPayments
-          );
-        }
-        return true;
-      })
-      // .map((column) => {
-      //   if (column.dataField == "upi" && !clientSession.isAppGlobal) {
-      //     return {
-      //       ...column,
-      //       caption: t("qr_pay"),
-      //     };
-      //   }
-      //   if (column.dataField == "exchangeRate") {
-      //     return {
-      //       ...column,
-      //       visible: filter.voucher_form == "Import",
-      //     };
-      //     // return filter.voucher_form !== "Import";
-      //   }
-      //   return column;
-      // });
-      // filter,
-  }, [t,  userSession.dbIdValue]);
+    return baseColumns.filter((column) => {
+      if (
+        column.dataField == "salesAmount" ||
+        column.dataField == "totalProfit"
+      ) {
+        return userSession.dbIdValue == "489995732270";
+      }
+      if (column.dataField == "upi" || column.dataField == "cardAmt") {
+        return applicationSettings.accountsSettings.allowMultiPayments;
+      }
+      if (column.dataField == "printCount") {
+        return userSession.dbIdValue == "543140180640";
+      }
+      if (
+        column.dataField == "mobileNumber" ||
+        column.dataField == "totalExciseTax" ||
+        column.dataField == "toWarehouseName"
+      ) {
+        return (
+          clientSession.isAppGlobal &&
+          !applicationSettings.accountsSettings.allowMultiPayments
+        );
+      }
+      return true;
+    });
+    // .map((column) => {
+    //   if (column.dataField == "upi" && !clientSession.isAppGlobal) {
+    //     return {
+    //       ...column,
+    //       caption: t("qr_pay"),
+    //     };
+    //   }
+    //   if (column.dataField == "exchangeRate") {
+    //     return {
+    //       ...column,
+    //       visible: filter.voucher_form == "Import",
+    //     };
+    //     // return filter.voucher_form !== "Import";
+    //   }
+    //   return column;
+    // });
+    // filter,
+  }, [t, userSession.dbIdValue]);
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -1185,7 +1194,6 @@ const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = 
           userSession.dbIdValue !== "543140180640"
         );
       }
-   
 
       return true;
     });
@@ -1212,22 +1220,52 @@ const InventorySummaryReportDetailed: FC<InventorySummaryReportDetailedProps> = 
                   summary: false,
                 }}
                 columns={columns}
-                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
-                                
-                filterText="
-                From Date : {**** (fromDate) }To Date : {**** (toDate)} {{**** (voucherType)}=='SI' && 'Sales'}"
+                postData={mergeObjectsRemovingIdenticalKeys(
+                  postData,
+                  contentProps
+                )}
+                filterText=" 
+              {**** (voucherType =='SI' && Sales Summary Report)}
+              {**** (voucherType =='SI-BT' && Sales Transfer Summary Report)}
+              {**** (voucherType =='PI' && Purchase Summary Report)}
+              {**** (voucherType =='SR' && Sales Return Summary)}
+              {**** (voucherType =='PR' && Purchase Return Summary)}
+              {**** (voucherType =='SO' && Sales Order Summary)}
+              {**** (voucherType =='SE' && Sales Estimate Summary)}
+              {**** (voucherType =='SQ' && Sales Quotation Summary)}
+              {**** (voucherType =='PE' && Purchase Estimate Summary)}
+              {**** (voucherType =='PO' && Purchase Order Summary)}
+              {**** (voucherType =='SUB' && Substitute Summary)}
+              {**** (voucherType =='OS' && Opening stock Summary)}
+              {**** (voucherType =='PQ' && Purchase Quotation Summary)}
+              {**** (voucherType =='BTO' && Branch Transfer Out Summary)}
+              {**** (voucherType =='GR' && Goods Request Summary)}
+              {**** (voucherType =='BTI' && Branch Transfer In Summary)}
+              {**** (voucherType =='EX' && Excess stock Summary)}
+              {**** (voucherType =='SH' && shortage stock Summary)}
+              {**** (voucherType =='DMG' && Damage stock Summary)}
+              {**** (voucherType =='ST' && Stock Transfer Summary)}
+              {**** (voucherType =='GD' && Goods Delivery Summary)}
+              {**** (voucherType =='DR' && Goods Delivery Return Summary)}
+              {**** (voucherType =='GRN' && Goods Receipt Summary)}
+              {**** (voucherType =='GRR' && Goods Receipt Return Summary)}
+              {**** (voucherType =='SVI' && Service Invoice Summary)}
+              {**** (voucherType =='SRE' && Sales Return Estimate Summary)}
+              {**** (voucherType =='PRE' && Purchase Return Estimate Summary)}
+              {**** (voucherType =='SB' && Booking Summary Report)}
+              From Date : {**** (fromDate) }To Date : {**** (toDate)}"
                 dataUrl={Urls.inventory_summary_report_detailed}
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}
                 gridId="grd_inventory_summary_drilldown"
-                   childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

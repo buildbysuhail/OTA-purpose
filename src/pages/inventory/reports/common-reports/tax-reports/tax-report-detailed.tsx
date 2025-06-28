@@ -1,6 +1,6 @@
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
@@ -92,7 +92,15 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            ></DrillDownCellTemplate>
+          );
+        },
+      },
     {
       dataField: "taxCategory",
       caption: t("tax_category"),

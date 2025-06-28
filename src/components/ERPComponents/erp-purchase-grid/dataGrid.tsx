@@ -448,6 +448,7 @@ const Row = React.memo(
                 data.currentCell?.column === column.dataField &&
                 data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
+                  rowIndex = {index}
                     id={cellId}
                     inputId={`${gridId}_${column.dataField}_${index}`}
                     searchType={

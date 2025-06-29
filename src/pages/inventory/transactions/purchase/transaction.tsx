@@ -5,7 +5,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { GridQtyFactors, SummaryItems, TransactionDetail, TransactionProps } from "./transaction-types";
+import {
+  GridQtyFactors,
+  SummaryItems,
+  TransactionDetail,
+  TransactionProps,
+} from "./transaction-types";
 import { TransactionData, TransactionFormState } from "./transaction-types";
 import {
   useAppDispatch,
@@ -32,7 +37,11 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import { generateUniqueKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
+import {
+  generateUniqueKey,
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
@@ -56,7 +65,9 @@ import {
   TransactionFormStateInitialData,
   initialFormElements,
 } from "./transaction-type-data";
-import ErpPurchaseGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import ErpPurchaseGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
@@ -151,8 +162,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
 
   const purchaseGridRef = useRef<{
-     focusCell: (targetRow: number, targetColumnIndex: number) => void;
-     nextCellFind: (rowIndex: number, column: string,focus?:boolean) => void;
+    focusCell: (targetRow: number, targetColumnIndex: number) => void;
+    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
+    focusCurrentColumn: (rowIndex: number, column: string) => void;
   }>(null);
 
   const toggleHeaderDropdown = () => {
@@ -165,13 +177,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setIsDropDownOpen(false);
   };
 
-
-
   const SIDEBAR_WIDTH = "196px";
 
   const [hasAnimated, setHasAnimated] = useState(false);
-
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -222,16 +230,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
     }
   };
-  const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-   
-
-  };
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => {};
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => {
-  purchaseGridRef.current?.nextCellFind(rowIndex,column)
-}
+    purchaseGridRef.current?.nextCellFind(rowIndex, column);
+  };
 
+  const focusCurrentColumn = (rowIndex: number, column: string) => {
+    purchaseGridRef.current?.focusCurrentColumn(rowIndex, column);
+  };
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
@@ -270,12 +278,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
     clearRow,
     calculateRowAmount,
     calculateSummary,
-    calculateTotal
+    calculateTotal,
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
     btnAddRef,
     focusToNextColumn,
+    focusCurrentColumn,
     ledgerCodeRef,
     ledgerIdRef,
     masterAccountRef,
@@ -293,7 +302,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef
   );
 
-
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -306,8 +314,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
 
-  console.log( "transaction mj23", {setGridHeight});
-
+  console.log("transaction mj23", { setGridHeight });
 
   useEffect(() => {
     dispatch(
@@ -410,7 +417,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
 
@@ -467,7 +473,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-
         _formState = await loadTransVoucher(
           false,
           voucherNo,
@@ -479,7 +484,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         );
       }
 
-      _formState.userRightsFormCode = isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode??""
+      _formState.userRightsFormCode =
+        isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
 
       _formState = {
         ..._formState,
@@ -488,7 +494,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
-            hasroundOff: formType == "Import" ? true: _formState.transaction.master.hasroundOff,
+            hasroundOff:
+              formType == "Import"
+                ? true
+                : _formState.transaction.master.hasroundOff,
           },
         },
         userConfig: {
@@ -514,11 +523,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
         pnlImport: {
           ...initialFormElements.pnlImport,
-          visible: formType == "Import" ? true : _formState.formElements.pnlImport.visible,
+          visible:
+            formType == "Import"
+              ? true
+              : _formState.formElements.pnlImport.visible,
         },
         grandTotalFc: {
           ...initialFormElements.grandTotalFc,
-          visible: formType == "Import" ? true : _formState.formElements.grandTotalFc.visible,
+          visible:
+            formType == "Import"
+              ? true
+              : _formState.formElements.grandTotalFc.visible,
         },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
@@ -678,59 +693,197 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setData((prev) => [...prev, newItem]);
   };
 
-
   useEffect(() => {
-
+    
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
-      loadProductDetailsByAutoBarcode(data?.transaction?.details ? data?.transaction?.details[0] : {}, { result: {}, formStateHandleFieldChangeKeysOnly })
+      if(data.rowIndex < 0) {
+        return;
+      }
+      const baseDetail = {...formState.transaction.details[data.rowIndex]}
+       loadProductDetailsByAutoBarcode(
+                  {productCode:data.productCode,autoBarcode:data.autoBarcode
+                    ,productBatchID:data.productBatchID, searchText:data.searchText,detail:baseDetail
+                    ,useProductCode: data.useProductCode,rowIndex:data.rowIndex
+                    ,searchColumn: data.useProductCode ?"pCode": "product", setFocusToNextColumn: true},{result:{}, formStateHandleFieldChangeKeysOnly})
+      
     }
   }, [formState.batchSelectionData]);
+useEffect(() => {
+        
+  const fetchData = async () => {
+    try {
+      
+        if (formState.popupSearchSelectionData != "") {
+      const data = JSON.parse(formState.popupSearchSelectionData);
 
+      if (data.items && data.items.length > 0) {
+        const rowIndex = data.rowIndex;
+        const searchColumn = data.searchColumn;
+        const searchText = data.searchText;
+        const items = data.items;
+        const baseRowData = formState.transaction.details[rowIndex];
+        let currentDetails = [
+          ...formState.transaction.details.filter((x) => x.productID > 0),
+        ];
+        if(currentDetails.find(x => x.slNo == baseRowData.slNo) == undefined) {
+          currentDetails.push(baseRowData)
+        }
+        let res: DeepPartial<TransactionFormState> = {};
+        let addDetails: TransactionDetail[] = [];
+debugger;
+          for (const [index, item] of items.entries()) {
+            debugger;
+          const input = {barCode: item.autoBarcode, productBatchID: item.productBatchID,warehouseID: item.warehouseID, warehouseName: item.warehouse};
+          if (index == 0) {
+            const rowData: TransactionDetail = { ...baseRowData, ...input};
+            const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+              {autoBarcode:rowData.barCode
+                ,productBatchID: rowData.productBatchID
+                , rowIndex: rowIndex
+                , searchColumn: searchColumn
+                , searchText: rowData.barCode
+                , detail: rowData,
+              productCode:"",
+            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
+
+debugger;
+const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+const mergedRowData: TransactionDetail = {
+    ...rowData,
+    ...latestData
+};
+            currentDetails[rowIndex] = mergedRowData;
+            res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
+             if(res?.transaction?.details && res?.transaction?.details.length > 0) {
+         currentDetails[rowIndex] = res.transaction.details[0] as TransactionDetail
+          }
+          } else {
+            let rowData: DeepPartial<TransactionDetail> = {
+              ...input
+            };
+            rowData.slNo = generateUniqueKey()
+            
+             const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+              {autoBarcode:rowData.barCode??""
+                ,productBatchID: rowData.productBatchID??0
+                , rowIndex: rowIndex
+                , searchColumn: searchColumn
+                , searchText: rowData.barCode??""
+                , detail: rowData as TransactionDetail,
+              productCode:"",
+            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
+
+            const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+const mergedRowData: TransactionDetail = {
+    ...rowData as TransactionDetail,
+    ...latestData
+};
+debugger;
+          let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
+         
+          if(_res?.transaction?.details && _res?.transaction?.details.length > 0) {
+          addDetails.push(_res!.transaction!.details![0] as TransactionDetail);
+          }
+        }
+        };
+debugger;
+        let final = [...currentDetails, ...addDetails];
+        const summaryRes = calculateSummary(final, formState, { result: {} });
+
+        const totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes.summary as SummaryItems,
+          formState.formElements,
+          { result: {} }
+        );debugger;
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              ...totalRes,
+              summary: summaryRes.summary,
+              showQuantityFactors: { visible: false, rowIndex: -1 },
+              transaction: {
+                ...totalRes.transaction,
+                details: res.transaction?.details,
+              },
+            },
+            updateOnlyGivenDetailsColumns: true,
+            rowIndex: rowIndex,
+            itemsToAddToDetails: addDetails,
+          })
+        );
+      }
+      
+    }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchData();
+}, [formState.popupSearchSelectionData]);
+ 
   useEffect(() => {
-   
     if (formState.quantityFactorData != "") {
       const data = JSON.parse(formState.quantityFactorData);
-      const rowIndex = data.rowIndex
-      const quantityFactor = data.data
+      const rowIndex = data.rowIndex;
+      const quantityFactor = data.data;
       const baseRowData = formState.transaction.details[rowIndex];
-      let currentDetails = [...formState.transaction.details.filter(x => x.productID > 0)];
-          let res: DeepPartial<TransactionFormState> = {}
-          let addDetails: TransactionDetail[] = [];
-          quantityFactor.forEach((value:GridQtyFactors, index: number) => {
-            
-            if(index  == 0 ) {
-              const rowData = {...baseRowData,  qty: value.total};
-              currentDetails[rowIndex] = rowData
-              res = calculateRowAmount(rowData, "qty", {result: {}},true)
-              res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`
-            } else {
-              const rowData = {...baseRowData,  qty: value.total, slNo: generateUniqueKey(), productDescription:  `${value.width} X ${value.height} X ${value.nos}`}
-              addDetails.push(rowData);
-            }
-          });
+      let currentDetails = [
+        ...formState.transaction.details.filter((x) => x.productID > 0),
+      ];
+      let res: DeepPartial<TransactionFormState> = {};
+      let addDetails: TransactionDetail[] = [];
+      quantityFactor.forEach((value: GridQtyFactors, index: number) => {
+        if (index == 0) {
+          const rowData = { ...baseRowData, qty: value.total };
+          currentDetails[rowIndex] = rowData;
+          res = calculateRowAmount(rowData, "qty", { result: {} }, true);
+          res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
+        } else {
+          const rowData = {
+            ...baseRowData,
+            qty: value.total,
+            slNo: generateUniqueKey(),
+            productDescription: `${value.width} X ${value.height} X ${value.nos}`,
+          };
+          res = calculateRowAmount(rowData, "qty", { result: {} }, true);
+          if(res?.transaction?.details && res?.transaction?.details.length > 0) {
+          addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+          }
+        }
+      });
 
-          
-          
-          let final = [
-            ...currentDetails,
-            ...addDetails
-          ]
-          const summaryRes = calculateSummary(final,formState, {result: {}})
+      let final = [...currentDetails, ...addDetails];
+      const summaryRes = calculateSummary(final, formState, { result: {} });
 
-          const totalRes = calculateTotal(formState.transaction.master, summaryRes.summary as SummaryItems,formState.formElements, {result: {}})
-          dispatch(formStateHandleFieldChangeKeysOnly(
-            { fields: {...totalRes, 
-              summary: summaryRes,
-              showQuantityFactors:{visible: false, rowIndex: -1},
-              transaction: {...totalRes.transaction,
-                details: res.transaction?.details
-              },
-            }, updateOnlyGivenDetailsColumns: true, rowIndex:rowIndex, itemsToAddToDetails: addDetails }));
+      const totalRes = calculateTotal(
+        formState.transaction.master,
+        summaryRes.summary as SummaryItems,
+        formState.formElements,
+        { result: {} }
+      );
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            ...totalRes,
+            summary: summaryRes.summary,
+            showQuantityFactors: { visible: false, rowIndex: -1 },
+            transaction: {
+              ...totalRes.transaction,
+              details: res.transaction?.details,
+            },
+          },
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex: rowIndex,
+          itemsToAddToDetails: addDetails,
+        })
+      );
     }
   }, [formState.quantityFactorData]);
 
- const purchaseGridCol: DevGridColumn[] = useMemo(
+  const purchaseGridCol: DevGridColumn[] = useMemo(
     () => [
       {
         dataField: "slNo",
@@ -742,7 +895,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         width: 70,
         isLocked: true,
         visible: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "pCode",
@@ -751,7 +904,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowEditing: true,
         visible: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "mrp",
@@ -761,7 +914,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         width: 100,
         visible: true,
         readOnly: false,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "barCode",
@@ -769,7 +922,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowEditing: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "productBatchID",
@@ -780,7 +933,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 200,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "product",
@@ -788,7 +941,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "string",
         allowEditing: true,
         minWidth: 200,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "productID",
@@ -799,7 +952,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "brand",
@@ -809,7 +962,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "brandID",
@@ -820,7 +973,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "qty",
@@ -828,7 +981,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowEditing: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "free",
@@ -836,7 +989,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowEditing: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit",
@@ -846,7 +999,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "unitID",
@@ -856,7 +1009,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unitPrice",
@@ -864,7 +1017,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         allowEditing: true,
         width: 130,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unitPriceFC",
@@ -873,7 +1026,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowEditing: true,
         width: 150,
         readOnly: false,
-        alignment: 'right'
+        alignment: "right",
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("sales_price"),
+        dataType: "number",
+        allowEditing: true,
+        width: 200,
+        alignment: "right",
       },
       {
         dataField: "gross",
@@ -883,7 +1044,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "discPerc",
@@ -894,7 +1055,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "discount",
@@ -904,7 +1065,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "netValue",
@@ -914,7 +1075,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "total",
@@ -924,7 +1085,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "stock",
@@ -934,7 +1095,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "manualBarcode",
@@ -944,7 +1105,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 200,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "stockDetails",
@@ -954,7 +1115,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         minWidth: 200,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "margin",
@@ -965,17 +1126,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
-      },
-      {
-        dataField: "salesPrice",
-        caption: t("sales_price"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 200,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "lpr",
@@ -985,7 +1136,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "lpc",
@@ -996,7 +1147,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "stickerQty",
@@ -1006,7 +1157,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 130,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "profit",
@@ -1016,7 +1167,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "size",
@@ -1026,7 +1177,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "vatPerc",
@@ -1036,7 +1187,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "vatAmount",
@@ -1046,7 +1197,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "cst",
@@ -1057,7 +1208,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "cstPerc",
@@ -1068,7 +1219,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "cost",
@@ -1078,7 +1229,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "batchNo",
@@ -1088,7 +1239,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "mfdDate",
@@ -1097,7 +1248,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100
+        width: 100,
       },
       {
         dataField: "expDate",
@@ -1107,7 +1258,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        readOnly: true
+        readOnly: true,
       },
       {
         dataField: "expDays",
@@ -1118,7 +1269,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "bd",
@@ -1129,7 +1280,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "btnPrintBarcode",
@@ -1140,7 +1291,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 250,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "barcodePrinted",
@@ -1152,7 +1303,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 250,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "batchCreated",
@@ -1164,7 +1315,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "removeCol",
@@ -1176,7 +1327,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 130,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "productDescription",
@@ -1187,7 +1338,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         minWidth: 250,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "serial",
@@ -1198,7 +1349,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "minSalePrice",
@@ -1209,7 +1360,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "additionalExpense",
@@ -1220,7 +1371,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 250,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "colour",
@@ -1231,7 +1382,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "warranty",
@@ -1242,7 +1393,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "nosQty",
@@ -1253,7 +1404,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "totalAddExpense",
@@ -1264,7 +1415,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 180,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "grossConvert",
@@ -1275,7 +1426,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 140,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "grossFC",
@@ -1286,7 +1437,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unitID2",
@@ -1297,7 +1448,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit2Qty",
@@ -1308,7 +1459,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit2SalesRate",
@@ -1319,7 +1470,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 200,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit2MRP",
@@ -1330,7 +1481,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit2MBarcode",
@@ -1341,7 +1492,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "unit2StickerQty",
@@ -1352,7 +1503,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 200,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unitID3",
@@ -1363,7 +1514,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit3Qty",
@@ -1374,7 +1525,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit3SalesRate",
@@ -1385,7 +1536,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit3MRP",
@@ -1396,7 +1547,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit3MBarcode",
@@ -1407,7 +1558,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 180,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "unit3StickerQty",
@@ -1418,7 +1569,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 180,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "tagQty",
@@ -1429,7 +1580,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "barcodeTagPrinted",
@@ -1441,7 +1592,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 250,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "barcodeUnit2Printed",
@@ -1453,7 +1604,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 280,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "barcodeUnit3Printed",
@@ -1465,7 +1616,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 280,
         readOnly: true,
-        alignment: 'center'
+        alignment: "center",
       },
       {
         dataField: "location",
@@ -1476,7 +1627,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "grTransDetailsID",
@@ -1487,7 +1638,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 200,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "arabicName",
@@ -1498,7 +1649,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "supplierReferenceProductCode",
@@ -1509,7 +1660,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 280,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "poTransDetailsID",
@@ -1520,7 +1671,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 180,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "ratePlusTax",
@@ -1531,7 +1682,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 130,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "warehouseID",
@@ -1542,7 +1693,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 130,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "sortOrder",
@@ -1553,7 +1704,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 120,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "profitPercentage",
@@ -1564,7 +1715,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 140,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "schemeDiscount",
@@ -1575,7 +1726,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 140,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "memo",
@@ -1586,7 +1737,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         minWidth: 200,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "memoEditor",
@@ -1597,7 +1748,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "rowNumber",
@@ -1608,7 +1759,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "actualSalesPrice",
@@ -1619,7 +1770,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 200,
         readOnly: true,
-        alignment: 'right'
+        alignment: "right",
       },
       {
         dataField: "unit2",
@@ -1630,7 +1781,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "unit3",
@@ -1641,7 +1792,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 150,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
       {
         dataField: "btnPrintBarcodeStd",
@@ -1652,7 +1803,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         allowFiltering: true,
         width: 250,
         readOnly: true,
-        alignment: 'left'
+        alignment: "left",
       },
     ],
     []
@@ -1931,8 +2082,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
               ref={purchaseGridRef}
-              onKeyDown={(value: any, e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
-              handleTextDataKeyDown(value,e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+              onKeyDown={(
+                value: any,
+                e: React.KeyboardEvent<any>,
+                column: keyof TransactionDetail,
+                rowIndex: number
+              ) =>
+                handleTextDataKeyDown(value, e, column, rowIndex, {
+                  result: {},
+                  formStateHandleFieldChangeKeysOnly:
+                    formStateHandleFieldChangeKeysOnly,
+                })
+              }
               transactionType={transactionType}
               columns={purchaseGridCol}
               keyField={"productID"}
@@ -2040,19 +2201,29 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
             {/* Form Section */}
             <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
-              <div className="space-y-2">
-
-              </div>
+              <div className="space-y-2"></div>
               <ErpPurchaseGrid
                 ref={purchaseGridRef}
-                onKeyDown={(value: any,e: React.KeyboardEvent<any>, column: keyof TransactionDetail, rowIndex: number) =>
-                handleTextDataKeyDown(value,e, column, rowIndex,{result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})}
+                onKeyDown={(
+                  value: any,
+                  e: React.KeyboardEvent<any>,
+                  column: keyof TransactionDetail,
+                  rowIndex: number
+                ) =>
+                  handleTextDataKeyDown(value, e, column, rowIndex, {
+                    result: {},
+                    formStateHandleFieldChangeKeysOnly:
+                      formStateHandleFieldChangeKeysOnly,
+                  })
+                }
                 columns={purchaseGridCol}
                 keyField={"productID"}
                 height={gridHeight}
                 gridId={`${gridCode}-grid`}
                 onAddData={handleAddData}
-                summaryConfig={formState.summaryConfig as SummaryConfig<TransactionDetail>[]}
+                summaryConfig={
+                  formState.summaryConfig as SummaryConfig<TransactionDetail>[]
+                }
               />
               <TransactionFooter
                 formState={formState}
@@ -2303,14 +2474,26 @@ const TransactionForm: React.FC<TransactionProps> = ({
         <QtyFactorsModal
           isOpen={formState.showQuantityFactors.visible}
           rowIndex={formState.showQuantityFactors.rowIndex}
-          onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showQuantityFactors: false } }))}
+          onClose={() =>
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: { showQuantityFactors: false },
+              })
+            )
+          }
           t={t}
         />
       )}
       {formState.showPcode && (
         <ItemListModal
           isOpen={formState.showPcode}
-          onClose={() => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { showPcode: false } }))}
+          onClose={() =>
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: { showPcode: false },
+              })
+            )
+          }
           t={t}
         />
       )}

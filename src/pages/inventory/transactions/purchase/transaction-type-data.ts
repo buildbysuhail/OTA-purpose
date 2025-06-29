@@ -560,6 +560,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   ],
   showQuantityFactors: { visible: false, rowIndex: 0 },
   batchSelectionData: "",
+  popupSearchSelectionData: "",
   showPcode: false,
   quantityFactorData: ""
 }

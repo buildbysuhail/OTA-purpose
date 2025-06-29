@@ -283,7 +283,7 @@ const Row = React.memo(
         column: DevGridColumn,
         rowIndex: number
       ) => {
-        debugger;
+        
         const target = e.target as HTMLElement;
         if (!target.id) return;
         const visibleColumns = data.columns.filter(
@@ -475,18 +475,13 @@ const Row = React.memo(
                     onNextCellFind={data.nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
                       const res = {
-                        transaction: {
-                          details: [
-                            {
-                              slNo: item.slNo,
+                        slNo: item.slNo,
+                        rowIndex: index,
                               productBatchID: data.productBatchID,
                               autoBarcode: data.autoBarcode,
                               productCode: data.productCode,
-                              useProductCode: false,
+                              useProductCode: column.dataField === "pCode",
                               searchText: rowValue,
-                            },
-                          ],
-                        },
                         key: crypto.randomUUID(),
                       };
                       dispatch(
@@ -617,6 +612,7 @@ const SummaryRow: React.FC<{
               s.showInColumn === column.dataField ||
               s.column === column.dataField
           );
+          debugger;
           const value = summary
             ? summaryValues[summary.column as string]
             : null;
@@ -718,65 +714,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
 
-  const calculateSummaryValues = useCallback(() => {
-    const details = formState.transaction?.details || [];
-    const summaryValues: Record<string, any> = {};
-
-    summaryConfig.forEach((config) => {
-      const { column, summaryType } = config;
-      let value: any;
-
-      switch (summaryType) {
-        case "sum":
-          value = details.reduce((sum, item) => {
-            const val = item[column];
-            const num = typeof val === "number" ? val : parseFloat(String(val));
-            return isNaN(num) ? sum : sum + num;
-          }, 0);
-          break;
-        case "min":
-          value = details.reduce((min, item) => {
-            const val = item[column];
-            const num = typeof val === "number" ? val : parseFloat(String(val));
-            return isNaN(num) ? min : Math.min(min, num);
-          }, Infinity);
-          break;
-        case "max":
-          value = details.reduce((max, item) => {
-            const val = item[column];
-            const num = typeof val === "number" ? val : parseFloat(String(val));
-            return isNaN(num) ? max : Math.max(max, num);
-          }, -Infinity);
-          break;
-        case "avg":
-          const validNumbers = details
-            .map((item) => {
-              const val = item[column];
-              return typeof val === "number" ? val : parseFloat(String(val));
-            })
-            .filter((num) => !isNaN(num));
-          value = validNumbers.length
-            ? validNumbers.reduce((sum, num) => sum + num, 0) /
-              validNumbers.length
-            : 0;
-          break;
-        case "count":
-          value = details.length;
-          break;
-        case "custom":
-          value = config.customizeText
-            ? config.customizeText({ value: details })
-            : 0;
-          break;
-        default:
-          value = 0;
-      }
-      summaryValues[column as string] = value;
-    });
-
-    return summaryValues;
-  }, [formState.transaction?.details, summaryConfig]);
-
   const focusCell = useCallback(
     (targetRow: number, targetColumnIndex: number) => {
       const visibleColumns =
@@ -857,7 +794,25 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     ]
   );
 
-  const nextCellFind = useCallback(
+  const focusCurrentColumn = useCallback(
+    (rowIndex: number, column: string) => {
+ const visibleColumns = formState.gridColumns?.filter(
+        (col) => col.visible != false && col.dataField != null
+      );
+
+      const editableColumns = visibleColumns?.filter(
+        (col) => col.allowEditing && col.readOnly !== true
+      );
+      const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
+      const editable = editableColumns ? editableColumns[currentEditableIndex]: undefined;
+      const targetColumnIndex = visibleColumns?.findIndex(
+            (col) => col.dataField === editable?.dataField
+          );
+if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
+        focusCell(rowIndex, (targetColumnIndex??-1));
+      }
+    },[formState.gridColumns, focusCell]);
+  const findCurrentEditableIndex = useCallback(
     (rowIndex: number, column: string) => {
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
@@ -868,13 +823,25 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       );
 
       if (editableColumns?.length === 0) {
-        return; // No editable columns, exit early
+        return -1; // No editable columns, exit early
       }
 
-      const currentEditableIndex = !editableColumns
+      return !editableColumns
         ? -1
         : editableColumns?.findIndex((col) => col.dataField === column);
+    },[formState.gridColumns, focusCell])
 
+  const nextCellFind = useCallback(
+    (rowIndex: number, column: string) => {
+      
+      const visibleColumns = formState.gridColumns?.filter(
+        (col) => col.visible != false && col.dataField != null
+      );
+
+      const editableColumns = visibleColumns?.filter(
+        (col) => col.allowEditing && col.readOnly !== true
+      );
+      const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
       let targetRow = rowIndex;
       let targetColumnIndex = -1;
       if (visibleColumns && editableColumns) {
@@ -905,6 +872,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   React.useImperativeHandle(ref, () => ({
     focusCell,
     nextCellFind,
+    focusCurrentColumn,
   }));
 
   const itemData = useMemo(
@@ -961,7 +929,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      debugger;
+      
       const updated = applyGridColumnPreferences(formState.gridColumns || columns, pref);
       dispatch(
         formStateHandleFieldChange({ fields: { gridColumns: updated } })
@@ -1137,6 +1105,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
               </tfoot>
             )}
           </table>
+          {/* {JSON.stringify(formState.summary)} */}
         </div>
       </div>
       {dragState.isDragging && dragState.draggedColumn && (

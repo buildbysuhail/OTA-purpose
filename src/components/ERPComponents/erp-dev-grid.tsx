@@ -939,7 +939,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       return result;
     }
-      debugger;
+      
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
         // Handle conditional expressions using '&&'

@@ -479,7 +479,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
-       debugger;
+       
         const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
@@ -631,7 +631,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   formStateHandleFieldChangeKeysOnly({
                     fields: {
                       formElements: {
-                        productSearchPopupWindow: { visible: false },
+                        productSearchPopupWindow: { visible: false, data:"" },
                       },
                     },
                   })

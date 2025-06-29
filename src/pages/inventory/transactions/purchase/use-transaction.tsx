@@ -52,8 +52,8 @@ import {
   TransactionDetail,
   SummaryItems,
   CommonParams,
-  LoadProductDetailsByAutoBarcode,
   LoadProductDetailsByAutoBarcodeProps,
+  DataAutoBarcode,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -88,6 +88,7 @@ export const useTransaction = (
   btnSaveRef: any,
   btnAddRef: any,
   focusToNextColumn:(rowIndex: number, column: string) => void,
+  focusCurrentColumn:(rowIndex: number, column: string) => void,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
   masterAccountRef?: any,
@@ -2289,11 +2290,11 @@ const loadProductDetailsByAutoBarcode = async (
  } = commonParams;
 
  try {
-  debugger;
-  let detail = {...formState.transaction?.details?.find(x => x?.slNo == data.slNo)};
+  
+  let detail = data.detail;
   let outDetail: DeepPartial<TransactionDetail> = {};
   
-  outDetail.slNo = data.slNo;
+  outDetail.slNo = detail.slNo;
   outDetail.warehouseID = detail.warehouseID
   outDetail.salesPrice = detail.salesPrice
   outDetail.unitID = detail.unitID
@@ -2320,6 +2321,7 @@ const loadProductDetailsByAutoBarcode = async (
     return 0;
   }
 })();
+
    let payload = {
   useProductCode: data.useProductCode,
   productCode: data.productCode,
@@ -2338,7 +2340,7 @@ Object.entries(payload).forEach(([key, value]) => {
     queryParams.append(key, value as any);
   }
 });
-   const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
+   const res: DataAutoBarcode  = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
 debugger;
     if (res?.isShowItemPopUp) {
        dispatch(
@@ -2366,7 +2368,7 @@ debugger;
    outDetail.product = product.productName;
    outDetail.productID = product.productID;
    outDetail.barCode = product.autoBarcode;
-   outDetail.manualBarcode = product.mannualBarcode;
+   outDetail.manualBarcode = product.manualBarcode;
    outDetail.productBatchID = product.productBatchID;
 
    // Set default quantity if configured
@@ -2389,21 +2391,21 @@ debugger;
    outDetail.productDescription = product.serialNumber;
    outDetail.warranty = product.warranty;
    outDetail.location = product.location;
-   outDetail.arabicName = product.itemNameInSecondLanguage;
+   outDetail.arabicName = product.itemNameinSecondLanguage;
    outDetail.colour = product.colour;
+   outDetail.multiFactor = product.multiFactor;
+   debugger;
    // Handle Unit2 barcode
-   if (product.isUnit2Barcode) {
+   if (product.isUnit2BarCode) {
      outDetail.unit = product.unit2;
      outDetail.unitID = product.unit2ID;
-     product.multiFactor = Number(product.unit2Qty || 0);
      outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
    }
 
    // Handle Unit3 barcode
-   if (product.isUnit3Barcode) {
+   if (product.isUnit3BarCode) {
      outDetail.unit = product.unit3;
      outDetail.unitID = product.unit3ID;
-     product.multiFactor = Number(product.unit3Qty || 0);
      outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
    }
 
@@ -2423,18 +2425,18 @@ debugger;
 
    // Handle supplier reference code
    if (formState.userConfig?.useSupplierProductCode) {
-     outDetail.supplierReferenceProductCode = product.SupplierReferenceProductCode;
+     outDetail.supplierReferenceProductCode = product.supplierReferenceProductCode;
    }
 
    // Handle default purchase unit
    if (Number(product.defPurchaseUnitID || 0) > 0 && 
-       !product.multiUnitBarcode && 
+       !product.isMultiUnitBarCode && 
        product.basicUnitID !== product.defPurchaseUnitID && 
-       product.basicUnitBarcode) {
+       product.isBasicUnitBarcode) {
      
      if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
        outDetail.unit = product.defUnitName;
-       product.multiFactor = product.defUnitMultiFactor ;
+       outDetail.multiFactor = product.defUnitMultiFactor ;
      }
      outDetail.unitID = product.defPurchaseUnitID;
    }
@@ -2447,17 +2449,17 @@ debugger;
    
    // Set MRP
    outDetail.mrp = round(product.mrp);
-
+debugger;
    // Calculate pricing based on multi-factor
-   if (product.multiFactor > 0) {
+   if (outDetail.multiFactor > 0) {
      const pPrice = Number(product.stdPurchasePrice || 0);
-     outDetail.unitPrice = pPrice * product.multiFactor;
+     outDetail.unitPrice = pPrice * outDetail.multiFactor;
 
      const sPrice = Number(product.stdSalesPrice || 0);
-     outDetail.salesPrice = sPrice * product.multiFactor;
+     outDetail.salesPrice = sPrice * outDetail.multiFactor;
 
      const minSPrice = Number(product.minSalePrice || 0);
-     outDetail.minSalePrice = minSPrice * product.multiFactor;
+     outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
    } else {
      outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
      outDetail.salesPrice = round(product.stdSalesPrice || 0);
@@ -2471,7 +2473,7 @@ debugger;
 
 
    // Handle listed product prices
-   if (product.listedProductPrice != -10000) {
+   if (product.hasListedProductPrice) {
     outDetail.unitPrice = product.listedProductPrice;
    }
 
@@ -2513,10 +2515,14 @@ debugger;
          disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
        }
    };
-
+debugger;
     commonParams.formStateHandleFieldChangeKeysOnly &&
        dispatch &&
        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
+       debugger;
+       if(data.setFocusToNextColumn) {
+        focusToNextColumn(data.rowIndex, data.searchColumn);
+       }
        return result;
     } else if (res?.products?.length > 1) {
       // Multiple products
@@ -2575,32 +2581,32 @@ const handleTextDataKeyDown = async (
        }
        break;
 
-     case ' ': // Space key
-       if (columnName === "qty") {
-         await handleUnitCycling(detail, rowIndex, commonParams, applicationSettings);
-         return { handled: true };
-       }
-       break;
+    //  case ' ': // Space key
+    //    if (columnName === "qty") {
+    //      await handleUnitCycling(detail, rowIndex, commonParams, applicationSettings);
+    //      return { handled: true };
+    //    }
+    //    break;
 
      case 'F2':
        if (isShiftPressed) {
          if (columnName === "barCode" || columnName === "pCode") {
           dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: { showPcode: true } }));
-           uiCallbacks.onShowItemListSearch(columnName);
-           return { handled: true };
+          //  uiCallbacks.onShowItemListSearch(columnName);
+          //  return { handled: true };
          }
        } 
        break;
 
      case 'Enter':
-      debugger;
+      
        if(columnName == "pCode") {
        
                let data = {...formState.transaction.details[rowIndex]};
                data.pCode = value;
                if(!isNullOrUndefinedOrEmpty(value)) {
                  loadProductDetailsByAutoBarcode(
-                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.pCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
+                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.pCode,detail:data,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{},formStateHandleFieldChangeKeysOnly})
                } else {
                
                  focusToNextColumn(rowIndex, columnName);
@@ -2612,19 +2618,19 @@ const handleTextDataKeyDown = async (
                let data = {...formState.transaction.details[rowIndex]};
                data.barCode = value;
                if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,slNo:data.slNo,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{}})
+                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,detail:data,useProductCode: false,rowIndex:rowIndex,searchColumn: "barCode", setFocusToNextColumn: true},{result:{}, formStateHandleFieldChangeKeysOnly})
                } else {
                
                  focusToNextColumn(rowIndex, columnName);
                }
         } else if(columnName == "unitPriceFC") {
           if ((() => { try { return parseFloat(value ?? "0"); } catch { return 0; } })() === 0) { 
-            debugger;
+            
             event.preventDefault()
              const confirm = await ERPAlert.show({
               icon: "info",
-              title: t("stock_update_warning"),
-              text: t("stock_already_updated_warning"),
+              title: t("warning"),
+              text: t("Unit Price Zero, Do you Want to Continue"),
               confirmButtonText: t("yes"),
               cancelButtonText: t("no"),
               showCancelButton: true,
@@ -2634,10 +2640,49 @@ const handleTextDataKeyDown = async (
               focusToNextColumn(rowIndex, columnName);
               break
             } else {
-
+              
+focusCurrentColumn(rowIndex, columnName);
             }
           }
-        } else {
+        } else if(columnName == "margin" || columnName == "salesPrice") {
+          
+           let data = {...formState.transaction.details[rowIndex]};
+               data.margin = columnName == "margin" ? value : data.margin;
+               data.salesPrice = columnName == "salesPrice" ? value: data.salesPrice;
+
+               calculateRowAmount(data, columnName, {result: { transaction: {
+                details:[data]
+               }}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})
+
+               if(applicationSettings.inventorySettings.showRateWarning.toUpperCase() == "WARN" && data.salesPrice > 0) {
+                if(data.unitPrice > data.salesPrice) {
+                  
+            event.preventDefault()
+                   const confirm = await ERPAlert.show({
+                    icon: "info",
+                    title: t("warning"),
+                    text: t("Sales Price Less than Purchase Price, Do you Want to Continue"),
+                    confirmButtonText: t("yes"),
+                    cancelButtonText: t("no"),
+                    showCancelButton: true,
+                    onCancel: () =>{return false},
+                  });
+                  if (confirm) {
+                    focusToNextColumn(rowIndex, columnName);
+                    break
+                  } else {
+                    focusCurrentColumn(rowIndex, columnName);
+                  }
+                }
+               }
+               else if(applicationSettings.inventorySettings.showRateWarning.toUpperCase() == "BLOCK" && data.salesPrice > 0) {
+                if(data.unitPrice > data.salesPrice) {
+                  focusCurrentColumn(rowIndex, columnName);
+                }
+               }
+
+        }
+        else {
           focusToNextColumn(rowIndex, columnName);
         }
 

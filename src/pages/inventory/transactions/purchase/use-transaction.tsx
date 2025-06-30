@@ -586,18 +586,18 @@ export const useTransaction = (
     }
 
     // Cost centre validation
-    if (
-      applicationSettings.accountsSettings.maintainCostCenter &&
-      isNullOrUndefinedOrZero(master.costCentreID)
-    ) {
-      await ERPAlert.show({
-        icon: "error",
-        title: t("validation_error"),
-        text: t("select_valid_cost_centre"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
-    }
+    // if (
+    //   applicationSettings.accountsSettings.maintainCostCenter &&
+    //   isNullOrUndefinedOrZero(master.costCentreID)
+    // ) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("validation_error"),
+    //     text: t("select_valid_cost_centre"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
 
     // Grand total check
     if (master.grandTotal < 0) {
@@ -650,30 +650,30 @@ export const useTransaction = (
     // }
 
     // Party selection check
-    if (!master.ledgerID) {
-      await ERPAlert.show({
-        icon: "error",
-        title: t("invalid_party"),
-        text: t("select_cash_or_party"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
-    }
+    // if (!master.ledgerID) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("invalid_party"),
+    //     text: t("select_cash_or_party"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
 
-    // Reference number validation
-    if (
-      applicationSettings.inventorySettings
-        .isReferenceNumberMandatoryInPurchase &&
-      !master.purchaseInvoiceNumber
-    ) {
-      await ERPAlert.show({
-        icon: "error",
-        title: t("reference_number_required"),
-        text: t("reference_number_not_entered"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
-    }
+    // // Reference number validation
+    // if (
+    //   applicationSettings.inventorySettings
+    //     .isReferenceNumberMandatoryInPurchase &&
+    //   !master.purchaseInvoiceNumber
+    // ) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("reference_number_required"),
+    //     text: t("reference_number_not_entered"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
 
     // if (master.purchaseInvoiceNumber) {
     //   const refExists = await checkReferenceNumberExists(master);
@@ -2503,11 +2503,11 @@ debugger;
               btnBarcode_Click(null, null);
               dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           }
-          else if (columnName == "btnPrintBarcodeStd")
-          {
-              btnBarcodeStd_Click(null, null);
-              dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
-          }
+          // else if (columnName == "btnPrintBarcodeStd")
+          // {
+          //     btnBarcodeStd_Click(null, null);
+          //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
+          // }
           else if (columnName == "BD")
           {
               ShowBatchForm();

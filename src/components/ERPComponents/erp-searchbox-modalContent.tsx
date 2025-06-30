@@ -28,6 +28,7 @@ import Urls from "../../redux/urls";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { useDispatch } from "react-redux";
 import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
+import { generateUniqueKey } from "../../utilities/Utils";
 
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
@@ -86,7 +87,7 @@ const ProductModalGrid = ({
         if (selectedRowsData.length > 0) {
           const res = {
             items: selectedRowsData,
-            key: crypto.randomUUID(),
+            key: generateUniqueKey(),
             rowIndex
           };
 

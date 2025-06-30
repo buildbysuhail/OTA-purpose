@@ -40,6 +40,7 @@ import {
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
+import { generateUniqueKey } from "../../../utilities/Utils";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -244,6 +245,9 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         style={{
           fontSize: `${gridFontSize}px`,
           fontWeight: gridIsBold ? "bold" : "normal",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
         value={localValue}
         noBorder
@@ -458,9 +462,15 @@ const Row = React.memo(
                 {
                 column.dataField === "slNo" ? (
                    <span
+                   className="px-1"
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     
@@ -510,7 +520,7 @@ const Row = React.memo(
                         productCode: data.productCode,
                         useProductCode: column.dataField === "pCode",
                         searchText: rowValue,
-                        key: crypto.randomUUID(),
+                        key: generateUniqueKey(),
                       };
                       dispatch(
                         formStateHandleFieldChange({
@@ -524,10 +534,16 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
+                    className="px-1 cursor-default"
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    // className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>
@@ -541,6 +557,11 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -590,10 +611,16 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    // className="w-full h-full flex items-center px-1 cursor-default"
+                    className="px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>
@@ -700,7 +727,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     onChange,
     gridId,
     className = "",
-    rowHeight = 24,
+    rowHeight = 35,
     height = 800,
     allowColumnReordering = true,
     summaryConfig = [],

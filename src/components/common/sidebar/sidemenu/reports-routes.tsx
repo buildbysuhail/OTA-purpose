@@ -121,38 +121,45 @@ const SalesmanIncentiveReport = lazy(() => import("../../../../pages/inventory/r
 const PrivilegeCardReport = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/privilege-card-report/privilege-card-report"));
 const StockJournalReport = lazy(() => import("../../../../pages/inventory/reports/stock-journal-reports/stock-journal-report/stock-journal"));
 
+const BranchTransferOutIn = lazy(() => import("../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-out-in"));
+const BranchTransferSummary = lazy(() => import("../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-summary"));
+
+const DiagnosisDynamicReport = lazy(() => import("../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-dynamic"));
+const DiagnosisReportDuplicateVouchers = lazy(() => import("../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-duplicate-vouchers"));
+const DiagnosisReportBarcodeRepeat = lazy(() => import("../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-barcode-repeat"));
+const DiagnosisReportInvalidProducts = lazy(() => import("../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-invalid-products"));
+
+const FastMovingProductsReport = lazy(() => import("../../../../pages/inventory/reports/advanced-reports/fast-moving-products/fast-moving-products"));
+const UnsoldProductReport = lazy(() => import("../../../../pages/inventory/reports/advanced-reports/unsold-products/unsold-products"));
+
+const ItemWiseGroupedBrandwiseSales = lazy(() => import("../../../../pages/inventory/reports/itemwise-reports/itemwise-grouped-brandwise-sales/itemwise-grouped-brandwise-sales"));
+
+const DailyBalanceReport = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/daily-balance/daily-balance-report"));
+
+const GSTDailySummary = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-daily-summary-report"));
+const ReturnTaxGSTSalesAndReturn = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/return-tax-gst-sales-and-return-report"));
+const GSTTaxwise = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-taxwise-report"));
+const GSTTaxwiseWithHSN = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-taxwise-with-hsn-report"));
+const GSTMonthlySummary = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-monthly-summary-report"));
+const GSTDetailed = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-detailed-report"));
+const GSTRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-register-format-report"));
+const GSTAdvRegisterFormat = lazy(() => import("../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-adv-register-format-report"));
+
+const NetSalesReport = lazy(() => import("../../../../pages/inventory/reports/sales-reports/net-sales-report/net-sales"));
+const SalesAndSalesReturn = lazy(() => import("../../../../pages/inventory/reports/sales-reports/sales-and-sales-return-report/sales-and-sales-return"));
+const DaywiseSummaryWithProfit = lazy(() => import("../../../../pages/inventory/reports/sales-reports/daywise-summary-with-profit-report/daywise-summary-with-profit"));
+const GroupwiseSalesSummaryDevexpress = lazy(() => import("../../../../pages/inventory/reports/sales-reports/groupwise-sales-summary/groupwise-sales-summary-devexpress"));
+const GroupwiseSalesSummary = lazy(() => import("../../../../pages/inventory/reports/sales-reports/groupwise-sales-summary/groupwise-sales-summary"));
+const NonInvoicedGoodsDelivery = lazy(() => import("../../../../pages/inventory/reports/sales-reports/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery"));
+const SalesmanwiseSalesAndCollection = lazy(() => import("../../../../pages/inventory/reports/sales-reports/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection"));
+const PromotionalSalesReport = lazy(() => import("../../../../pages/inventory/reports/sales-reports/promotional-sales-report/promotional-sales"));
+const GroupedBrandwiseSales = lazy(() => import("../../../../pages/inventory/reports/sales-reports/grouped-brandwise-sales-report/grouped-brandwise-sales"));
+const CouponReports = lazy(() => import("../../../../pages/inventory/reports/sales-reports/other-reports/coupon-report/coupon-report"));
+const SchemeWiseSales = lazy(() => import("../../../../pages/inventory/reports/sales-reports/other-reports/scheme-wise-sales-report/scheme-wise-sales"));
+
 import urls from "../../../../redux/urls";
 import GridId from "../../../../redux/gridId";
-import BranchTransferOutIn from "../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-out-in";
-import BranchTransferSummary from "../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-summary";
-import DiagnosisDynamicReport from "../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-dynamic";
-import DiagnosisReportDuplicateVouchers from "../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-duplicate-vouchers";
-import DiagnosisReportBarcodeRepeat from "../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-barcode-repeat";
-import DiagnosisReportInvalidProducts from "../../../../pages/inventory/reports/diagnosis-reports/diagnosis-report-invalid-products";
-import FastMovingProductsReport from "../../../../pages/inventory/reports/advanced-reports/fast-moving-products/fast-moving-products";
-import UnsoldProductReport from "../../../../pages/inventory/reports/advanced-reports/unsold-products/unsold-products";
-import ItemWiseGroupedBrandwiseSales from "../../../../pages/inventory/reports/itemwise-reports/itemwise-grouped-brandwise-sales/itemwise-grouped-brandwise-sales";
-import DailyBalanceReport from "../../../../pages/inventory/reports/other-inventory-reports/daily-balance/daily-balance-report";
-import GSTDailySummary from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-daily-summary-report";
-import ReturnTaxGSTSalesAndReturn from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/return-tax-gst-sales-and-return-report";
-import GSTTaxwise from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-taxwise-report";
-import GSTTaxwiseWithHSN from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-taxwise-with-hsn-report";
-import GSTMonthlySummary from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-monthly-summary-report";
-import GSTDetailed from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-detailed-report";
-import GSTRegisterFormat from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-register-format-report";
-import GSTAdvRegisterFormat from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/gst-adv-register-format-report";
-import NetSalesReport from "../../../../pages/inventory/reports/sales-reports/net-sales-report/net-sales";
-import SalesAndSalesReturn from "../../../../pages/inventory/reports/sales-reports/sales-and-sales-return-report/sales-and-sales-return";
-import DaywiseSummaryWithProfit from "../../../../pages/inventory/reports/sales-reports/daywise-summary-with-profit-report/daywise-summary-with-profit";
-import GroupwiseSalesSummaryDevexpress from "../../../../pages/inventory/reports/sales-reports/groupwise-sales-summary/groupwise-sales-summary-devexpress";
-import GroupwiseSalesSummary from "../../../../pages/inventory/reports/sales-reports/groupwise-sales-summary/groupwise-sales-summary";
-import NonInvoicedGoodsDelivery from "../../../../pages/inventory/reports/sales-reports/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery";
-import SalesmanwiseSalesAndCollection from "../../../../pages/inventory/reports/sales-reports/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection";
-import PromotionalSalesReport from "../../../../pages/inventory/reports/sales-reports/promotional-sales-report/promotional-sales";
-import GroupedBrandwiseSales from "../../../../pages/inventory/reports/sales-reports/grouped-brandwise-sales-report/grouped-brandwise-sales";
 import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/sales-reports/groupwise-sales-summary/groupwise-sales-summary-filter";
-import CouponReports from "../../../../pages/inventory/reports/sales-reports/other-reports/coupon-report/coupon-report";
-import SchemeWiseSales from "../../../../pages/inventory/reports/sales-reports/other-reports/scheme-wise-sales-report/scheme-wise-sales";
 export interface NavigationItem {
   id: number;
   path: string;

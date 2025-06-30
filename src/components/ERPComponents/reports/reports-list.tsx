@@ -40,7 +40,10 @@ const ReportList = () => {
   
     const { hasRight} = useUserRights();
     let clientSession = useAppSelector((state: RootState) => state.ClientSession);
-  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession, hasRight) as any);
+     let applicationSettings = useAppSelector(
+        (state: RootState) => state.ApplicationSettings
+      );
+  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession,applicationSettings, hasRight) as any);
   let sds = jwtHelper.getLoggedInUserRole();
   const preloadComponents = () => {};
 

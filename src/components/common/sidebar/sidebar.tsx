@@ -142,7 +142,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       setMenuitems(st);
     } else if (type == "reports") {      
       let st = menuitems;
-      setMenuitems(getFilteredReports(st, clientSession, hasRight));
+      setMenuitems(getFilteredReports(st, clientSession,applicationSettings, hasRight));
     } else if (type == "erp") {
       let st: [] = [];
 

@@ -1,7 +1,8 @@
 import { UserAction } from "../../../helpers/user-right-helper";
+import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
 import { ClientSessionModel } from "../../../redux/slices/client-session/reducer";
 
-export const getFilteredReports = (st: any, clientSession: ClientSessionModel, hasRight: (formCode: string, action: UserAction) => boolean) => {
+export const getFilteredReports = (st: any, clientSession: ClientSessionModel,applicationSettings:ApplicationSettingsType, hasRight: (formCode: string, action: UserAction) => boolean) => {
   
   if (clientSession.isAppGlobal) {
           const excluded = [
@@ -20,32 +21,51 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "billwise_profit_report",
             
             "void_report",
-          
-          
           ];
-            
+                const excludedAutoSyncSIandPI_BT=[ 
+            "sales_transfer_summary",
+            "sales_transfer_register",
+            "net_sales_transfer_report",
+            "sales_transfer_partyWise_sales",
+            "sales_transfer_monthWise_summary",
+            "sales_transfer_partyWise_summary",
+          ]
+          const excludedEnableAddStockAdjustment=[
+            "excess_stock_sp",
+            "shortage_stock_sp",
+          ]
           st = st
-            .filter((parent: any) => !excluded.includes(parent.title))
-            .map((parent: any) => {
-              const filteredChildren = parent.children?.filter(
-                (child: any) => !excluded.includes(child.title)
-              ).map((x:any)=>{
-              return {
-                ...x,
-                title:x.title.includes("___")?x.title.replace("___",""):x.title 
-              }
-            });
-              return {
-                ...parent,
-                children: filteredChildren,
-              };
-            })
-            .filter((parent: any) => parent.children?.length > 0).map((x:any)=>{
-              return {
-                ...x,
-                title:x.title.includes("___")?x.title.replace("___",""):x.title 
-              }
-            });
+       .filter((parent: any) => {
+    const isExcluded = excluded.includes(parent.title);
+    const isAutoSyncExcluded = !applicationSettings.miscellaneousSettings.autoSyncSIandPI_BT &&
+      excludedAutoSyncSIandPI_BT.includes(parent.title);
+    const isStockAdjustmentExcluded = !applicationSettings.inventorySettings.enableAddStockAdjustment &&
+      excludedEnableAddStockAdjustment.includes(parent.title);
+    return !isExcluded && !isAutoSyncExcluded && !isStockAdjustmentExcluded;
+  })
+  .map((parent: any) => {
+    const filteredChildren = parent.children?.filter((child: any) => {
+      const isExcluded = excluded.includes(child.title);
+      const isAutoSyncExcluded = !applicationSettings.miscellaneousSettings.autoSyncSIandPI_BT &&
+        excludedAutoSyncSIandPI_BT.includes(child.title);
+      const isStockAdjustmentExcluded = !applicationSettings.inventorySettings.enableAddStockAdjustment &&
+        excludedEnableAddStockAdjustment.includes(child.title);
+      return !isExcluded && !isAutoSyncExcluded && !isStockAdjustmentExcluded;
+    }).map((x: any) => ({
+      ...x,
+      title: x.title.includes("___") ? x.title.replace("___", "") : x.title,
+    }));
+
+    return {
+      ...parent,
+      children: filteredChildren,
+    };
+  })
+  .filter((parent: any) => parent.children?.length > 0)
+  .map((x: any) => ({
+    ...x,
+    title: x.title.includes("___") ? x.title.replace("___", "") : x.title,
+  }));
             return st;
         } else {
           const excluded = [
@@ -99,8 +119,10 @@ export const getFilteredReports = (st: any, clientSession: ClientSessionModel, h
             "products_with_price_categories",
             "zero_mrp_product_list___"
           ];
+      
           st = st
-            .filter((parent: any) => !excluded.includes(parent.title))
+            .filter((parent: any) => !excluded.includes(parent.title)
+          )
             .map((parent: any) => {
               const filteredChildren = parent.children?.filter(
                 (child: any) => !excluded.includes(child.title) && hasRight(child.formCode, child.action)

@@ -245,6 +245,9 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         style={{
           fontSize: `${gridFontSize}px`,
           fontWeight: gridIsBold ? "bold" : "normal",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
         value={localValue}
         noBorder
@@ -459,9 +462,15 @@ const Row = React.memo(
                 {
                 column.dataField === "slNo" ? (
                    <span
+                   className="px-1"
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     
@@ -525,10 +534,16 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
+                    className="px-1 cursor-default"
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    // className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>
@@ -542,6 +557,11 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -591,10 +611,16 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
                     }}
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    // className="w-full h-full flex items-center px-1 cursor-default"
+                    className="px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>

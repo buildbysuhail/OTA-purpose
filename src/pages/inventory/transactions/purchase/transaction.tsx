@@ -230,7 +230,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
     }
   };
-  const handleKeyDown = (e: any, field: string, rowIndex: number) => {};
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => {
@@ -310,7 +310,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightWindows = wh - 470;
+    let gridHeightWindows = wh - 420;
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
 
@@ -694,136 +694,142 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   useEffect(() => {
-    
+
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
-      if(data.rowIndex < 0) {
+      if (data.rowIndex < 0) {
         return;
       }
-      const baseDetail = {...formState.transaction.details[data.rowIndex]}
-       loadProductDetailsByAutoBarcode(
-                  {productCode:data.productCode,autoBarcode:data.autoBarcode
-                    ,productBatchID:data.productBatchID, searchText:data.searchText,detail:baseDetail
-                    ,useProductCode: data.useProductCode,rowIndex:data.rowIndex
-                    ,searchColumn: data.useProductCode ?"pCode": "product", setFocusToNextColumn: true},{result:{}, formStateHandleFieldChangeKeysOnly})
-      
+      const baseDetail = { ...formState.transaction.details[data.rowIndex] }
+      loadProductDetailsByAutoBarcode(
+        {
+          productCode: data.productCode, autoBarcode: data.autoBarcode
+          , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
+          , useProductCode: data.useProductCode, rowIndex: data.rowIndex
+          , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
+        }, { result: {}, formStateHandleFieldChangeKeysOnly })
+
     }
   }, [formState.batchSelectionData]);
-useEffect(() => {
-        
-  const fetchData = async () => {
-    try {
-      
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+
         if (formState.popupSearchSelectionData != "") {
-      const data = JSON.parse(formState.popupSearchSelectionData);
+          const data = JSON.parse(formState.popupSearchSelectionData);
 
-      if (data.items && data.items.length > 0) {
-        const rowIndex = data.rowIndex;
-        const searchColumn = data.searchColumn;
-        const searchText = data.searchText;
-        const items = data.items;
-        const baseRowData = formState.transaction.details[rowIndex];
-        let currentDetails = [
-          ...formState.transaction.details.filter((x) => x.productID > 0),
-        ];
-        if(currentDetails.find(x => x.slNo == baseRowData.slNo) == undefined) {
-          currentDetails.push(baseRowData)
-        }
-        let res: DeepPartial<TransactionFormState> = {};
-        let addDetails: TransactionDetail[] = [];
+          if (data.items && data.items.length > 0) {
+            const rowIndex = data.rowIndex;
+            const searchColumn = data.searchColumn;
+            const searchText = data.searchText;
+            const items = data.items;
+            const baseRowData = formState.transaction.details[rowIndex];
+            let currentDetails = [
+              ...formState.transaction.details.filter((x) => x.productID > 0),
+            ];
+            if (currentDetails.find(x => x.slNo == baseRowData.slNo) == undefined) {
+              currentDetails.push(baseRowData)
+            }
+            let res: DeepPartial<TransactionFormState> = {};
+            let addDetails: TransactionDetail[] = [];
 
-          for (const [index, item] of items.entries()) {
-            
-          const input = {barCode: item.autoBarcode, productBatchID: item.productBatchID,warehouseID: item.warehouseID, warehouseName: item.warehouse};
-          if (index == 0) {
-            const rowData: TransactionDetail = { ...baseRowData, ...input};
-            const autBarcodeRes = await loadProductDetailsByAutoBarcode(
-              {autoBarcode:rowData.barCode
-                ,productBatchID: rowData.productBatchID
-                , rowIndex: rowIndex
-                , searchColumn: searchColumn
-                , searchText: rowData.barCode
-                , detail: rowData,
-              productCode:"",
-            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
+            for (const [index, item] of items.entries()) {
+
+              const input = { barCode: item.autoBarcode, productBatchID: item.productBatchID, warehouseID: item.warehouseID, warehouseName: item.warehouse };
+              if (index == 0) {
+                const rowData: TransactionDetail = { ...baseRowData, ...input };
+                const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+                  {
+                    autoBarcode: rowData.barCode
+                    , productBatchID: rowData.productBatchID
+                    , rowIndex: rowIndex
+                    , searchColumn: searchColumn
+                    , searchText: rowData.barCode
+                    , detail: rowData,
+                    productCode: "",
+                    useProductCode: false, setFocusToNextColumn: false
+                  }, { result: { transaction: { details: [rowData] } } })
 
 
-const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
-const mergedRowData: TransactionDetail = {
-    ...rowData,
-    ...latestData
-};
-            currentDetails[rowIndex] = mergedRowData;
-            res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
-             if(res?.transaction?.details && res?.transaction?.details.length > 0) {
-         currentDetails[rowIndex] = res.transaction.details[0] as TransactionDetail
-          }
-          } else {
-            let rowData: DeepPartial<TransactionDetail> = {
-              ...input
+                const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const mergedRowData: TransactionDetail = {
+                  ...rowData,
+                  ...latestData
+                };
+                currentDetails[rowIndex] = mergedRowData;
+                res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: { transaction: { details: [mergedRowData] } } }, true);
+                if (res?.transaction?.details && res?.transaction?.details.length > 0) {
+                  currentDetails[rowIndex] = res.transaction.details[0] as TransactionDetail
+                }
+              } else {
+                let rowData: DeepPartial<TransactionDetail> = {
+                  ...input
+                };
+                rowData.slNo = generateUniqueKey()
+
+                const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+                  {
+                    autoBarcode: rowData.barCode ?? ""
+                    , productBatchID: rowData.productBatchID ?? 0
+                    , rowIndex: rowIndex
+                    , searchColumn: searchColumn
+                    , searchText: rowData.barCode ?? ""
+                    , detail: rowData as TransactionDetail,
+                    productCode: "",
+                    useProductCode: false, setFocusToNextColumn: false
+                  }, { result: { transaction: { details: [rowData] } } })
+
+                const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const mergedRowData: TransactionDetail = {
+                  ...rowData as TransactionDetail,
+                  ...latestData
+                };
+
+                let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: { transaction: { details: [mergedRowData] } } }, true);
+
+                if (_res?.transaction?.details && _res?.transaction?.details.length > 0) {
+                  addDetails.push(_res!.transaction!.details![0] as TransactionDetail);
+                }
+              }
             };
-            rowData.slNo = generateUniqueKey()
-            
-             const autBarcodeRes = await loadProductDetailsByAutoBarcode(
-              {autoBarcode:rowData.barCode??""
-                ,productBatchID: rowData.productBatchID??0
-                , rowIndex: rowIndex
-                , searchColumn: searchColumn
-                , searchText: rowData.barCode??""
-                , detail: rowData as TransactionDetail,
-              productCode:"",
-            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
 
-            const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
-const mergedRowData: TransactionDetail = {
-    ...rowData as TransactionDetail,
-    ...latestData
-};
+            let final = [...currentDetails, ...addDetails];
+            const summaryRes = calculateSummary(final, formState, { result: {} });
 
-          let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
-         
-          if(_res?.transaction?.details && _res?.transaction?.details.length > 0) {
-          addDetails.push(_res!.transaction!.details![0] as TransactionDetail);
+            const totalRes = calculateTotal(
+              formState.transaction.master,
+              summaryRes.summary as SummaryItems,
+              formState.formElements,
+              { result: {} }
+            );
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  ...totalRes,
+                  summary: summaryRes.summary,
+                  showQuantityFactors: { visible: false, rowIndex: -1 },
+                  transaction: {
+                    ...totalRes.transaction,
+                    details: res.transaction?.details,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+                rowIndex: rowIndex,
+                itemsToAddToDetails: addDetails,
+              })
+            );
           }
+
         }
-        };
-
-        let final = [...currentDetails, ...addDetails];
-        const summaryRes = calculateSummary(final, formState, { result: {} });
-
-        const totalRes = calculateTotal(
-          formState.transaction.master,
-          summaryRes.summary as SummaryItems,
-          formState.formElements,
-          { result: {} }
-        );
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {
-              ...totalRes,
-              summary: summaryRes.summary,
-              showQuantityFactors: { visible: false, rowIndex: -1 },
-              transaction: {
-                ...totalRes.transaction,
-                details: res.transaction?.details,
-              },
-            },
-            updateOnlyGivenDetailsColumns: true,
-            rowIndex: rowIndex,
-            itemsToAddToDetails: addDetails,
-          })
-        );
+      } catch (error) {
+        console.error(error);
       }
-      
-    }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  fetchData();
-}, [formState.popupSearchSelectionData]);
- 
+    fetchData();
+  }, [formState.popupSearchSelectionData]);
+
   useEffect(() => {
     if (formState.quantityFactorData != "") {
       const data = JSON.parse(formState.quantityFactorData);
@@ -849,8 +855,8 @@ const mergedRowData: TransactionDetail = {
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
           res = calculateRowAmount(rowData, "qty", { result: {} }, true);
-          if(res?.transaction?.details && res?.transaction?.details.length > 0) {
-          addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+          if (res?.transaction?.details && res?.transaction?.details.length > 0) {
+            addDetails.push(res!.transaction!.details![0] as TransactionDetail);
           }
         }
       });
@@ -1239,7 +1245,7 @@ const mergedRowData: TransactionDetail = {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy"
       },
       {
         dataField: "expDate",
@@ -1250,7 +1256,7 @@ const mergedRowData: TransactionDetail = {
         allowFiltering: true,
         width: 100,
         readOnly: true,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy"
       },
       {
         dataField: "expDays",
@@ -1897,7 +1903,7 @@ const mergedRowData: TransactionDetail = {
     ApplicationMainSettingsInitialState
   );
 
-  const handleChange = (selectedOption: { value: string; label: string }) => {};
+  const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -2098,6 +2104,7 @@ const mergedRowData: TransactionDetail = {
               gridIsBold={formState.userConfig?.gridIsBold}
               rowHeight={formState.userConfig?.gridRowHeight}
               gridBorderColor={formState.userConfig?.gridBorderColor}
+              gridHeaderBg={formState.userConfig?.gridHeaderBg}
             />
           </div>
           {formState.showSaveDialog && (
@@ -2196,7 +2203,7 @@ const mergedRowData: TransactionDetail = {
             <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
               <div className="space-y-2"></div>
               <ErpPurchaseGrid
-              onChange={handleTextDataChange}
+                onChange={handleTextDataChange}
                 ref={purchaseGridRef}
                 onKeyDown={(
                   value: any,

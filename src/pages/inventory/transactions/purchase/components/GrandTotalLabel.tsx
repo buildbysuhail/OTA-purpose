@@ -1,7 +1,16 @@
-import React from "react";
-import { VoucherElementProps } from "../../purchase/transaction-types";
+import React, { Dispatch } from "react";
+import { TransactionFormState } from "../../purchase/transaction-types";
+import { AnyAction } from "redux";
 
-const GrandTotalLabel: React.FC<VoucherElementProps> = ({ formState, t, }) => {
+export interface GrandTotalProps {
+  formState: TransactionFormState;
+  dispatch: Dispatch<AnyAction>;
+  handleKeyDown?: (e: any, field: string) => void;
+  t: any;
+  showFirstFooter: boolean;
+}
+
+const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t,showFirstFooter }) => {
   return (
     // <ERPLabel
     //   id="grandTotal"
@@ -12,9 +21,9 @@ const GrandTotalLabel: React.FC<VoucherElementProps> = ({ formState, t, }) => {
     //   boxed
     //   textAlign="right"
     // />
-    <div className="flex items-center">
-      <span className="w-20">{t(formState.formElements.grandTotal.label)}</span>
-      <span>:{formState.transaction.master.billDiscount}</span>
+    <div className={showFirstFooter ? "flex items-center" : "flex justify-between items-center"}>
+      <span className={showFirstFooter ? "w-20 text-xs text-gray-600 font-medium" : "text-xs text-gray-600 font-medium"}>{t(formState.formElements.grandTotal.label)}</span>
+      <span className="text-sm font-semibold text-gray-900">: {formState.transaction.master.billDiscount}</span>
     </div>
   );
 };

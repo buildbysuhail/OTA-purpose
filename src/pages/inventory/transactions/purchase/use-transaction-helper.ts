@@ -284,7 +284,7 @@ export const useTransactionHelper = (transactionType: string) => {
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
     let { result } = commonParams;
 
-      debugger;
+      
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
@@ -296,7 +296,7 @@ export const useTransactionHelper = (transactionType: string) => {
     }
 
     try {
-      debugger;
+      
       // Initialize variables with proper null checks and defaults
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);

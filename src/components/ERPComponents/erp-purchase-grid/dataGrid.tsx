@@ -39,7 +39,7 @@ import {
   formStateTransactionDetailsRowUpdate,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
-import useDebounce from "./useDebounce";
+import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -62,6 +62,11 @@ interface DataGridProps<T extends DataItem> {
   height?: number;
   isLoading?: boolean;
   onAddData?: (newItem: T) => void;
+  onChange: (
+    value: any,
+    column: keyof TransactionDetail,
+    rowIndex: number
+  ) => void;
   onKeyDown: (
     value: any,
     e: React.KeyboardEvent<HTMLElement>,
@@ -85,6 +90,11 @@ interface EditableCellProps {
   onKeyDown: (
     e: React.KeyboardEvent<HTMLElement>,
     column: DevGridColumn,
+    rowIndex: number
+  ) => void;
+  onChange: (
+    value: any,
+    column: keyof TransactionDetail,
     rowIndex: number
   ) => void;
   blockUnitOnDecimalPoint: boolean;
@@ -118,6 +128,11 @@ interface RowData {
     column: keyof TransactionDetail,
     rowIndex: number
   ) => void;
+  onChange: (
+    value: any,
+    column: keyof TransactionDetail,
+    rowIndex: number
+  ) => void;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
   advancedProductSearching?: boolean;
@@ -141,6 +156,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     onBlur,
     gridId,
     onKeyDown,
+    onChange,
     productId,
     gridFontSize,
     gridIsBold,
@@ -167,15 +183,9 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       }
       return true;
     };
-const debouncedDispatch = useDebounce(
-      (index: number, key: keyof TransactionDetail, value: string) => {
-        dispatch(
-          formStateTransactionDetailsRowUpdate({
-            index,
-            key,
-            value: column.dataType === "number" ? parseFloat(value) || 0 : value,
-          })
-        );
+    const debounceCellChange = useDebounce(
+      (value: string, key: keyof TransactionDetail, index: number) => {
+        onChange && onChange(value, key, rowIndex);
       },
       300 // 300ms debounce delay
     );
@@ -201,7 +211,11 @@ const debouncedDispatch = useDebounce(
         return;
       }
       setLocalValue(inputValue);
-    debouncedDispatch(rowIndex, column.dataField as keyof TransactionDetail, inputValue);
+      debounceCellChange(
+        inputValue,
+        column.dataField as keyof TransactionDetail,
+        rowIndex
+      );
     };
 
     const handleFocus = () => {
@@ -283,7 +297,6 @@ const Row = React.memo(
         column: DevGridColumn,
         rowIndex: number
       ) => {
-        
         const target = e.target as HTMLElement;
         if (!target.id) return;
         const visibleColumns = data.columns.filter(
@@ -442,13 +455,26 @@ const Row = React.memo(
                   );
                 }}
               >
-                {(column.dataField === "product" ||
+                {
+                column.dataField === "slNo" ? (
+                   <span
+                    style={{
+                      fontSize: `${data.gridFontSize}px`,
+                      fontWeight: data.gridIsBold ? "bold" : "normal",
+                    }}
+                    id={cellId}
+                    
+                  >
+                    {index+1}
+                  </span>
+                ):
+                (column.dataField === "product" ||
                   column.dataField === "pCode") &&
                 !column.readOnly &&
                 data.currentCell?.column === column.dataField &&
                 data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
-                  rowIndex = {index}
+                    rowIndex={index}
                     id={cellId}
                     inputId={`${gridId}_${column.dataField}_${index}`}
                     searchType={
@@ -467,7 +493,9 @@ const Row = React.memo(
                     className="h-[22px] text-sm"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(value,e) => handleKeyDown(value, e, column, index)}
+                    onKeyDown={(value, e) =>
+                      handleKeyDown(value, e, column, index)
+                    }
                     searchKey={column.dataField}
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
@@ -477,11 +505,11 @@ const Row = React.memo(
                       const res = {
                         slNo: item.slNo,
                         rowIndex: index,
-                              productBatchID: data.productBatchID,
-                              autoBarcode: data.autoBarcode,
-                              productCode: data.productCode,
-                              useProductCode: column.dataField === "pCode",
-                              searchText: rowValue,
+                        productBatchID: data.productBatchID,
+                        autoBarcode: data.autoBarcode,
+                        productCode: data.productCode,
+                        useProductCode: column.dataField === "pCode",
+                        searchText: rowValue,
                         key: crypto.randomUUID(),
                       };
                       dispatch(
@@ -502,7 +530,9 @@ const Row = React.memo(
                     className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
+                    onKeyDown={(e) =>
+                      handleKeyDown(cellValue, e, column, index)
+                    }
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -529,7 +559,9 @@ const Row = React.memo(
                     }`}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
+                    onKeyDown={(e) =>
+                      handleKeyDown(cellValue, e, column, index)
+                    }
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -538,6 +570,7 @@ const Row = React.memo(
                   txtData.visible == true ? (
                   <EditableCell
                     productId={productId}
+                    onChange={data.onChange}
                     blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
                     decimalLimit={2}
                     rowIndex={index}
@@ -546,7 +579,9 @@ const Row = React.memo(
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     gridId={gridId}
-                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
+                    onKeyDown={(e) =>
+                      handleKeyDown(cellValue, e, column, index)
+                    }
                     gridFontSize={data.gridFontSize}
                     gridIsBold={data.gridIsBold}
                   />
@@ -561,7 +596,9 @@ const Row = React.memo(
                     className="w-full h-full flex items-center px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(cellValue,e, column, index)}
+                    onKeyDown={(e) =>
+                      handleKeyDown(cellValue, e, column, index)
+                    }
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
@@ -612,7 +649,7 @@ const SummaryRow: React.FC<{
               s.showInColumn === column.dataField ||
               s.column === column.dataField
           );
-          debugger;
+          
           const value = summary
             ? summaryValues[summary.column as string]
             : null;
@@ -660,6 +697,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     keyField,
     transactionType,
     onKeyDown,
+    onChange,
     gridId,
     className = "",
     rowHeight = 24,
@@ -796,7 +834,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
 
   const focusCurrentColumn = useCallback(
     (rowIndex: number, column: string) => {
- const visibleColumns = formState.gridColumns?.filter(
+      const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );
 
@@ -804,14 +842,18 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         (col) => col.allowEditing && col.readOnly !== true
       );
       const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
-      const editable = editableColumns ? editableColumns[currentEditableIndex]: undefined;
+      const editable = editableColumns
+        ? editableColumns[currentEditableIndex]
+        : undefined;
       const targetColumnIndex = visibleColumns?.findIndex(
-            (col) => col.dataField === editable?.dataField
-          );
-if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
-        focusCell(rowIndex, (targetColumnIndex??-1));
+        (col) => col.dataField === editable?.dataField
+      );
+      if (rowIndex >= 0 && (targetColumnIndex ?? -1) >= 0) {
+        focusCell(rowIndex, targetColumnIndex ?? -1);
       }
-    },[formState.gridColumns, focusCell]);
+    },
+    [formState.gridColumns, focusCell]
+  );
   const findCurrentEditableIndex = useCallback(
     (rowIndex: number, column: string) => {
       const visibleColumns = formState.gridColumns?.filter(
@@ -829,11 +871,12 @@ if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
       return !editableColumns
         ? -1
         : editableColumns?.findIndex((col) => col.dataField === column);
-    },[formState.gridColumns, focusCell])
+    },
+    [formState.gridColumns, focusCell]
+  );
 
   const nextCellFind = useCallback(
     (rowIndex: number, column: string) => {
-      
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );
@@ -893,6 +936,13 @@ if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
       ) => {
         onKeyDown(value, e, column, rowIndex);
       },
+      onChange: (
+        value: any,
+        column: keyof TransactionDetail,
+        rowIndex: number
+      ) => {
+        onChange(value, column, rowIndex);
+      },
       transactionType: transactionType ?? formState.transactionType,
       blockUnitOnDecimalPoint:
         applicationState.inventorySettings?.blockUnitOnDecimalPoint,
@@ -929,8 +979,10 @@ if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      
-      const updated = applyGridColumnPreferences(formState.gridColumns || columns, pref);
+      const updated = applyGridColumnPreferences(
+        formState.gridColumns || columns,
+        pref
+      );
       dispatch(
         formStateHandleFieldChange({ fields: { gridColumns: updated } })
       );
@@ -961,7 +1013,7 @@ if (rowIndex >= 0 && (targetColumnIndex??-1) >= 0) {
           <GridPreferenceChooser
             ref={preferenceChooserRef}
             gridId={gridId}
-            columns={formState.gridColumns??[]}
+            columns={formState.gridColumns ?? []}
             onApplyPreferences={onApplyPreferences}
             showChooserOnGridHead
             eclipseClass="m-0 p-0"

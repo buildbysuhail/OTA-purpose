@@ -267,7 +267,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     unlockVoucher,
     handleRefresh,
     createNewVoucher,
-    billwiseChanged,
+    handleTextDataChange,
     focusCostCenterRef,
     focusLedgerCode,
     focusRefNo,
@@ -731,9 +731,9 @@ useEffect(() => {
         }
         let res: DeepPartial<TransactionFormState> = {};
         let addDetails: TransactionDetail[] = [];
-debugger;
+
           for (const [index, item] of items.entries()) {
-            debugger;
+            
           const input = {barCode: item.autoBarcode, productBatchID: item.productBatchID,warehouseID: item.warehouseID, warehouseName: item.warehouse};
           if (index == 0) {
             const rowData: TransactionDetail = { ...baseRowData, ...input};
@@ -747,7 +747,7 @@ debugger;
               productCode:"",
             useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
 
-debugger;
+
 const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
 const mergedRowData: TransactionDetail = {
     ...rowData,
@@ -779,7 +779,7 @@ const mergedRowData: TransactionDetail = {
     ...rowData as TransactionDetail,
     ...latestData
 };
-debugger;
+
           let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
          
           if(_res?.transaction?.details && _res?.transaction?.details.length > 0) {
@@ -787,7 +787,7 @@ debugger;
           }
         }
         };
-debugger;
+
         let final = [...currentDetails, ...addDetails];
         const summaryRes = calculateSummary(final, formState, { result: {} });
 
@@ -796,7 +796,7 @@ debugger;
           summaryRes.summary as SummaryItems,
           formState.formElements,
           { result: {} }
-        );debugger;
+        );
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
@@ -887,12 +887,12 @@ debugger;
     () => [
       {
         dataField: "slNo",
-        caption: t("sl_no"),
+        caption: "",
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 70,
+        width: 40,
         isLocked: true,
         visible: true,
         alignment: "right",
@@ -2082,6 +2082,7 @@ debugger;
           <div className="mt-[123PX]">
             <ErpPurchaseGrid
               ref={purchaseGridRef}
+              onChange={handleTextDataChange}
               onKeyDown={(
                 value: any,
                 e: React.KeyboardEvent<any>,
@@ -2203,6 +2204,7 @@ debugger;
             <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
               <div className="space-y-2"></div>
               <ErpPurchaseGrid
+              onChange={handleTextDataChange}
                 ref={purchaseGridRef}
                 onKeyDown={(
                   value: any,

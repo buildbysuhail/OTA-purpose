@@ -81,7 +81,7 @@ const ProductModalGrid = ({
       e.event?.preventDefault();
       const gridInstance = gridRef.current?.instance();
       if (gridInstance) {
-        debugger;
+        
         const selectedRowsData = gridInstance.getSelectedRowsData();
         if (selectedRowsData.length > 0) {
           const res = {

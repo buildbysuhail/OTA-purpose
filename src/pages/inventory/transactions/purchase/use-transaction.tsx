@@ -68,6 +68,7 @@ import {
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
+import useDebounce from "./use-debounce";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -1884,328 +1885,23 @@ const master = attachMaster(formState);
     //   // Handle error appropriately
     // }
   };
-  const isLedgerBillwiseApplicable = async (ledgerID: number) => {
-    // try {
-    //   return await api.getAsync(
-    //     `${Urls.is_ledger_billwise_applicable}${ledgerID}`
-    //   );
-    // } catch (error) {
-    //   return false;
-    //   // Handle error appropriately
-    // }
-  };
-  const openBillwise = async () => {
-    //   dispatch(
-    //     formStateHandleFieldChange({
-    //       fields: {
-    //         ledgerBillWiseLoading: true,
-    //       },
-    //     })
-    //   );
-    //   const _drcr = getDrCr(formState.transaction.master.voucherType);
-    //   let transactionDetailID = formState.row.transactionDetailID ?? 0;
-    //   switch (formState.transaction.master.voucherType) {
-    //     case "CR":
-    //     case "BR":
-    //     case "CN":
-    //     case "CQR":
-    //     case "PBR":
-    //       if (formState.isEdit && transactionDetailID > 0) {
-    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-    //       }
-    //       break;
-    //     case "JV":
-    //       if (formState.isEdit && transactionDetailID > 0) {
-    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-    //       }
-    //       break;
-    //     case "OB":
-    //       if (
-    //         formState.isEdit &&
-    //         transactionDetailID > 0 &&
-    //         formState.row.drCr.toUpperCase() == "CR"
-    //       )
-    //         transactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
-    //       break;
-    //   }
-    //   const billwise = await api.getAsync(
-    //     `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&TransactionDetailID=${transactionDetailID}`
-    //   );
-    //   if (transactionDetailID > 0) {
-    //     billwise.map((x: BillwiseData) => {
-    //       return {
-    //         ...x,
-    //         balanceAfter: x.balance - x.billwiseAmount,
-    //       };
-    //     });
-    //   }
-    //   setTimeout(() => {
-    //     dispatch(
-    //       formStateHandleFieldChange({
-    //         fields: {
-    //           billwiseData: billwise,
-    //           ledgerBillWiseLoading: false,
-    //         },
-    //       })
-    //     );
-    //   }, 0);
-    // };
-    // const billWiseExcludedTransactions = [
-    //   "TXP",
-    //   "CPT",
-    //   "BPT",
-    //   "CNT",
-    //   "EXP",
-    //   "CRT",
-    //   "BRT",
-    //   "DNT",
-    //   "INC",
-    // ];
-    // const showBillwise = async () => {
-    //   if (
-    //     billWiseExcludedTransactions.includes(
-    //       formState.transaction.master.voucherType
-    //     )
-    //   ) {
-    //     return false;
-    //   }
-    //   if (formState.row.ledgerID && formState.ledgerData != null) {
-    //     const isBillwiseApplicable = await isLedgerBillwiseApplicable(
-    //       formState.transaction.master.voucherType === "CN" ||
-    //         formState.transaction.master.voucherType === "DN"
-    //         ? formState.masterAccountID
-    //         : formState.row.ledgerID
-    //     );
-    //     if (isBillwiseApplicable == true) {
-    //       let _drCr = getDrCr(formState.transaction.master.voucherType);
-    //       dispatch(
-    //         formStateHandleFieldChange({
-    //           fields: { showbillwise: true, billwiseDrCr: _drCr },
-    //         })
-    //       );
-    //     } else {
-    //       if (formState.formElements?.costCentreID.visible == true) {
-    //         focusCostCenterRef();
-    //       } else {
-    //         addOrEditRow();
-    //         focusLedgerCode();
-    //       }
-    //     }
-    //   }
-  };
-  const billwiseChanged = async (showBillwise: boolean) => {
-    try {
-      // let drCr = "";
-      // const loadLedgerData = async () => {
-      //   // switch (formState.transaction.master.voucherType) {
-      //   //   case "CP":
-      //   //   case "BP":
-      //   //   case "DN":
-      //   //   case "CQP":
-      //   //   case "SV":
-      //   //   case "SRV":
-      //   //   case "PBP":
-      //   //     drCr = "Dr";
-      //   //     break;
-      //   //   case "CR":
-      //   //   case "BR":
-      //   //   case "CN":
-      //   //   case "CQR":
-      //   //   case "PV":
-      //   //   case "PBR":
-      //   //     drCr = "Cr";
-      //   //     break;
-      //   //   case "OB":
-      //   //   case "MJV":
-      //   //     drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
-      //   //     break;
-      //   //   case "JV":
-      //   //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
-      //   //     break;
-      //   // }
-      //   if (
-      //     formState.showbillwise === true &&
-      //     formState.row.ledgerID &&
-      //     formState.ledgerData != null
-      //   ) {
-      //     openBillwise();
-      //   } else {
-      //   }
-      // };
-      // loadLedgerData();
-    } catch (error) {
-      return false;
-      // Handle error appropriately
-    }
-  };
+  
 
-  // const TransactionDetailsFieldChange =  async(
-  //   index: number,
-  //         columnName: keyof TransactionDetail,
-  //         value: TransactionDetail[keyof TransactionDetail],
-  //     ): Promise<void> => {
-
-  //   switch (columnName) {
-  //     case "unitPriceFC":
-  //       if (formState.transaction.master.voucherForm === "Import") {
-  //         const detail = formState.transaction.details[index];
-
-  //         const unitPrice = detail.unitPriceFC * formState.transaction.master.exchangeRate;
-  //         const grossFC = detail.unitPriceFC * detail.qty;
-  //         formStateTransactionDetailsRowUpdate([{index, key: "unitPrice",value: unitPrice}
-  //           , {index, key: "grossFC",value: grossFC}
-  //         ])
-  //       }
-  //       break;
-
-  //     case "qty":
-  //     case "unitPrice":
-  //       formState.transaction.details[index][columnName as keyof Pick<TransactionDetail, 'Qty' | 'UnitPrice'>] =
-  //         polosysFramework.general.val(value);
-  //       calculateRowAmount(index);
-  //       break;
-
-  //     case "margin":
-  //       formState.transaction.details[index].Margin = polosysFramework.general.val(value);
-  //       break;
-
-  //     case "salesPrice":
-  //       {
-  //         const detail = formState.transaction.details[index];
-  //         detail.SalesPrice = polosysFramework.general.val(value);
-
-  //         const sp = detail.SalesPrice;
-  //         const netAmount = polosysFramework.general.val(detail.Total);
-  //         const qty = polosysFramework.general.val(detail.Qty) || 1;
-
-  //         const cost = netAmount / qty;
-  //         let marginPerc = 0;
-
-  //         if (cost !== 0) {
-  //           marginPerc = ((sp / cost) - 1) * 100;
-  //         }
-
-  //         detail.Margin = marginPerc;
-  //       }
-  //       break;
-
-  //     case "product":
-  //       {
-  //         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
-
-  //         if (value.trim() !== "") {
-  //           formState.transaction.details[index].Product = value;
-
-  //           let searchText = "";
-  //           if (value.trim() === "%") return;
-
-  //           if (chkInSearch.checked && value.length > 2) {
-  //             searchText = "%" + value;
-  //           } else {
-  //             searchText = value;
-  //           }
-
-  //           if (settings.inventorySettings.advancedProductSearching) {
-  //             searchText = searchText.replace(/ /g, "%");
-  //           }
-
-  //           const products = new polosysERPInventoryClass.masters.products();
-  //           let dt;
-
-  //           if (chkCodeSearch.checked) {
-  //             dt = products.getProductsForPurchaseTransactionsView(searchText, true);
-  //           } else {
-  //             dt = products.getProductsForPurchaseTransactionsView(searchText);
-  //           }
-
-  //           // Populate product grid
-  //           const currentCell = dgvInventory.getCurrentCellDetails();
-  //           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
-
-  //           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
-  //           pnlProductBatches.left = cellRect.left;
-
-  //           pnlProductBatches.visible = true;
-  //           dgvProduct.visible = true;
-  //           dgvProduct.width = pnlProductBatches.width;
-  //           dgvProductBatches.visible = false;
-  //           lblproductName.visible = false;
-
-  //           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
-  //           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
-
-  //           pnlProductBatches.bringToFront();
-  //           setProductPanelSize();
-
-  //           dgvProduct.columns["ProductID"].visible = false;
-  //           dgvProduct.loadGridViewDesignSettings();
-  //         } else {
-  //           pnlProductBatches.visible = false;
-  //         }
-  //       }
-  //       break;
-
-  //     case "pCode":
-  //       {
-  //         if (settings.inventorySettings.usePopupWindowForItemSearch) return;
-
-  //         formState.transaction.details[index].PCode = value;
-
-  //         if (value !== "" && value !== "%") {
-  //           let searchText = "";
-
-  //           if (chkInSearch.checked) {
-  //             searchText = "%" + value;
-  //           } else {
-  //             searchText = value;
-  //           }
-
-  //           const products = new polosysERPInventoryClass.masters.products();
-  //           const dt = products.getProductsForPurchaseTransactionsView(searchText, true);
-
-  //           // Populate product grid
-  //           const currentCell = dgvInventory.getCurrentCellDetails();
-  //           const cellRect = getCellDisplayRectangle(currentCell.columnIndex, currentCell.rowIndex, true);
-
-  //           pnlProductBatches.top = dgvInventory.top + cellRect.bottom;
-  //           pnlProductBatches.left = cellRect.left;
-
-  //           pnlProductBatches.visible = true;
-  //           dgvProduct.visible = true;
-  //           dgvProduct.width = pnlProductBatches.width;
-  //           dgvProductBatches.visible = false;
-  //           lblproductName.visible = false;
-
-  //           setProductPanelSize();
-
-  //           dgvProduct.columns["ProductName"].width = Math.floor(dgvProduct.width * 0.7); // 70%
-  //           dgvProduct.columns["ProductCode"].width = Math.floor(dgvProduct.width * 0.28); // 28%
-
-  //           dgvProduct.columns["ProductID"].visible = false;
-  //           dgvProduct.loadGridViewDesignSettings();
-  //         } else {
-  //           pnlProductBatches.visible = false;
-  //           dgvProduct.visible = false;
-  //         }
-  //       }
-  //       break;
-  //   }
-  // };
   const handleTextDataChange = (
- text: any,
+ value: any,
  columnName: string,
- rowIndex: number,
- formState: TransactionFormState,
+ rowIndex: number
 ) => {
-let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] } };
-
  try {
+  console.log('handleTextDataChange');
+  debugger;
    if (!formState.transaction?.details?.[rowIndex]) {
      return false;
    }
 
-   const detail = formState.transaction.details[0];
-   const outDetail:DeepPartial<TransactionDetail> = {};
+   const detail = {...formState.transaction.details[rowIndex]};
+   let outState:DeepPartial<TransactionFormState> = {transaction: {details:[{[columnName]: value, slNo: detail.slNo}]}};
+   const outDetail:DeepPartial<TransactionDetail> = {slNo: detail.slNo};
    if(detail == undefined) {
     return;
    }
@@ -2213,36 +1909,39 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
    switch (columnName) {
      case "unitPriceFC":
        if (formState.transaction.master.voucherForm === "Import") {
-         outDetail.unitPriceFC = text;
-         const unitPriceFC = Number(detail.unitPriceFC || 0);
+         outDetail.unitPriceFC = value;
+         const unitPriceFC = Number(outDetail.unitPriceFC || 0);
          const qty = Number(detail.qty || 0);
          const exchangeRate = Number(formState.transaction.master.exchangeRate || 1);
          
          outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
          outDetail.grossFC = round((unitPriceFC * qty), 3);
-         result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
+         outState = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
         details:[outDetail]
        }}}, true);
+       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState,updateOnlyGivenDetailsColumns: true, rowIndex: rowIndex}))
        }
        break;
 
      case "qty":
      case "unitPrice":
-       outDetail[columnName] = text;
+       outDetail[columnName] = value;
        // Calculate row amount
-       result = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
+       outState = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
         details:[outDetail]
        }}}, true);
-       
+       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState,updateOnlyGivenDetailsColumns: true, rowIndex: rowIndex}))
        break;
 
      case "margin":
-       outDetail.margin = text;
+       outDetail.margin = value;
+       outState.transaction?.details?.push(outDetail)
+       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
        break;
 
      case "salesPrice":
        {
-         outDetail.salesPrice = text;
+         outDetail.salesPrice = value;
          const sp = Number(outDetail.salesPrice || 0);
          const netAmount = Number(detail.total || 0);
          let qty = Number(detail.qty || 0);
@@ -2256,29 +1955,24 @@ let result: DeepPartial<TransactionFormState> = { transaction: { details: [{}] }
          }
          
          outDetail.margin = round(marginPerc, 6);
-         result.transaction!.details = [outDetail]
+         outState.transaction!.details = [outDetail]
+         dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
        }
        break;
 
      
 
-    //  default:
-    //    // Handle other columns
-    //    if (detail.hasOwnProperty(columnName)) {
-    //      detail[columnName as keyof TransactionDetail] = text;
-    //    }
-    //    break;
+     default:
+       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
+       break;
    }
 
-   // Dispatch the updated state
-   formStateHandleFieldChangeKeysOnly &&
-     dispatch &&
-     dispatch(formStateHandleFieldChangeKeysOnly({fields:result}));
+   
 
  } catch (error) {
    console.error('Error in handleTextDataChange:', error);
  } finally {
-   return result;
+   
  }
 }
 const loadProductDetailsByAutoBarcode = async (
@@ -2341,7 +2035,7 @@ Object.entries(payload).forEach(([key, value]) => {
   }
 });
    const res: DataAutoBarcode  = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
-debugger;
+
     if (res?.isShowItemPopUp) {
        dispatch(
                   formStateHandleFieldChangeKeysOnly({
@@ -2394,7 +2088,7 @@ debugger;
    outDetail.arabicName = product.itemNameinSecondLanguage;
    outDetail.colour = product.colour;
    outDetail.multiFactor = product.multiFactor;
-   debugger;
+   
    // Handle Unit2 barcode
    if (product.isUnit2BarCode) {
      outDetail.unit = product.unit2;
@@ -2449,7 +2143,7 @@ debugger;
    
    // Set MRP
    outDetail.mrp = round(product.mrp);
-debugger;
+
    // Calculate pricing based on multi-factor
    if (outDetail.multiFactor > 0) {
      const pPrice = Number(product.stdPurchasePrice || 0);
@@ -2515,11 +2209,11 @@ debugger;
          disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
        }
    };
-debugger;
+
     commonParams.formStateHandleFieldChangeKeysOnly &&
        dispatch &&
        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
-       debugger;
+       
        if(data.setFocusToNextColumn) {
         focusToNextColumn(data.rowIndex, data.searchColumn);
        }
@@ -2808,7 +2502,7 @@ const handleUnitCycling = async (
     handleRefresh,
     createNewVoucher,
     unlockVoucher,
-    billwiseChanged,
+    handleTextDataChange,
     focusCostCenterRef,
     focusLedgerCode,
     focusRefNo,

@@ -40,6 +40,7 @@ import {
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
+import { generateUniqueKey } from "../../../utilities/Utils";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -510,7 +511,7 @@ const Row = React.memo(
                         productCode: data.productCode,
                         useProductCode: column.dataField === "pCode",
                         searchText: rowValue,
-                        key: crypto.randomUUID(),
+                        key: generateUniqueKey(),
                       };
                       dispatch(
                         formStateHandleFieldChange({
@@ -700,7 +701,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     onChange,
     gridId,
     className = "",
-    rowHeight = 24,
+    rowHeight = 35,
     height = 800,
     allowColumnReordering = true,
     summaryConfig = [],

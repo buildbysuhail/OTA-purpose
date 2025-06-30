@@ -387,7 +387,6 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div>
                   <ERPProductSearch
-                    type="text"
                     id="test"
                     keyId="testserch"
                     placeholder="Search Here"

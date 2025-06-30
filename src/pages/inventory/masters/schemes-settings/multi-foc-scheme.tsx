@@ -345,6 +345,7 @@ const MultiFOCScheme: React.FC = () => {
               </div>
               <div className="md:col-span-4">
                 <ERPProductSearch
+                className=""
                   value={focSchemeForm.data.nameOrCode}
                   onChange={(e) => {
                     setFocSchemeForm((prev) => ({
@@ -352,7 +353,6 @@ const MultiFOCScheme: React.FC = () => {
                       data: { ...prev.data, nameOrCode: e.target.value },
                     }));
                   }}
-                  type="text"
                   id="test"
                   keyId="testserch"
                   placeholder="Search Here"
@@ -472,7 +472,6 @@ const MultiFOCScheme: React.FC = () => {
                         data: { ...prev.data, nameOrCode_free: e.target.value },
                       }));
                     }}
-                    type="text"
                     id="test"
                     keyId="testSearchFree"
                     placeholder="Search Here"

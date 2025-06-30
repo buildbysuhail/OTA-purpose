@@ -257,7 +257,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   poTransDetailsIDTag: 0,
   warehouseName: "",
   unitPriceTag: 0,
-  unitDecimalPoint: 0
+  unitDecimalPoint: 0,
+  multiFactor: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({

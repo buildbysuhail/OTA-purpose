@@ -2497,7 +2497,30 @@ debugger;
                 focusCurrentColumn(rowIndex, columnName);
               }
             }
-          } else {
+          } 
+          else if (columnName == "btnPrintBarcode")
+          {
+              btnBarcode_Click(null, null);
+              dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
+          }
+          else if (columnName == "btnPrintBarcodeStd")
+          {
+              btnBarcodeStd_Click(null, null);
+              dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
+          }
+          else if (columnName == "BD")
+          {
+              ShowBatchForm();
+          }
+          else if (columnName == "GrossConvert")
+          {
+              ChangeGrossToUnitRate();
+          }
+          else if (columnName == "Serial")
+          {
+              ShowProductSerialForm();
+          }
+           else {
             focusToNextColumn(rowIndex, columnName);
           }
 
@@ -2524,81 +2547,81 @@ debugger;
   };
 
   // Handle unit cycling when space is pressed on quantity column
-  const handleUnitCycling = async (detail: any) => {
-    try {
-      const productBatchId = Number(detail.productBatchId || 0);
-      const currentUnitId = Number(detail.unitId || 0);
+  // const handleUnitCycling = async (detail: any) => {
+  //   try {
+  //     const productBatchId = Number(detail.productBatchId || 0);
+  //     const currentUnitId = Number(detail.unitId || 0);
 
-      const batches = formState.batchesUnits?.filter(
-        (x: any) => x.productBatchID == productBatchId
-      );
+  //     const batches = formState.batchesUnits?.filter(
+  //       (x: any) => x.productBatchID == productBatchId
+  //     );
 
-      // Get next unit ID (this would be an API call)
-      const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
+  //     // Get next unit ID (this would be an API call)
+  //     const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
 
-      if (currentUnitId !== nextUnitId) {
-        // Update unit information
-        const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
+  //     if (currentUnitId !== nextUnitId) {
+  //       // Update unit information
+  //       const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
 
-        if (unitDetails) {
-          detail.unitId = nextUnitId;
-          detail.unit = unitDetails.unitName;
-          detail.unitPrice = unitDetails.standardPurchasePrice;
-          detail.unitPriceTag = unitDetails.standardPurchasePrice;
-          detail.salesPrice = unitDetails.standardSalesPrice;
-          detail.minSalePrice = unitDetails.standardMinSalePrice;
+  //       if (unitDetails) {
+  //         detail.unitId = nextUnitId;
+  //         detail.unit = unitDetails.unitName;
+  //         detail.unitPrice = unitDetails.standardPurchasePrice;
+  //         detail.unitPriceTag = unitDetails.standardPurchasePrice;
+  //         detail.salesPrice = unitDetails.standardSalesPrice;
+  //         detail.minSalePrice = unitDetails.standardMinSalePrice;
 
-          // Handle actual sales price if visible
-          if (result.ui?.visibleColumns?.includes("actualSalesPrice")) {
-            detail.actualSalesPrice = detail.salesPrice;
+  //         // Handle actual sales price if visible
+  //         if (result.ui?.visibleColumns?.includes("actualSalesPrice")) {
+  //           detail.actualSalesPrice = detail.salesPrice;
 
-            try {
-              const otherUnitPrice = await getProductOtherUnitPrice(
-                productBatchId,
-                nextUnitId
-              );
-              if (otherUnitPrice > 0) {
-                detail.actualSalesPrice = otherUnitPrice;
-              }
-            } catch (error) {
-              console.error("Error getting other unit price:", error);
-            }
-          }
+  //           try {
+  //             const otherUnitPrice = await getProductOtherUnitPrice(
+  //               productBatchId,
+  //               nextUnitId
+  //             );
+  //             if (otherUnitPrice > 0) {
+  //               detail.actualSalesPrice = otherUnitPrice;
+  //             }
+  //           } catch (error) {
+  //             console.error("Error getting other unit price:", error);
+  //           }
+  //         }
 
-          // Handle price category pricing
-          try {
-            const priceCategoryId = result.ui?.selectedPriceCategory || 0;
-            const priceCategoryPrice =
-              await getProductPriceCategoryPurchasePrice(
-                productBatchId,
-                priceCategoryId,
-                nextUnitId
-              );
-            if (priceCategoryPrice !== 0) {
-              detail.unitPrice = priceCategoryPrice;
-            }
-          } catch (error) {
-            console.error("Error getting price category price:", error);
-          }
+  //         // Handle price category pricing
+  //         try {
+  //           const priceCategoryId = result.ui?.selectedPriceCategory || 0;
+  //           const priceCategoryPrice =
+  //             await getProductPriceCategoryPurchasePrice(
+  //               productBatchId,
+  //               priceCategoryId,
+  //               nextUnitId
+  //             );
+  //           if (priceCategoryPrice !== 0) {
+  //             detail.unitPrice = priceCategoryPrice;
+  //           }
+  //         } catch (error) {
+  //           console.error("Error getting price category price:", error);
+  //         }
 
-          // Calculate row amounts
-          const calculateResult = calculateRowAmount(
-            detail,
-            "slNo",
-            applicationSettings,
-            commonParams,
-            true
-          );
-          if (calculateResult?.transaction?.details?.[0]) {
-            result.transaction.details[rowIndex] =
-              calculateResult.transaction.details[0];
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error in handleUnitCycling:", error);
-    }
-  };
+  //         // Calculate row amounts
+  //         const calculateResult = calculateRowAmount(
+  //           detail,
+  //           "slNo",
+  //           applicationSettings,
+  //           commonParams,
+  //           true
+  //         );
+  //         if (calculateResult?.transaction?.details?.[0]) {
+  //           result.transaction.details[rowIndex] =
+  //             calculateResult.transaction.details[0];
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in handleUnitCycling:", error);
+  //   }
+  // };
 
   // Handle Enter key press
 

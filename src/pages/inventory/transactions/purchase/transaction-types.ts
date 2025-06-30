@@ -226,6 +226,7 @@ export interface TransactionDetail {
   brandID: number;
   qty: number;
   free: number;
+  multiFactor: number;
   unit: string;
   unitID: number;
   unitDecimalPoint: number;
@@ -452,6 +453,7 @@ export interface TransactionFormState {
   showQuantityFactors: {visible: boolean, rowIndex: number};
   showPcode:boolean;
   batchSelectionData: string;  
+  popupSearchSelectionData: string;  
   quantityFactorData: string;
   currentCell?: { column: string, rowIndex: number };
   batchesUnits?: [];
@@ -482,7 +484,7 @@ export interface GridQtyFactors {
   total: number;
 }
 export interface LoadProductDetailsByAutoBarcodeProps {
-  slNo: string;
+  detail: TransactionDetail;
     productBatchID: number;
     autoBarcode: string;
     productCode: string;
@@ -491,4 +493,100 @@ export interface LoadProductDetailsByAutoBarcodeProps {
     searchColumn: string;
     rowIndex: number;
     setFocusToNextColumn: boolean;
+}
+interface ProductBatchDetailsForAutoBarcodeData {
+  serialNumber: string;
+  productCode: string;
+  productName: string;
+  commodityCode: string;
+  basicUnitID: number;
+  unitName: string;
+  taxCategoryID: number;
+  productCategoryID: number;
+  productGroupID: number;
+  autoBarcode: string;
+  manualBarcode: string;
+  mfgDate?: string;
+  expiryDate?: string;
+  batchNo: string;
+  productID: number;
+  stdSalesPrice: number;
+  stdPurchasePrice: number;
+  mrp: number;
+  modelNumber: string;
+  specification: string;
+  brandID: number;
+  brandName: string;
+  upcCode: string;
+  partNumber: string;
+  margingPerc: number;
+  stock: number;
+  sVatPerc: number;
+  pVatPerc: number;
+  salesExciseTaxPerc: number;
+  purchaseExciseTaxPerc: number;
+  productBatchID: number;
+  lastPurchaseCost: number;
+  lastPurchaseRate: number;
+  stockMax: number;
+  minSalePrice: number;
+  groupBarCode: string;
+  warranty: string;
+  colour: string;
+  defPurchaseUnitID: number;
+  unit2: string;
+  unit2ID?: number;
+  unit2Qty?: number;
+  unit2SalesPrice?: number;
+  unit2Barcode: string;
+  unit2MRP?: number;
+  unit2MinSalesRate?: number;
+  unit3: string;
+  unit3ID?: number;
+  unit3Qty?: number;
+  unit3SalesPrice?: number;
+  unit3Barcode: string;
+  unit3MRP?: number;
+  unit3MinSalesRate?: number;
+  itemType: string;
+  location: string;
+  itemNameinSecondLanguage: string;
+  p_SGSTPerc: number;
+  p_CGSTPerc: number;
+  p_IGSTPerc: number;
+  p_CessPerc: number;
+  p_AdditionalCessPerc: number;
+  p_CalamityCessPerc: number;
+  hsnCode: string;
+
+  // new fields
+  supplierReferenceProductCode: string;
+  stockDetails: string;
+  actualSalesPrice: number;
+  listedProductPrice: number;
+  hasListedProductPrice: boolean;
+  defUnitName: string;
+  multiFactor: number;
+  defUnitMultiFactor: number;
+  isUnit2BarCode: boolean;
+  isUnit3BarCode: boolean;
+  isBasicUnitBarcode: boolean;
+  isMultiUnitBarCode: boolean;
+  stickerQty: number;
+
+  units: UnitByBatchDetailsDto[];
+}
+interface UnitByBatchDetailsDto {
+  unitCode?: string;
+  productBatchID?: number; // C# long -> TS number
+  unitID?: number;
+  unitName?: string;
+  multiFactor?: string;
+  unitDescription?: string;
+  decimalPoints?: number;
+}
+export interface DataAutoBarcode {
+  products: ProductBatchDetailsForAutoBarcodeData[];
+  units: UnitByBatchDetailsDto[];
+  isShowItemPopUp: boolean;
 }

@@ -14,3 +14,6 @@
 // show_header
 //add_custom
 // custom_designer
+// Sales Price Less than Purchase Price, Do you Want to Continue
+// warning
+// "Unit Price Zero, Do you Want to Continue

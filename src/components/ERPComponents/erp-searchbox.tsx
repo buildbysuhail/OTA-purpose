@@ -59,6 +59,7 @@ interface InputProps {
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
+  onNextCellFind?: (rowIndex: number, column: string) => void;
 }
 
 interface LoadResult {
@@ -203,6 +204,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       advancedProductSearching = false,
       searchKey = "",
       rowIndex,
+      onNextCellFind,
       ...rest
     },
     ref
@@ -220,7 +222,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const inputRef = ref || internalRef;
     const { t } = useTranslation("inventory");
     const dispatch = useDispatch();
-
+  
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -477,8 +479,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
-       debugger;
-        const value = formState.transaction.details[rowIndex??-1] != undefined ? formState.transaction.details[rowIndex??-1][searchKey as keyof TransactionDetail] : undefined;
+       
+        const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
         if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
           if (e.key === "ArrowDown") {
@@ -523,25 +525,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                               searchText: e.currentTarget.value,
                               voucherType:
                                 formState.transaction.master.voucherType,
-                              warehouseId: applicationSettings.productsSettings
-                                .enableMultiWarehouseBilling
-                                ? 0
-                                : (() => {
-                                    try {
-                                      const val = Number(
-                                        formState.transaction.master
-                                          .fromWarehouseID
-                                      );
-                                      return isNaN(val)
-                                        ? -1
-                                        : Math.min(
-                                            Math.max(val, -1),
-                                            2147483647
-                                          );
-                                    } catch {
-                                      return -1;
-                                    }
-                                  })(),
+                              warehouseId: 1,
                               inSearch: formState.inSearch,
                             },
                           },
@@ -551,6 +535,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   );
                   e.preventDefault();
                 } 
+                else {
+                rest?.onKeyDown && rest?.onKeyDown(value,e);
+              }
               } else {
                 rest?.onKeyDown && rest?.onKeyDown(value,e);
               }
@@ -638,6 +625,18 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       document.addEventListener("keydown", handleFocusTrap);
       return () => document.removeEventListener("keydown", handleFocusTrap);
     }, [formState.formElements.dgvProduct.visible]);
+  
+    const onClose = useCallback(() => {
+    dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      formElements: {
+                        productSearchPopupWindow: { visible: false, data:"" },
+                      },
+                    },
+                  })
+                );
+  }, []);
 
     return (
       <>
@@ -844,19 +843,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               width={1000}
               height={800}
               isForm={true}
-              closeModal={() => {
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: {
-                        productSearchPopupWindow: { visible: false },
-                      },
-                    },
-                  })
-                );
-              }}
+              closeModal={onClose}
               content={
                 <ProductModalGrid
+                onNextCellFind={onNextCellFind}
+                onClose={onClose}
                   rowIndex={
                     formState.formElements.productSearchPopupWindow.data
                       .rowIndex

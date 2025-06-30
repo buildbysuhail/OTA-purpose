@@ -52,7 +52,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   };
 
  const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number|null, endIndex?: number|null) => {
-  debugger;
+  
      const draggedDataField = dragItem.current ? dragItem.current.split("_")[0] : null;
     const targetDataField = dragOverItem.current ? dragOverItem.current.split("_")[0] : null;
 

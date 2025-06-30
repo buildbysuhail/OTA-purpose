@@ -939,7 +939,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       return result;
     }
-      debugger;
+      
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
         // Handle conditional expressions using '&&'
@@ -1974,37 +1974,45 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         }
       }
     };
+
 const FilterRowKeyDown = (e: any) => {
-  const gridEl = e.component?.element?.();
-  if (!gridEl) return;
+  const gridInstance = e.component;
+  if (!gridInstance) return;
 
-  // Query all filter inputs in the filter row
-  const filterInputs = gridEl.querySelectorAll('.dx-datagrid-filter-row input');
+      const gridEl = gridInstance.element();
+      const filterInputs = gridEl.querySelectorAll('.dx-datagrid-filter-row input');
 
-  filterInputs.forEach((el:any) => {
-    const input = el as HTMLInputElement;
-    // Clear previous listener to avoid duplicates
-    input.onkeydown = null;
+    filterInputs.forEach((input: HTMLInputElement) => {
+    input.removeEventListener('keydown', handleArrowDown);
+    input.addEventListener('keydown', handleArrowDown);
+    });
 
-    input.addEventListener('keydown', (evt: KeyboardEvent) => {
-      if (evt.key === 'ArrowDown') {
-        evt.preventDefault();
-
-        // Focus the checkbox cell in the first data row
-        const elCheckbox = gridEl.querySelector('.dx-data-row:first-child .dx-select-checkbox');
-        const firstCheckbox = elCheckbox as HTMLElement | null;
-        if (firstCheckbox) {
-          firstCheckbox.tabIndex = 0; // Make it focusable
-          firstCheckbox.focus();
+  function handleArrowDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      
+      const visibleRows = gridInstance.getVisibleRows();
+      if (visibleRows.length > 0) {
+        const columns = gridInstance.getVisibleColumns();
+        
+        // Find selection column index
+        let targetColumnIndex = columns.findIndex((col: any) => col.command === 'select');
+        
+        // If no selection column found, use first column
+        if (targetColumnIndex === -1) {
+          targetColumnIndex = 0;
+        }
+        
+        const cellElement = gridInstance.getCellElement(0, targetColumnIndex);
+        if (cellElement) {
+          cellElement.focus();
         }
       }
-    });
-  });
+    }
+  }
 };
 
-
-
-    return (
+    return  (
       <Fragment>
         {showChooserOnGridHead && (
           <GridPreferenceChooser
@@ -2072,7 +2080,6 @@ const FilterRowKeyDown = (e: any) => {
                 }
               
               }
-
               onContentReady && onContentReady(e);
             }}
             showColumnLines={showColumnLines}

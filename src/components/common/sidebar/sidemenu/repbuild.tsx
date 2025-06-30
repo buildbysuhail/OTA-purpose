@@ -92,18 +92,7 @@ const StockSummary = lazy(() => import("../../../../pages/inventory/reports/othe
 const StockLedger = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/stock-ledger/stock-ledger-report"));
 const ExpiryReport = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/expiry-report/expiry-report"));
 const TransactionAnalysisReport = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/transaction-analysis-report/transaction-analysis-report"));
-const SalesAndSalesReturn = lazy(() => import("../../../../pages/inventory/reports/sales/sales-and-sales-return-report/sales-and-sales-return"));
-const NetSalesReport = lazy(() => import("../../../../pages/inventory/reports/sales/net-sales-report/net-sales"));
-const DaywiseSummaryWithProfit = lazy(() => import("../../../../pages/inventory/reports/sales/daywise-summary-with-profit-report/daywise-summary-with-profit"));
-const GroupwiseSalesSummaryDevexpress = lazy(() => import("../../../../pages/inventory/reports/sales/groupwise-sales-summary/groupwise-sales-summary-devexpress"));
-const GroupwiseSalesSummary = lazy(() => import("../../../../pages/inventory/reports/sales/groupwise-sales-summary/groupwise-sales-summary"));
-const SalesmanwiseSalesAndCollection = lazy(() => import("../../../../pages/inventory/reports/sales/salesman-wise-sales-and-collection-report/salesman-wise-sales-and-collection"));
-const NonInvoicedGoodsDelivery = lazy(() => import("../../../../pages/inventory/reports/sales/non-invoiced-goods-delivery-report/non-invoiced-goods-delivery"));
 const PendingOrderReport = lazy(() => import("../../../../pages/inventory/reports/other-inventory-reports/pending-order-report/pending-order"));
-const PromotionalSalesReport = lazy(() => import("../../../../pages/inventory/reports/sales/promotional-sales-report/promotional-sales"));
-const GroupedBrandwiseSales = lazy(() => import("../../../../pages/inventory/reports/sales/grouped-brandwise-sales-report/grouped-brandwise-sales"));
-const CouponReports = lazy(() => import("../../../../pages/inventory/reports/sales/other-reports/coupon-report/coupon-report"));
-const SchemeWiseSales = lazy(() => import("../../../../pages/inventory/reports/sales/other-reports/scheme-wise-sales-report/scheme-wise-sales"));
 const RouteWiseSalesAndCollection = lazy(() => import("../../../../pages/inventory/reports/advanced-reports/routewise-sales-and-collection-report/routewise-sales-and-collection"));
 const BranchInventoryRequestPendingOrder = lazy(() => import("../../../../pages/inventory/reports/advanced-reports/branch-inventory-request-pending-order-report/branch-inventory-request-pending-order"));
 const PrintDetails = lazy(() => import("../../../../pages/inventory/reports/advanced-reports/print-details-report/print-details"));
@@ -147,7 +136,6 @@ const StockJournalReport = lazy(() => import("../../../../pages/inventory/report
 
 import urls from "../../../../redux/urls";
 import GridId from "../../../../redux/gridId";
-import { GroupwiseSalesSummaryFilterInitialState } from "../../../../pages/inventory/reports/sales/groupwise-sales-summary/groupwise-sales-summary-filter";
 import BranchTransferOutIn from "../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-out-in";
 import BranchTransferSummary from "../../../../pages/inventory/reports/stock-journal-reports/branch-transfer-reports/branch-tranfer-summary";
 import ReturnTaxGSTSalesAndReturn from "../../../../pages/inventory/reports/common-reports/tax-gst-reports/return-tax-gst-sales-and-return-report";

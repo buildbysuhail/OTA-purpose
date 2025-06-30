@@ -1041,6 +1041,7 @@ const mergedRowData: TransactionDetail = {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        allowEditing: true,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1052,6 +1053,7 @@ const mergedRowData: TransactionDetail = {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        allowEditing: true,
         width: 100,
         alignment: "right",
       },
@@ -1237,6 +1239,7 @@ const mergedRowData: TransactionDetail = {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        format:"dd-MMM-yyyy"
       },
       {
         dataField: "expDate",
@@ -1247,6 +1250,7 @@ const mergedRowData: TransactionDetail = {
         allowFiltering: true,
         width: 100,
         readOnly: true,
+        format:"dd-MMM-yyyy"
       },
       {
         dataField: "expDays",

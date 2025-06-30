@@ -447,10 +447,10 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal) {
-        let details = formState.transaction.details[in]
-        const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
-      result: {},
-    });
+    //     let details = formState.transaction.details[in]
+    //     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
+    //   result: {},
+    // });
         result = calculateTotal(
           formState.transaction.master,
           formState.summary,

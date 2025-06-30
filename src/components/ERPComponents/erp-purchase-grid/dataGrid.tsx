@@ -1157,9 +1157,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
               </tfoot>
             )}
           </table>
-          {/* {JSON.stringify(formState.summary)} */}
         </div>
       </div>
+          {JSON.stringify(formState.summary)}
       {dragState.isDragging && dragState.draggedColumn && (
         <div
           ref={dragPreviewRef}

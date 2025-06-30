@@ -88,8 +88,8 @@ export const useTransaction = (
   transactionType: string,
   btnSaveRef: any,
   btnAddRef: any,
-  focusToNextColumn:(rowIndex: number, column: string) => void,
-  focusCurrentColumn:(rowIndex: number, column: string) => void,
+  focusToNextColumn: (rowIndex: number, column: string) => void,
+  focusCurrentColumn: (rowIndex: number, column: string) => void,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
   masterAccountRef?: any,
@@ -104,7 +104,7 @@ export const useTransaction = (
   taxableAmountRef?: any,
   refNoRef?: any,
   discountRef?: any,
-  chequeStatusRef?: any,
+  chequeStatusRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -115,25 +115,25 @@ export const useTransaction = (
   );
   const {
     attachDetails,
-  attachMaster,
-  calculateSummary,
-  calculateTotal,
-  // calculateTotal,
-  disableControlsFn,
-  refactorDetails,
-  // getClosedDate,
-  setUserRightsFn,
-  validateTransactionDate,
-  clearEntryControl,
-  disableControls,
-  calculateRowAmount
+    attachMaster,
+    calculateSummary,
+    calculateTotal,
+    // calculateTotal,
+    disableControlsFn,
+    refactorDetails,
+    // getClosedDate,
+    setUserRightsFn,
+    validateTransactionDate,
+    clearEntryControl,
+    disableControls,
+    calculateRowAmount,
   } = useTransactionHelper(transactionType);
   const { printVoucher, printCheque, printPaymentReceiptAdvice } =
     useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const{round} = useNumberFormat();
+  const { round } = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -252,7 +252,9 @@ export const useTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      const base64 = await api.get(`${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`);
+      const base64 = await api.get(
+        `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
+      );
       localStorage.setItem("utInvc", base64);
       // Decode the base64 back to JSON string
       const _userConfig = atob(base64);
@@ -420,33 +422,43 @@ export const useTransaction = (
         },
       };
     }
-    
+
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
-    
+
     voucher.transaction = {
       ...(vch || {}),
       details: refactorDetails(
         vch.details,
         vch.master.voucherType,
-        vch.master.voucherForm,{result:{}}, voucher
+        vch.master.voucherForm,
+        { result: {} },
+        voucher
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
 
-    const summaryRes = calculateSummary(voucher.transaction.details,voucher,{result:{}})
-    voucher.summary = (summaryRes && summaryRes.summary
-  ? summaryRes.summary 
-  : initialInventoryTotals) as SummaryItems;
+    const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
+      result: {},
+    });
+    voucher.summary = (
+      summaryRes && summaryRes.summary
+        ? summaryRes.summary
+        : initialInventoryTotals
+    ) as SummaryItems;
 
-  voucher =  calculateTotal(voucher.transaction.master, voucher.summary,voucher.formElements,
-    {result:voucher}
-  ) as TransactionFormState;
+    voucher = calculateTotal(
+      voucher.transaction.master,
+      voucher.summary,
+      voucher.formElements,
+      { result: voucher }
+    ) as TransactionFormState;
 
-    voucher.transaction.master.hasroundOff = voucher.transaction.master.roundAmount > 0 ;
+    voucher.transaction.master.hasroundOff =
+      voucher.transaction.master.roundAmount > 0;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
         ? moment().local().toISOString()
@@ -459,18 +471,21 @@ export const useTransaction = (
 
     // Handle master data
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
-    voucher.formElements.costCentreID.disabled = voucher.transaction.master.costCentreID <= 0 &&
-            (formState.userConfig?.presetCostenterId??0) > 0 ? true: false
+    voucher.formElements.costCentreID.disabled =
+      voucher.transaction.master.costCentreID <= 0 &&
+      (formState.userConfig?.presetCostenterId ?? 0) > 0
+        ? true
+        : false;
     // voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster: TransactionMaster = {
         ...voucher.transaction.master,
-        costCentreID: voucher.transaction.master.costCentreID <= 0 
-          ?
-            formState.userConfig?.presetCostenterId??0 > 0 
-              ? formState.userConfig?.presetCostenterId??0 
+        costCentreID:
+          voucher.transaction.master.costCentreID <= 0
+            ? formState.userConfig?.presetCostenterId ?? 0 > 0
+              ? formState.userConfig?.presetCostenterId ?? 0
               : applicationSettings.accountsSettings.defaultCostCenterID
-          :  voucher.transaction.master.costCentreID
+            : voucher.transaction.master.costCentreID,
       };
       voucher.transaction.master = updatedMaster;
     }
@@ -500,7 +515,6 @@ export const useTransaction = (
       return baseDetail;
     });
   };
-  
 
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
@@ -549,214 +563,218 @@ export const useTransaction = (
     return response;
   };
 
- async function validate(): Promise<boolean> {
-  const master = formState.transaction.master;
-  const details = formState.transaction.details;
+  async function validate(): Promise<boolean> {
+    const master = formState.transaction.master;
+    const details = formState.transaction.details;
 
-  // Stock update restriction
-  if (!formState.transaction.master.stockUpdate) {
-    const confirm = await ERPAlert.show({
-      icon: "info",
-      title: t("stock_update_warning"),
-      text: t("stock_already_updated_warning"),
-      confirmButtonText: t("yes"),
-      cancelButtonText: t("no"),
-      showCancelButton: true,
-      onCancel: () =>{return false},
-    });
-    if (!confirm) {
+    // Stock update restriction
+    if (!formState.transaction.master.stockUpdate) {
+      const confirm = await ERPAlert.show({
+        icon: "info",
+        title: t("stock_update_warning"),
+        text: t("stock_already_updated_warning"),
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+        showCancelButton: true,
+        onCancel: () => {
+          return false;
+        },
+      });
+      if (!confirm) {
+        return false;
+      }
+    }
+
+    // Cost centre validation
+    if (
+      applicationSettings.accountsSettings.maintainCostCenter &&
+      isNullOrUndefinedOrZero(master.costCentreID)
+    ) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("select_valid_cost_centre"),
+        confirmButtonText: t("ok"),
+      });
       return false;
-    };
-  }
+    }
 
-  // Cost centre validation
-  if (applicationSettings.accountsSettings.maintainCostCenter && isNullOrUndefinedOrZero(master.costCentreID)) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("validation_error"),
-      text: t("select_valid_cost_centre"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
-  }
+    // Grand total check
+    if (master.grandTotal < 0) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("wrong_discount_or_value"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
 
-  // Grand total check
-  if (master.grandTotal < 0) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("validation_error"),
-      text: t("wrong_discount_or_value"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
-  }
-
-  // Transaction date check
-  const transDateValidation = validateTransactionDate(
-     new Date(new Date(formState.transaction.master.transactionDate)),
+    // Transaction date check
+    const transDateValidation = validateTransactionDate(
+      new Date(new Date(formState.transaction.master.transactionDate)),
       false,
       undefined,
-      hasBlockedRight);
-       if (!transDateValidation.valid) {
-            await ERPAlert.show({
-              title: t("warning"),
-              text: transDateValidation.message,
-              icon: "warning",
-            });
-          }
-      
- 
+      hasBlockedRight
+    );
+    if (!transDateValidation.valid) {
+      await ERPAlert.show({
+        title: t("warning"),
+        text: transDateValidation.message,
+        icon: "warning",
+      });
+    }
 
-  // Day close check
-  // const closedDate = await getClosedDate(api, formState.transactionType);
-  // const tmpDate = new Date(master.transactionDate)
-  // tmpDate.setHours(0, 0, 0, 0);
-  // if (closedDate >= new Date(tmpDate)) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("invalid_transaction_date"),
-  //     text: t("day_closed"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+    // Day close check
+    // const closedDate = await getClosedDate(api, formState.transactionType);
+    // const tmpDate = new Date(master.transactionDate)
+    // tmpDate.setHours(0, 0, 0, 0);
+    // if (closedDate >= new Date(tmpDate)) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("invalid_transaction_date"),
+    //     text: t("day_closed"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
 
-  // if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("invalid_transaction_date"),
-  //     text: t("cannot_edit_day_closed"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
+    // if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("invalid_transaction_date"),
+    //     text: t("cannot_edit_day_closed"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
 
-  // Party selection check
-  if (!master.ledgerID) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("invalid_party"),
-      text: t("select_cash_or_party"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
+    // Party selection check
+    if (!master.ledgerID) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("invalid_party"),
+        text: t("select_cash_or_party"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // Reference number validation
+    if (
+      applicationSettings.inventorySettings
+        .isReferenceNumberMandatoryInPurchase &&
+      !master.purchaseInvoiceNumber
+    ) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("reference_number_required"),
+        text: t("reference_number_not_entered"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // if (master.purchaseInvoiceNumber) {
+    //   const refExists = await checkReferenceNumberExists(master);
+    //   if (refExists) {
+    //     if (!isEdit || refExists.toString() !== master.voucherNumber) {
+    //       await ERPAlert.show({
+    //         icon: "error",
+    //         title: t("invalid_reference_number"),
+    //         text: t("reference_exists_in_pi", { ref: refExists }),
+    //         confirmButtonText: t("ok"),
+    //       });
+    //       return false;
+    //     }
+    //   }
+    // }
+
+    // Scheme discount account check
+    // if (
+    //   DBID_VALUE === "SAMAPLASTICS" &&
+    //   getSchemeDiscount(details) > 0 &&
+    //   !master.schemeDiscountPostingLedgerId
+    // ) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("scheme_discount_warning"),
+    //     text: t("select_scheme_discount_posting_ledger"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
+
+    // Product validation
+    // for (let i = 0; i < details.length; i++) {
+    //   const row = details[i];
+    //   if (!row.productBatchId || row.productBatchId === 0) {
+    //     await ERPAlert.show({
+    //       icon: "error",
+    //       title: t("validation_error"),
+    //       text: t("invalid_item_details_in_row", { row: i + 1 }),
+    //       confirmButtonText: t("ok"),
+    //     });
+    //     return false;
+    //   }
+    // }
+
+    // // Purchase cost change warning
+    // if (Settings.InventorySettings.ShowPurchaseCostChangeWarning && !isEdit) {
+    //   let priceChangeItems = "";
+    //   for (const item of details) {
+    //     if (item.unitPrice !== item.unitPriceOriginal) {
+    //       priceChangeItems += `\n${item.product} [${item.barCode}]`;
+    //     }
+    //   }
+    //   if (priceChangeItems) {
+    //     await ERPAlert.show({
+    //       icon: "info",
+    //       title: t("purchase_price_changed"),
+    //       text: priceChangeItems,
+    //       confirmButtonText: t("ok"),
+    //     });
+    //   }
+    // }
+
+    // Gross amount zero validation
+    // for (let i = 0; i < details.length; i++) {
+    //   const row = details[i];
+    //   if (row.gross === 0) {
+    //     const confirm = await ERPAlert.show({
+    //       icon: "question",
+    //       title: t("zero_value"),
+    //       text: t("zero_qty_in_row", { row: i + 1 }),
+    //       confirmButtonText: t("yes"),
+    //       cancelButtonText: t("no"),
+    //       showCancelButton: true,
+    //     });
+    //     if (!confirm) {
+    //       // optionally set focus logic here
+    //       return false;
+    //     }
+    //   }
+    // }
+
+    // Check no items after blank rows
+    // const firstFreeIndex = details.findIndex((x) => !x.productId);
+    // for (let i = firstFreeIndex + 1; i < details.length; i++) {
+    //   if (details[i].productId) {
+    //     await ERPAlert.show({
+    //       icon: "error",
+    //       title: t("validation_error"),
+    //       text: t("items_after_blank_row", { row: firstFreeIndex + 1 }),
+    //       confirmButtonText: t("ok"),
+    //     });
+    //     return false;
+    //   }
+    // }
+
+    // Finalize
+    // calculateTotal();
+    return true;
   }
 
-  // Reference number validation
-  if (
-    applicationSettings.inventorySettings.isReferenceNumberMandatoryInPurchase &&
-    !master.purchaseInvoiceNumber
-  ) {
-    await ERPAlert.show({
-      icon: "error",
-      title: t("reference_number_required"),
-      text: t("reference_number_not_entered"),
-      confirmButtonText: t("ok"),
-    });
-    return false;
-  }
-
-  // if (master.purchaseInvoiceNumber) {
-  //   const refExists = await checkReferenceNumberExists(master);
-  //   if (refExists) {
-  //     if (!isEdit || refExists.toString() !== master.voucherNumber) {
-  //       await ERPAlert.show({
-  //         icon: "error",
-  //         title: t("invalid_reference_number"),
-  //         text: t("reference_exists_in_pi", { ref: refExists }),
-  //         confirmButtonText: t("ok"),
-  //       });
-  //       return false;
-  //     }
-  //   }
-  // }
-
-  // Scheme discount account check
-  // if (
-  //   DBID_VALUE === "SAMAPLASTICS" &&
-  //   getSchemeDiscount(details) > 0 &&
-  //   !master.schemeDiscountPostingLedgerId
-  // ) {
-  //   await ERPAlert.show({
-  //     icon: "error",
-  //     title: t("scheme_discount_warning"),
-  //     text: t("select_scheme_discount_posting_ledger"),
-  //     confirmButtonText: t("ok"),
-  //   });
-  //   return false;
-  // }
-
-  // Product validation
-  // for (let i = 0; i < details.length; i++) {
-  //   const row = details[i];
-  //   if (!row.productBatchId || row.productBatchId === 0) {
-  //     await ERPAlert.show({
-  //       icon: "error",
-  //       title: t("validation_error"),
-  //       text: t("invalid_item_details_in_row", { row: i + 1 }),
-  //       confirmButtonText: t("ok"),
-  //     });
-  //     return false;
-  //   }
-  // }
-
-  // // Purchase cost change warning
-  // if (Settings.InventorySettings.ShowPurchaseCostChangeWarning && !isEdit) {
-  //   let priceChangeItems = "";
-  //   for (const item of details) {
-  //     if (item.unitPrice !== item.unitPriceOriginal) {
-  //       priceChangeItems += `\n${item.product} [${item.barCode}]`;
-  //     }
-  //   }
-  //   if (priceChangeItems) {
-  //     await ERPAlert.show({
-  //       icon: "info",
-  //       title: t("purchase_price_changed"),
-  //       text: priceChangeItems,
-  //       confirmButtonText: t("ok"),
-  //     });
-  //   }
-  // }
-
-  // Gross amount zero validation
-  // for (let i = 0; i < details.length; i++) {
-  //   const row = details[i];
-  //   if (row.gross === 0) {
-  //     const confirm = await ERPAlert.show({
-  //       icon: "question",
-  //       title: t("zero_value"),
-  //       text: t("zero_qty_in_row", { row: i + 1 }),
-  //       confirmButtonText: t("yes"),
-  //       cancelButtonText: t("no"),
-  //       showCancelButton: true,
-  //     });
-  //     if (!confirm) {
-  //       // optionally set focus logic here
-  //       return false;
-  //     }
-  //   }
-  // }
-
-  // Check no items after blank rows
-  // const firstFreeIndex = details.findIndex((x) => !x.productId);
-  // for (let i = firstFreeIndex + 1; i < details.length; i++) {
-  //   if (details[i].productId) {
-  //     await ERPAlert.show({
-  //       icon: "error",
-  //       title: t("validation_error"),
-  //       text: t("items_after_blank_row", { row: firstFreeIndex + 1 }),
-  //       confirmButtonText: t("ok"),
-  //     });
-  //     return false;
-  //   }
-  // }
-
-  // Finalize
-  // calculateTotal();
-  return true;
-}
-
-  
   // const validateStatus = (accounts: TransactionRow[]): boolean => {
   //   try {
   //     let hasC = false;
@@ -813,7 +831,7 @@ export const useTransaction = (
 
     return { firstDebitLedgerID, firstCreditLedgerID };
   };
- 
+
   const preSave = async () => {
     if (
       formState.isEdit &&
@@ -846,7 +864,7 @@ export const useTransaction = (
     const valid = await validate();
 
     if (valid == true) {
-const master = attachMaster(formState);
+      const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -856,15 +874,24 @@ const master = attachMaster(formState);
           key: x.key,
           type: x.type,
         }));
-        const dtRes = attachDetails(formState.transaction.details.filter((x: TransactionDetail) => x.productID > 0),formState.transaction.master.voucherForm,formState.transaction.master.transactionDate, formState.transaction.master.ledgerID, formState.transaction.master.fromWarehouseID,formState.transaction.master.stockUpdate);
-        if(dtRes.hasError) {
-         ERPAlert.show({
+      const dtRes = attachDetails(
+        formState.transaction.details.filter(
+          (x: TransactionDetail) => x.productID > 0
+        ),
+        formState.transaction.master.voucherForm,
+        formState.transaction.master.transactionDate,
+        formState.transaction.master.ledgerID,
+        formState.transaction.master.fromWarehouseID,
+        formState.transaction.master.stockUpdate
+      );
+      if (dtRes.hasError) {
+        ERPAlert.show({
           icon: "warning",
           title: "Failed",
-          text: dtRes.errors.join(', ')
+          text: dtRes.errors.join(", "),
         });
-        return false
-        }
+        return false;
+      }
       const params = {
         master: {
           ...master,
@@ -893,9 +920,9 @@ const master = attachMaster(formState);
           })
         );
         if (formState.printOnSave == true) {
-         printVoucher();
+          printVoucher();
         }
-       
+
         ERPToast.show(saveRes.message, "success");
       } else {
         // dispatch(acc)
@@ -903,7 +930,7 @@ const master = attachMaster(formState);
           icon: "warning",
           title: saveRes.message,
         });
-        
+
         dispatch(
           formStateTransactionUpdate({
             key: "attachments",
@@ -990,7 +1017,7 @@ const master = attachMaster(formState);
       formStateTransactionDetailsRowRemove({
         index: index,
         applicationSettings: applicationSettings,
-        clearEntryControl
+        clearEntryControl,
       })
     );
   };
@@ -1199,7 +1226,7 @@ const master = attachMaster(formState);
     // );
     // focusLedgerCombo();
   };
- 
+
   interface RowClickHandlerParams {
     row: any;
   }
@@ -1426,7 +1453,7 @@ const master = attachMaster(formState);
             formStateTransactionDetailsRowRemove({
               applicationSettings: applicationSettings,
               index: focusedRowIndex,
-              clearEntryControl
+              clearEntryControl,
             })
           );
         },
@@ -1885,595 +1912,695 @@ const master = attachMaster(formState);
     //   // Handle error appropriately
     // }
   };
-  
 
   const handleTextDataChange = (
- value: any,
- columnName: string,
- rowIndex: number
-) => {
- try {
-  console.log('handleTextDataChange');
-  debugger;
-   if (!formState.transaction?.details?.[rowIndex]) {
-     return false;
-   }
+    value: any,
+    columnName: string,
+    rowIndex: number
+  ) => {
+    try {
+      console.log("handleTextDataChange");
+      debugger;
+      if (!formState.transaction?.details?.[rowIndex]) {
+        return false;
+      }
 
-   const detail = {...formState.transaction.details[rowIndex]};
-   let outState:DeepPartial<TransactionFormState> = {transaction: {details:[{[columnName]: value, slNo: detail.slNo}]}};
-   const outDetail:DeepPartial<TransactionDetail> = {slNo: detail.slNo};
-   if(detail == undefined) {
-    return;
-   }
-   
-   switch (columnName) {
-     case "unitPriceFC":
-       if (formState.transaction.master.voucherForm === "Import") {
-         outDetail.unitPriceFC = value;
-         const unitPriceFC = Number(outDetail.unitPriceFC || 0);
-         const qty = Number(detail.qty || 0);
-         const exchangeRate = Number(formState.transaction.master.exchangeRate || 1);
-         
-         outDetail.unitPrice = round((unitPriceFC * exchangeRate),4);
-         outDetail.grossFC = round((unitPriceFC * qty), 3);
-         outState = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
-        details:[outDetail]
-       }}}, true);
-       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState,updateOnlyGivenDetailsColumns: true, rowIndex: rowIndex}))
-       }
-       break;
+      const detail = { ...formState.transaction.details[rowIndex] };
+      let outState: DeepPartial<TransactionFormState> = {
+        transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
+      };
+      const outDetail: DeepPartial<TransactionDetail> = { slNo: detail.slNo };
+      if (detail == undefined) {
+        return;
+      }
 
-     case "qty":
-     case "unitPrice":
-       outDetail[columnName] = value;
-       // Calculate row amount
-       outState = calculateRowAmount(Object.assign(detail, outDetail) , columnName, {result:{transaction:{
-        details:[outDetail]
-       }}}, true);
-       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState,updateOnlyGivenDetailsColumns: true, rowIndex: rowIndex}))
-       break;
+      let calculateSummaryAndTotal = false;
+      if (columnName === "unitPriceFC") {
+        if (formState.transaction.master.voucherForm === "Import") {
+          outDetail.unitPriceFC = value;
+          const unitPriceFC = Number(outDetail.unitPriceFC || 0);
+          const qty = Number(detail.qty || 0);
+          const exchangeRate = Number(
+            formState.transaction.master.exchangeRate || 1
+          );
 
-     case "margin":
-       outDetail.margin = value;
-       outState.transaction?.details?.push(outDetail)
-       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
-       break;
-
-     case "salesPrice":
-       {
-         outDetail.salesPrice = value;
-         const sp = Number(outDetail.salesPrice || 0);
-         const netAmount = Number(detail.total || 0);
-         let qty = Number(detail.qty || 0);
-         
-         if (qty === 0) qty = 1;
-         const cost = netAmount / qty;
-         
-         let marginPerc = 0;
-         if (cost !== 0) {
-           marginPerc = ((sp / cost) - 1) * 100;
-         }
-         
-         outDetail.margin = round(marginPerc, 6);
-         outState.transaction!.details = [outDetail]
-         dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
-       }
-       break;
-
-     
-
-     default:
-       dispatch(formStateHandleFieldChangeKeysOnly({fields:outState}))
-       break;
-   }
-
-   
-
- } catch (error) {
-   console.error('Error in handleTextDataChange:', error);
- } finally {
-   
- }
-}
-const loadProductDetailsByAutoBarcode = async (
- data: LoadProductDetailsByAutoBarcodeProps,
- commonParams: CommonParams
-): Promise<DeepPartial<TransactionFormState> | null> => {
- let {
-   result,
- } = commonParams;
-
- try {
-  
-  let detail = data.detail;
-  let outDetail: DeepPartial<TransactionDetail> = {};
-  
-  outDetail.slNo = detail.slNo;
-  outDetail.warehouseID = detail.warehouseID
-  outDetail.salesPrice = detail.salesPrice
-  outDetail.unitID = detail.unitID
-  outDetail.productBatchID = detail.productBatchID
-   if (!detail) {
-     return {};
-   }
-    let warehouseId = 1;
-   if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
-     warehouseId = formState.transaction.master.fromWarehouseID;
-   }
-   if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
-     const detailWarehouseId = outDetail.warehouseID;
-     if (detailWarehouseId??0 > 0) {
-       warehouseId = detailWarehouseId??0;
-     }
-   }
-   const _lastSelectedWarehouseIDOfItemPopupsSearch = (() => {
-  try {
-    const stored = localStorage.getItem("lastSelectedWarehouseIDOfItemPopupsSearch");
-    return stored ? Number(stored) || 0 : 0;
-  } catch (error) {
-    console.warn("Failed to read from localStorage:", error);
-    return 0;
-  }
-})();
-
-   let payload = {
-  useProductCode: data.useProductCode,
-  productCode: data.productCode,
-  barCode: data.autoBarcode,
-  wareHouseId: warehouseId,
-  txtData: data.searchText,
-  partyId: formState.transaction.master.ledgerID,
-  isCheckUseSupplierProductCode: formState.userConfig?.useSupplierProductCode,
-  isActualPriceVisible: formState.gridColumns?.find(x => x.dataField == "actualSalesPrice")?.visible,
-  isStockDetailsVisible: formState.gridColumns?.find(x => x.dataField == "stockDetails")?.visible,
-  lastSelectedWareHouseIdOfItemPopUpsSearch: _lastSelectedWarehouseIDOfItemPopupsSearch
-};
-const queryParams = new URLSearchParams();
-Object.entries(payload).forEach(([key, value]) => {
-  if (value !== null && value !== undefined && value !== '') {
-    queryParams.append(key, value as any);
-  }
-});
-   const res: DataAutoBarcode  = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`);
-
-    if (res?.isShowItemPopUp) {
-       dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: {
-                        productSearchPopupWindow: {
-                          visible: true,
-                          data: {
-                            searchColumn: data.searchColumn,
-                            rowIndex: data.rowIndex,
-                            searchCriteria: data.useProductCode ? "pCode": "product",
-                            searchText: data.searchText,
-                            voucherType: formState.transaction.master.voucherType,
-                            warehouseId: 1,
-                          },
-                        },
-                      },
-                    },
-                  })
-                );
-    } else if (res?.products?.length === 1) {
-    let product = res.products[0]
-     outDetail.pCode = product.productCode;
-   outDetail.product = product.productName;
-   outDetail.productID = product.productID;
-   outDetail.barCode = product.autoBarcode;
-   outDetail.manualBarcode = product.manualBarcode;
-   outDetail.productBatchID = product.productBatchID;
-
-   // Set default quantity if configured
-   if (applicationSettings?.productsSettings?.setDefaultQty1) {
-     outDetail.qty = 1;
-   }
-
-   outDetail.unit = product.unitName;
-   outDetail.unitID = product.basicUnitID;
-   outDetail.brandID = product.brandID;
-   outDetail.brand = product.brandName;
-   outDetail.size = product.specification;
-   outDetail.batchNo = product.batchNo;
-   outDetail.expDate = product.expiryDate;
-   outDetail.expDays = 100;
-   outDetail.mfdDate = product.mfgDate;
-   outDetail.lpc = round(product.lastPurchaseCost || 0);
-   outDetail.lpr = round(product.lastPurchaseRate || 0);
-   outDetail.stock = product.stock;
-   outDetail.productDescription = product.serialNumber;
-   outDetail.warranty = product.warranty;
-   outDetail.location = product.location;
-   outDetail.arabicName = product.itemNameinSecondLanguage;
-   outDetail.colour = product.colour;
-   outDetail.multiFactor = product.multiFactor;
-   
-   // Handle Unit2 barcode
-   if (product.isUnit2BarCode) {
-     outDetail.unit = product.unit2;
-     outDetail.unitID = product.unit2ID;
-     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-   }
-
-   // Handle Unit3 barcode
-   if (product.isUnit3BarCode) {
-     outDetail.unit = product.unit3;
-     outDetail.unitID = product.unit3ID;
-     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-   }
-
-   // Unit 2 information
-   outDetail.unitID2 = product.unit2ID;
-   outDetail.unit2Qty = product.unit2Qty;
-   outDetail.unit2MBarcode = product.unit2Barcode;
-   outDetail.unit2SalesRate = product.unit2SalesPrice;
-   outDetail.unit2MRP = product.unit2MRP;
-
-   // Unit 3 information
-   outDetail.unitID3 = product.unit3ID;
-   outDetail.unit3Qty = product.unit3Qty;
-   outDetail.unit3MBarcode = product.unit3Barcode;
-   outDetail.unit3SalesRate = product.unit3SalesPrice;
-   outDetail.unit3MRP = product.unit3MRP;
-
-   // Handle supplier reference code
-   if (formState.userConfig?.useSupplierProductCode) {
-     outDetail.supplierReferenceProductCode = product.supplierReferenceProductCode;
-   }
-
-   // Handle default purchase unit
-   if (Number(product.defPurchaseUnitID || 0) > 0 && 
-       !product.isMultiUnitBarCode && 
-       product.basicUnitID !== product.defPurchaseUnitID && 
-       product.isBasicUnitBarcode) {
-     
-     if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
-       outDetail.unit = product.defUnitName;
-       outDetail.multiFactor = product.defUnitMultiFactor ;
-     }
-     outDetail.unitID = product.defPurchaseUnitID;
-   }
-
-   // Handle stock details if visible
-   if (payload.isStockDetailsVisible) {
-     outDetail.stockDetails = product.stockDetails;
-   }
-
-   
-   // Set MRP
-   outDetail.mrp = round(product.mrp);
-
-   // Calculate pricing based on multi-factor
-   if (outDetail.multiFactor > 0) {
-     const pPrice = Number(product.stdPurchasePrice || 0);
-     outDetail.unitPrice = pPrice * outDetail.multiFactor;
-
-     const sPrice = Number(product.stdSalesPrice || 0);
-     outDetail.salesPrice = sPrice * outDetail.multiFactor;
-
-     const minSPrice = Number(product.minSalePrice || 0);
-     outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
-   } else {
-     outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-     outDetail.salesPrice = round(product.stdSalesPrice || 0);
-     outDetail.minSalePrice = Number(product.minSalePrice || 0);
-   }
-
-   // Handle actual sales price if column is visible
-   if (payload.isActualPriceVisible) {
-     outDetail.actualSalesPrice = product.actualSalesPrice;
-   }
-
-
-   // Handle listed product prices
-   if (product.hasListedProductPrice) {
-    outDetail.unitPrice = product.listedProductPrice;
-   }
-
-   // Handle VAT and CST based on form type
-   if (formState.transaction.master.voucherForm === "VAT") {
-     outDetail.vatPerc = Number(product.pVatPerc || 0);
-     outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
-   } else {
-     outDetail.vatPerc = 0;
-     outDetail.cstPerc = 0;
-   }
-
-   // Special handling for meter units
-   const unitName = product.unitName?.toUpperCase().trim();
-   if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
-     outDetail.stickerQty = 4;
-   }
-
-   // Handle empty form type
-   if (formState.transaction.master.voucherForm == "") {
-     outDetail.vatPerc = 0;
-   }
-
-   // Set row header
-   outDetail.unitPriceTag = outDetail.unitPrice;
-   if(!result.transaction) {result.transaction = {}}
-   result.transaction.details = [outDetail];
-
-   // Update UI state for button enabling
-   result.formElements = {
-     ...result.formElements,
-       btnSave: { 
-         disabled: !hasRight(formState.userRightsFormCode, UserAction.Add) || applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
-       },
-       btnEdit: { 
-         disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
-       },
-       btnDelete: { 
-         disabled: applicationSettings?.branchSettings?.maintainInventoryTransactionsEntry == false 
-       }
-   };
-
-    commonParams.formStateHandleFieldChangeKeysOnly &&
-       dispatch &&
-       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result,updateOnlyGivenDetailsColumns: true}));
-       
-       if(data.setFocusToNextColumn) {
-        focusToNextColumn(data.rowIndex, data.searchColumn);
-       }
-       return result;
-    } else if (res?.products?.length > 1) {
-      // Multiple products
-    } else {
-     return null;
-    }
-
-     return result;
-
- } catch(err) {
-  return {}
- } 
-};
-
-const handleTextDataKeyDown = async (
-  value: any,
- event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
- columnName: string,
- rowIndex: number,
- commonParams: CommonParams,
-): Promise<{
- handled: boolean;
- preventDefault?: boolean;
- shouldReturn?: boolean;
- focusAction?: string;
- showDialog?: boolean;
-}> => {
- let {
-   result,
- } = commonParams;
-
- try {
-
-   const key = event.key;
-   const isShiftPressed = event.shiftKey;
-
-
-   if(!result.formElements) {
-    result.formElements = {};
-   }
-   switch (key) {
-     
-
-     case 'Escape':
-     case 'escape':
-        (result.formElements.dgvProduct ??= {}).visible = false;
-        (result.formElements.dgvProductBatches ??= {}).visible = false;
-
-        
-       break;
-
-     case 'q':
-     case 'Q':
-       if (columnName === "qty") {
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields:{showQuantityFactors: {visible: true, rowIndex:rowIndex }}}))
-       }
-       break;
-
-    //  case ' ': // Space key
-    //    if (columnName === "qty") {
-    //      await handleUnitCycling(detail, rowIndex, commonParams, applicationSettings);
-    //      return { handled: true };
-    //    }
-    //    break;
-
-     case 'F2':
-       if (isShiftPressed) {
-         if (columnName === "barCode" || columnName === "pCode") {
-          dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: { showPcode: true } }));
-          //  uiCallbacks.onShowItemListSearch(columnName);
-          //  return { handled: true };
-         }
-       } 
-       break;
-
-     case 'Enter':
-      
-       if(columnName == "pCode") {
-       
-               let data = {...formState.transaction.details[rowIndex]};
-               data.pCode = value;
-               if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode(
-                  {productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.pCode,detail:data,useProductCode: true,rowIndex:rowIndex,searchColumn: "pCode", setFocusToNextColumn: true},{result:{},formStateHandleFieldChangeKeysOnly})
-               } else {
-               
-                 focusToNextColumn(rowIndex, columnName);
-               }
+          outDetail.unitPrice = round(unitPriceFC * exchangeRate, 4);
+          outDetail.grossFC = round(unitPriceFC * qty, 3);
+          outState = calculateRowAmount(
+            Object.assign(detail, outDetail),
+            columnName,
+            {
+              result: {
+                transaction: {
+                  details: [outDetail],
+                },
+              },
+            },
+            true
+          );
+          calculateSummaryAndTotal = true;
         }
-       
-       else if(columnName == "barCode") {
-       
-               let data = {...formState.transaction.details[rowIndex]};
-               data.barCode = value;
-               if(!isNullOrUndefinedOrEmpty(value)) {
-                 loadProductDetailsByAutoBarcode({productCode:data.pCode,autoBarcode:data.barCode,productBatchID:0, searchText:data.barCode,detail:data,useProductCode: false,rowIndex:rowIndex,searchColumn: "barCode", setFocusToNextColumn: true},{result:{}, formStateHandleFieldChangeKeysOnly})
-               } else {
-               
-                 focusToNextColumn(rowIndex, columnName);
-               }
-        } else if(columnName == "unitPriceFC") {
-          if ((() => { try { return parseFloat(value ?? "0"); } catch { return 0; } })() === 0) { 
-            
-            event.preventDefault()
-             const confirm = await ERPAlert.show({
-              icon: "info",
-              title: t("warning"),
-              text: t("Unit Price Zero, Do you Want to Continue"),
-              confirmButtonText: t("yes"),
-              cancelButtonText: t("no"),
-              showCancelButton: true,
-              onCancel: () =>{return false},
-            });
-            if (confirm) {
-              focusToNextColumn(rowIndex, columnName);
-              break
-            } else {
-              
-focusCurrentColumn(rowIndex, columnName);
+      } else if (columnName === "qty" || columnName === "unitPrice") {
+        
+debugger;
+        outDetail[columnName] = value;
+        // Calculate row amount
+        outState = calculateRowAmount(
+          Object.assign(detail, outDetail),
+          columnName,
+          {
+            result: {
+              transaction: {
+                details: [outDetail],
+              },
+            },
+          },
+          true
+        );
+        calculateSummaryAndTotal = true;
+      } else if (columnName === "margin") {
+        outDetail.margin = value;
+        outState.transaction?.details?.push(outDetail);
+      } else if (columnName === "salesPrice") {
+        outDetail.salesPrice = value;
+        const sp = Number(outDetail.salesPrice || 0);
+        const netAmount = Number(detail.total || 0);
+        let qty = Number(detail.qty || 0);
+
+        if (qty === 0) qty = 1;
+        const cost = netAmount / qty;
+
+        let marginPerc = 0;
+        if (cost !== 0) {
+          marginPerc = (sp / cost - 1) * 100;
+        }
+
+        outDetail.margin = round(marginPerc, 6);
+        outState.transaction!.details = [outDetail];
+      }
+debugger;
+      if (calculateSummaryAndTotal) {
+        const details = [...formState.transaction.details];
+        let final = { ...detail, ...outState!.transaction!.details![0] };
+        details[rowIndex] = final;
+        const summaryRes = calculateSummary(details, formState, { result: {} });
+
+        const totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes.summary as SummaryItems,
+          formState.formElements,
+          { result: {} }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+        }
+        outState = totalRes;
+      } 
+      dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: outState,
+            updateOnlyGivenDetailsColumns: true,
+            rowIndex: rowIndex,
+          })
+        );
+    } catch (error) {
+      console.error("Error in handleTextDataChange:", error);
+    } finally {
+    }
+  };
+  const loadProductDetailsByAutoBarcode = async (
+    data: LoadProductDetailsByAutoBarcodeProps,
+    commonParams: CommonParams
+  ): Promise<DeepPartial<TransactionFormState> | null> => {
+    let { result } = commonParams;
+
+    try {
+      let detail = data.detail;
+      let outDetail: DeepPartial<TransactionDetail> = {};
+
+      outDetail.slNo = detail.slNo;
+      outDetail.warehouseID = detail.warehouseID;
+      outDetail.salesPrice = detail.salesPrice;
+      outDetail.unitID = detail.unitID;
+      outDetail.productBatchID = detail.productBatchID;
+      if (!detail) {
+        return {};
+      }
+      let warehouseId = 1;
+      if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
+        warehouseId = formState.transaction.master.fromWarehouseID;
+      }
+      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
+        const detailWarehouseId = outDetail.warehouseID;
+        if (detailWarehouseId ?? 0 > 0) {
+          warehouseId = detailWarehouseId ?? 0;
+        }
+      }
+      const _lastSelectedWarehouseIDOfItemPopupsSearch = (() => {
+        try {
+          const stored = localStorage.getItem(
+            "lastSelectedWarehouseIDOfItemPopupsSearch"
+          );
+          return stored ? Number(stored) || 0 : 0;
+        } catch (error) {
+          console.warn("Failed to read from localStorage:", error);
+          return 0;
+        }
+      })();
+
+      let payload = {
+        useProductCode: data.useProductCode,
+        productCode: data.productCode,
+        barCode: data.autoBarcode,
+        wareHouseId: warehouseId,
+        txtData: data.searchText,
+        partyId: formState.transaction.master.ledgerID,
+        isCheckUseSupplierProductCode:
+          formState.userConfig?.useSupplierProductCode,
+        isActualPriceVisible: formState.gridColumns?.find(
+          (x) => x.dataField == "actualSalesPrice"
+        )?.visible,
+        isStockDetailsVisible: formState.gridColumns?.find(
+          (x) => x.dataField == "stockDetails"
+        )?.visible,
+        lastSelectedWareHouseIdOfItemPopUpsSearch:
+          _lastSelectedWarehouseIDOfItemPopupsSearch,
+      };
+      const queryParams = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          queryParams.append(key, value as any);
+        }
+      });
+      const res: DataAutoBarcode = await api.getAsync(
+        `${
+          Urls.inv_transaction_base
+        }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
+      );
+
+      if (res?.isShowItemPopUp) {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              formElements: {
+                productSearchPopupWindow: {
+                  visible: true,
+                  data: {
+                    searchColumn: data.searchColumn,
+                    rowIndex: data.rowIndex,
+                    searchCriteria: data.useProductCode ? "pCode" : "product",
+                    searchText: data.searchText,
+                    voucherType: formState.transaction.master.voucherType,
+                    warehouseId: 1,
+                  },
+                },
+              },
+            },
+          })
+        );
+      } else if (res?.products?.length === 1) {
+        let product = res.products[0];
+        outDetail.pCode = product.productCode;
+        outDetail.product = product.productName;
+        outDetail.productID = product.productID;
+        outDetail.barCode = product.autoBarcode;
+        outDetail.manualBarcode = product.manualBarcode;
+        outDetail.productBatchID = product.productBatchID;
+
+        // Set default quantity if configured
+        if (applicationSettings?.productsSettings?.setDefaultQty1) {
+          outDetail.qty = 1;
+        }
+
+        outDetail.unit = product.unitName;
+        outDetail.unitID = product.basicUnitID;
+        outDetail.brandID = product.brandID;
+        outDetail.brand = product.brandName;
+        outDetail.size = product.specification;
+        outDetail.batchNo = product.batchNo;
+        outDetail.expDate = product.expiryDate;
+        outDetail.expDays = 100;
+        outDetail.mfdDate = product.mfgDate;
+        outDetail.lpc = round(product.lastPurchaseCost || 0);
+        outDetail.lpr = round(product.lastPurchaseRate || 0);
+        outDetail.stock = product.stock;
+        outDetail.productDescription = product.serialNumber;
+        outDetail.warranty = product.warranty;
+        outDetail.location = product.location;
+        outDetail.arabicName = product.itemNameinSecondLanguage;
+        outDetail.colour = product.colour;
+        outDetail.multiFactor = product.multiFactor;
+
+        // Handle Unit2 barcode
+        if (product.isUnit2BarCode) {
+          outDetail.unit = product.unit2;
+          outDetail.unitID = product.unit2ID;
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        }
+
+        // Handle Unit3 barcode
+        if (product.isUnit3BarCode) {
+          outDetail.unit = product.unit3;
+          outDetail.unitID = product.unit3ID;
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        }
+
+        // Unit 2 information
+        outDetail.unitID2 = product.unit2ID;
+        outDetail.unit2Qty = product.unit2Qty;
+        outDetail.unit2MBarcode = product.unit2Barcode;
+        outDetail.unit2SalesRate = product.unit2SalesPrice;
+        outDetail.unit2MRP = product.unit2MRP;
+
+        // Unit 3 information
+        outDetail.unitID3 = product.unit3ID;
+        outDetail.unit3Qty = product.unit3Qty;
+        outDetail.unit3MBarcode = product.unit3Barcode;
+        outDetail.unit3SalesRate = product.unit3SalesPrice;
+        outDetail.unit3MRP = product.unit3MRP;
+
+        // Handle supplier reference code
+        if (formState.userConfig?.useSupplierProductCode) {
+          outDetail.supplierReferenceProductCode =
+            product.supplierReferenceProductCode;
+        }
+
+        // Handle default purchase unit
+        if (
+          Number(product.defPurchaseUnitID || 0) > 0 &&
+          !product.isMultiUnitBarCode &&
+          product.basicUnitID !== product.defPurchaseUnitID &&
+          product.isBasicUnitBarcode
+        ) {
+          if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
+            outDetail.unit = product.defUnitName;
+            outDetail.multiFactor = product.defUnitMultiFactor;
+          }
+          outDetail.unitID = product.defPurchaseUnitID;
+        }
+
+        // Handle stock details if visible
+        if (payload.isStockDetailsVisible) {
+          outDetail.stockDetails = product.stockDetails;
+        }
+
+        // Set MRP
+        outDetail.mrp = round(product.mrp);
+
+        // Calculate pricing based on multi-factor
+        if (outDetail.multiFactor > 0) {
+          const pPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.unitPrice = pPrice * outDetail.multiFactor;
+
+          const sPrice = Number(product.stdSalesPrice || 0);
+          outDetail.salesPrice = sPrice * outDetail.multiFactor;
+
+          const minSPrice = Number(product.minSalePrice || 0);
+          outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
+        } else {
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.salesPrice = round(product.stdSalesPrice || 0);
+          outDetail.minSalePrice = Number(product.minSalePrice || 0);
+        }
+
+        // Handle actual sales price if column is visible
+        if (payload.isActualPriceVisible) {
+          outDetail.actualSalesPrice = product.actualSalesPrice;
+        }
+
+        // Handle listed product prices
+        if (product.hasListedProductPrice) {
+          outDetail.unitPrice = product.listedProductPrice;
+        }
+
+        // Handle VAT and CST based on form type
+        if (formState.transaction.master.voucherForm === "VAT") {
+          outDetail.vatPerc = Number(product.pVatPerc || 0);
+          outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
+        } else {
+          outDetail.vatPerc = 0;
+          outDetail.cstPerc = 0;
+        }
+
+        // Special handling for meter units
+        const unitName = product.unitName?.toUpperCase().trim();
+        if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
+          outDetail.stickerQty = 4;
+        }
+
+        // Handle empty form type
+        if (formState.transaction.master.voucherForm == "") {
+          outDetail.vatPerc = 0;
+        }
+
+        // Set row header
+        outDetail.unitPriceTag = outDetail.unitPrice;
+        if (!result.transaction) {
+          result.transaction = {};
+        }
+        result.transaction.details = [outDetail];
+
+        // Update UI state for button enabling
+        result.formElements = {
+          ...result.formElements,
+          btnSave: {
+            disabled:
+              !hasRight(formState.userRightsFormCode, UserAction.Add) ||
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+          btnEdit: {
+            disabled:
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+          btnDelete: {
+            disabled:
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+        };
+
+        commonParams.formStateHandleFieldChangeKeysOnly &&
+          dispatch &&
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: result,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+
+        if (data.setFocusToNextColumn) {
+          focusToNextColumn(data.rowIndex, data.searchColumn);
+        }
+        return result;
+      } else if (res?.products?.length > 1) {
+        // Multiple products
+      } else {
+        return null;
+      }
+
+      return result;
+    } catch (err) {
+      return {};
+    }
+  };
+
+  const handleTextDataKeyDown = async (
+    value: any,
+    event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
+    columnName: string,
+    rowIndex: number,
+    commonParams: CommonParams
+  ): Promise<{
+    handled: boolean;
+    preventDefault?: boolean;
+    shouldReturn?: boolean;
+    focusAction?: string;
+    showDialog?: boolean;
+  }> => {
+    let { result } = commonParams;
+
+    try {
+      const key = event.key;
+      const isShiftPressed = event.shiftKey;
+
+      if (!result.formElements) {
+        result.formElements = {};
+      }
+      switch (key) {
+        case "Escape":
+        case "escape":
+          (result.formElements.dgvProduct ??= {}).visible = false;
+          (result.formElements.dgvProductBatches ??= {}).visible = false;
+
+          break;
+
+        case "q":
+        case "Q":
+          if (columnName === "qty") {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  showQuantityFactors: { visible: true, rowIndex: rowIndex },
+                },
+              })
+            );
+          }
+          break;
+
+        //  case ' ': // Space key
+        //    if (columnName === "qty") {
+        //      await handleUnitCycling(detail, rowIndex, commonParams, applicationSettings);
+        //      return { handled: true };
+        //    }
+        //    break;
+
+        case "F2":
+          if (isShiftPressed) {
+            if (columnName === "barCode" || columnName === "pCode") {
+              dispatch(
+                commonParams.formStateHandleFieldChangeKeysOnly({
+                  fields: { showPcode: true },
+                })
+              );
+              //  uiCallbacks.onShowItemListSearch(columnName);
+              //  return { handled: true };
             }
           }
-        } else if(columnName == "margin" || columnName == "salesPrice") {
-          
-           let data = {...formState.transaction.details[rowIndex]};
-               data.margin = columnName == "margin" ? value : data.margin;
-               data.salesPrice = columnName == "salesPrice" ? value: data.salesPrice;
+          break;
 
-               calculateRowAmount(data, columnName, {result: { transaction: {
-                details:[data]
-               }}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})
-
-               if(applicationSettings.inventorySettings.showRateWarning.toUpperCase() == "WARN" && data.salesPrice > 0) {
-                if(data.unitPrice > data.salesPrice) {
-                  
-            event.preventDefault()
-                   const confirm = await ERPAlert.show({
-                    icon: "info",
-                    title: t("warning"),
-                    text: t("Sales Price Less than Purchase Price, Do you Want to Continue"),
-                    confirmButtonText: t("yes"),
-                    cancelButtonText: t("no"),
-                    showCancelButton: true,
-                    onCancel: () =>{return false},
-                  });
-                  if (confirm) {
-                    focusToNextColumn(rowIndex, columnName);
-                    break
-                  } else {
-                    focusCurrentColumn(rowIndex, columnName);
-                  }
+        case "Enter":
+          if (columnName == "pCode") {
+            let data = { ...formState.transaction.details[rowIndex] };
+            data.pCode = value;
+            if (!isNullOrUndefinedOrEmpty(value)) {
+              loadProductDetailsByAutoBarcode(
+                {
+                  productCode: data.pCode,
+                  autoBarcode: data.barCode,
+                  productBatchID: 0,
+                  searchText: data.pCode,
+                  detail: data,
+                  useProductCode: true,
+                  rowIndex: rowIndex,
+                  searchColumn: "pCode",
+                  setFocusToNextColumn: true,
+                },
+                { result: {}, formStateHandleFieldChangeKeysOnly }
+              );
+            } else {
+              focusToNextColumn(rowIndex, columnName);
+            }
+          } else if (columnName == "barCode") {
+            let data = { ...formState.transaction.details[rowIndex] };
+            data.barCode = value;
+            if (!isNullOrUndefinedOrEmpty(value)) {
+              loadProductDetailsByAutoBarcode(
+                {
+                  productCode: data.pCode,
+                  autoBarcode: data.barCode,
+                  productBatchID: 0,
+                  searchText: data.barCode,
+                  detail: data,
+                  useProductCode: false,
+                  rowIndex: rowIndex,
+                  searchColumn: "barCode",
+                  setFocusToNextColumn: true,
+                },
+                { result: {}, formStateHandleFieldChangeKeysOnly }
+              );
+            } else {
+              focusToNextColumn(rowIndex, columnName);
+            }
+          } else if (columnName == "unitPriceFC") {
+            if (
+              (() => {
+                try {
+                  return parseFloat(value ?? "0");
+                } catch {
+                  return 0;
                 }
-               }
-               else if(applicationSettings.inventorySettings.showRateWarning.toUpperCase() == "BLOCK" && data.salesPrice > 0) {
-                if(data.unitPrice > data.salesPrice) {
+              })() === 0
+            ) {
+              event.preventDefault();
+              const confirm = await ERPAlert.show({
+                icon: "info",
+                title: t("warning"),
+                text: t("Unit Price Zero, Do you Want to Continue"),
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: true,
+                onCancel: () => {
+                  return false;
+                },
+              });
+              if (confirm) {
+                focusToNextColumn(rowIndex, columnName);
+                break;
+              } else {
+                focusCurrentColumn(rowIndex, columnName);
+              }
+            }
+          } else if (columnName == "margin" || columnName == "salesPrice") {
+            let data = { ...formState.transaction.details[rowIndex] };
+            data.margin = columnName == "margin" ? value : data.margin;
+            data.salesPrice =
+              columnName == "salesPrice" ? value : data.salesPrice;
+
+            calculateRowAmount(data, columnName, {
+              result: {
+                transaction: {
+                  details: [data],
+                },
+              },
+              formStateHandleFieldChangeKeysOnly:
+                formStateHandleFieldChangeKeysOnly,
+            });
+
+            if (
+              applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
+                "WARN" &&
+              data.salesPrice > 0
+            ) {
+              if (data.unitPrice > data.salesPrice) {
+                event.preventDefault();
+                const confirm = await ERPAlert.show({
+                  icon: "info",
+                  title: t("warning"),
+                  text: t(
+                    "Sales Price Less than Purchase Price, Do you Want to Continue"
+                  ),
+                  confirmButtonText: t("yes"),
+                  cancelButtonText: t("no"),
+                  showCancelButton: true,
+                  onCancel: () => {
+                    return false;
+                  },
+                });
+                if (confirm) {
+                  focusToNextColumn(rowIndex, columnName);
+                  break;
+                } else {
                   focusCurrentColumn(rowIndex, columnName);
                 }
-               }
+              }
+            } else if (
+              applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
+                "BLOCK" &&
+              data.salesPrice > 0
+            ) {
+              if (data.unitPrice > data.salesPrice) {
+                focusCurrentColumn(rowIndex, columnName);
+              }
+            }
+          } else {
+            focusToNextColumn(rowIndex, columnName);
+          }
 
+        default:
+          break;
+      }
+
+      // Dispatch changes if any state was modified
+      if (result) {
+        console.log(result);
+
+        commonParams.formStateHandleFieldChangeKeysOnly &&
+          dispatch &&
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+          );
+      }
+
+      return { handled: false };
+    } catch (error) {
+      console.error("Error in handleTextDataKeyDown:", error);
+      return { handled: true, shouldReturn: true };
+    }
+  };
+
+  // Handle unit cycling when space is pressed on quantity column
+  const handleUnitCycling = async (detail: any) => {
+    try {
+      const productBatchId = Number(detail.productBatchId || 0);
+      const currentUnitId = Number(detail.unitId || 0);
+
+      const batches = formState.batchesUnits?.filter(
+        (x: any) => x.productBatchID == productBatchId
+      );
+
+      // Get next unit ID (this would be an API call)
+      const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
+
+      if (currentUnitId !== nextUnitId) {
+        // Update unit information
+        const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
+
+        if (unitDetails) {
+          detail.unitId = nextUnitId;
+          detail.unit = unitDetails.unitName;
+          detail.unitPrice = unitDetails.standardPurchasePrice;
+          detail.unitPriceTag = unitDetails.standardPurchasePrice;
+          detail.salesPrice = unitDetails.standardSalesPrice;
+          detail.minSalePrice = unitDetails.standardMinSalePrice;
+
+          // Handle actual sales price if visible
+          if (result.ui?.visibleColumns?.includes("actualSalesPrice")) {
+            detail.actualSalesPrice = detail.salesPrice;
+
+            try {
+              const otherUnitPrice = await getProductOtherUnitPrice(
+                productBatchId,
+                nextUnitId
+              );
+              if (otherUnitPrice > 0) {
+                detail.actualSalesPrice = otherUnitPrice;
+              }
+            } catch (error) {
+              console.error("Error getting other unit price:", error);
+            }
+          }
+
+          // Handle price category pricing
+          try {
+            const priceCategoryId = result.ui?.selectedPriceCategory || 0;
+            const priceCategoryPrice =
+              await getProductPriceCategoryPurchasePrice(
+                productBatchId,
+                priceCategoryId,
+                nextUnitId
+              );
+            if (priceCategoryPrice !== 0) {
+              detail.unitPrice = priceCategoryPrice;
+            }
+          } catch (error) {
+            console.error("Error getting price category price:", error);
+          }
+
+          // Calculate row amounts
+          const calculateResult = calculateRowAmount(
+            detail,
+            "slNo",
+            applicationSettings,
+            commonParams,
+            true
+          );
+          if (calculateResult?.transaction?.details?.[0]) {
+            result.transaction.details[rowIndex] =
+              calculateResult.transaction.details[0];
+          }
         }
-        else {
-          focusToNextColumn(rowIndex, columnName);
-        }
+      }
+    } catch (error) {
+      console.error("Error in handleUnitCycling:", error);
+    }
+  };
 
-     default:
-      break
-   }
-
-   // Dispatch changes if any state was modified
-   if (result) {
-    console.log(result);
-    
-     commonParams.formStateHandleFieldChangeKeysOnly &&
-       dispatch &&
-       dispatch(commonParams.formStateHandleFieldChangeKeysOnly({fields: result}));
-   }
-
-   return { handled: false };
-
- } catch (error) {
-   console.error('Error in handleTextDataKeyDown:', error);
-   return { handled: true, shouldReturn: true };
- }
-};
-
-// Handle unit cycling when space is pressed on quantity column
-const handleUnitCycling = async (
- detail: any
-) => {
-
- try {
-   const productBatchId = Number(detail.productBatchId || 0);
-   const currentUnitId = Number(detail.unitId || 0);
-
-   const batches = formState.batchesUnits?.filter((x: any) => x.productBatchID == productBatchId); 
-
-   // Get next unit ID (this would be an API call)
-   const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
-
-   if (currentUnitId !== nextUnitId) {
-     // Update unit information
-     const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
-     
-     if (unitDetails) {
-       detail.unitId = nextUnitId;
-       detail.unit = unitDetails.unitName;
-       detail.unitPrice = unitDetails.standardPurchasePrice;
-       detail.unitPriceTag = unitDetails.standardPurchasePrice;
-       detail.salesPrice = unitDetails.standardSalesPrice;
-       detail.minSalePrice = unitDetails.standardMinSalePrice;
-
-       // Handle actual sales price if visible
-       if (result.ui?.visibleColumns?.includes('actualSalesPrice')) {
-         detail.actualSalesPrice = detail.salesPrice;
-         
-         try {
-           const otherUnitPrice = await getProductOtherUnitPrice(
-             productBatchId,
-             nextUnitId
-           );
-           if (otherUnitPrice > 0) {
-             detail.actualSalesPrice = otherUnitPrice;
-           }
-         } catch (error) {
-           console.error('Error getting other unit price:', error);
-         }
-       }
-
-       // Handle price category pricing
-       try {
-         const priceCategoryId = result.ui?.selectedPriceCategory || 0;
-         const priceCategoryPrice = await getProductPriceCategoryPurchasePrice(
-           productBatchId,
-           priceCategoryId,
-           nextUnitId
-         );
-         if (priceCategoryPrice !== 0) {
-           detail.unitPrice = priceCategoryPrice;
-         }
-       } catch (error) {
-         console.error('Error getting price category price:', error);
-       }
-
-       // Calculate row amounts
-       const calculateResult = calculateRowAmount(detail, "slNo", applicationSettings, commonParams, true);
-       if (calculateResult?.transaction?.details?.[0]) {
-         result.transaction.details[rowIndex] = calculateResult.transaction.details[0];
-       }
-     }
-   }
-
- } catch (error) {
-   console.error('Error in handleUnitCycling:', error);
- }
-};
-
-// Handle Enter key press
-
+  // Handle Enter key press
 
   return {
     undoEditMode,
@@ -2513,7 +2640,6 @@ const handleUnitCycling = async (
     clearRow,
     calculateRowAmount,
     calculateSummary,
-    calculateTotal
+    calculateTotal,
   };
 };
-

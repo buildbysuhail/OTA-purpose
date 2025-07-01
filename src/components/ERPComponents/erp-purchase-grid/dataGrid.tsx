@@ -1106,7 +1106,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                       <th
                         id={`${col.dataField}_${col.dataField}`}
                         key={col.dataField}
-                        className="relative p-2 text-left font-semibold flex items-center justify-center transition-all duration-300 hover:bg-white/50 cursor-pointer group"
+                        className="relative p-2 text-left font-semibold   transition-all duration-300 hover:bg-white/50 cursor-pointer group"
                         style={{
                           fontSize: `${gridFontSize}px`,
                           fontWeight: gridIsBold ? "bold" : "600",

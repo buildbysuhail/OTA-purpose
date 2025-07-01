@@ -240,10 +240,12 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         id={`${gridId}_${column.dataField}_${rowIndex}`}
         noLabel
         type={column.dataType === "number" ? "text" : "text"}
-        className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none px-1 py-0 flex items-center"
+        className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
         style={{
-          fontSize: `${gridFontSize}px`,
-          fontWeight: gridIsBold ? "bold" : "normal",
+             fontSize: `${gridFontSize}px`,
+             fontWeight: gridIsBold ? "bold" : "normal",
+             textAlign: column.alignment || "center", 
+
         }}
         value={localValue}
         noBorder
@@ -403,15 +405,12 @@ const Row = React.memo(
                   gridId,
                 })}
                 key={column.dataField}
-                className={`flex items-center px-0 py-0 ${
+                className={`${
                   column.cssClass || ""
                 } ${isFocused ? "!border-[#4447ef]" : ""}`}
                 style={{
                   width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign:
-                    column.alignment ||
-                    (column.dataType === "number" ? "right" : "left"),
+                  minWidth: column.width ? `${column.width}px` : "150px",              
                   boxSizing: "border-box",
                   borderTop: isFocused
                     ? "2px solid #EF4444"
@@ -439,6 +438,14 @@ const Row = React.memo(
                         formState.userConfig?.gridBorderColor || "209,213,219"
                       })`
                     : "none",
+display: "flex", // Keep flex for layout consistency
+    alignItems: "center", // Vertically center content
+    justifyContent:
+      column.alignment === "right"
+        ? "flex-end"
+        : column.alignment === "center"
+        ? "center"
+        : "flex-start", // Align content based on column.alignment
                 }}
                 role="gridcell"
                 onClick={(e) => {
@@ -458,9 +465,14 @@ const Row = React.memo(
                 {
                 column.dataField === "slNo" ? (
                    <span
+                   className="px-1"
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+             width: "100%", 
+             textAlign: column.alignment || "center",
+              display: "block", 
+
                     }}
                     id={cellId}
                     
@@ -474,6 +486,7 @@ const Row = React.memo(
                 data.currentCell?.column === column.dataField &&
                 data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
+                    textAlign={column.alignment === "right" ? "right" : "left"}
                     rowIndex={index}
                     id={cellId}
                     inputId={`${gridId}_${column.dataField}_${index}`}
@@ -524,10 +537,13 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                       textAlign: column.alignment || "center",
+              display: "block", 
+
                     }}
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    className="w-full h-full px-1 flex items-center  cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>
@@ -541,10 +557,13 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                       textAlign: column.alignment || "center",
+              display: "block", 
+  
                     }}
                     id={cellId}
                     tabIndex={0}
-                    className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${
+                    className={`inline-flex px-1  py-1 font-medium rounded-full cursor-default ${
                       cellValue === "Active"
                         ? "bg-[#dcfce7] text-[#166534]"
                         : ""
@@ -590,10 +609,13 @@ const Row = React.memo(
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
+                       textAlign: column.alignment || "center",
+              display: "block", 
+ 
                     }}
                     id={cellId}
                     tabIndex={0}
-                    className="w-full h-full flex items-center px-1 cursor-default"
+                    className="w-full h-full px-1 flex items-center  cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) =>
@@ -1090,13 +1112,13 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                       <th
                         id={`${col.dataField}_${col.dataField}`}
                         key={col.dataField}
-                        className="relative !bg-[#f0f09285] px-1 py-1 text-left font-medium flex items-center justify-center"
+                       className="relative !bg-[#f0f09285] px-1  py-1  font-medium "
                         style={{
                           fontSize: `${gridFontSize}px`,
                           fontWeight: gridIsBold ? "bold" : "normal",
                           width: col.width ? `${col.width}px` : "150px",
                           minWidth: col.width ? `${col.width}px` : "150px",
-                          textAlign: "center",
+                          textAlign: col.alignment ||(col.dataType === "number" ? "right" : "left"),
                           boxSizing: "border-box",
                           borderRight:
                             index <

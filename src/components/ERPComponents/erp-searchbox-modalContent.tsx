@@ -13,6 +13,7 @@ import { DevGridColumn } from "../types/dev-grid-column";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { useDispatch } from "react-redux";
 import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
+import { generateUniqueKey } from "../../utilities/Utils";
 import ERPCheckbox from "./erp-checkbox";
 
 const isNotEmpty = (value: any) =>value !== undefined && value !== null && value !== "";
@@ -183,24 +184,33 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight,relatedInfo.showStockDetails]);
 
- const handleEnterKeyDown = useCallback(
-    (e: any) => {
-      if (e.event.key !== "Enter") return;
-      e.event.preventDefault();
-      const instance = gridRef.current?.instance();
-      if (!instance) return;
+  const handleEnterKeyDown = (e: any) => {
+    if (e.event.key === "Enter") {
+      e.event?.preventDefault();
+      const gridInstance = gridRef.current?.instance();
+      if (gridInstance) {
+        
+        const selectedRowsData = gridInstance.getSelectedRowsData();
+        if (selectedRowsData.length > 0) {
+          const res = {
+            items: selectedRowsData,
+            key: generateUniqueKey(),
+            rowIndex
+          };
 
-      const selected = instance.getSelectedRowsData();
-      if (selected.length === 0) return;
-
-      const payload = { items: selected, key: crypto.randomUUID(), rowIndex };
-      dispatch(formStateHandleFieldChange({ fields: { popupSearchSelectionData: JSON.stringify(payload) } }));
-      onNextCellFind?.(rowIndex, searchColumn);
-      onClose?.();
-    },
-    [dispatch, onClose, onNextCellFind, rowIndex, searchColumn]
-  );
-
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { popupSearchSelectionData: JSON.stringify(res) },
+            })
+          );
+          if (onClose) {
+            onNextCellFind?.(rowIndex, searchColumn);
+            onClose();
+          }
+        }
+      }
+    }
+  };
 
   const columns: DevGridColumn[] = useMemo(
     () => [

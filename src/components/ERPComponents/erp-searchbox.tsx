@@ -31,7 +31,7 @@ import Urls from "../../redux/urls";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 
 interface InputProps {
-  id: string,
+  id?: string,
   inputId?: string;
   label?: string;
   productDataUrl?: string;
@@ -44,7 +44,7 @@ interface InputProps {
   onKeyDown?: (value: any,e: React.KeyboardEvent<HTMLInputElement>) => void;
     onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    className: string;
+    className?: string;
   checkboxLabel?: string;
   value?: string;
   clearAfterSelection?: boolean;

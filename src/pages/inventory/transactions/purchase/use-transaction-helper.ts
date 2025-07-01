@@ -447,6 +447,10 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal) {
+    //     let details = formState.transaction.details[in]
+    //     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
+    //   result: {},
+    // });
         result = calculateTotal(
           formState.transaction.master,
           formState.summary,
@@ -567,7 +571,7 @@ export const useTransactionHelper = (transactionType: string) => {
             const unitPrice = round(uRate, 4);
 
             // Recalculate row amounts
-            result = calculateRowAmount(detail, currentColumn, commonParams);
+            result = calculateRowAmount({...detail, unitPriceFC: unitPrice, unitPrice: unitPriceFC }, currentColumn, {result: {transaction}});
             result.transaction!.details!.find(
               (x) => x?.slNo == detail.slNo
             )!.unitPrice = unitPrice;

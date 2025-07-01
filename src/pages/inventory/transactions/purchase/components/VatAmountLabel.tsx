@@ -3,12 +3,14 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 
 interface VatAmountLabelProps extends VoucherElementProps {
   taxData: any[];
+  showFirstFooter: boolean;
 }
 
 const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
   formState,
   t,
   taxData,
+  showFirstFooter
 }) => {
   return (
     // <ERPLabel
@@ -20,9 +22,9 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     //   showDropdown={true}
     //   dropdownData={taxData}
     // />
-    <div className="flex items-center">
-      <span className="w-20">{t(formState.formElements.totTax.label)}</span>
-      <span>:{formState.transaction.master.vatAmount}</span>
+     <div className={showFirstFooter ? "flex items-center" : "flex justify-between items-center"}>
+      <span className={showFirstFooter ? "w-20 text-xs text-gray-600 font-medium" : "text-xs text-gray-600 font-medium"}>{t(formState.formElements.totTax.label)}</span>
+      <span className="text-sm font-semibold text-gray-900">: {formState.transaction.master.vatAmount}</span>
     </div>
   );
 };

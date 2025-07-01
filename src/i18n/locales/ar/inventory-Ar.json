@@ -495,5 +495,7 @@
     "warehouse_id": "رقم تعريف المستودع",
     "unit_already_selected_please_change_it": "الوحدة محددة بالفعل، يرجى تغييرها!!",
     "already_used": "مستخدم بالفعل",
-    "capitalization_for_product_name": "حالة الأحرف لاسم المنتج"
+    "capitalization_for_product_name": "حالة الأحرف لاسم المنتج",
+    
+    "product_search_popup_window": "نافذة منبثقة للبحث عن المنتجات"
 }

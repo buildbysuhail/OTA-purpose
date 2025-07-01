@@ -257,7 +257,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   poTransDetailsIDTag: 0,
   warehouseName: "",
   unitPriceTag: 0,
-  unitDecimalPoint: 0
+  unitDecimalPoint: 0,
+  multiFactor: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
@@ -322,7 +323,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   dgvInventory: { visible: true, disabled: false, label: "" },
   dgvProduct: { visible: false, disabled: false, label: "",params: "" },
   dgvProductBatches: { visible: false, disabled: false, label: "",params: "" },
-  productSearchPopupWindow: { visible: false, disabled: false, label: "ProductSearchPopupWindow",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
+  productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
   lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },

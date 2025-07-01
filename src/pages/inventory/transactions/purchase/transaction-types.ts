@@ -361,6 +361,7 @@ export interface UserConfig {
   gridIsBold?: boolean;
   gridRowHeight?: number;
   gridBorderColor?: string;
+  gridHeaderBg?: string;
 }
 
 export type FormElementsState = {

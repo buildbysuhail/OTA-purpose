@@ -1273,6 +1273,7 @@
   "set_qty1_for_weighing_scale_item_value_mode": "Set Qty1 for Weighing Scale Item Value Mode",
   "purchase_register_report": "Purchase Register Report",
   "manual_barcode": "Manual Barcode",
+  "m_barcode": "MBarcode",
   "brand": "Brand",
   "unit_price_1": "Unit Price 1",
   "std_sales_price": "Std Sales Price",

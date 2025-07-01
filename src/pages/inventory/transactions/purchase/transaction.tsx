@@ -694,136 +694,179 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   useEffect(() => {
-    
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
-      if(data.rowIndex < 0) {
+      if (data.rowIndex < 0) {
         return;
       }
-      const baseDetail = {...formState.transaction.details[data.rowIndex]}
-       loadProductDetailsByAutoBarcode(
-                  {productCode:data.productCode,autoBarcode:data.autoBarcode
-                    ,productBatchID:data.productBatchID, searchText:data.searchText,detail:baseDetail
-                    ,useProductCode: data.useProductCode,rowIndex:data.rowIndex
-                    ,searchColumn: data.useProductCode ?"pCode": "product", setFocusToNextColumn: true},{result:{}, formStateHandleFieldChangeKeysOnly})
-      
+      const baseDetail = { ...formState.transaction.details[data.rowIndex] };
+      loadProductDetailsByAutoBarcode(
+        {
+          productCode: data.productCode,
+          autoBarcode: data.autoBarcode,
+          productBatchID: data.productBatchID,
+          searchText: data.searchText,
+          detail: baseDetail,
+          useProductCode: data.useProductCode,
+          rowIndex: data.rowIndex,
+          searchColumn: data.useProductCode ? "pCode" : "product",
+          setFocusToNextColumn: true,
+        },
+        { result: {}, formStateHandleFieldChangeKeysOnly }
+      );
     }
   }, [formState.batchSelectionData]);
-useEffect(() => {
-        
-  const fetchData = async () => {
-    try {
-      
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         if (formState.popupSearchSelectionData != "") {
-      const data = JSON.parse(formState.popupSearchSelectionData);
+          const data = JSON.parse(formState.popupSearchSelectionData);
 
-      if (data.items && data.items.length > 0) {
-        const rowIndex = data.rowIndex;
-        const searchColumn = data.searchColumn;
-        const searchText = data.searchText;
-        const items = data.items;
-        const baseRowData = formState.transaction.details[rowIndex];
-        let currentDetails = [
-          ...formState.transaction.details.filter((x) => x.productID > 0),
-        ];
-        if(currentDetails.find(x => x.slNo == baseRowData.slNo) == undefined) {
-          currentDetails.push(baseRowData)
-        }
-        let res: DeepPartial<TransactionFormState> = {};
-        let addDetails: TransactionDetail[] = [];
+          if (data.items && data.items.length > 0) {
+            const rowIndex = data.rowIndex;
+            const searchColumn = data.searchColumn;
+            const searchText = data.searchText;
+            const items = data.items;
+            const baseRowData = formState.transaction.details[rowIndex];
+            let currentDetails = [
+              ...formState.transaction.details.filter((x) => x.productID > 0),
+            ];
+            if (
+              currentDetails.find((x) => x.slNo == baseRowData.slNo) ==
+              undefined
+            ) {
+              currentDetails.push(baseRowData);
+            }
+            let res: DeepPartial<TransactionFormState> = {};
+            let addDetails: TransactionDetail[] = [];
 
-          for (const [index, item] of items.entries()) {
-            
-          const input = {barCode: item.autoBarcode, productBatchID: item.productBatchID,warehouseID: item.warehouseID, warehouseName: item.warehouse};
-          if (index == 0) {
-            const rowData: TransactionDetail = { ...baseRowData, ...input};
-            const autBarcodeRes = await loadProductDetailsByAutoBarcode(
-              {autoBarcode:rowData.barCode
-                ,productBatchID: rowData.productBatchID
-                , rowIndex: rowIndex
-                , searchColumn: searchColumn
-                , searchText: rowData.barCode
-                , detail: rowData,
-              productCode:"",
-            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
+            for (const [index, item] of items.entries()) {
+              const input = {
+                barCode: item.autoBarcode,
+                productBatchID: item.productBatchID,
+                warehouseID: item.warehouseID,
+                warehouseName: item.warehouse,
+              };
+              if (index == 0) {
+                const rowData: TransactionDetail = { ...baseRowData, ...input };
+                const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+                  {
+                    autoBarcode: rowData.barCode,
+                    productBatchID: rowData.productBatchID,
+                    rowIndex: rowIndex,
+                    searchColumn: searchColumn,
+                    searchText: rowData.barCode,
+                    detail: rowData,
+                    productCode: "",
+                    useProductCode: false,
+                    setFocusToNextColumn: false,
+                  },
+                  { result: { transaction: { details: [rowData] } } }
+                );
 
+                const latestData =
+                  autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const mergedRowData: TransactionDetail = {
+                  ...rowData,
+                  ...latestData,
+                };
+                currentDetails[rowIndex] = mergedRowData;
+                res = calculateRowAmount(
+                  mergedRowData as TransactionDetail,
+                  searchColumn,
+                  { result: { transaction: { details: [mergedRowData] } } },
+                  true
+                );
+                if (
+                  res?.transaction?.details &&
+                  res?.transaction?.details.length > 0
+                ) {
+                  currentDetails[rowIndex] = res.transaction
+                    .details[0] as TransactionDetail;
+                }
+              } else {
+                let rowData: DeepPartial<TransactionDetail> = {
+                  ...input,
+                };
+                rowData.slNo = generateUniqueKey();
 
-const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
-const mergedRowData: TransactionDetail = {
-    ...rowData,
-    ...latestData
-};
-            currentDetails[rowIndex] = mergedRowData;
-            res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
-             if(res?.transaction?.details && res?.transaction?.details.length > 0) {
-         currentDetails[rowIndex] = res.transaction.details[0] as TransactionDetail
+                const autBarcodeRes = await loadProductDetailsByAutoBarcode(
+                  {
+                    autoBarcode: rowData.barCode ?? "",
+                    productBatchID: rowData.productBatchID ?? 0,
+                    rowIndex: rowIndex,
+                    searchColumn: searchColumn,
+                    searchText: rowData.barCode ?? "",
+                    detail: rowData as TransactionDetail,
+                    productCode: "",
+                    useProductCode: false,
+                    setFocusToNextColumn: false,
+                  },
+                  { result: { transaction: { details: [rowData] } } }
+                );
+
+                const latestData =
+                  autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const mergedRowData: TransactionDetail = {
+                  ...(rowData as TransactionDetail),
+                  ...latestData,
+                };
+
+                let _res = calculateRowAmount(
+                  mergedRowData as TransactionDetail,
+                  searchColumn,
+                  { result: { transaction: { details: [mergedRowData] } } },
+                  true
+                );
+
+                if (
+                  _res?.transaction?.details &&
+                  _res?.transaction?.details.length > 0
+                ) {
+                  addDetails.push(
+                    _res!.transaction!.details![0] as TransactionDetail
+                  );
+                }
+              }
+            }
+
+            let final = [...currentDetails, ...addDetails];
+            const summaryRes = calculateSummary(final, formState, {
+              result: {},
+            });
+
+            const totalRes = calculateTotal(
+              formState.transaction.master,
+              summaryRes.summary as SummaryItems,
+              formState.formElements,
+              { result: {} }
+            );
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  ...totalRes,
+                  summary: summaryRes.summary,
+                  showQuantityFactors: { visible: false, rowIndex: -1 },
+                  transaction: {
+                    ...totalRes.transaction,
+                    details: res.transaction?.details,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+                rowIndex: rowIndex,
+                itemsToAddToDetails: addDetails,
+              })
+            );
           }
-          } else {
-            let rowData: DeepPartial<TransactionDetail> = {
-              ...input
-            };
-            rowData.slNo = generateUniqueKey()
-            
-             const autBarcodeRes = await loadProductDetailsByAutoBarcode(
-              {autoBarcode:rowData.barCode??""
-                ,productBatchID: rowData.productBatchID??0
-                , rowIndex: rowIndex
-                , searchColumn: searchColumn
-                , searchText: rowData.barCode??""
-                , detail: rowData as TransactionDetail,
-              productCode:"",
-            useProductCode: false, setFocusToNextColumn: false}, {result:{transaction:{ details:[rowData]}}})
-
-            const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
-const mergedRowData: TransactionDetail = {
-    ...rowData as TransactionDetail,
-    ...latestData
-};
-
-          let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: {transaction:{details: [mergedRowData]}} }, true);
-         
-          if(_res?.transaction?.details && _res?.transaction?.details.length > 0) {
-          addDetails.push(_res!.transaction!.details![0] as TransactionDetail);
-          }
         }
-        };
-
-        let final = [...currentDetails, ...addDetails];
-        const summaryRes = calculateSummary(final, formState, { result: {} });
-
-        const totalRes = calculateTotal(
-          formState.transaction.master,
-          summaryRes.summary as SummaryItems,
-          formState.formElements,
-          { result: {} }
-        );
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {
-              ...totalRes,
-              summary: summaryRes.summary,
-              showQuantityFactors: { visible: false, rowIndex: -1 },
-              transaction: {
-                ...totalRes.transaction,
-                details: res.transaction?.details,
-              },
-            },
-            updateOnlyGivenDetailsColumns: true,
-            rowIndex: rowIndex,
-            itemsToAddToDetails: addDetails,
-          })
-        );
+      } catch (error) {
+        console.error(error);
       }
-      
-    }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  fetchData();
-}, [formState.popupSearchSelectionData]);
- 
+    fetchData();
+  }, [formState.popupSearchSelectionData]);
+
   useEffect(() => {
     if (formState.quantityFactorData != "") {
       const data = JSON.parse(formState.quantityFactorData);
@@ -849,8 +892,11 @@ const mergedRowData: TransactionDetail = {
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
           res = calculateRowAmount(rowData, "qty", { result: {} }, true);
-          if(res?.transaction?.details && res?.transaction?.details.length > 0) {
-          addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+          if (
+            res?.transaction?.details &&
+            res?.transaction?.details.length > 0
+          ) {
+            addDetails.push(res!.transaction!.details![0] as TransactionDetail);
           }
         }
       });
@@ -896,7 +942,7 @@ const mergedRowData: TransactionDetail = {
       },
       {
         dataField: "pCode",
-        caption: t("p_code"),
+        caption: t("code"),
         dataType: "string",
         allowEditing: true,
         visible: true,
@@ -909,7 +955,7 @@ const mergedRowData: TransactionDetail = {
         dataType: "number",
         allowEditing: true,
         width: 100,
-        visible: true,
+        visible: false,
         readOnly: false,
         alignment: "right",
       },
@@ -923,11 +969,12 @@ const mergedRowData: TransactionDetail = {
       },
       {
         dataField: "productBatchID",
-        caption: t("product_batch_id"),
+        caption: t("item_batch_id"),
         dataType: "number",
         width: 200,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "product",
@@ -944,6 +991,7 @@ const mergedRowData: TransactionDetail = {
         width: 100,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "brand",
@@ -951,17 +999,17 @@ const mergedRowData: TransactionDetail = {
         dataType: "string",
         width: 150,
         alignment: "left",
+        visible: false,
+        allowEditing: true,
       },
       {
         dataField: "brandID",
         caption: t("brand_id"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 100,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "qty",
@@ -978,24 +1026,21 @@ const mergedRowData: TransactionDetail = {
         allowEditing: true,
         width: 100,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "unit",
         caption: t("unit"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 150,
         alignment: "left",
+        readOnly: true,
       },
       {
         dataField: "unitID",
         caption: t("unit_id"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         alignment: "right",
       },
@@ -1008,12 +1053,78 @@ const mergedRowData: TransactionDetail = {
         alignment: "right",
       },
       {
-        dataField: "unitPriceFC",
-        caption: t("unit_price_fc"),
+        dataField: "gross",
+        caption: t("gross"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        allowEditing: true,
+      },
+      {
+        dataField: "discPerc",
+        caption: t("disc_perc"),
         dataType: "number",
         allowEditing: true,
-        width: 150,
-        readOnly: false,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "discount",
+        caption: t("discount"),
+        dataType: "number",
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "netValue",
+        caption: t("net_value"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+        readOnly: true,
+        visible: false,
+      },
+      {
+        dataField: "total",
+        caption: t("total"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+        readOnly: true,
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "manualBarcode",
+        caption: t("m_barcode"),
+        dataType: "string",
+        width: 200,
+        alignment: "left",
+      },
+      {
+        dataField: "stockDetails",
+        caption: t("stock_details"),
+        dataType: "string",
+        readOnly: true,
+        visible:false,
+        minWidth: 200,
+        alignment: "left",
+      },
+      {
+        dataField: "margin",
+        caption: t("margin"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        allowEditing:true,
         alignment: "right",
       },
       {
@@ -1023,108 +1134,13 @@ const mergedRowData: TransactionDetail = {
         allowEditing: true,
         width: 200,
         alignment: "right",
-      },
-      {
-        dataField: "gross",
-        caption: t("gross"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "discPerc",
-        caption: t("disc_perc"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        allowEditing: true,
-        width: 100,
         readOnly: true,
-        alignment: "right",
-      },
-      {
-        dataField: "discount",
-        caption: t("discount"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        allowEditing: true,
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "netValue",
-        caption: t("net_value"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "total",
-        caption: t("total"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "stock",
-        caption: t("stock"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "manualBarcode",
-        caption: t("manual_barcode"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 200,
-        alignment: "left",
-      },
-      {
-        dataField: "stockDetails",
-        caption: t("stock_details"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-        alignment: "left",
-      },
-      {
-        dataField: "margin",
-        caption: t("margin"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        readOnly: true,
-        alignment: "right",
       },
       {
         dataField: "lpr",
         caption: t("lpr"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        readOnly: true,
         width: 100,
         alignment: "right",
       },
@@ -1132,20 +1148,16 @@ const mergedRowData: TransactionDetail = {
         dataField: "lpc",
         caption: t("lpc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
         readOnly: true,
+        width: 100,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "stickerQty",
-        caption: t("sticker_qty"),
+        caption: t("sticker"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 130,
         alignment: "right",
       },
@@ -1153,9 +1165,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "profit",
         caption: t("profit"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        readOnly: true,
         width: 100,
         alignment: "right",
       },
@@ -1163,9 +1173,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "size",
         caption: t("size"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         alignment: "left",
       },
@@ -1173,19 +1181,17 @@ const mergedRowData: TransactionDetail = {
         dataField: "vatPerc",
         caption: t("vat_perc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
+        allowEditing:true,
         width: 100,
         alignment: "right",
       },
       {
         dataField: "vatAmount",
-        caption: t("vat_amount"),
+        caption: t("vat"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
+        readOnly: true,
         width: 100,
         alignment: "right",
       },
@@ -1193,31 +1199,24 @@ const mergedRowData: TransactionDetail = {
         dataField: "cst",
         caption: t("cst"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
-        readOnly: true,
         alignment: "right",
       },
       {
         dataField: "cstPerc",
         caption: t("cst_perc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
-        readOnly: true,
+        allowEditing:true,
         alignment: "right",
       },
       {
         dataField: "cost",
         caption: t("cost"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        readOnly: true,
         width: 100,
         alignment: "right",
       },
@@ -1225,9 +1224,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "batchNo",
         caption: t("batch_no"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         alignment: "left",
       },
@@ -1235,66 +1232,49 @@ const mergedRowData: TransactionDetail = {
         dataField: "mfdDate",
         caption: t("mfd_date"),
         dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy",
       },
       {
         dataField: "expDate",
         caption: t("exp_date"),
         dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy",
       },
       {
         dataField: "expDays",
         caption: t("exp_days"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
-        readOnly: true,
         alignment: "right",
       },
       {
         dataField: "bd",
         caption: t("bd"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
-        readOnly: true,
         alignment: "left",
       },
       {
         dataField: "btnPrintBarcode",
-        caption: t("btn_print_barcode"),
+        caption: t("pb"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 250,
-        readOnly: true,
         alignment: "left",
       },
       {
         dataField: "barcodePrinted",
         caption: t("barcode_printed"),
         dataType: "boolean",
-        allowSorting: true,
         visible: false,
-        allowSearch: true,
-        allowFiltering: true,
         width: 250,
-        readOnly: true,
         alignment: "center",
       },
       {
@@ -1302,21 +1282,14 @@ const mergedRowData: TransactionDetail = {
         caption: t("batch_created"),
         dataType: "boolean",
         visible: false,
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 150,
         readOnly: true,
         alignment: "center",
       },
       {
         dataField: "removeCol",
-        caption: t("remove_col"),
+        caption: t("x"),
         dataType: "boolean",
-        visible: false,
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 130,
         readOnly: true,
         alignment: "center",
@@ -1325,20 +1298,16 @@ const mergedRowData: TransactionDetail = {
         dataField: "productDescription",
         caption: t("product_description"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         minWidth: 250,
         readOnly: true,
         alignment: "left",
+        visible: false,
       },
       {
         dataField: "serial",
-        caption: t("serial"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        caption: t("sl"),
+        dataType: "boolean",
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
@@ -1347,53 +1316,52 @@ const mergedRowData: TransactionDetail = {
         dataField: "minSalePrice",
         caption: t("min_sale_price"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 150,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "additionalExpense",
         caption: t("additional_expense"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 250,
-        readOnly: true,
         alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "unitPriceFC",
+        caption: t("unit_price_fc"),
+        dataType: "number",
+        allowEditing: true,
+        width: 150,
+        readOnly: false,
+        alignment: "right",
+        visible: false,
       },
       {
         dataField: "colour",
         caption: t("colour"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 150,
         readOnly: true,
         alignment: "left",
+        visible: false,
       },
       {
         dataField: "warranty",
         caption: t("warranty"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "nosQty",
-        caption: t("nos_qty"),
+        caption: t("nos"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1402,42 +1370,35 @@ const mergedRowData: TransactionDetail = {
         dataField: "totalAddExpense",
         caption: t("total_add_expense"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 180,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "grossConvert",
         caption: t("gross_convert"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        dataType: "boolean",
         width: 140,
         readOnly: true,
         alignment: "right",
+        visible: false,
       },
+
       {
         dataField: "grossFC",
         caption: t("gross_fc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 100,
-        readOnly: true,
+        allowEditing: true,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "unitID2",
         caption: t("unit_id_2"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1446,9 +1407,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit2Qty",
         caption: t("unit_2_qty"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1457,9 +1416,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit2SalesRate",
         caption: t("unit_2_sales_rate"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 200,
         readOnly: true,
         alignment: "right",
@@ -1468,9 +1425,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit2MRP",
         caption: t("unit_2_mrp"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1479,20 +1434,16 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit2MBarcode",
         caption: t("unit_2_m_barcode"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "unit2StickerQty",
-        caption: t("unit_2_sticker_qty"),
+        caption: t("sq2"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 200,
         readOnly: true,
         alignment: "right",
@@ -1501,9 +1452,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unitID3",
         caption: t("unit_id_3"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1512,9 +1461,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit3Qty",
         caption: t("unit_3_qty"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1523,9 +1470,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit3SalesRate",
         caption: t("unit_3_sales_rate"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "right",
@@ -1534,9 +1479,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit3MRP",
         caption: t("unit_3_mrp"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1545,20 +1488,16 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit3MBarcode",
         caption: t("unit_3_m_barcode"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 180,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "unit3StickerQty",
-        caption: t("unit_3_sticker_qty"),
+        caption: t("sq3"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 180,
         readOnly: true,
         alignment: "right",
@@ -1567,9 +1506,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "tagQty",
         caption: t("tag_qty"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1579,9 +1516,6 @@ const mergedRowData: TransactionDetail = {
         caption: t("barcode_tag_printed"),
         dataType: "boolean",
         visible: false,
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 250,
         readOnly: true,
         alignment: "center",
@@ -1591,9 +1525,6 @@ const mergedRowData: TransactionDetail = {
         caption: t("barcode_unit_2_printed"),
         dataType: "boolean",
         visible: false,
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 280,
         readOnly: true,
         alignment: "center",
@@ -1603,9 +1534,6 @@ const mergedRowData: TransactionDetail = {
         caption: t("barcode_unit_3_printed"),
         dataType: "boolean",
         visible: false,
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 280,
         readOnly: true,
         alignment: "center",
@@ -1614,9 +1542,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "location",
         caption: t("location"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
@@ -1625,9 +1551,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "grTransDetailsID",
         caption: t("gr_trans_details_id"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 200,
         readOnly: true,
         alignment: "right",
@@ -1636,20 +1560,16 @@ const mergedRowData: TransactionDetail = {
         dataField: "arabicName",
         caption: t("arabic_name"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "supplierReferenceProductCode",
-        caption: t("supplier_reference_product_code"),
+        caption: t("supplier_pcode"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 280,
         readOnly: true,
         alignment: "left",
@@ -1658,31 +1578,24 @@ const mergedRowData: TransactionDetail = {
         dataField: "poTransDetailsID",
         caption: t("po_trans_details_id"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 180,
         readOnly: true,
         alignment: "right",
       },
       {
         dataField: "ratePlusTax",
-        caption: t("rate_plus_tax"),
+        caption: t("rate"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 130,
-        readOnly: true,
         alignment: "right",
       },
       {
         dataField: "warehouseID",
-        caption: t("warehouse_id"),
+        caption: t("warehouse"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 130,
         readOnly: true,
         alignment: "right",
@@ -1691,9 +1604,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "sortOrder",
         caption: t("sort_order"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 120,
         readOnly: true,
         alignment: "right",
@@ -1702,42 +1613,34 @@ const mergedRowData: TransactionDetail = {
         dataField: "profitPercentage",
         caption: t("profit_percentage"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 140,
         readOnly: true,
         alignment: "right",
       },
       {
         dataField: "schemeDiscount",
-        caption: t("scheme_discount"),
+        caption: t("scheme_disc"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 140,
-        readOnly: true,
+
         alignment: "right",
       },
       {
         dataField: "memo",
         caption: t("memo"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         minWidth: 200,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "memoEditor",
-        caption: t("memo_editor"),
+        caption: t("me"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
@@ -1746,9 +1649,6 @@ const mergedRowData: TransactionDetail = {
         dataField: "rowNumber",
         caption: t("row_number"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 100,
         readOnly: true,
         alignment: "right",
@@ -1757,9 +1657,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "actualSalesPrice",
         caption: t("actual_sales_price"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 200,
         readOnly: true,
         alignment: "right",
@@ -1768,9 +1666,7 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit2",
         caption: t("unit_2"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
@@ -1779,22 +1675,17 @@ const mergedRowData: TransactionDetail = {
         dataField: "unit3",
         caption: t("unit_3"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        visible: false,
         width: 150,
         readOnly: true,
         alignment: "left",
       },
       {
         dataField: "btnPrintBarcodeStd",
-        caption: t("btn_print_barcode_std"),
+        caption: t("pbs"),
         dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
         width: 250,
-        readOnly: true,
+        visible: false,
         alignment: "left",
       },
     ],
@@ -2196,7 +2087,7 @@ const mergedRowData: TransactionDetail = {
             <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
               <div className="space-y-2"></div>
               <ErpPurchaseGrid
-              onChange={handleTextDataChange}
+                onChange={handleTextDataChange}
                 ref={purchaseGridRef}
                 onKeyDown={(
                   value: any,

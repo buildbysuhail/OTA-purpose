@@ -76,6 +76,7 @@ import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previ
 import QtyFactorsModal from "./qty-factors";
 import ItemListModal from "./item-list";
 import { DeepPartial } from "redux";
+import BatchEntryModal from "./batch-entry";
 
 interface BilledItem {
   id?: number;
@@ -2340,6 +2341,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
               })
             )
           }
+          t={t}
+        />
+      )}
+      {formState.showBd && (
+        <BatchEntryModal
+          isOpen={formState.showBd}
+          onClose={() => dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: { showBd: false },
+            })
+          )}
+          rowIndex={0}
           t={t}
         />
       )}

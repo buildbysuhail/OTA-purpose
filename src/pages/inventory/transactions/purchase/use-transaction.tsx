@@ -125,7 +125,7 @@ export const useTransaction = (
     setUserRightsFn,
     validateTransactionDate,
     clearEntryControl,
-    disableControls,
+    changeGrossToUnitRate,
     calculateRowAmount,
   } = useTransactionHelper(transactionType);
   const { printVoucher, printCheque, printPaymentReceiptAdvice } =
@@ -2516,9 +2516,9 @@ debugger;
                 })
               )
           }
-          else if (columnName == "GrossConvert")
+         else if (columnName == "grossConvert")
           {
-              ChangeGrossToUnitRate();
+              changeGrossToUnitRate(rowIndex, columnName);
           }
           else if (columnName == "Serial")
           {

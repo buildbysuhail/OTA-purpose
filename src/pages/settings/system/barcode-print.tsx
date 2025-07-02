@@ -17,6 +17,7 @@ import SystemSettingsApi from "./system-apis";
 import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode";
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { customJsonParse } from "../../../utilities/jsonConverter";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -189,7 +190,8 @@ const BarcodePrint: React.FC = () => {
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
         const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
-        setTemplate(res);
+         let cc: TemplateState = customJsonParse(res.content);
+        setTemplate(cc);
         setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
@@ -210,7 +212,8 @@ const BarcodePrint: React.FC = () => {
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    setData(response);
+    let sliceData = response?.slice(0, 10);
+    setData(sliceData);
   }, [barcodeForm.data]);
 
   const voucherFormSubmit = useCallback(async () => {
@@ -218,7 +221,8 @@ const BarcodePrint: React.FC = () => {
     const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
-    setData(response);
+    let sliceData = response?.slice(0, 10);
+    setData(sliceData);
   }, [voucherForm]);
 
   const barcodeDescSubmit = useCallback(() => {
@@ -664,7 +668,7 @@ const BarcodePrint: React.FC = () => {
       </div>
 
       {
-        template && data &&
+        template && data && showPrint &&
         <ERPModal
           isOpen={showPrint}
           title={t("barcode_print")}

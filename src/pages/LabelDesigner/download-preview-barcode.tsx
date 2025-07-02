@@ -39,6 +39,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
       resultArray[chunkIndex].push(item)
       return resultArray
     }, [])
+    debugger;
     setChunkedData(_chunkedData);
   }, [ template?.barcodeState?.labelState?.columnsPerRow])
 

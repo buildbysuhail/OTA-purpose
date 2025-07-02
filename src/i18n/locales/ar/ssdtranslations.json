@@ -1270,6 +1270,7 @@
   "set_qty1_for_weighing_scale_item_value_mode": "ضبط الكمية 1 لوضع قيمة عنصر الميزان",
   "purchase_register_report": "تقرير سجل المشتريات",
   "manual_barcode": "الباركود اليدوي",
+  "m_barcode": "الباركود اليدوي",
   "brand": "العلامة التجارية",
   "unit_price_1": "سعر الوحدة 1",
   "std_sales_price": "السعر القياسي للبيع",

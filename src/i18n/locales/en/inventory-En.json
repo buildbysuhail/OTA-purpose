@@ -35,6 +35,7 @@
     "unit_qty": "Unit Qty",
     "packing_slip": "Packing Slip",
     "manual_barcode": "Manual Barcode",
+    "m_barcode": "MBarcode",
     "auto_barcode": "Auto Barcode",
     "is_weighing_scale": "Is Weighing Scale",
     "batch_no": "Batch No",

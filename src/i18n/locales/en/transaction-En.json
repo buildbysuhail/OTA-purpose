@@ -367,6 +367,7 @@
   "net_value": "Net Value",
   "stock": "Stock",
   "manual_barcode": "Manual Barcode",
+  "m_barcode": "MBarcode",
   "stock_details": "Stock Details",
   "margin": "Margin",
   "sales_price": "Sales Price",

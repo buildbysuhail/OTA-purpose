@@ -322,9 +322,30 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
         />
 
         {relatedInfo.showStockDetails && 
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start gap-5">
            <div className="basis-1/2">
-      
+            <ErpDevGrid
+              hideGridHeader
+              hideGridAddButton
+              hideDefaultExportButton
+              enableScrollButton={false}
+              ShowGridPreferenceChooser={false}
+              showPrintButton={false}
+              showChooserOnGridHead
+              chooserClass="absolute z-10 pointer-events-auto"
+              hideDefaultSearchPanel
+              allowSearching={false}
+              showFilterRow={false}
+              allowExport={false}
+              enablefilter={false}
+              remoteOperations={false}
+              columns={stockDetails}
+              heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
+              gridId="grd_warehouse_products"
+              reload
+              gridAddButtonIcon="ri-add-line"
+             showTotalCount={false}
+            />
            </div>
            <div className="basis-1/2">
             <ErpDevGrid
@@ -335,7 +356,7 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
               ShowGridPreferenceChooser={false}
               showPrintButton={false}
               showChooserOnGridHead
-              chooserClass=""
+              chooserClass="absolute z-10 pointer-events-auto"
               hideDefaultSearchPanel
               allowSearching={false}
               showFilterRow={false}
@@ -344,11 +365,9 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
               remoteOperations={false}
               columns={stockDetails}
               heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
-              gridId="grd_acc_group"
-              gridAddButtonType="popup"
+              gridId="grd_stock_details"
               reload
-              gridAddButtonIcon="ri-add-line"
-             showTotalCount={false}
+              showTotalCount={false}
           
             />
            </div>

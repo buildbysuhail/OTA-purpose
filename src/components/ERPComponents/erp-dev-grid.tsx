@@ -158,6 +158,7 @@ interface ERPDevGridProps {
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
   showChooserOnGridHead?: boolean;
+  chooserClass?: string;
   // ERPGridActionsstyle?: boolean;
   showColumnHeaders?: boolean;
   showRowLines?: boolean;
@@ -541,6 +542,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
       showChooserOnGridHead = false,
+      chooserClass = "",
       // ERPGridActionsstyle = false,
       showColumnHeaders = true,
       showRowLines = true,
@@ -2021,6 +2023,7 @@ const FilterRowKeyDown = (e: any) => {
             gridId={gridId}
             onApplyPreferences={onApplyPreferences}
             showChooserOnGridHead={showChooserOnGridHead}
+            eclipseClass={chooserClass}
           />
         )}
         <div
@@ -2031,7 +2034,7 @@ const FilterRowKeyDown = (e: any) => {
           style={gridStyle}
         >
           <DataGrid
-            // wordWrapEnabled={wordWrapEnabled}
+       
             loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}

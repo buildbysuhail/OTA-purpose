@@ -10,7 +10,7 @@ export interface GrandTotalProps {
   showFirstFooter: boolean;
 }
 
-const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t,showFirstFooter }) => {
+const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t, showFirstFooter }) => {
   return (
     // <ERPLabel
     //   id="grandTotal"
@@ -21,8 +21,8 @@ const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t,showFirstFoot
     //   boxed
     //   textAlign="right"
     // />
-    <div className={showFirstFooter ? "flex items-center" : "flex justify-between items-center"}>
-      <span className={showFirstFooter ? "w-20 text-xs text-gray-600 font-medium" : "text-xs text-gray-600 font-medium"}>{t(formState.formElements.grandTotal.label)}</span>
+    <div className="flex justify-between items-center">
+      <span className="text-xs text-gray-600 font-medium">{t(formState.formElements.grandTotal.label)}</span>
       <span className="text-sm font-semibold text-gray-900">: {formState.transaction.master.billDiscount}</span>
     </div>
   );

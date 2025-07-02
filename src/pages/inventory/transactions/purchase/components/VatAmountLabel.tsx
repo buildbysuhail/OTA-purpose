@@ -22,8 +22,8 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     //   showDropdown={true}
     //   dropdownData={taxData}
     // />
-     <div className={showFirstFooter ? "flex items-center" : "flex justify-between items-center"}>
-      <span className={showFirstFooter ? "w-20 text-xs text-gray-600 font-medium" : "text-xs text-gray-600 font-medium"}>{t(formState.formElements.totTax.label)}</span>
+    <div className="flex justify-between items-center">
+      <span className="text-xs text-gray-600 font-medium">{t(formState.formElements.totTax.label)}</span>
       <span className="text-sm font-semibold text-gray-900">: {formState.transaction.master.vatAmount}</span>
     </div>
   );

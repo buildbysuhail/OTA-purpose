@@ -2508,9 +2508,13 @@ debugger;
           //     btnBarcodeStd_Click(null, null);
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
-          else if (columnName == "BD")
+          else if (columnName == "bd")
           {
-              ShowBatchForm();
+              dispatch(
+                commonParams.formStateHandleFieldChangeKeysOnly({
+                  fields: { showBd: true },
+                })
+              )
           }
           else if (columnName == "GrossConvert")
           {

@@ -18,13 +18,15 @@ import { Check, ChevronUp, Eye, Paperclip, X, Repeat } from "lucide-react";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPTextarea from "../../../../components/ERPComponents/erp-textarea";
 import { formStateHandleFieldChange } from "./reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { TransactionFormState } from "./transaction-types";
 
 interface TransactionFooterProps {
-  formState: any;
+  formState: TransactionFormState;
   dispatch: any;
   t: any;
   handleKeyDown: any;
@@ -183,88 +185,220 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       </div>
 
       <div className="flex items-end gap-4">
-        <div className="grid grid-cols-1 gap-1 w-96">
-          <NetAmountInput
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            handleKeyDown={handleKeyDown}
-            showFirstFooter={showFirstFooter}
-          />
-
-          <VatAmountLabel
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            taxData={taxData}
-            showFirstFooter={showFirstFooter}
-          />
-
-          <GrandTotalLabel
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            showFirstFooter={showFirstFooter}
-          />
-
-          <NetTotalLabel
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            showFirstFooter={showFirstFooter}
-          />
-
-          {formState.formElements.grandTotalFc.visible && (
-            <div>
-              <div className="flex items-center justify-between">
-                <span>{t(formState.formElements.grandTotalFc.label)}:</span>
-                <span>{formState.transaction.master.grandTotalFc}</span>
+        <div className="p-2 bg-gray-50 w-[400px]">
+          <div className="flex flex-col gap-1.5">
+            <NetAmountInput
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+              showFirstFooter={showFirstFooter}
+            />
+            <VatAmountLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              taxData={taxData}
+              showFirstFooter={showFirstFooter}
+            />
+            <GrandTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            <NetTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            {formState.formElements.grandTotalFc.visible && (
+              <div>
+                <div className="flex items-center justify-between">
+                  <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                  <span>{formState.transaction.master.grandTotalFc}</span>
+                </div>
               </div>
+            )}
+            <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+              <span className="text-sm font-bold text-gray-900 uppercase">Grand Total</span>
+              <span className="text-lg font-bold text-[#3b82f6]">{getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}</span>
             </div>
-          )}
+          </div>
         </div>
+        <div className="flex items-center gap-2">
+          <ERPButton
+            title={t("close")}
+            onClick={() => goToPreviousPage()}
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+          />
 
-        <div className="flex flex-col items-center gap-2">
-          <div className="hidden md:block mr-2">
-            <h6 className="font-semibold whitespace-nowrap text-[20px] ">
-              {" "}
-              <span className="!font-medium !text-gray-600">
-                {t("total")}:{" "}
-              </span>
-              {getFormattedValue(
-                formState.transaction.master?.roundAmount ?? 0
-              )}
-            </h6>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ERPButton
-              title={t("close")}
-              onClick={() => goToPreviousPage()}
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-            />
-
-            <ERPButton
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-              ref={btnSaveRef}
-              title={t("save")}
-              jumpTarget="save"
-              variant="primary"
-              onClick={save}
-              className="w-24"
-              disabled={
-                formState.formElements.pnlMasters?.disabled ||
-                formState.transaction.details == null ||
-                formState.transaction.details.length == 0
-              }
-            />
-          </div>
+          <ERPButton
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+            ref={btnSaveRef}
+            title={t("save")}
+            jumpTarget="save"
+            variant="primary"
+            onClick={save}
+            className="w-24"
+            disabled={
+              formState.formElements.pnlMasters?.disabled ||
+              formState.transaction.details == null ||
+              formState.transaction.details.length == 0
+            }
+          />
         </div>
       </div>
     </div>
   );
 
   const renderSecondFooter = () => (
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_400px]">
+        <div className="p-2 flex flex-col items-end justify-end">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex flex-col">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
+            </div>
+            <div className="flex flex-col">
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
+            </div>
+            <div className="flex flex-col">
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+
+          <div className="w-[345px]">
+            <div className="flex flex-col">
+              {/* <RemarksInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              /> */}
+              <ERPTextarea
+                id="remarks"
+                required={true}
+                label={t(formState.formElements.remarks.label)}
+                value={formState.transaction.master.remarks}
+              />
+            </div>
+          </div>
+
+          <button
+            className="flex items-center gap-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-gray-600 hover:text-gray-700 w-[345px] mt-2"
+            onClick={selectAttachment}
+          >
+            <div className="flex items-center gap-2">
+              <Paperclip className="w-4 h-4" />
+              <span className="text-sm font-medium">{t("attachment")}</span>
+            </div>
+            <div className="ml-auto">
+              <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-semibold rounded-full">
+                0
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <div className="p-2 bg-gray-50 border-l border-gray-200">
+          <div className="flex flex-col gap-1.5">
+            <NetAmountInput
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+              showFirstFooter={showFirstFooter}
+            />
+            <VatAmountLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              taxData={taxData}
+              showFirstFooter={showFirstFooter}
+            />
+            <GrandTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            <NetTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            {formState.formElements.grandTotalFc.visible && (
+              <div>
+                <div className="flex items-center justify-between">
+                  <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                  <span>{formState.transaction.master.grandTotalFc}</span>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+              <span className="text-sm font-bold text-gray-900 uppercase">Grand Total</span>
+              <span className="text-lg font-bold text-[#3b82f6]">{getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-2 bg-gray-100 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 bg-[#22c55e] rounded-full"></div>
+          <span className="text-xs text-[#16a34a] font-medium">Ready to save</span>
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+          >
+            <X className="w-3.5 h-3.5" />
+            Cancel
+          </button>
+          <button
+            className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            Preview
+          </button>
+          <button
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#3b82f6] text-white rounded-md text-xs font-semibold hover:bg-[#2563eb] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#3b82f6]/30 transition-all duration-200"
+          >
+            <Check className="w-3.5 h-3.5" />
+            Save Transaction
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderThirdFooter = () => (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px]">
         <div className="p-2 flex flex-col items-left justify-end">
@@ -383,6 +517,379 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <Check className="w-3.5 h-3.5" />
             Save Transaction
           </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderFourthFooter = () => (
+    <div className="flex items-end justify-end">
+      <div className="flex flex-col gap-2">
+        <div className="w-full">
+          <RemarksInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+          />
+        </div>
+        <div className="flex items-end gap-1">
+          <div className="flex items-center gap-1">
+            <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
+            </div>
+
+            <div className="flex flex-col xl:flex-row items-end gap-1">
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
+
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-end gap-4">
+        <div className="p-2 bg-gray-50 w-[400px]">
+          <div className="flex flex-col gap-1.5">
+            <NetAmountInput
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+              showFirstFooter={showFirstFooter}
+            />
+            <VatAmountLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              taxData={taxData}
+              showFirstFooter={showFirstFooter}
+            />
+            <GrandTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            <NetTotalLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              showFirstFooter={showFirstFooter}
+            />
+            {formState.formElements.grandTotalFc.visible && (
+              <div>
+                <div className="flex items-center justify-between">
+                  <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                  <span>{formState.transaction.master.grandTotalFc}</span>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+              <span className="text-sm font-bold text-gray-900 uppercase">Grand Total</span>
+              <span className="text-lg font-bold text-[#3b82f6]">{getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <ERPButton
+            title={t("close")}
+            onClick={() => goToPreviousPage()}
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+          />
+
+          <ERPButton
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+            ref={btnSaveRef}
+            title={t("save")}
+            jumpTarget="save"
+            variant="primary"
+            onClick={save}
+            className="w-24"
+            disabled={
+              formState.formElements.pnlMasters?.disabled ||
+              formState.transaction.details == null ||
+              formState.transaction.details.length == 0
+            }
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderFifthFooter = () => (
+    <div className="flex items-end justify-between">
+      <div className="flex flex-col gap-2">
+        <div className="w-full">
+          <RemarksInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+          />
+        </div>
+        <div className="flex items-end gap-1">
+          <div className="flex items-center gap-1">
+            <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
+            </div>
+
+            <div className="flex flex-col xl:flex-row items-end gap-1">
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
+
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-end gap-4">
+        <div className="grid grid-cols-1 gap-1 w-96">
+          <NetAmountInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <VatAmountLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            taxData={taxData}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <GrandTotalLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <NetTotalLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            showFirstFooter={showFirstFooter}
+          />
+
+          {formState.formElements.grandTotalFc.visible && (
+            <div>
+              <div className="flex items-center justify-between">
+                <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                <span>{formState.transaction.master.grandTotalFc}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <div className="hidden md:block mr-2">
+            <h6 className="font-semibold whitespace-nowrap text-[20px] ">
+              {" "}
+              <span className="!font-medium !text-gray-600">
+                {t("total")}:{" "}
+              </span>
+              {getFormattedValue(
+                formState.transaction.master?.roundAmount ?? 0
+              )}
+            </h6>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <ERPButton
+              title={t("close")}
+              onClick={() => goToPreviousPage()}
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+            />
+
+            <ERPButton
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              ref={btnSaveRef}
+              title={t("save")}
+              jumpTarget="save"
+              variant="primary"
+              onClick={save}
+              className="w-24"
+              disabled={
+                formState.formElements.pnlMasters?.disabled ||
+                formState.transaction.details == null ||
+                formState.transaction.details.length == 0
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  const renderSixthFooter = () => (
+    <div className="flex items-end justify-between">
+      <div className="flex flex-col gap-2">
+        <div className="w-full">
+          <RemarksInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+          />
+        </div>
+        <div className="flex items-end gap-1">
+          <div className="flex items-center gap-1">
+            <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
+              <CashPaidSection
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+              />
+            </div>
+
+            <div className="flex flex-col xl:flex-row items-end gap-1">
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => {
+                  document.getElementById("discountID")?.focus();
+                }}
+                focusAmount={() => {
+                  document.getElementById("amountID")?.focus();
+                }}
+              />
+
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-end gap-4">
+        <div className="grid grid-cols-1 gap-1 w-96">
+          <NetAmountInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <VatAmountLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            taxData={taxData}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <GrandTotalLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            showFirstFooter={showFirstFooter}
+          />
+
+          <NetTotalLabel
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            showFirstFooter={showFirstFooter}
+          />
+
+          {formState.formElements.grandTotalFc.visible && (
+            <div>
+              <div className="flex items-center justify-between">
+                <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                <span>{formState.transaction.master.grandTotalFc}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-end justify-between gap-2">
+          {/* Total section on the left */}
+          <div className="hidden md:block">
+            <h6 className="font-semibold whitespace-nowrap text-[20px]">
+              <span className="!font-medium !text-gray-600">
+                {t("total")}:{" "}
+              </span>
+              {getFormattedValue(
+                formState.transaction.master?.roundAmount ?? 0
+              )}
+            </h6>
+          </div>
+
+          {/* Buttons section on the right */}
+          <div className="flex flex-col items-center gap-3">
+            <button
+              onClick={() => goToPreviousPage()}
+              title={t("close")}
+              className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#f87171] bg-[#fef2f2] hover:bg-[#fee2e2] hover:border-[#ef4444] transition-all duration-200 text-[#dc2626] hover:text-[#b91c1c] shadow-sm hover:shadow-md"
+            >
+              <X size={20} />
+            </button>
+
+            <button
+              title={t("save")}
+              onClick={save}
+              ref={btnSaveRef}
+              className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#4ade80] bg-[#f0fdf4] hover:bg-[#dcfce7] hover:border-[#22c55e] transition-all duration-200 text-[#16a34a] hover:text-[#15803d] shadow-sm hover:shadow-md"
+            >
+              <Check size={20} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -513,7 +1020,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
           </div>
 
-          {showFirstFooter ? renderFirstFooter() : renderSecondFooter()}
+          {
+            formState.transaction.master.billDiscount == 1 ? renderFirstFooter()
+              : formState.transaction.master.billDiscount == 2 ? renderSecondFooter()
+                : formState.transaction.master.billDiscount == 3 ? renderThirdFooter()
+                  : formState.transaction.master.billDiscount == 4 ? renderFourthFooter()
+                    : formState.transaction.master.billDiscount == 5 ? renderFifthFooter()
+                      : formState.transaction.master.billDiscount == 6 ? renderSixthFooter()
+                        : renderSixthFooter()}
 
           <BottomSidebar
             isOpen={isOpentwo}

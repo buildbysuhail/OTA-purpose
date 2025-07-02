@@ -496,5 +496,7 @@
     "purchase_return_gst_advanced_register_format_report":"Purchase Return Gst Advanced Register Format Report",
     "purchase_return_gst_detailed_report":"Purchase Return Gst Detailed Report",
     "purchase_return_gst_taxwise_report":"Purchase Return Gst TaxWise Report",
-    "purchase_return_gst_taxwise_with_hsn_report":"Purchase Return GSt TaxWise Hsn Report"
+    "purchase_return_gst_taxwise_with_hsn_report":"Purchase Return GSt TaxWise Hsn Report",
+
+    "product_search_popup_window":"Product Search Popup Window"
 }

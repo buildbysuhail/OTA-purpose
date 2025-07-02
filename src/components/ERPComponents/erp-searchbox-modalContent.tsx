@@ -7,32 +7,123 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { DataGrid } from "devextreme-react";
-import {
-  Toolbar,
-  Item,
-  Editing,
-  Column,
-  Lookup,
-  Scrolling,
-  RemoteOperations,
-  Paging,
-  KeyboardNavigation,
-  DataGridTypes,
-  FilterRow,
-} from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../helpers/api-client";
 import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../types/dev-grid-column";
-import Urls from "../../redux/urls";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { useDispatch } from "react-redux";
 import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
 import { generateUniqueKey } from "../../utilities/Utils";
+import ERPCheckbox from "./erp-checkbox";
 
-const isNotEmpty = (value: any) =>
-  value !== undefined && value !== null && value !== "";
+const isNotEmpty = (value: any) =>value !== undefined && value !== null && value !== "";
 const api = new APIClient();
+
+// ----------------------------------------------------------------------------
+// Memoized Checkboxes
+// ----------------------------------------------------------------------------
+interface RelatedInfoCheckboxesProps {
+  relatedInfo: {
+    showStockDetails: boolean;
+    allWarehouseProducts: boolean;
+  };
+  onChange: (key: any, val: boolean) => void;
+}
+
+ const RelatedInfoCheckboxes = React.memo<RelatedInfoCheckboxesProps>(
+  ({ relatedInfo, onChange }) => {
+    const { t } = useTranslation("inventory");
+    return (
+      <div className="flex items-center justify-start gap-4 mb-2">
+        <ERPCheckbox
+          id="showStockDetails"
+          label={t("show_stock_details")}
+          checked={relatedInfo.showStockDetails}
+          onChange={e => onChange("showStockDetails", e.target.checked)}
+        />
+        <ERPCheckbox
+          id="allWarehouseProducts"
+          label={t("all_warehouse_products")}
+          checked={relatedInfo.allWarehouseProducts}
+          onChange={e => onChange("allWarehouseProducts", e.target.checked)}
+        />
+      </div>
+    );
+  }
+);
+
+
+// ----------------------------------------------------------------------------
+// Memoized Grid Container
+// ----------------------------------------------------------------------------
+interface GridContainerProps {
+  columns: DevGridColumn[];
+  gridHeight: number;
+  popupSearchUrl: string;
+  warehouseId: number;
+  searchCriteria: string;
+  searchText: string;
+  gridRef: React.Ref<any>;
+  handleEnter: (e: any) => void;
+  searchColumn: keyof TransactionDetail;
+  rowIndex: number;
+  onNextCellFind?: (rowIndex: number, column: string) => void;
+  onClose?: () => void;
+}
+const GridContainer = React.memo(({
+  columns,
+  gridHeight,
+  popupSearchUrl,
+  warehouseId,
+  searchCriteria,
+  searchText,
+  gridRef,
+  handleEnter,
+}: GridContainerProps) => {
+
+
+  return (
+    <ErpDevGrid
+      ref={gridRef}
+      hideGridAddButton
+      enableScrollButton={false}
+      pageSize={30}
+      columns={columns}
+      heightToAdjustOnWindowsInModal={gridHeight}
+      gridHeader="Item Search"
+      dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
+      gridId="grd_acc_group"
+      gridAddButtonType="popup"
+      reload
+      gridAddButtonIcon="ri-add-line"
+      selectionMode="multiple"
+      onKeyDown={handleEnter}
+      initialFilters={
+        searchCriteria == "pCode"
+          ? [
+              {
+                field: "productCode",
+                value: searchCriteria == "pCode" ? searchText : "",
+                operation: "startswith",
+                initialFocus: searchCriteria == "pCode" ? true : false,
+              },
+            ]
+          : [
+              {
+                field: "productName",
+                value: searchCriteria == "product" ? searchText : "",
+                operation: "startswith",
+                initialFocus:
+                  searchCriteria == "product" ? true : false,
+              },
+            ]
+      }
+    />
+  );
+});
+
+
+
 interface ProductModalGridProps {
   isMaximized?: boolean;
   modalHeight?: any;
@@ -63,19 +154,35 @@ const ProductModalGrid = ({
   popupSearchUrl,
 }: ProductModalGridProps) => {
   const { t } = useTranslation("inventory");
+  const dispatch = useDispatch();
+  const gridRef = useRef<any>(null);
 
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
-  const [selectedRows, setSelectedRows] = useState<TransactionDetail[]>([]);
-  const dispatch = useDispatch();
-  const gridRef = useRef<any>(null);
+
+const [relatedGridHeight, setRelatedGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+    // Keep checkbox state here
+  const [relatedInfo,setRelatedInfo] = useState({
+    showStockDetails: true,
+    allWarehouseProducts: false,
+  });
+ 
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 700;
+    let gridHeightWindows =  modalHeight - 750;
+    setRelatedGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 120;
+    let gridHeightWindows = relatedInfo.showStockDetails ?modalHeight-300 : modalHeight - 160;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized, modalHeight]);
+  }, [isMaximized, modalHeight,relatedInfo.showStockDetails]);
 
   const handleEnterKeyDown = (e: any) => {
     if (e.event.key === "Enter") {
@@ -133,49 +240,120 @@ const ProductModalGrid = ({
     [t]
   );
 
+  const stockDetails: DevGridColumn[] = useMemo(
+    () => [
+      {
+        dataField: "warehouseName",
+        caption: t("warehouse_name"),
+        dataType: "string",
+        minWidth: 150,
+       
+      },
+   
+      {
+        dataField: "stockDetails",
+        caption: t("stock_details"),
+        dataType: "string",
+        width: 100,
+      },
+         {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        width: 100,
+     
+      },
+    ],
+    [t]
+  );
+    const unitPrice: DevGridColumn[] = useMemo(
+    () => [
+      {
+        dataField: "productCode",
+        caption: t("product_code"),
+        dataType: "string",
+        width: 100,
+        allowFiltering: true,
+      },
+      {
+        dataField: "productID",
+        caption: t("productID"),
+        dataType: "number",
+        visible: false,
+        allowFiltering: false,
+      },
+      {
+        dataField: "productName",
+        caption: t("ProductName"),
+        dataType: "string",
+        minWidth: 150,
+        allowFiltering: true,
+        selectedFilterOperation: "startswith",
+      },
+    ],
+    [t]
+  );
+  const handleRelatedInfoChange = useCallback(
+    (key: keyof typeof relatedInfo, value: boolean) => {
+      setRelatedInfo(prev => ({ ...prev, [key]: value }));
+    },
+    []
+  );
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+        <RelatedInfoCheckboxes relatedInfo={relatedInfo} onChange={handleRelatedInfoChange} />
           <div className="grid grid-cols-1 gap-3">
+       <GridContainer
+        columns={columns}
+        gridHeight={gridHeight.windows}
+        popupSearchUrl={popupSearchUrl}
+        warehouseId={warehouseId}
+        searchCriteria={searchCriteria}
+        searchText={searchText}
+        gridRef={gridRef}
+        handleEnter={handleEnterKeyDown}
+        searchColumn={searchColumn}
+        rowIndex={rowIndex}
+        onNextCellFind={onNextCellFind}
+        onClose={onClose}
+        />
+
+        {relatedInfo.showStockDetails && 
+        <div className="flex justify-between items-start">
+           <div className="basis-1/2">
+      
+           </div>
+           <div className="basis-1/2">
             <ErpDevGrid
-              ref={gridRef}
-              hideGridAddButton={true}
+              hideGridHeader
+              hideGridAddButton
+              hideDefaultExportButton
               enableScrollButton={false}
-              pageSize={30}
-              columns={columns}
-              heightToAdjustOnWindowsInModal={gridHeight.windows}
-              gridHeader={"Item Search"}
-              dataUrl={`${popupSearchUrl}/${warehouseId}/${true}/${true}`}
+              ShowGridPreferenceChooser={false}
+              showPrintButton={false}
+              showChooserOnGridHead
+              chooserClass=""
+              hideDefaultSearchPanel
+              allowSearching={false}
+              showFilterRow={false}
+              allowExport={false}
+              enablefilter={false}
+              remoteOperations={false}
+              columns={stockDetails}
+              heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
               gridId="grd_acc_group"
               gridAddButtonType="popup"
-              reload={true}
+              reload
               gridAddButtonIcon="ri-add-line"
-              selectionMode="multiple"
-              onKeyDown={(e: any) => {
-                handleEnterKeyDown(e);
-              }}
-              initialFilters={
-                searchCriteria == "pCode"
-                  ? [
-                      {
-                        field: "productCode",
-                        value: searchCriteria == "pCode" ? searchText : "",
-                        operation: "startswith",
-                        initialFocus: searchCriteria == "pCode" ? true : false,
-                      },
-                    ]
-                  : [
-                      {
-                        field: "productName",
-                        value: searchCriteria == "product" ? searchText : "",
-                        operation: "startswith",
-                        initialFocus:
-                          searchCriteria == "product" ? true : false,
-                      },
-                    ]
-              }
+             showTotalCount={false}
+          
             />
+           </div>
+        </div>
+        }
           </div>
         </div>
       </div>

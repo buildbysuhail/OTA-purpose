@@ -53,6 +53,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   labelClassName?: string;
   className?: string;
   inputClassName?: string;
+  textAlignStyle?: "left" | "right" | "center";
   noLabel?: boolean;
   noBorder?: boolean;
   showCustomNumberChanger?: boolean;
@@ -101,6 +102,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       labelClassName,
       className,
       inputClassName,
+      textAlignStyle,
       value,
       defaultValue,
       required,
@@ -754,6 +756,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }
 
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
+
+    const VALID = new Set(["left", "right", "center"]);
+    const inputTextAlign = textAlignStyle !== undefined && textAlignStyle !== null && VALID.has(textAlignStyle) ? textAlignStyle : (type === "number" ? "right" : "left");
+
+
     if (_useMUI == undefined || _useMUI == false) {
       return (
         <div
@@ -882,7 +889,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     : 0
                     }px`,
                   backgroundColor: bgColor,
-                  textAlign: type === "number" ? "right" : "left",
+                  textAlign:inputTextAlign,
                   paddingRight:
                     type === "number" && showCustomNumberChanger
                       ? "16px"
@@ -896,7 +903,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                     }),
                 }}
-                className={`form-control ${contextClassName || ""} !${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize ${
+                className={`form-control ${contextClassName || ""} !${inputClassName}   dark:!bg-dark-bg-card placeholder:capitalize ${
                   showCustomNumberChanger
                     ? "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     : "number-input-spinner"

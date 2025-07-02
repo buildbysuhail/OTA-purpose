@@ -4,6 +4,7 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 interface NetAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
   dispatch: any;
+  showFirstFooter: boolean;
 }
 
 const NetAmountInput: React.FC<NetAmountInputProps> = ({
@@ -11,6 +12,7 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
   dispatch,
   t,
   handleKeyDown,
+  showFirstFooter
 }) => {
   return (
     // <ERPInput
@@ -36,9 +38,9 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     //     formState.formElements.pnlMasters?.disabled
     //   }
     // />
-    <div className="flex items-center">
-      <span className="w-20">{t(formState.formElements.netAmount.label)}</span>
-      <span>:{formState.netAmount}</span>
+    <div className={showFirstFooter ? "flex items-center" : "flex justify-between items-center"}>
+      <span className={showFirstFooter ? "w-20 text-xs text-gray-600 font-medium" : "text-xs text-gray-600 font-medium"}>{t(formState.formElements.netAmount.label)}</span>
+      <span className="text-sm font-semibold text-gray-900">: {formState.netAmount}</span>
     </div>
   );
 };

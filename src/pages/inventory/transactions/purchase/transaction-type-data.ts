@@ -323,7 +323,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   dgvInventory: { visible: true, disabled: false, label: "" },
   dgvProduct: { visible: false, disabled: false, label: "",params: "" },
   dgvProductBatches: { visible: false, disabled: false, label: "",params: "" },
-  productSearchPopupWindow: { visible: false, disabled: false, label: "ProductSearchPopupWindow",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
+  productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
   lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },

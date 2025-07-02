@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -9,8 +9,7 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { useDispatch, useSelector } from 'react-redux';
 import { formStateHandleFieldChangeKeysOnly } from './reducer';
 import { RootState } from '../../../../redux/store';
-import { DeepPartial } from 'redux';
-import { GridQtyFactors, TransactionFormState } from './transaction-types';
+import { GridQtyFactors } from './transaction-types';
 import { toast } from 'react-toastify';
 
 interface QtyFactors {
@@ -19,8 +18,6 @@ interface QtyFactors {
   nos: number;
   multipleRows: boolean;
 }
-
-
 
 interface QtyFactorsModalProps {
   isOpen: boolean;
@@ -31,6 +28,8 @@ interface QtyFactorsModalProps {
 
 const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, rowIndex }) => {
   const dispatch = useDispatch();
+  const widthInputRef = useRef<HTMLInputElement>(null);
+
   const [qtyFactors, setQtyFactors] = useState<QtyFactors>({
     width: 0,
     height: 0,
@@ -41,6 +40,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
   const [gridData, setGridData] = useState<GridQtyFactors[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
+
   const handleQtyFactors = (field: keyof QtyFactors, value: number | boolean) => {
     setQtyFactors(prev => ({
       ...prev,
@@ -61,6 +61,12 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
     });
     setIsEditMode(false);
     setEditingRowId(null);
+
+    setTimeout(() => {
+      if (widthInputRef.current) {
+        widthInputRef.current.focus();
+      }
+    }, 0);
   };
 
   const handleClick = () => {
@@ -182,12 +188,10 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       width: 45
     },
     {
-      dataField: "actions",
-      caption: t("actions"),
+      dataField: "x",
+      caption: 'X',
       dataType: "string",
-      allowSorting: false,
-      allowSearch: false,
-      allowFiltering: false,
+      alignment: 'right',
       width: 80,
       cellRender: (params: any) => {
         return (
@@ -223,10 +227,12 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
         <>
           <div className="flex items-end gap-2">
             <ERPInput
+              ref={widthInputRef}
               id="width"
               type="number"
               label={t("width")}
               className='w-28'
+              autoFocus={true}
               value={qtyFactors.width}
               onChange={(e) => handleQtyFactors('width', parseFloat(e.target.value) || 0)}
             />

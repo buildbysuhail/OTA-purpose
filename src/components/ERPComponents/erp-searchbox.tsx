@@ -59,6 +59,7 @@ interface InputProps {
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
+  textAlign?: "left" | "right" | "center";
   onNextCellFind?: (rowIndex: number, column: string) => void;
 }
 
@@ -205,6 +206,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       searchKey = "",
       rowIndex,
       onNextCellFind,
+      textAlign,
       ...rest
     },
     ref
@@ -643,6 +645,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         <div className="flex items-center gap-4">
           <div className="relative w-full" ref={gridContainerRef}>
             <ERPInput
+              textAlignStyle={textAlign}
               ignoreRandomId={true}
               noLabel={noLabel}
               label={label}
@@ -841,7 +844,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               isOpen={formState.formElements.productSearchPopupWindow.visible}
               title={t("privilege_card")}
               width={1000}
-              height={800}
+              height={900}
               isForm={true}
               closeModal={onClose}
               content={

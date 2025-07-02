@@ -557,7 +557,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                   />
                 </div>
 
-                {/* New gridBorderColor field */}
+                {/* Existing gridBorderColor field */}
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 mb-2">
                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#ddd6fe] dark:bg-[#7c3aed44]">
@@ -592,6 +592,46 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex-1">
                       <div className="text-sm text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md mt-1">
                         rgb({formState.userConfig?.gridBorderColor || "0,0,0"})
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* New gridHeaderBg field */}
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#ddd6fe] dark:bg-[#7c3aed44]">
+                      <Palette className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />
+                    </div>
+                    <label className="text-sm font-semibold text-gray-700 dark:text-dark-text">
+                      {t("grid_header_background_color")}
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                      style={{
+                        backgroundColor: formState.userConfig?.gridHeaderBg
+                          ? `rgb(${formState.userConfig.gridHeaderBg})`
+                          : "#ffffff"
+                      }}
+                    >
+                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none drop-shadow-md"></i>
+                      <input
+                        type="color"
+                        value={formState.userConfig?.gridHeaderBg ? rgbToHex(formState.userConfig.gridHeaderBg) : "#ffffff"}
+                        onChange={(e) => {
+                          const rgb = hexToRgb(e.target?.value);
+                          if (rgb) {
+                            handleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          }
+                        }}
+                        className="opacity-0 w-full h-full cursor-pointer"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md mt-1">
+                        rgb({formState.userConfig?.gridHeaderBg || "255,255,255"})
                       </div>
                     </div>
                   </div>

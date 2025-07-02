@@ -216,6 +216,37 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     </label>
                   </div>
                 </div>
+
+                <div className="mt-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
+                    <div className="relative inline-block w-16 h-8">
+                      <input
+                        type="checkbox"
+                        id="footer-position"
+                        className="sr-only"
+                        checked={formState.userConfig?.footerPosition === 'right'} 
+                        onChange={() => {
+                          const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
+                          handleFieldChange('footerPosition', newPosition); 
+                        }}
+                      />
+                      <label
+                        htmlFor="footer-position"
+                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right'
+                            ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
+                            : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
+                          }`}
+                      >
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'
+                          }`}></div>
+                      </label>
+                    </div>
+                    <span className="text-gray-700 dark:text-dark-text font-medium">
+                      {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 

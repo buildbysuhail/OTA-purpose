@@ -565,5 +565,10 @@
   "reset_all_settings_to_default": "إعادة ضبط جميع الإعدادات إلى الافتراضي",
   "reset_to_default": "إعادة ضبط إلى الافتراضي",
   "reset_all": "إعادة ضبط الكل",
-  "choose_content_alignment_preference": "اختر تفضيل محاذاة المحتوى"
+  "choose_content_alignment_preference": "اختر تفضيل محاذاة المحتوى",
+
+  "batch_entry": "إدخال الدفعة",
+  "packing_qty": "كمية التعبئة",
+  "unit_mbarcode": "الباركود الرئيسي للوحدة",
+  "sticker": "ملصق"
 }

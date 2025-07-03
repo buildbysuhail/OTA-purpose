@@ -18,6 +18,8 @@ interface SerialItem {
 }
 
 interface SerialsProps {
+  isMaximized?: boolean;
+  modalHeight?: any;
   isOpen: boolean;
   data: string;
   productId: number | null;
@@ -26,13 +28,14 @@ interface SerialsProps {
   t: (key: string) => string;
 }
 
-const Serials: React.FC<SerialsProps> = ({ data,isOpen, productId, onClose, rowIndex, t }) => {
+const Serials: React.FC<SerialsProps> = ({ data,isOpen, productId, onClose, rowIndex, t,}) => {
   const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: '' }]);
-  const [focusCell, setFocusCell] = useState<{ rowIndex: number, colIndex: number } | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
+
 const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
+
 
   useEffect(() => {
     debugger;
@@ -43,10 +46,19 @@ const dispatch = useDispatch();
         
       })) || [];
     setSerialData(formattedData)
-    setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
+  // Defer focusing until the grid is fully rendered
+      if (dataGridRef.current && formattedData.length > 0) {
+        setTimeout(() => {
+          dataGridRef.current.instance.editCell(formattedData.length - 1, 1);
+        }, 100);
+      }
     } else if (isOpen) {
       setSerialData([{ slNo: 1, serial: '' }]);
-      setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
+      if (dataGridRef.current) {
+        setTimeout(() => {
+          dataGridRef.current.instance.editCell(0, 1);
+        }, 100);
+      }
     }
   }, [isOpen, data]);
 
@@ -59,7 +71,7 @@ const dispatch = useDispatch();
     .filter(item => item.serial && item.serial.trim() !== '')
     .map(item => item.serial.trim())
     .join(',');
-debugger;
+
 
         const slNo = formState.transaction.details[rowIndex].slNo;
     dispatch(
@@ -94,9 +106,17 @@ debugger;
               updatedData[rowIndex].serial = currentValue;
               updatedData.push({ slNo: serialData.length + 1, serial: '' });
               setSerialData(updatedData);
-              setFocusCell({ rowIndex: rowIndex + 1, colIndex: 1 });
+           setTimeout(() => {
+                if (dataGridRef.current) {
+                  dataGridRef.current.instance.editCell(rowIndex + 1, 1);
+                }
+              }, 0);
             } else {
-              setFocusCell({ rowIndex: rowIndex + 1, colIndex: 1 });
+             setTimeout(() => {
+                if (dataGridRef.current) {
+                  dataGridRef.current.instance.editCell(rowIndex + 1, 1);
+                }
+              }, 0);
             }
             event.event.preventDefault();
           }
@@ -105,26 +125,15 @@ debugger;
     }
   };
 
-  const onContentReady = (e: any) => {
-    if (focusCell) {
-      const grid = e.component;
-      try {
-        grid.focus(grid.getCellElement(focusCell.rowIndex, focusCell.colIndex));
-        grid.editCell(focusCell.rowIndex, 'serial');
-        setTimeout(() => {
-          const cell = grid.getCellElement(focusCell.rowIndex, focusCell.colIndex);
-          if (cell) {
-            const input = cell.querySelector('input');
-            if (input) {
-              input.focus();
-              input.select();
-            }
-          }
-        }, 50);
-      } catch (err) {
-        console.error("Error focusing cell:", err);
-      }
-      setFocusCell(null);
+const onContentReady = (e: any) => {
+    if (serialData.length > 0 && dataGridRef.current) {
+      const lastRowIndex = serialData.length - 1;
+      // Focus the cell in the 'serial' column (index 1) of the last row
+      setTimeout(() => {
+        if (dataGridRef.current) {
+          e.component.editCell(lastRowIndex, 1);
+        }
+      }, 100);
     }
   };
 
@@ -138,13 +147,15 @@ debugger;
           <div className="w-full flex flex-col gap-4 p-4">
             <DataGrid
               ref={dataGridRef}
+              keyExpr="slNo"
               dataSource={serialData}
+              onContentReady={onContentReady}
               className='custom-data-grid-dark-only'
+              focusedRowEnabled={false}
               showBorders={true}
               columnAutoWidth={true}
               rowAlternationEnabled={true}
               onEditorPreparing={onEditorPreparing}
-              onContentReady={onContentReady}
               repaintChangesOnly={true}
               height={300}
             >

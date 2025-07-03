@@ -1343,6 +1343,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "grossConvert",
         caption: t("gross_convert"),
         dataType: "boolean",
+        allowEditing: true,
         width: 140,
         readOnly: true,
         alignment: "right",

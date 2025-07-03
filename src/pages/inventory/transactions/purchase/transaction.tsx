@@ -1829,7 +1829,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // };
 
   return (
-    <div className="relative">
+    <>
+    { formState.formElements?.ledgerID?.accLedgerType ?(
+        <div className="relative">
       {/* <h1>SAFVAN{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
         <div
@@ -1916,7 +1918,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             handleLoadByRefNo={handleLoadByRefNo}
             handleFieldChange={handleFieldChange}
             setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-            triggerEffect={triggerEffect}
+            transactionType={transactionType??formState.transactionType}
             handleFieldKeyDown={handleFieldKeyDown}
             ledgerCodeRef={ledgerCodeRef}
             voucherNumberRef={voucherNumberRef}
@@ -2037,7 +2039,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   handleLoadByRefNo={handleLoadByRefNo}
                   handleFieldChange={handleFieldChange}
                   setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-                  triggerEffect={triggerEffect}
+                  transactionType={transactionType??formState.transactionType}
                   handleFieldKeyDown={handleFieldKeyDown}
                   ledgerCodeRef={ledgerCodeRef}
                   voucherNumberRef={voucherNumberRef}
@@ -2374,6 +2376,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
           t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
       )}
     </div>
+    ) : (
+      <>Loading ............</>
+    )}
+    </>
+  
   );
 };
 

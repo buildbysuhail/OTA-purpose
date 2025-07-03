@@ -9,7 +9,7 @@ export const cdnUrl = import.meta.env.VITE_CDN_URL;
 export const projectName = import.meta.env.VITE_PROJECT_NAME;
 
 const CachedUrls: string[] = [
-  Urls.data_acc_ledgers,Urls.data_costcentres
+  Urls.data_acc_ledgers,Urls.data_costcentres, '/Inventory/Purchase/AccLedgers/'
 ]
 
 export default CachedUrls;

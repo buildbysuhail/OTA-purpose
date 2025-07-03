@@ -10,7 +10,7 @@ import { updateFormElement, formStateMasterHandleFieldChange, formStateHandleFie
 
 interface LedgerProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
-  triggerEffect: boolean;
+  transactionType: string;
   setIsPartyDetailsOpen: () => void;
 }
 
@@ -21,7 +21,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
       dispatch,
       t,
       handleKeyDown,
-      triggerEffect,
+      transactionType,
       handleFieldKeyDown,
       setIsPartyDetailsOpen,
     },
@@ -30,12 +30,11 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
     const { getFormattedValue } = useNumberFormat();
     return (
       <>
-        {formState.formElements.ledgerID.visible && (
+        {formState.formElements.ledgerID.visible && formState.formElements?.ledgerID?.accLedgerType && (
           <>
             <ERPDataCombobox
               localInputBox={formState?.userConfig?.inputBoxStyle}
               ref={ref}
-              triggerEffect={triggerEffect}
               id="ledgerID"
               required={true}
               className="w-full min-w-[150px]"
@@ -55,6 +54,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 handleKeyDown && handleKeyDown(e, "ledgerID");
               }}
               onSelectItem={(e) => {
+                debugger;
                 dispatch(
                   formStateMasterHandleFieldChange({
                     fields: { ledgerID: e.value, partyName: e.label },
@@ -66,7 +66,8 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 id: "ledgerID",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: Urls.data_parties,
+                getListUrl: `${Urls.inv_transaction_base}${transactionType}/AccLedgers/`,
+                params: `ledgerType=${formState.formElements?.ledgerID?.accLedgerType}`,
               }}
               disabled={
                 formState.formElements.ledgerID?.disabled ||

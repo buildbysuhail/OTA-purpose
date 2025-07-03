@@ -38,6 +38,7 @@ interface TransactionFooterProps {
   selectAttachment: any;
   isDropUpOpen: boolean;
   toggleDropup: () => void;
+  footerLayout: 'horizontal' | 'vertical';
 }
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
@@ -53,6 +54,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   selectAttachment,
   isDropUpOpen,
   toggleDropup,
+  footerLayout
 }) => {
   const [showFirstFooter, setShowFirstFooter] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -137,7 +139,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const renderFirstFooter = () => (
-    <div className="flex items-end justify-between">
+    <div className={`flex ${footerLayout === 'vertical' ? 'flex-col' : 'flex-row'} items-end justify-between`}>
       <div className="flex flex-col gap-2">
         <div className="w-full">
           <RemarksInput
@@ -307,21 +309,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               />
             </div>
           </div>
-
-          <button
-            className="flex items-center gap-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-gray-600 hover:text-gray-700 w-[345px] mt-2"
-            onClick={selectAttachment}
-          >
-            <div className="flex items-center gap-2">
-              <Paperclip className="w-4 h-4" />
-              <span className="text-sm font-medium">{t("attachment")}</span>
-            </div>
-            <div className="ml-auto">
-              <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-semibold rounded-full">
-                0
-              </span>
-            </div>
-          </button>
         </div>
 
         <div className="p-2 bg-gray-50 border-l border-gray-200">

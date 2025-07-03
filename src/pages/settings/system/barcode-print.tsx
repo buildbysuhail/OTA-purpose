@@ -123,7 +123,11 @@ const initialStandardBarcodeData = {
 }
 
 const api = new APIClient();
-const BarcodePrint: React.FC = () => {
+interface BarcodePrintProps {
+  isMaximized?: boolean;
+  modalHeight?: any;
+}
+const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight }) => {
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -141,6 +145,17 @@ const BarcodePrint: React.FC = () => {
   const [printing, setPrinting] = useState<boolean>(false);
   const [data, setData] = useState<any>();
   const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
+  const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+
+      useEffect(() => {
+        let gridHeightMobile = modalHeight - 500;
+        let gridHeightWindows =  modalHeight - 490;
+        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+      }, [isMaximized, modalHeight]);
+
   const handleBarcodeStateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
@@ -358,7 +373,7 @@ const BarcodePrint: React.FC = () => {
 
   return (
     <Fragment>
-      <div className="p-0 dark:!bg-dark-bg bg-gray-100 min-h-screen">
+      <div className="p-0 dark:!bg-dark-bg ">
         {/* BarcodePrint Form */}
         <div className="p-2 dark:!bg-dark-bg bg-white border dark:!border-dark-border border-gray-300 rounded-md shadow-md mx-auto my-0">
           {/* Form */}
@@ -648,7 +663,7 @@ const BarcodePrint: React.FC = () => {
               <div className="box-body">
                 <ERPDevGrid
                   columns={columns}
-                  // heightToAdjustOnWindows={500}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   gridHeader={t("barcode_print")}
                   hideGridAddButton={true}
                   hideDefaultSearchPanel={true}

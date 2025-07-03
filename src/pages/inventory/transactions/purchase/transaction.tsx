@@ -77,6 +77,7 @@ import QtyFactorsModal from "./qty-factors";
 import ItemListModal from "./item-list";
 import { DeepPartial } from "redux";
 import BatchEntryModal from "./batch-entry";
+import Serials from "./serials";
 
 interface BilledItem {
   id?: number;
@@ -1075,7 +1076,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("stock_details"),
         dataType: "string",
         readOnly: true,
-        visible:false,
+        visible: false,
         minWidth: 200,
         alignment: "left",
       },
@@ -1085,7 +1086,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         visible: false,
         width: 100,
-        allowEditing:true,
+        allowEditing: true,
         alignment: "right",
       },
       {
@@ -1143,7 +1144,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("vat_perc"),
         dataType: "number",
         visible: false,
-        allowEditing:true,
+        allowEditing: true,
         width: 100,
         alignment: "right",
       },
@@ -1170,7 +1171,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "number",
         visible: false,
         width: 100,
-        allowEditing:true,
+        allowEditing: true,
         alignment: "right",
       },
       {
@@ -1273,6 +1274,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         width: 150,
         readOnly: true,
         alignment: "left",
+        allowEditing: true,
       },
       {
         dataField: "minSalePrice",
@@ -2086,6 +2088,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 selectAttachment={selectAttachment}
                 isDropUpOpen={isDropUpOpen}
                 toggleDropup={toggleFooterDropup}
+                footerLayout={(formState.userConfig?.footerPosition || 'bottom') === 'right' ? 'vertical' : 'horizontal'}
               />
 
               {/* Total Summary */}
@@ -2123,6 +2126,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         selectAttachment={selectAttachment}
         isDropUpOpen={isDropUpOpen}
         toggleDropup={toggleFooterDropup}
+        footerLayout={(formState.userConfig?.footerPosition || 'bottom') === 'right' ? 'vertical' : 'horizontal'}
       />
       {/* footer ends here */}
 
@@ -2357,6 +2361,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
           rowIndex={formState.batchEntryData.rowIndex}
           t={t}
         />
+      )}
+      {formState.showSerial && (
+        <Serials
+          isOpen={formState.showSerial}
+          onClose={() => dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: { showSerial: false },
+            })
+          )}
+          t={t} productId={null} api={new APIClient} />
       )}
     </div>
   );

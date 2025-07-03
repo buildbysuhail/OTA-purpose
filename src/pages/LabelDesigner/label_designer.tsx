@@ -796,7 +796,6 @@ const handleQRCodePropertyChange = (
         },
       };
       const activeTemplate: TemplateDto = {
-        // ...templateData.activeTemplate,
         id: id == "new" ? 0 : id, //temparary fix
         templateType: tmpTemplate.propertiesState.template_type ?? "standard",
         templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
@@ -899,14 +898,14 @@ const handleRemoveImage =()=>{
     ) {
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
-        canvasElement.height = pxToPoint(component.height);
+        canvasElement.height = component.height;
       }
       if (canvasElement) {
         try {
           JsBarcode(canvasElement, component.content, {
             ...component.barcodeProps,
             width: component.barcodeProps.barWidth,
-            height: pxToPoint(component.height),
+            height: component.height,
             marginBottom: 0,
             displayValue: component.barcodeProps.showText,
             valid: (valid: boolean) => {
@@ -2762,6 +2761,7 @@ const handleRemoveImage =()=>{
                             }
                             min={1}
                             max={10}
+                            step={1}
                           />
                         </Box>
 
@@ -2777,6 +2777,7 @@ const handleRemoveImage =()=>{
                             }
                             min={0}
                             max={50}
+                            step={1}
                           />
                         </Box>
 

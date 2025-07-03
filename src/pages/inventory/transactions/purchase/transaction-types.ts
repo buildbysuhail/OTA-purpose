@@ -362,6 +362,7 @@ export interface UserConfig {
   gridRowHeight?: number;
   gridBorderColor?: string;
   gridHeaderBg?: string;
+  footerPosition?: 'bottom' | 'right';
 }
 
 export type FormElementsState = {
@@ -454,6 +455,7 @@ export interface TransactionFormState {
   showQuantityFactors: {visible: boolean, rowIndex: number};
   showPcode:boolean;
   batchEntryData:{visible: boolean, data: string, rowIndex: number};
+  showSerial:boolean;
   batchSelectionData: string;  
   popupSearchSelectionData: string;  
   quantityFactorData: string;

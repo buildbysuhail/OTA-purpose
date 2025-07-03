@@ -2550,10 +2550,13 @@ debugger;
           {
               changeGrossToUnitRate(rowIndex, columnName);
           }
-          // else if (columnName == "Serial")
-          // {
-          //     ShowProductSerialForm();
-          // }
+          else if (columnName == "serial") {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: { showSerial: true }
+              })
+            )
+          }
            else {
             focusToNextColumn(rowIndex, columnName);
           }

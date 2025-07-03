@@ -22,12 +22,24 @@ export interface DownloadPreviewProps {
   template?: TemplateState;
   data?: any;
   docTitle?: string;
+   isMaximized?: boolean;
+  modalHeight?: any;
 }
 
-export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
+export default function Component({ template, docTitle = "Document Preview", data,isMaximized,modalHeight }: DownloadPreviewProps = {}) {
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
+   const [previewHeight, setPreviewHeight ]= useState<{
+        mobile: number;
+        windows: number;
+      }>({ mobile: 500, windows: 500 });
   const pxToPoint = (px: number) => px * (72 / 96);
+  
+  useEffect(() => {
+          let gridHeightMobile = modalHeight - 200;
+          let gridHeightWindows =  modalHeight - 100;
+          setPreviewHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+        }, [isMaximized, modalHeight]);
   
   useEffect(() => {
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
@@ -43,59 +55,75 @@ export default function Component({ template, docTitle = "Document Preview", dat
     setChunkedData(_chunkedData);
   }, [ template?.barcodeState?.labelState?.columnsPerRow])
 
-  useEffect(() => {
-    const generateBarcodeImages = async () => {
-      const images: { [key: string]: string } = {};
+ useEffect(() => {
+  const generateBarcodeImages = async () => {
+    const images: { [key: string]: string } = {};
 
-      if (template?.barcodeState?.placedComponents) {
-        data?.forEach((item: any) => {
-          template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
-            if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
-              const canvas = document.createElement('canvas');
-              canvas.height = pxToPoint(barcodeComponent.height);
-              canvas.width = pxToPoint(barcodeComponent.width);
-
-              // Calculate the barWidth based on the component width and the number of characters
-              const barcodeText = item?.autoBarcode || '';
-              const barWidth = 10; // Adjust this calculation as needed
-
-              JsBarcode(canvas, barcodeText, {
-                ...barcodeComponent.barcodeProps,
-                width: 100,
-                format: barcodeComponent.barcodeProps?.format ?? "CODE128",
-                margin: barcodeComponent.barcodeProps?.margin || 0,
-                background: barcodeComponent.barcodeProps?.background || "#FFFFFF",
-                lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",
-                textAlign: barcodeComponent.barcodeProps?.textAlign,
-                height: pxToPoint(barcodeComponent.height),
-                marginBottom: 0,
-                displayValue: barcodeComponent.barcodeProps.showText,
-                valid: (valid: boolean) => {
-                  if (!valid) {
-                    throw new Error("Invalid barcode");
-                  }
-                },
-                fontSize: barcodeComponent.barcodeProps?.fontSize || 21,
-                textMargin: barcodeComponent.barcodeProps?.textMargin || 5,
-              });
-              images[`${item.siNo}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
+    if (template?.barcodeState?.placedComponents) {
+      data?.forEach((item: any) => {
+        template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
+          if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size with proper scaling for high DPI
+            const scale = window.devicePixelRatio || 1;
+            const canvasWidth = barcodeComponent.width * scale;
+            const canvasHeight = barcodeComponent.height * scale;
+            
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            // // Scale the canvas back down using CSS
+            canvas.style.width = barcodeComponent.width + "px";
+            canvas.style.height = barcodeComponent.height+ "px" ;
+            
+            // Scale the drawing context so everything draws at the higher resolution
+            if (ctx) {
+              ctx.scale(scale, scale);
             }
-          });
+            
+            const barcodeText = item?.autoBarcode || '';
+      
+            JsBarcode(canvas, barcodeText, {
+              ...barcodeComponent.barcodeProps,
+              width: barcodeComponent.barcodeProps?.barWidth||2, // Reduced width for better text rendering
+              height: barcodeComponent.height, // Ensure minimum height for text
+              margin: barcodeComponent.barcodeProps?.margin, // Add some margi
+              textMargin: barcodeComponent.barcodeProps?.textMargin || 2, // Ensure text is not too close to the barcode
+              displayValue: barcodeComponent.barcodeProps?.showText,
+              fontSize: barcodeComponent.barcodeProps?.fontSize, // Dynamic font size
+              font: barcodeComponent.barcodeProps.font || "Roboto",
+              textAlign: barcodeComponent.barcodeProps?.textAlign || "center",
+              textPosition: "bottom",
+              background: barcodeComponent.barcodeProps?.background || "#ffffff",
+              lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",
+              valid: (valid: boolean) => {
+                if (!valid) {
+                  console.warn(`Invalid barcode for ${barcodeText}`);
+                  // Don't throw error, just log warning
+                }
+              },
+            });
+            
+            images[`${item.siNo}-${barcodeComponent.id}`] = canvas.toDataURL('image/png', 2.0);
+          }
         });
-      }
+      });
+    }
 
-      setBarcodeImages(images);
-    };
+    setBarcodeImages(images);
+  };
 
-    generateBarcodeImages();
-  }, [template?.barcodeState?.placedComponents]);
+  generateBarcodeImages();
+}, [template?.barcodeState?.placedComponents, data]); // Added data as dependency
 
   const renderComponent = (component: PlacedComponent, data: any) => {
     
     const baseStyle: Style = {
       position: 'absolute',
-      left: component.x,
-      top: component.y,
+      left:pxToPoint(component.x) ,
+      top: pxToPoint(component.y),
       transform: `rotate(${component.rotate || 0}deg)`,
       transformOrigin: "center",
     };
@@ -108,11 +136,11 @@ export default function Component({ template, docTitle = "Document Preview", dat
             style={{
               ...baseStyle,
               fontFamily: component.font || 'Roboto',
-              fontSize: component.fontSize || 12,
+              fontSize: pxToPoint(component.fontSize) || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
-              height: component.height || 50,
-              width: component.width || 50,
+              height: pxToPoint(component.height) || 50,
+              width: pxToPoint(component.width) || 50,
             }}
           >
             {component.content}
@@ -125,11 +153,11 @@ export default function Component({ template, docTitle = "Document Preview", dat
             <Text
               style={{
                 fontFamily: component.font || 'Roboto',
-                fontSize: component.fontSize || 12,
+                fontSize: pxToPoint(component.fontSize) || 12,
                 fontStyle: component.fontStyle || "normal",
                 textAlign: component.textAlign || "center",
-                height: component.height || 50,
-                width: component.width || 50,
+                height: pxToPoint(component.height) || 50,
+                width: pxToPoint(component.width) || 50,
               }}
             >
               {data[component.content] || "N/A"}
@@ -145,8 +173,8 @@ export default function Component({ template, docTitle = "Document Preview", dat
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              height: pxToPoint(component.height) || 50,
-              width: component.width || 50,
+              height:component.height || 50,
+              width: pxToPoint(component.width) || 50,
             }}
           />
         ) : null;
@@ -213,7 +241,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <PDFViewer width="100%" height="100%">
+      <PDFViewer width="100%" height={previewHeight.windows}>
         <PreviewDocument />
       </PDFViewer>
     </div>

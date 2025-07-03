@@ -108,7 +108,7 @@ const dispatch = useDispatch();
               setSerialData(updatedData);
            setTimeout(() => {
                 if (dataGridRef.current) {
-                  dataGridRef.current.instance.editCell(rowIndex + 1, 1);
+                  // dataGridRef.current.instance.editCell(rowIndex + 1, 1);
                 }
               }, 0);
             } else {

@@ -2114,7 +2114,7 @@ debugger;
                     searchCriteria: data.useProductCode ? "pCode" : "product",
                     searchText: data.searchText,
                     voucherType: formState.transaction.master.voucherType,
-                    warehouseId: 1,
+                    warehouseId: payload,
                   },
                 },
               },

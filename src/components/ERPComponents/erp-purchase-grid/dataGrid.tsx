@@ -1012,7 +1012,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         overflow: "hidden",
         boxSizing: "border-box",
         border: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
-        borderRadius: "16px",
+        // borderRadius: "16px",
         boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
         // boxShadow: "0 4px 25px rgba(0, 0, 0, 0.08)",
         // table whole shadow

@@ -453,7 +453,7 @@ export interface TransactionFormState {
   summaryConfig: SummaryConfig<TransactionDetail>[];
   showQuantityFactors: {visible: boolean, rowIndex: number};
   showPcode:boolean;
-  showBd:boolean;
+  batchEntryData:{visible: boolean, data: string, rowIndex: number};
   batchSelectionData: string;  
   popupSearchSelectionData: string;  
   quantityFactorData: string;

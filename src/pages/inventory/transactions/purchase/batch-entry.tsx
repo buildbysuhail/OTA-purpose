@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { formStateHandleFieldChangeKeysOnly } from './reducer';
 
 interface BatchEntryModalProps {
   isOpen: boolean;
   onClose: () => void;
   rowIndex: number;
   t: (key: string) => string;
+  data: string
 }
 
 interface InventoryDetail {
@@ -38,10 +40,30 @@ interface InventoryDetail {
   unit3?: string;
 }
 
-const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, rowIndex }) => {
+const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, rowIndex,data }) => {
   const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
+useEffect(() => {
+            debugger;
+  if(formState.batchEntryData.visible && formState.batchEntryData.data != "") {
+    const data = JSON.parse(formState.batchEntryData.data)
+    setBatchData(data);
+  }
+  
+}, [formState.batchEntryData])
+const handleSet = () => {
+            debugger;
+    const slNo = formState.transaction.details[rowIndex].slNo;
+    dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                 
+                  fields: { transaction: {
+                    details:[{...batchData,slNo: slNo}]
+                  }}
+                  ,updateOnlyGivenDetailsColumns: true, rowIndex
+                }))
 
+  };
   const [batchData, setBatchData] = useState<InventoryDetail & {
     batchEnabled: boolean;
     unit2Enabled: boolean;
@@ -380,7 +402,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
             <div className='flex items-center justify-end gap-2 mt-2'>
               <ERPButton
                 title={t('set')}
-                // onClick={handleSet}
+                onClick={handleSet}
                 variant='primary'
               />
             </div>

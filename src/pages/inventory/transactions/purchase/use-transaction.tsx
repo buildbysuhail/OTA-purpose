@@ -2100,7 +2100,7 @@ debugger;
           Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
-
+debugger;
       if (res?.isShowItemPopUp) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
@@ -2498,21 +2498,51 @@ debugger;
               }
             }
           } 
-          else if (columnName == "btnPrintBarcode")
-          {
-              btnBarcode_Click(null, null);
-              dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
-          }
+          // else if (columnName == "btnPrintBarcode")
+          // {
+          //     btnBarcode_Click(null, null);
+          //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
+          // }
           // else if (columnName == "btnPrintBarcodeStd")
           // {
           //     btnBarcodeStd_Click(null, null);
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd")
-          {
-              dispatch(
+          { 
+            debugger;
+            const data = formState.transaction.details[rowIndex];
+
+            const batchDetails = {
+                  // Required fields
+                  batchNo: data.batchNo || '',
+                  expDate: data.expDate || null,
+                  mfdDate: data.mfdDate || null,
+                  expDays: data.expDays || '',
+                  mrp: data.mrp || '',
+                  
+                  // Optional multiunit fields - Unit 2
+                  unitID2: data.unitID2 || null,
+                  unit2Qty: data.unit2Qty || undefined,
+                  unit2SalesRate: data.unit2SalesRate || undefined,
+                  unit2MRP: data.unit2MRP || undefined,
+                  unit2MBarcode: data.unit2MBarcode || undefined,
+                  unit2StickerQty: data.unit2StickerQty || undefined,
+                  unit2: data.unit2 || undefined,
+                  
+                  // Optional multiunit fields - Unit 3
+                  unitID3: data.unitID3 || null,
+                  unit3Qty: data.unit3Qty || undefined,
+                  unit3SalesRate: data.unit3SalesRate || undefined,
+                  unit3MRP: data.unit3MRP || undefined,
+                  unit3MBarcode: data.unit3MBarcode || undefined,
+                  unit3StickerQty: data.unit3StickerQty || undefined,
+                  unit3: data.unit3 || undefined,
+                };
+                dispatch(
                 commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: { showBd: true },
+                  fields: { batchEntryData: {visible: true, data:JSON.stringify(batchDetails), rowIndex} }
+                  ,updateOnlyGivenDetailsColumns: true,
                 })
               )
           }
@@ -2520,10 +2550,10 @@ debugger;
           {
               changeGrossToUnitRate(rowIndex, columnName);
           }
-          else if (columnName == "Serial")
-          {
-              ShowProductSerialForm();
-          }
+          // else if (columnName == "Serial")
+          // {
+          //     ShowProductSerialForm();
+          // }
            else {
             focusToNextColumn(rowIndex, columnName);
           }

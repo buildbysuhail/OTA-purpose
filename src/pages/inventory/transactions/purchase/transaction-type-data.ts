@@ -563,5 +563,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   batchSelectionData: "",
   popupSearchSelectionData: "",
   showPcode: false,
-  quantityFactorData: ""
+  quantityFactorData: "",
+  batchEntryData: {visible: false, data: "", rowIndex: -1}
 }

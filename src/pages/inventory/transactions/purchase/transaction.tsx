@@ -1218,6 +1218,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "bd",
         caption: t("bd"),
         dataType: "string",
+        allowEditing: true,
         visible: false,
         width: 150,
         alignment: "left",
@@ -2344,15 +2345,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
           t={t}
         />
       )}
-      {formState.showBd && (
+      {formState.batchEntryData && formState.batchEntryData.visible && (
         <BatchEntryModal
-          isOpen={formState.showBd}
+        data={formState.batchEntryData.data }
+          isOpen={formState.batchEntryData.visible}
           onClose={() => dispatch(
             formStateHandleFieldChangeKeysOnly({
-              fields: { showBd: false },
+              fields: { batchEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
             })
           )}
-          rowIndex={0}
+          rowIndex={formState.batchEntryData.rowIndex}
           t={t}
         />
       )}

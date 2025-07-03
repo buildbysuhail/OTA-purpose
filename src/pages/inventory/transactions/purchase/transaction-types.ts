@@ -455,7 +455,7 @@ export interface TransactionFormState {
   showQuantityFactors: {visible: boolean, rowIndex: number};
   showPcode:boolean;
   batchEntryData:{visible: boolean, data: string, rowIndex: number};
-  showSerial:boolean;
+  serialNoEntryData:{visible: boolean, data: string, rowIndex: number};
   batchSelectionData: string;  
   popupSearchSelectionData: string;  
   quantityFactorData: string;

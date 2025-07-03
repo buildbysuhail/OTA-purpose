@@ -12,9 +12,10 @@ import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../types/dev-grid-column";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPCheckbox from "./erp-checkbox";
+import Urls from "../../redux/urls";
 
 const isNotEmpty = (value: any) =>value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -130,8 +131,10 @@ interface ProductModalGridProps {
   searchCriteria: string;
   searchText: string;
   voucherType: string;
+  userConfig: any;
   warehouseId: number;
   inSearch: boolean;
+  transactionType: string;
   popupSearchUrl: string;
   searchColumn: keyof TransactionDetail;
   rowIndex: number;
@@ -147,6 +150,8 @@ const ProductModalGrid = ({
   voucherType,
   warehouseId,
   inSearch,
+  userConfig,
+  transactionType,
   searchColumn,
   rowIndex,
   onClose,
@@ -294,8 +299,23 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
     [t]
   );
   const handleRelatedInfoChange = useCallback(
-    (key: keyof typeof relatedInfo, value: boolean) => {
-      setRelatedInfo(prev => ({ ...prev, [key]: value }));
+    async(key: keyof typeof relatedInfo, value: boolean) => {
+      if(key == "allWarehouseProducts") {
+        const updatedUserConfig = {
+                            ...userConfig,
+                            allWarehouseProducts: value,
+                          };
+                          await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, updatedUserConfig);
+                          dispatch(
+                            formStateHandleFieldChangeKeysOnly({
+                              fields: { userConfig: { allWarehouseProducts: value} },
+                            })
+                          );
+                          setRelatedInfo(prev => ({ ...prev, [key]: value }));
+      }
+      else {
+        setRelatedInfo(prev => ({ ...prev, [key]: value }));
+      }
     },
     []
   );
@@ -304,7 +324,7 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        <RelatedInfoCheckboxes relatedInfo={relatedInfo} onChange={handleRelatedInfoChange} />
+        <RelatedInfoCheckboxes relatedInfo={{...relatedInfo,allWarehouseProducts: userConfig.allWarehouseProducts}} onChange={handleRelatedInfoChange} />
           <div className="grid grid-cols-1 gap-3">
        <GridContainer
         columns={columns}

@@ -7,6 +7,9 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 interface SerialItem {
   slNo: number;
@@ -16,83 +19,57 @@ interface SerialItem {
 
 interface SerialsProps {
   isOpen: boolean;
+  data: string;
   productId: number | null;
   onClose: () => void;
-  api: APIClient;
+  rowIndex: number;
   t: (key: string) => string;
 }
 
-const Serials: React.FC<SerialsProps> = ({ isOpen, productId, onClose, api, t }) => {
+const Serials: React.FC<SerialsProps> = ({ data,isOpen, productId, onClose, rowIndex, t }) => {
   const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: '' }]);
   const [focusCell, setFocusCell] = useState<{ rowIndex: number, colIndex: number } | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
-
-  const fetchSerialData = async () => {
-    try {
-      if (!productId) {
-        setSerialData([{ slNo: 1, serial: '' }]);
-        setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
-        return;
-      }
-
-      const response = await api.getAsync(`${Urls.products}GetSerials/${productId}`);
-      handleResponse(response);
-
-      const formattedData = response?.map((serial: string, index: number) => ({
-        slNo: index + 1,
-        serial: serial || '',
-        id: `${productId}_${index}` 
-      })) || [];
-
-      formattedData.push({
-        slNo: formattedData.length + 1,
-        serial: ''
-      });
-
-      setSerialData(formattedData);
-
-      const lastEmptyRowIndex = formattedData.length - 1;
-      setTimeout(() => setFocusCell({ rowIndex: lastEmptyRowIndex, colIndex: 1 }), 100);
-    } catch (error) {
-      console.error("Error fetching serial data:", error);
-      setSerialData([{ slNo: 1, serial: '' }]);
-      setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
-    }
-  };
+const dispatch = useDispatch();
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
 
   useEffect(() => {
-    if (isOpen && productId) {
-      fetchSerialData();
+    debugger;
+    if (isOpen && data && data !=  "") {
+     const formattedData = (data??"").split(',').map((serial: string, index: number) => ({
+        slNo: index + 1,
+        serial: serial || ''
+        
+      })) || [];
+    setSerialData(formattedData)
+    setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
     } else if (isOpen) {
       setSerialData([{ slNo: 1, serial: '' }]);
       setTimeout(() => setFocusCell({ rowIndex: 0, colIndex: 1 }), 100);
     }
-  }, [isOpen, productId]);
+  }, [isOpen, data]);
 
   const handleSaveButtonClick = async () => {
-    if (!productId) {
-      return;
-    }
+    
 
     setIsSaving(true);
     try {
-      const dataToSave = serialData
-        .filter(item => item.serial && item.serial.trim() !== '')
-        .map(item => item.serial);
+      const dataToSaveString = serialData
+    .filter(item => item.serial && item.serial.trim() !== '')
+    .map(item => item.serial.trim())
+    .join(',');
+debugger;
 
-      if (dataToSave.length > 0) {
-        const response = await api.post(`${Urls.products}AddSerials`, {
-          productID: productId,
-          serials: dataToSave,
-        });
-
-        handleResponse(response, () => {
-          onClose();
-        });
-      } else {
-        onClose();
-      }
+        const slNo = formState.transaction.details[rowIndex].slNo;
+    dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                 
+                  fields: {serialNoEntryData: {visible: false, data:"", rowIndex:-1}, transaction: {
+                    details:[{productDescription:dataToSaveString ,slNo: slNo}]
+                  }}
+                  ,updateOnlyGivenDetailsColumns: true, rowIndex
+                }));
     } catch (error) {
       console.error("Error saving serials:", error);
     } finally {
@@ -235,7 +212,7 @@ const Serials: React.FC<SerialsProps> = ({ isOpen, productId, onClose, api, t })
             className="max-w-[115px]"
             variant="primary"
             onClick={handleSaveButtonClick}
-            disabled={isSaving || !productId}
+            disabled={isSaving}
           >
             {t("save")}
           </ERPSubmitButton>

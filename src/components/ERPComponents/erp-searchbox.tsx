@@ -849,6 +849,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               closeModal={onClose}
               content={
                 <ProductModalGrid
+                transactionType={formState.transactionType}
+                userConfig={formState.userConfig}
                 onNextCellFind={onNextCellFind}
                 onClose={onClose}
                   rowIndex={

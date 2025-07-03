@@ -57,7 +57,7 @@ const handleSet = () => {
     dispatch(
                 formStateHandleFieldChangeKeysOnly({
                  
-                  fields: { transaction: {
+                  fields: { batchEntryData: {visible: false, data:"", rowIndex:-1},transaction: {
                     details:[{...batchData,slNo: slNo}]
                   }}
                   ,updateOnlyGivenDetailsColumns: true, rowIndex

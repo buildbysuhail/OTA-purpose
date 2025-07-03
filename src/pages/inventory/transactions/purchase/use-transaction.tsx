@@ -2511,7 +2511,7 @@ debugger;
           else if (columnName == "bd")
           { 
             debugger;
-            const data = formState.transaction.details[rowIndex];
+            const data: TransactionDetail = formState.transaction.details[rowIndex];
 
             const batchDetails = {
                   // Required fields
@@ -2551,11 +2551,13 @@ debugger;
               changeGrossToUnitRate(rowIndex, columnName);
           }
           else if (columnName == "serial") {
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: { showSerial: true }
-              })
-            )
+             const rowData: TransactionDetail = formState.transaction.details[rowIndex];
+             dispatch(
+                commonParams.formStateHandleFieldChangeKeysOnly({
+                  fields: { serialNoEntryData: {visible: true, data: rowData.productDescription, rowIndex} }
+                  ,updateOnlyGivenDetailsColumns: true,
+                }))
+           
           }
            else {
             focusToNextColumn(rowIndex, columnName);

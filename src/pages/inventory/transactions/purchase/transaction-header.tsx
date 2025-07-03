@@ -33,7 +33,7 @@ interface TransactionHeaderProps {
   handleLoadByRefNo: any;
   handleFieldChange: any;
   setIsPartyDetailsOpen: any;
-  triggerEffect: boolean;
+  transactionType: string;
   handleFieldKeyDown: any;
   ledgerCodeRef: any;
   voucherNumberRef: any;
@@ -51,7 +51,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   handleLoadByRefNo,
   handleFieldChange,
   setIsPartyDetailsOpen,
-  triggerEffect,
+  transactionType,
   handleFieldKeyDown,
   ledgerCodeRef,
   voucherNumberRef,
@@ -125,7 +125,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <PartyLedger
               ref={ledgerIdRef}
               handleFieldKeyDown={handleFieldKeyDown}
-              triggerEffect={triggerEffect}
+              transactionType={transactionType}
               handleKeyDown={handleKeyDown}
               formState={formState}
               dispatch={dispatch}
@@ -478,7 +478,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <PartyLedger
               ref={ledgerIdRef}
               handleFieldKeyDown={handleFieldKeyDown}
-              triggerEffect={triggerEffect}
+              transactionType={transactionType}
               handleKeyDown={handleKeyDown}
               formState={formState}
               dispatch={dispatch}

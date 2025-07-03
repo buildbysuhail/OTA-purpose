@@ -71,11 +71,12 @@ export default function Component({ template, docTitle = "Document Preview", dat
             const canvasWidth = barcodeComponent.width * scale;
             const canvasHeight = barcodeComponent.height * scale;
             
-            canvas.width = canvasWidth;
+          
             canvas.height = canvasHeight;
+            // canvas.width = canvasWidth;
             
-            // // Scale the canvas back down using CSS
-            canvas.style.width = barcodeComponent.width + "px";
+            // // // Scale the canvas back down using CSS
+            // canvas.style.width = barcodeComponent.width + "px";
             canvas.style.height = barcodeComponent.height+ "px" ;
             
             // Scale the drawing context so everything draws at the higher resolution
@@ -88,8 +89,9 @@ export default function Component({ template, docTitle = "Document Preview", dat
             JsBarcode(canvas, barcodeText, {
               ...barcodeComponent.barcodeProps,
               width: barcodeComponent.barcodeProps?.barWidth||2, // Reduced width for better text rendering
-              height: barcodeComponent.height, // Ensure minimum height for text
+              height:(barcodeComponent.height) , // Ensure minimum height for text
               margin: barcodeComponent.barcodeProps?.margin, // Add some margi
+              marginBottom:0,
               textMargin: barcodeComponent.barcodeProps?.textMargin || 2, // Ensure text is not too close to the barcode
               displayValue: barcodeComponent.barcodeProps?.showText,
               fontSize: barcodeComponent.barcodeProps?.fontSize, // Dynamic font size
@@ -136,7 +138,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
             style={{
               ...baseStyle,
               fontFamily: component.font || 'Roboto',
-              fontSize: pxToPoint(component.fontSize) || 12,
+              fontSize: (component.fontSize) || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
               height: pxToPoint(component.height) || 50,
@@ -153,7 +155,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
             <Text
               style={{
                 fontFamily: component.font || 'Roboto',
-                fontSize: pxToPoint(component.fontSize) || 12,
+                fontSize: (component.fontSize) || 12,
                 fontStyle: component.fontStyle || "normal",
                 textAlign: component.textAlign || "center",
                 height: pxToPoint(component.height) || 50,
@@ -173,7 +175,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              height:component.height || 50,
+              height:pxToPoint(component.height) || 50,
               width: pxToPoint(component.width) || 50,
             }}
           />

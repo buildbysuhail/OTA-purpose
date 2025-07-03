@@ -2557,10 +2557,11 @@ debugger;
               changeGrossToUnitRate(rowIndex, columnName);
           }
           else if (columnName == "serial") {
+            debugger;
              const rowData: TransactionDetail = formState.transaction.details[rowIndex];
              dispatch(
                 commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: { serialNoEntryData: {visible: true, data: rowData.productDescription, rowIndex} }
+                  fields: { serialNoEntryData: {visible: true, data: rowData.productDescription, rowIndex: rowIndex} }
                   ,updateOnlyGivenDetailsColumns: true,
                 }))
            

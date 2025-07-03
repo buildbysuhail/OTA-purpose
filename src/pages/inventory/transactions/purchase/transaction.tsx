@@ -2364,14 +2364,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
       )}
       {formState.serialNoEntryData &&  formState.serialNoEntryData.visible && (
         <Serials        
-        data={formState.batchEntryData.data }
+        data={formState.serialNoEntryData.data }
           isOpen={formState.serialNoEntryData.visible}
           onClose={() => dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: { serialNoEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
             })
           )}
-          t={t} productId={null} rowIndex={formState.batchEntryData.rowIndex} />
+          t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
       )}
     </div>
   );

@@ -898,15 +898,36 @@ const handleRemoveImage =()=>{
     ) {
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
-        canvasElement.height = component.height;
-      }
-      if (canvasElement) {
+        const ctx = canvasElement.getContext('2d');
+           const scale = window.devicePixelRatio || 1;
+         
+            const canvasHeight = component.height * scale;
+
+        canvasElement.height = canvasHeight;
+      
+       
+            canvasElement.style.height = component.height+ "px" ;
+
+         if (ctx) {
+                    ctx.scale(scale, scale);
+                  }
+            }
+   
         try {
           JsBarcode(canvasElement, component.content, {
             ...component.barcodeProps,
             width: component.barcodeProps.barWidth,
-            height: component.height,
+            height: (component.height),
+            margin:component.barcodeProps?.margin,
             marginBottom: 0,
+            textAlign:component.barcodeProps?.textAlign,
+            textMargin: component.barcodeProps.textMargin,
+            textPosition: "bottom",
+            background: component.barcodeProps?.background || "#ffffff",
+            lineColor: component.barcodeProps?.lineColor || "#000000",
+            fontSize:component.barcodeProps?.fontSize,
+            font:component.barcodeProps.font || "Roboto",
+
             displayValue: component.barcodeProps.showText,
             valid: (valid: boolean) => {
               if (!valid) {
@@ -938,7 +959,7 @@ const handleRemoveImage =()=>{
           ]);
         }
       }
-    }
+    
   }, []);
 
   const appDispatch = useAppDispatch();
@@ -1196,7 +1217,7 @@ const handleRemoveImage =()=>{
                 <canvas
                   ref={(el) => (barcodeRefs.current[component.id] = el)}
                   width={`${component.width}pt`}
-                  height={`${component.height}pt`}
+                  height={component.height}
                   style={{overflow:"hidden",zIndex: 2,}}
                 />
               </>
@@ -1204,7 +1225,7 @@ const handleRemoveImage =()=>{
               <canvas
                 ref={(el) => (barcodeRefs.current[component.id] = el)}
                 width={`${component.width}pt`}
-                height={`${component.height}pt`}
+                height={component.height}
                 style={{overflow:"hidden",zIndex: 2,}}
               />
             )}

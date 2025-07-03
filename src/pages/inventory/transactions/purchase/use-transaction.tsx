@@ -2049,7 +2049,8 @@ debugger;
       if (!detail) {
         return {};
       }
-      let warehouseId = -1;
+      debugger;
+      let warehouseId = 1;
       if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
         warehouseId = formState.transaction.master.fromWarehouseID;
       }
@@ -2101,6 +2102,11 @@ debugger;
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 debugger;
+ warehouseId = -1;
+    
+      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
+       warehouseId = 0
+      }
       if (res?.isShowItemPopUp) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({

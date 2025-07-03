@@ -386,7 +386,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   title: "",
   rowProcessing: false,
   transactionProcessing: false,
-  transactionLoading: false,
+  transactionLoading: true,
   transaction: transactionInitialData,
   printOnSave: false,
   printPreview: false,

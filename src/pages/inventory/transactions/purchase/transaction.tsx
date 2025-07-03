@@ -1830,7 +1830,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   return (
     <>
-    { formState.formElements?.ledgerID?.accLedgerType ?(
+    { !formState.transactionLoading ?(
         <div className="relative">
       {/* <h1>SAFVAN{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (

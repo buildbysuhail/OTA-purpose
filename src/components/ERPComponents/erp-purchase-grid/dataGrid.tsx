@@ -42,6 +42,7 @@ import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { generateUniqueKey } from "../../../utilities/Utils";
 
+import "./loader-style.css"; 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
   column: keyof T;
@@ -444,6 +445,13 @@ const Row = React.memo(
                 }}
               >
                 {
+                  formState.transactionLoading ? (
+                   <div style={{ maxWidth: "400px", margin: "2rem auto" }}>
+            <div className="card_description loading"></div>
+            <div className="card_description loading"></div>
+            <div className="card_description loading"></div>
+        </div>
+                  ):
                   column.dataField === "slNo" ? (
                     <span
                       className="px-1"

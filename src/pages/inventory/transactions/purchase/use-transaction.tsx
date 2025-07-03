@@ -362,7 +362,8 @@ export const useTransaction = (
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState)
     );
-
+debugger;
+    _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
         fields: {
@@ -500,7 +501,6 @@ export const useTransaction = (
       );
     }
 
-    voucher.transactionLoading = false;
 
     return voucher;
   };

@@ -2049,7 +2049,7 @@ debugger;
       if (!detail) {
         return {};
       }
-      let warehouseId = 1;
+      let warehouseId = -1;
       if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
         warehouseId = formState.transaction.master.fromWarehouseID;
       }

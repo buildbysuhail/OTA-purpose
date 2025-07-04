@@ -33,7 +33,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
     
     return (
       <>
-        {formState.formElements.ledgerID.visible && formState.formElements?.ledgerID?.accLedgerType && (
+        {formState.formElements.ledgerID.visible && (
           <>
             <ERPDataCombobox
               localInputBox={formState?.userConfig?.inputBoxStyle}

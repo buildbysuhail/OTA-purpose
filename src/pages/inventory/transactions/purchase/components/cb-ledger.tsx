@@ -28,6 +28,9 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
     ref
   ) => {
     const { getFormattedValue } = useNumberFormat();
+    console.log("mj23");
+    console.log({ formState: formState.transactionLoading });
+    
     return (
       <>
         {formState.formElements.ledgerID.visible && formState.formElements?.ledgerID?.accLedgerType && (
@@ -43,6 +46,8 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               data={formState.transaction.master}
               reload={formState.formElements.ledgerID.reload}
               disableEnterNavigation={true}
+              transactionLoading={formState.transactionLoading}
+              // transactionLoading={true}
               changeReload={() =>
                 dispatch(
                   updateFormElement({

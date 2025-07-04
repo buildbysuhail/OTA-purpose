@@ -30,6 +30,7 @@ import AccountTransactionsTemplate from "../../../DownloadPreview/account/accoun
 import TotalPremiumDesigner from "./designer/total-designer";
 import TablePremiumDesigner from "./designer/table-designer";
 import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+import { bindingDemoData } from "../../../../LabelDesigner/fields";
 
 interface DesignSectionType {
   id: number;
@@ -283,19 +284,19 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
                  {currentSection.type == "total" &&
                   <TotalPremiumDesigner/>
                  }
-        </div>
+         </div>
               <PDFViewer
                     className="pdf-viewer"
                     width="100%"
                     height="auto"
                     style={{ maxHeight: maxHeight, margin: 20, border: "1px solid #DFDFDF" }}>
-                 <AccountTransactionsTemplate
-                 clientSession={ClientSession}
+                <AccountTransactionsTemplate
+                  clientSession={ClientSession}
                   template={templateData.activeTemplate}
                   data={DummyVoucherData}
                   currentBranch={currentBranch}
+                  bindingDemoData={bindingDemoData}
                 />
-
              </PDFViewer>
              
 

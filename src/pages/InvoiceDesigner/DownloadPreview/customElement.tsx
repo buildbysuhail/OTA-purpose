@@ -9,7 +9,7 @@ import type { Style } from "@react-pdf/types";
 
 const pxToPt = (px: number) => px * (72 / 96);
 
-export const renderComponent = (component: PlacedComponent, data?: any,qrCodeImages?: { [key: string]: string }) => {
+export const renderComponent = (component: PlacedComponent, data?: any,qrCodeImages?: { [key: string]: string },bindData?:any) => {
 
 
   const baseStyle: Style = {

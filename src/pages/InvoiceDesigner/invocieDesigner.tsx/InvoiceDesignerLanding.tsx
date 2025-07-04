@@ -95,7 +95,7 @@ const InvoiceDesigner = () => {
     <CustomerBalanceTemplateDesigner/>
     )}
 
-       <ERPModal
+         <ERPModal
             isForm={true}
             isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
             title={t("custom_designer")}
@@ -109,7 +109,7 @@ const InvoiceDesigner = () => {
             customTemplate={rootState.PopupData.CustomDesignerPopup.customTemplate}
             onSuccess={ useCallback(() => dispatch(toggleCustomDesignerPopup({ isOpen: false,customTemplate:""})), [dispatch])}
             />
-          }
+            }
           /> 
     </div>
   );

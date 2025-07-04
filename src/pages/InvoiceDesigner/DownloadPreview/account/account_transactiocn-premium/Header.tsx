@@ -63,6 +63,7 @@ export const Header = ({
   docIDKey,
   currency,
   userSession,
+  bindData
 }: {
   data: any;
   template?: TemplateState;
@@ -70,6 +71,7 @@ export const Header = ({
   docIDKey?: string;
   currency?: string;
   userSession?: any;
+  bindData?:any;
 }) => {
 const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
 

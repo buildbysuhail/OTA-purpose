@@ -15,9 +15,10 @@ export interface AccountTransactionProps {
   userSession?: any
   clientSession?: any
   currency?: string
+  bindingDemoData?:any
 }
 
-const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession }: AccountTransactionProps) => {
+const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession,bindingDemoData }: AccountTransactionProps) => {
   const paperSize = template?.propertiesState?.pageSize || "A4"
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
 
@@ -38,7 +39,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
       <FontRegistration />
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
-        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession}/>
+        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData}/>
 
         {/* Main Content Container */}
         <View

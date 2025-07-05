@@ -46,7 +46,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               data={formState.transaction.master}
               reload={formState.formElements.ledgerID.reload}
               disableEnterNavigation={true}
-              transactionLoading={formState.transactionLoading}
+              fetching={formState.transactionLoading}
               // transactionLoading={true}
               changeReload={() =>
                 dispatch(

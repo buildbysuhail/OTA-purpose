@@ -20,6 +20,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
           id="partyId"
           className="!m-0"
           required={true}
+          transactionLoading={formState.transactionLoading}
           label={t(formState.formElements.partyCode.label)}
           value={formState.partyId}
           ref={ref}

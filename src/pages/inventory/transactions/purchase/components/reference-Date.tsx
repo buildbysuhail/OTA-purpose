@@ -15,6 +15,7 @@ const AccReferenceDate = React.forwardRef<
         <ERPDateInput
           localInputBox={formState.userConfig?.inputBoxStyle}
           id="purchaseInvoiceDate"
+          transactionLoading={formState.transactionLoading}
           label={t(formState.formElements.referenceDate.label)}
           className="md:w-[150px]"
           value={formState.transaction.master.purchaseInvoiceDate}

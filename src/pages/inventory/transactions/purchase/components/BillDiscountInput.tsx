@@ -6,6 +6,7 @@ import { formStateMasterHandleFieldChange } from "../reducer";
 interface BillDiscountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
   dispatch: any;
+  footerLayout?: 'horizontal' | 'vertical';
 }
 
 const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
@@ -13,6 +14,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
   dispatch,
   t,
   handleKeyDown,
+  footerLayout
 }) => {
   return (
     <ERPInput
@@ -20,6 +22,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
       transactionLoading={formState.transactionLoading}
       id="billDiscount"
       type="number"
+      labelDirection={footerLayout === 'vertical' ? 'horizontal' : 'vertical'}
       label={t(formState.formElements.billDiscount.label)}
       value={formState.transaction.master.billDiscount}
       disableEnterNavigation={true}
@@ -33,7 +36,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
           })
         )
       }
-      className="max-w-[110px] min-w-[110px] !m-0"
+      className={`${footerLayout === "vertical" ? 'w-full' : 'max-w-[110px] min-w-[110px] !m-0'}`}
       disabled={
         formState.formElements.billDiscount?.disabled ||
         formState.formElements.pnlMasters?.disabled

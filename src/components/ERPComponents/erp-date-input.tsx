@@ -47,7 +47,8 @@ interface ERPDateInputProps {
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
-  localInputBox?: inputBox; // Local styling preferences
+  localInputBox?: inputBox;
+  transactionLoading?: boolean;
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
@@ -72,7 +73,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       defaultValue,
       value,
       type = "date",
-      noLabel=false,
+      noLabel = false,
       data,
       validation,
       className,
@@ -85,7 +86,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       skip = false,
       jumpTo,
       jumpTarget,
-      localInputBox, // Destructure localInputBox
+      localInputBox,
+      transactionLoading = false,
       ...props
     },
     ref
@@ -164,7 +166,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       const commonMuiStyles = {
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
         color: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.fontColor})`,
-        fontWeight:inputBoxState?.bold ? 700:400,
+        fontWeight: inputBoxState?.bold ? 700 : 400,
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: appState?.mode == "dark" ? "#ffffff1a" : `rgb(${inputBoxState?.borderColor})`,
         },
@@ -289,7 +291,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               height: `${inputBoxState?.inputHeight ?? 3}rem`,
               fontSize: `${inputBoxState?.fontSize ?? 16}px`,
               ...commonMuiStyles,
-              fontWeight:inputBoxState?.bold ? 700: inputBoxState?.fontWeight ?? 500,
+              fontWeight: inputBoxState?.bold ? 700 : inputBoxState?.fontWeight ?? 500,
             },
             "& .MuiInputLabel-root": {
               fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
@@ -350,26 +352,26 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
     const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
-      
+
       const yearPattern = /^(\d{2})-(\d{2})-(\d{5,})$/;
       if (yearPattern.test(inputValue)) {
-          return;
+        return;
       }
-      
+
       let newValue: string | null = null;
       if (inputValue !== "") {
-          const parsedDate = moment(inputValue, "DD-MM-YYYY", true);
-          newValue = parsedDate.isValid() ? parsedDate.format() : inputValue;
+        const parsedDate = moment(inputValue, "DD-MM-YYYY", true);
+        newValue = parsedDate.isValid() ? parsedDate.format() : inputValue;
       }
-      
+
       if (onChange) {
-          onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
+        onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
       }
-      
+
       if (onChangeData && data) {
-          onChangeData({ ...data, [id]: newValue });
+        onChangeData({ ...data, [id]: newValue });
       }
-  };
+    };
 
     if (_useMUI === true) {
       return (
@@ -383,8 +385,14 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePicker
               label={!noLabel && label}
-              disabled={disabled || readonly}
-              value={value ? moment(value).local() : null}
+              disabled={disabled || readonly || transactionLoading} // Disable when loading
+              value={
+                transactionLoading
+                  ? null
+                  : value
+                  ? moment(value).local()
+                  : null
+              }
               onChange={handleChange}
               minDate={
                 minDate
@@ -422,6 +430,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                       : handleKeyDown(e),
                   onKeyUp: onKeyUp,
                   sx: sizeStyles,
+                  placeholder: transactionLoading ? "" : placeholder,
                   inputProps: {
                     shrink: true,
                     "data-skip": skip,
@@ -458,10 +467,11 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             }
             noLabel={noLabel}
             localInputBox={inputBoxState}
+            transactionLoading={transactionLoading}
             label={label}
-            placeholder={placeholder}
-            disabled={disabled}
-            type={type}
+            placeholder={transactionLoading ? "" : placeholder}
+            disabled={disabled || transactionLoading}
+            type={transactionLoading ? "text" : type}
             onChange={handleChangeNormal}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
@@ -483,10 +493,10 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 console.log("Corrected date:", correctedDate);
                 handleChangeNormal({
                   ...e,
-                  target: { ...e.target, value: correctedDate }
+                  target: { ...e.target, value: correctedDate },
                 });
               }
-              
+
               if (onBlur) {
                 onBlur(e);
               }

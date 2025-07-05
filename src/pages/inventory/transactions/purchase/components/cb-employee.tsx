@@ -28,6 +28,8 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
           className="min-w-[180px] !m-0"
           label={t(formState.formElements.cbEmployee.label)}
           data={formState.transaction.master}
+          transactionLoading={formState.transactionLoading}
+          // transactionLoading={true}
           onSelectItem={(e) => {
             dispatch(
               formStateMasterHandleFieldChange({

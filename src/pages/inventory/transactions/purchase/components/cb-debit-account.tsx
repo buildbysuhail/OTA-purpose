@@ -49,7 +49,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
           // nameField="costCentreName"
           noLabel
           className="min-w-[180px] !m-0"
-          transactionLoading={formState.transactionLoading}
+          fetching={formState.transactionLoading}
           // transactionLoading={true}
           label={t(formState.formElements.cbDebitAccount.label)}
           data={formState.transaction.master}

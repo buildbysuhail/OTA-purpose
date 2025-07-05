@@ -21,9 +21,6 @@ import { RootState } from "../../../../redux/store";
 import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
-  formStateMasterHandleFieldChange,
-  formStateSet,
-  setUserRight,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +36,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
 import {
   generateUniqueKey,
-  isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
 } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
@@ -112,8 +108,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   financialYearID,
   isTeller = false,
 }) => {
-  const [triggerEffect, setTriggerEffect] = useState(false);
 
+  const [triggerEffect, setTriggerEffect] = useState(false);
   const handleClearControls = () => {
     clearControls(
       formState.isEdit,
@@ -124,19 +120,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const { t } = useTranslation("transaction");
-  const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
-  );
+  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
+  const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const currentBranch = useCurrentBranch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const clientSession = useAppSelector(
-    (state: RootState) => state.ClientSession
-  );
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
@@ -162,7 +152,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isFooterOnRight = formState.userConfig?.footerPosition === "right";
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
-
   const purchaseGridRef = useRef<{
     focusCell: (targetRow: number, targetColumnIndex: number) => void;
     nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
@@ -180,14 +169,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const SIDEBAR_WIDTH = "196px";
-
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasAnimated(true);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -200,7 +187,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
-
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const focusTaxNoField = () => {
@@ -211,6 +197,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
     }, 0);
   };
+
   const onSelectionChanged = (
     e: any,
     state: RootState,
@@ -219,10 +206,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
     if (state.InventoryTransaction.formElements.pnlMasters?.disabled == true) {
       return false;
     }
+
     const selectedIndexes = e.component.getSelectedRowKeys();
     const row = formState?.transaction?.details.find(
       (x: any) => x.slNo == selectedIndexes[0]
     );
+
     if (selectedIndexes.length > 0 && row) {
       if (deviceInfo.isMobile) {
         setIsOpen(true);
@@ -232,16 +221,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
     }
   };
+
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
-
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-  const focusToNextColumn = (rowIndex: number, column: string) => {
-    purchaseGridRef.current?.nextCellFind(rowIndex, column);
-  };
-
-  const focusCurrentColumn = (rowIndex: number, column: string) => {
-    purchaseGridRef.current?.focusCurrentColumn(rowIndex, column);
-  };
+  const focusToNextColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.nextCellFind(rowIndex, column); };
+  const focusCurrentColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.focusCurrentColumn(rowIndex, column); };
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
@@ -304,19 +288,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef
   );
 
-  const applicationSettings = useAppSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useAppSelector(  (state: RootState) => state.ApplicationSettings);
   const [gridHeight, setGridHeight] = useState(200);
   const { hasRight } = useUserRights();
 
-useEffect(() => {
-  if (formState.userConfig?.footerPosition === 'right') {
-    setGridHeight(700);
-  } else {
-    setGridHeight(530);
-  }
-}, [formState.userConfig?.footerPosition]);
+  useEffect(() => {
+    if (formState.userConfig?.footerPosition === 'right') {
+      setGridHeight(620);
+    } else {
+      setGridHeight(450);
+    }
+  }, [formState.userConfig?.footerPosition]);
 
   console.log("transaction mj23", { setGridHeight });
 
@@ -461,7 +443,7 @@ useEffect(() => {
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                applicationSettings.inventorySettings.defaultPurchaseAcc,
+               applicationSettings.inventorySettings.defaultPurchaseAcc,
             },
           },
           formElements: {
@@ -1832,273 +1814,128 @@ useEffect(() => {
 
   return (
     <>
-    {/* { !formState.transactionLoading ?( */}
-        <div className="relative">
-          {/* <h1>SAFVAN{transactionType}</h1> */}
-          {!deviceInfo?.isMobile && (
-            <div
-              className={`dark:!bg-dark-bg p-4`}
-              style={{
-                backgroundColor: formState.userConfig?.outerPageBg
-                  ? `rgb(${formState.userConfig?.outerPageBg})`
-                  : `transparent`,
-              }}
-            >
-              <div className="flex justify-between items-center mb-0">
-                <div className="flex items-center gap-2">
-                  {/* <TransactionUserConfig /> */}
-                </div>
-                {/* <h2 className="text-4xl font-bold text-center text-blue">
+      {/* { !formState.transactionLoading ?( */}
+      <div className="relative">
+        {/* <h1>SAFVAN{transactionType}</h1> */}
+        {!deviceInfo?.isMobile && (
+          <div
+            className={`dark:!bg-dark-bg p-4`}
+            style={{
+              backgroundColor: formState.userConfig?.outerPageBg
+                ? `rgb(${formState.userConfig?.outerPageBg})`
+                : `transparent`,
+            }}
+          >
+            <div className="flex justify-between items-center mb-0">
+              <div className="flex items-center gap-2">
+                {/* <TransactionUserConfig /> */}
+              </div>
+              {/* <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
             </h2> */}
-                <div className="w-[100px]"></div>
-              </div>
+              <div className="w-[100px]"></div>
+            </div>
 
-              <div className="py-0">
-                <div
-                  className="w-full max-w-full mx-0"
-                  style={{
-                    position: "fixed",
-                    top: "60px",
-                    left: 0,
-                    right: 0,
-                    padding: 0,
-                    zIndex: 40,
-                  }}
-                >
-                  {formState.isEdit}
-                  <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
-                    <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                      <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px] flex items-center gap-2">
-                        {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
-                        {t(formState.title)}
-                        {!formState.formElements.lblPosted.visible && (
-                          <div title={t("posted_transaction")}>
-                            <Info className="text-[#ef4444] w-4 h-4" />
-                          </div>
-                        )}
-                      </h6>
-                      <i className="fas fa-cog ms-1"></i>
-                    </div>
-                    <AccHeader
-                      formState={formState}
-                      dispatch={dispatch}
-                      // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-                      t={t} // Replace with your translation function
-                      loadTemporaryRows={loadTemporaryRows}
-                      deleteTransVoucher={deleteTransVoucher}
-                      handleRefresh={handleRefresh}
-                      createNewVoucher={createNewVoucher}
-                      handleEdit={handleEdit}
-                      printVoucher={printVoucher}
-                      handleClearControls={handleClearControls}
-                      handleHistoryClick={handleHistoryClick}
-                      setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-                      transactionType={formState.transactionType} // Replace with your actual transaction type
-                      voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-                      userSession={userSession} // Replace with your actual user session object
-                      unlockVoucher={unlockVoucher}
-                      setShowValidation={setShowValidation}
-                      showValidation={showValidation}
-                      selectTemplates={selectTemplates}
-                      goToPreviousPage={goToPreviousPage}
-                      isHistorySidebarOpen={isHistorySidebarOpen}
-                      setIsPrintModalOpen={setIsPrintModalOpen}
-                      printPaymentReceiptAdvice={printPaymentReceiptAdvice}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* header starts here */}
-              <TransactionHeader
-                formState={formState}
-                dispatch={dispatch}
-                handleKeyDown={handleKeyDown}
-                loadAndSetTransVoucher={loadAndSetTransVoucher}
-                t={t}
-                handleLoadByRefNo={handleLoadByRefNo}
-                handleFieldChange={handleFieldChange}
-                setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-            transactionType={transactionType??formState.transactionType}
-                handleFieldKeyDown={handleFieldKeyDown}
-                ledgerCodeRef={ledgerCodeRef}
-                voucherNumberRef={voucherNumberRef}
-                refNoRef={refNoRef}
-                isDropDownOpen={isDropDownOpen}
-                toggleDropdown={toggleHeaderDropdown}
-              />
-              {/* header ends here */}
-
+            <div className="py-0">
               <div
-                className="mt-[123px]"
+                className="w-full max-w-full mx-0"
                 style={{
-                  width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
-                  height: `${gridHeight}px`,
-                  overflow: "auto",
+                  position: "fixed",
+                  top: "60px",
+                  left: 0,
+                  right: 0,
+                  padding: 0,
+                  zIndex: 40,
                 }}
               >
-                <div
-                  className={
-                    formState.userConfig?.footerPosition === "right"
-                      ? "flex flex-row items-center gap-2"
-                      : "flex flex-col"
-                  }
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      height: `${gridHeight}px`,
-                    }}
-                  >
-                    <ErpPurchaseGrid
-                      ref={purchaseGridRef}
-                      onChange={handleTextDataChange}
-                      onKeyDown={(
-                        value: any,
-                        e: React.KeyboardEvent<any>,
-                        column: keyof TransactionDetail,
-                        rowIndex: number
-                      ) =>
-                        handleTextDataKeyDown(value, e, column, rowIndex, {
-                          result: {},
-                          formStateHandleFieldChangeKeysOnly:
-                            formStateHandleFieldChangeKeysOnly,
-                        })
-                      }
-                      transactionType={transactionType}
-                      columns={purchaseGridCol}
-                      keyField={"productID"}
-                      // height={gridHeight}
-                      gridId={`${gridCode}-grid`}
-                      onAddData={handleAddData}
-                      summaryConfig={formState.summaryConfig}
-                      gridFontSize={formState.userConfig?.gridFontSize}
-                      gridIsBold={formState.userConfig?.gridIsBold}
-                      rowHeight={formState.userConfig?.gridRowHeight}
-                      gridBorderColor={formState.userConfig?.gridBorderColor}
-                      gridHeaderBg={formState.userConfig?.gridHeaderBg}
-                    />
+                {formState.isEdit}
+                <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
+                  <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
+                    <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px] flex items-center gap-2">
+                      {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
+                      {t(formState.title)}
+                      {!formState.formElements.lblPosted.visible && (
+                        <div title={t("posted_transaction")}>
+                          <Info className="text-[#ef4444] w-4 h-4" />
+                        </div>
+                      )}
+                    </h6>
+                    <i className="fas fa-cog ms-1"></i>
                   </div>
-                  <div className="w-[300px]">
-                    {formState.userConfig?.footerPosition === "right" && (
-                      <TransactionFooter
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                        handleKeyDown={handleKeyDown}
-                        handleFieldKeyDown={handleFieldKeyDown}
-                        focusDiscount={focusDiscount}
-                        focusAmount={focusAmount}
-                        goToPreviousPage={goToPreviousPage}
-                        save={save}
-                        selectAttachment={selectAttachment}
-                        isDropUpOpen={isDropUpOpen}
-                        toggleDropup={toggleFooterDropup}
-                        footerLayout={"vertical"}
-                      />
-                    )}
-                  </div>
+                  <AccHeader
+                    formState={formState}
+                    dispatch={dispatch}
+                    // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                    t={t} // Replace with your translation function
+                    loadTemporaryRows={loadTemporaryRows}
+                    deleteTransVoucher={deleteTransVoucher}
+                    handleRefresh={handleRefresh}
+                    createNewVoucher={createNewVoucher}
+                    handleEdit={handleEdit}
+                    printVoucher={printVoucher}
+                    handleClearControls={handleClearControls}
+                    handleHistoryClick={handleHistoryClick}
+                    setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                    transactionType={formState.transactionType} // Replace with your actual transaction type
+                    voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                    userSession={userSession} // Replace with your actual user session object
+                    unlockVoucher={unlockVoucher}
+                    setShowValidation={setShowValidation}
+                    showValidation={showValidation}
+                    selectTemplates={selectTemplates}
+                    goToPreviousPage={goToPreviousPage}
+                    isHistorySidebarOpen={isHistorySidebarOpen}
+                    setIsPrintModalOpen={setIsPrintModalOpen}
+                    printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+                  />
                 </div>
               </div>
-              {formState.showSaveDialog && (
-                <ERPAlert
-                  showAnimation="animate__fadeIn"
-                  hideAnimation="animate__fadeOut"
-                  title={t("in_progress")}
-                  icon="warning"
-                  position="center"
-                  confirmButtonText={t("ok")}
-                  cancelButtonText={t("cancel")}
-                  onConfirm={() => {
-                    dispatch(
-                      formStateHandleFieldChange({
-                        fields: { showSaveDialog: false },
-                      })
-                    );
-                  }}
-                  onCancel={() =>
-                    dispatch(
-                      formStateHandleFieldChange({
-                        fields: { showSaveDialog: false },
-                      })
-                    )
-                  }
-                />
-              )}
             </div>
-          )}
 
-          {deviceInfo?.isMobile && (
-            <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
-              {/* Sale Header */}
-              <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
-                <ERPPreviousUrlButton />
-                {/* test mj23 */}
-                <h1 className="flex-grow font-semibold text-lg text-zinc-800">
-                  {/* {t("cash_payment")} */}
-                  {t(formState.title)}
-                </h1>
-              </div>
+            {/* header starts here */}
+            <TransactionHeader
+              formState={formState}
+              dispatch={dispatch}
+              handleKeyDown={handleKeyDown}
+              loadAndSetTransVoucher={loadAndSetTransVoucher}
+              t={t}
+              handleLoadByRefNo={handleLoadByRefNo}
+              handleFieldChange={handleFieldChange}
+              setIsPartyDetailsOpen={setIsPartyDetailsOpen}
+              transactionType={transactionType ?? formState.transactionType}
+              handleFieldKeyDown={handleFieldKeyDown}
+              ledgerCodeRef={ledgerCodeRef}
+              voucherNumberRef={voucherNumberRef}
+              refNoRef={refNoRef}
+              isDropDownOpen={isDropDownOpen}
+              toggleDropdown={toggleHeaderDropdown}
+            />
+            {/* header ends here */}
 
-              {/* Main Content */}
-              <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
-                <AccHeader
-                  formState={formState}
-                  dispatch={dispatch}
-                  // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-                  t={t} // Replace with your translation function
-                  loadTemporaryRows={loadTemporaryRows}
-                  deleteTransVoucher={deleteTransVoucher}
-                  handleRefresh={handleRefresh}
-                  createNewVoucher={createNewVoucher}
-                  handleEdit={handleEdit}
-                  printVoucher={printVoucher}
-                  handleClearControls={handleClearControls}
-                  handleHistoryClick={handleHistoryClick}
-                  setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-                  transactionType={formState.transactionType} // Replace with your actual transaction type
-                  voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-                  userSession={userSession} // Replace with your actual user session object
-                  unlockVoucher={unlockVoucher}
-                  setShowValidation={setShowValidation}
-                  showValidation={showValidation}
-                  selectTemplates={selectTemplates}
-                  goToPreviousPage={goToPreviousPage}
-                  isHistorySidebarOpen={isHistorySidebarOpen}
-                  setIsPrintModalOpen={setIsPrintModalOpen}
-                  printPaymentReceiptAdvice={printPaymentReceiptAdvice}
-                />
-
-                {/* Voucher Info */}
-                <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
-                  <div className="flex items-center gap-2 flex-1">
-                    <TransactionHeader
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      t={t}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      handleFieldChange={handleFieldChange}
-                      setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-                  transactionType={transactionType??formState.transactionType}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                      ledgerCodeRef={ledgerCodeRef}
-                      voucherNumberRef={voucherNumberRef}
-                      refNoRef={refNoRef}
-                      isDropDownOpen={isDropDownOpen}
-                      toggleDropdown={toggleHeaderDropdown}
-                    />
-                  </div>
-                </div>
-
-                {/* Form Section */}
-                <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
-                  <div className="space-y-2"></div>
+            <div
+              className="mt-[123px]"
+              style={{
+                width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
+                // height: `${gridHeight}px`,
+                overflow: "auto",
+              }}
+            >
+              <div
+                className={
+                  formState.userConfig?.footerPosition === "right"
+                    ? "flex flex-row items-center gap-2"
+                    : "flex flex-col"
+                }
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    // height: `${gridHeight}px`,
+                  }}
+                >
                   <ErpPurchaseGrid
-                    onChange={handleTextDataChange}
                     ref={purchaseGridRef}
+                    onChange={handleTextDataChange}
                     onKeyDown={(
                       value: any,
                       e: React.KeyboardEvent<any>,
@@ -2111,38 +1948,183 @@ useEffect(() => {
                           formStateHandleFieldChangeKeysOnly,
                       })
                     }
+                    transactionType={transactionType}
                     columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}
                     gridId={`${gridCode}-grid`}
                     onAddData={handleAddData}
-                    summaryConfig={
-                      formState.summaryConfig as SummaryConfig<TransactionDetail>[]
-                    }
+                    summaryConfig={formState.summaryConfig}
+                    gridFontSize={formState.userConfig?.gridFontSize}
+                    gridIsBold={formState.userConfig?.gridIsBold}
+                    rowHeight={formState.userConfig?.gridRowHeight}
+                    gridBorderColor={formState.userConfig?.gridBorderColor}
+                    gridHeaderBg={formState.userConfig?.gridHeaderBg}
                   />
-                  <TransactionFooter
+                </div>
+                <div className="w-[300px]">
+                  {formState.userConfig?.footerPosition === "right" && (
+                    <TransactionFooter
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                      focusDiscount={focusDiscount}
+                      focusAmount={focusAmount}
+                      goToPreviousPage={goToPreviousPage}
+                      save={save}
+                      selectAttachment={selectAttachment}
+                      isDropUpOpen={isDropUpOpen}
+                      toggleDropup={toggleFooterDropup}
+                      footerLayout={"vertical"}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            {formState.showSaveDialog && (
+              <ERPAlert
+                showAnimation="animate__fadeIn"
+                hideAnimation="animate__fadeOut"
+                title={t("in_progress")}
+                icon="warning"
+                position="center"
+                confirmButtonText={t("ok")}
+                cancelButtonText={t("cancel")}
+                onConfirm={() => {
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: { showSaveDialog: false },
+                    })
+                  );
+                }}
+                onCancel={() =>
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: { showSaveDialog: false },
+                    })
+                  )
+                }
+              />
+            )}
+          </div>
+        )}
+
+        {deviceInfo?.isMobile && (
+          <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
+            {/* Sale Header */}
+            <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
+              <ERPPreviousUrlButton />
+              {/* test mj23 */}
+              <h1 className="flex-grow font-semibold text-lg text-zinc-800">
+                {/* {t("cash_payment")} */}
+                {t(formState.title)}
+              </h1>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
+              <AccHeader
+                formState={formState}
+                dispatch={dispatch}
+                // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                t={t} // Replace with your translation function
+                loadTemporaryRows={loadTemporaryRows}
+                deleteTransVoucher={deleteTransVoucher}
+                handleRefresh={handleRefresh}
+                createNewVoucher={createNewVoucher}
+                handleEdit={handleEdit}
+                printVoucher={printVoucher}
+                handleClearControls={handleClearControls}
+                handleHistoryClick={handleHistoryClick}
+                setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                transactionType={formState.transactionType} // Replace with your actual transaction type
+                voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                userSession={userSession} // Replace with your actual user session object
+                unlockVoucher={unlockVoucher}
+                setShowValidation={setShowValidation}
+                showValidation={showValidation}
+                selectTemplates={selectTemplates}
+                goToPreviousPage={goToPreviousPage}
+                isHistorySidebarOpen={isHistorySidebarOpen}
+                setIsPrintModalOpen={setIsPrintModalOpen}
+                printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+              />
+
+              {/* Voucher Info */}
+              <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
+                <div className="flex items-center gap-2 flex-1">
+                  <TransactionHeader
                     formState={formState}
                     dispatch={dispatch}
-                    t={t}
                     handleKeyDown={handleKeyDown}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    t={t}
+                    handleLoadByRefNo={handleLoadByRefNo}
+                    handleFieldChange={handleFieldChange}
+                    setIsPartyDetailsOpen={setIsPartyDetailsOpen}
+                  transactionType={transactionType??formState.transactionType}
                     handleFieldKeyDown={handleFieldKeyDown}
-                    focusDiscount={focusDiscount}
-                    focusAmount={focusAmount}
-                    goToPreviousPage={goToPreviousPage}
-                    save={save}
-                    selectAttachment={selectAttachment}
-                    isDropUpOpen={isDropUpOpen}
-                    toggleDropup={toggleFooterDropup}
-                    footerLayout={
-                      (formState.userConfig?.footerPosition || "bottom") ===
-                        "right"
-                        ? "vertical"
-                        : "horizontal"
-                    }
+                    ledgerCodeRef={ledgerCodeRef}
+                    voucherNumberRef={voucherNumberRef}
+                    refNoRef={refNoRef}
+                    isDropDownOpen={isDropDownOpen}
+                    toggleDropdown={toggleHeaderDropdown}
                   />
+                </div>
+              </div>
 
-                  {/* Total Summary */}
-                  {/* <div className="bg-white shadow-md p-[10px] rounded-lg mt-0">
+              {/* Form Section */}
+              <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
+                <div className="space-y-2"></div>
+                <ErpPurchaseGrid
+                  onChange={handleTextDataChange}
+                  ref={purchaseGridRef}
+                  onKeyDown={(
+                    value: any,
+                    e: React.KeyboardEvent<any>,
+                    column: keyof TransactionDetail,
+                    rowIndex: number
+                  ) =>
+                    handleTextDataKeyDown(value, e, column, rowIndex, {
+                      result: {},
+                      formStateHandleFieldChangeKeysOnly:
+                        formStateHandleFieldChangeKeysOnly,
+                    })
+                  }
+                  columns={purchaseGridCol}
+                  keyField={"productID"}
+                  height={gridHeight}
+                  gridId={`${gridCode}-grid`}
+                  onAddData={handleAddData}
+                  summaryConfig={
+                    formState.summaryConfig as SummaryConfig<TransactionDetail>[]
+                  }
+                />
+                <TransactionFooter
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                  goToPreviousPage={goToPreviousPage}
+                  save={save}
+                  selectAttachment={selectAttachment}
+                  isDropUpOpen={isDropUpOpen}
+                  toggleDropup={toggleFooterDropup}
+                  footerLayout={
+                    (formState.userConfig?.footerPosition || "bottom") ===
+                      "right"
+                      ? "vertical"
+                      : "horizontal"
+                  }
+                />
+
+                {/* Total Summary */}
+                {/* <div className="bg-white shadow-md p-[10px] rounded-lg mt-0">
                 <div className="flex justify-between mb-2 text-gray-600 text-sm">
                   <span className="flex-1">
                     {t("total_disc")}:{" "}
@@ -2157,280 +2139,280 @@ useEffect(() => {
                   </span>
                 </div>
               </div> */}
-                </div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* footer starts here */}
-          {formState.userConfig?.footerPosition !== "right" && (
-            <TransactionFooter
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-              focusDiscount={focusDiscount}
-              focusAmount={focusAmount}
-              goToPreviousPage={goToPreviousPage}
-              save={save}
-              selectAttachment={selectAttachment}
-              isDropUpOpen={isDropUpOpen}
-              toggleDropup={toggleFooterDropup}
-              footerLayout={"horizontal"}
-            />
-          )}
-          {/* footer ends here */}
+        {/* footer starts here */}
+        {formState.userConfig?.footerPosition !== "right" && (
+          <TransactionFooter
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+            focusDiscount={focusDiscount}
+            focusAmount={focusAmount}
+            goToPreviousPage={goToPreviousPage}
+            save={save}
+            selectAttachment={selectAttachment}
+            isDropUpOpen={isDropUpOpen}
+            toggleDropup={toggleFooterDropup}
+            footerLayout={"horizontal"}
+          />
+        )}
+        {/* footer ends here */}
 
-          {formState.transaction && formState.template && (
-            <ERPModal
-              isOpen={formState.printPreview && isPrintModalOpen}
-              title={t("Template")}
-              width={1000}
-              height={700}
-              isForm={true}
-              closeModal={() => {
-                setIsPrintModalOpen(false);
-                dispatch(
-              formStateHandleFieldChange({ fields: { printPreview: false } })
-                );
-              }}
-              content={
-                <PDFViewer
-                  className="pdf-viewer"
-                  width="100%"
-                  height={700}
-                  style={{ padding: "10px" }}
-                >
-                  {renderSelectedTemplate({
-                    template: formState.template,
-                    data: formState.transaction,
-                    currentBranch: currentBranch,
-                    userSession: userSession,
-                  })}
-                </PDFViewer>
-              }
-            />
-          )}
-          {formState.isFormStateDetailOpen && (
-            <ERPModal
-              isOpen={formState.isFormStateDetailOpen}
-              title={t("formState_summary")}
-              width={2500}
-              height={2500}
-              isForm={true}
-              disableParentInteraction={false}
-              closeModal={() =>
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: { isFormStateDetailOpen: false },
-                  })
-                )
-              }
-              content={
-                <ObjectViewer
-                  value={formState}
-                  label="formState"
-                  expandByDefault={true}
-                />
-              }
-            />
-          )}
-          {formState.isProductSummaryOpen && (
-            <ERPModal
-              isOpen={formState.isProductSummaryOpen}
-              title={t("product_summary")}
-              width={1000}
-              height={700}
-              isForm={true}
-              initialMaximize={true}
-              closeModal={() =>
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: { isProductSummaryOpen: false },
-                  })
-                )
-              }
-              content={<ProductSummaryMaster />}
-            />
-          )}
+        {formState.transaction && formState.template && (
+          <ERPModal
+            isOpen={formState.printPreview && isPrintModalOpen}
+            title={t("Template")}
+            width={1000}
+            height={700}
+            isForm={true}
+            closeModal={() => {
+              setIsPrintModalOpen(false);
+              dispatch(
+                formStateHandleFieldChange({ fields: { printPreview: false } })
+              );
+            }}
+            content={
+              <PDFViewer
+                className="pdf-viewer"
+                width="100%"
+                height={700}
+                style={{ padding: "10px" }}
+              >
+                {renderSelectedTemplate({
+                  template: formState.template,
+                  data: formState.transaction,
+                  currentBranch: currentBranch,
+                  userSession: userSession,
+                })}
+              </PDFViewer>
+            }
+          />
+        )}
+        {formState.isFormStateDetailOpen && (
+          <ERPModal
+            isOpen={formState.isFormStateDetailOpen}
+            title={t("formState_summary")}
+            width={2500}
+            height={2500}
+            isForm={true}
+            disableParentInteraction={false}
+            closeModal={() =>
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { isFormStateDetailOpen: false },
+                })
+              )
+            }
+            content={
+              <ObjectViewer
+                value={formState}
+                label="formState"
+                expandByDefault={true}
+              />
+            }
+          />
+        )}
+        {formState.isProductSummaryOpen && (
+          <ERPModal
+            isOpen={formState.isProductSummaryOpen}
+            title={t("product_summary")}
+            width={1000}
+            height={700}
+            isForm={true}
+            initialMaximize={true}
+            closeModal={() =>
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { isProductSummaryOpen: false },
+                })
+              )
+            }
+            content={<ProductSummaryMaster />}
+          />
+        )}
 
-          {formState.isPartyWiseSummaryOpen && (
-            <ERPModal
-              isOpen={formState.isPartyWiseSummaryOpen}
-              title={t("party_wise_summary")}
-              width={1000}
-              height={700}
-              isForm={true}
-              initialMaximize={true}
-              closeModal={() =>
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: { isPartyWiseSummaryOpen: false },
-                  })
-                )
-              }
-              content={<PartySummaryMaster />}
-            />
-          )}
+        {formState.isPartyWiseSummaryOpen && (
+          <ERPModal
+            isOpen={formState.isPartyWiseSummaryOpen}
+            title={t("party_wise_summary")}
+            width={1000}
+            height={700}
+            isForm={true}
+            initialMaximize={true}
+            closeModal={() =>
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { isPartyWiseSummaryOpen: false },
+                })
+              )
+            }
+            content={<PartySummaryMaster />}
+          />
+        )}
 
-          {isPartyDetailsOpen && (
-            <CustomerDetailsSidebar
-              displayType="none"
-              isOpen={isPartyDetailsOpen}
-              setIsOpen={setIsPartyDetailsOpen}
-            />
-          )}
+        {isPartyDetailsOpen && (
+          <CustomerDetailsSidebar
+            displayType="none"
+            isOpen={isPartyDetailsOpen}
+            setIsOpen={setIsPartyDetailsOpen}
+          />
+        )}
 
-          <BottomSidebar
-            isOpen={isOpentwo}
-            setIsOpen={setIsOpentwo}
-            minHeight={200}
-            maxHeight={600}
-            initialHeight={400}
-          >
-            <div>
-              <div style={sidebarHeaderStyle}>
-                {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
-                <button
-                  style={closeButtonStyle}
-                  onClick={() => setIsOpentwo(false)}
-                >
-                  <X />
-                </button>
-              </div>
+        <BottomSidebar
+          isOpen={isOpentwo}
+          setIsOpen={setIsOpentwo}
+          minHeight={200}
+          maxHeight={600}
+          initialHeight={400}
+        >
+          <div>
+            <div style={sidebarHeaderStyle}>
+              {/* <h2 style={sidebarTitleStyle}>Bottom Sidebar</h2> */}
+              <button
+                style={closeButtonStyle}
+                onClick={() => setIsOpentwo(false)}
+              >
+                <X />
+              </button>
+            </div>
 
-              {/* <p className="mb-[24px] text-[#6b7280]">
+            {/* <p className="mb-[24px] text-[#6b7280]">
             This sidebar for test.
           </p> */}
 
-              {/* <BottomSidebarGrid /> */}
-              {/* <BottomSidebarGrid sidebarHeight={sidebarHeight} /> */}
-            </div>
-          </BottomSidebar>
+            {/* <BottomSidebarGrid /> */}
+            {/* <BottomSidebarGrid sidebarHeight={sidebarHeight} /> */}
+          </div>
+        </BottomSidebar>
 
-          <ERPResizableSidebar
-            minWidth={350}
-            isOpen={isTemplateOpen}
-            setIsOpen={setIsTemplateOpen}
-            children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
+        <ERPResizableSidebar
+          minWidth={350}
+          isOpen={isTemplateOpen}
+          setIsOpen={setIsTemplateOpen}
+          children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
+        />
+
+        <ERPResizableSidebar
+          minWidth={350}
+          isOpen={isAttachmentOpen}
+          setIsOpen={setIsAttachmentOpen}
+          children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
+        />
+
+        <ERPResizableSidebar
+          minWidth={350}
+          isOpen={isHistoryOpen}
+          setIsOpen={setIsHistoryOpen}
+          children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
+        />
+
+        {formState.openUnsavedPrompt == true && (
+          <UnsavedChangesModal
+            isOpen={formState.openUnsavedPrompt == true}
+            onClose={() => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: {
+                    openUnsavedPrompt: false,
+                  },
+                })
+              );
+            }}
+            onStay={() => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: {
+                    openUnsavedPrompt: false,
+                  },
+                })
+              );
+            }}
+            onLeave={async () => {
+              const ret = await loadAndSetTransVoucher(
+                false,
+                formState.tmpVoucherNo,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                true,
+                true
+              );
+            }}
           />
-
-          <ERPResizableSidebar
-            minWidth={350}
-            isOpen={isAttachmentOpen}
-            setIsOpen={setIsAttachmentOpen}
-            children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
+        )}
+        {transactionType !== "" && (
+          <HistorySidebar
+            transactionType={transactionType ?? ""}
+            isOpen={isHistorySidebarOpen}
+            onClose={() => setIsHistorySidebarOpen(false)}
           />
-
-          <ERPResizableSidebar
-            minWidth={350}
-            isOpen={isHistoryOpen}
-            setIsOpen={setIsHistoryOpen}
-            children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
+        )}
+        {formState.showQuantityFactors.visible && (
+          <QtyFactorsModal
+            isOpen={formState.showQuantityFactors.visible}
+            rowIndex={formState.showQuantityFactors.rowIndex}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { showQuantityFactors: false },
+                })
+              )
+            }
+            t={t}
           />
-
-          {formState.openUnsavedPrompt == true && (
-            <UnsavedChangesModal
-              isOpen={formState.openUnsavedPrompt == true}
-              onClose={() => {
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: {
-                      openUnsavedPrompt: false,
-                    },
-                  })
-                );
-              }}
-              onStay={() => {
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: {
-                      openUnsavedPrompt: false,
-                    },
-                  })
-                );
-              }}
-              onLeave={async () => {
-                const ret = await loadAndSetTransVoucher(
-                  false,
-                  formState.tmpVoucherNo,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  true,
-                  true
-                );
-              }}
-            />
-          )}
-          {transactionType !== "" && (
-            <HistorySidebar
-              transactionType={transactionType ?? ""}
-              isOpen={isHistorySidebarOpen}
-              onClose={() => setIsHistorySidebarOpen(false)}
-            />
-          )}
-          {formState.showQuantityFactors.visible && (
-            <QtyFactorsModal
-              isOpen={formState.showQuantityFactors.visible}
-              rowIndex={formState.showQuantityFactors.rowIndex}
-              onClose={() =>
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: { showQuantityFactors: false },
-                  })
-                )
-              }
-              t={t}
-            />
-          )}
-          {formState.showPcode && (
-            <ItemListModal
-              isOpen={formState.showPcode}
-              onClose={() =>
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: { showPcode: false },
-                  })
-                )
-              }
-              t={t}
-            />
-          )}
-          {formState.batchEntryData && formState.batchEntryData.visible && (
-            <BatchEntryModal
+        )}
+        {formState.showPcode && (
+          <ItemListModal
+            isOpen={formState.showPcode}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { showPcode: false },
+                })
+              )
+            }
+            t={t}
+          />
+        )}
+        {formState.batchEntryData && formState.batchEntryData.visible && (
+          <BatchEntryModal
         data={formState.batchEntryData.data }
-              isOpen={formState.batchEntryData.visible}
-          onClose={() => dispatch(
-                  formStateHandleFieldChangeKeysOnly({
+            isOpen={formState.batchEntryData.visible}
+            onClose={() => dispatch(
+              formStateHandleFieldChangeKeysOnly({
               fields: { batchEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
-                  })
-          )}
-              rowIndex={formState.batchEntryData.rowIndex}
-              t={t}
-            />
-          )}
-      {formState.serialNoEntryData &&  formState.serialNoEntryData.visible && (
-              <Serials
-        data={formState.serialNoEntryData.data }
-                isOpen={formState.serialNoEntryData.visible}
-          onClose={() => dispatch(
-                    formStateHandleFieldChangeKeysOnly({
-              fields: { serialNoEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
-                    })
-          )}
-          t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
+              })
             )}
-        </div>
+            rowIndex={formState.batchEntryData.rowIndex}
+            t={t}
+          />
+        )}
+      {formState.serialNoEntryData &&  formState.serialNoEntryData.visible && (
+          <Serials
+        data={formState.serialNoEntryData.data }
+            isOpen={formState.serialNoEntryData.visible}
+            onClose={() => dispatch(
+              formStateHandleFieldChangeKeysOnly({
+              fields: { serialNoEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
+              })
+            )}
+            t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
+        )}
+      </div>
       {/* ) : (
         <>Loading ............</>
       )} */}
     </>
-  
+
   );
 };
 

@@ -217,6 +217,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onClick={handleButtonClick}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     className="!m-0"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
 
@@ -275,6 +276,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       className="min-w-[180px] !m-0"
                       // label={t(formState.formElements.cbVatAccount.label)}
                       noLabel={true}
+                      transactionLoading={formState.transactionLoading}
                       data={formState.transaction.master}
                       onChange={(e) => {
                         dispatch(
@@ -323,6 +325,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
+                    transactionLoading={formState.transactionLoading}
                     id="labelDesignID"
                     className="min-w-[180px] !m-0"
                     label={t(formState.formElements.cbLabelDesign.label)}
@@ -360,6 +363,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title={t("more")}
                     variant="secondary"
                     onClick={handleMoreButtonClick}
+                    disabled={formState.transactionLoading}
                   />
                 </div>
 
@@ -388,6 +392,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       enableClearOption={false}
+                      transactionLoading={formState.transactionLoading}
                       id="currencyId"
                       className="min-w-[180px] !m-0"
                       label={t(formState.formElements.cbCurrency.label)}
@@ -426,6 +431,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     label={t(formState.formElements.exchangeRate.label)}
                     value={formState.transaction.master.exchangeRate}
                     disableEnterNavigation={true}
+                    transactionLoading={formState.transactionLoading}
                     onKeyDown={(e) => {
                       handleKeyDown && handleKeyDown(e, "exchangeRate");
                     }}
@@ -447,6 +453,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title={t("set")}
                     variant="secondary"
                     className="!m-0"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
               }
@@ -582,6 +589,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onClick={handleButtonClick}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     className="!m-0"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
 
@@ -640,6 +648,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       className="min-w-[180px] !m-0"
                       // label={t(formState.formElements.cbVatAccount.label)}
                       noLabel={true}
+                      transactionLoading={formState.transactionLoading}
                       data={formState.transaction.master}
                       onSelectItem={(e) => {
                         dispatch(
@@ -697,6 +706,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
+                    transactionLoading={formState.transactionLoading}
                     id="labelDesignID"
                     className="min-w-[180px] !m-0"
                     label={t(formState.formElements.cbLabelDesign.label)}
@@ -761,6 +771,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
+                    transactionLoading={formState.transactionLoading}
                     id="currencyId"
                     className="min-w-[180px] !m-0"
                     label={t(formState.formElements.cbCurrency.label)}
@@ -798,6 +809,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   id="exchangeRate"
                   label={t(formState.formElements.exchangeRate.label)}
                   value={formState.transaction.master.exchangeRate}
+                  transactionLoading={formState.transactionLoading}
                   disableEnterNavigation={true}
                   onKeyDown={(e) => {
                     handleKeyDown && handleKeyDown(e, "exchangeRate");
@@ -820,6 +832,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   title={t("set")}
                   variant="secondary"
                   className="!m-0"
+                  disabled={formState.transactionLoading}
                 />
               </div>
             </div>

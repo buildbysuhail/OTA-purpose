@@ -567,8 +567,15 @@
   "reset_all": "Reset all",
   "choose_content_alignment_preference": "Choose content alignment preference",
 
-  "batch_entry":"Batch Entry",
-  "packing_qty":"Packing Qty",
-  "unit_mbarcode":"Unit M Barcode",
-  "sticker":"Sticker"
+  "batch_entry": "Batch Entry",
+  "packing_qty": "Packing Qty",
+  "unit_mbarcode": "Unit M Barcode",
+  "sticker": "Sticker",
+
+  "footer_position": "Footer Position",
+  "bottom": "Bottom",
+  "grid_border_radius_px": "Grid border radius px",
+  "grid_border_color": "Grid border color",
+  "grid_header_background_color": "Grid header background color",
+  "grid_header_font_color": "Grid header font color"
 }

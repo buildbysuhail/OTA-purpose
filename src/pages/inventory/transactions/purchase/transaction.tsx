@@ -288,7 +288,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef
   );
 
-  const applicationSettings = useAppSelector(  (state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [gridHeight, setGridHeight] = useState(200);
   const { hasRight } = useUserRights();
 
@@ -443,7 +443,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-               applicationSettings.inventorySettings.defaultPurchaseAcc,
+                applicationSettings.inventorySettings.defaultPurchaseAcc,
             },
           },
           formElements: {
@@ -1960,6 +1960,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     rowHeight={formState.userConfig?.gridRowHeight}
                     gridBorderColor={formState.userConfig?.gridBorderColor}
                     gridHeaderBg={formState.userConfig?.gridHeaderBg}
+                    gridHeaderFontColor={formState.userConfig?.gridHeaderFontColor}
+                    gridBorderRadius={formState.userConfig?.gridBorderRadius}
                   />
                 </div>
                 <div className="w-[300px]">
@@ -2064,7 +2066,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     handleLoadByRefNo={handleLoadByRefNo}
                     handleFieldChange={handleFieldChange}
                     setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-                  transactionType={transactionType??formState.transactionType}
+                    transactionType={transactionType ?? formState.transactionType}
                     handleFieldKeyDown={handleFieldKeyDown}
                     ledgerCodeRef={ledgerCodeRef}
                     voucherNumberRef={voucherNumberRef}
@@ -2385,24 +2387,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
         {formState.batchEntryData && formState.batchEntryData.visible && (
           <BatchEntryModal
-        data={formState.batchEntryData.data }
+            data={formState.batchEntryData.data}
             isOpen={formState.batchEntryData.visible}
             onClose={() => dispatch(
               formStateHandleFieldChangeKeysOnly({
-              fields: { batchEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
+                fields: { batchEntryData: { visible: false, data: "" } }, updateOnlyGivenDetailsColumns: true
               })
             )}
             rowIndex={formState.batchEntryData.rowIndex}
             t={t}
           />
         )}
-      {formState.serialNoEntryData &&  formState.serialNoEntryData.visible && (
+        {formState.serialNoEntryData && formState.serialNoEntryData.visible && (
           <Serials
-        data={formState.serialNoEntryData.data }
+            data={formState.serialNoEntryData.data}
             isOpen={formState.serialNoEntryData.visible}
             onClose={() => dispatch(
               formStateHandleFieldChangeKeysOnly({
-              fields: { serialNoEntryData: {visible: false, data:""} },updateOnlyGivenDetailsColumns: true
+                fields: { serialNoEntryData: { visible: false, data: "" } }, updateOnlyGivenDetailsColumns: true
               })
             )}
             t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />

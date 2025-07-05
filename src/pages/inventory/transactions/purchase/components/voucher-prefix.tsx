@@ -37,6 +37,8 @@ const AccVoucherPrefix = React.forwardRef<
             localInputBox={formState?.userConfig?.inputBoxStyle}
             id="master_voucherPrefix"
             label={t(formState.formElements.voucherPrefix.label)}
+            transactionLoading={formState.transactionLoading}
+            // transactionLoading={true}
             value={formState.transaction.master.voucherPrefix}
             className={`max-w-[90px] min-w-[90px] ${phone ? "!w-[90px]" : ""}`}
             onChange={(e) =>

@@ -19,6 +19,7 @@ import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxSt
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import useDebounce from "./use-debounce";
 
 const api = new APIClient();
 
@@ -130,6 +131,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
+  const debouncedHandleFieldChange = useDebounce(handleFieldChange, 300);
+
   const resetThemeChange = async () => {
     try {
       ERPAlert.show({
@@ -225,19 +228,18 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         type="checkbox"
                         id="footer-position"
                         className="sr-only"
-                        checked={formState.userConfig?.footerPosition === 'right'} 
+                        checked={formState.userConfig?.footerPosition === 'right'}
                         onChange={() => {
                           const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
-                          handleFieldChange('footerPosition', newPosition); 
+                          handleFieldChange('footerPosition', newPosition);
                         }}
                       />
                       <label
                         htmlFor="footer-position"
                         className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right'
-                            ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
-                            : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
-                          }`}
-                      >
+                          ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
+                          : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
+                          }`}>
                         <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'
                           }`}></div>
                       </label>
@@ -487,7 +489,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                           onChange={(e) => {
                             const rgb = hexToRgb(e.target?.value);
                             if (rgb) {
-                              handleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                              debouncedHandleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
                             }
                           }}
                           className="opacity-0 w-full h-full cursor-pointer"
@@ -523,7 +525,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                           onChange={(e) => {
                             const rgb = hexToRgb(e.target?.value);
                             if (rgb) {
-                              handleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                              debouncedHandleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
                             }
                           }}
                           className="opacity-0 w-full h-full cursor-pointer"
@@ -614,7 +616,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         onChange={(e) => {
                           const rgb = hexToRgb(e.target?.value);
                           if (rgb) {
-                            handleFieldChange("gridBorderColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                            debouncedHandleFieldChange("gridBorderColor", `${rgb.r},${rgb.g},${rgb.b}`);
                           }
                         }}
                         className="opacity-0 w-full h-full cursor-pointer"
@@ -654,7 +656,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         onChange={(e) => {
                           const rgb = hexToRgb(e.target?.value);
                           if (rgb) {
-                            handleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                            debouncedHandleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
                           }
                         }}
                         className="opacity-0 w-full h-full cursor-pointer"

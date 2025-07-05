@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement } from "react";
-import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, Typography } from "@mui/material";
+import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, Typography, styled } from "@mui/material";
 import { setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
@@ -71,6 +71,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   useMUI?: boolean;
   skip?: boolean;
   isTransaction?: boolean;
+  transactionLoading?: boolean; // New prop for loading state
   jumpTo?: string;
   jumpTarget?: string;
   variant?: "filled" | "outlined" | "standard" | "normal";
@@ -78,6 +79,46 @@ interface ERPInputProps extends ERPInputBaseProps {
   boldInput?: boolean;
   contextClassName?: string;
 }
+
+const LoadingContainer = styled("div")`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 20;
+`;
+
+const LoadingBar = styled("div")`
+  height: 10px;
+  width: ${(props) => `${Math.floor(Math.random() * 50) + 40}%`}; // Random width 40–90%
+  border-radius: 3px;
+  background: #e8e8e8;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(-100%, 0, 0);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loading 0.8s infinite linear;
+  }
+
+  @keyframes loading {
+    100% {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+`;
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
   (
@@ -131,8 +172,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       jumpTarget,
       variant,
       info,
-      localInputBox, // Destructure localInputBox
-      isTransaction,
+      localInputBox,
+      isTransaction = false,
+      // transactionLoading = true, // Default to false
+      transactionLoading = false, // Default to false
       boldInput = false,
       contextClassName,
       ...props
@@ -527,8 +570,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
       return sizeStyles.regular.height || '2rem';
     };
-    // const inputHeight = getInputHeight();
-    // const inputHeight = getInputHeight() - 2.1;
 
     const remToPx = (rem: number) => 
     {
@@ -544,7 +585,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const commonProps = {
       id: ignoreRandomId ? id : `${id}_${Math.random()}`,
       name: `input_${id}_${Math.random()}`,
-      value: value === undefined ? "" : value,
+      value:  transactionLoading ? "" : value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
       onFocus: (e: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -685,6 +726,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   </button>
                 </div>
               )}
+              {transactionLoading && ( // Use transactionLoading instead of isTransaction
+                <LoadingContainer>
+                  <LoadingBar />
+                </LoadingContainer>
+              )}
             </>
           ),
           inputRef: ref, // Add the ref attribute here
@@ -760,7 +806,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const VALID = new Set(["left", "right", "center"]);
     const inputTextAlign = textAlignStyle !== undefined && textAlignStyle !== null && VALID.has(textAlignStyle) ? textAlignStyle : (type === "number" ? "right" : "left");
 
-
     if (_useMUI == undefined || _useMUI == false) {
       return (
         <div
@@ -810,7 +855,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </label>
               )}
               <label
-         
                 className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""
                   }`}
                 style={{
@@ -823,10 +867,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           ? "14px"
                           : `${inputBoxState?.labelFontSize}px`
                     : "14px",
-             
-               
-                     
-                }}  >
+                }} >
                 {labelInfo &&
                   cloneElement(
                     labelInfo,
@@ -835,8 +876,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </label>
             </div>
           
-
-          <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`} >
+          <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`}>
             {prefix && (
               <div
                 onClick={onClickPrefix}
@@ -851,7 +891,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               <input
                 {...commonProps}
                 {...numberInputProps}
-                placeholder={iPlaceholder}
+                placeholder={transactionLoading
+                ? "" : iPlaceholder}
                 ref={ref}
                 autoComplete="new-password"
                 onMouseEnter={handleMouseEnter}
@@ -921,7 +962,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onKeyDown={(e) => {
                   const isEnter =
                     e.key === "NumpadEnter" || e.key === "Enter" || e.keyCode === 13 || e.which === 13;
-                
+                  
                   if (disableEnterNavigation === true) {
                     if (isEnter && onEnterKeyDown) {
                       onEnterKeyDown(e);
@@ -939,7 +980,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 data-jump-to={jumpTo}
                 data-jump-target={jumpTarget}
               />
-
+              {transactionLoading && ( // Use transactionLoading instead of isTransaction
+                <LoadingContainer>
+                  <LoadingBar />
+                </LoadingContainer>
+              )}
               {showCustomNumberChanger && (
                 <div
                   className="absolute right-0 top-0 flex flex-col border-l dark:border-dark-border border-gray-300 m-[2px]"
@@ -990,7 +1035,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           }),
                     }}
                   >
-                    
                     <ChevronUp
                       className="h-4 w-4 text-gray-600 dark:text-gray-400 hover:text-gray-700  dark:hover:text-gray-500 transition-colors"
                       // style={{

@@ -870,6 +870,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
             <button
               title={t("save")}
+              disabled={formState.transactionLoading}
               onClick={save}
               ref={btnSaveRef}
               className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#4ade80] bg-[#f0fdf4] hover:bg-[#dcfce7] hover:border-[#22c55e] transition-all duration-200 text-[#16a34a] hover:text-[#15803d] shadow-sm hover:shadow-md"
@@ -1001,6 +1002,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   <ERPButton
                     title={t("grn_print")}
                     variant="secondary"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
               </div>
@@ -1189,6 +1191,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   <ERPButton
                     title={t("grn_print")}
                     variant="secondary"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
               </div>
@@ -1333,7 +1336,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     disabled={
                       formState.formElements.pnlMasters?.disabled ||
                       formState.transaction.details == null ||
-                      formState.transaction.details.length == 0
+                      formState.transaction.details.length == 0 || 
+                      formState.transactionLoading
                     }
                   />
                 </div>

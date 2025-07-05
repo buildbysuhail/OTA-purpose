@@ -45,6 +45,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
 
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
+        transactionLoading={formState.transactionLoading}
         id="roundAmount"
         className="max-w-[110px] min-w-[110px] !m-0"
         type="number"

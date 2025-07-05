@@ -48,7 +48,7 @@ interface ERPDateInputProps {
   jumpTo?: string;
   jumpTarget?: string;
   localInputBox?: inputBox;
-  transactionLoading?: boolean;
+  fetching?: boolean;
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
@@ -87,7 +87,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       jumpTo,
       jumpTarget,
       localInputBox,
-      transactionLoading = false,
+      fetching = false,
       ...props
     },
     ref
@@ -385,9 +385,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePicker
               label={!noLabel && label}
-              disabled={disabled || readonly || transactionLoading} // Disable when loading
+              disabled={disabled || readonly || fetching} // Disable when loading
               value={
-                transactionLoading
+                fetching
                   ? null
                   : value
                   ? moment(value).local()
@@ -430,7 +430,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                       : handleKeyDown(e),
                   onKeyUp: onKeyUp,
                   sx: sizeStyles,
-                  placeholder: transactionLoading ? "" : placeholder,
+                  placeholder: fetching ? "" : placeholder,
                   inputProps: {
                     shrink: true,
                     "data-skip": skip,
@@ -467,11 +467,11 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             }
             noLabel={noLabel}
             localInputBox={inputBoxState}
-            transactionLoading={transactionLoading}
+            fetching={fetching}
             label={label}
-            placeholder={transactionLoading ? "" : placeholder}
-            disabled={disabled || transactionLoading}
-            type={transactionLoading ? "text" : type}
+            placeholder={fetching ? "" : placeholder}
+            disabled={disabled || fetching}
+            type={fetching ? "text" : type}
             onChange={handleChangeNormal}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}

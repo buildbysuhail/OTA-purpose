@@ -637,6 +637,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           <ERPInput
             id="postDatedTransInNumbers"
             min={0}
+            // min={5}
             type="number"
             label=" "
             data={settings?.mainSettings}

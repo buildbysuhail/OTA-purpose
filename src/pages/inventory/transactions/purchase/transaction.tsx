@@ -1831,7 +1831,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   return (
     <>
-    { !formState.transactionLoading ?(
         <div className="relative">
       {/* <h1>SAFVAN{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
@@ -2377,9 +2376,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
       )}
     </div>
-    ) : (
-      <>Loading ............</>
-    )}
     </>
   
   );

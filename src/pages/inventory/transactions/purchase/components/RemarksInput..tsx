@@ -12,6 +12,7 @@ const RemarksInput = React.forwardRef<HTMLInputElement, RemarksInputProps>(
     return (
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
+        transactionLoading={formState.transactionLoading}
         id="remarks"
         className="!m-0"
         required={true}

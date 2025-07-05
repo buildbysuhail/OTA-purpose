@@ -85,6 +85,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
   };
 
   const openModal = () => {
+    if (formState.transactionLoading) return;
     setIsModalOpen(true);
   };
 
@@ -289,6 +290,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
       </a>
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
+        transactionLoading={formState.transactionLoading}
         id="adjustmentAmount"
         type="number"
         className="!m-0"

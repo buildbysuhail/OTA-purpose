@@ -131,6 +131,7 @@ interface ERPDataComboboxProps {
     closeModal: () => void;
     content?: any;
   };
+  transactionLoading?: boolean;
 }
 
 interface RowProps {
@@ -149,6 +150,42 @@ const ITEMS_PER_PAGE = 50;
 const ITEM_HEIGHT = 36;
 const LIST_HEIGHT = 300;
 const api = new APIClient();
+
+const LoadingContainer = styled("div")`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px !important;
+  width: 100%;
+  position: relative;
+`;
+
+const LoadingBar = styled("div")`
+  height: 10px;
+  width: ${(props) => `${Math.floor(Math.random() * 50) + 40}%`}; // Random width 40–90%
+  border-radius: 3px;
+  background: #e8e8e8;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(-100%, 0, 0);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loading 0.8s infinite linear;
+  }
+
+  @keyframes loading {
+    100% {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+`;
 
 const getNestedValue = (item: any, path: string) => {
   const keys = path?.split(".");
@@ -229,7 +266,7 @@ const Row = ({
   index,
   style,
 }: RowProps & { customSize?: "sm" | "md" | "lg" | "customize" }) => {
-  const { items, selectedValue, handleSelect, activeIndex} = data;
+  const { items, selectedValue, handleSelect, activeIndex } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
   const isActive = activeIndex === index;
@@ -238,7 +275,7 @@ const Row = ({
   const appState = useAppSelector(
     (state: RootState) => state.AppState?.appState
   );
-  
+
   return (
     <Combobox.Option
       style={style}
@@ -295,7 +332,7 @@ const Row = ({
         </div>
       )}
     </Combobox.Option>
-  )
+  );
 };
 
 const ComboboxList = React.forwardRef<
@@ -308,7 +345,7 @@ const ComboboxList = React.forwardRef<
     customSize?: "sm" | "md" | "lg" | "customize";
   } & { appState: "rtl" | "ltr" }
 >((props, ref) => {
-  const { items, selectedValue, onSelect, activeIndex, customSize, appState,} =
+  const { items, selectedValue, onSelect, activeIndex, customSize, appState } =
     props;
   const itemData = {
     items,
@@ -316,10 +353,9 @@ const ComboboxList = React.forwardRef<
     handleSelect: onSelect,
     activeIndex,
     customSize,
-
   };
 
-    const dynamicHeight = Math.min(items.length * ITEM_HEIGHT, LIST_HEIGHT);
+  const dynamicHeight = Math.min(items.length * ITEM_HEIGHT, LIST_HEIGHT);
   return (
     <List
       height={dynamicHeight}
@@ -394,8 +430,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       localInputBox, // Destructure localInputBox
       triggerEffect,
       addNewOption = false,
-      addNewOptionCobonent
-
+      addNewOptionCobonent,
+      transactionLoading = false,
     }: ERPDataComboboxProps,
     ref
   ) => {
@@ -426,7 +462,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [_customSize, setCustomSize] = useState(
       customSize ? customSize : inputBoxState?.inputSize
     );
-    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI ??false);
+    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI ?? false);
     const [_variant, set_variant] = useState<
       "filled" | "outlined" | "standard" | undefined
     >(variant === "normal" ? undefined : variant);
@@ -438,22 +474,23 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleBlur = (e: any) => {
       e.stopPropagation();
       setTimeout(() => {
-      setIsFocused(false);
-      setIsOpen(false);
-      onBlur?.(e);
-    }, 200);
+        setIsFocused(false);
+        setIsOpen(false);
+        onBlur?.(e);
+      }, 200);
     };
     const [_reload, set_reload] = useState(reload);
+
     useEffect(() => {
       set_reload(reload);
     }, [reload]);
-    
-    useEffect(() => { 
-     const run = async () => {
+
+    useEffect(() => {
+      const run = async () => {
         if (isOpen) {
           const _lcct = localStorage.getItem("lcct") ?? "";
           if (lcct.current !== _lcct) {
-            await loadData(); // Await here
+            await loadData();
           }
         }
       };
@@ -471,10 +508,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           }
         }
       };
-    
-      
+
       window.addEventListener("scroll", handleScroll, true);
-    
+
       return () => {
         window.removeEventListener("scroll", handleScroll, true);
       };
@@ -489,11 +525,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         },
         { threshold: 0.1 }
       );
-    
+
       if (comboboxRef.current) {
         observer.observe(comboboxRef.current);
       }
-    
+
       return () => {
         if (comboboxRef.current) {
           observer.unobserve(comboboxRef.current);
@@ -507,7 +543,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           (item) => item.value === initial.value
         );
         if (index !== -1) {
-          
           setTimeout(() => {
             listRef.current?.scrollToItem(index, "center");
             setActiveIndex(index);
@@ -686,17 +721,16 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
     useEffect(() => {
       const run = async () => {
-   if (_reload !== undefined && _reload !== true) {
-        return;
-      }
-      setGetListUrl(`${field?.getListUrl??""}${field?.params??""}`)
-      if (!disabledApiCall && field?.freezeDataLoad !== true) {
-       await loadData();
-      }
-  };
+        if (_reload !== undefined && _reload !== true) {
+          return;
+        }
+        setGetListUrl(`${field?.getListUrl ?? ""}${field?.params ?? ""}`);
+        if (!disabledApiCall && field?.freezeDataLoad !== true) {
+          await loadData();
+        }
+      };
 
-  run();
-      
+      run();
     }, [
       field?.getListUrl,
       field?.getListUrlDynamic,
@@ -704,45 +738,43 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       field?.freezeDataLoad,
       _reload,
       disabledApiCall,
-      options
+      options,
+      transactionLoading
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
 // New useEffect to handle new item from modal
-useEffect(() => {
-  if (
-    addNewOption &&
-    addNewOptionCobonent?.id &&
-    addNewOptionCobonent?.name &&
-    !addNewOptionCobonent.isOpen
-  ) {
-    const newItem: Option = {
-      value: addNewOptionCobonent.id,
-      label: addNewOptionCobonent.name,
-      is_active: true,
-      name: addNewOptionCobonent.name,
-    };
+    useEffect(() => {
+      if (
+        addNewOption &&
+        addNewOptionCobonent?.id &&
+        addNewOptionCobonent?.name &&
+        !addNewOptionCobonent.isOpen
+      ) {
+        const newItem: Option = {
+          value: addNewOptionCobonent.id,
+          label: addNewOptionCobonent.name,
+          is_active: true,
+          name: addNewOptionCobonent.name,
+        };
 
     // Check if the item already exists to avoid duplicates
-    if (!items.some((item) => item.value === newItem.value)) {
-      setItems((prevItems) => [...prevItems, newItem]);
-      setFilteredItems((prevItems) => [...prevItems, newItem]);
-    }
+        if (!items.some((item) => item.value === newItem.value)) {
+          setItems((prevItems) => [...prevItems, newItem]);
+          setFilteredItems((prevItems) => [...prevItems, newItem]);
+        }
 
-    // Select the new item
-    handleItemClick(newItem);
-  }
-}, [
-  addNewOption,
-  addNewOptionCobonent?.id,
-  addNewOptionCobonent?.name,
-  addNewOptionCobonent?.isOpen,
-]);
-    const filterLedgers = async (
-      ledgers: any[],
-      queryString: string
-    ): Promise<any[]> => {
-      // Decrypt all names asynchronously
+        // Select the new item
+        handleItemClick(newItem);
+      }
+    }, [
+      addNewOption,
+      addNewOptionCobonent?.id,
+      addNewOptionCobonent?.name,
+      addNewOptionCobonent?.isOpen,
+    ]);
+
+    const filterLedgers = async (ledgers: any[], queryString: string): Promise<any[]> => {
       const decryptedLedgers = await Promise.all(
         ledgers.map(async (x) => ({
           ...x,
@@ -766,7 +798,6 @@ useEffect(() => {
             value !== " 0 " &&
             value !== "00" &&
             value !== "0" &&
-            value !== "" &&
             value !== "" &&
             value !== null
           ) {
@@ -795,7 +826,6 @@ useEffect(() => {
 
     const fetchData = useCallback(
       async (cacheEnabled: boolean = false) => {
-        
         let params = "";
         if (
           field?.params != undefined &&
@@ -805,18 +835,15 @@ useEffect(() => {
         }
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
-          const res = await api
-            .getWithCacheAsync(url, params);
-             if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
-                localStorage.setItem(btoa(url), JSON.stringify(res));
-                return filterLedgers(res, params);
-              }
-              return res;
-
+          const res = await api.getWithCacheAsync(url, params);
+          if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
+            localStorage.setItem(btoa(url), JSON.stringify(res));
+            return filterLedgers(res, params);
+          }
+          return res;
         } else {
-          const res = await api
-            .getAsync(url, params)
-             return res;
+          const res = await api.getAsync(url, params);
+          return res;
         }
       },
       [
@@ -856,7 +883,6 @@ useEffect(() => {
           } else {
             if (fetchWithCache) {
               _items = await fetchData(true);
-              
             } else {
               _items = await fetchData();
             }
@@ -901,8 +927,6 @@ useEffect(() => {
       },
       [items]
     );
-  
-
 
     useEffect(() => {
       filterItems(query);
@@ -916,15 +940,14 @@ useEffect(() => {
       [JSON.stringify(filteredItems)]
     );
 
-      useEffect(() => {
-        
-        const fieldKey = field?.id?.replaceAll("_id", "");
-        const defaultValueKey = getNestedValue(
-          defaultData?.[fieldKey ?? ""],
-          field?.valueKey ?? ""
-        );
-        let final: Option | null = null;
-        // Handle value == -2 by selecting the first item if items are loaded
+    useEffect(() => {
+      const fieldKey = field?.id?.replaceAll("_id", "");
+      const defaultValueKey = getNestedValue(
+        defaultData?.[fieldKey ?? ""],
+        field?.valueKey ?? ""
+      );
+      let final: Option | null = null;
+      // Handle value == -2 by selecting the first item if items are loaded
         
         const x = getListUrl;
         const y = `${field?.getListUrl??""}${field?.params??""}`;
@@ -1001,7 +1024,7 @@ useEffect(() => {
       });
     };
 
-    const handleItemClick = (value: Option ) => {
+    const handleItemClick = (value: Option) => {
       setInitial(value);
       setIsOpen(false);
       setQuery("");
@@ -1010,13 +1033,12 @@ useEffect(() => {
       setFilteredItems(items); // Reset filtered items to original list
       onChange?.(value);
       if (onChangeData) {
-        
         const updatedData = { ...data };
-    
+
         if (value && data && id) {
           const keys = id.split(".");
           let current = updatedData;
-    
+
           for (let i = 0; i < keys.length - 1; i++) {
             const key = keys[i];
             if (!current[key] || typeof current[key] !== "object") {
@@ -1045,7 +1067,7 @@ useEffect(() => {
       if (!value.trim()) {
         setFilteredItems(items);
       }
-      onTextChange && onTextChange(value)
+      onTextChange && onTextChange(value);
     };
 
     const moveToNextInputField = (event: React.KeyboardEvent<any>) => {
@@ -1093,7 +1115,7 @@ useEffect(() => {
     const handleAddNewClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-    
+
       if (addNewOptionCobonent?.popupAction) {
         dispatch(addNewOptionCobonent.popupAction({ isOpen: true }));
       }
@@ -1174,6 +1196,7 @@ useEffect(() => {
           break;
       }
     };
+
     const sizeClasses = getSizeClasses(_customSize, inputBoxState);
     const getSizeStyles = () => {
       const styles: {
@@ -1443,6 +1466,7 @@ useEffect(() => {
           ))
         : text;
     }
+
     interface AutocompleteProps<
       T,
       Multiple extends boolean | undefined = undefined,
@@ -1461,6 +1485,7 @@ useEffect(() => {
         details?: AutocompleteChangeDetails<T> | undefined
       ) => void;
     }
+
     const StyledAutocomplete = styled(Autocomplete)`
       & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
         max-height: 200px !important;
@@ -1612,7 +1637,19 @@ useEffect(() => {
                     ...params.InputProps,
                     endAdornment: (
                       <React.Fragment>
-                        {loading ? (
+                        {transactionLoading ? (
+                          <LoadingContainer
+                            style={{
+                              position: "absolute",
+                              right: "8px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              zIndex: 10,
+                            }}
+                          >
+                            <LoadingBar />
+                          </LoadingContainer>
+                        ) : loading ? (
                           <CircularProgress color="inherit" size={20} />
                         ) : null}
                         {params.InputProps.endAdornment}
@@ -1745,6 +1782,7 @@ useEffect(() => {
                   // overflow: "hidden",
                   // textOverflow: "ellipsis",
                   // whiteSpace: "nowrap",
+                  // padding: `0 10px 0 10px`, // Simplified padding
                 }}
                 className={`form-control ${
                   sizeClasses?.input
@@ -1753,7 +1791,8 @@ useEffect(() => {
                   enableClearOption &&
                   (initial || inputValue) &&
                   !noXMarkIcon &&
-                  !disabled
+                  !disabled &&
+                  !transactionLoading
                     ? "!pr-[60px]"
                     : "!pr-[30px]"
                 } dark:!text-dark-text placeholder:capitalize ${
@@ -1770,7 +1809,9 @@ useEffect(() => {
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={
-                  t("select") + " " + (label || id?.replaceAll("_", " "))
+                  transactionLoading
+                    ? ""
+                    : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -1798,6 +1839,27 @@ useEffect(() => {
                 readOnly={disabled}
                 disabled={disabled}
               />
+            {transactionLoading && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: "rgba(255, 255, 255, 0.7)", // Optional overlay for visibility
+                  zIndex: 20, // Higher z-index to ensure visibility
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <LoadingContainer>
+                  <LoadingBar />
+                </LoadingContainer>
+              </div>
+            )}
+            {!transactionLoading && (
               <div
                 className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
                 style={{
@@ -1877,6 +1939,7 @@ useEffect(() => {
                   </div>
                 </Combobox.Button>
               </div>
+            )}
             </div>
             {isOpen &&
               createPortal(
@@ -2127,7 +2190,6 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
   // Handle regular objects - check keys and values
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
-  
   if (keys1.length !== keys2.length) return false;
   
   // Check if all keys in obj1 exist in obj2 with the same values
@@ -2139,7 +2201,6 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
         key === '_owner') {
       return true;
     }
-    
     return obj2.hasOwnProperty(key) && safeCompare(obj1[key], obj2[key]);
   });
 };
@@ -2178,5 +2239,4 @@ const propsAreEqual = (
   return true;
 };
 
-
-export default memo(ERPDataCombobox);
+export default memo(ERPDataCombobox, propsAreEqual);

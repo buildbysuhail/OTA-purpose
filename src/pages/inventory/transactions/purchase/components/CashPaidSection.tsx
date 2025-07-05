@@ -42,6 +42,7 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
 
         <ERPInput
           localInputBox={formState?.userConfig?.inputBoxStyle}
+          transactionLoading={formState.transactionLoading}
           id="cashReceived"
           type="number"
           min={0}

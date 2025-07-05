@@ -33,6 +33,8 @@ const ReferenceNumber = React.forwardRef<
                 label={t(formState.formElements.referenceNumber.label)}
                 value={formState.transaction.master.purchaseInvoiceDate}
                 className="w-full min-w-[135px]"
+                transactionLoading={formState.transactionLoading}
+              // transactionLoading={true}
                 onChange={(e) =>
                   dispatch(
                     formStateMasterHandleFieldChange({

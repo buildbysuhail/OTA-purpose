@@ -17,6 +17,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
   return (
     <ERPInput
       localInputBox={formState?.userConfig?.inputBoxStyle}
+      transactionLoading={formState.transactionLoading}
       id="billDiscount"
       type="number"
       label={t(formState.formElements.billDiscount.label)}

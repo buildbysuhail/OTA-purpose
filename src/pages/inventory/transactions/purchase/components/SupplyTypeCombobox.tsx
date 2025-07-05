@@ -18,6 +18,7 @@ const SupplyTypeCombobox: React.FC<SupplyTypeComboboxProps> = ({
   return (
     <ERPDataCombobox
       localInputBox={formState?.userConfig?.inputBoxStyle}
+      transactionLoading={formState.transactionLoading}
       enableClearOption={false}
       id="supplyType"
       className="min-w-[180px] !m-0"

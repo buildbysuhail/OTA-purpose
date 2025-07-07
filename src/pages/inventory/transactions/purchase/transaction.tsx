@@ -296,7 +296,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     if (formState.userConfig?.footerPosition === 'right') {
       setGridHeight(620);
     } else {
-      setGridHeight(450);
+      setGridHeight(400);
     }
   }, [formState.userConfig?.footerPosition]);
 

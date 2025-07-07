@@ -1207,6 +1207,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
         visible: false,
         width: 150,
         alignment: "left",
+        cellRender: (cellData) => {
+          return (
+            <div className="flex items-center justify-center p-2 cursor-pointer">
+              <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
+                <X className="w-4 h-4" />
+              </a>
+            </div>
+          )
+        }
       },
       {
         dataField: "btnPrintBarcode",

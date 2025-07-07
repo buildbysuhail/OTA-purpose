@@ -67,10 +67,9 @@ const ColorPicker: React.FC<{
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700 dark:text-dark-text">{label}</label>
       <div className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-dark-hover-bg rounded-lg border border-gray-200 dark:border-dark-border">
         <div
-          className="relative h-10 w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+          className="relative h-12 w-12 rounded-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
           style={{ backgroundColor: `rgb(${value ?? defaultColor})` }}
         >
           <i className="ri-palette-line text-white text-lg absolute pointer-events-none drop-shadow-md"></i>
@@ -87,7 +86,7 @@ const ColorPicker: React.FC<{
           />
         </div>
         <div className="flex-1">
-        {/* <span className="text-xs text-gray-500 dark:text-dark-text/70 uppercase tracking-wide font-medium">RGB Value</span> */}
+           <label className="block text-xs font-medium text-gray-700 dark:text-dark-text">{label}</label>
           <div className="text-sm text-gray-700 dark:text-dark-text font-mono bg-white dark:bg-dark-bg p-2 rounded-md mt-1 border border-gray-200 dark:border-dark-border">
             rgb({value ?? defaultColor})
           </div>
@@ -593,7 +592,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
         title={t("color_customization")}
         icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {isInputBgColor && (
             <ColorPicker
               label={t("input_background_color")}

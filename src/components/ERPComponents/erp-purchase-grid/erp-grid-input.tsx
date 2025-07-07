@@ -13,8 +13,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   noBorder?: boolean;
   type?: string;
   isEditing?: boolean;
-   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-   onKeyDown?: (e: any) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: any) => void;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -51,35 +51,30 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     const [borderStyle, setBorderStyle] = useState<string>(noBorder ? "border-none" : "");
-    const [bgColor, setBgColor] = useState<string>("bg-white");
+    const [bgColor, setBgColor] = useState<string>("bg-transparent");
 
     useEffect(() => {
       if (isFocused) {
-        setBorderStyle("border-1 border-blue-500"); // Always show border on focus
-      } else if (noBorder) {
-        setBorderStyle("border-none"); // Apply noBorder when not focused
+        setBorderStyle("border-1 border-blue-500");
+        setBgColor("bg-white");
       } else if (disabled) {
         setBorderStyle("border-none");
+        setBgColor("bg-gray-100");
       } else if (isHovered) {
         setBorderStyle("border-none");
-      } else {
-        setBorderStyle("border-none");
-      }
-
-      if (disabled) {
-        setBgColor("bg-gray-100");
-      } else if (isHovered && !isFocused) {
         setBgColor("bg-gray-50");
       } else {
-        setBgColor("bg-white");
+        setBorderStyle("border-none");
+        setBgColor("bg-transparent");
       }
     }, [isFocused, isHovered, disabled, noBorder]);
 
-       const handleKeyDown = (e: any) => {
-          if (e.key === "Enter") {
-            handleNavigation(e);
-          }
-        };
+    const handleKeyDown = (e: any) => {
+      if (e.key === "Enter") {
+        handleNavigation(e);
+      }
+    };
+
     return (
       <div className="relative w-full">
         <input
@@ -90,22 +85,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           disabled={disabled}
           placeholder={placeholder}
           onFocus={() => setIsFocused(true)}
-            onBlur={(e) => {
-                  setIsFocused(false);
-                  onBlur && onBlur(e);
-                }}
-
-          className={`w-full h-full px-3 py-2 ${className} ${borderStyle} ${bgColor} disabled:opacity-50 disabled:cursor-not-allowed text-sm ${
+          onBlur={(e) => {
+            setIsFocused(false);
+            onBlur && onBlur(e);
+          }}
+          className={`w-full h-full px-3 py-2 ${className} ${borderStyle} ${bgColor} disabled:opacity-50 disabled:cursor-not-allowed ${
             error && !noBorder ? "border-2 border-red-500" : ""
           }`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-              onKeyDown={(e) => {
-                     if (onKeyDown) {
-                      onKeyDown(e);
-                    }
-                    // handleKeyDown(e);      
-                }}
+          onKeyDown={(e) => {
+            if (onKeyDown) {
+              onKeyDown(e);
+            }
+            handleKeyDown(e);
+          }}
           {...props}
         />
         {error && <p className="mt-1 text-xs text-red-600">{error}</p>}

@@ -94,6 +94,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      popupRef.current &&
+      !popupRef.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setIsPopupVisible(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
   const taxData = [
     { label: "SGST", value: 0 },
     { label: "CGST", value: 0 },
@@ -618,10 +636,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <div className={`p-2 bg-gray-100 border-t border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-end items-center gap-4"}`}>
           <div className="flex justify-end gap-2">
             {/* <div className={`flex ${footerLayout === 'vertical' ? 'flex-col gap-2' : 'flex-row'}`}> */}
-            <button className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-              <X className="w-3.5 h-3.5" />
-              Cancel
-            </button>
+            
             {/* <button
               className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
             >
@@ -631,6 +646,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <button className="flex items-center gap-1.5 px-5 py-2 bg-[#3b82f6] text-white rounded-md text-xs font-semibold hover:bg-[#2563eb] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#3b82f6]/30 transition-all duration-200">
               <Check className="w-3.5 h-3.5" />
               Save Transaction
+            </button>
+            <button className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
+              <X className="w-3.5 h-3.5" />
+              Cancel
             </button>
           </div>
         </div>
@@ -1264,7 +1283,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     formState.transaction.master.billDiscount == 2
   ) {
     return (
-      <div className="fixed top-[186px] right-0 h-[732px] w-[300px] bg-[#f8f8ff] shadow-lg overflow-y-auto p-2 z-50">
+      <div className="fixed top-[170px] right-0 h-[748px] w-[300px] bg-[#f8f8ff] shadow-lg overflow-y-auto p-2 z-30">
         {/* {dropdownContent} */}
         {renderSecondFooter()}
       </div>
@@ -1277,7 +1296,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
 
         {!deviceInfo?.isMobile && (
-          <div className={`fixed dark:bg-dark-bg bg-[#f8f8ff] ${footerLayout === 'vertical' ? 'top-[186px] right-0 h-[732px] w-[300px] overflow-y-auto p-2 z-50' : 'z-40 bottom-0  shadow-lg full-available-width lg:px-3 py-2 md:px-2 '}`}
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[748px] w-[300px] overflow-y-auto p-2 z-30 bg-white border border-slate-200' : 'z-40 bottom-0  shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
             style={{
               boxShadow: footerLayout === 'vertical'
                 ? 'none'

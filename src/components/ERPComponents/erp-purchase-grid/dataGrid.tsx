@@ -384,8 +384,8 @@ const Row = React.memo(
           boxSizing: "border-box",
           borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
         }}
-        className="py-0 hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-200 ease-in-out group"
-        // column bg transition ☝
+        className={`py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
+         // column bg transition ☝
         key={`inv_transaction_grid_${index}`}
       >
         {columns
@@ -660,7 +660,7 @@ const SummaryRow: React.FC<{
             return (
               <td
                 key={`summary_${column.dataField}`}
-                className="flex items-center px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
+                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
                 style={{
                   fontSize: `${gridFontSize}px`,
                   fontWeight: gridIsBold ? "bold" : "600",
@@ -1004,7 +1004,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
         borderRadius: formState.userConfig?.gridBorderRadius
           ? `${formState.userConfig.gridBorderRadius}px`
-          : "16px",
+          : "0px",
         // boxShadow: "0 4px 25px rgba(0, 0, 0, 0.08)",
         // table whole shadow
       }}
@@ -1024,7 +1024,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           />
         </div>
 
-        <div className="w-full overflow-x-auto scrollbar rounded-t-xl sticky top-0 z-10">
+        <div className="w-full overflow-x-auto scrollbar sticky top-0 z-10">
           <table
             className="w-full border-collapse"
             style={{
@@ -1130,7 +1130,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                         }
                       >
                         <span
-                          className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
+                          // className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
                           style={{
                             display: "inline-block",
                             maxWidth: "100%",

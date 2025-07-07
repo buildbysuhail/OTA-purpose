@@ -1277,7 +1277,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               ? renderFifthFooter()
               : formState.transaction.master.billDiscount == 6
                 ? renderSixthFooter()
-                : renderFirstFooter();
+                : renderSecondFooter();
   if (
     formState.userConfig?.footerPosition === "right" &&
     formState.transaction.master.billDiscount == 2

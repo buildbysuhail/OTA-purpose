@@ -74,6 +74,7 @@ import ItemListModal from "./item-list";
 import { DeepPartial } from "redux";
 import BatchEntryModal from "./batch-entry";
 import Serials from "./serials";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
 
 interface BilledItem {
   id?: number;
@@ -152,6 +153,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isFooterOnRight = formState.userConfig?.footerPosition === "right";
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
+  const { appState } = useAppState();
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "90px" : "250px";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
   const purchaseGridRef = useRef<{
     focusCell: (targetRow: number, targetColumnIndex: number) => void;
     nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
@@ -525,15 +531,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings.maintainWarehouse,
         },
-         ledgerID: {
-            ...initialFormElements.ledgerID,
-            accLedgerType: 
+        ledgerID: {
+          ...initialFormElements.ledgerID,
+          accLedgerType:
             formType == "BT" ? LedgerType.Branch_Recv_Payable :
-            !applicationSettings.inventorySettings
-              .showAccountReceivableInPurchase
-              ? LedgerType.Cash_Bank_Suppliers
-              : LedgerType.Cash_Bank_Suppliers_Customers,
-          },
+              !applicationSettings.inventorySettings
+                .showAccountReceivableInPurchase
+                ? LedgerType.Cash_Bank_Suppliers
+                : LedgerType.Cash_Bank_Suppliers_Customers,
+        },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
@@ -1863,8 +1869,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 {formState.isEdit}
                 <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                   <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                    <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px] flex items-center gap-2">
-                      {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
+                    <h6 className="absolute  text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
+                      style={{ left: headerLeft }}>
+                        {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
                         <div title={t("posted_transaction")}>

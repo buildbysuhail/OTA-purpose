@@ -95,22 +95,22 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   }, []);
 
   useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      popupRef.current &&
-      !popupRef.current.contains(event.target as Node) &&
-      buttonRef.current &&
-      !buttonRef.current.contains(event.target as Node)
-    ) {
-      setIsPopupVisible(false);
-    }
-  };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsPopupVisible(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const taxData = [
     { label: "SGST", value: 0 },
@@ -219,22 +219,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </li>
                 <li>
                   <button className="text-[#2563eb]">
-                    <span
-                      className="hover:underline text-[#0ea5e9] capitalize"
-                      onClick={selectAttachment}
-                    >
+                    <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
                       {t("attachment")}
                     </span>
                   </button>
                 </li>
                 <li>
-                  <ERPButton title={t("grn_print")} variant="secondary" disabled={formState.transactionLoading}/>
+                  <ERPButton
+                    title={t("grn_print")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                  />
                 </li>
               </ul>
             </nav>
           </div>
         )}
       </div>
+
       <div className={`${footerLayout === "vertical" ? "block" : "hidden"}`}>
         <div className="mb-2">
           <div className={`grid${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
@@ -289,6 +291,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         </div>
       </div>
+
       <div className={`${footerLayout === "vertical" ? 'grid grid-cols-1' : "flex flex-col gap-2"}`}>
         <div className="w-full">
           <RemarksInput
@@ -461,22 +464,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </li>
                 <li>
                   <button className="text-[#2563eb]">
-                    <span
-                      className="hover:underline text-[#0ea5e9] capitalize"
-                      onClick={selectAttachment}
-                    >
+                    <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
                       {t("attachment")}
                     </span>
                   </button>
                 </li>
                 <li>
-                  <ERPButton title={t("grn_print")} variant="secondary" disabled={formState.transactionLoading}/>
+                  <ERPButton
+                    title={t("grn_print")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                  />
                 </li>
               </ul>
             </nav>
           </div>
         )}
       </div>
+
       <div className={`${footerLayout === "vertical" ? "" : "bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"}`} >
         <div className={`${footerLayout === "vertical" ? "block" : "hidden"}`}>
           <div className="mb-2">
@@ -636,10 +641,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <div className={`p-2 bg-gray-100 border-t border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-end items-center gap-4"}`}>
           <div className="flex justify-end gap-2">
             {/* <div className={`flex ${footerLayout === 'vertical' ? 'flex-col gap-2' : 'flex-row'}`}> */}
-            
-            {/* <button
-              className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
-            >
+            {/* <button  className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
               <Eye className="w-3.5 h-3.5" />
               Preview
             </button> */}
@@ -794,6 +796,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             handleKeyDown={handleKeyDown}
           />
         </div>
+
         <div className="flex items-end gap-1">
           <div className="flex items-center gap-1">
             <div className="flex flex-col xl:flex-row items-start xl:items-end gap-1">
@@ -1240,25 +1243,25 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             t={t}
           />
 
-                  <IsLockedCheckbox
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
+          <IsLockedCheckbox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+          />
         </div>
 
         <button className="text-[#2563eb]">
-                  <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+          <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
             {t("attachment")}
           </span>
         </button>
 
         <div className="w-full">
-                  <ERPButton
-                    title={t("grn_print")}
-                    variant="secondary"
-                    disabled={formState.transactionLoading}
-                  />
+          <ERPButton
+            title={t("grn_print")}
+            variant="secondary"
+            disabled={formState.transactionLoading}
+          />
         </div>
       </div>
     </div>
@@ -1278,12 +1281,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               : formState.transaction.master.billDiscount == 6
                 ? renderSixthFooter()
                 : renderSecondFooter();
-  if (
-    formState.userConfig?.footerPosition === "right" &&
-    formState.transaction.master.billDiscount == 2
-  ) {
+  if (formState.userConfig?.footerPosition === "right" && formState.transaction.master.billDiscount == 2) {
     return (
-      <div className="fixed top-[170px] right-0 h-[748px] w-[300px] bg-[#f8f8ff] shadow-lg overflow-y-auto p-2 z-30">
+      <div className="fixed top-[170px] right-0 h-[748px] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg  p-2 z-30">
         {/* {dropdownContent} */}
         {renderSecondFooter()}
       </div>
@@ -1291,17 +1291,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   } else {
     return (
       <>
-        {isDropUpOpen && (
-          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropup} />
-        )}
+        {isDropUpOpen && (<div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropup} />)}
 
         {!deviceInfo?.isMobile && (
-          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[748px] w-[300px] overflow-y-auto p-2 z-30 bg-white border border-slate-200' : 'z-40 bottom-0  shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
-            style={{
-              boxShadow: footerLayout === 'vertical'
-                ? 'none'
-                : '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)',
-            }}>
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-30 bg-white border-l border-l-slate-200' : 'z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
+            style={{ boxShadow: footerLayout === 'vertical' ? 'none' : '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)', }}>
             <div className={`${footerLayout === 'vertical' ? 'hidden' : 'block'}`}>
               <button onClick={() => setShowFirstFooter(!showFirstFooter)} className="absolute bottom-2 left-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 z-30">
                 <Repeat size={20} />
@@ -1317,7 +1311,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
 
-              <div ref={dropUpRef} className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"}`}>
+              <div ref={dropUpRef} className={`w-full transition-all duration-500 ease-in-out overflow-y-auto ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"}`}>
                 {dropdownContent}
               </div>
             </div>
@@ -1358,10 +1352,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {/* Dropdown content */}
             <div
               ref={dropUpRef}
-              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen
-                ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6"
-                : "max-h-0 overflow-hidden"
-                }`}
+              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6" : "max-h-0 overflow-hidden"}`}
               style={{
                 width: "100%", // Ensures the dropdown fits the mobile width
                 boxSizing: "border-box", // Prevents horizontal overflow
@@ -1428,7 +1419,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
                   <div>
                     <div className="flex items-center justify-between">
-                    <span>{t(formState.formElements.grandTotalFc.label)}</span>
+                      <span>{t(formState.formElements.grandTotalFc.label)}</span>
                       <span>:{formState.transaction.master.grandTotalFc}</span>
                     </div>
                   </div>
@@ -1467,8 +1458,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       disabled={
                         formState.formElements.pnlMasters?.disabled ||
                         formState.transaction.details == null ||
-                        formState.transaction.details.length == 0 || 
-                      formState.transactionLoading
+                        formState.transaction.details.length == 0 ||
+                        formState.transactionLoading
                       }
                     />
                   </div>
@@ -1485,12 +1476,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             >
               <div>
                 <div style={sidebarHeaderStyle}>
-                  <button
-                    style={closeButtonStyle}
-                    onClick={() => setIsOpentwo(false)}
-                  >
-                    <X />
-                  </button>
+                  <button style={closeButtonStyle} onClick={() => setIsOpentwo(false)}>  <X /></button>
                 </div>
               </div>
             </BottomSidebar>

@@ -23,6 +23,7 @@ import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from ".
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
 
 interface TransactionHeaderProps {
   formState: any;
@@ -59,6 +60,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   isDropDownOpen,
   toggleDropdown,
 }) => {
+  const { appState } = useAppState();
   // const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,6 +68,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef(null);
   const ledgerIdRef = useRef<any>(null);
+
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "80px" : "240px";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
 
   // const toggleDropdown = () => {
   //   setIsDropDownOpen(!isDropDownOpen);
@@ -120,7 +127,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {!deviceInfo?.isMobile && (
-        <div className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}>
+        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-40 bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -480,7 +487,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {deviceInfo?.isMobile && (
-        <div className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}>
+        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-40 bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}

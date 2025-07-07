@@ -17,11 +17,12 @@ export interface TransactionProps {
   title?: string;
   drCr?: string;
   voucherNo?: number;
-  transactionMasterID?: number,
-  financialYearID?: number,
-  isTeller?: boolean | false,
+  transactionMasterID?: number;
+  financialYearID?: number;
+  isTeller?: boolean | false;
   // localInputBox?: inputBox;
 }
+
 export interface TransactionData {
   master: TransactionMaster;
   // master3: TransactionMaster3;
@@ -30,6 +31,7 @@ export interface TransactionData {
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
 }
+
 export interface InvAccTransaction {
   invTransAccountsID: number;
   invTransactionMasterID: number;
@@ -43,6 +45,7 @@ export interface InvAccTransaction {
   isIncome: boolean;
   slNo: number;
 }
+
 export interface Attachments {
   id?: string;
   key: string;
@@ -54,8 +57,9 @@ export interface Attachments {
   uploaded?: boolean;
   uploading?: boolean;
   error?: string;
-  progress: number
+  progress: number;
 }
+
 export interface TransactionValidationsData {
   master: TransactionMasterValidations;
   // master3: TransactionMaster3Validations;
@@ -171,17 +175,18 @@ export interface TransactionMaster {
   cardTip: number;
   notes1: string;
   notes2: string;
-  particulars: string;//new
-  lb: boolean;//new
-  hasCashPaid: boolean;//new
-  hasroundOff: boolean;//new
-  supplyType: string;//new
+  particulars: string; //new
+  lb: boolean; //new
+  hasCashPaid: boolean; //new
+  hasroundOff: boolean; //new
+  supplyType: string; //new
   other: TransactionMaster3;
   labelDesignID: number;
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
 }
+
 export interface TransactionMaster3 {
   invTransactionMasterID: number;
   branchID: number;
@@ -204,16 +209,13 @@ export interface TransactionMaster3 {
   shipStateCode: number;
 }
 
-export interface TransactionMaster3Validations {
-
-}
-export interface TransactionMasterValidations {
-
-}
+export interface TransactionMaster3Validations {}
+export interface TransactionMasterValidations {}
 export interface CommonParams {
   result: DeepPartial<TransactionFormState>;
   formStateHandleFieldChangeKeysOnly?: any;
 }
+
 export interface TransactionDetail {
   slNo: string;
   pCode: string;
@@ -307,8 +309,8 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
-
 }
+
 export interface TransactionDetails2 {
   invTransactionDetailID: number;
   branchID: number;
@@ -326,7 +328,6 @@ export interface TransactionDetails2 {
   additionalCess: number;
 }
 
-
 export interface UserConfig {
   maxWidth?: any;
   gridMaxWidth?: any;
@@ -336,11 +337,11 @@ export interface UserConfig {
   mnuShowConfirmationForEditOnAccounts?: boolean;
   maximizeBillwiseScreenInitially?: boolean;
   alignment?: "left" | "center" | "right";
-  presetCostenterId?: number
-  counterAssignedCashLedgerId?: number
+  presetCostenterId?: number;
+  counterAssignedCashLedgerId?: number;
   outerPageBg?: string;
   innerPageBg?: string;
-  inputBoxStyle?: inputBox
+  inputBoxStyle?: inputBox;
   isExpanded?: boolean;
   useBarcode?: boolean;
   resizeGrid?: boolean;
@@ -362,17 +363,21 @@ export interface UserConfig {
   gridRowHeight?: number;
   gridBorderColor?: string;
   gridHeaderBg?: string;
-  footerPosition?: 'bottom' | 'right';
+  footerPosition?: "bottom" | "right";
+  gridHeaderFontColor?: string;
+  gridBorderRadius?: number;
 }
 
 export type FormElementsState = {
   [key in keyof typeof initialFormElements]: FormElementState;
 };
+
 export interface LoadData {
   formType?: string;
   vPrefix?: string;
   vNumber?: string;
 }
+
 export interface SummaryItems {
   qty: number;
   gross: number;
@@ -405,7 +410,7 @@ export interface TransactionFormState {
   ledgerData: any;
   groupName: any;
   dtLedgerCodes: any[];
-  summary: SummaryItems,
+  summary: SummaryItems;
   showPartySelection: boolean;
   showSaveDialog: boolean;
   customerType: string;
@@ -420,22 +425,22 @@ export interface TransactionFormState {
   transaction: TransactionData;
   transactionType: string;
   total: number;
-  printOnSave: boolean
-  printPreview: boolean
-  printCheque: boolean
-  amountInWords: string,
-  template?: any,
-  templates?: [],
-  templatesData?: TemplateState[]
+  printOnSave: boolean;
+  printPreview: boolean;
+  printCheque: boolean;
+  amountInWords: string;
+  template?: any;
+  templates?: [];
+  templatesData?: TemplateState[];
   userConfig?: UserConfig;
-  formElements: FormElementsState
-  openUnsavedPrompt?: boolean
-  foreignCurrency: boolean
-  enableDebitAccount: boolean
+  formElements: FormElementsState;
+  openUnsavedPrompt?: boolean;
+  foreignCurrency: boolean;
+  enableDebitAccount: boolean;
   inSearch: boolean;
-  enableTaxNumber: boolean
-  tmpVoucherNo?: number
-  dummyCode?: any
+  enableTaxNumber: boolean;
+  tmpVoucherNo?: number;
+  dummyCode?: any;
   remarks?: string;
   prevTransactionDate?: string;
   lb?: boolean;
@@ -452,17 +457,17 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];
-  showQuantityFactors: {visible: boolean, rowIndex: number};
-  showPcode:boolean;
-  batchEntryData:{visible: boolean, data: string, rowIndex: number};
-  serialNoEntryData:{visible: boolean, data: string, rowIndex: number};
-  batchSelectionData: string;  
-  popupSearchSelectionData: string;  
+  showQuantityFactors: { visible: boolean; rowIndex: number };
+  showPcode: boolean;
+  batchEntryData: { visible: boolean; data: string; rowIndex: number };
+  serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
+  batchSelectionData: string;
+  popupSearchSelectionData: string;
   quantityFactorData: string;
-  currentCell?: { column: string, rowIndex: number };
+  currentCell?: { column: string; rowIndex: number };
   batchesUnits?: [];
-
 }
+
 export interface PrintTransProps {
   masterAccount: string;
   details: TransactionDetail[];
@@ -472,6 +477,7 @@ export interface PrintTransProps {
   vrNumber: string;
   isPrintPreview: boolean;
 }
+
 export interface VoucherElementProps {
   formState: TransactionFormState;
   dispatch: Dispatch<AnyAction>;
@@ -487,17 +493,19 @@ export interface GridQtyFactors {
   nos: number;
   total: number;
 }
+
 export interface LoadProductDetailsByAutoBarcodeProps {
   detail: TransactionDetail;
-    productBatchID: number;
-    autoBarcode: string;
-    productCode: string;
-    useProductCode: boolean;
-    searchText: string;
-    searchColumn: string;
-    rowIndex: number;
-    setFocusToNextColumn: boolean;
+  productBatchID: number;
+  autoBarcode: string;
+  productCode: string;
+  useProductCode: boolean;
+  searchText: string;
+  searchColumn: string;
+  rowIndex: number;
+  setFocusToNextColumn: boolean;
 }
+
 interface ProductBatchDetailsForAutoBarcodeData {
   serialNumber: string;
   productCode: string;
@@ -562,7 +570,6 @@ interface ProductBatchDetailsForAutoBarcodeData {
   p_AdditionalCessPerc: number;
   p_CalamityCessPerc: number;
   hsnCode: string;
-
   // new fields
   supplierReferenceProductCode: string;
   stockDetails: string;
@@ -577,9 +584,9 @@ interface ProductBatchDetailsForAutoBarcodeData {
   isBasicUnitBarcode: boolean;
   isMultiUnitBarCode: boolean;
   stickerQty: number;
-
   units: UnitByBatchDetailsDto[];
 }
+
 interface UnitByBatchDetailsDto {
   unitCode?: string;
   productBatchID?: number; // C# long -> TS number
@@ -589,6 +596,7 @@ interface UnitByBatchDetailsDto {
   unitDescription?: string;
   decimalPoints?: number;
 }
+
 export interface DataAutoBarcode {
   products: ProductBatchDetailsForAutoBarcodeData[];
   units: UnitByBatchDetailsDto[];

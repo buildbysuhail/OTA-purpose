@@ -570,5 +570,12 @@
   "batch_entry": "إدخال الدفعة",
   "packing_qty": "كمية التعبئة",
   "unit_mbarcode": "الباركود الرئيسي للوحدة",
-  "sticker": "ملصق"
+  "sticker": "ملصق",
+
+  "footer_position": "موضع التذييل",
+  "bottom": "الأسفل",
+  "grid_border_radius_px": "نصف قطر حدود الشبكة بالبكسل",
+  "grid_border_color": "لون حدود الشبكة",
+  "grid_header_background_color": "لون خلفية رأس الجدول",
+  "grid_header_font_color": "لون خط رأس الجدول"
 }

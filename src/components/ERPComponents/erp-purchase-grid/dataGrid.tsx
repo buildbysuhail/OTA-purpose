@@ -36,13 +36,12 @@ import type {
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
   formStateHandleFieldChange,
-  formStateTransactionDetailsRowUpdate,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { generateUniqueKey } from "../../../utilities/Utils";
+import "../../../assets/css/loader-style.css";
 
-import "../../../assets/css/loader-style.css"; 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
   column: keyof T;
@@ -81,6 +80,8 @@ interface DataGridProps<T extends DataItem> {
   gridIsBold?: boolean;
   gridBorderColor?: string;
   gridHeaderBg?: string;
+  gridHeaderFontColor?: string;
+  gridBorderRadius?: number;
 }
 
 interface EditableCellProps {
@@ -189,8 +190,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const debounceCellChange = useDebounce(
       (value: string, key: keyof TransactionDetail, index: number) => {
         onChange && onChange(value, key, rowIndex);
-      },
-      300 // 300ms debounce delay
+      }, 300
     );
 
     const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -246,13 +246,12 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         type={column.dataType === "number" ? "text" : "text"}
         className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
         style={{
-             fontSize: `${gridFontSize}px`,
-             fontWeight: gridIsBold ? "bold" : "normal",
+          fontSize: `${gridFontSize}px`,
+          fontWeight: gridIsBold ? "bold" : "normal",
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-             textAlign: column.alignment || "center", 
-
+          textAlign: column.alignment || "center",
         }}
         value={localValue}
         noBorder
@@ -288,11 +287,9 @@ const Row = React.memo(
       (state: RootState) => state.ApplicationSettings
     );
 
-    const handleFocus = useCallback(
-      (columnKey: string) => {
-        setFocusedColumn(columnKey);
-      }, [index]
-    );
+    const handleFocus = useCallback((columnKey: string) => {
+      setFocusedColumn(columnKey);
+    }, [index]);
 
     const handleBlur = useCallback(() => {
       if (document.activeElement?.closest(".dx-datagrid")) return;
@@ -387,8 +384,8 @@ const Row = React.memo(
           boxSizing: "border-box",
           borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
         }}
-        className="py-0 hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-200 ease-in-out group"
-        // column bg transition ☝
+        className={`py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
+         // column bg transition ☝
         key={`inv_transaction_grid_${index}`}
       >
         {columns
@@ -415,7 +412,7 @@ const Row = React.memo(
                 className={` p-0 ${column.cssClass || ""} ${isFocused ? "!border-[#3b82f6] bg-[#eff6ff80]" : ""}${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
                 style={{
                   width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",              
+                  minWidth: column.width ? `${column.width}px` : "150px",
                   boxSizing: "border-box",
                   borderTop: isFocused ? "1px solid #3B82F6" : "none",
                   borderBottom: isFocused ? "1px solid #3B82F6" : "none",
@@ -425,10 +422,11 @@ const Row = React.memo(
                     : columnIndex <
                       columns.filter(
                         (col) => col.visible != false && col.dataField != null
-                      ).length - 1 ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)` : "none",
+                      ).length - 1
+                      ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
+                      : "none",
                   boxShadow: isFocused ? "0 0 0 3px rgba(59, 130, 246, 0.1)" : "none",
                 }}
-
                 role="gridcell"
                 onClick={(e) => {
                   e.preventDefault();
@@ -444,186 +442,169 @@ const Row = React.memo(
                   );
                 }}
               >
-                  {/* {!formState.transactionLoading ? ( */}
-                  {formState.transactionLoading ? (
-                    <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0" }}>
-                      <div className="card_description loading"
+                {formState.transactionLoading ? (
+                  <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0" }}>
+                    <div className="card_description loading"
                       style={{
-                              width: `${Math.floor(Math.random() * 50) + 40}%`, // 40–90%
-                            }}
-                      ></div>
-                    </div>
-                  ) :
-                  column.dataField === "slNo" ? (
-                    <span
-                      className="px-1"
-                      style={{
-                        fontSize: `${data.gridFontSize}px`,
-                        fontWeight: data.gridIsBold ? "bold" : "normal",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "block",
-                        width: "100%",
-                        textAlign: column.alignment || "center",
+                        width: `${Math.floor(Math.random() * 50) + 40}%`,
                       }}
-                      id={cellId}
-
-                    >
-                      {index + 1}
-                    </span>
-                  ) :
-                    (column.dataField === "product" ||
-                      column.dataField === "pCode") &&
-                      !column.readOnly &&
-                      data.currentCell?.column === column.dataField &&
-                      data.currentCell?.rowIndex === index ? (
-                      <ERPProductSearch
-                      textAlign={column.alignment === "right" ? "right" : "left"}
-                        rowIndex={index}
-                        id={cellId}
-                        inputId={`${gridId}_${column.dataField}_${index}`}
-                        searchType={
-                          applicationSettings?.productsSettings
-                            ?.usePopupWindowForItemSearch
-                            ? "modal"
-                            : "grid"
-                        }
-                        noLabel={true}
-                        showCheckBox={false}
-                        contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
-                        value={(cellValue as string) || ""}
-                        productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
-                        batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
-                        // tabIndex={0}
-                        className="h-[22px] text-sm"
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(value, e) =>
-                          handleKeyDown(value, e, column, index)
-                        }
-                        searchKey={column.dataField}
-                        advancedProductSearching={data.advancedProductSearching}
-                        useInSearch={data.useInSearch}
-                        useCodeSearch={data.useCodeSearch}
-                        onNextCellFind={data.nextCellFind}
-                        onRowSelected={(data: any, rowValue?: string) => {
-                          const res = {
-                            slNo: item.slNo,
-                            rowIndex: index,
-                            productBatchID: data.productBatchID,
-                            autoBarcode: data.autoBarcode,
-                            productCode: data.productCode,
-                            useProductCode: column.dataField === "pCode",
-                            searchText: rowValue,
-                            key: generateUniqueKey(),
-                          };
-                          dispatch(
-                            formStateHandleFieldChange({
-                              fields: { batchSelectionData: JSON.stringify(res) },
-                            })
-                          );
-                        }}
-                      />
-                    ) : column.dataField === "product" && !column.readOnly ? (
-                      <span
-                        style={{
-                          fontSize: `${data.gridFontSize}px`,
-                          fontWeight: data.gridIsBold ? "bold" : "normal",
-                          textAlign: column.alignment || "center",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "block",
-                          width: "100%",
-                        }}
-                        className="px-1 cursor-default"
-                        id={cellId}
-                        tabIndex={0}
-                        // className="w-full h-full flex items-center px-1 cursor-default"
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) =>
-                          handleKeyDown(cellValue, e, column, index)
-                        }
-                      >
-                        {productId > 0 ? cellValue : ""}
-                      </span>
-                    ) : column.dataField === "status" ? (
-                      <span
-                        style={{
-                          fontSize: `${data.gridFontSize}px`,
-                          fontWeight: data.gridIsBold ? "bold" : "normal",
-                            textAlign: column.alignment || "center",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "block",
-                          width: "100%",
-                        }}
-                        id={cellId}
-                        tabIndex={0}
-                        className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
-                          ? "bg-[#dcfce7] text-[#166534]"
-                          : ""
-                          } ${cellValue === "Inactive"
-                            ? "bg-[#fee2e2] text-[#991b1b]"
-                            : ""
-                          } ${cellValue === "Pending"
-                            ? "bg-[#fef9c3] text-[#854d0e]"
-                            : ""
-                          }`}
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                      >
-                        {productId > 0 ? cellValue : ""}
-                      </span>
-                    ) : column.allowEditing &&
-                      !column.readOnly &&
-                      txtData.visible == true ? (
-                      <EditableCell
-                        productId={productId}
-                        onChange={data.onChange}
-                        blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
-                        decimalLimit={2}
-                        rowIndex={index}
-                        column={column}
-                        value={cellValue as string | number}
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        gridId={gridId}
-                        onKeyDown={(e) =>
-                          handleKeyDown(cellValue, e, column, index)
-                        }
-                        gridFontSize={data.gridFontSize}
-                        gridIsBold={data.gridIsBold}
-                      />
-                    ) : (
-                      <span
-                        style={{
-                          fontSize: `${data.gridFontSize}px`,
-                          fontWeight: data.gridIsBold ? "bold" : "normal",
-                          textAlign: column.alignment || "center",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "block",
-                          width: "100%",
-                        }}
-                        id={cellId}
-                        tabIndex={0}
-                        // className="w-full h-full flex items-center px-1 cursor-default"
-                        className="px-1 cursor-default"
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) =>
-                          handleKeyDown(cellValue, e, column, index)
-                        }
-                      >
-                        {productId > 0 ? cellValue : ""}
-                      </span>
-                    )}
+                    ></div>
+                  </div>
+                ) : column.dataField === "slNo" ? (
+                  <span
+                    className="px-1"
+                    style={{
+                      fontSize: `${data.gridFontSize}px`,
+                      fontWeight: data.gridIsBold ? "bold" : "normal",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
+                      textAlign: column.alignment || "center",
+                    }}
+                    id={cellId}
+                  >
+                    {index + 1}
+                  </span>
+                ) : (column.dataField === "product" || column.dataField === "pCode") &&
+                  !column.readOnly &&
+                  data.currentCell?.column === column.dataField &&
+                  data.currentCell?.rowIndex === index ? (
+                  <ERPProductSearch
+                    textAlign={column.alignment === "right" ? "right" : "left"}
+                    rowIndex={index}
+                    id={cellId}
+                    inputId={`${gridId}_${column.dataField}_${index}`}
+                    searchType={
+                      applicationSettings?.productsSettings?.usePopupWindowForItemSearch
+                        ? "modal"
+                        : "grid"
+                    }
+                    noLabel={true}
+                    showCheckBox={false}
+                    contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
+                    value={(cellValue as string) || ""}
+                    productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
+                    batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
+                    className="h-[22px] text-sm"
+                    onFocus={() => handleFocus(column.dataField!)}
+                    onBlur={handleBlur}
+                    onKeyDown={(value, e) => handleKeyDown(value, e, column, index)}
+                    searchKey={column.dataField}
+                    advancedProductSearching={data.advancedProductSearching}
+                    useInSearch={data.useInSearch}
+                    useCodeSearch={data.useCodeSearch}
+                    onNextCellFind={data.nextCellFind}
+                    onRowSelected={(data: any, rowValue?: string) => {
+                      const res = {
+                        slNo: item.slNo,
+                        rowIndex: index,
+                        productBatchID: data.productBatchID,
+                        autoBarcode: data.autoBarcode,
+                        productCode: data.productCode,
+                        useProductCode: column.dataField === "pCode",
+                        searchText: rowValue,
+                        key: generateUniqueKey(),
+                      };
+                      dispatch(
+                        formStateHandleFieldChange({
+                          fields: { batchSelectionData: JSON.stringify(res) },
+                        })
+                      );
+                    }}
+                  />
+                ) : column.dataField === "product" && !column.readOnly ? (
+                  <span
+                    style={{
+                      fontSize: `${data.gridFontSize}px`,
+                      fontWeight: data.gridIsBold ? "bold" : "normal",
+                      textAlign: column.alignment || "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
+                    }}
+                    className="px-1 cursor-default"
+                    id={cellId}
+                    tabIndex={0}
+                    // className="w-full h-full flex items-center px-1 cursor-default"
+                    onFocus={() => handleFocus(column.dataField!)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                  >
+                    {productId > 0 ? cellValue : ""}
+                  </span>
+                ) : column.dataField === "status" ? (
+                  <span
+                    style={{
+                      fontSize: `${data.gridFontSize}px`,
+                      fontWeight: data.gridIsBold ? "bold" : "normal",
+                      textAlign: column.alignment || "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
+                    }}
+                    id={cellId}
+                    tabIndex={0}
+                    className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
+                      ? "bg-[#dcfce7] text-[#166534]"
+                      : ""
+                      } ${cellValue === "Inactive"
+                        ? "bg-[#fee2e2] text-[#991b1b]"
+                        : ""
+                      } ${cellValue === "Pending"
+                        ? "bg-[#fef9c3] text-[#854d0e]"
+                        : ""
+                      }`}
+                    onFocus={() => handleFocus(column.dataField!)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                  >
+                    {productId > 0 ? cellValue : ""}
+                  </span>
+                ) : column.allowEditing && !column.readOnly && txtData.visible == true ? (
+                  <EditableCell
+                    productId={productId}
+                    onChange={data.onChange}
+                    blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                    decimalLimit={2}
+                    rowIndex={index}
+                    column={column}
+                    value={cellValue as string | number}
+                    onFocus={() => handleFocus(column.dataField!)}
+                    onBlur={handleBlur}
+                    gridId={gridId}
+                    onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                    gridFontSize={data.gridFontSize}
+                    gridIsBold={data.gridIsBold}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontSize: `${data.gridFontSize}px`,
+                      fontWeight: data.gridIsBold ? "bold" : "normal",
+                      textAlign: column.alignment || "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
+                    }}
+                    id={cellId}
+                    tabIndex={0}
+                    // className="w-full h-full flex items-center px-1 cursor-default"
+                    className="px-1 cursor-default"
+                    onFocus={() => handleFocus(column.dataField!)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                  >
+                    {productId > 0 ? cellValue : ""}
+                  </span>
+                )}
               </td>
             );
           })}
@@ -657,10 +638,8 @@ const SummaryRow: React.FC<{
         style={{
           width: `${tableWidth}px`,
           boxSizing: "border-box",
-          // borderTop: `1px solid rgb(${
-          //   formState.userConfig?.gridBorderColor || "209,213,219"
-          // })`,
-          // the above border is the border of the footer 
+          // borderTop: `1px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`,
+          // the above border is the border of the footer
         }}
       >
         {columns
@@ -681,7 +660,7 @@ const SummaryRow: React.FC<{
             return (
               <td
                 key={`summary_${column.dataField}`}
-                className="flex items-center px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
+                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
                 style={{
                   fontSize: `${gridFontSize}px`,
                   fontWeight: gridIsBold ? "bold" : "600",
@@ -696,10 +675,8 @@ const SummaryRow: React.FC<{
                     index <
                       columns.filter(
                         (col) => col.visible != false && col.dataField != null
-                      ).length -
-                      1
-                      ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"
-                      })`
+                      ).length - 1
+                      ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
                       : "none",
                 }}
               >
@@ -729,6 +706,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     gridIsBold = false,
     gridBorderColor,
     gridHeaderBg,
+    gridHeaderFontColor,
   }: DataGridProps<T>,
   ref: Ref<any>
 ) {
@@ -888,7 +866,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       );
 
       if (editableColumns?.length === 0) {
-        return -1; // No editable columns, exit early
+        return -1;
       }
 
       return !editableColumns
@@ -1024,6 +1002,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         border: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
         // borderRadius: "16px",
         boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+        borderRadius: formState.userConfig?.gridBorderRadius
+          ? `${formState.userConfig.gridBorderRadius}px`
+          : "0px",
         // boxShadow: "0 4px 25px rgba(0, 0, 0, 0.08)",
         // table whole shadow
       }}
@@ -1031,8 +1012,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     >
       <div className={`relative ${className} w-full overflow-hidden`}>
         <div
-          className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"
-            } z-20`}
+          className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}
         >
           <GridPreferenceChooser
             ref={preferenceChooserRef}
@@ -1044,7 +1024,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           />
         </div>
 
-        <div className="w-full overflow-x-auto scrollbar rounded-t-xl sticky top-0 z-10">
+        <div className="w-full overflow-x-auto scrollbar sticky top-0 z-10">
           <table
             className="w-full border-collapse"
             style={{
@@ -1116,25 +1096,27 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                       <th
                         id={`${col.dataField}_${col.dataField}`}
                         key={col.dataField}
-                        className="relative p-2 text-left font-semibold   transition-all duration-300 hover:bg-white/50 cursor-pointer group"
+                        className="relative p-2 text-left font-semibold transition-all duration-300 hover:bg-white/50 cursor-pointer group"
                         style={{
                           fontSize: `${gridFontSize}px`,
                           fontWeight: gridIsBold ? "bold" : "600",
                           width: col.width ? `${col.width}px` : "150px",
                           minWidth: col.width ? `${col.width}px` : "150px",
-                          textAlign: col.alignment ||(col.dataType === "number" ? "right" : "left"),
+                          textAlign:
+                            col.alignment ||
+                            (col.dataType === "number" ? "right" : "left"),
                           boxSizing: "border-box",
                           borderRight:
                             index <
                               (formState.gridColumns?.filter(
                                 (c) => c.visible != false
-                              ).length ?? 0) -
-                              1
-                              ? `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"
-                              }, 0.4)`
+                              ).length ?? 0) - 1
+                              ? `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`
                               : "none",
                           background: "transparent",
-                          color: "#1f2937",
+                          color: gridHeaderFontColor
+                            ? `rgb(${gridHeaderFontColor})`
+                            : "#1f2937",
                         }}
                         draggable={!col.isLocked}
                         onDragStart={(e) =>
@@ -1148,7 +1130,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                         }
                       >
                         <span
-                          className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
+                          // className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
                           style={{
                             display: "inline-block",
                             maxWidth: "100%",
@@ -1197,8 +1179,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 style={{
                   background:
                     "linear-gradient(to right, #f8fafc, #ffffff, #f8fafc)",
-                  borderTop: `0px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"
-                    }, 0.8)`,
+                  borderTop: `0px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
                 }}
               >
                 <SummaryRow
@@ -1214,7 +1195,6 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           </table>
         </div>
       </div>
-      {/* {JSON.stringify(formState.summary)} */}
       {dragState.isDragging && dragState.draggedColumn && (
         <div
           ref={dragPreviewRef}

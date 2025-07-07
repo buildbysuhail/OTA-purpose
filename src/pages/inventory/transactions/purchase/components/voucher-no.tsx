@@ -50,7 +50,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             value={formState.transaction.master.voucherNumber}
             type="number"
             required={true}
-            transactionLoading={formState.transactionLoading}
+            fetching={formState.transactionLoading}
             // transactionLoading={true}
             showCustomNumberChanger={
               formState.formElements.voucherNumberUpDownBtns.visible == true

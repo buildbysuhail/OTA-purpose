@@ -131,7 +131,7 @@ interface ERPDataComboboxProps {
     closeModal: () => void;
     content?: any;
   };
-  transactionLoading?: boolean;
+  fetching?: boolean;
 }
 
 interface RowProps {
@@ -431,7 +431,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       triggerEffect,
       addNewOption = false,
       addNewOptionCobonent,
-      transactionLoading = false,
+      fetching = false,
     }: ERPDataComboboxProps,
     ref
   ) => {
@@ -739,7 +739,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       _reload,
       disabledApiCall,
       options,
-      transactionLoading
+      fetching
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
@@ -1637,7 +1637,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                     ...params.InputProps,
                     endAdornment: (
                       <React.Fragment>
-                        {transactionLoading ? (
+                        {fetching ? (
                           <LoadingContainer
                             style={{
                               position: "absolute",
@@ -1792,7 +1792,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   (initial || inputValue) &&
                   !noXMarkIcon &&
                   !disabled &&
-                  !transactionLoading
+                  !fetching
                     ? "!pr-[60px]"
                     : "!pr-[30px]"
                 } dark:!text-dark-text placeholder:capitalize ${
@@ -1809,7 +1809,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={
-                  transactionLoading
+                  fetching
                     ? ""
                     : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }
@@ -1839,7 +1839,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 readOnly={disabled}
                 disabled={disabled}
               />
-            {transactionLoading && (
+            {fetching && (
               <div
                 style={{
                   position: "absolute",
@@ -1859,7 +1859,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 </LoadingContainer>
               </div>
             )}
-            {!transactionLoading && (
+            {!fetching && (
               <div
                 className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
                 style={{

@@ -16,7 +16,7 @@ const CostCentreCombobox = React.forwardRef<
   return (
     <ERPDataCombobox
       localInputBox={formState?.userConfig?.inputBoxStyle}
-      transactionLoading={formState.transactionLoading}
+      fetching={formState.transactionLoading}
       enableClearOption={false}
       id="costCentreID"
       className="min-w-[180px] !m-0"

@@ -71,7 +71,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   useMUI?: boolean;
   skip?: boolean;
   isTransaction?: boolean;
-  transactionLoading?: boolean; // New prop for loading state
+  fetching?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
   variant?: "filled" | "outlined" | "standard" | "normal";
@@ -174,8 +174,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       info,
       localInputBox,
       isTransaction = false,
-      // transactionLoading = true, // Default to false
-      transactionLoading = false, // Default to false
+      fetching = false,
       boldInput = false,
       contextClassName,
       ...props
@@ -585,7 +584,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const commonProps = {
       id: ignoreRandomId ? id : `${id}_${Math.random()}`,
       name: `input_${id}_${Math.random()}`,
-      value:  transactionLoading ? "" : value === undefined ? "" : value,
+      value:  fetching ? "" : value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
       onFocus: (e: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -726,7 +725,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   </button>
                 </div>
               )}
-              {transactionLoading && ( // Use transactionLoading instead of isTransaction
+              {fetching && (
                 <LoadingContainer>
                   <LoadingBar />
                 </LoadingContainer>
@@ -891,7 +890,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               <input
                 {...commonProps}
                 {...numberInputProps}
-                placeholder={transactionLoading
+                placeholder={fetching
                 ? "" : iPlaceholder}
                 ref={ref}
                 autoComplete="new-password"
@@ -980,7 +979,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 data-jump-to={jumpTo}
                 data-jump-target={jumpTarget}
               />
-              {transactionLoading && ( // Use transactionLoading instead of isTransaction
+              {fetching && (
                 <LoadingContainer>
                   <LoadingBar />
                 </LoadingContainer>

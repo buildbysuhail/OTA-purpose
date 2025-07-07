@@ -13,7 +13,7 @@ const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
     return (
       <ERPDataCombobox
         localInputBox={formState?.userConfig?.inputBoxStyle}
-        transactionLoading={formState.transactionLoading}
+        fetching={formState.transactionLoading}
         enableClearOption={false}
         id="warehouseID"
         className="min-w-[180px] !m-0"

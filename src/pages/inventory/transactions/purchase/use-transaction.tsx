@@ -2342,7 +2342,11 @@ debugger;
         case "escape":
           (result.formElements.dgvProduct ??= {}).visible = false;
           (result.formElements.dgvProductBatches ??= {}).visible = false;
-
+ dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: result
+              })
+            );
           break;
 
         case "q":
@@ -2554,6 +2558,7 @@ debugger;
           }
          else if (columnName == "grossConvert")
           {
+            debugger;
               changeGrossToUnitRate(rowIndex, columnName);
           }
           else if (columnName == "serial") {
@@ -2575,15 +2580,15 @@ debugger;
       }
 
       // Dispatch changes if any state was modified
-      if (result) {
-        console.log(result);
+      // if (result) {
+      //   console.log(result);
 
-        commonParams.formStateHandleFieldChangeKeysOnly &&
-          dispatch &&
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
-          );
-      }
+      //   commonParams.formStateHandleFieldChangeKeysOnly &&
+      //     dispatch &&
+      //     dispatch(
+      //       commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+      //     );
+      // }
 
       return { handled: false };
     } catch (error) {

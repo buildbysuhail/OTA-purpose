@@ -316,12 +316,12 @@ export interface TransactionDetails2 {
   branchID: number;
   cessPerc: number;
   cessAmt: number;
-  sgstPerc: number;
-  sgst: number;
-  cgstPerc: number;
-  cgst: number;
-  igstPerc: number;
-  igst: number;
+  sGSTPerc: number;
+  sGST: number;
+  cGSTPerc: number;
+  cGST: number;
+  iGSTPerc: number;
+  iGST: number;
   calamityCessPerc: number;
   calamityCess: number;
   additionalCessPerc: number;

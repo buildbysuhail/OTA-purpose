@@ -525,13 +525,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings.maintainWarehouse,
         },
-        ledgerID: {
-          ...initialFormElements.ledgerID,
-          accLedgerType: !applicationSettings.inventorySettings
-            .showAccountReceivableInPurchase
-            ? LedgerType.Cash_Bank_Suppliers
-            : LedgerType.Cash_Bank_Suppliers_Customers,
-        },
+         ledgerID: {
+            ...initialFormElements.ledgerID,
+            accLedgerType: 
+            formType == "BT" ? LedgerType.Branch_Recv_Payable :
+            !applicationSettings.inventorySettings
+              .showAccountReceivableInPurchase
+              ? LedgerType.Cash_Bank_Suppliers
+              : LedgerType.Cash_Bank_Suppliers_Customers,
+          },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",

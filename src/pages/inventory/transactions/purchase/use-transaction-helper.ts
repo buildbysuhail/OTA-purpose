@@ -18,11 +18,15 @@ import {
   generateUniqueKey,
   isNullOrUndefinedOrZero,
 } from "../../../../utilities/Utils";
-import { initialInventoryTotals, initialTransactionDetailData } from "./transaction-type-data";
+import {
+  initialInventoryTotals,
+  initialTransactionDetailData,
+} from "./transaction-type-data";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -271,7 +275,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+        );
     }
     return result;
   };
@@ -282,11 +288,10 @@ export const useTransactionHelper = (transactionType: string) => {
     ignoreCalculateTotal?: boolean,
     rowIndex?: number
   ): DeepPartial<TransactionFormState> => {
-    rowIndex = rowIndex??-1;
+    rowIndex = rowIndex ?? -1;
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
     let { result } = commonParams;
 
-      
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
@@ -298,7 +303,6 @@ export const useTransactionHelper = (transactionType: string) => {
     }
 
     try {
-      
       // Initialize variables with proper null checks and defaults
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);
@@ -448,28 +452,29 @@ export const useTransactionHelper = (transactionType: string) => {
 
       result.transaction.details = [detail];
 
-      if (!ignoreCalculateTotal && rowIndex > 0) {
-        let details = formState.transaction.details
-        let current = formState.transaction.details[rowIndex]
-        const final = {...current, detail}
-        details[rowIndex] = final
+      if (!ignoreCalculateTotal && rowIndex >= 0) {
+        let details = [...formState.transaction.details];
+        let current = {...formState.transaction.details[rowIndex]};
+        const final = { ...current, ...detail };
+        details[rowIndex] = final;
 
-        const summaryRes = calculateSummary(details,formState, {
-      result: {},
-    });
+        const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
         let _result = calculateTotal(
           formState.transaction.master,
-          summaryRes ? summaryRes.summary as SummaryItems: initialInventoryTotals,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
           formState.formElements,
           {
             result,
           }
-          
         );
-        _result.transaction = _result.transaction ? _result.transaction :{  } ;
-        _result.summary = summaryRes.summary
-        _result.transaction.details = [detail];
-        result = _result
+        _result.transaction = _result.transaction ? _result.transaction : {};
+        _result.summary = summaryRes.summary;
+        _result.transaction.details = [{...detail, slNo: current.slNo}];
+        result = _result;
       }
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
@@ -543,7 +548,7 @@ export const useTransactionHelper = (transactionType: string) => {
   };
   const changeGrossToUnitRate = (
     rowIndex: number,
-    currentColumn: keyof TransactionDetail,
+    currentColumn: keyof TransactionDetail
   ): void => {
     try {
       const detail = formState.transaction.details[rowIndex];
@@ -579,9 +584,22 @@ export const useTransactionHelper = (transactionType: string) => {
 
             // Recalculate row amounts
             calculateRowAmount(
-              {...detail, unitPriceFC: unitPrice, unitPrice: unitPriceFC }
-              , currentColumn, {result: {transaction:{details:[{unitPriceFC: unitPrice, unitPrice: unitPriceFC}]}}},false,rowIndex);
-           
+              { ...detail, unitPriceFC: unitPrice, unitPrice: unitPriceFC },
+              currentColumn,
+              {
+                formStateHandleFieldChangeKeysOnly:
+                  formStateHandleFieldChangeKeysOnly,
+                result: {
+                  transaction: {
+                    details: [
+                      { unitPriceFC: unitPrice, unitPrice: unitPriceFC },
+                    ],
+                  },
+                },
+              },
+              false,
+              rowIndex
+            );
           }
         }
       } else {
@@ -597,13 +615,21 @@ export const useTransactionHelper = (transactionType: string) => {
 
             // Recalculate row amounts
             calculateRowAmount(
-              {...detail, unitPriceFC: unitPrice }
-              , currentColumn, {result: {transaction:{details:[{unitPriceFC: unitPrice}]}}},false,rowIndex);
-           
+              { ...detail, unitPrice: unitPrice },
+              currentColumn,
+              {
+                formStateHandleFieldChangeKeysOnly:
+                  formStateHandleFieldChangeKeysOnly,
+                result: {
+                  transaction: { details: [{ unitPrice: unitPrice }] },
+                },
+              },
+              false,
+              rowIndex
+            );
           }
         }
       }
-      
     } catch (error) {
       console.error("Error in changeGrossToUnitRate:", error);
     }
@@ -640,7 +666,9 @@ export const useTransactionHelper = (transactionType: string) => {
       // Dispatch the updated state
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+        );
     } catch (error) {
       console.error("Error in enableControls:", error);
     } finally {
@@ -694,7 +722,9 @@ export const useTransactionHelper = (transactionType: string) => {
       // Dispatch the updated state
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+        );
     } catch (error) {
       console.error("Error in disableControls:", error);
     } finally {
@@ -884,7 +914,9 @@ export const useTransactionHelper = (transactionType: string) => {
       // Dispatch the updated state
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+        dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+        );
     } catch (error) {
       console.error("Error in calculateSummary:", error);
     } finally {
@@ -1310,7 +1342,7 @@ export const useTransactionHelper = (transactionType: string) => {
       // Additional sales and warehouse info
       outputRow.actualSalesPrice = detail.actualSalesPrice;
       outputRow.warehouse = detail.warehouseID;
-      outputRow.warehouse.grandTotal = outputRow.warehouse.grandTotal??0;
+      outputRow.warehouse.grandTotal = outputRow.warehouse.grandTotal ?? 0;
 
       outputDetails.push(outputRow);
     }

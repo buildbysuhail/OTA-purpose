@@ -140,8 +140,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
         icon: "warning",
         confirmButtonText: t("reset_now"),
         cancelButtonText: t("cancel"),
+        showCancelButton:true,
         onConfirm: async (result: any) => {
-          const res = await api.postAsync(Urls.reset_user_settings, {});
+          const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, () => {
             const st = atob(res.item);
             localStorage.setItem("utInvc", res.item);

@@ -9,6 +9,7 @@ import { hexToRgb } from "../../components/common/switcher/switcherdata/switcher
 import { inputBox } from "../../redux/slices/app/types";
 import { useTranslation } from "react-i18next";
 import { CheckSquare, ChevronRight, Layout, Palette, Settings, Sliders, Type } from "lucide-react";
+import useDebounce from "../../pages/inventory/transactions/purchase/use-debounce";
 
 interface InputBoxStylingProps {
   inputBox?: inputBox; // Pass the inputBox state
@@ -61,36 +62,40 @@ const ColorPicker: React.FC<{
   value?: string
   onChange: (value: string) => void
   defaultColor?: string
-}> = ({ label, value, onChange, defaultColor = "128, 128, 128" }) => (
-  <div className="space-y-2">
-    <label className="block text-sm font-medium text-gray-700 dark:text-dark-text">{label}</label>
-    <div className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-dark-hover-bg rounded-lg border border-gray-200 dark:border-dark-border">
-      <div
-        className="relative h-10 w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-        style={{ backgroundColor: `rgb(${value ?? defaultColor})` }}
-      >
-        <i className="ri-palette-line text-white text-lg absolute pointer-events-none drop-shadow-md"></i>
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => {
-            const rgb = hexToRgb(e.target?.value)
-            if (rgb) {
-              onChange(`${rgb.r},${rgb.g},${rgb.b}`)
-            }
-          }}
-          className="opacity-0 w-full h-full cursor-pointer"
-        />
-      </div>
-      <div className="flex-1">
+}> = ({ label, value, onChange, defaultColor = "128, 128, 128" }) => {
+  const debouncedOnChange = useDebounce(onChange, 300);
+
+  return (
+    <div className="space-y-2">
+      <label className="block text-sm font-medium text-gray-700 dark:text-dark-text">{label}</label>
+      <div className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-dark-hover-bg rounded-lg border border-gray-200 dark:border-dark-border">
+        <div
+          className="relative h-10 w-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+          style={{ backgroundColor: `rgb(${value ?? defaultColor})` }}
+        >
+          <i className="ri-palette-line text-white text-lg absolute pointer-events-none drop-shadow-md"></i>
+          <input
+            type="color"
+            value={value}
+            onChange={(e) => {
+              const rgb = hexToRgb(e.target?.value)
+              if (rgb) {
+                debouncedOnChange(`${rgb.r},${rgb.g},${rgb.b}`)
+              }
+            }}
+            className="opacity-0 w-full h-full cursor-pointer"
+          />
+        </div>
+        <div className="flex-1">
         {/* <span className="text-xs text-gray-500 dark:text-dark-text/70 uppercase tracking-wide font-medium">RGB Value</span> */}
-        <div className="text-sm text-gray-700 dark:text-dark-text font-mono bg-white dark:bg-dark-bg p-2 rounded-md mt-1 border border-gray-200 dark:border-dark-border">
-          rgb({value ?? defaultColor})
+          <div className="text-sm text-gray-700 dark:text-dark-text font-mono bg-white dark:bg-dark-bg p-2 rounded-md mt-1 border border-gray-200 dark:border-dark-border">
+            rgb({value ?? defaultColor})
+          </div>
         </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
   inputBox,
@@ -106,6 +111,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
     checkBox: false,
   });
   const { t } = useTranslation('main')
+  const debouncedOnInputBoxChange = useDebounce(onInputBoxChange, 300);
 
   return (
     <div className="space-y-2">
@@ -118,14 +124,14 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             customSize="sm"
             name="bold"
             checked={inputBox?.bold}
-            onChange={(e) => { onInputBoxChange("bold", e.target.checked); }}
+            onChange={(e) => { debouncedOnInputBoxChange("bold", e.target.checked); }}
             label={t("bold")}
           />
         </div>
       )}
 
       {/* Live Demo Section */}
-      <StyleSection title={t("live_preview")} icon={<Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
+      <StyleSection title={t("live_preview")} defaultExpanded={true} icon={<Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <ERPInput
             id="inputBox"
@@ -176,7 +182,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               checked={inputBox?.inputStyle === "normal"}
               onChange={(e) => {
                 if (e.target.checked) {
-                  onInputBoxChange("inputStyle", "normal");
+                  debouncedOnInputBoxChange("inputStyle", "normal");
                 }
               }}
             />
@@ -255,7 +261,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               checked={inputBox?.inputSize === "sm"}
               onChange={(e) => {
                 if (e.target.checked) {
-                  onInputBoxChange("inputSize", "sm");
+                  debouncedOnInputBoxChange("inputSize", "sm");
                 }
               }}
             />
@@ -273,7 +279,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               checked={inputBox?.inputSize === "md"}
               onChange={(e) => {
                 if (e.target.checked) {
-                  onInputBoxChange("inputSize", "md");
+                  debouncedOnInputBoxChange("inputSize", "md");
                 }
               }}
             />
@@ -291,7 +297,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               checked={inputBox?.inputSize === "lg"}
               onChange={(e) => {
                 if (e.target.checked) {
-                  onInputBoxChange("inputSize", "lg");
+                  debouncedOnInputBoxChange("inputSize", "lg");
                 }
               }}
             />
@@ -309,7 +315,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               checked={inputBox?.inputSize === "customize"}
               onChange={(e) => {
                 if (e.target.checked) {
-                  onInputBoxChange("inputSize", "customize");
+                  debouncedOnInputBoxChange("inputSize", "customize");
                 }
               }}
             />
@@ -336,7 +342,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                   label={t("border_radius")}
                   className="bg-slate-300"
                   value={inputBox?.borderRadius}
-                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("borderRadius", newValue); }}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("borderRadius", newValue); }}
                   min={0}
                   max={20}
                 />
@@ -348,7 +354,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                   type="number"
                   value={inputBox?.borderRadius}
                   data={inputBox}
-                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("borderRadius", newValue); }}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("borderRadius", newValue); }}
                   min={0}
                   max={20}
                 />
@@ -367,7 +373,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("margin_bottom")} (${inputBox?.marginBottom ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.marginBottom}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("marginBottom", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("marginBottom", newValue); }}
                     min={0}
                     max={30}
                   />
@@ -380,7 +386,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("margin_top")} (${inputBox?.marginTop ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.marginTop}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("marginTop", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("marginTop", newValue); }}
                     min={0}
                     max={30}
                   />
@@ -415,7 +421,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       label={t("font_size")}
                       className="bg-slate-300"
                       value={inputBox?.fontSize}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontSize", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("fontSize", newValue); }}
                       min={5}
                       max={25}
                     />
@@ -427,7 +433,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       noLabel={true}
                       value={inputBox?.fontSize}
                       data={inputBox}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontSize", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("fontSize", newValue); }}
                       min={5}
                       max={25}
                     />
@@ -444,7 +450,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       label={t("label_font_size")}
                       className="bg-slate-300"
                       value={inputBox?.labelFontSize}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("labelFontSize", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("labelFontSize", newValue); }}
                       min={5}
                       max={25}
                     />
@@ -456,7 +462,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       noLabel={true}
                       value={inputBox?.labelFontSize}
                       data={inputBox}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("labelFontSize", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("labelFontSize", newValue); }}
                       min={5}
                       max={25}
                     />
@@ -473,7 +479,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       label={t("font_weight")}
                       className="bg-slate-300"
                       value={inputBox?.fontWeight}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontWeight", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("fontWeight", newValue); }}
                       min={300}
                       max={700}
                       step={100}
@@ -486,7 +492,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       noLabel={true}
                       value={inputBox?.fontWeight}
                       data={inputBox}
-                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontWeight", newValue); }}
+                      onChange={(e) => { const newValue = parseInt(e.target?.value, 10); debouncedOnInputBoxChange("fontWeight", newValue); }}
                       min={300}
                       max={700}
                       step={100}
@@ -504,7 +510,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       label={t("height")}
                       className="bg-slate-300"
                       value={inputBox?.inputHeight}
-                      onChange={(e) => { const newValue = parseFloat(e.target?.value); onInputBoxChange("inputHeight", newValue); }}
+                      onChange={(e) => { const newValue = parseFloat(e.target?.value); debouncedOnInputBoxChange("inputHeight", newValue); }}
                       min={1.2}
                       max={5}
                       step={0.1}
@@ -517,7 +523,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                       noLabel={true}
                       value={inputBox?.inputHeight}
                       data={inputBox}
-                      onChange={(e) => { const newValue = parseFloat(e.target?.value); onInputBoxChange("inputHeight", newValue); }}
+                      onChange={(e) => { const newValue = parseFloat(e.target?.value); debouncedOnInputBoxChange("inputHeight", newValue); }}
                       min={0}
                       max={5}
                       step={0.1}
@@ -537,7 +543,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("adjust_a")} (${inputBox?.adjustA ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.adjustA}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustA", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("adjustA", newValue); }}
                     min={-30}
                     max={30}
                   />
@@ -546,7 +552,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("adjust_c")} (${inputBox?.adjustC ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.adjustC}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustC", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("adjustC", newValue); }}
                     min={-30}
                     max={30}
                   />
@@ -557,7 +563,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("adjust_b")} (${inputBox?.adjustB ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.adjustB}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustB", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("adjustB", newValue); }}
                     min={-30}
                     max={30}
                   />
@@ -566,7 +572,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     label={`${t("adjust_d")} (${inputBox?.adjustD ?? 0})`}
                     className="bg-slate-300"
                     value={inputBox?.adjustD}
-                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustD", newValue); }}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); debouncedOnInputBoxChange("adjustD", newValue); }}
                     min={-30}
                     max={30}
                   />
@@ -592,50 +598,50 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <ColorPicker
               label={t("input_background_color")}
               value={inputBox?.inputBgColor}
-              onChange={(value) => onInputBoxChange("inputBgColor", value)}
+              onChange={(value) => debouncedOnInputBoxChange("inputBgColor", value)}
             />
           )}
           <ColorPicker
             label={t("border_color")}
             value={inputBox?.borderColor}
-            onChange={(value) => onInputBoxChange("borderColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("borderColor", value)}
           />
           <ColorPicker
             label={t("font_color")}
             value={inputBox?.fontColor}
-            onChange={(value) => onInputBoxChange("fontColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("fontColor", value)}
           />
           <ColorPicker
             label={t("label_color")}
             value={inputBox?.labelColor}
-            onChange={(value) => onInputBoxChange("labelColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("labelColor", value)}
           />
           <ColorPicker
             label={t("border_focus")}
             value={inputBox?.borderFocus}
-            onChange={(value) => onInputBoxChange("borderFocus", value)}
+            onChange={(value) => debouncedOnInputBoxChange("borderFocus", value)}
           />
           <ColorPicker
             label={t("active_select_box")}
             value={inputBox?.selectColor}
-            onChange={(value) => onInputBoxChange("selectColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("selectColor", value)}
           />
           <ColorPicker
             label={t("focus_background")}
             value={inputBox?.focusBgColor}
-            onChange={(value) => onInputBoxChange("focusBgColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("focusBgColor", value)}
             defaultColor="255, 204, 88"
           />
           <ColorPicker
             label={t("focus_fore_color")}
             value={inputBox?.focusForeColor}
-            onChange={(value) => onInputBoxChange("focusForeColor", value)}
+            onChange={(value) => debouncedOnInputBoxChange("focusForeColor", value)}
             defaultColor="0, 0, 0"
           />
           <ColorPicker
             label={t("focus_button_color")}
             value={inputBox?.buttonFocusBg}
-            onChange={(value) => onInputBoxChange("buttonFocusBg", value)}
+            onChange={(value) => debouncedOnInputBoxChange("buttonFocusBg", value)}
             defaultColor="0, 0, 0"
           />
         </div>
@@ -690,7 +696,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                     checked={inputBox?.checkButtonInputSize === size}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        onInputBoxChange("checkButtonInputSize", size)
+                        debouncedOnInputBoxChange("checkButtonInputSize", size)
                       }
                     }}
                   />

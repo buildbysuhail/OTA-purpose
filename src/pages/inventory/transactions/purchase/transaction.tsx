@@ -162,6 +162,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     focusCell: (targetRow: number, targetColumnIndex: number) => void;
     nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
     focusCurrentColumn: (rowIndex: number, column: string) => void;
+    focusColumn: (rowIndex: number, column: string) => void;
   }>(null);
 
   const toggleHeaderDropdown = () => {
@@ -231,6 +232,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.nextCellFind(rowIndex, column); };
+  const focusColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.focusColumn(rowIndex, column); };
   const focusCurrentColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.focusCurrentColumn(rowIndex, column); };
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
@@ -274,6 +276,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     btnSaveRef,
     btnAddRef,
     focusToNextColumn,
+    focusColumn,
     focusCurrentColumn,
     ledgerCodeRef,
     ledgerIdRef,
@@ -474,7 +477,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
-
+      _formState.inSearch = applicationSettings.productsSettings.batchCriteria != "NB" ? false: true;
       _formState.userRightsFormCode =
         isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
 

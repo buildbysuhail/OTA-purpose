@@ -875,6 +875,36 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     },
     [formState.gridColumns, focusCell]
   );
+  const focusColumn = useCallback(
+    (rowIndex: number, column: string) => {
+      debugger;
+      const visibleColumns = formState.gridColumns?.filter(
+        (col) => col.visible != false && col.dataField != null
+      );
+
+      const editableColumns = visibleColumns?.filter(
+        (col) => col.allowEditing && col.readOnly !== true
+      );
+
+      if (editableColumns?.length === 0) {
+        return -1;
+      }
+
+      const currentEditableIndex = !editableColumns
+        ? -1
+        : editableColumns?.findIndex((col) => col.dataField === column);
+
+         const currentEditable = editableColumns![currentEditableIndex];
+          const targetColumnIndex = visibleColumns?.findIndex(
+            (col) => col.dataField === currentEditable.dataField
+          );
+
+        if (targetColumnIndex??-1 >= 0) {
+        focusCell(rowIndex, targetColumnIndex!);
+      }
+    },
+    [formState.gridColumns, focusCell]
+  );
 
   const nextCellFind = useCallback(
     (rowIndex: number, column: string) => {
@@ -916,6 +946,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   React.useImperativeHandle(ref, () => ({
     focusCell,
     nextCellFind,
+    focusColumn,
     focusCurrentColumn,
   }));
 

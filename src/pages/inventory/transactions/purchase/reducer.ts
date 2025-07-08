@@ -535,7 +535,7 @@ const InvTransactionSlice = createSlice({
      
       const { fields, updateOnlyGivenDetailsColumns = false, itemsToAddToDetails = undefined, rowIndex = -1 } =
         action.payload || {};
-
+debugger;
       if (!fields || typeof fields !== "object") {
         console.error("Invalid fields in payload");
         return;

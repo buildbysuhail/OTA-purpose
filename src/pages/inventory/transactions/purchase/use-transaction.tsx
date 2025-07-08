@@ -89,6 +89,7 @@ export const useTransaction = (
   btnSaveRef: any,
   btnAddRef: any,
   focusToNextColumn: (rowIndex: number, column: string) => void,
+  focusColumn: (rowIndex: number, column: string) => void,
   focusCurrentColumn: (rowIndex: number, column: string) => void,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
@@ -128,8 +129,7 @@ export const useTransaction = (
     changeGrossToUnitRate,
     calculateRowAmount,
   } = useTransactionHelper(transactionType);
-  const { printVoucher } =
-    useAccPrint();
+  const { printVoucher } = useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -362,7 +362,7 @@ export const useTransaction = (
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState)
     );
-debugger;
+    debugger;
     _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
@@ -500,7 +500,6 @@ debugger;
         voucher.transaction
       );
     }
-
 
     return voucher;
   };
@@ -1733,82 +1732,165 @@ debugger;
 
   // Delete button handler
   const deleteTransVoucher = async () => {
-    // if (formState.transaction.master?.isLocked) {
-    //   ERPAlert.show({
-    //     title: t("warning"),
-    //     text: t("voucher_is_locked"),
-    //     icon: "warning",
-    //   });
-    //   return;
-    // }
-    // if (
-    //   clientSession.isAppGlobal &&
-    //   (formState.transaction.master.voucherType === "CQP" ||
-    //     formState.transaction.master.voucherType === "CQR")
-    // ) {
-    //   const isCleared =
-    //     formState.transaction.details.filter((x) => x.chequeStatus == "C")
-    //       .length > 0;
-    //   const isBounced =
-    //     formState.transaction.details.filter((x) => x.chequeStatus == "B")
-    //       .length > 0;
-    //   if (isCleared) {
-    //     ERPAlert.show({
-    //       title: t("warning"),
-    //       text: t("cleared_pdc_cannot_be_modified"),
-    //       icon: "warning",
-    //     });
-    //     return false;
-    //   } else if (isBounced) {
-    //     ERPAlert.show({
-    //       title: t("warning"),
-    //       text: t("Bounced PDC Cannot be Modified"),
-    //       icon: "warning",
-    //     });
-    //     return false;
-    //   }
-    // }
-    // ERPAlert.show({
-    //   title: t("confirm_delete"),
-    //   text: t("delete_this_voucher"),
-    //   icon: "warning",
-    //   confirmButtonText: t("delete_it"),
-    //   onConfirm: async () => {
-    //     try {
-    //       if (formState.transaction?.master?.transactionMasterID > 0) {
-    //         const res = await appDispatch(
-    //           deleteAccVoucher({
-    //             transactionMasterID:
-    //               formState.transaction?.master?.transactionMasterID,
-    //             transactionType: transactionType,
-    //           })
-    //         ).unwrap();
-    //         if (res != undefined && res.isOk != true) {
-    //           ERPAlert.show({
-    //             title: t("failed"),
-    //             text: res.message,
-    //             onConfirm: () => {
-    //               return false;
-    //             },
-    //           });
-    //         } else if (res?.isOk == true) {
-    //           ERPAlert.show({
-    //             icon: "success",
-    //             title: t("deleted"),
-    //             text: res.message,
-    //           });
-    //           clearControls(
-    //             formState.isEdit,
-    //             formState.transaction.master.transactionMasterID
-    //           );
-    //         }
-    //       }
-    //     } catch (error) {
-    //       console.error("Error deleting voucher:", error);
-    //     }
-    //   },
-    // });
-  };
+  // Check if voucher is locked
+  if (formState.transaction.master.isLocked) {
+    ERPAlert.show({
+      title: t("warning"),
+      text: t("voucher_is_locked"),
+      icon: "warning",
+    });
+    return;
+  }
+
+  try {
+    // Check if transaction is in edit mode
+    const result = await api.postAsync(
+      `${Urls.inv_transaction_base}${transactionType}/SelectTransactionEditMode`,
+      {
+        tType: "I",
+        invTransactionMasterID: formState.transaction.master.invTransactionMasterID ?? 0,
+      }
+    );
+
+    if (result?.isOk && result.message === "") {
+      // Check if day is closed
+      const closedDateResult = await api.getAsync(
+        `${Urls.inv_transaction_base}GetClosedDate`
+      );
+
+      if (closedDateResult?.isOk) {
+        const closedDate = new Date(closedDateResult.data);
+        const prevTransDate = new Date(formState.transaction.master.prevTransDate);
+        
+        if (closedDate.getTime() >= prevTransDate.getTime()) {
+          ERPAlert.show({
+            title: t("invalid_transaction_date"),
+            text: t("cannot_delete_day_closed"),
+            icon: "warning",
+          });
+          return;
+        }
+      }
+
+      // Validate transaction date
+      const validateTransactionDateRes = validateTransactionDate(
+        new Date(formState.transaction.master.transactionDate),
+        false,
+        undefined,
+        hasBlockedRight
+      );
+      
+      if (!validateTransactionDateRes.valid) {
+        ERPAlert.show({
+          title: t("invalid_transaction_date"),
+          text: validateTransactionDateRes.message,
+          icon: "warning",
+        });
+        return;
+      }
+
+      // Show delete confirmation dialog
+      const deleteConfirmResult = await ERPAlert.show({
+        title: t("confirm_delete"),
+        text: t("are_you_sure_delete"),
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+      });
+
+      if (deleteConfirmResult) {
+        try {
+          // Begin transaction and delete
+          const deleteResult = await api.delete(
+            `${Urls.inv_transaction_base}${transactionType}/DeleteAccTransaction`,
+            {
+              data:{invTransactionMasterID: formState.transaction.master.invTransactionMasterID,
+              transactionType: transactionType}
+
+            }
+          );
+
+          if (deleteResult?.) {
+            // Log user action
+            await api.postAsync(
+              `${Urls.inv_transaction_base}SaveUserActions`,
+              {
+                action: `User Deleted The Account Transaction ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+                actionType: "Delete",
+                module: formState.transaction.master.voucherType,
+                reference: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+              }
+            );
+
+            // Delete attachments if any
+            if (formState.attachmentList && formState.atta.length > 0) {
+              await api.postAsync(
+                `${Urls.inv_transaction_base}DeleteAttachments`,
+                {
+                  module: "A",
+                  referenceId: formState.transaction.master.invTransactionMasterID,
+                }
+              );
+            }
+
+            // Clear controls and reset form
+            dispatch(clearFormState());
+            
+            ERPAlert.show({
+              title: t("success"),
+              text: t("transaction_deleted_successfully"),
+              icon: "success",
+            });
+
+            // Update form elements state
+            dispatch(
+              updateFormElement({
+                fields: {
+                  btnSave: { disabled: false },
+                  btnDelete: { disabled: true },
+                  btnPrint: { disabled: true },
+                  btnEdit: { disabled: true },
+                  pnlMasters: { disabled: false },
+                  dxGrid: { disabled: true },
+                },
+              })
+            );
+
+          } else {
+            ERPAlert.show({
+              title: t("error"),
+              text: deleteResult?.message || t("delete_failed"),
+              icon: "error",
+            });
+          }
+        } catch (deleteError) {
+          console.error("Error during delete operation:", deleteError);
+          ERPAlert.show({
+            title: t("error"),
+            text: t("delete_operation_failed"),
+            icon: "error",
+          });
+        }
+      }
+    } else {
+      // Voucher is in use by another user
+      const editInfo = result?.message?.split(";") || [];
+      ERPAlert.show({
+        title: t("voucher_in_use"),
+        text: `This Voucher is already in use by ${editInfo[1]} opened for edit in system ${editInfo[0]} at ${editInfo[2]}`,
+        icon: "warning",
+      });
+    }
+  } catch (error) {
+    console.error("Error handling delete:", error);
+    ERPAlert.show({
+      title: t("error"),
+      text: t("server_busy_or_system_issue"),
+      icon: "error",
+    });
+  }
+};
   const handleLoadByRefNo = useCallback(async () => {
     if (formState.transaction.master.purchaseInvoiceDate) {
       await loadAndSetTransVoucher(
@@ -1831,10 +1913,17 @@ debugger;
       // const currentMasterAccountId = formState.masterAccountID;
 
       dispatch(
-        updateFormElement({
+        formStateHandleFieldChangeKeysOnly({
           fields: {
-            ledgerID: { reload: true },
-            masterAccount: { reload: true },
+            formElements: {
+              ledgerID: { reload: true },
+              masterAccount: { reload: true },
+            },
+            transaction: {
+              master: {
+                ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+              },
+            },
           },
         })
       );
@@ -1961,8 +2050,7 @@ debugger;
           calculateSummaryAndTotal = true;
         }
       } else if (columnName === "qty" || columnName === "unitPrice") {
-        
-debugger;
+        debugger;
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
@@ -1998,7 +2086,7 @@ debugger;
         outDetail.margin = round(marginPerc, 6);
         outState.transaction!.details = [outDetail];
       }
-debugger;
+      debugger;
       if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details];
         let final = { ...detail, ...outState!.transaction!.details![0] };
@@ -2018,14 +2106,14 @@ debugger;
             ?.details as TransactionDetail[];
         }
         outState = totalRes;
-      } 
+      }
       dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: outState,
-            updateOnlyGivenDetailsColumns: true,
-            rowIndex: rowIndex,
-          })
-        );
+        formStateHandleFieldChangeKeysOnly({
+          fields: outState,
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex: rowIndex,
+        })
+      );
     } catch (error) {
       console.error("Error in handleTextDataChange:", error);
     } finally {
@@ -2101,11 +2189,11 @@ debugger;
           Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
-debugger;
- warehouseId = -1;
-    
+      debugger;
+      warehouseId = -1;
+
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
-       warehouseId = 0
+        warehouseId = 0;
       }
       if (res?.isShowItemPopUp) {
         dispatch(
@@ -2129,6 +2217,51 @@ debugger;
         );
       } else if (res?.products?.length === 1) {
         let product = res.products[0];
+        const _index = formState.transaction.details.findIndex(
+          (x) => x.barCode == product.autoBarcode && x.slNo != detail.slNo
+        );
+        if (
+          product.autoBarcode != "" &&
+          _index > -1 &&
+          formState.userConfig?.duplicationMessage
+        ) {
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t(
+              `Item Already selected in row ${
+                _index + 1
+              }. Do you want to goto that row?.`
+            ),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => {
+              return false;
+            },
+          });
+          if (confirm) {
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  transaction: {
+                    details: [
+                      { ...initialTransactionDetailData, slNo: detail.slNo },
+                    ],
+                  },
+                },
+                updateOnlyGivenDetailsColumns: false,
+                rowIndex: data.rowIndex,
+              })
+            );
+            focusColumn(_index, "qty");
+
+            return {};
+          } else {
+          }
+          return {};
+        }
+
         outDetail.pCode = product.productCode;
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
@@ -2342,11 +2475,11 @@ debugger;
         case "escape":
           (result.formElements.dgvProduct ??= {}).visible = false;
           (result.formElements.dgvProductBatches ??= {}).visible = false;
- dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: result
-              })
-            );
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: result,
+            })
+          );
           break;
 
         case "q":
@@ -2507,7 +2640,7 @@ debugger;
                 focusCurrentColumn(rowIndex, columnName);
               }
             }
-          } 
+          }
           // else if (columnName == "btnPrintBarcode")
           // {
           //     btnBarcode_Click(null, null);
@@ -2518,60 +2651,69 @@ debugger;
           //     btnBarcodeStd_Click(null, null);
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
-          else if (columnName == "bd")
-          { 
+          else if (columnName == "bd") {
             debugger;
-            const data: TransactionDetail = formState.transaction.details[rowIndex];
+            const data: TransactionDetail =
+              formState.transaction.details[rowIndex];
 
             const batchDetails = {
-                  // Required fields
-                  batchNo: data.batchNo || '',
-                  expDate: data.expDate || null,
-                  mfdDate: data.mfdDate || null,
-                  expDays: data.expDays || '',
-                  mrp: data.mrp || '',
-                  
-                  // Optional multiunit fields - Unit 2
-                  unitID2: data.unitID2 || null,
-                  unit2Qty: data.unit2Qty || undefined,
-                  unit2SalesRate: data.unit2SalesRate || undefined,
-                  unit2MRP: data.unit2MRP || undefined,
-                  unit2MBarcode: data.unit2MBarcode || undefined,
-                  unit2StickerQty: data.unit2StickerQty || undefined,
-                  unit2: data.unit2 || undefined,
-                  
-                  // Optional multiunit fields - Unit 3
-                  unitID3: data.unitID3 || null,
-                  unit3Qty: data.unit3Qty || undefined,
-                  unit3SalesRate: data.unit3SalesRate || undefined,
-                  unit3MRP: data.unit3MRP || undefined,
-                  unit3MBarcode: data.unit3MBarcode || undefined,
-                  unit3StickerQty: data.unit3StickerQty || undefined,
-                  unit3: data.unit3 || undefined,
-                };
-                dispatch(
-                commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: { batchEntryData: {visible: true, data:JSON.stringify(batchDetails), rowIndex} }
-                  ,updateOnlyGivenDetailsColumns: true,
-                })
-              )
-          }
-         else if (columnName == "grossConvert")
-          {
+              // Required fields
+              batchNo: data.batchNo || "",
+              expDate: data.expDate || null,
+              mfdDate: data.mfdDate || null,
+              expDays: data.expDays || "",
+              mrp: data.mrp || "",
+
+              // Optional multiunit fields - Unit 2
+              unitID2: data.unitID2 || null,
+              unit2Qty: data.unit2Qty || undefined,
+              unit2SalesRate: data.unit2SalesRate || undefined,
+              unit2MRP: data.unit2MRP || undefined,
+              unit2MBarcode: data.unit2MBarcode || undefined,
+              unit2StickerQty: data.unit2StickerQty || undefined,
+              unit2: data.unit2 || undefined,
+
+              // Optional multiunit fields - Unit 3
+              unitID3: data.unitID3 || null,
+              unit3Qty: data.unit3Qty || undefined,
+              unit3SalesRate: data.unit3SalesRate || undefined,
+              unit3MRP: data.unit3MRP || undefined,
+              unit3MBarcode: data.unit3MBarcode || undefined,
+              unit3StickerQty: data.unit3StickerQty || undefined,
+              unit3: data.unit3 || undefined,
+            };
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  batchEntryData: {
+                    visible: true,
+                    data: JSON.stringify(batchDetails),
+                    rowIndex,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
+          } else if (columnName == "grossConvert") {
             debugger;
-              changeGrossToUnitRate(rowIndex, columnName);
-          }
-          else if (columnName == "serial") {
+            changeGrossToUnitRate(rowIndex, columnName);
+          } else if (columnName == "serial") {
             debugger;
-             const rowData: TransactionDetail = formState.transaction.details[rowIndex];
-             dispatch(
-                commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: { serialNoEntryData: {visible: true, data: rowData.productDescription, rowIndex: rowIndex} }
-                  ,updateOnlyGivenDetailsColumns: true,
-                }))
-           
-          }
-           else {
+            const rowData: TransactionDetail =
+              formState.transaction.details[rowIndex];
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  serialNoEntryData: {
+                    visible: true,
+                    data: rowData.productDescription,
+                    rowIndex: rowIndex,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
+          } else {
             focusToNextColumn(rowIndex, columnName);
           }
 

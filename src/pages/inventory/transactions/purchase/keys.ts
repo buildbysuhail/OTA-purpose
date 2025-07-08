@@ -17,3 +17,16 @@
 // Sales Price Less than Purchase Price, Do you Want to Continue
 // warning
 // "Unit Price Zero, Do you Want to Continue
+//`Item Already selected in row ${(_index + 1)}. Do you want to goto that 
+// invalid_transaction_date
+// cannot_delete_day_closed
+// invalid_transaction_date
+// confirm_delete
+// are_you_sure_delete
+// transaction_deleted_successfully
+// success
+// delete_failed
+// delete_operation_failed
+// voucher_in_use
+// server_busy_or_system_issue
+// error

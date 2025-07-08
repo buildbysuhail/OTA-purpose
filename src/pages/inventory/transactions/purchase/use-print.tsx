@@ -18,8 +18,10 @@ import { customJsonParse } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
+import { useTranslation } from "react-i18next";
 const api = new APIClient();
 export const useAccPrint = () => {
+  const {t} = useTranslation();
   const currentBranch = useCurrentBranch();
   const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -167,38 +169,6 @@ export const useAccPrint = () => {
     }
   };
 
-  const printPaymentReceiptAdvice = async (
-    voucher?: TransactionFormState,
-    voucherType?: any
-  ) => {
-    voucher = voucher == undefined ? formState : voucher;
-    let voucherTypes = ["CP", "BP", "CQP"].includes(voucherType)
-      ? "PARP"
-      : ["CR", "BR", "CQR"].includes(voucherType)
-      ? "RARP"
-      : "";
-    const existingTemplate = voucher.templatesData?.find(
-      (template: any) => template.templateGroup === voucherTypes
-    );
-
-    let template;
-    if (existingTemplate) {
-      template = existingTemplate;
-    } else {
-      template = await fetchDefaultTemplates(voucherTypes);
-    }
-    console.log("Advice Template", template);
-    await handleDirectPrint(template);
-  };
-
-  const printCheque = async (voucher: any) => {
-    try {
-    } catch (error) {
-      console.error("Error printing cheque:", error);
-      // Handle error appropriately
-    }
-  };
-
   const checkReprintAuthorization = async (
     event: any,
     voucherNumber: number,
@@ -242,13 +212,11 @@ export const useAccPrint = () => {
 
       return true;
     } catch (error) {
-      onError("Error checking reprint authorization", error as Error);
+      console.log("Error checking reprint authorization", error as Error);
       return false;
     }
   };
   return {
     printVoucher,
-    printCheque,
-    printPaymentReceiptAdvice,
   };
 };

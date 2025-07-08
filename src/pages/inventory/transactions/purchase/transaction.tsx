@@ -253,9 +253,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     disableCombo,
     handleEdit,
     clearControls,
-    printCheque,
     printVoucher,
-    printPaymentReceiptAdvice,
     handleLoadByRefNo,
     unlockVoucher,
     handleRefresh,
@@ -451,6 +449,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherNumber: _voucherNo,
               inventoryLedgerID:
                 applicationSettings.inventorySettings.defaultPurchaseAcc,
+                ledgerID: applicationSettings.accountsSettings.defaultCashAcc
             },
           },
           formElements: {
@@ -1906,7 +1905,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
-                    printPaymentReceiptAdvice={printPaymentReceiptAdvice}
                   />
                 </div>
               </div>
@@ -2072,7 +2070,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 goToPreviousPage={goToPreviousPage}
                 isHistorySidebarOpen={isHistorySidebarOpen}
                 setIsPrintModalOpen={setIsPrintModalOpen}
-                printPaymentReceiptAdvice={printPaymentReceiptAdvice}
               />
 
               {/* Voucher Info */}

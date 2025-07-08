@@ -54,10 +54,6 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  printPaymentReceiptAdvice: (
-    voucher?: TransactionFormState,
-    voucherType?: any
-  ) => Promise<void>;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -85,7 +81,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       goToPreviousPage,
       phone = false,
       setIsPrintModalOpen,
-      printPaymentReceiptAdvice,
     },
     ref
   ) => {
@@ -361,7 +356,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               >
                 <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                   <ul className="space-y-1">
-                    <li>
+                    {/* <li>
                       <button
                         className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
                         onClick={(e) => {
@@ -371,7 +366,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <Printer className="h-4 w-4" />
                         <span>{t("print_payment_advise")}</span>
                       </button>
-                    </li>
+                    </li> */}
 
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>
@@ -734,17 +729,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               >
                 <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                   <ul className="space-y-1">
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                        onClick={(e) => {
-                          printPaymentReceiptAdvice(formState, voucherType);
-                        }}
-                      >
-                        <Printer className="h-4 w-4" />
-                        <span>{t("print_payment_advise")}</span>
-                      </button>
-                    </li>
+                  
 
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>

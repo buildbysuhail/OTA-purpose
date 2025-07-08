@@ -4,6 +4,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { formStateMasterHandleFieldChange } from "../reducer";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface RoundOffInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
@@ -19,6 +20,18 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
   focusAmount,
 }) => {
   const dispatch = useAppDispatch();
+
+  const { value, onChange } = useDebouncedInput(
+    formState.transaction.master.roundAmount || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { roundAmount: debouncedValue },
+        })
+      );
+    },
+    300
+  );
 
   return (
     <div className="flex flex-col gap-0">
@@ -50,18 +63,12 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
         className="max-w-[110px] min-w-[110px] !m-0"
         type="number"
         noLabel
-        value={formState.transaction.master.roundAmount}
+        value={value}
         disableEnterNavigation={true}
         onKeyDown={(e) => {
           handleKeyDown && handleKeyDown(e, "roundAmount");
         }}
-        onChange={(e) =>
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: { roundAmount: e.target?.value },
-            })
-          )
-        }
+        onChange={(e) => onChange(e.target.value)}
         readOnly
       />
     </div>

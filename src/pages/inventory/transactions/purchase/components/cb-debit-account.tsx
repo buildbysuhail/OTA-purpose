@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { VoucherElementProps } from "../transaction-types";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
@@ -14,9 +14,6 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
   dispatch,
   t,
 }, ref) => {
-
-
-
   return (
     <div className="xl:w-[170px] lg:w-[250px]">
       {formState.formElements.chkDebitAccount.visible && (

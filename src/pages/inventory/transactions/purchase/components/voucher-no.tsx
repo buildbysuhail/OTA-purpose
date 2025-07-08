@@ -4,11 +4,13 @@ import { VoucherElementProps } from "../transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherNumberDetailsSidebar from "../../../../transaction-base/Voucher-number-details";
 import React from "react";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+
+const api = new APIClient();
 
 interface AccVoucherNoProps {
   phone?: boolean;
 }
-const api = new APIClient();
 
 interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
   loadAndSetTransVoucher: (
@@ -30,6 +32,18 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
     { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
     ref
   ) => {
+    const { value, onChange } = useDebouncedInput(
+      formState.transaction.master.voucherNumber || '',
+      (debouncedValue) => {
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { voucherNumber: debouncedValue },
+          })
+        );
+      },
+      300
+    );
+
     return (
       <>
         {formState.formElements.voucherNumber.visible && (
@@ -47,7 +61,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                 ? "Voucher No"
                 : t(formState.formElements.voucherNumber.label)
             }
-            value={formState.transaction.master.voucherNumber}
+            value={value}
             type="number"
             required={true}
             fetching={formState.transactionLoading}
@@ -74,11 +88,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                   false
                 );
               } else {
-                dispatch(
-                  formStateMasterHandleFieldChange({
-                    fields: { voucherNumber: e.target?.value },
-                  })
-                );
+                onChange(e.target.value);
               }
             }}
             disabled={formState.formElements.voucherNumber?.disabled}

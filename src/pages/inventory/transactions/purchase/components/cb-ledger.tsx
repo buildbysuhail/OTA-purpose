@@ -1,12 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import Urls from "../../../../../redux/urls";
-import CustomerDetailsSidebar from "../../../../transaction-base/customer-details";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { updateFormElement, formStateMasterHandleFieldChange, formStateHandleFieldChange } from "../reducer";
+import { updateFormElement, formStateMasterHandleFieldChange } from "../reducer";
 
 interface LedgerProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;

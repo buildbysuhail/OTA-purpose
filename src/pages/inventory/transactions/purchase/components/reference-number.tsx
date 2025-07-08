@@ -1,12 +1,16 @@
 import { APIClient } from "../../../../../helpers/api-client";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange} from "../reducer";
-import { useRef } from "react";
+import { formStateMasterHandleFieldChange } from "../reducer";
 import React from "react";
 import { Ellipsis } from "lucide-react";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
-interface ReferenceNumberProps extends VoucherElementProps {handleLoadByRefNo: () => Promise<void>}
+const api = new APIClient();
+
+interface ReferenceNumberProps extends VoucherElementProps {
+  handleLoadByRefNo: () => Promise<void>;
+}
 
 const ReferenceNumber = React.forwardRef<
   HTMLInputElement,
@@ -21,7 +25,19 @@ const ReferenceNumber = React.forwardRef<
     },
     ref
   ) => {
-   return (
+    const { value, onChange } = useDebouncedInput(
+      formState.transaction.master.purchaseInvoiceNumber || '',
+      (debouncedValue) => {
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { purchaseInvoiceNumber: debouncedValue },
+          })
+        );
+      },
+      300
+    );
+
+    return (
       <>
         {formState.formElements.referenceNumber.visible && (
           <>
@@ -31,17 +47,11 @@ const ReferenceNumber = React.forwardRef<
                 localInputBox={formState?.userConfig?.inputBoxStyle}
                 id="purchaseInvoiceDate"
                 label={t(formState.formElements.referenceNumber.label)}
-                value={formState.transaction.master.purchaseInvoiceNumber}
+                value={value}
                 className="w-full min-w-[135px]"
                 fetching={formState.transactionLoading}
-              // transactionLoading={true}
-                onChange={(e) =>
-                  dispatch(
-                    formStateMasterHandleFieldChange({
-                      fields: { purchaseInvoiceDate: e.target?.value },
-                    })
-                  )
-                }
+                // transactionLoading={true}
+                onChange={(e) => onChange(e.target.value)}
                 disabled={
                   formState.formElements.referenceNumber?.disabled ||
                   formState.formElements.pnlMasters?.disabled

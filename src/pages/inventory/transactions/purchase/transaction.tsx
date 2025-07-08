@@ -1871,7 +1871,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                     <h6 className="absolute  text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
                       style={{ left: headerLeft }}>
-                        {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
+                      {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
                         <div title={t("posted_transaction")}>
@@ -1928,6 +1928,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               refNoRef={refNoRef}
               isDropDownOpen={isDropDownOpen}
               toggleDropdown={toggleHeaderDropdown}
+              footerLayout="vertical"
             />
             {/* header ends here */}
 
@@ -2092,6 +2093,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     refNoRef={refNoRef}
                     isDropDownOpen={isDropDownOpen}
                     toggleDropdown={toggleHeaderDropdown}
+                    footerLayout="vertical"
                   />
                 </div>
               </div>

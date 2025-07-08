@@ -65,6 +65,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [isSmallHeight, setIsSmallHeight] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -110,6 +111,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallHeight(window.innerHeight <= 650);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const taxData = [
@@ -483,7 +493,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       </div>
 
       <div className={`${footerLayout === "vertical" ? "" : "bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"}`} >
-        <div className={`${footerLayout === "vertical" ? "block" : "hidden"}`}>
+        <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
           <div className="mb-2">
             <div className={`grid${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
               <div className="w-full">
@@ -1294,12 +1304,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {isDropUpOpen && (<div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropup} />)}
 
         {!deviceInfo?.isMobile && (
-          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-30 bg-white border-l border-l-slate-200' : 'z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l border-l-slate-200' : 'z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
             style={{ boxShadow: footerLayout === 'vertical' ? 'none' : '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)', }}>
             <div className={`${footerLayout === 'vertical' ? 'hidden' : 'block'}`}>
-              <button onClick={() => setShowFirstFooter(!showFirstFooter)} className="absolute bottom-2 left-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 z-30">
+              {/* <button onClick={() => setShowFirstFooter(!showFirstFooter)} className="absolute bottom-2 left-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 z-30">
                 <Repeat size={20} />
-              </button>
+              </button> */}
               <div className="relative w-full">
                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[-22px]">
                   <button

@@ -28,7 +28,6 @@ import InvoicePreview from "../InvoicePreview";
 import AccountTransactionsVoucher from "../DownloadPreview/account/account_transactiocn_standard";
 import { RootState } from "../../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
-import 'pdfjs-dist/build/pdf.worker';
 import AccountTransactionsUniversal from "../DownloadPreview/account/account_transaction-universal";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "../DownloadPreview/advice-template";

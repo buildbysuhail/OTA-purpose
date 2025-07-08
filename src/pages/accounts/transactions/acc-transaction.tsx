@@ -96,6 +96,7 @@ import AccVoucherNo from "./components/acc-voucher-no";
 import BtnAdd from "./components/btn-add";
 import AccHeader from "./components/acc-header";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import { useAppState } from "../../../utilities/hooks/useAppState";
 interface BilledItem {
   id?: number;
   name: string;
@@ -161,8 +162,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     (state: RootState) => state.ClientSession
   );
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${
-      (formState.transaction.master?.voucherType ?? "") + (formType ?? "")
+    `grd_acc_transaction_${(formState.transaction.master?.voucherType ?? "") + (formType ?? "")
     }`
   );
   const btnSaveRef = useRef<HTMLButtonElement>(null);
@@ -184,6 +184,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
+  const { appState } = useAppState();
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "90px" : "250px";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
 
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
@@ -217,7 +222,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string) => {
-    
+
     handleFieldKeyDown(
       field,
       e?.key ?? e?.event?.originalEvent?.key,
@@ -325,7 +330,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [financialYearID]);
 
   useEffect(() => {
-    
+
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
@@ -343,11 +348,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       try {
         const _drcr = getDrCr(formState.transaction.master.voucherType);
-        const ledgerID = item.value??0;
+        const ledgerID = item.value ?? 0;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-        let formElmns = { };
+        let formElmns = {};
         if (ledgerID > 0) {
           if (
             billwiseMandatory &&
@@ -362,7 +367,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 disabled:
                   (formState.transaction.master.voucherType == "CQP" ||
                     formState.transaction.master.voucherType == "CQR") &&
-                  IsBillwiseTransAdjustmentExists
+                    IsBillwiseTransAdjustmentExists
                     ? true
                     : false, // Update visibility based on ledgerData
               },
@@ -407,7 +412,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ? undefined
                   : ledgerData,
                 ledgerDataLoading: false,
-                row:{
+                row: {
                   ledgerID: ledgerID,
                   ledgerCode: ledgerData?.ledgerCode,
                   ledgerName: ledgerData?.partyName,
@@ -418,13 +423,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   taxNo:
                     formState.isTaxOnExpense && ledgerData != null
                       ? // ? ledgerData.taxNumber??""
-                        ledgerData.taxNumber ?? ""
+                      ledgerData.taxNumber ?? ""
                       : "",
-              }
+                }
               },
             })
           );
-          
+
           // dispatch(
           //   accFormStateRowHandleFieldChange({
           //     fields: {
@@ -443,7 +448,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           //   })
           // );
         } else {
-          
+
         }
       } catch (error) {
         // Handle error
@@ -458,25 +463,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         })
       );
     };
-    if(item.value??0 > 0) {
-      loadLedgerData();  
+    if (item.value ?? 0 > 0) {
+      loadLedgerData();
     } else {
       dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                ledgerBalance: 0,
-                groupName: "",
-                ledgerData: undefined,
-                row: {...formState.row,
-                  ledgerCode: "",
-                  ledgerID: 0,
-                  ledgerName: "",
-                  partyName: "",
-                  taxNo: ""
-                }
-              },
-            })
-          );
+        accFormStateHandleFieldChange({
+          fields: {
+            ledgerBalance: 0,
+            groupName: "",
+            ledgerData: undefined,
+            row: {
+              ...formState.row,
+              ledgerCode: "",
+              ledgerID: 0,
+              ledgerName: "",
+              partyName: "",
+              taxNo: ""
+            }
+          },
+        })
+      );
     }
   };
   useEffect(() => {
@@ -501,7 +507,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
     const loadLedgerData = async () => {
       const _drcr = getDrCr(formState.transaction.master.voucherType);
-      if(["DN", "CN"].includes(formState.transaction.master.voucherType) && formState.masterAccountID > 0) {
+      if (["DN", "CN"].includes(formState.transaction.master.voucherType) && formState.masterAccountID > 0) {
         const [ledgerBalance, ledgerData] = await Promise.all([
           (formState.masterAccountID ?? 0) > 0
             ? api.getAsync(`${Urls.get_ledger_balance}${formState.masterAccountID ?? 0}`)
@@ -522,7 +528,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           })
         );
       }
-    
+
     };
     loadLedgerData();
   }, [formState.masterAccountID]);
@@ -568,7 +574,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
             userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter
+              applicationSettings.accountsSettings?.allowSalesCounter
               ? userSession?.counterwiseCashLedgerId
               : applicationSettings.accountsSettings?.defaultCashAcc;
         }
@@ -627,11 +633,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ? t(title)
               : t(title) + "[" + formType + "]") ?? "",
           row: {
-            ...AccTransactionRowInitialData,            
+            ...AccTransactionRowInitialData,
             ledgerCode: "",
             narration:
               (voucherType == "JV" || voucherType == "JVSP") &&
-              formState?.userConfig?.keepNarrationForJV
+                formState?.userConfig?.keepNarrationForJV
                 ? prevNation
                 : "",
             bankDate: ["CR", "CP"].includes(voucher.master.voucherType)
@@ -641,8 +647,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               (formState.userConfig?.presetCostenterId ?? 0) > 0
                 ? formState.userConfig?.presetCostenterId ?? 0
                 : userSession.dbIdValue == "SAMAPLASTICS121212121"
-                ? 0
-                : applicationSettings.accountsSettings?.defaultCostCenterID,
+                  ? 0
+                  : applicationSettings.accountsSettings?.defaultCostCenterID,
           },
 
           // printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
@@ -698,10 +704,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             (_formState.transaction.master.voucherType ==
               VoucherType.CashPayment ||
               _formState.transaction.master.voucherType ==
-                VoucherType.CashReceipt) &&
-            userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter &&
-            userSession?.counterAssignedCashLedgerId > 0
+              VoucherType.CashReceipt) &&
+              userSession?.counterwiseCashLedgerId > 0 &&
+              applicationSettings.accountsSettings?.allowSalesCounter &&
+              userSession?.counterAssignedCashLedgerId > 0
               ? userSession.countryId == Countries.India
                 ? formState.masterAccountActive == true
                   ? false
@@ -1274,10 +1280,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       } else {
         _formState.template = null;
       }
-      
-    if (voucherNo != undefined && voucherNo > 0) {
-      _formState.formElements = setUserRight({..._formState.formElements},userSession,_formState.formCode,_formState.transaction.details?.length??0,hasRight);
-    }
+
+      if (voucherNo != undefined && voucherNo > 0) {
+        _formState.formElements = setUserRight({ ..._formState.formElements }, userSession, _formState.formCode, _formState.transaction.details?.length ?? 0, hasRight);
+      }
       setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously
     };
@@ -1285,7 +1291,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     initializeFormElements();
   }, [voucherType, voucherPrefix, location.search, voucherNo]);
 
-  
+
   const handleUserConfigFieldChange = (field: keyof AccUserConfig, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
@@ -1386,13 +1392,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div
             className={
               cellData.data?.isValid != undefined &&
-              cellData.data?.isValid != true
+                cellData.data?.isValid != true
                 ? "grid-error-cell"
                 : ""
             }
             title={
               cellData.data?.isValid != undefined &&
-              (cellData.data?.isValid != true) != true
+                (cellData.data?.isValid != true) != true
                 ? t("validation_failed")
                 : ""
             } // Add validation message as tooltip
@@ -1552,7 +1558,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           state: RootState
         ) =>
           state.AccTransaction.formElements.pnlMasters?.disabled ==
-          true ? null : (
+            true ? null : (
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -1561,7 +1567,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               disabled={
                 (formState.isRowEdit &&
                   cellElement.data.accTransactionDetailID ==
-                    formState.row.accTransactionDetailID) 
+                  formState.row.accTransactionDetailID)
               }
               className="ti-btn-link"
               type="button"
@@ -1740,7 +1746,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
 
 
-  
+
 
   const [showTotalsPopup, setShowTotalsPopup] = useState(false); // State for showing totals popup
 
@@ -1771,7 +1777,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const { bankAccountField, handleBankNameChange, handleLedgerChange } =
     useFormComponent();
 
-  const handleChange = (selectedOption: { value: string; label: string }) => {};
+  const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const navigate = useNavigate();
   const goToPreviousPage = () => {
@@ -1786,7 +1792,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  
+
   const isChequeSectionVisible =
     formState.formElements.nameOnCheque.visible ||
     formState.formElements.bankName.visible ||
@@ -1830,7 +1836,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
+                  <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300" style={{ left: headerLeft }}>
                     {t(formState.title)}
                     {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(formState.formElements.masterAccount.visible.toString())} */}
                   </h6>
@@ -1877,28 +1883,28 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               textAlign: formState.userConfig?.alignment,
               border:
                 formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
+                  formState.userConfig?.maxWidth !== "100%"
                   ? "1px solid #ccc"
                   : "none",
               padding: formState.userConfig?.maxWidth ? "10px" : "0",
               borderRadius:
                 formState.userConfig?.maxWidth &&
-                formState.userConfig?.maxWidth !== "100%"
+                  formState.userConfig?.maxWidth !== "100%"
                   ? "10px"
                   : "none",
               borderBottomLeftRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderBottomRightRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderBottom:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "1px solid #ccc",
               marginTop: "2.5rem",
@@ -1939,7 +1945,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                       setIsPartyDetailsOpen={() => {
                         setIsPartyDetailsOpen((prev: any) => {
-                          
+
                           return !prev;
                         });
                       }}
@@ -2025,7 +2031,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         t={t}
                         setIsPartyDetailsOpen={() => {
                           setIsPartyDetailsOpen((prev: any) => {
-                            
+
                             return !prev;
                           });
                         }}
@@ -2217,7 +2223,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           t={t}
                           setIsPartyDetailsOpen={() => {
                             setIsPartyDetailsOpen((prev: any) => {
-                              
+
                               return !prev;
                             });
                           }}
@@ -2318,7 +2324,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                     />
                     <Ledger
-                    onSelectItem={ledgerIDChanged}
+                      onSelectItem={ledgerIDChanged}
                       ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}
                       handleKeyDown={handleKeyDown}
@@ -2327,7 +2333,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                       setIsPartyDetailsOpen={() => {
                         setIsPartyDetailsOpen((prev: any) => {
-                          
+
                           return !prev;
                         });
                       }}
@@ -2411,7 +2417,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               formState.saving ||
                               formState.ledgerBillWiseLoading ||
                               formState.formElements.btnBillWise.disabled ===
-                                true ||
+                              true ||
                               formState.formElements.pnlMasters?.disabled
                             }
                           />
@@ -2504,38 +2510,38 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               textAlign: formState.userConfig?.alignment,
               border:
                 formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
+                  formState.userConfig?.gridMaxWidth !== "100%"
                   ? "1px solid #ccc"
                   : "none",
               padding: formState.userConfig?.gridMaxWidth ? "10px" : "0",
               borderRadius:
                 formState.userConfig?.gridMaxWidth &&
-                formState.userConfig?.gridMaxWidth !== "100%"
+                  formState.userConfig?.gridMaxWidth !== "100%"
                   ? "10px"
                   : "none",
               borderTopLeftRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTopRightRadius:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "0"
                   : "10px",
               borderTop:
                 formState.userConfig?.maxWidth ===
-                formState.userConfig?.gridMaxWidth
+                  formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "0",
             }}
-          >  
+          >
             <ErpDevGrid
               key={key}
               showChooserOnGridHead
               heightToAdjustOnWindows={
-                formState.userConfig?.gridHeight !== undefined && formState.userConfig?.gridHeight !== null && formState.userConfig?.gridHeight !== '' 
-                  ? formState.userConfig?.gridHeight 
+                formState.userConfig?.gridHeight !== undefined && formState.userConfig?.gridHeight !== null && formState.userConfig?.gridHeight !== ''
+                  ? formState.userConfig?.gridHeight
                   : (isChequeSectionVisible ? 550 : 530)
               }
               summaryItems={summaryItems}
@@ -2675,7 +2681,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                   setIsPartyDetailsOpen={() => {
                     setIsPartyDetailsOpen((prev: any) => {
-                      
+
                       return !prev;
                     });
                   }}
@@ -3020,7 +3026,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                     <div className="mb-1">
                       <Ledger
-                      onSelectItem={ledgerIDChanged}
+                        onSelectItem={ledgerIDChanged}
                         ref={ledgerIdRef}
                         handleFieldKeyDown={handleFieldKeyDown}
                         handleKeyDown={handleKeyDown}
@@ -3029,7 +3035,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         t={t}
                         setIsPartyDetailsOpen={() => {
                           setIsPartyDetailsOpen((prev: any) => {
-                            
+
                             return !prev;
                           });
                         }}
@@ -3258,10 +3264,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             title={t("close")}
             onClick={() => goToPreviousPage()}
             localInputBox={formState?.userConfig?.inputBoxStyle}
-            // loading={formState.saving}
-            // disabled={
-            //   formState.saving
-            // }
+          // loading={formState.saving}
+          // disabled={
+          //   formState.saving
+          // }
           />
 
           <ERPButton
@@ -3284,19 +3290,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div>
 
       {formState.transaction && formState.template && (
-       <ERPModal
-       isOpen={(formState.userConfig?.printPreview??false)&& formState.isPrintModalOpen}
-       title={t("Template")}
-       width={1000}
-       height={700}
-       isForm={true}
-       closeModal={() => {
-         dispatch(
-           accFormStateHandleFieldChange({
-             fields: { printPreview: false, isPrintModalOpen: false },
-           })
-         );
-       }}
+        <ERPModal
+          isOpen={(formState.userConfig?.printPreview ?? false) && formState.isPrintModalOpen}
+          title={t("Template")}
+          width={1000}
+          height={700}
+          isForm={true}
+          closeModal={() => {
+            dispatch(
+              accFormStateHandleFieldChange({
+                fields: { printPreview: false, isPrintModalOpen: false },
+              })
+            );
+          }}
           content={
             <PDFViewer
               className="pdf-viewer"

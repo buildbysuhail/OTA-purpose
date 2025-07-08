@@ -2,12 +2,13 @@ import { useSearchParams } from "react-router-dom";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { FooterState } from "./interfaces";
 import { isFile } from "../../../utilities/Utils";
-import { TemplateImagesTypes } from "../invocieDesigner.tsx/InvoiceDesignerLanding";
+
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { useTranslation } from "react-i18next";
+import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
 
 interface FooterDesignerProps {
   onChange: (state: FooterState) => void;

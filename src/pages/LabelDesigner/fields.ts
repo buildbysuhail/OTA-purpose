@@ -195,13 +195,13 @@ const generalFields = [
 ];
 
 const footerFields = [
-  "[Footer1]","[Footer10]","[Footer2]","[Footer3]","[Footer4]",
-  "[Footer5]","[Footer6]","[Footer7]","[Footer8]","[Footer9]",
+  "Footer1","Footer10","Footer2","Footer3","Footer4",
+  "Footer5","Footer6","Footer7","Footer8","Footer9",
 ];
 
 const headerFields = [
-  "[Header1]","[Header10]","[Header2]","[Header3]","[Header4]",
-  "[Header5]","[Header6]","[Header7]","[Header8]","[Header9]",
+  "Header1","Header10","Header2","Header3","Header4",
+  "Header5","Header6","Header7","Header8","Header9",
 ];
 
 export const groupedField: OptionGroup[] = [

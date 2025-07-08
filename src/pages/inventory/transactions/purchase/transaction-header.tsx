@@ -23,9 +23,16 @@ import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from ".
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
+import WarehouseID from "./components/warehouse-id ";
+import { TransactionFormState } from "./transaction-types";
+import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
+import CostCentreCombobox from "./components/CostCentreCombobox";
+import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
+import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
 
 interface TransactionHeaderProps {
-  formState: any;
+  formState: TransactionFormState;
   dispatch: any;
   handleKeyDown: any;
   loadAndSetTransVoucher: any;
@@ -40,6 +47,7 @@ interface TransactionHeaderProps {
   refNoRef: any;
   isDropDownOpen: boolean;
   toggleDropdown: () => void;
+  footerLayout: "horizontal" | "vertical";
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -58,14 +66,31 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   refNoRef,
   isDropDownOpen,
   toggleDropdown,
+  footerLayout
 }) => {
+  const { appState } = useAppState();
   // const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef(null);
   const ledgerIdRef = useRef<any>(null);
+
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "80px" : "240px";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallHeight(window.innerHeight <= 650);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // const toggleDropdown = () => {
   //   setIsDropDownOpen(!isDropDownOpen);
@@ -113,6 +138,49 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
+  const conditionalFooterComponents =
+    footerLayout === "vertical" &&
+      isSmallHeight ? (
+      <>
+        <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
+          <WarehouseID
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+          <PriceCategoryCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+          <CostCentreCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+          <SupplyTypeCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+          <AdjustmentAmountInput
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+          />
+        </div>
+      </>
+    ) : null;
+
   return (
     <div>
       {isDropDownOpen && (
@@ -120,7 +188,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {!deviceInfo?.isMobile && (
-        <div className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}>
+        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -385,7 +453,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 )}
               </div>
-
+              {conditionalFooterComponents}
               {formState.formElements.pnlImport.visible &&
                 <div className="inline-flex items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
                   {formState.formElements.cbCurrency?.visible && (
@@ -407,7 +475,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         );
                         handleFieldKeyDown("currencyId", "Enter");
                       }}
-                      value={formState.transaction.master.currencyId}
+                      value={formState.transaction.master.currencyID}
                       field={{
                         id: "currencyId",
                         valueKey: "id",
@@ -480,7 +548,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {deviceInfo?.isMobile && (
-        <div className={`fixed top-[110px] left-0 right-0 z-40 bg-white shadow-md transition-all duration-300 [@media(min-width:1000px)]:ml-[240px] }`}>
+        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -765,7 +833,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 )}
               </div>
-
+              {conditionalFooterComponents}
               <div className=" items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
                 {formState.formElements.cbCurrency?.visible && (
                   <ERPDataCombobox
@@ -786,7 +854,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       );
                       handleFieldKeyDown("currencyId", "Enter");
                     }}
-                    value={formState.transaction.master.currencyId}
+                    value={formState.transaction.master.currencyID}
                     field={{
                       id: "currencyId",
                       valueKey: "id",

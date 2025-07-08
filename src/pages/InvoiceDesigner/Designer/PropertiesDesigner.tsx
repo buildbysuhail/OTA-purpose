@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { PropertiesState } from "./interfaces";
-import { TemplateImagesTypes } from "../invocieDesigner.tsx/InvoiceDesignerLanding";
+
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
@@ -13,6 +13,7 @@ import VoucherType from "../../../enums/voucher-types";
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
 import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import { useTranslation } from "react-i18next";
+import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;

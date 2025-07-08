@@ -18,6 +18,7 @@ import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { LedgerType } from "../../../enums/ledger-types";
+import { useAppState } from "../../../utilities/hooks/useAppState";
 
 interface FormState {
   paymentType: "payment" | "receipt";
@@ -70,6 +71,11 @@ const PostDatedCheques = () => {
   const [__key, set__key] = useState<number>(10);
   const { t } = useTranslation("transaction");
   const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const { appState } = useAppState();
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "90px" : "250px";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
   useEffect(() => {
     setFormState((prev: any) => {
       return {
@@ -394,7 +400,7 @@ const PostDatedCheques = () => {
           allowEditing: true,
           allowFiltering: true,
           width: 250,
-          format:"dd-MM-yyyy"
+          format: "dd-MM-yyyy"
         },
         {
           dataField: "ledgerName",
@@ -532,7 +538,7 @@ const PostDatedCheques = () => {
       <div className="fixed w-full left-0 z-10 top-[60px]">
         <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-            <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-Width:1000px)]:ml-[231px]">
+            <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300" style={{ left: headerLeft }}>
               {t("post_dated_cheques")}
             </h6>
             <i className="fas fa-cog ms-1"></i>

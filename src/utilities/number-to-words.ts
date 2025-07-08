@@ -1,22 +1,8 @@
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
+import { ApplicationSettingsType } from '../pages/settings/system/application-settings-types/application-settings-types';
+import { RootState } from '../redux/store';
 
-// ==================== STRICT TYPESCRIPT INTERFACES ====================
-
-// Redux State Types
-export interface MainSettings {
-  readonly showNumberFormat: 'Millions' | 'Lakhs';
-  readonly decimalPoints: number;
-  readonly currency: number;
-}
-
-export interface ApplicationSettings {
-  readonly mainSettings: MainSettings;
-}
-
-export interface RootState {
-  readonly ApplicationState: ApplicationSettings;
-}
 
 // Currency Data Interface
 export interface CurrencyData {
@@ -26,22 +12,141 @@ export interface CurrencyData {
 
 // Currency Database Interface
 export interface CurrencyDatabase {
-  readonly [key: number]: CurrencyData;
+  readonly [key: string]: CurrencyData;
 }
 
 // ==================== CURRENCY ENUMS AND TYPES ====================
 
 export enum Currencies {
-  Syria = 0,
-  UAE = 1,
-  SaudiArabia = 2,
-  Qatar = 3,
-  Bahrain = 4,
-  Oman = 5,
-  Kuwait = 6,
-  Tunisia = 7,
-  Gold = 8,
-  Other = 9
+  SAUDI_ARABIA = 'SAR',
+  BULGARIA = 'BGN',
+  SPAIN = 'EUR',
+  TAIWAN = 'TWD',
+  CZECH_REPUBLIC = 'CZK',
+  DENMARK = 'DKK',
+  GERMANY = 'EUR',
+  GREECE = 'EUR',
+  UNITED_STATES = 'USD',
+  FINLAND = 'EUR',
+  FRANCE = 'EUR',
+  ISRAEL = 'ILS',
+  HUNGARY = 'HUF',
+  ICELAND = 'ISK',
+  ITALY = 'EUR',
+  JAPAN = 'JPY',
+  KOREA = 'KRW',
+  NETHERLANDS = 'EUR',
+  NORWAY = 'NOK',
+  POLAND = 'PLN',
+  BRAZIL = 'BRL',
+  SWITZERLAND = 'CHF',
+  ROMANIA = 'RON',
+  RUSSIA = 'RUB',
+  CROATIA = 'EUR',
+  SLOVAKIA = 'EUR',
+  ALBANIA = 'ALL',
+  SWEDEN = 'SEK',
+  THAILAND = 'THB',
+  TURKEY = 'TRY',
+  PAKISTAN = 'PKR',
+  INDONESIA = 'IDR',
+  UKRAINE = 'UAH',
+  BELARUS = 'BYN',
+  SLOVENIA = 'EUR',
+  ESTONIA = 'EUR',
+  LATVIA = 'EUR',
+  LITHUANIA = 'EUR',
+  TAJIKISTAN = 'TJS',
+  IRAN = 'IRR',
+  VIETNAM = 'VND',
+  ARMENIA = 'AMD',
+  AZERBAIJAN = 'AZN',
+  MACEDONIA = 'MKD',
+  SOUTH_AFRICA = 'ZAR',
+  GEORGIA = 'GEL',
+  FAROE_ISLANDS = 'DKK',
+  INDIA = 'INR',
+  MALTA = 'EUR',
+  MALAYSIA = 'MYR',
+  KAZAKHSTAN = 'KZT',
+  KYRGYZSTAN = 'KGS',
+  KENYA = 'KES',
+  TURKMENISTAN = 'TMT',
+  UZBEKISTAN = 'UZS',
+  MONGOLIA = 'MNT',
+  CHINA = 'CNY',
+  UNITED_KINGDOM = 'GBP',
+  CAMBODIA = 'KHR',
+  LAOS = 'LAK',
+  SYRIA = 'SYP',
+  SRI_LANKA = 'LKR',
+  CANADA = 'CAD',
+  ETHIOPIA = 'ETB',
+  NEPAL = 'NPR',
+  AFGHANISTAN = 'AFN',
+  PHILIPPINES = 'PHP',
+  MALDIVES = 'MVR',
+  NIGERIA = 'NGN',
+  BOLIVIA = 'BOB',
+  LUXEMBOURG = 'EUR',
+  GREENLAND = 'DKK',
+  CHILE = 'CLP',
+  NEW_ZEALAND = 'NZD',
+  GUATEMALA = 'GTQ',
+  RWANDA = 'RWF',
+  SENEGAL = 'XOF',
+  IRAQ = 'IQD',
+  MEXICO = 'MXN',
+  BELGIUM = 'EUR',
+  PORTUGAL = 'EUR',
+  SERBIA_MONTENEGRO = 'RSD', // Note: Serbia and Montenegro split, using Serbian Dinar
+  IRELAND = 'EUR',
+  BRUNEI = 'BND',
+  BANGLADESH = 'BDT',
+  ALGERIA = 'DZD',
+  ECUADOR = 'USD',
+  EGYPT = 'EGP',
+  HONG_KONG = 'HKD',
+  AUSTRIA = 'EUR',
+  AUSTRALIA = 'AUD',
+  PERU = 'PEN',
+  LIBYA = 'LYD',
+  SINGAPORE = 'SGD',
+  BOSNIA_HERZEGOVINA = 'BAM',
+  MACAO = 'MOP',
+  LIECHTENSTEIN = 'CHF',
+  COSTA_RICA = 'CRC',
+  MOROCCO = 'MAD',
+  PANAMA = 'PAB',
+  MONACO = 'EUR',
+  TUNISIA = 'TND',
+  DOMINICAN_REPUBLIC = 'DOP',
+  OMAN = 'OMR',
+  JAMAICA = 'JMD',
+  VENEZUELA = 'VES',
+  YEMEN = 'YER',
+  CARIBBEAN = 'XCD', // Eastern Caribbean Dollar (commonly used)
+  COLOMBIA = 'COP',
+  SERBIA = 'RSD',
+  BELIZE = 'BZD',
+  JORDAN = 'JOD',
+  TRINIDAD_TOBAGO = 'TTD',
+  ARGENTINA = 'ARS',
+  MONTENEGRO = 'EUR',
+  LEBANON = 'LBP',
+  ZIMBABWE = 'ZWL',
+  KUWAIT = 'KWD',
+  UAE = 'AED',
+  URUGUAY = 'UYU',
+  BAHRAIN = 'BHD',
+  PARAGUAY = 'PYG',
+  QATAR = 'QAR',
+  EL_SALVADOR = 'USD',
+  HONDURAS = 'HNL',
+  NICARAGUA = 'NIO',
+  PUERTO_RICO = 'USD',
+  GOLD = 'XAU',
+  OTHER = ''
 }
 
 export interface CurrencyConfig {
@@ -87,7 +192,7 @@ export class CurrencyInfo {
   private readonly config: CurrencyConfig;
 
   constructor(currency: Currencies) {
-    this.config = this.initializeCurrency(currency);
+    this.config = this.initializeCurrency(currency)??{};
   }
 
   public get currencyId(): number { return this.config.currencyId; }
@@ -109,8 +214,8 @@ export class CurrencyInfo {
   public get isCurrencyPartNameFeminine(): boolean { return this.config.isCurrencyPartNameFeminine; }
 
   private initializeCurrency(currency: Currencies): CurrencyConfig {
-    const currencyConfigs: Record<Currencies, CurrencyConfig> = {
-      [Currencies.Syria]: {
+    const currencyConfigs: Partial<Record<Currencies, CurrencyConfig>> = {
+      [Currencies.SYRIA]: {
         currencyId: 0,
         currencyCode: "SYP",
         isCurrencyNameFeminine: true,
@@ -148,7 +253,7 @@ export class CurrencyInfo {
         partPrecision: 2,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.SaudiArabia]: {
+      [Currencies.SAUDI_ARABIA]: {
         currencyId: 2,
         currencyCode: "SAR",
         isCurrencyNameFeminine: false,
@@ -167,7 +272,7 @@ export class CurrencyInfo {
         partPrecision: 2,
         isCurrencyPartNameFeminine: true
       },
-      [Currencies.Qatar]: {
+      [Currencies.QATAR]: {
         currencyId: 3,
         currencyCode: "QAR",
         isCurrencyNameFeminine: false,
@@ -186,7 +291,7 @@ export class CurrencyInfo {
         partPrecision: 2,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.Bahrain]: {
+      [Currencies.BAHRAIN]: {
         currencyId: 4,
         currencyCode: "BHD",
         isCurrencyNameFeminine: false,
@@ -205,7 +310,7 @@ export class CurrencyInfo {
         partPrecision: 3,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.Oman]: {
+      [Currencies.OMAN]: {
         currencyId: 5,
         currencyCode: "OMR",
         isCurrencyNameFeminine: false,
@@ -224,7 +329,7 @@ export class CurrencyInfo {
         partPrecision: 3,
         isCurrencyPartNameFeminine: true
       },
-      [Currencies.Kuwait]: {
+      [Currencies.KUWAIT]: {
         currencyId: 6,
         currencyCode: "KWD",
         isCurrencyNameFeminine: false,
@@ -243,7 +348,7 @@ export class CurrencyInfo {
         partPrecision: 3,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.Tunisia]: {
+      [Currencies.TUNISIA]: {
         currencyId: 7,
         currencyCode: "TND",
         isCurrencyNameFeminine: false,
@@ -262,7 +367,7 @@ export class CurrencyInfo {
         partPrecision: 3,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.Gold]: {
+      [Currencies.GOLD]: {
         currencyId: 8,
         currencyCode: "XAU",
         isCurrencyNameFeminine: false,
@@ -281,7 +386,7 @@ export class CurrencyInfo {
         partPrecision: 2,
         isCurrencyPartNameFeminine: false
       },
-      [Currencies.Other]: {
+      [Currencies.OTHER]: {
         currencyId: 9,
         currencyCode: "XXX",
         isCurrencyNameFeminine: false,
@@ -301,24 +406,40 @@ export class CurrencyInfo {
         isCurrencyPartNameFeminine: false
       }
     };
-
-    return currencyConfigs[currency];
+const defaultConfig: CurrencyConfig= { currencyId: 9,
+        currencyCode: "",
+        isCurrencyNameFeminine: false,
+        englishCurrencyName: "",
+        englishPluralCurrencyName: "",
+        englishCurrencyPartName: "",
+        englishPluralCurrencyPartName: "",
+        arabic1CurrencyName: "",
+        arabic2CurrencyName: "",
+        arabic310CurrencyName: "",
+        arabic1199CurrencyName: "",
+        arabic1CurrencyPartName: "",
+        arabic2CurrencyPartName: "",
+        arabic310CurrencyPartName: "",
+        arabic1199CurrencyPartName: "",
+        partPrecision: 2,
+        isCurrencyPartNameFeminine: false}
+    return currencyConfigs[currency]??defaultConfig;
   }
 }
 
 // ==================== CURRENCY DATABASE ====================
 
 const DEFAULT_CURRENCY_DATABASE: CurrencyDatabase = {
-  [Currencies.Syria]: { currencyName: "Syrian Pounds", subUnit: "Piasters" },
+  [Currencies.SYRIA]: { currencyName: "Syrian Pounds", subUnit: "Piasters" },
   [Currencies.UAE]: { currencyName: "UAE Dirhams", subUnit: "Fils" },
-  [Currencies.SaudiArabia]: { currencyName: "Saudi Riyals", subUnit: "Halalas" },
-  [Currencies.Qatar]: { currencyName: "Qatar Riyals", subUnit: "Dirhams" },
-  [Currencies.Bahrain]: { currencyName: "Bahraini Dinars", subUnit: "Fils" },
-  [Currencies.Oman]: { currencyName: "Omani Rials", subUnit: "Baisa" },
-  [Currencies.Kuwait]: { currencyName: "Kuwaiti Dinars", subUnit: "Fils" },
-  [Currencies.Tunisia]: { currencyName: "Tunisian Dinars", subUnit: "Millimes" },
-  [Currencies.Gold]: { currencyName: "Grams", subUnit: "Milligrams" },
-  [Currencies.Other]: { currencyName: "Units", subUnit: "Subunits" }
+  [Currencies.SAUDI_ARABIA]: { currencyName: "Saudi Riyals", subUnit: "Halalas" },
+  [Currencies.QATAR]: { currencyName: "Qatar Riyals", subUnit: "Dirhams" },
+  [Currencies.BAHRAIN]: { currencyName: "Bahraini Dinars", subUnit: "Fils" },
+  [Currencies.OMAN]: { currencyName: "Omani Rials", subUnit: "Baisa" },
+  [Currencies.KUWAIT]: { currencyName: "Kuwaiti Dinars", subUnit: "Fils" },
+  [Currencies.TUNISIA]: { currencyName: "Tunisian Dinars", subUnit: "Millimes" },
+  [Currencies.GOLD]: { currencyName: "Grams", subUnit: "Milligrams" },
+  [Currencies.OTHER]: { currencyName: "Units", subUnit: "Subunits" }
 } as const;
 
 // ==================== CONVERSION CLASSES ====================
@@ -365,7 +486,7 @@ class NumberConverter {
   public static convertToEnglish(
     amount: number, 
     currency: CurrencyInfo, 
-    settings: MainSettings
+    settings: ApplicationSettingsType
   ): string {
     if (amount === 0) return "Zero";
 
@@ -390,7 +511,7 @@ class NumberConverter {
   public static convertToArabic(
     amount: number, 
     currency: CurrencyInfo, 
-    settings: MainSettings
+    settings: ApplicationSettingsType
   ): string {
     if (amount === 0) return "صفر";
 
@@ -412,7 +533,7 @@ class NumberConverter {
     return result + " فقط.";
   }
 
-  private static extractParts(amount: number, currency: CurrencyInfo, settings: MainSettings): {
+  private static extractParts(amount: number, currency: CurrencyInfo, settings: ApplicationSettingsType): {
     integerPart: number;
     decimalPart: number;
   } {
@@ -422,18 +543,18 @@ class NumberConverter {
     let decimalPart = 0;
     if (parts.length > 1) {
       let decimalString = parts[1];
-      decimalString = decimalString.padEnd(settings.decimalPoints, '0');
-      decimalString = decimalString.substring(0, settings.decimalPoints);
+      decimalString = decimalString.padEnd(settings.mainSettings.decimalPoints, '0');
+      decimalString = decimalString.substring(0, settings.mainSettings.decimalPoints);
       decimalPart = parseInt(decimalString, 10);
     }
 
     return { integerPart, decimalPart };
   }
 
-  private static convertIntegerToEnglish(num: number, settings: MainSettings): string {
+  private static convertIntegerToEnglish(num: number, settings: ApplicationSettingsType): string {
     if (num === 0) return "";
     
-    if (settings.showNumberFormat === 'Lakhs') {
+    if (settings.mainSettings.showNumberFormat === 'Lakhs') {
       return this.convertToLakhsFormat(num);
     } else {
       return this.convertToMillionsFormat(num);
@@ -582,7 +703,7 @@ class NumberConverter {
 // ==================== MAIN HOOK ====================
 
 export const useNumberToWords = () => {
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationState);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   
   const currencyDatabase = useMemo<CurrencyDatabase>(() => {
     // You can extend this to fetch from an API or database
@@ -605,19 +726,19 @@ export const useNumberToWords = () => {
       const english = NumberConverter.convertToEnglish(
         options.amount, 
         currencyInfo, 
-        applicationSettings.mainSettings
+        applicationSettings
       );
       
       const arabic = NumberConverter.convertToArabic(
         options.amount, 
         currencyInfo, 
-        applicationSettings.mainSettings
+        applicationSettings
       );
       
       const simple = NumberConverter.convertToEnglish(
         options.amount, 
-        new CurrencyInfo(Currencies.Other), 
-        applicationSettings.mainSettings
+        new CurrencyInfo(Currencies.OTHER), 
+        applicationSettings
       );
 
       return {
@@ -696,9 +817,11 @@ export type ConvertAmountFunction = UseNumberToWordsReturn['convertAmount'];
 
 // ==================== UTILITY HOOK FOR FORM USAGE ====================
 
-export const useAmountConverter = (defaultCurrency?: Currencies) => {
+export const useAmountConverter = () => {
   const { convertAmount, isValidAmount, settings } = useNumberToWords();
   
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const defaultCurrency= userSession.currency.currencyCode
   const convertFormAmount = useMemo(() => {
     return (amount: string | number, currency?: Currencies): ConversionResult | null => {
       const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
@@ -707,7 +830,7 @@ export const useAmountConverter = (defaultCurrency?: Currencies) => {
         return null;
       }
       
-      return convertAmount(numAmount, currency || defaultCurrency);
+      return convertAmount(numAmount, currency || defaultCurrency as Currencies);
     };
   }, [convertAmount, isValidAmount, defaultCurrency]);
 
@@ -715,6 +838,6 @@ export const useAmountConverter = (defaultCurrency?: Currencies) => {
     convertFormAmount,
     isValidAmount,
     settings,
-    defaultCurrency: defaultCurrency || (settings.currency as Currencies)
+    defaultCurrency: defaultCurrency || (defaultCurrency as Currencies)
   } as const;
 };

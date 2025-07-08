@@ -1,253 +1,18 @@
 import { useSelector } from "react-redux";
-import { Currencies, useNumberToWords } from "./number-to-words";
+import { Currencies,  useNumberToWords } from "./number-to-words";
 import { isNullOrUndefinedOrEmpty } from "./Utils";
 import { useNumberFormat } from "./hooks/use-number-format";
-
-// ==================== STRICT TYPESCRIPT INTERFACES ====================
-
-export interface TransactionMasterRow {
-  readonly CreatedDate: string;
-  readonly GrandTotal: string;
-  readonly VatAmount: string;
-  readonly IQR: string;
-  readonly EInvoiceQRCode: string;
-  readonly SRAmount: string;
-  readonly BillDiscount: string;
-  readonly CouponAmt: string;
-  readonly VehicleNumber: string;
-  readonly PartyDisplayName: string;
-  readonly VehicleName: string;
-  readonly VehicleModel: string;
-  readonly VehicleCapacity: string;
-  readonly VehicleManufacturer: string;
-  readonly VehicleOwner: string;
-  readonly VehicleColor: string;
-  readonly VehicleOdometer: string;
-  readonly VehicleRemarks: string;
-  readonly OldInvTransactionID: string;
-  readonly InOut: string;
-  readonly CashReturned: string;
-}
-
-export interface ApplicationSettings {
-  readonly mainSettings: {
-    readonly CountryID: number;
-    readonly currency: number;
-    readonly showNumberFormat: "Millions" | "Lakhs";
-    readonly decimalPoints: number;
-    readonly MaintainKSAEInvoice: boolean;
-    readonly BusinessType: string;
-  };
-  readonly accountsSettings: {
-    readonly DefaultCustomerLedgerID: number;
-  };
-}
-
-export interface HeaderFooterSettings {
-  readonly Header1: string;
-  readonly Header2: string;
-  readonly Header3: string;
-  readonly Header4: string;
-  readonly Header5: string;
-  readonly Header6: string;
-  readonly Header7: string;
-  readonly Header8: string;
-  readonly Header9: string;
-  readonly Header10: string;
-  readonly Footer1: string;
-  readonly Footer2: string;
-  readonly Footer3: string;
-  readonly Footer4: string;
-  readonly Footer5: string;
-  readonly Footer6: string;
-  readonly Footer7: string;
-  readonly Footer8: string;
-  readonly Footer9: string;
-  readonly Footer10: string;
-}
-
-export interface CommonValuesData {
-  readonly dtTranMaster: TransactionMasterRow[];
-  readonly GrantTotal: number;
-  readonly FldLength: number;
-  readonly mBarcode: string;
-  readonly AutoBarcode: string;
-  readonly BillNumberBarcode: string;
-  readonly Transactionbarcode: string;
-  readonly DeliveryAddress3: string;
-  readonly BILLNUMBER_PREF_BARCODE: string;
-  readonly TokenBarcode: string;
-  readonly VoucherNumberBarcode: string;
-  readonly LastGroupName: string;
-  readonly TransactionTime: Date;
-  readonly PrintinCopy: number;
-  readonly SalesBillNumbers: string;
-  readonly SalesRetBillNumbers: string;
-  readonly BillAmounts: string;
-  readonly RetBillAmounts: string;
-  readonly TotalItems: number;
-  readonly TotalQty: number;
-  readonly TotalPageQty: number;
-  readonly TotalFree: number;
-  readonly TotalQtyFree: number;
-  readonly PageTotFree: number;
-  readonly SumOfCGST: number;
-  readonly SumOfSGST: number;
-  readonly SumOfIGST: number;
-  readonly SumOfCessAmt: number;
-  readonly SumOfAddCessAmt: number;
-  readonly SumOfGST: number;
-  readonly SumGST: number;
-  readonly ZeroTaxable: number;
-  readonly ZeroSGSTAmt: number;
-  readonly ZeroCGSTAmt: number;
-  readonly ZeroIGSTAmt: number;
-  readonly ZeroTotal: number;
-  readonly ThreeTaxable: number;
-  readonly ThreeSGST: number;
-  readonly ThreeCGST: number;
-  readonly ThreeIGST: number;
-  readonly ThreeTotal: number;
-  readonly FiveTaxable: number;
-  readonly FiveSGSTAmt: number;
-  readonly FiveCGSTAmt: number;
-  readonly FiveIGSTAmt: number;
-  readonly FiveTotal: number;
-  readonly TwelveTaxable: number;
-  readonly TwelveSGSTAmt: number;
-  readonly TwelveCGSTAmt: number;
-  readonly TwelveIGSTAmt: number;
-  readonly TwelveTotal: number;
-  readonly EighteenTaxable: number;
-  readonly EighteenSGSTAmt: number;
-  readonly EighteenCGSTAmt: number;
-  readonly EighteenIGSTAmt: number;
-  readonly EighteenTotal: number;
-  readonly TwentyEightTaxable: number;
-  readonly TwentyEightSGSTAmt: number;
-  readonly TwentyEightCGSTAmt: number;
-  readonly TwentyEightIGSTAmt: number;
-  readonly TwentyEightTotal: number;
-  readonly MRPTOTAL: number;
-  readonly MRPDifference: number;
-  readonly QRpay: number;
-  readonly BankCard: number;
-  readonly SumOfGross: number;
-  readonly SumOfGrossfc: number;
-  readonly SumOfDisc: number;
-  readonly SumOfTax: number;
-  readonly SumOfNetAmt: number;
-  readonly SumOfVAT: number;
-  readonly SumOfTotDisc: number;
-  readonly SumOfCST: number;
-  readonly SumOfNetValue: number;
-  readonly SumOfMRP: number;
-  readonly SumOfNosQty: number;
-  readonly SumOfMRPRate: number;
-  readonly SumOfSchemDisc: number;
-  readonly SumOfNetWeight: number;
-  readonly StateName: string;
-  readonly StateCode: string;
-  readonly totalSavedAmt: number;
-  readonly TotalNetAmount: number;
-  readonly BillDiscount: number;
-  readonly PageTotalofGross: number;
-  readonly PageTotalofDisc: number;
-  readonly PageTotalofTax: number;
-  readonly PageTotalofNetAmt: number;
-  readonly PageTotalofSchmeDisc: number;
-  readonly PageTotalofVAT: number;
-  readonly PageTotalofTotDisc: number;
-  readonly PageTotalofCST: number;
-  readonly PageTotalofNetValue: number;
-  readonly PageTotalofNosQty: number;
-  readonly PageNo: number;
-  readonly NoOfPages: number;
-  readonly PageTotDebit: number;
-  readonly PageTotAmount: number;
-  readonly FreeString: string;
-  readonly R: number;
-  readonly ProductUnitRemarksOrProductName: string;
-  readonly PARTYNAME: string;
-  readonly ProdName: string;
-  readonly ProdDescription: string;
-  readonly ProductCode: string;
-  readonly ModelNoKOT: string;
-  readonly ProductBatchID: number;
-  readonly InvQty: number;
-  readonly PartyLedgerID: number;
-  readonly CashReceived: number;
-  readonly CashReturned: number;
-  readonly BankAmt: number;
-  readonly QtyWithUnit: number;
-  readonly UnitNetValue: number;
-  readonly LoyaltyCardNo: string;
-  readonly CHEQUE_CHEQUEDATE: string;
-  readonly CHEQUE_PAYTOACCOUNTNAME: string;
-  readonly CHEQUE_AMOUNT: string;
-  readonly CHEQUE_REMARKS: string;
-  readonly CHEQUE_AMOUNTINWORDS: string;
-  readonly VOUCHERTYPE: string;
-  readonly CashPaidOrRcvd: number;
-  readonly TransDate: Date;
-  readonly TransactionDate: Date;
-  readonly OpeningBalance: number;
-  readonly StockTransferTotalSalesValue: number;
-  readonly PageTotalBarcode: string;
-  readonly JVTotalDebit: number;
-  readonly JVTotalCredit: number;
-  readonly InvoiceNumberAndPageTotalBarcode: string;
-  readonly PWidth: string;
-  readonly PHeight: string;
-  readonly Non_Height_Width: string;
-  readonly PrintCount: number;
-  readonly FCAmount: number;
-  readonly IN_OUT: string;
-  readonly KM_KitchenRemarks: string;
-  readonly KM_Waiter: string;
-  readonly KM_OrderNumber: string;
-  readonly KM_TableNo: string;
-  readonly KM_SeatNo: string;
-  readonly KM_TokenNumber: string;
-  readonly KM_ServeType: string;
-  readonly Narration: string;
-  readonly TotalBillQty: number;
-  readonly TotalBillItemNos: number;
-  readonly BankCardName: string;
-  readonly ServiceItems: string[];
-  readonly ServiceItemsAMT: string[];
-  readonly productnamegatepass: string;
-  readonly Qtygatepass: number;
-  readonly TransactionTimeGate: Date;
-  readonly TotalItemsGate: number;
-  readonly TokenBarcodeGate: string;
-  readonly GatePass: boolean;
-  readonly _InvTransactionMasterID: number;
-  readonly Total5PerctaxableValue: number;
-  readonly Total5PercTaxValue: number;
-  readonly Total15PerctaxableValue: number;
-  readonly Total15PercTaxValue: number;
-  readonly ZeroPercentTaxableValue: number;
-  readonly ZeroPercentTaxValue: number;
-  readonly TotalOtherTaxableValue: number;
-  readonly TotalOtherTaxValue: number;
-  readonly GT: boolean;
-}
-
-export interface RootState {
-  readonly ApplicationState: ApplicationSettings;
-  readonly HeaderFooter: HeaderFooterSettings;
-}
+import { RootState } from "../redux/store";
 
 // ==================== COUNTRY ID TO CURRENCY MAPPING ====================
 
 const COUNTRY_ID_TO_CURRENCY: Record<number, Currencies> = {
-  1: Currencies.SaudiArabia, // Saudi Arabia
-  124: Currencies.Qatar, // Qatar
+  1: Currencies.SAUDI_ARABIA, // Saudi Arabia
+  124: Currencies.QATAR, // Qatar
   120: Currencies.UAE, // UAE
-  122: Currencies.Bahrain, // Bahrain
-  104: Currencies.Oman, // Oman
-  118: Currencies.Kuwait, // Kuwait
+  122: Currencies.BAHRAIN, // Bahrain
+  104: Currencies.OMAN, // Oman
+  118: Currencies.KUWAIT, // Kuwait
 } as const;
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -387,10 +152,10 @@ export const getModeOfPaymentArabic = (
 // ==================== MAIN HOOK ====================
 
 export const useCommonValues = () => {
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationState
+  const userSession = useSelector(
+    (state: RootState) => state.UserSession
   );
-  const headerFooter = useSelector((state: RootState) => state.HeaderFooter);
+  const headerFooter = useSelector((state: RootState) => state);
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
 const{posRoundAmount} = useNumberFormat()
   const getCommonValues = (
@@ -428,9 +193,9 @@ const{posRoundAmount} = useNumberFormat()
           break;
 
         case "AMOUNTINWORDSINARABIC":
-          const countryId = applicationSettings.mainSettings.CountryID;
+          const countryId = userSession.countryId??0;
           const currency =
-            COUNTRY_ID_TO_CURRENCY[countryId] ?? Currencies.Other;
+            COUNTRY_ID_TO_CURRENCY[countryId] ?? Currencies.OTHER;
           value = convertAmountToArabic(master?.grantTotal, currency);
           break;
 

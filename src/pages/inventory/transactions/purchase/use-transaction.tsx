@@ -128,7 +128,7 @@ export const useTransaction = (
     changeGrossToUnitRate,
     calculateRowAmount,
   } = useTransactionHelper(transactionType);
-  const { printVoucher, printCheque, printPaymentReceiptAdvice } =
+  const { printVoucher } =
     useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -2697,9 +2697,7 @@ debugger;
     disableCombo,
     handleEdit,
     handleLoadByRefNo,
-    printCheque,
     printVoucher,
-    printPaymentReceiptAdvice,
     handleRefresh,
     createNewVoucher,
     unlockVoucher,

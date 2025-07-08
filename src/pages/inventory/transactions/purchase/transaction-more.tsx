@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useDebouncedInput } from "../../../../utilities/hooks/useDebounce";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -6,9 +7,11 @@ import { formStateMasterHandleFieldChange } from "./reducer";
 import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
 import Urls from "../../../../redux/urls";
+import { TransactionFormState } from "./transaction-types";
 
 interface MoreOptionsModalContentProps {
-  formState: any;
+  formState: TransactionFormState;
+  loadAndSetTransVoucher: any;
   dispatch: any;
   handleFieldChange: any;
   t: any;
@@ -17,9 +20,146 @@ interface MoreOptionsModalContentProps {
 const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
   formState,
   dispatch,
-  handleFieldChange,
+  loadAndSetTransVoucher,
 }) => {
   const { t } = useTranslation("transaction");
+
+  const { value: despatchDocumentNumberValue, onChange: onDespatchDocumentNumberChange } = useDebouncedInput(
+    formState.transaction.master.despatchDocumentNumber || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { despatchDocumentNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedInput(
+    formState.transaction.master.orderNumber || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { orderNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: quotationNumberValue, onChange: onQuotationNumberChange } = useDebouncedInput(
+    formState.transaction.master.quotationNumber || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { quotationNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: purchaseInvoiceNumberValue, onChange: onPurchaseInvoiceNumberChange } = useDebouncedInput(
+    formState.transaction.master.purchaseInvoiceNumber || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { purchaseInvoiceNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: deliveryNoteNumberValue, onChange: onDeliveryNoteNumberChange } = useDebouncedInput(
+    formState.transaction.master.deliveryNoteNumber || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { deliveryNoteNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: gatePassNoValue, onChange: onGatePassNoChange } = useDebouncedInput(
+    formState.transaction.master.gatePassNo || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { gatePassNo: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: dueDaysValue, onChange: onDueDaysChange } = useDebouncedInput(
+    formState.transaction.master.dueDays || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { dueDays: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: salesManIncentiveValue, onChange: onSalesManIncentiveChange } = useDebouncedInput(
+    formState.transaction.master.salesManIncentive || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { salesManIncentive: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: notes1Value, onChange: onNotes1Change } = useDebouncedInput(
+    formState.transaction.master.notes1 || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { notes1: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: notes2Value, onChange: onNotes2Change } = useDebouncedInput(
+    formState.transaction.master.notes2 || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { notes2: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const handleLoadByRefNo = useCallback(async () => {
+    if (formState.transaction.master.orderNumber) {
+      await loadAndSetTransVoucher(
+        true,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        formState.transaction.master.orderNumber,
+        undefined,
+        undefined,
+        true
+      );
+    }
+  }, [formState.transaction.master.orderNumber, loadAndSetTransVoucher]);
+
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -37,16 +177,10 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   </label>
                   <ERPInput
                     id="despatchDocumentNumber"
-                    value={formState.despatchDocumentNumber}
+                    value={despatchDocumentNumberValue}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     noLabel={true}
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { despatchDocumentNumber: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onDespatchDocumentNumberChange(e.target.value)}
                   />
                 </div>
 
@@ -57,15 +191,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="despatchDate"
                     noLabel={true}
-                    value={formState.despatchDate}
+                    value={formState.transaction.master.despatchDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { despatchDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { despatchDate: e.target.value } }))}
                   />
                 </div>
 
@@ -76,7 +204,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDataCombobox
                     id="driverID"
                     noLabel={true}
-                    value={formState.driverID}
+                    value={formState.transaction.master.driverID}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "driverID",
@@ -84,13 +212,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                       labelKey: "name",
                       getListUrl: Urls.data_driver
                     }}
-                    onSelectItem={(data) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { driverID: data.value },
-                        })
-                      )
-                    }
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { driverID: data.value } }))}
                   />
                 </div>
               </div>
@@ -110,17 +232,14 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                     <ERPInput
                       id="orderNumber"
                       noLabel={true}
-                      value={formState.orderNumber}
+                      value={orderNumberValue}
                       className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
-                      onChange={(e) =>
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: { orderNumber: e.target.value },
-                          })
-                        )
-                      }
+                      onChange={(e) => onOrderNumberChange(e.target.value)}
                     />
-                    <button className="bg-gray-300 p-2 rounded-md ml-1 hover:shadow-md transition duration-300 flex-shrink-0">
+                    <button
+                      className="bg-gray-300 p-2 rounded-md ml-1 hover:shadow-md transition duration-300 flex-shrink-0"
+                      onClick={handleLoadByRefNo}
+                    >
                       <Ellipsis className="w-4 h-4" />
                     </button>
                   </div>
@@ -133,15 +252,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="orderDate"
                     noLabel={true}
-                    value={formState.orderDate}
+                    value={formState.transaction.master.orderDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { orderDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { orderDate: e.target.value } }))}
                   />
                 </div>
               </div>
@@ -160,15 +273,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="quotationNumber"
                     noLabel={true}
-                    value={formState.quotationNumber}
+                    value={quotationNumberValue}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { quotationNumber: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onQuotationNumberChange(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -178,15 +285,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="quotationDate"
                     noLabel={true}
-                    value={formState.quotationDate}
+                    value={formState.transaction.master.quotationDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { quotationDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { quotationDate: e.target.value } }))}
                   />
                 </div>
               </div>
@@ -205,15 +306,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="purchaseInvoiceNumber"
                     noLabel={true}
-                    value={formState.purchaseInvoiceNumber}
+                    value={purchaseInvoiceNumberValue}
                     className="w-full sm:w-20 h-6 text-xs"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { purchaseInvoiceNumber: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onPurchaseInvoiceNumberChange(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -223,15 +318,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="purchaseInvoiceDate"
                     noLabel={true}
-                    value={formState.purchaseInvoiceDate}
+                    value={formState.transaction.master.purchaseInvoiceDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { purchaseInvoiceDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { purchaseInvoiceDate: e.target.value } }))}
                   />
                 </div>
               </div>
@@ -252,15 +341,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="deliveryNoteNumber"
                     noLabel={true}
-                    value={formState.deliveryNoteNumber}
+                    value={deliveryNoteNumberValue}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { deliveryNoteNumber: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onDeliveryNoteNumberChange(e.target.value)}
                   />
                 </div>
 
@@ -271,15 +354,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="deliveryDate"
                     noLabel={true}
-                    value={formState.deliveryDate}
+                    value={formState.transaction.master.deliveryDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { deliveryDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { deliveryDate: e.target.value } }))}
                   />
                 </div>
 
@@ -290,20 +367,14 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDataCombobox
                     id="deliveryManID"
                     noLabel={true}
-                    value={formState.deliveryManID}
+                    value={formState.transaction.master.deliveryManID}
                     field={{
                       id: "deliveryManID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl:Urls.data_deliveryMan,
+                      getListUrl: Urls.data_deliveryMan,
                     }}
-                    onSelectItem={(data) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { deliveryManID: data.value },
-                        })
-                      )
-                    }
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { deliveryManID: data.value } }))}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                   />
                 </div>
@@ -323,15 +394,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="gatePassNo"
                     noLabel={true}
-                    value={formState.gatePassNo}
+                    value={gatePassNoValue}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { gatePassNo: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onGatePassNoChange(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -341,15 +406,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="dueDays"
                     noLabel={true}
-                    value={formState.dueDays}
+                    value={dueDaysValue}
                     className="w-full sm:w-20 h-6 text-xs sm:mr-2"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { dueDays: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onDueDaysChange(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -359,15 +418,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDateInput
                     id="dueDate"
                     noLabel={true}
-                    value={formState.dueDate}
+                    value={formState.transaction.master.dueDate}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { dueDate: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { dueDate: e.target.value } }))}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -377,21 +430,15 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDataCombobox
                     id="vehicleID"
                     noLabel={true}
-                    value={formState.vehicleID}
+                    value={formState.transaction.master.vehicleID}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "vehicleID",
                       valueKey: "id",
                       labelKey: "name",
-                      // getListUrl:Urls.
+                      // getListUrl: Urls.
                     }}
-                    onSelectItem={(data) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { vehicleID: data.value },
-                        })
-                      )
-                    }
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { vehicleID: data.value } }))}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
@@ -401,15 +448,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     noLabel={true}
                     id="salesManIncentive"
-                    value={formState.salesManIncentive}
+                    value={salesManIncentiveValue}
                     className="w-full sm:w-20 h-6 text-xs"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { salesManIncentive: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onSalesManIncentiveChange(e.target.value)}
                   />
                 </div>
               </div>
@@ -428,15 +469,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="notes1"
                     noLabel={true}
-                    value={formState.notes1}
+                    value={notes1Value}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { notes1: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onNotes1Change(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
@@ -446,15 +481,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPInput
                     id="notes2"
                     noLabel={true}
-                    value={formState.notes2}
+                    value={notes2Value}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { notes2: e.target.value },
-                        })
-                      )
-                    }
+                    onChange={(e) => onNotes2Change(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
@@ -464,21 +493,15 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                   <ERPDataCombobox
                     id="tableId"
                     noLabel={true}
-                    value={formState.tableId}
+                    value={formState.transaction.master.tableId}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "tableId",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl:Urls.data_acc_ledgers,
+                      getListUrl: Urls.data_acc_ledgers,
                     }}
-                    onSelectItem={(data) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { tableId: data.value },
-                        })
-                      )
-                    }
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableId: data.value } }))}
                   />
                 </div>
               </div>

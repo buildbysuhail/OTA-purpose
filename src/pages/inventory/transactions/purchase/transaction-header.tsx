@@ -444,6 +444,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     closeModal={closeMoreModal}
                     content={
                       <MoreOptionsModalContent
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                         formState={formState}
                         dispatch={dispatch}
                         handleFieldChange={handleFieldChange}
@@ -827,6 +828,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         formState={formState}
                         dispatch={dispatch}
                         handleFieldChange={handleFieldChange}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                         t={t}
                       />
                     }

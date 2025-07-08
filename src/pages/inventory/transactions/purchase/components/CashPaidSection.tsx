@@ -3,6 +3,7 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface CashPaidSectionProps extends VoucherElementProps {
   focusDiscount: () => void;
@@ -11,6 +12,19 @@ interface CashPaidSectionProps extends VoucherElementProps {
 
 const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>(
   ({ formState, dispatch, t, focusDiscount, focusAmount }, ref) => {
+    // Debounced input for cashReceived
+    const { value, onChange } = useDebouncedInput(
+      formState.transaction.master.cashReceived || '',
+      (debouncedValue) => {
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { cashReceived: debouncedValue },
+          })
+        );
+      },
+      300
+    );
+
     const isDisabled =
       formState.formElements.hasCashPaid?.disabled ||
       formState.formElements.pnlMasters?.disabled;
@@ -47,16 +61,11 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
           type="number"
           min={0}
           noLabel
-          value={formState.transaction.master.cashReceived}
+          value={value}
           className="max-w-[110px] min-w-[110px] !m-0"
-          onChange={(e) =>
-            dispatch(
-              formStateMasterHandleFieldChange({
-                fields: { cashReceived: e.target?.value },
-              })
-            )
-          }
+          onChange={(e) => onChange(e.target.value)}
           disabled={inputDisabled}
+          ref={ref}
         />
       </div>
     );

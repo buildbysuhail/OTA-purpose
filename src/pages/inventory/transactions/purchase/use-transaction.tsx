@@ -2426,7 +2426,17 @@ debugger;
             } else {
               focusToNextColumn(rowIndex, columnName);
             }
-          } else if (columnName == "unitPriceFC") {
+          }else if (columnName == "unitPrice") {
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: {
+                productTransactionSiPi: true,
+              },
+            })
+          );
+          return { handled: true };
+        }
+           else if (columnName == "unitPriceFC") {
             if (
               (() => {
                 try {

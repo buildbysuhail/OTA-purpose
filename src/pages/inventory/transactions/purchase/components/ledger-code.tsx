@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateHandleFieldChange } from "../reducer";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface LedgerCodeProps extends VoucherElementProps { }
 
@@ -11,6 +12,17 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   t,
   handleKeyDown
 }, ref) => {
+  const { value, onChange } = useDebouncedInput(
+    formState.partyId || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { partyId: debouncedValue },
+        })
+      );
+    },
+    300
+  );
 
   return (
     <>
@@ -22,19 +34,13 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
           required={true}
           fetching={formState.transactionLoading}
           label={t(formState.formElements.partyCode.label)}
-          value={formState.partyId}
+          value={value}
           ref={ref}
           disableEnterNavigation={true}
           onKeyDown={(e) => {
             handleKeyDown && handleKeyDown(e, "partyId");
           }}
-          onChange={(e) =>
-            dispatch(
-              formStateHandleFieldChange({
-                fields: { partyId: e.target?.value },
-              })
-            )
-          }
+          onChange={(e) => onChange(e.target.value)}
           disabled={
             formState.formElements.partyCode?.disabled ||
             formState.formElements.pnlMasters?.disabled

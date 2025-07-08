@@ -3,6 +3,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import React from "react";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 const api = new APIClient();
 
@@ -30,6 +31,18 @@ const AccVoucherPrefix = React.forwardRef<
     { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
     ref
   ) => {
+    const { value, onChange } = useDebouncedInput(
+      formState.transaction.master.voucherPrefix || '',
+      (debouncedValue) => {
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { voucherPrefix: debouncedValue },
+          })
+        );
+      },
+      300
+    );
+
     return (
       <>
         {formState.formElements.voucherPrefix.visible && (
@@ -39,19 +52,15 @@ const AccVoucherPrefix = React.forwardRef<
             label={t(formState.formElements.voucherPrefix.label)}
             fetching={formState.transactionLoading}
             // transactionLoading={true}
-            value={formState.transaction.master.voucherPrefix}
+            value={value}
             className={`max-w-[90px] min-w-[90px] ${phone ? "!w-[90px]" : ""}`}
-            onChange={(e) =>
-              dispatch(
-                formStateMasterHandleFieldChange({
-                  fields: { voucherPrefix: e.target?.value },
-                })
-              )
-            }
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={(e) => handleKeyDown && handleKeyDown(e, "voucherPrefix")}
             disabled={
               formState.formElements.voucherPrefix?.disabled ||
               formState.formElements.pnlMasters?.disabled
             }
+            ref={ref}
           />
         )}
       </>

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";

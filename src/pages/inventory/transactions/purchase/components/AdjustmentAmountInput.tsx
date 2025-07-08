@@ -11,6 +11,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { Pencil } from "lucide-react";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface AdjustmentAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
@@ -62,10 +63,51 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
     showAllList: false,
     debitCredit: '',
     debitCreditId: 0,
-    debitCreditValue: " ",
+    debitCreditValue: "",
   });
 
   const [gridData, setGridData] = useState<InvAccTransaction[]>([]);
+
+  // Debounced input for adjustmentAmount (main input)
+  const { value: adjustmentAmountValue, onChange: onAdjustmentAmountChange } = useDebouncedInput(
+    formState.transaction.master.adjustmentAmount || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { adjustmentAmount: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  // Debounced input for ledCode
+  const { value: ledCodeValue, onChange: onLedCodeChange } = useDebouncedInput(
+    amountModal.ledCode,
+    (debouncedValue) => {
+      handleAmountModal('ledCode', debouncedValue);
+    },
+    300
+  );
+
+  // Debounced input for amount
+  const { value: amountValue, onChange: onAmountChange } = useDebouncedInput(
+    amountModal.amount.toString(),
+    (debouncedValue) => {
+      const parsedValue = parseFloat(debouncedValue) || 0;
+      handleAmountModal('amount', parsedValue);
+    },
+    300
+  );
+
+  // Debounced input for remarks
+  const { value: remarksValue, onChange: onRemarksChange } = useDebouncedInput(
+    amountModal.remarks,
+    (debouncedValue) => {
+      handleAmountModal('remarks', debouncedValue);
+    },
+    300
+  );
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -272,7 +314,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
     },
   ];
 
-  const totalDebit = gridData.reduce((sum, item) => sum + item.debit, 0)
+  const totalDebit = gridData.reduce((sum, item) => sum + item.debit, 0);
   const totalCredit = gridData.reduce((sum, item) => sum + item.credit, 0);
   const totalFC = gridData.reduce((sum, item) => sum + item.amountFC, 0);
 
@@ -295,18 +337,12 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
         type="number"
         className="!m-0"
         noLabel={true}
-        value={formState.transaction.master.adjustmentAmount}
+        value={adjustmentAmountValue}
         disableEnterNavigation={true}
         onKeyDown={(e) => {
           handleKeyDown && handleKeyDown(e, "adjustmentAmount");
         }}
-        onChange={(e) =>
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: { adjustmentAmount: e.target?.value },
-            })
-          )
-        }
+        onChange={(e) => onAdjustmentAmountChange(e.target.value)}
         disabled={
           formState.formElements.adjustmentAmount?.disabled ||
           formState.formElements.pnlMasters?.disabled
@@ -327,9 +363,9 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
                 <ERPInput
                   id="ledCode"
                   noLabel={true}
-                  value={amountModal.ledCode}
+                  value={ledCodeValue}
                   className="!max-w-[200px]"
-                  onChange={(e) => handleAmountModal('ledCode', e.target.value)}
+                  onChange={(e) => onLedCodeChange(e.target.value)}
                   onKeyDown={(e) => {
                     handleKeyDown && handleKeyDown(e, "ledCode");
                   }}
@@ -393,8 +429,8 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
                   noLabel={true}
                   type="number"
                   className="max-w-[210px]"
-                  value={amountModal.amount}
-                  onChange={(e) => handleAmountModal('amount', parseFloat(e.target.value) || 0)}
+                  value={amountValue}
+                  onChange={(e) => onAmountChange(e.target.value)}
                   onKeyDown={(e) => {
                     handleKeyDown && handleKeyDown(e, "amount");
                   }}
@@ -439,8 +475,8 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
                   id="remarks"
                   noLabel={true}
                   className="w-[120px]"
-                  value={amountModal.remarks}
-                  onChange={(e) => handleAmountModal('remarks', e.target.value)}
+                  value={remarksValue}
+                  onChange={(e) => onRemarksChange(e.target.value)}
                   onKeyDown={(e) => {
                     handleKeyDown && handleKeyDown(e, "remarks");
                   }}

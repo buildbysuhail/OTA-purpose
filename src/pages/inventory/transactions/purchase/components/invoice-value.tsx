@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
-import { AccVoucherElementProps } from "../../../../accounts/transactions/acc-transaction-types";
+import React from "react";
 import { VoucherElementProps } from "../transaction-types";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { formStateMasterHandleFieldChange } from "../reducer";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface InvoiceValueProps extends VoucherElementProps { }
 
@@ -12,7 +12,21 @@ const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({
   t,
   handleKeyDown
 }, ref) => {
-
+  const { value, onChange } = useDebouncedInput(
+    formState.transaction.master.address4 || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: {
+            address4: debouncedValue !== "" && !debouncedValue.endsWith(".")
+              ? debouncedValue
+              : debouncedValue,
+          },
+        })
+      );
+    },
+    300
+  );
 
   return (
     <>
@@ -28,22 +42,11 @@ const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({
           type="number"
           required={true}
           min={0}
-          value={formState.transaction.master.address4}
+          value={value}
           className="!m-0"
           disableEnterNavigation={true}
-          onChange={(e: any) =>
-            dispatch(
-              formStateMasterHandleFieldChange({
-                fields: {
-                  address4:
-                    e.target?.value !== "" && !e.target?.value.endsWith(".")
-                      // ? parseFloat(e.target?.value)
-                      ? e.target?.value
-                      : e.target?.value,
-                },
-              })
-            )
-          }
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => handleKeyDown && handleKeyDown(e, "address4")}
           disabled={
             formState.formElements.invoiceValue?.disabled ||
             formState.formElements.pnlMasters?.disabled

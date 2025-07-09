@@ -7,7 +7,7 @@ import { AccountTransactionProps } from "../account_transactiocn-premium";
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util";
 import { AccTransactionRow } from "../../../../accounts/transactions/acc-transaction-types";
 
-const AccountTransactionsVoucher = ({ data, template, currentBranch,userSession,clientSession}: AccountTransactionProps) => {
+const AccountDowTransactionsVoucher = ({ data, template, currentBranch,userSession,clientSession}: AccountTransactionProps) => {
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
@@ -17,7 +17,6 @@ const paddingBottom = template?.propertiesState?.padding?.bottom || 10
 const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
   // Get the page size for the PDF
     const pageSize = template?.propertiesState?.pageSize ?? "A4"
-
       // Get the actual page dimensions based on the selected page size
       const selectedPageSize = getPageDimensions(
         pageSize,
@@ -71,4 +70,4 @@ const renderPage = (detail: any, index: any) => {
     )
   
 };
-export default AccountTransactionsVoucher;
+export default AccountDowTransactionsVoucher;

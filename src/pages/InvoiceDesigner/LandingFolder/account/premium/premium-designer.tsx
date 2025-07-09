@@ -95,7 +95,6 @@ const designSections: Array<DesignSectionType> = [
 ];
 
 const api = new APIClient();
-
 const PremiumDesigner : React.FC<StandardDesignType> = () => {
      const { t } = useTranslation('system')
       const { id } = useParams();

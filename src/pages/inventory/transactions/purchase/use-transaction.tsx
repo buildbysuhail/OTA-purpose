@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useAccPrint } from "./use-print";
+import { usePrint } from "./use-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
@@ -129,7 +129,6 @@ export const useTransaction = (
     changeGrossToUnitRate,
     calculateRowAmount,
   } = useTransactionHelper(transactionType);
-  const { printVoucher } = useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -137,6 +136,7 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
+  const{printBarcode, printVoucher} = usePrint()
   // const clearControlForNew = async () => {
 
   // };
@@ -2617,11 +2617,34 @@ export const useTransaction = (
               }
             }
           }
-          // else if (columnName == "btnPrintBarcode")
-          // {
-          //     btnBarcode_Click(null, null);
-          //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
-          // }
+          else if (columnName == "btnPrintBarcode")
+          {
+            const isReprint = formState.transaction.details[rowIndex].barcodePrinted;
+            if(isReprint) {
+            event.preventDefault();
+                const confirm = await ERPAlert.show({
+                  icon: "info",
+                  title: t("RePrint Barcode"),
+                  text: t(
+                    "Do you want to print barcode again"
+                  ),
+                  confirmButtonText: t("yes"),
+                  cancelButtonText: t("no"),
+                  showCancelButton: true,
+                  onCancel: () => {
+                    return false;
+                  },
+                });
+                if (confirm) {
+                 printBarcode([rowIndex], true, true)
+                  break;
+                } else {
+                  break;
+                }
+              } else {
+                 printBarcode([rowIndex], false, true)
+              }
+          }
           // else if (columnName == "btnPrintBarcodeStd")
           // {
           //     btnBarcodeStd_Click(null, null);

@@ -3,12 +3,23 @@ import { APIClient } from "../../../../helpers/api-client";
 import { useUserRights } from "../../../../helpers/user-right-helper";
 import { RootState } from "../../../../redux/store";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { getPurchasePriceCode, isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
+import {
+  getPurchasePriceCode,
+  isNullOrUndefinedOrEmpty,
+} from "../../../../utilities/Utils";
 import { printCheque_AccTransaction } from "./print-trans-service";
-import { BarcodeLabel, TransactionData, TransactionFormState } from "./transaction-types";
+import {
+  BarcodeLabel,
+  TransactionData,
+  TransactionFormState,
+} from "./transaction-types";
 import { logUserAction } from "../../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, templatesData } from "./reducer";
+import {
+  formStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
+  templatesData,
+} from "./reducer";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./renderSelected-template";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
@@ -21,8 +32,8 @@ import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-temp
 import { useTranslation } from "react-i18next";
 import { initialProductData } from "./transaction-type-data";
 const api = new APIClient();
-export const useAccPrint = () => {
-  const {t} = useTranslation();
+export const usePrint = () => {
+  const { t } = useTranslation();
   const currentBranch = useCurrentBranch();
   const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -174,10 +185,10 @@ export const useAccPrint = () => {
     event: any,
     voucherNumber: number,
     voucherType: number,
-    transactionType: string,
+    transactionType: string
   ): Promise<boolean> => {
     try {
-      let allow = true
+      let allow = true;
       if (isNaN(voucherNumber)) {
         return false;
       }
@@ -207,7 +218,7 @@ export const useAccPrint = () => {
             voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
           });
         } else {
-          allow = true
+          allow = true;
         }
       }
 
@@ -217,110 +228,173 @@ export const useAccPrint = () => {
       return false;
     }
   };
-  async function printDevExpressBarcode(
-  rowIndexes: number[],
-  isReprint: boolean
-): Promise<void> {
-  try {
-    let barcodeLabelAdded = false;
-    
+  async function printBarcode(
+    rowIndexes: number[],
+    isReprint: boolean,
+    updateBatch: boolean,
+    partyLedgerId: number,
+    wareHouseId: number,
+    isDummyBill: boolean
+  ): Promise<void> {
+    let modifiedDetails = [];
+    let batchCreatedList = [];
+    try {
+      let barcodeLabelAdded = false;
 
-let modifiedDetails = [];
-let barcodeData = [];
-    // Process each row in the specified range
-    for (let i = 0; i < rowIndexes.length; i++) {
-      
-    let barcode: BarcodeLabel = initialProductData;
-    barcode.showPreview = false;
-      const row = formState.transaction.details[rowIndexes[i]];
-      
-      // Skip empty product rows
-      if (!row.productID || row.productID === 0) break;
+      let barcodeData = [];
+      if (updateBatch) {
+        let data = [];
+        for (let i = 0; i < rowIndexes.length; i++) {
+          const row = formState.transaction.details[rowIndexes[i]];
 
-      // Process if not printed or if reprint is requested
-      if (!row.barcodePrinted || isReprint === true) {
-        
-        // Get sticker quantity
-        let stickerQty = 0;
-        
-        if (row.stickerQty === 0 || row.stickerQty === 0) continue;
-        
-        stickerQty = row.stickerQty;
-        
-        barcode.invQty = row.qty
-        
-        // If sticker quantity is 0, use the main quantity
-        if (stickerQty === 0) {
-          stickerQty = row.qty
+          let p = {
+            productID: row.productID,
+            stdPurchasePrice: row.cost,
+            stdSalesPrice: row.salesPrice,
+            minSalePrice: row.minSalePrice,
+            unitID: row.unitID,
+            selectedUnit: row.unitID,
+            prevProductBatchID: row.productBatchID,
+            mrp: row.mrp,
+            shelfID: 1,
+            brandID: row.brandID,
+            mfgDate: row.mfdDate,
+            expiryDate: row.expDate,
+            batchNo: row.batchNo,
+            mannualBarcode: row.manualBarcode,
+            openingDate: new Date(),
+            warrantyPeriod: row.warranty,
+            partNumber: row.colour,
+            location: row.location,
+            isActive: true,
+            specification: row.size,
+            slNo: row.slNo,
+          };
+
+          data.push(p);
         }
-
-        // Process only if there are stickers to print
-        if (stickerQty > 0) {
-          // Set barcode properties
-          barcode.autoBarcode = row.barCode;
-          barcode.manualBarcode = row.manualBarcode;
-          barcode.productCode = row.pCode;
-          barcode.productName = row.product;
-          barcode.productId = row.productID;
-          barcode.productDescription = row.productDescription;
-          barcode.size = row.size;
-          barcode.pPrice = parseFloat("0" + row.unitPrice.toString());
-          
-          // Calculate cost with additional expenses
-          const baseCost = parseFloat("0" + row.cost.toString());
-          const additionalExpense = parseFloat("0" + row.additionalExpense.toString());
-          const totalCost = baseCost + additionalExpense;
-          
-          barcode.cost = totalCost.toString();
-          barcode.costCode = getPurchasePriceCode(totalCost.toString(), applicationSettings.inventorySettings.priceCode);
-          
-          barcode.salesPrice = parseFloat("0" + row.salesPrice.toString()).toString();
-          barcode.vatPerc = parseFloat("0" + row.vatPerc.toString());
-          
-          // Calculate sales price with VAT
-          const salesPriceNum = parseFloat("0" + barcode.salesPrice);
-          const salesPriceWithVAT = salesPriceNum + (salesPriceNum * barcode.vatPerc / 100);
-          barcode.salesPriceWithVAT = salesPriceWithVAT.toFixed(3);
-          
-          barcode.mrp = parseFloat("0" + row.mrp.toString());
-          barcode.msp = parseFloat("0" + row.minSalePrice.toString());
-          
-          barcode.siNo = (i + 1).toString();
-          barcode.qty = stickerQty.toString();
-          barcode.labelCount = stickerQty;
-          
-          barcode.partyCode = formState.ledgerData.partyCode;
-          barcode.unit = row.unit;
-          barcode.batchNo = row.batchNo;
-          barcode.expiryDate = row.expDate;
-          barcode.expiryDays = row.expDays.toString();
-          barcode.mfdDate = row.mfdDate;
-          
-          barcode.voucherNo = formState.transaction.master.voucherNumber.toString();
-          barcode.transDate = formState.transaction.master.transactionDate;
-
-          // Mark as printed and show report
-          modifiedDetails.push({slNo: row.slNo, barcodePrinted: true});
-          barcodeData.push(barcode);
-          barcodeLabelAdded = true;
-        }
-        
-        dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-          transaction:{
-            details: modifiedDetails
+        const res = await api.postAsync(
+          `${Urls.inv_transaction_base}${formState.transactionType}/`,
+          {
+            items: data,
+            partyLedgerId: partyLedgerId,
+            wareHouseId: wareHouseId,
+            IsDummayBill: isDummyBill,
           }
-        }}))
+        );
+        if (res.isOk) {
+          batchCreatedList = res.items;
+        }
       }
+      // Process each row in the specified range
+      for (let i = 0; i < rowIndexes.length; i++) {
+        let barcode: BarcodeLabel = initialProductData;
+        barcode.showPreview = false;
+        const row = formState.transaction.details[rowIndexes[i]];
+        const batch = batchCreatedList.find((x: any) => x.slNo == row.slNo);
+
+        // Skip empty product rows
+        if (!row.productID || row.productID === 0) break;
+
+        // Process if not printed or if reprint is requested
+        if (!row.barcodePrinted || isReprint === true) {
+          // Get sticker quantity
+          let stickerQty = 0;
+
+          if (row.stickerQty === 0 || row.stickerQty === 0) continue;
+
+          stickerQty = row.stickerQty;
+
+          barcode.invQty = row.qty;
+
+          // If sticker quantity is 0, use the main quantity
+          if (stickerQty === 0) {
+            stickerQty = row.qty;
+          }
+
+          // Process only if there are stickers to print
+          if (stickerQty > 0) {
+            // Set barcode properties
+            barcode.autoBarcode = updateBatch? batch.autoBarcode:  row.barCode;
+            barcode.manualBarcode = row.manualBarcode;
+            barcode.productCode = row.pCode;
+            barcode.productName = row.product;
+            barcode.productId = row.productID;
+            barcode.productDescription = row.productDescription;
+            barcode.size = row.size;
+            barcode.pPrice = parseFloat("0" + row.unitPrice.toString());
+
+            // Calculate cost with additional expenses
+            const baseCost = parseFloat("0" + row.cost.toString());
+            const additionalExpense = parseFloat(
+              "0" + row.additionalExpense.toString()
+            );
+            const totalCost = baseCost + additionalExpense;
+
+            barcode.cost = totalCost.toString();
+            barcode.costCode = getPurchasePriceCode(
+              totalCost.toString(),
+              applicationSettings.inventorySettings.priceCode
+            );
+
+            barcode.salesPrice = parseFloat(
+              "0" + row.salesPrice.toString()
+            ).toString();
+            barcode.vatPerc = parseFloat("0" + row.vatPerc.toString());
+
+            // Calculate sales price with VAT
+            const salesPriceNum = parseFloat("0" + barcode.salesPrice);
+            const salesPriceWithVAT =
+              salesPriceNum + (salesPriceNum * barcode.vatPerc) / 100;
+            barcode.salesPriceWithVAT = salesPriceWithVAT.toFixed(3);
+
+            barcode.mrp = parseFloat("0" + row.mrp.toString());
+            barcode.msp = parseFloat("0" + row.minSalePrice.toString());
+
+            barcode.siNo = (i + 1).toString();
+            barcode.qty = stickerQty.toString();
+            barcode.labelCount = stickerQty;
+
+            barcode.partyCode = formState.ledgerData.partyCode;
+            barcode.unit = row.unit;
+            barcode.batchNo = row.batchNo;
+            barcode.expiryDate = row.expDate;
+            barcode.expiryDays = row.expDays.toString();
+            barcode.mfdDate = row.mfdDate;
+
+            barcode.voucherNo =
+              formState.transaction.master.voucherNumber.toString();
+            barcode.transDate = formState.transaction.master.transactionDate;
+
+            // Mark as printed and show report
+            modifiedDetails.push({...batch, slNo: row.slNo, barcodePrinted: true });
+            barcodeData.push(barcode);
+            barcodeLabelAdded = true;
+          }
+
+         
+        }
+      }
+       dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction: {
+                  details: modifiedDetails,
+                },
+              },
+            })
+          );
+
+      console.log(
+        `Barcode printing completed. Labels added: ${barcodeLabelAdded}`
+      );
+    } catch (error) {
+      console.error("Error printing barcode:", error);
+      throw error;
     }
-    
-    console.log(`Barcode printing completed. Labels added: ${barcodeLabelAdded}`);
-    
-  } catch (error) {
-    console.error("Error printing barcode:", error);
-    throw error;
   }
-}
   return {
     printVoucher,
+    printBarcode,
   };
 };

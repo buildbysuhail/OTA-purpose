@@ -603,3 +603,34 @@ export interface DataAutoBarcode {
   units: UnitByBatchDetailsDto[];
   isShowItemPopUp: boolean;
 }
+export interface BarcodeLabel {
+  showPreview: boolean;
+  printerName: string;
+  invQty: number;
+  autoBarcode: string;
+  manualBarcode: string;
+  productCode: string;
+  productName: string;
+  productID: number;
+  productDescription: string;
+  size: string;
+  pPrice: number;
+  cost: string;
+  costCode: string;
+  salesPrice: string;
+  vatPerc: number;
+  salesPriceWithVAT: string;
+  mrp: number;
+  msp: number;
+  siNo: string;
+  qty: string;
+  labelcount: number;
+  partyCode: string;
+  unit: string;
+  batchNo: string;
+  expiryDate: string;
+  expiryDays: string;
+  mfdDate: string;
+  voucherNo: string;
+  transDate: string;
+}

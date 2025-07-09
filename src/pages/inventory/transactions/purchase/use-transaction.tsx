@@ -1811,33 +1811,7 @@ export const useTransaction = (
             }
           );
 
-          if (deleteResult?.) {
-            // Log user action
-            await api.postAsync(
-              `${Urls.inv_transaction_base}SaveUserActions`,
-              {
-                action: `User Deleted The Account Transaction ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-                actionType: "Delete",
-                module: formState.transaction.master.voucherType,
-                reference: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-              }
-            );
-
-            // Delete attachments if any
-            if (formState.attachmentList && formState.atta.length > 0) {
-              await api.postAsync(
-                `${Urls.inv_transaction_base}DeleteAttachments`,
-                {
-                  module: "A",
-                  referenceId: formState.transaction.master.invTransactionMasterID,
-                }
-              );
-            }
-
-            // Clear controls and reset form
-            dispatch(clearFormState());
-            
-            ERPAlert.show({
+          ERPAlert.show({
               title: t("success"),
               text: t("transaction_deleted_successfully"),
               icon: "success",
@@ -1856,14 +1830,6 @@ export const useTransaction = (
                 },
               })
             );
-
-          } else {
-            ERPAlert.show({
-              title: t("error"),
-              text: deleteResult?.message || t("delete_failed"),
-              icon: "error",
-            });
-          }
         } catch (deleteError) {
           console.error("Error during delete operation:", deleteError);
           ERPAlert.show({

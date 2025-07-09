@@ -216,6 +216,139 @@ export const useAccPrint = () => {
       return false;
     }
   };
+//   async function printDevExpressBarcode(
+//   rowIndexes: number[],
+// ): Promise<void> {
+//   try {
+//     let barcodeLabelAdded = false;
+    
+//     // Get printer information
+//     const printerInfo = barcodeService.getBarcodeePrinterName(1);
+    
+//     // Create barcode label instance
+//     const barcode = barcodeService.createBarcodeLabel("Barcode Label", "Default.repx");
+    
+//     barcode.showPreview = showPrintPreview;
+//     barcode.printerName = printerInfo.printerName;
+
+//     // Check if this is a reprint operation
+//     let isReprint = true;
+//     let startRow = 0;
+//     let endRow = inventoryData.length;
+
+//     // Check if all items have already been printed
+//     for (let i = 0; i < inventoryData.length; i++) {
+//       if (!inventoryData[i].product || inventoryData[i].product === "") {
+//         isReprint = false;
+//         break;
+//       }
+
+//       if (!inventoryData[i].barcodePrinted || inventoryData[i].barcodePrinted === "") {
+//         isReprint = false;
+//         break;
+//       }
+//     }
+
+//     // If reprint, ask for confirmation and set range to current row only
+//     if (isReprint) {
+//       startRow = currentRowIndex;
+//       endRow = startRow + 1;
+      
+//       const result = utils.showMessageBox(
+//         "Do you want to print barcode again", 
+//         "RePrint Barcode", 
+//         "YesNo"
+//       );
+      
+//       if (result === "No") {
+//         return;
+//       }
+//     }
+
+//     // Process each row in the specified range
+//     for (let i = startRow; i < endRow; i++) {
+//       const row = inventoryData[i];
+      
+//       // Skip empty product rows
+//       if (!row.product || row.product === "") break;
+
+//       // Process if not printed or if reprint is requested
+//       if (!row.barcodePrinted || row.barcodePrinted === "" || isReprint === true) {
+        
+//         // Get sticker quantity
+//         let stickerQty = 0;
+        
+//         if (row.stickerQty === "0" || row.stickerQty === 0) continue;
+        
+//         stickerQty = utils.val(row.stickerQty.toString());
+        
+//         barcode.invQty = utils.val(row.qty.toString());
+        
+//         // If sticker quantity is 0, use the main quantity
+//         if (stickerQty === 0) {
+//           stickerQty = utils.val(row.qty.toString());
+//         }
+
+//         // Process only if there are stickers to print
+//         if (stickerQty > 0) {
+//           // Set barcode properties
+//           barcode.autoBarcode = row.barCode;
+//           barcode.manualBarcode = row.manualBarcode;
+//           barcode.productCode = row.pCode;
+//           barcode.productName = row.product;
+//           barcode.productID = parseInt("0" + row.productID.toString());
+//           barcode.productDescription = row.productDescription;
+//           barcode.size = row.size;
+//           barcode.pPrice = parseFloat("0" + row.unitPrice.toString());
+          
+//           // Calculate cost with additional expenses
+//           const baseCost = parseFloat("0" + row.cost.toString());
+//           const additionalExpense = parseFloat("0" + row.additionalExpense.toString());
+//           const totalCost = baseCost + additionalExpense;
+          
+//           barcode.cost = totalCost.toString();
+//           barcode.costCode = utils.getPurchasePriceCode(totalCost);
+          
+//           barcode.salesPrice = parseFloat("0" + row.salesPrice.toString()).toString();
+//           barcode.vatPerc = parseFloat("0" + row.vatPerc.toString());
+          
+//           // Calculate sales price with VAT
+//           const salesPriceNum = parseFloat("0" + barcode.salesPrice);
+//           const salesPriceWithVAT = salesPriceNum + (salesPriceNum * barcode.vatPerc / 100);
+//           barcode.salesPriceWithVAT = salesPriceWithVAT.toFixed(3);
+          
+//           barcode.mrp = parseFloat("0" + row.mrp.toString());
+//           barcode.msp = parseFloat("0" + row.minSalePrice.toString());
+          
+//           barcode.siNo = (i + 1).toString();
+//           barcode.qty = stickerQty.toString();
+//           barcode.labelcount = stickerQty;
+          
+//           barcode.partyCode = partyCode;
+//           barcode.unit = row.unit;
+//           barcode.batchNo = row.batchNo;
+//           barcode.expiryDate = row.expDate;
+//           barcode.expiryDays = row.expDays;
+//           barcode.mfdDate = row.mfdDate;
+          
+//           barcode.voucherNo = voucherNumber;
+//           barcode.transDate = transactionDate.toLocaleDateString();
+
+//           // Mark as printed and show report
+//           inventoryData[i].barcodePrinted = "Y";
+//           barcodeLabelAdded = true;
+//           barcodeService.showReport(barcode);
+//         }
+//       }
+//     }
+    
+//     console.log(`Barcode printing completed. Labels added: ${barcodeLabelAdded}`);
+    
+//   } catch (error) {
+//     console.error("Error printing barcode:", error);
+//     throw error;
+//   }
+// }
   return {
     printVoucher,
   };

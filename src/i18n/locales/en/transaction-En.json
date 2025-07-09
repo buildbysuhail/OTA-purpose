@@ -577,5 +577,22 @@
   "grid_border_radius_px": "Grid border radius px",
   "grid_border_color": "Grid border color",
   "grid_header_background_color": "Grid header background color",
-  "grid_header_font_color": "Grid header font color"
+  "grid_header_font_color": "Grid header font color",
+
+  "description": "Description",
+  "before_add_amount": "Before Add Amount",
+  "x_rate": "X Rate",
+  "net_item_cost": "Net Item Cost",
+  "unit_name": "Unit Name",
+  "rate_with_tax": "Rate With Tax",
+  "disc": "Disc",
+  "vat": "VAT",
+  "net_rate": "Net Rate",
+  "bill_number": "Bill Number",
+  "rate": "Rate",
+  "maximize": "Maximize",
+  "show_selected_party_details_only": "Show selected party details only",
+  "purchase_details": "Purchase Details",
+  "sales_details": "Sales Details",
+  "minimize": "Minimize"
 }

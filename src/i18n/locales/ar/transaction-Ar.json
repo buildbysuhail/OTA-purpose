@@ -577,5 +577,22 @@
   "grid_border_radius_px": "نصف قطر حدود الشبكة بالبكسل",
   "grid_border_color": "لون حدود الشبكة",
   "grid_header_background_color": "لون خلفية رأس الجدول",
-  "grid_header_font_color": "لون خط رأس الجدول"
+  "grid_header_font_color": "لون خط رأس الجدول",
+
+  "description": "الوصف",
+  "before_add_amount": "قبل إضافة المبلغ",
+  "x_rate": "سعر الصرف",
+  "net_item_cost": "تكلفة الصنف الصافية",
+  "unit_name": "اسم الوحدة",
+  "rate_with_tax": "السعر مع الضريبة",
+  "disc": "خصم",
+  "vat": "ضريبة القيمة المضافة",
+  "net_rate": "السعر الصافي",
+  "bill_number": "رقم الفاتورة",
+  "rate": "السعر",
+  "maximize": "تكبير",
+  "show_selected_party_details_only": "إظهار تفاصيل الطرف المحدد فقط",
+  "purchase_details": "تفاصيل الشراء",
+  "sales_details": "تفاصيل المبيعات",
+  "minimize": "تصغير"
 }

@@ -75,7 +75,7 @@ import { DeepPartial } from "redux";
 import BatchEntryModal from "./batch-entry";
 import Serials from "./serials";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
-import ProductTransactionSiPiModal from "./productTransactionSiPi";
+import ProductInfoSlideUp from "./productInfo";
 
 interface BilledItem {
   id?: number;
@@ -2433,13 +2433,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
             )}
             t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
         )}
-        {formState.productTransactionSiPi && (
-          <ProductTransactionSiPiModal
-            isOpen={formState.productTransactionSiPi}
+        {formState.productInfo && (
+          <ProductInfoSlideUp
+            isOpen={formState.productInfo}
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
-                  fields: { productTransactionSiPi: false },
+                  fields: { productInfo: false },
                 })
               )
             }

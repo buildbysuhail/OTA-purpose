@@ -466,7 +466,7 @@ export interface TransactionFormState {
   quantityFactorData: string;
   currentCell?: { column: string; rowIndex: number };
   batchesUnits?: [];
-  productTransactionSiPi:boolean;
+  productInfo:boolean;
 }
 
 export interface PrintTransProps {

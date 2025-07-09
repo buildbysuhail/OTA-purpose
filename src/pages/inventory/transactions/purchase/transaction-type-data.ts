@@ -566,7 +566,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   quantityFactorData: "",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
   serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
-  productTransactionSiPi: false
+  productInfo: false
 }
 
 export  const initialProductData: BarcodeLabel = {

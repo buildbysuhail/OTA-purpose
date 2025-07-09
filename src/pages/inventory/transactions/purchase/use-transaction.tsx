@@ -2529,7 +2529,7 @@ export const useTransaction = (
           dispatch(
             commonParams.formStateHandleFieldChangeKeysOnly({
               fields: {
-                productTransactionSiPi: true,
+                productInfo: true,
               },
             })
           );

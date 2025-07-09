@@ -704,7 +704,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
           , useProductCode: data.useProductCode, rowIndex: data.rowIndex
           , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
-        }, { result: {}, formStateHandleFieldChangeKeysOnly })
+        }, { result: {}, formStateHandleFieldChangeKeysOnly },true)
 
     }
   }, [formState.batchSelectionData]);

@@ -54,6 +54,7 @@ import {
   CommonParams,
   LoadProductDetailsByAutoBarcodeProps,
   DataAutoBarcode,
+  FormElementsState,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -136,7 +137,7 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const{printBarcode, printVoucher} = usePrint()
+  const { printBarcode, printVoucher } = usePrint();
   // const clearControlForNew = async () => {
 
   // };
@@ -1732,86 +1733,91 @@ export const useTransaction = (
 
   // Delete button handler
   const deleteTransVoucher = async () => {
-  // Check if voucher is locked
-  if (formState.transaction.master.isLocked) {
-    ERPAlert.show({
-      title: t("warning"),
-      text: t("voucher_is_locked"),
-      icon: "warning",
-    });
-    return;
-  }
+    // Check if voucher is locked
+    if (formState.transaction.master.isLocked) {
+      ERPAlert.show({
+        title: t("warning"),
+        text: t("voucher_is_locked"),
+        icon: "warning",
+      });
+      return;
+    }
 
-  try {
-    // Check if transaction is in edit mode
-    const result = await api.postAsync(
-      `${Urls.inv_transaction_base}${transactionType}/SelectTransactionEditMode`,
-      {
-        tType: "I",
-        invTransactionMasterID: formState.transaction.master.invTransactionMasterID ?? 0,
-      }
-    );
-
-    if (result?.isOk && result.message === "") {
-      // Check if day is closed
-      const closedDateResult = await api.getAsync(
-        `${Urls.inv_transaction_base}GetClosedDate`
+    try {
+      // Check if transaction is in edit mode
+      const result = await api.postAsync(
+        `${Urls.inv_transaction_base}${transactionType}/SelectTransactionEditMode`,
+        {
+          tType: "I",
+          invTransactionMasterID:
+            formState.transaction.master.invTransactionMasterID ?? 0,
+        }
       );
 
-      if (closedDateResult?.isOk) {
-        const closedDate = new Date(closedDateResult.data);
-        const prevTransDate = new Date(formState.transaction.master.prevTransDate);
-        
-        if (closedDate.getTime() >= prevTransDate.getTime()) {
+      if (result?.isOk && result.message === "") {
+        // Check if day is closed
+        const closedDateResult = await api.getAsync(
+          `${Urls.inv_transaction_base}GetClosedDate`
+        );
+
+        if (closedDateResult?.isOk) {
+          const closedDate = new Date(closedDateResult.data);
+          const prevTransDate = new Date(
+            formState.transaction.master.prevTransDate
+          );
+
+          if (closedDate.getTime() >= prevTransDate.getTime()) {
+            ERPAlert.show({
+              title: t("invalid_transaction_date"),
+              text: t("cannot_delete_day_closed"),
+              icon: "warning",
+            });
+            return;
+          }
+        }
+
+        // Validate transaction date
+        const validateTransactionDateRes = validateTransactionDate(
+          new Date(formState.transaction.master.transactionDate),
+          false,
+          undefined,
+          hasBlockedRight
+        );
+
+        if (!validateTransactionDateRes.valid) {
           ERPAlert.show({
             title: t("invalid_transaction_date"),
-            text: t("cannot_delete_day_closed"),
+            text: validateTransactionDateRes.message,
             icon: "warning",
           });
           return;
         }
-      }
 
-      // Validate transaction date
-      const validateTransactionDateRes = validateTransactionDate(
-        new Date(formState.transaction.master.transactionDate),
-        false,
-        undefined,
-        hasBlockedRight
-      );
-      
-      if (!validateTransactionDateRes.valid) {
-        ERPAlert.show({
-          title: t("invalid_transaction_date"),
-          text: validateTransactionDateRes.message,
-          icon: "warning",
+        // Show delete confirmation dialog
+        const deleteConfirmResult = await ERPAlert.show({
+          title: t("confirm_delete"),
+          text: t("are_you_sure_delete"),
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
         });
-        return;
-      }
 
-      // Show delete confirmation dialog
-      const deleteConfirmResult = await ERPAlert.show({
-        title: t("confirm_delete"),
-        text: t("are_you_sure_delete"),
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: t("yes"),
-        cancelButtonText: t("no"),
-      });
+        if (deleteConfirmResult) {
+          try {
+            // Begin transaction and delete
+            const deleteResult = await api.delete(
+              `${Urls.inv_transaction_base}${transactionType}/DeleteAccTransaction`,
+              {
+                data: {
+                  invTransactionMasterID:
+                    formState.transaction.master.invTransactionMasterID,
+                  transactionType: transactionType,
+                },
+              }
+            );
 
-      if (deleteConfirmResult) {
-        try {
-          // Begin transaction and delete
-          const deleteResult = await api.delete(
-            `${Urls.inv_transaction_base}${transactionType}/DeleteAccTransaction`,
-            {
-              data:{invTransactionMasterID: formState.transaction.master.invTransactionMasterID,
-              transactionType: transactionType}
-
-            }
-          );
-
-          ERPAlert.show({
+            ERPAlert.show({
               title: t("success"),
               text: t("transaction_deleted_successfully"),
               icon: "success",
@@ -1830,33 +1836,33 @@ export const useTransaction = (
                 },
               })
             );
-        } catch (deleteError) {
-          console.error("Error during delete operation:", deleteError);
-          ERPAlert.show({
-            title: t("error"),
-            text: t("delete_operation_failed"),
-            icon: "error",
-          });
+          } catch (deleteError) {
+            console.error("Error during delete operation:", deleteError);
+            ERPAlert.show({
+              title: t("error"),
+              text: t("delete_operation_failed"),
+              icon: "error",
+            });
+          }
         }
+      } else {
+        // Voucher is in use by another user
+        const editInfo = result?.message?.split(";") || [];
+        ERPAlert.show({
+          title: t("voucher_in_use"),
+          text: `This Voucher is already in use by ${editInfo[1]} opened for edit in system ${editInfo[0]} at ${editInfo[2]}`,
+          icon: "warning",
+        });
       }
-    } else {
-      // Voucher is in use by another user
-      const editInfo = result?.message?.split(";") || [];
+    } catch (error) {
+      console.error("Error handling delete:", error);
       ERPAlert.show({
-        title: t("voucher_in_use"),
-        text: `This Voucher is already in use by ${editInfo[1]} opened for edit in system ${editInfo[0]} at ${editInfo[2]}`,
-        icon: "warning",
+        title: t("error"),
+        text: t("server_busy_or_system_issue"),
+        icon: "error",
       });
     }
-  } catch (error) {
-    console.error("Error handling delete:", error);
-    ERPAlert.show({
-      title: t("error"),
-      text: t("server_busy_or_system_issue"),
-      icon: "error",
-    });
-  }
-};
+  };
   const handleLoadByRefNo = useCallback(async () => {
     if (formState.transaction.master.purchaseInvoiceDate) {
       await loadAndSetTransVoucher(
@@ -2087,10 +2093,11 @@ export const useTransaction = (
   };
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
-    commonParams: CommonParams
+    commonParams: CommonParams,
+    proceedAll?: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
-
+    proceedAll = proceedAll ?? false;
     try {
       let detail = data.detail;
       let outDetail: DeepPartial<TransactionDetail> = {};
@@ -2388,13 +2395,48 @@ export const useTransaction = (
                 ?.maintainInventoryTransactionsEntry == false,
           },
         };
+        if (proceedAll) {
+          const latestData = outDetail;
 
+          let _res = calculateRowAmount(
+            latestData as TransactionDetail,
+            "pCode",
+            { result: { transaction: { details: [latestData] } } },
+            true
+          );
+let currentDetails = [
+              ...formState.transaction.details.filter((x) => x.productID > 0),
+            ];
+          let final =
+            _res?.transaction?.details != undefined && _res?.transaction?.details.length > 0
+              ? _res?.transaction?.details[0] as DeepPartial<TransactionDetail>
+              : latestData;
+              currentDetails[data.rowIndex] = final as TransactionDetail;
+          const summaryRes = calculateSummary(currentDetails, formState, { result: {} });
+
+          const totalRes = calculateTotal(
+            formState.transaction.master,
+            summaryRes.summary as SummaryItems,
+            {...formState.formElements, ...result.formElements} as FormElementsState,
+            { result: {} }
+          );
+          result = {
+                ...totalRes,
+                summary: summaryRes.summary,
+                showQuantityFactors: { visible: false, rowIndex: -1 },
+                transaction: {
+                  ...totalRes.transaction,
+                  details: [final],
+                },
+              }
+        }
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&
           dispatch(
             commonParams.formStateHandleFieldChangeKeysOnly({
               fields: result,
               updateOnlyGivenDetailsColumns: true,
+              rowIndex: data.rowIndex,
             })
           );
 
@@ -2499,7 +2541,7 @@ export const useTransaction = (
                   searchColumn: "pCode",
                   setFocusToNextColumn: true,
                 },
-                { result: {}, formStateHandleFieldChangeKeysOnly }
+                { result: {}, formStateHandleFieldChangeKeysOnly },true
               );
             } else {
               focusToNextColumn(rowIndex, columnName);
@@ -2520,22 +2562,21 @@ export const useTransaction = (
                   searchColumn: "barCode",
                   setFocusToNextColumn: true,
                 },
-                { result: {}, formStateHandleFieldChangeKeysOnly }
+                { result: {}, formStateHandleFieldChangeKeysOnly },true
               );
             } else {
               focusToNextColumn(rowIndex, columnName);
             }
-          }else if (columnName == "unitPrice") {
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({
-              fields: {
-                productTransactionSiPi: true,
-              },
-            })
-          );
-          return { handled: true };
-        }
-           else if (columnName == "unitPriceFC") {
+          } else if (columnName == "unitPrice") {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productTransactionSiPi: true,
+                },
+              })
+            );
+            return { handled: true };
+          } else if (columnName == "unitPriceFC") {
             if (
               (() => {
                 try {
@@ -2616,34 +2657,31 @@ export const useTransaction = (
                 focusCurrentColumn(rowIndex, columnName);
               }
             }
-          }
-          else if (columnName == "btnPrintBarcode")
-          {
-            const isReprint = formState.transaction.details[rowIndex].barcodePrinted;
-            if(isReprint) {
-            event.preventDefault();
-                const confirm = await ERPAlert.show({
-                  icon: "info",
-                  title: t("RePrint Barcode"),
-                  text: t(
-                    "Do you want to print barcode again"
-                  ),
-                  confirmButtonText: t("yes"),
-                  cancelButtonText: t("no"),
-                  showCancelButton: true,
-                  onCancel: () => {
-                    return false;
-                  },
-                });
-                if (confirm) {
-                 printBarcode([rowIndex], true, true)
-                  break;
-                } else {
-                  break;
-                }
+          } else if (columnName == "btnPrintBarcode") {
+            const isReprint =
+              formState.transaction.details[rowIndex].barcodePrinted;
+            if (isReprint) {
+              event.preventDefault();
+              const confirm = await ERPAlert.show({
+                icon: "info",
+                title: t("RePrint Barcode"),
+                text: t("Do you want to print barcode again"),
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: true,
+                onCancel: () => {
+                  return false;
+                },
+              });
+              if (confirm) {
+                printBarcode([rowIndex], true, true);
+                break;
               } else {
-                 printBarcode([rowIndex], false, true)
+                break;
               }
+            } else {
+              printBarcode([rowIndex], false, true);
+            }
           }
           // else if (columnName == "btnPrintBarcodeStd")
           // {

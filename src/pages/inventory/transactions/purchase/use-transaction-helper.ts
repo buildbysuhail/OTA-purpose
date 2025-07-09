@@ -291,7 +291,7 @@ export const useTransactionHelper = (transactionType: string) => {
     rowIndex = rowIndex ?? -1;
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
     let { result } = commonParams;
-
+debugger;
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
@@ -387,7 +387,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
-
+debugger;
       // Calculate cost based on settings
       if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
         cost = round(netVal + (netVal * vatPerc) / 100, 2);

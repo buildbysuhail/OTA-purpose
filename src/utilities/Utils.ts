@@ -896,3 +896,41 @@ export function getUUID() {
     });
   }
 }
+export const  getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: string): string => {
+  priceVal = priceVal.replace(/,/g, "");
+  let priceCode = priceVal;
+  let priceCodes: string;
+  
+  // First digit zero, then 1,2...9, 11th one ".", 12th repeated symbol
+  priceCodes = priceCodeFromSettings + "ABCDEFGHIJPK";
+  
+  if (priceCodes.length < 11) {
+    return priceCode;
+  }
+  
+  let l: number;
+  let pc = "", formatedCode = "", c = "", previousDigit = "";
+  pc = priceVal;
+  l = pc.length;
+  
+  for (let i = 0; i < l; i++) {
+    c = pc.substring(i, i + 1);
+    
+    if (c === ".") {
+      formatedCode = formatedCode + priceCodes.substring(10, 11);
+    } else if (c === "-") {
+      formatedCode = formatedCode + priceCodes.substring(10, 11);
+    } else if (c === ",") {
+      formatedCode = formatedCode + c;
+    } else {
+      if (previousDigit === c && priceCodes.substring(11, 12) !== "") {
+        formatedCode = formatedCode + priceCodes.substring(11, 12);
+      } else {
+        formatedCode = formatedCode + priceCodes.substring(parseInt(c), parseInt(c) + 1);
+      }
+    }
+    previousDigit = c;
+  }
+  
+  return formatedCode;
+}

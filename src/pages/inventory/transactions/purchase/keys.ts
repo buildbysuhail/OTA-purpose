@@ -30,3 +30,5 @@
 // voucher_in_use
 // server_busy_or_system_issue
 // error
+//Do you want to print barcode again
+//RePrint Barcode

@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -568,3 +568,62 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
   productTransactionSiPi: false
 }
+
+export  const initialProductData: BarcodeLabel = {
+  labelCount: 1,
+  productCode: "",
+  productName: "",
+  arabicName: "",
+  salesPrice: "",
+  salesPrice2: "",
+  salesPrice3: "",
+  cost: "",
+  autoBarcode: "",
+  manualBarcode: "",
+  costCode: "",
+  note1: "",
+  note2: "",
+  note3: "",
+  note4: "",
+  unit: "",
+  unitRemarks: "",
+  unit1Remarks: "",
+  unit2Remarks: "",
+  unit3Remarks: "",
+  qty: "",
+  salesPriceWithVAT: "",
+  salesPrice2WithVAT: "",
+  salesPrice3WithVAT: "",
+  batchNo: "",
+  expiryDate: "",
+  partNumber: "",
+  mfdDate: "",
+  packingDate: "",
+  warrantyPeriod: "",
+  expiryDays: "",
+  brand: "",
+  groupName: "",
+  specification: "",
+  itemAliasName: "",
+  unit2: "",
+  unit2SalesPrice: "",
+  unit3: "",
+  unit3SalesPrice: "",
+  partyCode: "",
+  productDescription: "",
+  voucherNo: "",
+  transDate: "",
+  siNo: "",
+  size: "",
+  productId: 0,
+  invQty: 0,
+  isCalculate: false,
+  reQty: 0.00,
+  vatPerc: 0,
+  pPrice: 0,
+  mrp: 0,
+  msp: 0,
+  sPrice: 0,
+  showPreview: false,
+  pluCode: ""
+};

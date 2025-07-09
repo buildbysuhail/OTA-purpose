@@ -26,8 +26,8 @@ export const PAGE_DIMENSIONS = {
     // Handle custom page size
     if (upperCasePageSize === "CUSTOM" && (customWidth || customHeight)) {
       return {
-        width: Number(customWidth) || PAGE_DIMENSIONS.A4.width,
-        height: Number(customHeight) || PAGE_DIMENSIONS.A4.height,
+        width: Number(customWidth) ,
+        height: Number(customHeight) ,
       }
     }
   

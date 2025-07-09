@@ -9,13 +9,14 @@ import { Content } from "./Content"
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util"
 
 export interface AccountTransactionProps {
-  data: any
+  data?: any
   template?: TemplateState
   currentBranch?: any
   userSession?: any
   clientSession?: any
   currency?: string
   bindingDemoData?:any
+  
 }
 
 const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession,bindingDemoData }: AccountTransactionProps) => {

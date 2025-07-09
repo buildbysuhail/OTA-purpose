@@ -162,7 +162,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
                 width: pxToPoint(component.width) || 50,
               }}
             >
-              {data[component.content] || "N/A"}
+              {data[component.content] || " "}
             </Text>
           </View>
         );

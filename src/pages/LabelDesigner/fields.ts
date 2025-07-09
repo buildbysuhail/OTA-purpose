@@ -1,4 +1,5 @@
 import { OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
+import { BarcodeLabel } from "../inventory/transactions/purchase/transaction-types";
 
 export const fields = [
    "org_name",
@@ -204,12 +205,74 @@ const headerFields = [
   "Header5","Header6","Header7","Header8","Header9",
 ];
 
+
+export const barcodeLabelKeys = [
+  "labelCount",
+  "productCode",
+  "productName",
+  "arabicName",
+  "salesPrice",
+  "salesPrice2",
+  "salesPrice3",
+  "cost",
+  "autoBarcode",
+  "manualBarcode",
+  "costCode",
+  "note1",
+  "note2",
+  "note3",
+  "note4",
+  "unit",
+  "unitRemarks",
+  "unit1Remarks",
+  "unit2Remarks",
+  "unit3Remarks",
+  "qty",
+  "salesPriceWithVAT",
+  "salesPrice2WithVAT",
+  "salesPrice3WithVAT",
+  "batchNo",
+  "expiryDate",
+  "partNumber",
+  "mfdDate",
+  "packingDate",
+  "warrantyPeriod",
+  "expiryDays",
+  "brand",
+  "groupName",
+  "specification",
+  "itemAliasName",
+  "unit2",
+  "unit2SalesPrice",
+  "unit3",
+  "unit3SalesPrice",
+  "partyCode",
+  "productDescription",
+  "voucherNo",
+  "transDate",
+  "siNo",
+  "size",
+  "productId",
+  "invQty",
+  "isCalculate",
+  "reQty",
+  "vatPerc",
+  "pPrice",
+  "mrp",
+  "msp",
+  "sPrice",
+  "showPreview",
+  "pluCode",
+] as const satisfies readonly (keyof BarcodeLabel)[];
+
 export const groupedField: OptionGroup[] = [
   { groupName: 'General', options: generalFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
   { groupName: 'Footer', options: footerFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
   { groupName: 'Header', options: headerFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
 ];
-
+export const barCodeField: OptionGroup[] = [
+  {groupName: "BarCodeField",options:barcodeLabelKeys.map(f=>({id:f,label:f}))}
+]
 export const bindingDemoData = {
   org_name: "Acme Corporation Pvt Ltd",
   org_branch: "Bangalore Branch",

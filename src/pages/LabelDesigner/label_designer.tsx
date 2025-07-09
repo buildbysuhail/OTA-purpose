@@ -91,7 +91,7 @@ import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { useTranslation } from "react-i18next";
 import VoucherType from "../../enums/voucher-types";
-import { AccountMasterFields, fields, groupedField } from "./fields";
+import { AccountMasterFields, barCodeField, fields, groupedField } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
@@ -1806,7 +1806,7 @@ const handleRemoveImage =()=>{
                         {selectedComponent.type ===
                         DesignerElementType.field ? (
                           <GroupedComboBox
-                            options={groupedField}
+                            options={forCustomRows?groupedField:barCodeField}
                             value={selectedComponent.content} 
                             onChange={(selectedId) => {
                               if (selectedId) {

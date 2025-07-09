@@ -1233,6 +1233,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("pb"),
         dataType: "string",
         visible: false,
+        allowEditing: true,
         width: 250,
         alignment: "left",
       },

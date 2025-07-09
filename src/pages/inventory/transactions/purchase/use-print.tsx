@@ -274,7 +274,7 @@ export const usePrint = () => {
           data.push(p);
         }
         const res = await api.postAsync(
-          `${Urls.inv_transaction_base}${formState.transactionType}/`,
+          `${Urls.inv_transaction_base}${formState.transactionType}/CreateBatch`,
           {
             items: data,
             partyLedgerId: partyLedgerId,

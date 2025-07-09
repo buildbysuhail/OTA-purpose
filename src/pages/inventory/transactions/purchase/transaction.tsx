@@ -1117,6 +1117,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         visible: false,
         width: 130,
         alignment: "right",
+        allowEditing: true
       },
       {
         dataField: "profit",

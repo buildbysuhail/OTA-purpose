@@ -185,15 +185,15 @@ interface ERPDevGridProps {
   allowResizing?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
-    | boolean
-    | {
-        filtering?: boolean;
-        sorting?: boolean;
-        paging?: boolean;
-        summary?: boolean;
-        groupPaging?: boolean;
-        grouping?: boolean;
-      };
+  | boolean
+  | {
+    filtering?: boolean;
+    sorting?: boolean;
+    paging?: boolean;
+    summary?: boolean;
+    groupPaging?: boolean;
+    grouping?: boolean;
+  };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
@@ -217,6 +217,7 @@ interface ERPDevGridProps {
   filterText?: string;
   condition?: any;
   hideGridAddButton?: boolean;
+  hideToolbar?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonLink?: string;
   gridAddButtonIcon?: string | "";
@@ -406,26 +407,27 @@ const createStore = async (
         });
       }
 
-      const queryString = new URLSearchParams(params).toString();
+      const postDataModified = formatDateFields(postData);
+      const queryString = new URLSearchParams(method == ActionType.GET ? { ...params, ...postDataModified } : params).toString();
       const updated = formatDateFields(filterData);
 
-      const postDataModified = formatDateFields(postData);
+
       try {
         setFilterValidations(undefined);
         const result =
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-            ? await api.postAsync(
+              ? await api.postAsync(
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
                   : postDataModified != undefined
-                  ? postDataModified
-                  : {},
+                    ? postDataModified
+                    : {},
                 queryString
               )
-            : null;
+              : null;
 
         if (
           result != undefined &&
@@ -453,35 +455,35 @@ const createStore = async (
           result != undefined
             ? result.isOk != undefined && result.isOk == false
               ? {
-                  data: [],
-                  totalCount: -1,
-                  summary: {},
-                  groupCount: 0,
-                }
-              : {
-                  data:
-                    result.loadResult != undefined
-                      ? result.loadResult
-                      : result.data,
-                  totalCount:
-                    result.loadResult != undefined
-                      ? result.loadResult.totalCount
-                      : result.totalCount,
-                  groupCount:
-                    result.loadResult != undefined
-                      ? result.loadResult.groupCount
-                      : result.groupCount,
-                  summary:
-                    result.loadResult != undefined
-                      ? result.loadResult.summary
-                      : result.summary,
-                }
-            : {
                 data: [],
                 totalCount: -1,
                 summary: {},
                 groupCount: 0,
-              };
+              }
+              : {
+                data:
+                  result.loadResult != undefined
+                    ? result.loadResult
+                    : result.data,
+                totalCount:
+                  result.loadResult != undefined
+                    ? result.loadResult.totalCount
+                    : result.totalCount,
+                groupCount:
+                  result.loadResult != undefined
+                    ? result.loadResult.groupCount
+                    : result.groupCount,
+                summary:
+                  result.loadResult != undefined
+                    ? result.loadResult.summary
+                    : result.summary,
+              }
+            : {
+              data: [],
+              totalCount: -1,
+              summary: {},
+              groupCount: 0,
+            };
 
         onDataChanged != undefined && onDataChanged(data.data);
         if (totalRowCountRef) {
@@ -589,6 +591,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridHeader = "",
       filterText = "",
       hideGridAddButton = false,
+      hideToolbar = false,
       gridAddButtonType = "link",
       gridAddButtonLink = "#",
       gridAddButtonIcon = "ri-add-line",
@@ -717,8 +720,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         heightToAdjustOnWindowsInModal !== undefined
           ? heightToAdjustOnWindowsInModal
           : wh - heightToAdjustOnWindows < 300
-          ? 300
-          : wh - heightToAdjustOnWindows;
+            ? 300
+            : wh - heightToAdjustOnWindows;
       setGridHeight({
         mobile: height != undefined ? height : gridHeightMobile,
         windows: height != undefined ? height : gridHeightWindows,
@@ -807,6 +810,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [store, setStore] = useState<CustomStore | null>(null);
     useEffect(() => {
       const fetchStore = async () => {
+        debugger;
         if (data) {
           setStore(data);
           if (data.totalCount) {
@@ -888,7 +892,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const onGridReady = (e: any) => {
       setGridInst(e.component);
     };
-   
+
     const formatStringWithConditions = (
       formatString: string,
       formState: any
@@ -912,64 +916,64 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           return false; // Return false in case of error
         }
       };
- function processConditionalPlaceholder(
-      placeholder: string,
-      data: Record<string, any>
-    ): string {
-      if (!placeholder.includes("&&")) {
-        return placeholder; // or throw an error if strictly meant for "&&" processing
-      }
-
-      const [condition, trueValue] = placeholder.split("&&");
-      const conditionResult = evaluateExpression(condition.trim(), data);
-
-      if (!conditionResult) {
-        return "";
-      }
-
-      const result = trueValue.replace(
-        /\[([^\]]+)\]/g,
-        (innerMatch: string, innerPlaceholder: string) => {
-          if (
-            innerPlaceholder.toLowerCase().includes("date")
-          ) {
-            return appFormatDate(data[innerPlaceholder]);
-          }
-          return data[innerPlaceholder] ?? "N/A";
+      function processConditionalPlaceholder(
+        placeholder: string,
+        data: Record<string, any>
+      ): string {
+        if (!placeholder.includes("&&")) {
+          return placeholder; // or throw an error if strictly meant for "&&" processing
         }
-      );
 
-      return result;
-    }
-      
+        const [condition, trueValue] = placeholder.split("&&");
+        const conditionResult = evaluateExpression(condition.trim(), data);
+
+        if (!conditionResult) {
+          return "";
+        }
+
+        const result = trueValue.replace(
+          /\[([^\]]+)\]/g,
+          (innerMatch: string, innerPlaceholder: string) => {
+            if (
+              innerPlaceholder.toLowerCase().includes("date")
+            ) {
+              return appFormatDate(data[innerPlaceholder]);
+            }
+            return data[innerPlaceholder] ?? "N/A";
+          }
+        );
+
+        return result;
+      }
+
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
         // Handle conditional expressions using '&&'
-         if (placeholder.includes("___")) {
+        if (placeholder.includes("___")) {
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
 
-                  if (innerPlaceholder.includes("&&")) {
-                    return processConditionalPlaceholder(innerPlaceholder,rowData); 
-                  }
-
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return rowData != undefined
-                      ? appFormatDate(rowData[innerPlaceholder])
-                      : "N/A";
-                  }
-                  return rowData != undefined
-                    ? rowData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                if (innerPlaceholder.includes("&&")) {
+                  return processConditionalPlaceholder(innerPlaceholder, rowData);
                 }
-              )
+
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return rowData != undefined
+                    ? appFormatDate(rowData[innerPlaceholder])
+                    : "N/A";
+                }
+                return rowData != undefined
+                  ? rowData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -977,25 +981,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("****");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
 
-                  if (innerPlaceholder.includes("&&")) {
-                    return processConditionalPlaceholder(innerPlaceholder,postData); 
-                  }
-                  
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(postData[innerPlaceholder]);
-                  }
-                  return postData != undefined
-                    ? postData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                if (innerPlaceholder.includes("&&")) {
+                  return processConditionalPlaceholder(innerPlaceholder, postData);
                 }
-              )
+
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return appFormatDate(postData[innerPlaceholder]);
+                }
+                return postData != undefined
+                  ? postData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -1003,44 +1007,44 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("---");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
 
-                  if (innerPlaceholder.includes("&&")) {
-                    return processConditionalPlaceholder(innerPlaceholder,userSession); 
-                  }
-                  
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date") ||
-                    innerPlaceholder.includes("finFrom") ||
-                    innerPlaceholder.includes("finTo")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return appFormatDate(userSession[innerPlaceholder]);
-                  }
-                  return userSession != undefined
-                    ? userSession[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                if (innerPlaceholder.includes("&&")) {
+                  return processConditionalPlaceholder(innerPlaceholder, userSession);
                 }
-              )
+
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date") ||
+                  innerPlaceholder.includes("finFrom") ||
+                  innerPlaceholder.includes("finTo")
+                ) {
+                  // If the placeholder is a date, format it
+                  return appFormatDate(userSession[innerPlaceholder]);
+                }
+                return userSession != undefined
+                  ? userSession[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
           return result;
         } else if (formState !== undefined) {
 
           if (placeholder.includes("&&")) {
-            return processConditionalPlaceholder(placeholder,formState); 
+            return processConditionalPlaceholder(placeholder, formState);
           }
-          
-          else{
+
+          else {
             if (formState[placeholder] !== undefined) {
-            // Handle regular placeholders
-          if (placeholder.includes("date") || placeholder.includes("Date")) {
-            // If the placeholder is a date, format it
-            return appFormatDate(formState[placeholder]);
-          }
-          return formState[placeholder] || "N/A";
-          }
+              // Handle regular placeholders
+              if (placeholder.includes("date") || placeholder.includes("Date")) {
+                // If the placeholder is a date, format it
+                return appFormatDate(formState[placeholder]);
+              }
+              return formState[placeholder] || "N/A";
+            }
           }
         }
         return "N/A";
@@ -1064,8 +1068,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const totalRows = gridInstance.totalCount(); // or gridInstance.getDataSource().totalCount()
       if (totalRows > 500) {
         const userConfirmed = window.confirm(
-          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${
-            (totalRows ?? 0) / 25
+          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${(totalRows ?? 0) / 25
           } pages, Please click 'Wait' if the application becomes unresponsive.`
         );
         if (!userConfirmed) {
@@ -1082,11 +1085,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
       doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
       doc.setFont("Amiri");
-      const pageTitle = `${gridHeader} - ${
-        !filterText || !filter
-          ? filterText || ""
-          : formatStringWithConditions(filterText.toString(), filter)
-      }`;
+      const pageTitle = `${gridHeader} - ${!filterText || !filter
+        ? filterText || ""
+        : formatStringWithConditions(filterText.toString(), filter)
+        }`;
 
       let currentY = 30;
 
@@ -1139,8 +1141,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.dataField)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.dataField)
         : gridCols.filter((col) => col.showInPdf).map((col) => col.dataField);
 
       const columnsWithoutWidth = pdfVisibleColumns.filter(
@@ -1165,11 +1167,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.width || 0)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.width || 0)
         : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.width || 100);
+          .filter((col) => col.showInPdf)
+          .map((col) => col.width || 100);
 
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
@@ -1437,11 +1439,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               if (column) {
                 const renderResult = column.cellRender
                   ? column.cellRender(
-                      { data: options.gridCell.data },
-                      options.gridCell,
-                      filter,
-                      options.excelCell.style
-                    )
+                    { data: options.gridCell.data },
+                    options.gridCell,
+                    filter,
+                    options.excelCell.style
+                  )
                   : undefined;
 
                 let isDefined = renderResult !== undefined;
@@ -1596,9 +1598,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             dynamicProps?.bodyProps != undefined
               ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-                  const trimmedProp = prop.trim();
-                  updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-                })
+                const trimmedProp = prop.trim();
+                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+              })
               : {};
 
             const pdata =
@@ -1869,11 +1871,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           if (column) {
             const renderResult = column.cellRender
               ? column.cellRender(
-                  { data: options.gridCell.data },
-                  options.gridCell,
-                  filter,
-                  options.excelCell.style
-                )
+                { data: options.gridCell.data },
+                options.gridCell,
+                filter,
+                options.excelCell.style
+              )
               : undefined;
 
             let isDefined = renderResult !== undefined;
@@ -1937,7 +1939,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [store, initialFilters]);
 
-    const focusColumn = initialFilters?.find( (filter: any) => filter.initialFocus);
+    const focusColumn = initialFilters?.find((filter: any) => filter.initialFocus);
 
     const handleCellPrepared = (e: any) => {
       if (e.rowType === "filter" && e.column.dataField === focusColumn?.field) {
@@ -1977,44 +1979,44 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     };
 
-const FilterRowKeyDown = (e: any) => {
-  const gridInstance = e.component;
-  if (!gridInstance) return;
+    const FilterRowKeyDown = (e: any) => {
+      const gridInstance = e.component;
+      if (!gridInstance) return;
 
       const gridEl = gridInstance.element();
       const filterInputs = gridEl.querySelectorAll('.dx-datagrid-filter-row input');
 
-    filterInputs.forEach((input: HTMLInputElement) => {
-    input.removeEventListener('keydown', handleArrowDown);
-    input.addEventListener('keydown', handleArrowDown);
-    });
+      filterInputs.forEach((input: HTMLInputElement) => {
+        input.removeEventListener('keydown', handleArrowDown);
+        input.addEventListener('keydown', handleArrowDown);
+      });
 
-  function handleArrowDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      
-      const visibleRows = gridInstance.getVisibleRows();
-      if (visibleRows.length > 0) {
-        const columns = gridInstance.getVisibleColumns();
-        
-        // Find selection column index
-        let targetColumnIndex = columns.findIndex((col: any) => col.command === 'select');
-        
-        // If no selection column found, use first column
-        if (targetColumnIndex === -1) {
-          targetColumnIndex = 0;
-        }
-        
-        const cellElement = gridInstance.getCellElement(0, targetColumnIndex);
-        if (cellElement) {
-          cellElement.focus();
+      function handleArrowDown(event: KeyboardEvent) {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+
+          const visibleRows = gridInstance.getVisibleRows();
+          if (visibleRows.length > 0) {
+            const columns = gridInstance.getVisibleColumns();
+
+            // Find selection column index
+            let targetColumnIndex = columns.findIndex((col: any) => col.command === 'select');
+
+            // If no selection column found, use first column
+            if (targetColumnIndex === -1) {
+              targetColumnIndex = 0;
+            }
+
+            const cellElement = gridInstance.getCellElement(0, targetColumnIndex);
+            if (cellElement) {
+              cellElement.focus();
+            }
+          }
         }
       }
-    }
-  }
-};
+    };
 
-    return  (
+    return (
       <Fragment>
         {showChooserOnGridHead && (
           <GridPreferenceChooser
@@ -2029,12 +2031,11 @@ const FilterRowKeyDown = (e: any) => {
         <div
           className={`custom-data-grid ${
             showChooserOnGridHead ? "toolbar-expanded" : ""
-          } 
-          ${className}`}
+          } ${!hideToolbar ? "hide-toolbar" : ""} ${className}`}
           style={gridStyle}
         >
           <DataGrid
-       
+
             loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
@@ -2078,10 +2079,10 @@ const FilterRowKeyDown = (e: any) => {
                       totalRowCountRef.current.toString();
                   }
                 }
-                if(selectionMode === "multiple") {
+                if (selectionMode === "multiple") {
                   FilterRowKeyDown(e)
                 }
-              
+
               }
               onContentReady && onContentReady(e);
             }}
@@ -2173,181 +2174,182 @@ const FilterRowKeyDown = (e: any) => {
               <Export enabled={false}></Export>
             )}
 
-            <Toolbar>
-              {!hideGridHeader && (
-                <Item location="before">
-                  <div className="flex flex-col">
-                    <div className="box-title !text-xs !font-medium">
-                      <span
-                        className="text-sm dark:!text-dark-text"
-                        title={gridHeader}
-                      >
-                        {gridHeader.length > 100
-                          ? `${gridHeader.slice(0, 100)}...`
-                          : gridHeader}
-                      </span>
-                      &nbsp;
-                      <span
-                        className="text-sm dark:!text-dark-text"
-                        title={header}
-                      >
-                        {header.length > 72
-                          ? `${header.slice(0, 72)}...`
-                          : header}
-                      </span>
+            {!hideToolbar && (
+              <Toolbar>
+                {!hideGridHeader && (
+                  <Item location="before">
+                    <div className="flex flex-col">
+                      <div className="box-title !text-xs !font-medium">
+                        <span
+                          className="text-sm dark:!text-dark-text"
+                          title={gridHeader}
+                        >
+                          {gridHeader.length > 100
+                            ? `${gridHeader.slice(0, 100)}...`
+                            : gridHeader}
+                        </span>
+                        &nbsp;
+                        <span
+                          className="text-sm dark:!text-dark-text"
+                          title={header}
+                        >
+                          {header.length > 72
+                            ? `${header.slice(0, 72)}...`
+                            : header}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Item>
-              )}
+                  </Item>
+                )}
 
-              <Item>
-                <div className="block sm:hidden relative">
-                  <button
-                    onClick={handleMobileMenuClick}
-                    className="ti-btn bg-gradient-to-r from-[#6366f1] to-[#7e22ce] text-white rounded-lg p-2.5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    aria-label="Open menu"
-                  >
-                    <Menu className="w-4 h-4" />
-                  </button>
-
-                  {isMobileMenuOpen && (
-                    <div
-                      className="absolute bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 text-black dark:text-white animate-fadeIn"
-                      style={{
-                        width: "300px",
-                        maxHeight: "500px",
-                        overflowY: "auto",
-                        top: "120%",
-                        right: "-10px",
-                      }}
+                <Item>
+                  <div className="block sm:hidden relative">
+                    <button
+                      onClick={handleMobileMenuClick}
+                      className="ti-btn bg-gradient-to-r from-[#6366f1] to-[#7e22ce] text-white rounded-lg p-2.5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      aria-label="Open menu"
                     >
-                      <button
-                        onClick={handleMobileMenuClose}
-                        className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 transition-colors duration-200"
-                        aria-label="Close menu"
+                      <Menu className="w-4 h-4" />
+                    </button>
+
+                    {isMobileMenuOpen && (
+                      <div
+                        className="absolute bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 text-black dark:text-white animate-fadeIn"
+                        style={{
+                          width: "300px",
+                          maxHeight: "500px",
+                          overflowY: "auto",
+                          top: "120%",
+                          right: "-10px",
+                        }}
                       >
-                        <X className="w-4 h-4" />
-                      </button>
+                        <button
+                          onClick={handleMobileMenuClose}
+                          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 transition-colors duration-200"
+                          aria-label="Close menu"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
 
-                      <div className="p-5">
-                        {!hideGridHeader && (
-                          <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div className="flex flex-col">
-                              <div className="font-medium text-gray-800 dark:text-gray-200">
-                                <span className="text-sm text-[#4f46e5] dark:text-[#818cf8] block mb-1 font-semibold">
-                                  {gridHeader}
-                                </span>
-                                <span className="text-lg font-semibold">
-                                  {header}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        <ul className="space-y-3">
-                          {enableScrollButton && (
-                            <li>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  scrollTo();
-                                  handleMobileMenuClose();
-                                }}
-                                className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-                              >
-                                <span className="flex items-center">
-                                  <div className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none">
-                                    {isAtBottom ? (
-                                      <ArrowUp className="w-4 h-4" />
-                                    ) : (
-                                      <ArrowDown className="w-4 h-4" />
-                                    )}
-                                  </div>
-                                  <span className="ml-2">
-                                    {isAtBottom
-                                      ? t("scroll_to_top")
-                                      : t("scroll_to_bottom")}
+                        <div className="p-5">
+                          {!hideGridHeader && (
+                            <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                              <div className="flex flex-col">
+                                <div className="font-medium text-gray-800 dark:text-gray-200">
+                                  <span className="text-sm text-[#4f46e5] dark:text-[#818cf8] block mb-1 font-semibold">
+                                    {gridHeader}
                                   </span>
-                                </span>
-                              </button>
-                            </li>
-                          )}
-
-                          <li className="mb-3">
-                            <div className="relative">
-                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search className="w-4 h-4 text-gray-400" />
+                                  <span className="text-lg font-semibold">
+                                    {header}
+                                  </span>
+                                </div>
                               </div>
-                              <input
-                                // ref={mobileSearchRef}
-                                autoFocus
-                                type="text"
-                                value={searchText}
-                                onChange={(e) => {
-                                  setSearchText(e.target.value);
-                                  if (gridRef.current) {
-                                    gridRef.current
-                                      .instance()
-                                      .searchByText(e.target.value);
-                                  }
-                                }}
-                                placeholder={t("search")}
-                                className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm transition-all duration-200"
-                                onClick={(e) => e.stopPropagation()}
-                              />
                             </div>
-                          </li>
+                          )}
 
-                          {!hideDefaultExportButton && allowExport && (
-                            <li className="py-1">
-                              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden">
-                                <span className="block px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                                  {t("export_options")}
-                                </span>
+                          <ul className="space-y-3">
+                            {enableScrollButton && (
+                              <li>
                                 <button
-                                  className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                                  type="button"
                                   onClick={() => {
-                                    handlePrintMobilePdf();
+                                    scrollTo();
                                     handleMobileMenuClose();
                                   }}
+                                  className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
                                 >
-                                  <FileText className="w-4 h-4 mr-3 text-[#ef4444]" />
-                                  <span>{t("export_to_pdf")}</span>
+                                  <span className="flex items-center">
+                                    <div className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none">
+                                      {isAtBottom ? (
+                                        <ArrowUp className="w-4 h-4" />
+                                      ) : (
+                                        <ArrowDown className="w-4 h-4" />
+                                      )}
+                                    </div>
+                                    <span className="ml-2">
+                                      {isAtBottom
+                                        ? t("scroll_to_top")
+                                        : t("scroll_to_bottom")}
+                                    </span>
+                                  </span>
                                 </button>
-                                <button
-                                  className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
-                                  onClick={() => {
-                                    handlePrintExcel();
-                                    handleMobileMenuClose();
+                              </li>
+                            )}
+
+                            <li className="mb-3">
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                  <Search className="w-4 h-4 text-gray-400" />
+                                </div>
+                                <input
+                                  // ref={mobileSearchRef}
+                                  autoFocus
+                                  type="text"
+                                  value={searchText}
+                                  onChange={(e) => {
+                                    setSearchText(e.target.value);
+                                    if (gridRef.current) {
+                                      gridRef.current
+                                        .instance()
+                                        .searchByText(e.target.value);
+                                    }
                                   }}
-                                >
-                                  <Table className="w-4 h-4 mr-3 text-[#22c55e]" />
-                                  <span>{t("export_to_excel")}</span>
-                                </button>
+                                  placeholder={t("search")}
+                                  className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm transition-all duration-200"
+                                  onClick={(e) => e.stopPropagation()}
+                                />
                               </div>
                             </li>
-                          )}
 
-                          {showPrintButton && (
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-                                onClick={() => {
-                                  handlePrintPdf();
-                                  handleMobileMenuClose();
-                                }}
-                              >
-                                <Printer className="w-4 h-4 mr-3 text-[#6366f1]" />
-                                <span>{t("print")}</span>
-                              </button>
-                            </li>
-                          )}
+                            {!hideDefaultExportButton && allowExport && (
+                              <li className="py-1">
+                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden">
+                                  <span className="block px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                    {t("export_options")}
+                                  </span>
+                                  <button
+                                    className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                                    onClick={() => {
+                                      handlePrintMobilePdf();
+                                      handleMobileMenuClose();
+                                    }}
+                                  >
+                                    <FileText className="w-4 h-4 mr-3 text-[#ef4444]" />
+                                    <span>{t("export_to_pdf")}</span>
+                                  </button>
+                                  <button
+                                    className="w-full flex items-center text-gray-700 dark:text-gray-300 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                                    onClick={() => {
+                                      handlePrintExcel();
+                                      handleMobileMenuClose();
+                                    }}
+                                  >
+                                    <Table className="w-4 h-4 mr-3 text-[#22c55e]" />
+                                    <span>{t("export_to_excel")}</span>
+                                  </button>
+                                </div>
+                              </li>
+                            )}
 
-                          {ShowGridPreferenceChooser &&
-                            !showChooserOnGridHead && (
+                            {showPrintButton && (
                               <li>
-                                {/* <div
+                                <button
+                                  className="w-full flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                  onClick={() => {
+                                    handlePrintPdf();
+                                    handleMobileMenuClose();
+                                  }}
+                                >
+                                  <Printer className="w-4 h-4 mr-3 text-[#6366f1]" />
+                                  <span>{t("print")}</span>
+                                </button>
+                              </li>
+                            )}
+
+                            {ShowGridPreferenceChooser &&
+                              !showChooserOnGridHead && (
+                                <li>
+                                  {/* <div
                                 onClick={() => {
                                   setIsPreferenceChooserVisible(true);
                                   handleMobileMenuClose();
@@ -2357,200 +2359,201 @@ const FilterRowKeyDown = (e: any) => {
                                 <Settings className="w-4 h-4 mr-3 text-[#6366f1]" />
                                 <span>{t("preferences")}</span>
                               </div> */}
-                                <GridPreferenceChooser
-                                  ref={preferenceChooserRef}
-                                  columns={columns}
-                                  gridId={gridId}
-                                  onApplyPreferences={onApplyPreferences}
-                                  showChooserOnGridHead={showChooserOnGridHead}
-                                />
-                              </li>
+                                  <GridPreferenceChooser
+                                    ref={preferenceChooserRef}
+                                    columns={columns}
+                                    gridId={gridId}
+                                    onApplyPreferences={onApplyPreferences}
+                                    showChooserOnGridHead={showChooserOnGridHead}
+                                  />
+                                </li>
+                              )}
+
+                            {!hideGridAddButton && (
+                              <button
+                                onClick={() =>
+                                  gridAddButtonType === "link"
+                                    ? (window.location.href = gridAddButtonLink)
+                                    : onPopupOpenClick()
+                                }
+                                className="absolute bottom-[25px] right-[25px] w-12 h-12 rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7e22ce] text-white shadow-lg hover:shadow-xl flex items-center justify-center z-50 transform hover:scale-110 transition-all duration-300"
+                                aria-label={addButtonText || t("new")}
+                              >
+                                <Plus className="w-6 h-6" />
+                              </button>
                             )}
 
-                          {!hideGridAddButton && (
-                            <button
-                              onClick={() =>
-                                gridAddButtonType === "link"
-                                  ? (window.location.href = gridAddButtonLink)
-                                  : onPopupOpenClick()
-                              }
-                              className="absolute bottom-[25px] right-[25px] w-12 h-12 rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7e22ce] text-white shadow-lg hover:shadow-xl flex items-center justify-center z-50 transform hover:scale-110 transition-all duration-300"
-                              aria-label={addButtonText || t("new")}
-                            >
-                              <Plus className="w-6 h-6" />
-                            </button>
-                          )}
-
-                          {customToolbarItems
-                            ?.filter(
-                              (item: any) =>
-                                item.location === "before" ||
-                                item.location === "after"
-                            )
-                            .map((toolbarItem: any, index: any) => (
-                              <li key={index} className="py-1">
-                                <div
-                                  onClick={handleMobileMenuClose}
-                                  className="px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-                                >
-                                  {toolbarItem.item}
-                                </div>
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Item>
-
-              {enableScrollButton && (
-                <Item>
-                  <div
-                    className="hidden sm:block"
-                    title={
-                      isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")
-                    }
-                  >
-                    <button
-                      type="button"
-                      onClick={() => {
-                        scrollTo();
-                      }}
-                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"
-                    >
-                      {isAtBottom ? "↑" : "↓"}
-                    </button>
-                  </div>
-                </Item>
-              )}
-
-              {!hideDefaultSearchPanel && (
-                <Item cssClass="!hidden sm:!block" name="searchPanel" />
-              )}
-
-              {!hideDefaultExportButton && allowExport && (
-                <Item cssClass="!hidden sm:!block" name="exportButton" />
-              )}
-
-              {showPrintButton && (
-                <Item>
-                  <div className="hidden sm:block">
-                    <button
-                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
-                      onClick={handlePrintPdf}
-                    >
-                      <Printer className="w-4 h-4" />
-                    </button>
-                  </div>
-                </Item>
-              )}
-              {showMoreOption && (
-                <Item>
-                  <div className="relative hidden sm:block">
-                    <button
-                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
-                      onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
-                    >
-                      <EllipsisVertical className="w-4 h-4" />
-                    </button>
-                    {isMoreOptionVisible && (
-                      <div
-                        className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
-                        style={{
-                          top: "100%",
-                          left: "-90px",
-                          width: "221px",
-                          marginTop: "4px",
-                        }}
-                      >
-                        <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
-                          <ul className="space-y-1">
-                            {moreOptions?.map(
-                              (option: any, index: any) => option
-                            )}
+                            {customToolbarItems
+                              ?.filter(
+                                (item: any) =>
+                                  item.location === "before" ||
+                                  item.location === "after"
+                              )
+                              .map((toolbarItem: any, index: any) => (
+                                <li key={index} className="py-1">
+                                  <div
+                                    onClick={handleMobileMenuClose}
+                                    className="px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                  >
+                                    {toolbarItem.item}
+                                  </div>
+                                </li>
+                              ))}
                           </ul>
-                        </nav>
+                        </div>
                       </div>
                     )}
                   </div>
                 </Item>
-              )}
 
-              {enablefilter == true && (
-                <Item>
-                  <div className="hidden sm:block">
-                    <ErpGridGlobalFilter
-                      width={filterWidth}
-                      height={filterHeight}
-                      title={gridHeader}
-                      gridId={gridId}
-                      validations={filterValidations}
-                      initialData={filter}
-                      content={filterContent}
-                      toogleFilter={showFilter}
-                      onApplyFilters={(filters) => onApplyFilter(filters)}
-                    />
-                  </div>
-                </Item>
-              )}
+                {enableScrollButton && (
+                  <Item>
+                    <div
+                      className="hidden sm:block"
+                      title={
+                        isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")
+                      }
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          scrollTo();
+                        }}
+                        className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"
+                      >
+                        {isAtBottom ? "↑" : "↓"}
+                      </button>
+                    </div>
+                  </Item>
+                )}
 
-              {ShowGridPreferenceChooser && !showChooserOnGridHead && (
-                <Item>
-                  <div className="hidden sm:block">
-                    <GridPreferenceChooser
-                      ref={preferenceChooserRef}
-                      columns={columns}
-                      gridId={gridId}
-                      onApplyPreferences={onApplyPreferences}
-                      showChooserOnGridHead={showChooserOnGridHead}
-                    />
-                  </div>
-                </Item>
-              )}
+                {!hideDefaultSearchPanel && (
+                  <Item cssClass="!hidden sm:!block" name="searchPanel" />
+                )}
 
-              {!hideGridAddButton && (
-                <Item>
-                  <div className="hidden sm:block">
-                    <div>
-                      {gridAddButtonType == "link" && (
-                        <Link
-                          to={gridAddButtonLink}
-                          className="ti-btn-primary-full ti-btn ti-btn-full"
+                {!hideDefaultExportButton && allowExport && (
+                  <Item cssClass="!hidden sm:!block" name="exportButton" />
+                )}
+
+                {showPrintButton && (
+                  <Item>
+                    <div className="hidden sm:block">
+                      <button
+                        className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+                        onClick={handlePrintPdf}
+                      >
+                        <Printer className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </Item>
+                )}
+                {showMoreOption && (
+                  <Item>
+                    <div className="relative hidden sm:block">
+                      <button
+                        className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+                        onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
+                      >
+                        <EllipsisVertical className="w-4 h-4" />
+                      </button>
+                      {isMoreOptionVisible && (
+                        <div
+                          className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                          style={{
+                            top: "100%",
+                            left: "-90px",
+                            width: "221px",
+                            marginTop: "4px",
+                          }}
                         >
-                          {t("new")}
-                          <Plus className="w-4 h-4" />
-                        </Link>
-                      )}
-                      {gridAddButtonType == "popup" && (
-                        <ERPButton
-                          variant="primary"
-                          onClick={onPopupOpenClick}
-                          title={addButtonText}
-                          startIcon={gridAddButtonIcon}
-                        />
+                          <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                            <ul className="space-y-1">
+                              {moreOptions?.map(
+                                (option: any, index: any) => option
+                              )}
+                            </ul>
+                          </nav>
+                        </div>
                       )}
                     </div>
-                  </div>
-                </Item>
-              )}
-
-              {customToolbarItems
-                ?.filter((item: any) => item.location === "before")
-                .map((toolbarItem: any, index: any) => (
-                  <Item key={index} location="before">
-                    {toolbarItem.item}
                   </Item>
-                ))}
+                )}
 
-              {customToolbarItems
-                ?.filter((item: any) => item.location === "after")
-                .map((toolbarItem: any, index: any) => (
-                  <Item key={index} location="after">
-                    {toolbarItem.item}
+                {enablefilter == true && (
+                  <Item>
+                    <div className="hidden sm:block">
+                      <ErpGridGlobalFilter
+                        width={filterWidth}
+                        height={filterHeight}
+                        title={gridHeader}
+                        gridId={gridId}
+                        validations={filterValidations}
+                        initialData={filter}
+                        content={filterContent}
+                        toogleFilter={showFilter}
+                        onApplyFilters={(filters) => onApplyFilter(filters)}
+                      />
+                    </div>
                   </Item>
-                ))}
-            </Toolbar>
+                )}
+
+                {ShowGridPreferenceChooser && !showChooserOnGridHead && (
+                  <Item>
+                    <div className="hidden sm:block">
+                      <GridPreferenceChooser
+                        ref={preferenceChooserRef}
+                        columns={columns}
+                        gridId={gridId}
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserOnGridHead={showChooserOnGridHead}
+                      />
+                    </div>
+                  </Item>
+                )}
+
+                {!hideGridAddButton && (
+                  <Item>
+                    <div className="hidden sm:block">
+                      <div>
+                        {gridAddButtonType == "link" && (
+                          <Link
+                            to={gridAddButtonLink}
+                            className="ti-btn-primary-full ti-btn ti-btn-full"
+                          >
+                            {t("new")}
+                            <Plus className="w-4 h-4" />
+                          </Link>
+                        )}
+                        {gridAddButtonType == "popup" && (
+                          <ERPButton
+                            variant="primary"
+                            onClick={onPopupOpenClick}
+                            title={addButtonText}
+                            startIcon={gridAddButtonIcon}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </Item>
+                )}
+
+                {customToolbarItems
+                  ?.filter((item: any) => item.location === "before")
+                  .map((toolbarItem: any, index: any) => (
+                    <Item key={index} location="before">
+                      {toolbarItem.item}
+                    </Item>
+                  ))}
+
+                {customToolbarItems
+                  ?.filter((item: any) => item.location === "after")
+                  .map((toolbarItem: any, index: any) => (
+                    <Item key={index} location="after">
+                      {toolbarItem.item}
+                    </Item>
+                  ))}
+              </Toolbar>
+            )}
 
             {gridCols?.map((column, index) => (
               <Column
@@ -2586,32 +2589,32 @@ const FilterRowKeyDown = (e: any) => {
                 fixedPosition={column.fixedPosition}
                 cellRender={
                   column.cellRenderDynamic === undefined &&
-                  column.cellRender === undefined &&
-                  column.cellRenderDynamicRootState === undefined
+                    column.cellRender === undefined &&
+                    column.cellRenderDynamicRootState === undefined
                     ? undefined
                     : (cellElement: any, cellInfo: any) => {
-                        if (column.cellRenderDynamic) {
-                          return column.cellRenderDynamic(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
-                        if (column.cellRenderDynamicRootState) {
-                          return column.cellRenderDynamicRootState(
-                            cellElement,
-                            cellInfo,
-                            rootState
-                          );
-                        }
-                        if (column.cellRender) {
-                          return column.cellRender(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
+                      if (column.cellRenderDynamic) {
+                        return column.cellRenderDynamic(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
                       }
+                      if (column.cellRenderDynamicRootState) {
+                        return column.cellRenderDynamicRootState(
+                          cellElement,
+                          cellInfo,
+                          rootState
+                        );
+                      }
+                      if (column.cellRender) {
+                        return column.cellRender(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
+                      }
+                    }
                 }
                 visible={
                   column.visibleDynamic != undefined
@@ -2665,8 +2668,8 @@ const FilterRowKeyDown = (e: any) => {
               originDynamic
                 ? originDynamic(isChildOpen.key)
                 : childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).origin
-                : childPopupProps?.origin
+                  ? childPopupPropsDynamic(isChildOpen.key).origin
+                  : childPopupProps?.origin
             }
             closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
             content={

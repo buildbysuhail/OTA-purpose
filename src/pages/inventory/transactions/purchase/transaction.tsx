@@ -62,6 +62,7 @@ import {
   initialFormElements,
 } from "./transaction-type-data";
 import ErpPurchaseGrid, {
+  ColumnModel,
   SummaryConfig,
 } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
@@ -886,7 +887,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.quantityFactorData]);
 
-  const purchaseGridCol: DevGridColumn[] = useMemo(
+  const purchaseGridCol: ColumnModel[] = useMemo(
     () => [
       {
         dataField: "slNo",
@@ -996,8 +997,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
       {
         dataField: "unitID",
         caption: t("unit_id"),
-        dataType: "number",
-        visible: false,
+        dataType: "cb",
+        detailsOptionKey:"units",
+        allowEditing: true,
+        visible: true,
         width: 100,
         alignment: "right",
       },

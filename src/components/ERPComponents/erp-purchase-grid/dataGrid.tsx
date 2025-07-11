@@ -31,6 +31,7 @@ import {
   getInitialPreference,
 } from "../../../utilities/dx-grid-preference-updater";
 import type {
+  ColumnModel,
   FormElementState,
   TransactionDetail,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
@@ -41,6 +42,7 @@ import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { generateUniqueKey } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
+import ERPSimpleCombobox, { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -54,7 +56,7 @@ export interface SummaryConfig<T = any> {
 }
 
 interface DataGridProps<T extends DataItem> {
-  columns?: DevGridColumn[];
+  columns?: ColumnModel[];
   keyField: string;
   gridId: string;
   className?: string;
@@ -86,14 +88,15 @@ interface DataGridProps<T extends DataItem> {
 
 interface EditableCellProps {
   rowIndex: number;
-  column: DevGridColumn;
+  column: ColumnModel;
+  options: any;
   value: string | number;
   onFocus: () => void;
   onBlur: () => void;
   gridId: string;
   onKeyDown: (
     e: React.KeyboardEvent<HTMLElement>,
-    column: DevGridColumn,
+    column: ColumnModel,
     rowIndex: number
   ) => void;
   onChange: (
@@ -106,6 +109,7 @@ interface EditableCellProps {
   productId: number;
   gridFontSize: number;
   gridIsBold: boolean;
+  type:"any"|"cb"
 }
 
 interface DragState {
@@ -117,9 +121,10 @@ interface DragState {
   startY: number;
 }
 
+
 interface RowData {
   details: TransactionDetail[];
-  columns: DevGridColumn[];
+  columns: ColumnModel[];
   tableWidth: number;
   txtData: Partial<FormElementState>;
   gridId: string;
@@ -155,6 +160,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     blockUnitOnDecimalPoint,
     rowIndex,
     column,
+    options,
     value,
     onFocus,
     onBlur,
@@ -164,8 +170,10 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     productId,
     gridFontSize,
     gridIsBold,
+    type,
   }) => {
     const dispatch = useAppDispatch();
+    const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [localValue, setLocalValue] = useState<string>(
@@ -224,22 +232,50 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
     const handleFocus = () => {
       onFocus();
+      inputRef.current?.focus();
       inputRef.current?.select();
+    };
+    const handleCbFocus = () => {
+      onFocus();
+      cbRef.current?.focus();
+      cbRef.current?.select();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Backspace" || e.key === "Delete") return;
-      if (column.dataType === "number") {
-        const key = e.key;
-        const inputElement = inputRef.current;
-        const currentValue = localValue;
-        const cursorPosition = inputElement?.selectionStart || 0;
-      }
+      
       onKeyDown(e, column, rowIndex);
     };
 
     return (
-      <Input
+      <>
+      {type == "cb" ? (
+<ERPSimpleCombobox
+options={options??[]}
+onSelectItem={(e: any) => {onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
+        ref={cbRef}
+        id={`${gridId}_${column.dataField}_${rowIndex}`}
+        noLabel
+        className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
+        style={{
+          fontSize: `${gridFontSize}px`,
+          fontWeight: gridIsBold ? "bold" : "normal",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          textAlign: column.alignment || "center",
+        }}
+        value={localValue}
+        noBorder
+        readOnly={column.readOnly}
+        onInput={handleInput}
+        onFocus={handleFocus}
+        onBlur={onBlur}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+      />
+      ):(
+        <Input
         ref={inputRef}
         id={`${gridId}_${column.dataField}_${rowIndex}`}
         noLabel
@@ -262,6 +298,9 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         onKeyDown={handleKeyDown}
         tabIndex={0}
       />
+      )}
+      </>
+      
     );
   }
 );
@@ -300,7 +339,7 @@ const Row = React.memo(
       (
         value: any,
         e: React.KeyboardEvent<HTMLElement>,
-        column: DevGridColumn,
+        column: ColumnModel,
         rowIndex: number
       ) => {
         const target = e.target as HTMLElement;
@@ -392,8 +431,10 @@ const Row = React.memo(
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
+            const optionKey = (column.detailsOptionKey?? column.formStateOptionKey??"slNo") as keyof TransactionDetail;
             const productId = item.productID;
             const cellValue = item[fieldKey];
+            const options = optionKey != "slNo" ? item[optionKey]:[];
             const isFocused = focusedColumn === column.dataField;
             const cellId = `${gridId}_${column.dataField}_${index}`;
 
@@ -421,7 +462,7 @@ const Row = React.memo(
                     ? "1px solid #3b82f6"
                     : columnIndex <
                       columns.filter(
-                        (col) => col.visible != false && col.dataField != null
+                        (__col) => __col.visible != false && __col.dataField != null
                       ).length - 1
                       ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
                       : "none",
@@ -566,8 +607,11 @@ const Row = React.memo(
                   >
                     {productId > 0 ? cellValue : ""}
                   </span>
-                ) : column.allowEditing && !column.readOnly && txtData.visible == true ? (
+                ) : column.allowEditing && !column.readOnly && txtData.visible == true
+                &&  data.currentCell?.column === column.dataField &&
+                  data.currentCell?.rowIndex === index ? (
                   <EditableCell
+                  type={column.dataType == "cb" ? "cb": "any"}
                     productId={productId}
                     onChange={data.onChange}
                     blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
@@ -575,6 +619,7 @@ const Row = React.memo(
                     rowIndex={index}
                     column={column}
                     value={cellValue as string | number}
+                    options={options}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     gridId={gridId}
@@ -614,7 +659,7 @@ const Row = React.memo(
 );
 
 const SummaryRow: React.FC<{
-  columns: DevGridColumn[];
+  columns: ColumnModel[];
   tableWidth: number;
   summaryValues: Record<string, any>;
   summaryConfig: SummaryConfig[];
@@ -1012,7 +1057,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
       const updated = applyGridColumnPreferences(
-        formState.gridColumns || columns,
+        (formState.gridColumns || columns) as DevGridColumn[],
         pref
       );
       dispatch(
@@ -1048,7 +1093,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           <GridPreferenceChooser
             ref={preferenceChooserRef}
             gridId={gridId}
-            columns={formState.gridColumns ?? []}
+            columns={(formState.gridColumns ?? [])as DevGridColumn[]}
             onApplyPreferences={onApplyPreferences}
             showChooserOnGridHead
             eclipseClass="m-0 p-0"

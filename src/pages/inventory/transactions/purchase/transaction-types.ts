@@ -453,7 +453,7 @@ export interface TransactionFormState {
   isPartyWiseSummaryOpen: boolean;
   isFormStateDetailOpen?: boolean;
   selectedRow?: TransactionDetail;
-  gridColumns?: DevGridColumn[];
+  gridColumns?: ColumnModel[];
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];
@@ -469,6 +469,22 @@ export interface TransactionFormState {
   productTransactionSiPi:boolean;
 }
 
+export interface ColumnModel {
+  dataField?: string;
+  detailsOptionKey?: string;
+  formStateOptionKey?: string;
+  cssClass?: string;
+    caption?: string;
+    dataType?: "string" | "number" | "cb" |"date" |"boolean";
+    allowEditing?: boolean;
+    alignment?: "center" | "left" | "right";
+    format?: string;
+    visible?: boolean;
+    isLocked?: boolean;
+    width?: number;
+    readOnly?: boolean;
+    cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
+}
 export interface PrintTransProps {
   masterAccount: string;
   details: TransactionDetail[];

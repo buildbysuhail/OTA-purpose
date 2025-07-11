@@ -2140,6 +2140,7 @@ export const useTransaction = (
         wareHouseId: warehouseId,
         txtData: data.searchText,
         partyId: formState.transaction.master.ledgerID,
+        isUnitDetailsRequired: true,
         isCheckUseSupplierProductCode:
           formState.userConfig?.useSupplierProductCode,
         isActualPriceVisible: formState.gridColumns?.find(
@@ -2404,31 +2405,38 @@ export const useTransaction = (
             { result: { transaction: { details: [latestData] } } },
             true
           );
-let currentDetails = [
-              ...formState.transaction.details.filter((x) => x.productID > 0),
-            ];
+          let currentDetails = [
+            ...formState.transaction.details.filter((x) => x.productID > 0),
+          ];
           let final =
-            _res?.transaction?.details != undefined && _res?.transaction?.details.length > 0
-              ? _res?.transaction?.details[0] as DeepPartial<TransactionDetail>
+            _res?.transaction?.details != undefined &&
+            _res?.transaction?.details.length > 0
+              ? (_res?.transaction
+                  ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
-              currentDetails[data.rowIndex] = final as TransactionDetail;
-          const summaryRes = calculateSummary(currentDetails, formState, { result: {} });
+          currentDetails[data.rowIndex] = final as TransactionDetail;
+          const summaryRes = calculateSummary(currentDetails, formState, {
+            result: {},
+          });
 
           const totalRes = calculateTotal(
             formState.transaction.master,
             summaryRes.summary as SummaryItems,
-            {...formState.formElements, ...result.formElements} as FormElementsState,
+            {
+              ...formState.formElements,
+              ...result.formElements,
+            } as FormElementsState,
             { result: {} }
           );
           result = {
-                ...totalRes,
-                summary: summaryRes.summary,
-                showQuantityFactors: { visible: false, rowIndex: -1 },
-                transaction: {
-                  ...totalRes.transaction,
-                  details: [final],
-                },
-              }
+            ...totalRes,
+            summary: summaryRes.summary,
+            showQuantityFactors: { visible: false, rowIndex: -1 },
+            transaction: {
+              ...totalRes.transaction,
+              details: [final],
+            },
+          };
         }
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&
@@ -2541,7 +2549,8 @@ let currentDetails = [
                   searchColumn: "pCode",
                   setFocusToNextColumn: true,
                 },
-                { result: {}, formStateHandleFieldChangeKeysOnly },true
+                { result: {}, formStateHandleFieldChangeKeysOnly },
+                true
               );
             } else {
               focusToNextColumn(rowIndex, columnName);
@@ -2562,7 +2571,8 @@ let currentDetails = [
                   searchColumn: "barCode",
                   setFocusToNextColumn: true,
                 },
-                { result: {}, formStateHandleFieldChangeKeysOnly },true
+                { result: {}, formStateHandleFieldChangeKeysOnly },
+                true
               );
             } else {
               focusToNextColumn(rowIndex, columnName);
@@ -2674,13 +2684,21 @@ let currentDetails = [
                 },
               });
               if (confirm) {
-                printBarcode([rowIndex], true, true);
+                printBarcode(
+                  [rowIndex],
+                  true,
+                  true,
+                  formState.transaction.master.ledgerID,
+                  formState.transaction.master.fromWarehouseID,
+                  
+                );
                 break;
               } else {
                 break;
               }
             } else {
-              printBarcode([rowIndex], false, true);
+              printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
+                  formState.transaction.master.fromWarehouseID,);
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")

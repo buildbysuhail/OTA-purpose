@@ -476,6 +476,7 @@ const Row = React.memo(
                       fields: {
                         currentCell: {
                           column: column.dataField,
+                          productBatchID:item.productBatchID,
                           rowIndex: index,
                         },
                       },

@@ -54,7 +54,6 @@ import {
   CommonParams,
   LoadProductDetailsByAutoBarcodeProps,
   DataAutoBarcode,
-  FormElementsState,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -2093,11 +2092,10 @@ export const useTransaction = (
   };
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
-    commonParams: CommonParams,
-    proceedAll?: boolean
+    commonParams: CommonParams
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
-    proceedAll = proceedAll ?? false;
+
     try {
       let detail = data.detail;
       let outDetail: DeepPartial<TransactionDetail> = {};
@@ -2202,11 +2200,7 @@ export const useTransaction = (
           const confirm = await ERPAlert.show({
             icon: "info",
             title: t("warning"),
-            text: t(
-              `Item Already selected in row ${
-                _index + 1
-              }. Do you want to goto that row?.`
-            ),
+            text: t('item_already_selected', { row: _index + 1 }),
             confirmButtonText: t("yes"),
             cancelButtonText: t("no"),
             showCancelButton: true,
@@ -2444,7 +2438,6 @@ export const useTransaction = (
             commonParams.formStateHandleFieldChangeKeysOnly({
               fields: result,
               updateOnlyGivenDetailsColumns: true,
-              rowIndex: data.rowIndex,
             })
           );
 
@@ -2581,7 +2574,7 @@ export const useTransaction = (
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  productTransactionSiPi: true,
+                  productInfo: true,
                 },
               })
             );
@@ -2600,7 +2593,7 @@ export const useTransaction = (
               const confirm = await ERPAlert.show({
                 icon: "info",
                 title: t("warning"),
-                text: t("Unit Price Zero, Do you Want to Continue"),
+                text: t("unit_price_zero_do_you_want_to_continue"),
                 confirmButtonText: t("yes"),
                 cancelButtonText: t("no"),
                 showCancelButton: true,
@@ -2642,7 +2635,7 @@ export const useTransaction = (
                   icon: "info",
                   title: t("warning"),
                   text: t(
-                    "Sales Price Less than Purchase Price, Do you Want to Continue"
+                    "sales_price_less_than_purchase_price_do_you_want_to_continue"
                   ),
                   confirmButtonText: t("yes"),
                   cancelButtonText: t("no"),
@@ -2674,8 +2667,8 @@ export const useTransaction = (
               event.preventDefault();
               const confirm = await ERPAlert.show({
                 icon: "info",
-                title: t("RePrint Barcode"),
-                text: t("Do you want to print barcode again"),
+                title: t("reprint_barcode"),
+                text: t("do_you_want_to_print_barcode_again"),
                 confirmButtonText: t("yes"),
                 cancelButtonText: t("no"),
                 showCancelButton: true,
@@ -2771,6 +2764,14 @@ export const useTransaction = (
           } else {
             focusToNextColumn(rowIndex, columnName);
           }
+
+        case "Control":
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: { ShowProductBatchUnitDetails: true },
+            })
+          );
+          return { handled: true };
 
         default:
           break;

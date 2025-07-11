@@ -76,7 +76,8 @@ import { DeepPartial } from "redux";
 import BatchEntryModal from "./batch-entry";
 import Serials from "./serials";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
-import ProductTransactionSiPiModal from "./productTransactionSiPi";
+import ProductInfoSlideUp from "./productInfo";
+import ProductBatchUnitDetails from "./product-batch-unit-details";
 
 interface BilledItem {
   id?: number;
@@ -453,7 +454,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherNumber: _voucherNo,
               inventoryLedgerID:
                 applicationSettings.inventorySettings.defaultPurchaseAcc,
-                ledgerID: applicationSettings.accountsSettings.defaultCashAcc
+              ledgerID: applicationSettings.accountsSettings.defaultCashAcc
             },
           },
           formElements: {
@@ -479,7 +480,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
-      _formState.inSearch = applicationSettings.productsSettings.batchCriteria != "NB" ? false: true;
+      _formState.inSearch = applicationSettings.productsSettings.batchCriteria != "NB" ? false : true;
       _formState.userRightsFormCode =
         isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
 
@@ -705,7 +706,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
           , useProductCode: data.useProductCode, rowIndex: data.rowIndex
           , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
-        }, { result: {}, formStateHandleFieldChangeKeysOnly },true)
+        }, { result: {}, formStateHandleFieldChangeKeysOnly })
 
     }
   }, [formState.batchSelectionData]);
@@ -2436,13 +2437,26 @@ const TransactionForm: React.FC<TransactionProps> = ({
             )}
             t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
         )}
-        {formState.productTransactionSiPi && (
-          <ProductTransactionSiPiModal
-            isOpen={formState.productTransactionSiPi}
+        {formState.productInfo && (
+          <ProductInfoSlideUp
+            isOpen={formState.productInfo}
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
-                  fields: { productTransactionSiPi: false },
+                  fields: { productInfo: false },
+                })
+              )
+            }
+            t={t}
+          />
+        )}
+        {formState.ShowProductBatchUnitDetails && (
+          <ProductBatchUnitDetails
+            isOpen={formState.ShowProductBatchUnitDetails}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { ShowProductBatchUnitDetails: false },
                 })
               )
             }

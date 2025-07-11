@@ -464,9 +464,10 @@ export interface TransactionFormState {
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
-  currentCell?: { column: string; rowIndex: number };
+  currentCell?: { column: string; rowIndex: number, productBatchID: number };
   batchesUnits?: [];
-  productTransactionSiPi:boolean;
+  productInfo:boolean;
+  ShowProductBatchUnitDetails:boolean;
 }
 
 export interface ColumnModel {

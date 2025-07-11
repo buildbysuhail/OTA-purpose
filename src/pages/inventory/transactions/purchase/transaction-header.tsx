@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RefreshCw, Search } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -30,6 +30,7 @@ import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
 import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
+import LedgerDetails from "./ledger-details";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -72,6 +73,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   // const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLedgerDetailsOpen, setIsLedgerDetailsOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -110,6 +112,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   const closeMoreModal = () => {
     setIsMoreModalOpen(false);
+  };
+
+  const handleLedgerDetailsClick = () => {
+    setIsLedgerDetailsOpen(true);
+  };
+
+  const closeLedgerDetailsModal = () => {
+    setIsLedgerDetailsOpen(false);
   };
 
   useEffect(() => {
@@ -204,7 +214,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 });
               }}
             />
-
+            <div className="bg-gray-200 p-2 rounded-md shadow-md">
+              <button onClick={handleLedgerDetailsClick}>
+                <Search className="w-4 h-4" />
+              </button>
+            </div>
             <AccVoucherPrefix
               ref={voucherNumberRef}
               formState={formState}
@@ -836,7 +850,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
               </div>
               {conditionalFooterComponents}
-              <div className=" items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
+              <div className="items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
                 {formState.formElements.cbCurrency?.visible && (
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -924,6 +938,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             </div>
           </div>
         </div>
+      )}
+      {isLedgerDetailsOpen && (
+        <ERPModal
+          isOpen={isLedgerDetailsOpen}
+          title={t("ledger_details")}
+          width={600}
+          height={600}
+          closeModal={closeLedgerDetailsModal}
+          content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
+        />
       )}
     </div>
   );

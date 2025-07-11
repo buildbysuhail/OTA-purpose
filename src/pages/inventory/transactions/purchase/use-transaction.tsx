@@ -54,6 +54,7 @@ import {
   CommonParams,
   LoadProductDetailsByAutoBarcodeProps,
   DataAutoBarcode,
+  FormElementsState,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -2092,7 +2093,8 @@ export const useTransaction = (
   };
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
-    commonParams: CommonParams
+    commonParams: CommonParams,
+    proceedAll: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
 

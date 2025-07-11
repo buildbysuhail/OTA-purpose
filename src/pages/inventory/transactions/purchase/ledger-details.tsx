@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-
-interface LedgerDetailsGrid {
-  id: string;
-  partyCode: string;
-  partyName: string;
-  displayName: string;
-}
+import Urls from "../../../../redux/urls";
+import { useSelector } from "react-redux/es/exports";
+import { RootState } from "../../../../redux/store";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 
 interface LedgerDetailsProps {
   closeModal: () => void;
@@ -15,8 +13,9 @@ interface LedgerDetailsProps {
 }
 
 const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
-  const [gridData, setGridData] = useState<LedgerDetailsGrid[]>([]);
-
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const [salesRoute, setSalesRoute] = useState(false);
+  const [mainSalesRoute, setMainSalesRoute] = useState<any>();
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "partyCode",
@@ -25,7 +24,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150
+      width: 150,
     },
     {
       dataField: "partyName",
@@ -34,7 +33,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 250
+      width: 250,
     },
     {
       dataField: "displayName",
@@ -43,19 +42,58 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 250
-    }
+      width: 250,
+    },
   ];
 
   return (
     <>
-      <ErpDevGrid
-        columns={gridColumns}
-        data={gridData}
-        gridId="ledgerDetailsGrid"
-        height={450}
-        hideGridAddButton={true}
-      />
+      <div className="flex items-end gap-2">
+        <ERPCheckbox
+          id="salesRoute"
+          label={t("sales_route")}
+          checked={salesRoute}
+          onChange={() => setSalesRoute(!salesRoute)}
+        />
+        <ERPDataCombobox
+          key={mainSalesRoute}
+          field={{
+            id: "salesRouteID",
+            getListUrl: Urls.MainSalesRoute,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          noLabel={true}
+          id="mainSalesRoute"
+          data={{ mainSalesRoute }}
+          value={mainSalesRoute}
+          disabled={!salesRoute}
+          onChange={(e) => {
+            setMainSalesRoute(e?.value ?? null);
+          }}
+        />
+      </div>
+      <div className="mt-4">
+        <ErpDevGrid
+          columns={gridColumns}
+          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/LedgerList/${salesRoute && mainSalesRoute ? mainSalesRoute : 0}`}
+          gridId="ledgerDetailsGrid"
+          height={450}
+          hideGridAddButton={true}
+          columnHidingEnabled={true}
+          hideDefaultExportButton={true}
+          hideDefaultSearchPanel={true}
+          allowSearching={false}
+          allowExport={false}
+          hideGridHeader={false}
+          enablefilter={false}
+          hideToolbar={true}
+          remoteOperations={false}
+          enableScrollButton={false}
+          ShowGridPreferenceChooser={false}
+          showPrintButton={false}
+        />
+      </div>
     </>
   );
 };

@@ -195,7 +195,7 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
           </div>
 
           <div style={scrollAreaStyle}>
-            <div className="flex-1" style={{ height: gridHeight }}>
+            <div className="mt-4" style={{ height: gridHeight }}>
               <ErpDevGrid
                 key={`batch-unit-grid-${isExpanded}`}
                 columns={batchUnitColumns}
@@ -220,7 +220,7 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}
                 showTotalCount={false}
-                hideToolbar={false}
+                hideToolbar={true}
               />
             </div>
           </div>

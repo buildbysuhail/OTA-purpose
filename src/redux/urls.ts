@@ -633,6 +633,7 @@ const Urls = {
   //Purchase
   inv_reports_purchase_summary:
     "/Inventory/RptPurchaseReport/PurchaseSummaryTest/",
+    MainSalesRoute:"/Inventory/Purchase/Data/MainSalesRoute/",
   // Transaction
 
   acc_transaction_base: "/Accounts/",

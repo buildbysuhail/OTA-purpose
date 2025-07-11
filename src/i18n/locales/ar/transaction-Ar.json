@@ -625,5 +625,11 @@
   "stock_update_warning": "تحذير تحديث المخزون",
   "stock_already_updated_warning": "لا يمكن تحديث المخزون في هذه الفاتورة. في سند استلام البضاعة تم تحديث المخزون بالفعل. هل تريد المتابعة؟",
   "multi_foc_scheme": "نظام FOC متعدد",
-  "scheme_price": "سعر العرض"
+  "scheme_price": "سعر العرض",
+
+  "ledger_details": "تفاصيل دفتر الأستاذ",
+  "party_code": "رمز الطرف",
+  "party_name": "اسم الطرف",
+  "display_name": "اسم العرض",
+  "sales_route": "مسار المبيعات"
 }

@@ -944,7 +944,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           isOpen={isLedgerDetailsOpen}
           title={t("ledger_details")}
           width={600}
-          height={600}
+          height={610}
           closeModal={closeLedgerDetailsModal}
           content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
         />

@@ -97,7 +97,6 @@
   "financial_year_id": "معرف السنة المالية",
   "form_type": "نوع النموذج",
   "voucher_prefix": "بادئة القسيمة",
-  "party_name": "اسم الطرف",
   "balance_after": "الرصيد بعد",
   "drcr": "مدين/دائن",
   "net_adjustment": "صافي التعديل",
@@ -631,5 +630,15 @@
   "party_code": "رمز الطرف",
   "party_name": "اسم الطرف",
   "display_name": "اسم العرض",
-  "sales_route": "مسار المبيعات"
+  "sales_route": "مسار المبيعات",
+  "save_transaction": "حفظ المعاملة",
+
+  "scrollbar_settings": "إعدادات شريط التمرير",
+  "scrollbar_width": "عرض شريط التمرير",
+  "normal": "عادي",
+  "thin": "رفيع",
+  "scrollbar_color": "لون شريط التمرير",
+  "scrollbar_preview": "معاينة شريط التمرير",
+  "scroll_down_to_see_the_effect": "مرّر لأسفل لمشاهدة التأثير",
+  "normal_and_thin_options_are_available": "خيارا عادي ورفيع متاحان"
 }

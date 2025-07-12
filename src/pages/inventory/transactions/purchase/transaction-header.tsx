@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -84,6 +84,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const sidebarWidth = isMinimized ? "80px" : "240px";
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
+  const isRtl = appState.locale.rtl;
+
+  const headerStyle = {
+    left: isRtl ? "0" : headerLeft,
+    right: isRtl ? headerLeft : "0"
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -198,7 +204,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {!deviceInfo?.isMobile && (
-        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] bg-white shadow-md transition-all duration-300">
+        <div style={headerStyle} className="fixed top-[110px] z-[39] bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -214,11 +220,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 });
               }}
             />
-            <div className="bg-gray-200 p-2 rounded-md shadow-md">
-              <button onClick={handleLedgerDetailsClick}>
-                <Search className="w-4 h-4" />
+            <div>
+              <button
+                onClick={handleLedgerDetailsClick}
+                aria-label="View Ledger Details"
+                className="p-2 rounded-md shadow-md hover:bg-gray-300 focus:outline-none transition-colors duration-200"
+              >
+                <Search className="w-5 h-5 text-gray-700" />
               </button>
             </div>
+
             <AccVoucherPrefix
               ref={voucherNumberRef}
               formState={formState}

@@ -97,7 +97,6 @@
   "financial_year_id": "Financial year id",
   "form_type": "Form type",
   "voucher_prefix": "Voucher prefix",
-  "party_name": "Party name",
   "balance_after": "Balance after",
   "drcr": "DrCr",
   "net_adjustment": "Net adjustment",
@@ -631,5 +630,15 @@
   "party_code": "Party Code",
   "party_name": "Party Name",
   "display_name": "Display Name",
-  "sales_route": "Sales route"
+  "sales_route": "Sales route",
+  "save_transaction": "Save Transaction",
+
+  "scrollbar_settings": "Scrollbar Settings",
+  "scrollbar_width": "Scrollbar Width",
+  "normal": "Normal",
+  "thin": "Thin",
+  "scrollbar_color": "Scrollbar Color",
+  "scrollbar_preview": "Scrollbar Preview",
+  "scroll_down_to_see_the_effect": "Scroll down to see the effect",
+  "normal_and_thin_options_are_available": "Normal and thin options are available"
 }

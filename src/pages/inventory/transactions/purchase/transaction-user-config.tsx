@@ -12,14 +12,16 @@ import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid } from "lucide-react";
+import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid, Mouse } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { inputBox } from "../../../../redux/slices/app/types";
+import { AppState, inputBox } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import useDebounce from "./use-debounce";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
+import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
 
 const api = new APIClient();
 
@@ -80,7 +82,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const { appState, updateAppState } = useAppState();
   const handleToggle = () => {
     const newValue = !isExpanded;
     setIsExpanded(newValue);
@@ -131,6 +133,14 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
+  const handleScrollbarChange = (field: keyof AppState, value: any) => {
+    const _appState = {
+      ...appState,
+      [field]: value,
+    };
+    updateAppState(_appState);
+  };
+  const debouncedHandleScrollbarChange = useDebounce(handleScrollbarChange, 300);
   const debouncedHandleFieldChange = useDebounce(handleFieldChange, 300);
 
   const resetThemeChange = async () => {
@@ -140,7 +150,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
         icon: "warning",
         confirmButtonText: t("reset_now"),
         cancelButtonText: t("cancel"),
-        showCancelButton:true,
+        showCancelButton: true,
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, () => {
@@ -454,6 +464,111 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                       onClick={() => handleFieldChange("alignment", "right")}
                       className="min-w-[100px] transition-all duration-300"
                     />
+                  </div>
+                </div>
+              </div>
+            </CollapsibleSection>
+
+            {/* Scrollbar Settings */}
+            <CollapsibleSection
+              title={t("scrollbar_settings")}
+              defaultExpanded={false}
+              icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}
+            >
+              <div className="space-y-4">
+                <div className="p-4">
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h6 className="font-semibold text-gray-700 dark:text-dark-text text-sm flex items-center space-x-2">
+                        <span>{t("scrollbar_width")}</span>
+                      </h6>
+                      <div className="space-y-2">
+                        {["md", "sm"].map((width) => (
+                          <div key={width} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="data-page-scrollbar"
+                              className="ti-form-radio w-4 h-4 text-[#8b5cf6] focus:ring-[#8b5cf6] focus:ring-2"
+                              id={`scrollbar-${width}`}
+                              checked={appState.scrollbarWidth === width}
+                              onChange={() => { handleScrollbarChange("scrollbarWidth", width); }}
+                            />
+                            <label htmlFor={`scrollbar-${width}`} className="text-sm font-medium text-gray-700 dark:text-dark-text cursor-pointer">
+                              {width === "md" ? t("normal") : t("thin")}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Scrollbar Color Picker */}
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div
+                            className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                            style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}
+                          >
+                            <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                            <input
+                              type="color"
+                              value={rgbToHex(appState.scrollbarColor || "128,128,128")}
+                              onChange={(e) => {
+                                const rgb = hexToRgb(e.target?.value);
+                                if (rgb) {
+                                  debouncedHandleScrollbarChange(
+                                    "scrollbarColor",
+                                    `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                  );
+                                }
+                              }}
+                              className="opacity-0 w-full h-full cursor-pointer"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                              {t("scrollbar_color")}
+                            </label>
+                            <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                              rgb({appState.scrollbarColor || "128,128,128"})
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Preview Section */}
+                    <div className="space-y-3">
+                      <div className="bg-white dark:bg-dark-bg-card rounded-lg border border-gray-200 dark:border-dark-border shadow-sm overflow-hidden">
+                        <div className="p-3 bg-gray-50 dark:bg-dark-hover-bg border-b border-gray-200 dark:border-dark-border">
+                          <h6 className="text-sm font-medium text-gray-700 dark:text-dark-text">
+                            {t("scrollbar_preview")}
+                          </h6>
+                        </div>
+                        <ERPScrollArea className="w-full h-64 border border-gray-300 overflow-y-auto rounded-md">
+                          <div className="space-y-2 p-4 text-sm text-gray-600 dark:text-dark-text/70">
+                            <p className="font-medium text-gray-800 dark:text-dark-text">
+                              {t("scroll_down_to_see_the_effect")}
+                            </p>
+                            <p>{t("normal_and_thin_options_are_available")}</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                            <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
+                            <p>Cillum dolore eu fugiat nulla pariatur.</p>
+                            <p>Excepteur sint occaecat cupidatat non proident.</p>
+                            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
+                            <p>Aut odit aut fugit, sed quia consequuntur magni dolores.</p>
+                            <p>Eos qui ratione voluptatem sequi nesciunt.</p>
+                            <p>Neque porro quisquam est, qui dolorem ipsum quia.</p>
+                            <p>Dolor sit amet, consectetur, adipisci velit.</p>
+                            <p>Sed quia non numquam eius modi tempora incidunt.</p>
+                            <p>Ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                          </div>
+                        </ERPScrollArea>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

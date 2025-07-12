@@ -1,3 +1,8 @@
+import React from "react";
+import { inputBox } from "../../redux/slices/app/types";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
+
 interface ERPInputProps {
   id: string;
   data?: any;
@@ -17,6 +22,7 @@ interface ERPInputProps {
   disabled?: boolean;
   className?: string;
   noLabel?: boolean;
+  localInputBox?: inputBox;
 }
 
 const ERPTextarea = ({
@@ -38,8 +44,15 @@ const ERPTextarea = ({
   rows,
   cols,
   noLabel,
+  localInputBox,
 }: ERPInputProps) => {
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState?.appState
+  );
   const iLabel = label || id?.replaceAll("_", " ");
+  const inputBoxState = React.useMemo(() => {
+    return localInputBox || appState?.inputBox;
+  }, [localInputBox, appState?.inputBox]);
   return (
     <div>
       {!noLabel && (
@@ -67,12 +80,12 @@ const ERPTextarea = ({
         required={required}
         minLength={minLength}
         maxLength={maxLength}
-        // onInvalid={(e: any) => {
-        // 	e.target.setCustomValidity("Please fill out this field.");
-        // }}
-        // onInput={(e: any) => {
-        // 	e.target.setCustomValidity("");
-        // }}
+      // onInvalid={(e: any) => {
+      // 	e.target.setCustomValidity("Please fill out this field.");
+      // }}
+      // onInput={(e: any) => {
+      // 	e.target.setCustomValidity("");
+      // }}
       />
     </div>
   );

@@ -591,6 +591,15 @@ export const userRights: UserRight[] = [
 { id: 2011702, headId: 20117, name: "AdvanceOptions_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Advance Options" },
 { id: 2011703, headId: 20117, name: "AdvanceOptions_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Advance Options" },
 { id: 2011704, headId: 20117, name: "AdvanceOptions_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Advance Options" },
+
+//#region not in 1050
+{ id: 20118, headId: 201, name: "TCSCategory", fullName: "TCS Category", formCode: "TCSCategory", treeNode: 3, description: "Manage TCS Category" },
+{ id: 2011801, headId: 20118, name: "TCSCategory_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add TCS Category" },
+{ id: 2011802, headId: 20118, name: "TCSCategory_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit TCS Category" },
+{ id: 2011803, headId: 20118, name: "TCSCategory_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete TCS Category" },
+{ id: 2011804, headId: 20118, name: "TCSCategory_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print TCS Category" },
+
+//#endregion not in 1050
 //global end
 
   //#endregion Inventory Master End

@@ -498,7 +498,9 @@ export const userRights: UserRight[] = [
 { id: 2011402, headId: 20114, name: "Schemes_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Schemes" },
 { id: 2011403, headId: 20114, name: "Schemes_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Schemes" },
 { id: 2011404, headId: 20114, name: "Schemes_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Schemes" },
+//#region not in 1050
 
+//#endregion not in 1050
   //#endregion Inventory Master End
   //#region Inventory Transaction
   { id: 202, headId: 2, name: "InvTransact", fullName: "Transactions", formCode: "INVT", treeNode: 2, description: "Inventory Transactions" },

@@ -24,6 +24,8 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { TransactionFormState } from "./transaction-types";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
+import { accFormStateTransactionMasterHandleFieldChange } from "../../../accounts/transactions/reducer";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -66,6 +68,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -590,8 +594,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <ERPTextarea
                   id="remarks"
                   required={true}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
                   label={t(formState.formElements.remarks.label)}
                   value={formState.transaction.master.remarks}
+                  onChange={(e) => {
+                    console.log("Dispatching remarks:", e.target.value);
+                    dispatch(
+                      accFormStateTransactionMasterHandleFieldChange({
+                        fields: { remarks: e.target?.value },
+                      })
+                    );
+                  }}
+                  disabled={
+                    formState.formElements.remarks?.disabled ||
+                    formState.formElements.pnlMasters?.disabled
+                  }
                 />
               </div>
             </div>
@@ -635,7 +652,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
               <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
                 <span className="text-sm font-bold text-gray-900 uppercase">
-                  Grand Total
+                  {t("grand_total")}
                 </span>
                 <span className="text-lg font-bold text-[#3b82f6]">
                   {getFormattedValue(
@@ -655,14 +672,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <Eye className="w-3.5 h-3.5" />
               Preview
             </button> */}
-            <button className="flex items-center gap-1.5 px-5 py-2 bg-[#3b82f6] text-white rounded-md text-xs font-semibold hover:bg-[#2563eb] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#3b82f6]/30 transition-all duration-200">
-              <Check className="w-3.5 h-3.5" />
-              Save Transaction
-            </button>
-            <button className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-md text-xs font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-              <X className="w-3.5 h-3.5" />
-              Cancel
-            </button>
+            <ERPButton
+              title={t("save_transaction")}
+              variant="primary"
+              startIcon={<Check className="w-3.5 h-3.5" />}
+            />
+
+            <ERPButton
+              title={t("cancel")}
+              variant="secondary"
+              startIcon={<X className="w-3.5 h-3.5" />}
+            />
           </div>
         </div>
       </div>
@@ -1293,7 +1313,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 : renderSecondFooter();
   if (formState.userConfig?.footerPosition === "right" && formState.transaction.master.billDiscount == 2) {
     return (
-      <div className="fixed top-[170px] right-0 h-[748px] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg  p-2 z-30">
+      <div className={`fixed top-[170px] ${isRtl ? 'left-0' : 'right-0'} h-[748px] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg  p-2 z-30`}>
         {/* {dropdownContent} */}
         {renderSecondFooter()}
       </div>
@@ -1304,8 +1324,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {isDropUpOpen && (<div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropup} />)}
 
         {!deviceInfo?.isMobile && (
-          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical' ? 'top-[170px] right-0 h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l border-l-slate-200' : 'z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'}`}
-            style={{ boxShadow: footerLayout === 'vertical' ? 'none' : '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)', }}>
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === 'vertical'
+            ? `top-[170px] ${isRtl ? 'left-0' : 'right-0'} h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l border-l-slate-200`
+            : 'z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]'
+            }`}>
             <div className={`${footerLayout === 'vertical' ? 'hidden' : 'block'}`}>
               {/* <button onClick={() => setShowFirstFooter(!showFirstFooter)} className="absolute bottom-2 left-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 z-30">
                 <Repeat size={20} />

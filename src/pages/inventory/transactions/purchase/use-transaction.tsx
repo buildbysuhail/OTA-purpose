@@ -442,7 +442,7 @@ export const useTransaction = (
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.costCentreID.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-      (formState.userConfig?.presetCostenterId ?? 0) > 0
+        (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -511,10 +511,8 @@ export const useTransaction = (
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${
-        voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
-        isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -872,13 +870,13 @@ export const useTransaction = (
       const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
+            `${Urls.inv_transaction_base}${transactionType}`,
+            params
+          )
           : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
+            `${Urls.inv_transaction_base}${transactionType}`,
+            params
+          );
       if (saveRes.isOk == true) {
         dispatch(
           formStateTransactionUpdate({
@@ -1589,8 +1587,8 @@ export const useTransaction = (
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-            ? "increment"
-            : undefined,
+              ? "increment"
+              : undefined,
           true
         );
       }
@@ -2160,8 +2158,7 @@ export const useTransaction = (
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${
-          Urls.inv_transaction_base
+        `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
       debugger;
@@ -2413,9 +2410,9 @@ export const useTransaction = (
           ];
           let final =
             _res?.transaction?.details != undefined &&
-            _res?.transaction?.details.length > 0
+              _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                  ?.details[0] as DeepPartial<TransactionDetail>)
+                ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -2498,6 +2495,7 @@ export const useTransaction = (
     try {
       const key = event.key;
       const isShiftPressed = event.shiftKey;
+      const isCtrlPressed = event.ctrlKey;
 
       if (!result.formElements) {
         result.formElements = {};
@@ -2524,6 +2522,16 @@ export const useTransaction = (
                 },
               })
             );
+          }
+          break;
+        case "Control":
+          if (isCtrlPressed) {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: { ShowProductBatchUnitDetails: true },
+              })
+            );
+            return { handled: true };
           }
           break;
 
@@ -2719,7 +2727,7 @@ export const useTransaction = (
 
             if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-                "WARN" &&
+              "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -2748,7 +2756,7 @@ export const useTransaction = (
               }
             } else if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-                "BLOCK" &&
+              "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -2779,7 +2787,7 @@ export const useTransaction = (
                   true,
                   formState.transaction.master.ledgerID,
                   formState.transaction.master.fromWarehouseID,
-                  
+
                 );
                 break;
               } else {
@@ -2787,14 +2795,14 @@ export const useTransaction = (
               }
             } else {
               printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
-                  formState.transaction.master.fromWarehouseID,);
+                formState.transaction.master.fromWarehouseID,);
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")
           // {
           //     btnBarcodeStd_Click(null, null);
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
-          // }
+          // } 
           else if (columnName == "bd") {
             debugger;
             const data: TransactionDetail =
@@ -2861,15 +2869,7 @@ export const useTransaction = (
             const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data.productBatchID)
           }
-
-        case "Control":
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({
-              fields: { ShowProductBatchUnitDetails: true },
-            })
-          );
-          return { handled: true };
-
+          break;
         default:
           break;
       }

@@ -1,6 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { useEffect, useState, useRef, KeyboardEvent, forwardRef } from "react";
-import { handleNavigation } from "../../utilities/shortKeys";
+import { useEffect, useState, forwardRef } from "react";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { inputBox } from "../../redux/slices/app/types";
@@ -12,12 +11,14 @@ type StatusType = {
 };
 
 type ERPButtonProps = {
-   localInputBox?: inputBox;
+  localInputBox?: inputBox;
   title?: string;
   disabled?: boolean;
   disableEnterNavigation?: boolean;
   loading?: boolean;
   startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  iconPosition?: "start" | "end";
   onClick?: (e?: any) => void;
   onKeyDown?: (e: any) => void;
   className?: string;
@@ -44,6 +45,8 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       foreColor,
       loading,
       startIcon,
+      endIcon,
+      iconPosition = "start",
       onClick,
       onKeyDown,
       className = "",
@@ -66,9 +69,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
     const [isFocused, setIsFocused] = useState(false);
 
     const appState = useAppSelector((state: RootState) => state.AppState?.appState) || {};
-       const inputBoxState = React.useMemo(() => {
-          return localInputBox || appState?.inputBox;
-        }, [localInputBox, appState?.inputBox]);
+    const inputBoxState = React.useMemo(() => { return localInputBox || appState?.inputBox; }, [localInputBox, appState?.inputBox]);
     // const buttonRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
       if (variant === "status" && status) {
@@ -101,14 +102,29 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
           return "rounded-md";
       }
     };
+
+    const renderIcon = (icon: React.ReactNode) => {
+      if (typeof icon === "string") {
+        return <i className={icon}></i>;
+      }
+      return icon;
+    };
+
     const getButtonContent = () => {
       if (variant === "status" && status) {
         return status.label;
       }
+
+      const showStartIcon = iconPosition === "start" && (startIcon || (!endIcon && startIcon));
+      const showEndIcon = iconPosition === "end" && (endIcon || (!startIcon && endIcon));
+      const actualStartIcon = showStartIcon ? (startIcon || endIcon) : null;
+      const actualEndIcon = showEndIcon ? (endIcon || startIcon) : null;
+
       return (
         <div className="flex gap-2 items-center">
-          {typeof startIcon === "string" && <i className={startIcon}></i>}
+          {actualStartIcon && renderIcon(actualStartIcon)}
           {title}
+          {actualEndIcon && renderIcon(actualEndIcon)}
           {loading && (
             <div className="flex items-center">
               <CircularProgress className="" color="inherit" size={14} />
@@ -117,12 +133,13 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         </div>
       );
     };
+
     const commonProps = {
       ...props,
     };
     return (
       <button
-      ref={ref}
+        ref={ref}
         {...commonProps}
         tabIndex={tabIndex}
         type={type}
@@ -131,11 +148,11 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         onFocus={(e) => setIsFocused(true)}
         onBlur={(e) => setIsFocused(false)}
         onKeyDown={(e) => {
-          
+
           if (disableEnterNavigation) {
             if (onKeyDown) {
               console.log(e);
-              
+
               onKeyDown(e);
             }
           } else {
@@ -146,9 +163,9 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-to={jumpTo}
         data-jump-target={jumpTarget}
         style={{
-          backgroundColor:backgroundColor? backgroundColor : isFocused 
-          ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})` 
-          : undefined,
+          backgroundColor: backgroundColor ? backgroundColor : isFocused
+            ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})`
+            : undefined,
           marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
           marginTop: `${inputBoxState?.marginTop ?? 0}px`,
         }}

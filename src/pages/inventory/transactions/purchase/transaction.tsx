@@ -161,6 +161,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const sidebarWidth = isMinimized ? "90px" : "250px";
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
+  const isRtl = appState.locale.rtl;
+  const headerStyle = {
+    left: isRtl ? "0" : headerLeft,
+    right: isRtl ? headerLeft : "0"
+  };
   const purchaseGridRef = useRef<{
     focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
     nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
@@ -1041,6 +1046,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "unitID",
         caption: t("unit_id"),
         dataType: "cb",
+        detailsOptionKey: "units",
         allowEditing: true,
         visible: true,
         width: 100,
@@ -1919,8 +1925,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 {formState.isEdit}
                 <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                   <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                    <h6 className="absolute  text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
-                      style={{ left: headerLeft }}>
+                    <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
+                      style={headerStyle}>
                       {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (

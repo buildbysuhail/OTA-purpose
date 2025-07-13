@@ -322,6 +322,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
     <>
       <a
         href="#"
+        type= "popup"
         onClick={(e) => {
           e.preventDefault();
           openModal();
@@ -348,7 +349,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           formState.formElements.pnlMasters?.disabled
         }
       />
-
+{isModalOpen &&
       <ERPModal
         isOpen={isModalOpen}
         closeModal={closeModal}
@@ -527,6 +528,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           </>
         }
       />
+}
     </>
   );
 };

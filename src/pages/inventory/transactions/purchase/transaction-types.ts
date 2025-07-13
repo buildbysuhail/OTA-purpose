@@ -465,14 +465,13 @@ export interface TransactionFormState {
   popupSearchSelectionData: string;
   quantityFactorData: string;
   currentCell?: { column: string; rowIndex: number, productBatchID: number };
-  batchesUnits?: [];
+  batchesUnits?: UnitByBatchDetailsDto[];
   productInfo:boolean;
   ShowProductBatchUnitDetails:boolean;
 }
 
 export interface ColumnModel {
   dataField?: string;
-  detailsOptionKey?: string;
   formStateOptionKey?: string;
   cssClass?: string;
     caption?: string;
@@ -677,4 +676,13 @@ export interface BarcodeLabel {
   sPrice: number;
   showPreview: boolean;
   pluCode: string;
+}
+interface UnitByBatchDetailsDto {
+    unitCode?: string;
+    value?: number;
+    label?: string;
+    multiFactor?: string; // default '' in C#
+    unitDescription?: string; // default '' in C#
+    decimalPoints?: number;
+    productBatchID?: number;
 }

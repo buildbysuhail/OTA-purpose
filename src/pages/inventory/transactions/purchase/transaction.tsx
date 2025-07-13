@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import {
+  ColumnModel,
   GridQtyFactors,
   SummaryItems,
   TransactionDetail,
@@ -62,7 +63,6 @@ import {
   initialFormElements,
 } from "./transaction-type-data";
 import ErpPurchaseGrid, {
-  ColumnModel,
   SummaryConfig,
 } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
@@ -124,7 +124,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const { t } = useTranslation("transaction");
-  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`);
+  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}-grid`);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
@@ -162,10 +162,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
   const purchaseGridRef = useRef<{
-    focusCell: (targetRow: number, targetColumnIndex: number) => void;
-    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
-    focusCurrentColumn: (rowIndex: number, column: string) => void;
-    focusColumn: (rowIndex: number, column: string) => void;
+    focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
+    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
+    focusCurrentColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null;
+    focusColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null;
+    gridRef: HTMLDivElement
   }>(null);
 
   const toggleHeaderDropdown = () => {
@@ -234,9 +235,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-  const focusToNextColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.nextCellFind(rowIndex, column); };
-  const focusColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.focusColumn(rowIndex, column); };
-  const focusCurrentColumn = (rowIndex: number, column: string) => { purchaseGridRef.current?.focusCurrentColumn(rowIndex, column); };
+  const focusToNextColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.nextCellFind(rowIndex, column) ?? null; };
+  const focusColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.focusColumn(rowIndex, column) ?? null; };
+  const focusCurrentColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.focusCurrentColumn(rowIndex, column) ?? null; };
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
@@ -887,6 +888,47 @@ const TransactionForm: React.FC<TransactionProps> = ({
       );
     }
   }, [formState.quantityFactorData]);
+  useEffect(() => {
+    if (formState.currentCell && formState.currentCell.column != "" && formState.currentCell.rowIndex > -1) {
+      const targetCellId = `${gridCode}_${formState.currentCell.column}_${formState.currentCell.rowIndex}`;
+      const targetCell = document.getElementById(
+          targetCellId
+        ) as HTMLElement | null;
+        if (targetCell) {
+          if (formState.currentCell.column === "product") {
+            const erpSearchInput = targetCell.querySelector(
+              `input[id="${targetCellId}"]`
+            ) as HTMLInputElement | null;
+            if (erpSearchInput) {
+              erpSearchInput.focus();
+              erpSearchInput.select();
+              return;
+            }
+          }
+          targetCell.focus();
+          const input =
+            targetCell.tagName === "INPUT"
+              ? (targetCell as HTMLInputElement)
+              : (targetCell.querySelector("input") as HTMLInputElement | null);
+          if (input) input.select();
+
+          //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
+        if (purchaseGridRef?.current && targetCell) {
+          const cellRect = targetCell?.getBoundingClientRect();
+          const gridRect = purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
+          const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
+          if (cellRect?.left < gridRect?.left && purchaseGridRef && purchaseGridRef.current && purchaseGridRef?.current?.gridRef) {
+            purchaseGridRef.current.gridRef.scrollLeft =
+              scrollLeft + (cellRect?.left - gridRect?.left);
+          } else if (cellRect?.right > gridRect?.right && purchaseGridRef && purchaseGridRef.current && purchaseGridRef?.current?.gridRef) {
+            purchaseGridRef.current.gridRef.scrollLeft =
+              scrollLeft + (cellRect?.right - gridRect?.right);
+          }
+        }
+          
+        }
+    }
+  }, [formState.currentCell]);
 
   const purchaseGridCol: ColumnModel[] = useMemo(
     () => [
@@ -999,7 +1041,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "unitID",
         caption: t("unit_id"),
         dataType: "cb",
-        detailsOptionKey:"units",
         allowEditing: true,
         visible: true,
         width: 100,
@@ -1223,7 +1264,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         visible: false,
         width: 150,
         alignment: "left",
-        cellRender: (cellData) => {
+        cellRender: (cellData: any) => {
           return (
             <div className="flex items-center justify-center p-2 cursor-pointer">
               <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
@@ -1980,7 +2021,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}
-                    gridId={`${gridCode}-grid`}
+                    gridId={`${gridCode}`}
                     onAddData={handleAddData}
                     summaryConfig={formState.summaryConfig}
                     gridFontSize={formState.userConfig?.gridFontSize}
@@ -2126,7 +2167,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   columns={purchaseGridCol}
                   keyField={"productID"}
                   height={gridHeight}
-                  gridId={`${gridCode}-grid`}
+                  gridId={`${gridCode}`}
                   onAddData={handleAddData}
                   summaryConfig={
                     formState.summaryConfig as SummaryConfig<TransactionDetail>[]

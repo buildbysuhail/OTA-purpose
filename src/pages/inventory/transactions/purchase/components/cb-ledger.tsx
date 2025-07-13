@@ -78,8 +78,8 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               labelInfo={
                 formState.formElements.pnlMasters?.disabled == true ? null : (
                   <div>
-                    <span className="text-primary">
-                      <a
+                    <span className="text-primary" >
+                      <a type= "popup"
                         onClick={setIsPartyDetailsOpen}
                         className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer"
                       >

@@ -20,6 +20,7 @@ import { RootState } from "../../../redux/store";
 import Input from "./erp-grid-input";
 import { GripVertical } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
+import ERPDataCombobox from "../erp-data-combobox";
 import type {
   DevGridColumn,
   GridPreference,
@@ -147,8 +148,8 @@ interface RowData {
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
-  focusCell: (targetRow: number, targetColumnIndex: number) => void;
-  nextCellFind: (rowIndex: number, column: string, focus?: boolean) => void;
+  focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
+  nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
   currentCell?: { column: string; rowIndex: number };
   gridFontSize: number;
   gridIsBold: boolean;
@@ -250,29 +251,38 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     return (
       <>
       {type == "cb" ? (
-<ERPSimpleCombobox
+<ERPDataCombobox
 options={options??[]}
-onSelectItem={(e: any) => {onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
-        ref={cbRef}
-        id={`${gridId}_${column.dataField}_${rowIndex}`}
+// onSelectItem={(e: any) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
+        // ref={cbRef}
+          onChange={(e) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
+        id={column.dataField??""}
         noLabel
+        enableClearOption={false}
         className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-        style={{
-          fontSize: `${gridFontSize}px`,
-          fontWeight: gridIsBold ? "bold" : "normal",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          textAlign: column.alignment || "center",
-        }}
-        value={localValue}
-        noBorder
-        readOnly={column.readOnly}
-        onInput={handleInput}
+        // style={{
+        //   fontSize: `${gridFontSize}px`,
+        //   fontWeight: gridIsBold ? "bold" : "normal",
+        //   whiteSpace: "nowrap",
+        //   overflow: "hidden",
+        //   textOverflow: "ellipsis",
+        //   textAlign: column.alignment || "center",
+        // }}
+        data={{unitID: localValue}}
+        value={value}
+        label={localValue}
+         field={{
+              id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+        // noBorder
+        // readOnly={column.readOnly}
+        // onInput={handleInput}
         onFocus={handleFocus}
         onBlur={onBlur}
         onKeyDown={handleKeyDown}
-        tabIndex={0}
+        // tabIndex={0}
       />
       ):(
         <Input
@@ -321,7 +331,21 @@ const Row = React.memo(
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
-
+  const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
+        if(input) {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            currentCell: {
+              column: input?.column,
+              productBatchID: item.productBatchID, 
+              rowIndex: input?.rowIndex, 
+            },
+          },
+        })
+      );
+    }
+    }
     const applicationSettings = useSelector(
       (state: RootState) => state.ApplicationSettings
     );
@@ -397,22 +421,38 @@ const Row = React.memo(
         switch (e.key) {
           case "ArrowRight":
             if (currentColumnIndex < visibleColumns.length - 1)
-              data.focusCell(index, currentColumnIndex + 1);
+            {
+              const res = data.focusCell(index, currentColumnIndex + 1);
+              setCurrentCell(res);
+            }
+            
             break;
           case "ArrowLeft":
-            if (currentColumnIndex > 0)
-              data.focusCell(index, currentColumnIndex - 1);
+            {
+              debugger;
+              if (currentColumnIndex > 1){
+                
+              const res =  data.focusCell(index, currentColumnIndex - 1);
+              setCurrentCell(res);
+            }
+            }
             break;
           case "ArrowUp":
-            data.focusCell(index - 1, currentColumnIndex);
+             {
+              const res = data.focusCell(index - 1, currentColumnIndex);
+              setCurrentCell(res);
+            }
             break;
           case "ArrowDown":
-            data.focusCell(index + 1, currentColumnIndex);
+            {
+               const res = data.focusCell(index + 1, currentColumnIndex);
+              setCurrentCell(res);
+            }
             break;
         }
       }, [data]
     );
-
+    
     return (
       <tr
         ref={rowRef}
@@ -431,26 +471,21 @@ const Row = React.memo(
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
-            const optionKey = (column.detailsOptionKey?? column.formStateOptionKey??"slNo") as keyof TransactionDetail;
+            
             const productId = item.productID;
             const cellValue = item[fieldKey];
-            const options = optionKey != "slNo" ? item[optionKey]:[];
-            const isFocused = focusedColumn === column.dataField;
+            let options: any[] = []
+            if(fieldKey == "unitID") {
+              options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
+            }
+            const isFocused = false;
             const cellId = `${gridId}_${column.dataField}_${index}`;
 
             return (
               <td
-                title={JSON.stringify({
-                  dataField: column.dataField,
-                  readOnly: column.readOnly,
-                  currentCellColumn: data.currentCell?.column,
-                  currentCellRowIndex: data.currentCell?.rowIndex,
-                  currentRowIndex: index,
-                  cellId,
-                  gridId,
-                })}
+                
                 key={column.dataField}
-                className={` p-0 ${column.cssClass || ""} ${isFocused ? "!border-[#3b82f6] bg-[#eff6ff80]" : ""}${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
+                className={` p-0 ${column.cssClass || ""} ${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
                 style={{
                   width: column.width ? `${column.width}px` : "150px",
                   minWidth: column.width ? `${column.width}px` : "150px",
@@ -493,7 +528,7 @@ const Row = React.memo(
                     ></div>
                   </div>
                 ) : column.dataField === "slNo" ? (
-                  <span
+                  <div
                     className="px-1"
                     style={{
                       fontSize: `${data.gridFontSize}px`,
@@ -503,12 +538,17 @@ const Row = React.memo(
                       textOverflow: "ellipsis",
                       display: "block",
                       width: "100%",
+                      WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    caretColor: "transparent",
+    outline: "none",
                       textAlign: column.alignment || "center",
                     }}
                     id={cellId}
                   >
                     {index + 1}
-                  </span>
+                  </div>
                 ) : (column.dataField === "product" || column.dataField === "pCode") &&
                   !column.readOnly &&
                   data.currentCell?.column === column.dataField &&
@@ -557,7 +597,7 @@ const Row = React.memo(
                     }}
                   />
                 ) : column.dataField === "product" && !column.readOnly ? (
-                  <span
+                  <div
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
@@ -567,6 +607,11 @@ const Row = React.memo(
                       textOverflow: "ellipsis",
                       display: "block",
                       width: "100%",
+                      WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    caretColor: "transparent",
+    outline: "none",
                     }}
                     className="px-1 cursor-default"
                     id={cellId}
@@ -576,10 +621,10 @@ const Row = React.memo(
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                   >
-                    {productId > 0 ? cellValue : ""}
-                  </span>
+                    {productId > 0 ? cellValue??"" : ""}
+                  </div>
                 ) : column.dataField === "status" ? (
-                  <span
+                  <div
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
@@ -589,6 +634,11 @@ const Row = React.memo(
                       textOverflow: "ellipsis",
                       display: "block",
                       width: "100%",
+                      WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    caretColor: "transparent",
+    outline: "none",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -606,8 +656,8 @@ const Row = React.memo(
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                   >
-                    {productId > 0 ? cellValue : ""}
-                  </span>
+                    {productId > 0 ? cellValue??"" : ""}
+                  </div>
                 ) : column.allowEditing && !column.readOnly && txtData.visible == true
                 &&  data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
@@ -629,7 +679,7 @@ const Row = React.memo(
                     gridIsBold={data.gridIsBold}
                   />
                 ) : (
-                  <span
+                  <div
                     style={{
                       fontSize: `${data.gridFontSize}px`,
                       fontWeight: data.gridIsBold ? "bold" : "normal",
@@ -639,6 +689,11 @@ const Row = React.memo(
                       textOverflow: "ellipsis",
                       display: "block",
                       width: "100%",
+                      WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    caretColor: "transparent",
+    outline: "none",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -646,10 +701,10 @@ const Row = React.memo(
                     className="px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
                   >
-                    {productId > 0 ? cellValue : ""}
-                  </span>
+                    {productId > 0 ? cellValue??"" : ""}
+                  </div>
                 )}
               </td>
             );
@@ -812,63 +867,17 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         targetColumnIndex < 0 ||
         targetColumnIndex >= visibleColumns.length
       )
-        return;
+        return null;
 
       const targetColumn = visibleColumns[targetColumnIndex];
-      const targetCellId = `${gridId}_${targetColumn.dataField}_${targetRow}`;
 
       if (listRef.current) listRef.current.scrollToItem(targetRow, "smart");
 
       const attemptFocus = () => {
-        const targetCell = document.getElementById(
-          targetCellId
-        ) as HTMLElement | null;
-        if (targetCell) {
-          if (targetColumn.dataField === "product") {
-            const erpSearchInput = targetCell.querySelector(
-              `input[id="${targetCellId}"]`
-            ) as HTMLInputElement | null;
-            if (erpSearchInput) {
-              erpSearchInput.focus();
-              erpSearchInput.select();
-              return true;
-            }
-          }
-          targetCell.focus();
-          const input =
-            targetCell.tagName === "INPUT"
-              ? (targetCell as HTMLInputElement)
-              : (targetCell.querySelector("input") as HTMLInputElement | null);
-          if (input) input.select();
-          return true;
-        }
-        return false;
+        return {column: targetColumn.dataField??"", rowIndex: targetRow};
       };
 
-      if (attemptFocus()) {
-        const targetCell = document.getElementById(targetCellId) as HTMLElement;
-        if (gridRef.current && targetCell) {
-          const cellRect = targetCell.getBoundingClientRect();
-          const gridRect = gridRef.current.getBoundingClientRect();
-          const scrollLeft = gridRef.current.scrollLeft;
-          if (cellRect.left < gridRect.left) {
-            gridRef.current.scrollLeft =
-              scrollLeft + (cellRect.left - gridRect.left);
-          } else if (cellRect.right > gridRect.right) {
-            gridRef.current.scrollLeft =
-              scrollLeft + (cellRect.right - gridRect.right);
-          }
-        }
-      }
-
-      if (attemptFocus()) return;
-
-      const maxAttempts = 5;
-      let attempts = 0;
-      const interval = setInterval(() => {
-        if (attemptFocus() || attempts >= maxAttempts) clearInterval(interval);
-        attempts++;
-      }, 50);
+      return attemptFocus();
     },
     [
       formState.gridColumns,
@@ -896,8 +905,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         (col) => col.dataField === editable?.dataField
       );
       if (rowIndex >= 0 && (targetColumnIndex ?? -1) >= 0) {
-        focusCell(rowIndex, targetColumnIndex ?? -1);
+        return focusCell(rowIndex, targetColumnIndex ?? -1);
+        
       }
+      return null
     },
     [formState.gridColumns, focusCell]
   );
@@ -946,8 +957,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           );
 
         if (targetColumnIndex??-1 >= 0) {
-        focusCell(rowIndex, targetColumnIndex!);
+        return focusCell(rowIndex, targetColumnIndex!);
       }
+      return null;
     },
     [formState.gridColumns, focusCell]
   );
@@ -983,8 +995,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       }
 
       if (targetColumnIndex >= 0) {
-        focusCell(targetRow, targetColumnIndex);
+        return focusCell(targetRow, targetColumnIndex);
       }
+      return null;
     },
     [formState.gridColumns, focusCell]
   );
@@ -1024,8 +1037,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       transactionType: transactionType ?? formState.transactionType,
       blockUnitOnDecimalPoint:
         applicationState.inventorySettings?.blockUnitOnDecimalPoint,
-      focusCell: focusCell,
-      nextCellFind: nextCellFind,
+      focusCell: focusCell??null,
+      nextCellFind: nextCellFind??null,
       currentCell: formState.currentCell,
       gridFontSize: gridFontSize || 14,
       gridIsBold: gridIsBold || false,
@@ -1206,7 +1219,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           preferenceChooserRef.current?.handleDropping(true)
                         }
                       >
-                        <span
+                        <div
                           // className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
                           style={{
                             display: "inline-block",
@@ -1214,12 +1227,17 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
+                      WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    caretColor: "transparent",
+    outline: "none",
                           }}
                           title={col.caption}
                         >
                           {col.caption}
                           {/* <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3b82f6] to-[#1e40af] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" /> */}
-                        </span>
+                        </div>
                         {!col.isLocked && (
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#DBEAFE33] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                         )}
@@ -1290,13 +1308,13 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
             <div className="w-5 h-5 bg-gradient-to-br from-[#60A5FA] to-[#2563EB] rounded-full flex items-center justify-center">
               <GripVertical className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700 tracking-wide">
+            <div className="text-sm font-semibold text-gray-700 tracking-wide">
               {
                 formState.gridColumns?.find(
                   (col) => col.dataField === dragState.draggedColumn
                 )?.caption
               }
-            </span>
+            </div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#60A5FA]/10 to-[#C084FC1A] rounded-xl animate-pulse" />
         </div>

@@ -15,6 +15,7 @@ import {
   Table,
   SquareDashed,
   QrCode as QrCodeIcon,
+  EllipsisVertical,
 } from "lucide-react";
 // Import the images
 
@@ -96,6 +97,7 @@ import { customJsonParse } from "../../utilities/jsonConverter";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
+import { usePrinters } from "../InvoiceDesigner/utils/get_printers";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -298,6 +300,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
+const { printers,printerLoading, hasPermission, requestPrinterPermission } = usePrinters();
+
 
   let paperWidth, paperHeight;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
@@ -1845,6 +1849,8 @@ const handleRemoveImage =()=>{
                         ) : selectedComponent.type ===
                           DesignerElementType.qrCode ? (
                           <ERPDataCombobox
+
+                          // onTextChange={}
                             id="value"
                             data={selectedComponent.qrCodeProps}
                             label="QR Code Value"
@@ -3463,23 +3469,71 @@ const handleRemoveImage =()=>{
                     label="Language Prefer"
                   />
                 </Box>
-                <Box sx={{ mb: 1 }}>
-                  <ERPDataCombobox
-                    id="printer"
+
+                  <ERPCheckbox
+                    id="select_printer"
+                    label={t("select printer")}
+                    checked={templateData?.propertiesState?.select_printer}
                     data={templateData?.propertiesState}
-                    label="Printer"
-                    field={{
-                      id: "printer",
-                      valueKey: "value",
-                      labelKey: "value",
+                    onChange={async (e) => {
+                      const checked = e.target.checked;
+                      // Always update checkbox state first
+                      handlePagePropsChange("select_printer", checked);
+                      if (checked && !hasPermission) {
+                        await requestPrinterPermission();
+                        if (printers[0]){
+                          handlePagePropsChange("printer", printers[0].name);
+                        }
+                      }
                     }}
-                    options={printers?.map((printer) => ({
-                      value: printer,
-                      label: printer,
-                    }))}
-                    onChange={(e) => handlePagePropsChange("printer", e.value)}
                   />
-                </Box>
+              {templateData?.propertiesState?.select_printer && (
+                <>
+                  {printerLoading ? (
+                    <p className="text-sm text-gray-500">{t("Loading printers...")}</p>
+                  ) : hasPermission && printers.length > 0 ? (
+                    <Box sx={{ mb: 1 }}>
+                      <ERPDataCombobox
+                        id="printer"
+                        data={templateData?.propertiesState}
+                        label={t("Printer")}
+                        field={{
+                          id: "printer",
+                          valueKey: "value",
+                          labelKey: "value",
+                        }}
+                        options={printers.map((p) => ({ value: p.name }))}
+                        onChange={(e) => handlePagePropsChange("printer", e.value)}
+                      />
+                    </Box>
+                  ) : !hasPermission && printers.length === 0 ? (
+                    <Box sx={{ mb: 1 }}>
+                      <ERPInput
+                        id="printer"
+                        label={t("Printer Name (Manual)")}
+                        value={templateData?.propertiesState?.printer || ""}
+                        data={templateData?.propertiesState}
+                        onChange={(e) => handlePagePropsChange("printer", e.target.value)}
+                      />
+                      {!templateData?.propertiesState?.printer && (
+                        <div className="p-2 bg-[#eff6ff] dark:bg-[#1e3a8a33] rounded-lg border border-[#bfdbfe] dark:border-[#1e40af] mt-2">
+                          <p className="text-xs text-[#1d4ed8] dark:text-[#93c5fd]">
+                            <span className="font-semibold">{t("instructions")}:</span>
+                          </p>
+                          <ul className="list-disc list-inside text-xs text-[#1d4ed8] dark:text-[#93c5fd] mt-1 space-y-1">
+                            <li>{t("Open Control Panel > Devices and Printers.")}</li>
+                            <li>{t("Find your printer in the list.")}</li>
+                            <li>{t("Right-click and select Properties to copy the exact printer name.")}</li>
+                            <li>{t("Paste the exact name above.")}</li>
+                          </ul>
+                        </div>
+                      )}
+                    </Box>
+                  ) : null}
+                </>
+              )}
+
+
               </Box>
             </Box>
           </Box>

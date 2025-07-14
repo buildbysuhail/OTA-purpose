@@ -260,6 +260,7 @@ export interface PropertiesState {
   bg_color?: string;
   bg_image_position?: string;
   bg_image_objectFit?:string;
+  select_printer?:boolean;
   printer?: string;
 
   /// Font

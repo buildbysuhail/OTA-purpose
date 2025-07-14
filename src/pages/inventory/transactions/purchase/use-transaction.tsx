@@ -2787,7 +2787,7 @@ export const useTransaction = (
                   true,
                   formState.transaction.master.ledgerID,
                   formState.transaction.master.fromWarehouseID,
-
+                  false,
                 );
                 break;
               } else {
@@ -2795,7 +2795,7 @@ export const useTransaction = (
               }
             } else {
               printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
-                formState.transaction.master.fromWarehouseID,);
+                formState.transaction.master.fromWarehouseID,false);
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")

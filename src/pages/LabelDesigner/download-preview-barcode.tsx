@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect } from 'react';
 import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import JsBarcode from 'jsbarcode';
@@ -39,21 +38,36 @@ export default function Component({ template, docTitle = "Document Preview", dat
           let gridHeightMobile = modalHeight - 200;
           let gridHeightWindows =  modalHeight - 100;
           setPreviewHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-        }, [isMaximized, modalHeight]);
-  
+  }, [isMaximized, modalHeight]);
+
   useEffect(() => {
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
-    const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
-      const chunkIndex = Math.floor(index / columnsPerRow)
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []
+    
+    // First, expand the data based on labelCount
+    const expandedData = data?.reduce((acc: any, item: any) => {
+      const labelCount = item.labelCount || 1; // Default to 1 if labelCount is not specified
+      
+      // Create labelCount number of copies of the item
+      for (let i = 0; i < labelCount; i++) {
+        acc.push(item);
       }
-      resultArray[chunkIndex].push(item)
-      return resultArray
-    }, [])
+      
+      return acc;
+    }, []) || [];
+    
+    // Then chunk the expanded data
+    const _chunkedData = expandedData.reduce((resultArray: any, item: any, index: number) => {
+      const chunkIndex = Math.floor(index / columnsPerRow);
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
+      resultArray[chunkIndex].push(item);
+      return resultArray;
+    }, []);
+    
     debugger;
     setChunkedData(_chunkedData);
-  }, [ template?.barcodeState?.labelState?.columnsPerRow])
+  }, [data, template?.barcodeState?.labelState?.columnsPerRow]); // Added 'data' to dependencies
 
  useEffect(() => {
   const generateBarcodeImages = async () => {

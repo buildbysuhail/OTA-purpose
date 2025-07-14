@@ -4,7 +4,7 @@ import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
 import { Fragment, useState, useMemo } from "react"
 
 export interface Option {
-  id: string
+  id: any
   label: string
 }
 

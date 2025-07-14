@@ -22,6 +22,7 @@ import { RootState } from "../../../../redux/store";
 import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
+  formStateMasterHandleFieldChange,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,7 +81,7 @@ import ProductInfoSlideUp from "./productInfo";
 import ProductBatchUnitDetails from "./product-batch-unit-details";
 import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
-
+import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2348,6 +2349,22 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
 
+       <ERPModal
+          isOpen={formState.transaction.master?.showPrevBar ||  false}
+          title={t("barcode_print")}
+          isForm={true}
+          closeModal={() => {    dispatch(
+                                formStateMasterHandleFieldChange({
+                                  fields: {
+                                    
+                                    showPrevBar:false,
+                                  },
+                                })
+                              ); }}
+          content={<DownloadBarcodePreview  template={formState.transaction.master?.barcodeTemplate} data={formState.transaction.master?.barcodeData} />}
+          width={1000}
+          height={800}
+        />
         {formState.isPartyWiseSummaryOpen && (
           <ERPModal
             isOpen={formState.isPartyWiseSummaryOpen}

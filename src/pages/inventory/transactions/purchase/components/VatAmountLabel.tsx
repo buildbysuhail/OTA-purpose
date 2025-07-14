@@ -3,14 +3,12 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 
 interface VatAmountLabelProps extends VoucherElementProps {
   taxData: any[];
-  showFirstFooter: boolean;
 }
 
 const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
   formState,
   t,
   taxData,
-  showFirstFooter
 }) => {
   return (
     // <ERPLabel

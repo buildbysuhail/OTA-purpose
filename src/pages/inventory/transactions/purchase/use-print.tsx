@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
+  formStateMasterHandleFieldChange,
   templatesData,
 } from "./reducer";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
@@ -31,6 +32,8 @@ import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import { initialProductData } from "./transaction-type-data";
+import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation();
@@ -46,18 +49,18 @@ export const usePrint = () => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
+   const [showPrint, setShowPrint] = useState<boolean>(false);
   const { hasRight } = useUserRights();
   const voucherTypeSet = new Set(Object.values(VoucherType));
   const adviceTem = ["PARP", "RARP", "Cheque"];
-  const handleDirectPrint = async (template: any) => {
+  const handleDirectPrint = async (template: any,data?:any) => {
+    debugger;
     let pdfDocument;
-    if (adviceTem.includes(template.templateGroup)) {
+    if (template.templateGroup === "barcode") {      
       pdfDocument = (
-        <AdviceTemplate
+        <DownloadBarcodePreview 
           template={template}
-          data={formState.transaction}
-          currentBranch={currentBranch}
-          userSession={userSession}
+          data={data}
         />
       );
     } else {
@@ -234,7 +237,8 @@ export const usePrint = () => {
     updateBatch: boolean,
     partyLedgerId: number,
     wareHouseId: number,
-    isDummyBill: boolean
+    isDummyBill: boolean,
+   
   ): Promise<void> {
     let modifiedDetails = [];
     let batchCreatedList = [];
@@ -255,11 +259,12 @@ export const usePrint = () => {
             unitID: row.unitID,
             selectedUnit: row.unitID,
             prevProductBatchID: row.productBatchID,
+            productBatchID: row.productBatchID,
             mrp: row.mrp,
             shelfID: 1,
             brandID: row.brandID,
-            mfgDate: row.mfdDate,
-            expiryDate: row.expDate,
+            mfgDate: isNullOrUndefinedOrEmpty(row.mfdDate)?new Date():row.mfdDate,
+            expiryDate:  isNullOrUndefinedOrEmpty(row.expDate)?new Date():row.expDate,
             batchNo: row.batchNo,
             mannualBarcode: row.manualBarcode,
             openingDate: new Date(),
@@ -286,10 +291,11 @@ export const usePrint = () => {
           batchCreatedList = res.items;
         }
       }
+    
       // Process each row in the specified range
       for (let i = 0; i < rowIndexes.length; i++) {
-        let barcode: BarcodeLabel = initialProductData;
-        barcode.showPreview = false;
+        let barcode: BarcodeLabel = {...initialProductData};
+        // barcode.showPreview = false;
         const row = formState.transaction.details[rowIndexes[i]];
         const batch = batchCreatedList.find((x: any) => x.slNo == row.slNo);
 
@@ -301,7 +307,7 @@ export const usePrint = () => {
           // Get sticker quantity
           let stickerQty = 0;
 
-          if (row.stickerQty === 0 || row.stickerQty === 0) continue;
+          if ( row.stickerQty === 0) continue;
 
           stickerQty = row.stickerQty;
 
@@ -372,18 +378,25 @@ export const usePrint = () => {
             barcodeLabelAdded = true;
           }
 
-         
         }
       }
-      // prit
-      debugger;
+                    dispatch(
+                                formStateMasterHandleFieldChange({
+                                  fields: {
+                                    barcodeData:barcodeData,
+                                    showPrevBar:true,
+                                  },
+                                })
+                              );
+      await handleDirectPrint(formState.transaction.master?.barcodeTemplate,barcodeData)
+       
        dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
                 transaction: {
                   details: modifiedDetails,
                 },
-              },
+              },updateOnlyGivenDetailsColumns: true
             })
           );
 
@@ -395,6 +408,7 @@ export const usePrint = () => {
       throw error;
     }
   }
+
   return {
     printVoucher,
     printBarcode,

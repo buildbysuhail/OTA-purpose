@@ -640,5 +640,9 @@
   "scrollbar_color": "لون شريط التمرير",
   "scrollbar_preview": "معاينة شريط التمرير",
   "scroll_down_to_see_the_effect": "مرّر لأسفل لمشاهدة التأثير",
-  "normal_and_thin_options_are_available": "خيارا عادي ورفيع متاحان"
+  "normal_and_thin_options_are_available": "خيارا عادي ورفيع متاحان",
+
+  "show_all_list": "عرض كل القوائم",
+  "inv_trans_accounts_id": "معرف حسابات معاملة المخزون",
+  "amount_fc": "المبلغ بالعملة الأجنبية"
 }

@@ -32,3 +32,4 @@
 // error
 //Do you want to print barcode again
 //RePrint Barcode
+// select printer

@@ -31,6 +31,7 @@ import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
 import LedgerDetails from "./ledger-details";
+import { loadTemplateById } from "../../../../utilities/Utils";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -151,7 +152,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+useEffect(()=>{
 
+},[])
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const conditionalFooterComponents =
@@ -423,11 +426,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="min-w-[180px] !m-0"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
-                    onSelectItem={(e) => {
+                    onSelectItem={async(e) => {
+                      let barcodeTem= await loadTemplateById(e.value);
                       dispatch(
                         formStateMasterHandleFieldChange({
                           fields: {
                             labelDesignID: e.value,
+                            barcodeTemplate:barcodeTem
                           },
                         })
                       );
@@ -435,6 +440,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }}
                     value={formState.transaction.master.labelDesignID}
                     field={{
+                      params: `TemplateType=barcode`,
                       id: "labelDesignID",
                       valueKey: "id",
                       labelKey: "name",

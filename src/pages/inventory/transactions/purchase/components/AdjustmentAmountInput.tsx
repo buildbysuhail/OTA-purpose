@@ -296,7 +296,7 @@ setValidationErrors({})
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("SiNo"),
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -388,7 +388,7 @@ setValidationErrors({})
         return (
           <button
             onClick={() => handleEditClick(params.data)}
-            className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+            className="p-1 text-[#2563EB] hover:text-[#1E40AF] hover:bg-[#EFF6FF] rounded-md transition-colors"
             title={t("edit")}
           >
             <Pencil size={16} />

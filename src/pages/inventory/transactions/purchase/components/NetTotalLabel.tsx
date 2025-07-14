@@ -7,10 +7,9 @@ export interface NetTotalProps {
   dispatch: Dispatch<AnyAction>;
   handleKeyDown?: (e: any, field: string) => void;
   t: any;
-  showFirstFooter: boolean;
 }
 
-const NetTotalLabel: React.FC<NetTotalProps> = ({ formState, t, showFirstFooter }) => {
+const NetTotalLabel: React.FC<NetTotalProps> = ({ formState, t }) => {
   return (
     // <ERPLabel
     //   id="netTotal"

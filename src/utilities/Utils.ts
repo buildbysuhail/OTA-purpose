@@ -1,5 +1,5 @@
 import { ToWords } from "to-words";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "@mui/material";
 import ERPToast from "../components/ERPComponents/erp-toast";
 import { thisYear } from "../utilities/ERPDateFilterData";
@@ -8,7 +8,11 @@ import { AppState } from "../redux/slices/app/types";
 import moment from "moment";
 import dayjs from "dayjs";
 import { useNumberFormat } from "./hooks/use-number-format";
-
+import { TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
+import Urls from "../redux/urls";
+import { customJsonParse } from "./jsonConverter";
+import { APIClient } from "../helpers/api-client";
+const api = new APIClient();
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
 }
@@ -934,3 +938,32 @@ export const  getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: s
   
   return formatedCode;
 }
+
+export interface LoadTemplateParams {
+  templateId: any;
+}
+
+export const loadTemplateById = async (templateId:LoadTemplateParams) => {
+  debugger;
+  try {
+    const res = await api.getAsync(`${Urls.templates}${templateId}`);
+        let cc: TemplateState = customJsonParse(res.content);
+        const _template = {
+          ...cc,
+          id: res.id,
+          background_image: res?.payload?.data?.background_image as string | undefined,
+          background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+          background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+          isCurrent: res.isCurrent,
+          templateGroup: res.templateGroup,
+          templateKind: res.templateKind,
+          templateName: res.templateName,
+          templateType: res.templateType,
+          thumbImage: res.thumbImage as string | undefined,
+      };
+  return _template
+  } catch (error) {
+    console.error('Error loading template:', error);
+    throw error;
+  }
+};

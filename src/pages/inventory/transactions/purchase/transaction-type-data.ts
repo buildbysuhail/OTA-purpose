@@ -138,7 +138,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   couponAmt: 0.0,
   projectID: 0,
   // currencyID:0,
-  labelDesignID: 0,
+  labelDesignID: -2,
   customerType: "",
   taxOnDiscount: 0.0,
   draftTransactionMasterID: 0,
@@ -164,7 +164,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   other: TransactionMaster3InitialData,
   prevTransDate: "",
   oldLedgerID: 0,
-  dueDays: 0
+  dueDays: 0,
+  barcodeTemplate:{},
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -193,7 +194,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   salesPrice: 0,
   lpr: 0,
   lpc: 0,
-  stickerQty: 0,
+  stickerQty: 1,
   profit: 0,
   size: '',
   vatPerc: 0,

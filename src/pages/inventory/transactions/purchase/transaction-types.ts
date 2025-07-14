@@ -185,6 +185,9 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  barcodeTemplate?:any;
+  barcodeData?:any;
+  showPrevBar?:boolean;
 }
 
 export interface TransactionMaster3 {
@@ -468,6 +471,7 @@ export interface TransactionFormState {
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo:boolean;
   ShowProductBatchUnitDetails:boolean;
+  showProductInformation:boolean;
 }
 
 export interface ColumnModel {

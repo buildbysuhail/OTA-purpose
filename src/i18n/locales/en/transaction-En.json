@@ -640,5 +640,9 @@
   "scrollbar_color": "Scrollbar Color",
   "scrollbar_preview": "Scrollbar Preview",
   "scroll_down_to_see_the_effect": "Scroll down to see the effect",
-  "normal_and_thin_options_are_available": "Normal and thin options are available"
+  "normal_and_thin_options_are_available": "Normal and thin options are available",
+
+  "show_all_list": "Show all list",
+  "inv_trans_accounts_id": "Inv Transaction Accounts ID",
+  "amount_fc": "Amount Fc"
 }

@@ -7,10 +7,9 @@ export interface GrandTotalProps {
   dispatch: Dispatch<AnyAction>;
   handleKeyDown?: (e: any, field: string) => void;
   t: any;
-  showFirstFooter: boolean;
 }
 
-const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t, showFirstFooter }) => {
+const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
   return (
     // <ERPLabel
     //   id="grandTotal"

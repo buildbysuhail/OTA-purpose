@@ -115,7 +115,8 @@ export const useTransaction = (
   taxableAmountRef?: any,
   refNoRef?: any,
   discountRef?: any,
-  chequeStatusRef?: any
+  chequeStatusRef?: any,
+  handleKeyDown?: (e: any, field: string, rowIndex: number) => void
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -2442,7 +2443,10 @@ export const useTransaction = (
         }
 
         debugger;
+
+        debugger;
         for (const unit of product.units) {
+          if (!result.batchesUnits) {
           if (!result.batchesUnits) {
             result.batchesUnits = [];
           }
@@ -2468,6 +2472,7 @@ export const useTransaction = (
           const res = focusToNextColumn(data.rowIndex, data.searchColumn);
           setCurrentCell(res, outDetail.productBatchID);
         }
+
 
         return result;
       } else if (res?.products?.length > 1) {
@@ -2592,7 +2597,9 @@ rowIndex: number
             );
           }
           break;
-        case "Control":
+
+        case "b":
+        case 'B':
           if (isCtrlPressed) {
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
@@ -2811,20 +2818,16 @@ rowIndex: number
                   true,
                   true,
                   formState.transaction.master.ledgerID,
-                  formState.transaction.master.fromWarehouseID
+                  formState.transaction.master.fromWarehouseID,
+                  false,
                 );
                 break;
               } else {
                 break;
               }
             } else {
-              printBarcode(
-                [rowIndex],
-                false,
-                true,
-                formState.transaction.master.ledgerID,
-                formState.transaction.master.fromWarehouseID
-              );
+              printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
+                formState.transaction.master.fromWarehouseID, false);
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")

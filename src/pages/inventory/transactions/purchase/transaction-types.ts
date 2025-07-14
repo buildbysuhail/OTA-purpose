@@ -185,6 +185,9 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  barcodeTemplate?:any;
+  barcodeData?:any;
+  showPrevBar?:boolean;
 }
 
 export interface TransactionMaster3 {

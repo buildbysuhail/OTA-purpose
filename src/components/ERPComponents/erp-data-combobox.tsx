@@ -721,9 +721,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
     useEffect(() => {
       const run = async () => {
-        if (_reload !== undefined && _reload !== true) {
+        if ((_reload !== undefined && _reload !== true) || fetching) {
           return;
         }
+        
         setGetListUrl(`${field?.getListUrl ?? ""}${field?.params ?? ""}`);
         if (!disabledApiCall && field?.freezeDataLoad !== true) {
           await loadData();

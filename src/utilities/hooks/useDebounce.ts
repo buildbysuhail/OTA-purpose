@@ -48,6 +48,8 @@ export const useDebounceCallback = <T extends (...args: any[]) => any>(
   return debouncedCallback;
 };
 
+
+// Alternative approach - more explicit control
 export const useDebouncedInput = <T>(
   initialValue: T,
   onDebouncedChange: (value: T) => void,
@@ -55,21 +57,30 @@ export const useDebouncedInput = <T>(
 ) => {
   const [value, setValue] = useState<T>(initialValue);
   const debouncedValue = useDebounce(value, delay);
+  const hasUserInteracted = useRef(false);
 
   useEffect(() => {
-    if (debouncedValue !== initialValue) {
+    // Only trigger onDebouncedChange if user has actually interacted with the input
+    if (hasUserInteracted.current && debouncedValue !== initialValue) {
       onDebouncedChange(debouncedValue);
     }
   }, [debouncedValue, onDebouncedChange, initialValue]);
 
   useEffect(() => {
     setValue(initialValue);
+    // Reset interaction flag when initialValue changes externally
+    hasUserInteracted.current = false;
   }, [initialValue]);
+
+  const handleChange = useCallback((newValue: T) => {
+    hasUserInteracted.current = true;
+    setValue(newValue);
+  }, []);
 
   return {
     value,
     debouncedValue,
-    setValue,
-    onChange: setValue
+    setValue: handleChange,
+    onChange: handleChange
   };
 };

@@ -426,7 +426,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-
+debugger;
       let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
@@ -712,7 +712,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
           , useProductCode: data.useProductCode, rowIndex: data.rowIndex
           , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
-        }, { result: {}, formStateHandleFieldChangeKeysOnly })
+        }, { result: {}, formStateHandleFieldChangeKeysOnly },true)
 
     }
   }, [formState.batchSelectionData]);
@@ -2017,11 +2017,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       column: keyof TransactionDetail,
                       rowIndex: number
                     ) =>
-                      handleTextDataKeyDown(value, e, column, rowIndex, {
+                     {
+                      debugger;  handleTextDataKeyDown(value, e, column, rowIndex, {
                         result: {},
                         formStateHandleFieldChangeKeysOnly:
                           formStateHandleFieldChangeKeysOnly,
                       })
+                     }
                     }
                     transactionType={transactionType}
                     columns={purchaseGridCol}

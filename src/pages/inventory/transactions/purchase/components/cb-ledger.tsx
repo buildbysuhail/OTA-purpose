@@ -43,7 +43,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               data={formState.transaction.master}
               reload={formState.formElements.ledgerID.reload}
               disableEnterNavigation={true}
-              fetching={formState.transactionLoading}
+              fetching={formState.transactionLoading || formState.formElements?.ledgerID?.accLedgerType == undefined}
               // transactionLoading={true}
               changeReload={() =>
                 dispatch(
@@ -68,8 +68,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 id: "ledgerID",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: `${Urls.inv_transaction_base}${transactionType}/AccLedgers/`,
-                params: `ledgerType=${formState.formElements?.ledgerID?.accLedgerType}`,
+                getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${formState.formElements?.ledgerID?.accLedgerType}`,
               }}
               disabled={
                 formState.formElements.ledgerID?.disabled ||

@@ -212,7 +212,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("SiNo"),
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -304,7 +304,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
         return (
           <button
             onClick={() => handleEditClick(params.data)}
-            className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+            className="p-1 text-[#2563EB] hover:text-[#1E40AF] hover:bg-[#EFF6FF] rounded-md transition-colors"
             title={t("edit")}
           >
             <Pencil size={16} />
@@ -322,7 +322,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
     <>
       <a
         href="#"
-        type= "popup"
+        type="popup"
         onClick={(e) => {
           e.preventDefault();
           openModal();
@@ -349,186 +349,189 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           formState.formElements.pnlMasters?.disabled
         }
       />
-{isModalOpen &&
-      <ERPModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-        width={1200}
-        height={610}
-        title={t("add_amount_or_jv")}
-        content={
-          <>
-            <div className="flex items-end gap-2">
-              <div>
-                <label className="text-xs">{t("led_code")}</label>
-                <ERPInput
-                  id="ledCode"
-                  noLabel={true}
-                  value={ledCodeValue}
-                  className="!max-w-[200px]"
-                  onChange={(e) => onLedCodeChange(e.target.value)}
-                  onKeyDown={(e) => {
-                    handleKeyDown && handleKeyDown(e, "ledCode");
-                  }}
-                />
-              </div>
-
-              <div className="w-full">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs">{t("ledger")}</label>
-                  <ERPCheckbox
-                    id="showAllList"
-                    className="!m-0 !p-0"
-                    label={t("show_all_list")}
-                    checked={amountModal.showAllList}
-                    onChange={(e) => handleAmountModal('showAllList', e.target.checked)}
+      {isModalOpen &&
+        <ERPModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          width={1200}
+          height={620}
+          title={t("add_amount_or_jv")}
+          content={
+            <>
+              <div className="flex items-end gap-2">
+                <div>
+                  <label className="text-xs">{t("led_code")}</label>
+                  <ERPInput
+                    id="ledCode"
+                    noLabel={true}
+                    value={ledCodeValue}
+                    className="!max-w-[200px]"
+                    onChange={(e) => onLedCodeChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      handleKeyDown && handleKeyDown(e, "ledCode");
+                    }}
                   />
                 </div>
-                <ERPDataCombobox
-                  field={{
-                    id: "ledgerID",
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_acc_ledgers
-                  }}
-                  noLabel={true}
-                  id="ledgerID"
-                  value={amountModal.ledgerID}
-                  onChange={(e) => {
-                    handleAmountModal('ledgerID', e.value);
-                    handleAmountModal('ledgerName', e.name);
-                  }}
-                />
-              </div>
 
-              {/* <div>
-                <label className="text-xs">{t("amount")}</label>
-                {amountModal.selected}
-                <ERPInput
-                  id="amount"
-                  noLabel={true}
-                  type="number"
-                  className="max-w-[210px]"
-                  value={amountModal.amount}
-                  onChange={(e) => {
-                    setAmountModal(prev => ({
-                      ...prev,
-                      amount: parseFloat(e.target.value) || 0, // or Number(e.target.value)
-                      selected: e.target.
+                <div className="w-full">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs">{t("ledger")}</label>
+                    <ERPCheckbox
+                      id="showAllList"
+                      className="!m-0 !p-0"
+                      label={t("show_all_list")}
+                      checked={amountModal.showAllList}
+                      onChange={(e) => handleAmountModal('showAllList', e.target.checked)}
+                    />
+                  </div>
+                  <ERPDataCombobox
+                    field={{
+                      id: "ledgerID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_acc_ledgers
+                    }}
+                    noLabel={true}
+                    id="ledgerID"
+                    value={amountModal.ledgerID}
+                    onChange={(e) => {
+                      handleAmountModal('ledgerID', e.value);
+                      handleAmountModal('ledgerName', e.name);
+                    }}
+                  />
+                </div>
+
+                {/* <div>
+                  <label className="text-xs">{t("amount")}</label>
+                  {amountModal.selected}
+                  <ERPInput
+                    id="amount"
+                    noLabel={true}
+                    type="number"
+                    className="max-w-[210px]"
+                    value={amountModal.amount}
+                    onChange={(e) => {
+                      setAmountModal(prev => ({
+                        ...prev,
+                        amount: parseFloat(e.target.value) || 0, // or Number(e.target.value)
+                        selected: e.target.
                     }));
-                  }}
-                  onKeyDown={(e) => {
-                    handleKeyDown && handleKeyDown(e, "amount");
-                  }}
-                />
-              </div> */}
+                    }}
+                    onKeyDown={(e) => {
+                      handleKeyDown && handleKeyDown(e, "amount");
+                    }}
+                  />
+                </div> */}
 
-              <div>
-                <label className="text-xs">{t("amount")}</label>
-                <ERPInput
-                  id="amount"
-                  noLabel={true}
-                  type="number"
-                  className="max-w-[210px]"
-                  value={amountValue}
-                  onChange={(e) => onAmountChange(e.target.value)}
-                  onKeyDown={(e) => {
-                    handleKeyDown && handleKeyDown(e, "amount");
-                  }}
-                />
-              </div>
-
-              <div>
-                <label className="text-xs">{t("debit_credit")}</label>
-                <ERPDataCombobox
-                  field={{
-                    id: "debitCredit",
-                    valueKey: "value",
-                    labelKey: "label",
-                  }}
-                  options={[
-                    { value: "debit", label: "Debit" },
-                    { value: "credit", label: "Credit" }
-                  ]}
-                  noLabel={true}
-                  id="debitCredit"
-                  className="w-[120px]"
-                  value={amountModal.debitCredit}
-                  onChange={(e) => {
-                    handleAmountModal('debitCredit', e.value);
-                    handleAmountModal('debitCreditId', e.value);
-                    handleAmountModal('debitCreditValue', e.label);
-                  }}
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-xs">{t("remarks")}</label>
-                  <ERPCheckbox
-                    id="isIncome"
-                    label={t("is_income")}
-                    checked={amountModal.isIncome}
-                    onChange={(e) => handleAmountModal('isIncome', e.target.checked)}
+                <div>
+                  <label className="text-xs">{t("amount")}</label>
+                  <ERPInput
+                    id="amount"
+                    noLabel={true}
+                    type="number"
+                    className="max-w-[210px]"
+                    value={amountValue}
+                    onChange={(e) => onAmountChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      handleKeyDown && handleKeyDown(e, "amount");
+                    }}
                   />
                 </div>
-                <ERPInput
-                  id="remarks"
-                  noLabel={true}
-                  className="w-[120px]"
-                  value={remarksValue}
-                  onChange={(e) => onRemarksChange(e.target.value)}
-                  onKeyDown={(e) => {
-                    handleKeyDown && handleKeyDown(e, "remarks");
-                  }}
-                />
-              </div>
 
-              <ERPButton
-                variant="primary"
-                title={editingIndex !== null ? t("update") : t("add")}
-                onClick={handleClick}
-              />
-            </div>
-            <ErpDevGrid
-              columns={gridColumns}
-              data={gridData}
-              gridId="adjustmentAmountGrid"
-              height={400}
-              hideGridAddButton={true}
-              columnHidingEnabled={true}
-              hideDefaultExportButton={true}
-              hideDefaultSearchPanel={true}
-              allowSearching={false}
-              allowExport={false}
-              hideGridHeader={true}
-              enablefilter={false}
-              enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
-              showPrintButton={false}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex items-center gap-4">
-                <h3 className="text-sm font-medium">{t("total_debit")}: {totalDebit}</h3>
-                <h3 className="text-sm font-medium">{t("total_credit")}: {totalCredit}</h3>
-                <h3 className="text-sm font-semibold">{t("total_fc")}: {totalFC}</h3>
-              </div>
-              <div className="flex items-center gap-2">
+                <div>
+                  <label className="text-xs">{t("debit_credit")}</label>
+                  <ERPDataCombobox
+                    field={{
+                      id: "debitCredit",
+                      valueKey: "value",
+                      labelKey: "label",
+                    }}
+                    options={[
+                      { value: "debit", label: "Debit" },
+                      { value: "credit", label: "Credit" }
+                    ]}
+                    noLabel={true}
+                    id="debitCredit"
+                    className="w-[120px]"
+                    value={amountModal.debitCredit}
+                    onChange={(e) => {
+                      handleAmountModal('debitCredit', e.value);
+                      handleAmountModal('debitCreditId', e.value);
+                      handleAmountModal('debitCreditValue', e.label);
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs">{t("remarks")}</label>
+                    <ERPCheckbox
+                      id="isIncome"
+                      label={t("is_income")}
+                      checked={amountModal.isIncome}
+                      onChange={(e) => handleAmountModal('isIncome', e.target.checked)}
+                    />
+                  </div>
+                  <ERPInput
+                    id="remarks"
+                    noLabel={true}
+                    className="w-[120px]"
+                    value={remarksValue}
+                    onChange={(e) => onRemarksChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      handleKeyDown && handleKeyDown(e, "remarks");
+                    }}
+                  />
+                </div>
+
                 <ERPButton
-                  title={t('close')}
-                  variant="secondary"
-                  onClick={closeModal}
-                />
-                <ERPButton
-                  title={t('apply')}
                   variant="primary"
+                  title={editingIndex !== null ? t("update") : t("add")}
+                  onClick={handleClick}
                 />
               </div>
-            </div>
-          </>
-        }
-      />
-}
+              <div className="mt-4">
+                <ErpDevGrid
+                  columns={gridColumns}
+                  data={gridData}
+                  gridId="adjustmentAmountGrid"
+                  height={400}
+                  hideGridAddButton={true}
+                  columnHidingEnabled={true}
+                  hideDefaultExportButton={true}
+                  hideDefaultSearchPanel={true}
+                  allowSearching={false}
+                  allowExport={false}
+                  hideGridHeader={true}
+                  enablefilter={false}
+                  enableScrollButton={false}
+                  ShowGridPreferenceChooser={false}
+                  showPrintButton={false}
+                  hideToolbar={true}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-sm font-medium">{t("total_debit")}: {totalDebit}</h3>
+                  <h3 className="text-sm font-medium">{t("total_credit")}: {totalCredit}</h3>
+                  <h3 className="text-sm font-semibold">{t("total_fc")}: {totalFC}</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ERPButton
+                    title={t('close')}
+                    variant="secondary"
+                    onClick={closeModal}
+                  />
+                  <ERPButton
+                    title={t('apply')}
+                    variant="primary"
+                  />
+                </div>
+              </div>
+            </>
+          }
+        />
+      }
     </>
   );
 };

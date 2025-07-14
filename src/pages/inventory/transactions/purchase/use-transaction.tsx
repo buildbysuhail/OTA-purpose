@@ -89,9 +89,9 @@ export const useTransaction = (
   transactionType: string,
   btnSaveRef: any,
   btnAddRef: any,
-  focusToNextColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null,
-  focusColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null,
-  focusCurrentColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null,
+  focusToNextColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null,
+  focusColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null,
+  focusCurrentColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
   masterAccountRef?: any,
@@ -106,7 +106,8 @@ export const useTransaction = (
   taxableAmountRef?: any,
   refNoRef?: any,
   discountRef?: any,
-  chequeStatusRef?: any
+  chequeStatusRef?: any,
+  handleKeyDown?: (e: any, field: string, rowIndex: number) => void
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -201,22 +202,22 @@ export const useTransaction = (
       ledgerIdRef.current?.focus();
     }
   };
-  
-  const setCurrentCell = (input: {column: string; rowIndex: number} | null, productBatchID: number) => {
-          if(input) {
-        dispatch(
-          formStateHandleFieldChange({
-            fields: {
-              currentCell: {
-                column: input?.column,
-                productBatchID: productBatchID, 
-                rowIndex: input?.rowIndex, 
-              },
+
+  const setCurrentCell = (input: { column: string; rowIndex: number } | null, productBatchID: number) => {
+    if (input) {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            currentCell: {
+              column: input?.column,
+              productBatchID: productBatchID,
+              rowIndex: input?.rowIndex,
             },
-          })
-        );
-      }
-      }
+          },
+        })
+      );
+    }
+  }
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
@@ -1963,35 +1964,35 @@ export const useTransaction = (
       let calculateSummaryAndTotal = false;
       const actualPriceVisible = formState.gridColumns?.find(x => x.dataField == "actualSalesPrice")?.visible;
       if (columnName === "unitID") {
-        if(value > 0) {
+        if (value > 0) {
           const unitName = formState.batchesUnits?.find(xer => xer.value == value && xer.productBatchID == detail.productBatchID)?.label
           outDetail.unit = unitName;
           outDetail.unitID = value;
           const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${value}/${actualPriceVisible}`)
-          if(res) {
+          if (res) {
             outDetail.unitPrice = res.unitPrice;
             outDetail.unitPriceTag = res.unitPrice;
             outDetail.salesPrice = res.salesPrice;
             outDetail.minSalePrice = res.minSalePrice;
             outDetail.actualSalesPrice = res.salesPrice;
-            if(actualPriceVisible) {
-              if(res.specialPrice > 0) {
-           outDetail.actualSalesPrice = res.res.specialPrice; 
+            if (actualPriceVisible) {
+              if (res.specialPrice > 0) {
+                outDetail.actualSalesPrice = res.res.specialPrice;
               }
             }
             outState = calculateRowAmount(
-            Object.assign(detail, outDetail),
-            columnName,
-            {
-              result: {
-                transaction: {
-                  details: [outDetail],
+              Object.assign(detail, outDetail),
+              columnName,
+              {
+                result: {
+                  transaction: {
+                    details: [outDetail],
+                  },
                 },
               },
-            },
-            true
-          );
-          calculateSummaryAndTotal = true;
+              true
+            );
+            calculateSummaryAndTotal = true;
           }
         }
       }
@@ -2211,16 +2212,16 @@ export const useTransaction = (
           });
           if (confirm) {
             let pld: DeepPartial<TransactionFormState> = {
-                  
-                  transaction: {
-                    details: [
-                      { ...initialTransactionDetailData, slNo: detail.slNo },
-                    ],
-                  },
-                }
+
+              transaction: {
+                details: [
+                  { ...initialTransactionDetailData, slNo: detail.slNo },
+                ],
+              },
+            }
             const res = focusColumn(_index, "qty");
-            if(res) {
-              pld.currentCell = {...res, productBatchID: product.productBatchID}
+            if (res) {
+              pld.currentCell = { ...res, productBatchID: product.productBatchID }
             }
             dispatch(
               formStateHandleFieldChangeKeysOnly({
@@ -2438,16 +2439,16 @@ export const useTransaction = (
             },
           };
         }
-        
-              debugger;
+
+        debugger;
         for (const unit of product.units) {
-          if(!result.batchesUnits) {
+          if (!result.batchesUnits) {
             result.batchesUnits = [];
           }
-            const exists = result.batchesUnits.some(u => u.productBatchID === unit.productBatchID && u.value == unit.value);
-            if (!exists) {
-                result.batchesUnits.push(unit);
-            }
+          const exists = result.batchesUnits.some(u => u.productBatchID === unit.productBatchID && u.value == unit.value);
+          if (!exists) {
+            result.batchesUnits.push(unit);
+          }
         }
 
         commonParams.formStateHandleFieldChangeKeysOnly &&
@@ -2463,7 +2464,7 @@ export const useTransaction = (
           const res = focusToNextColumn(data.rowIndex, data.searchColumn);
           setCurrentCell(res, outDetail.productBatchID)
         }
-        
+
         return result;
       } else if (res?.products?.length > 1) {
         // Multiple products
@@ -2524,7 +2525,9 @@ export const useTransaction = (
             );
           }
           break;
-        case "Control":
+
+        case "b":
+        case 'B':
           if (isCtrlPressed) {
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
@@ -2535,78 +2538,90 @@ export const useTransaction = (
           }
           break;
 
-         case ' ': // Space key
+        case "i":
+        case 'I':
+          if (isCtrlPressed) {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: { showProductInformation: true },
+              })
+            );
+            return { handled: true };
+          }
+          break;
+
+        case ' ': // Space key
           {
             debugger
             let outState: DeepPartial<TransactionFormState> = {
-        transaction: { details: [] },
-      };
+              transaction: { details: [] },
+            };
             const actualPriceVisible = formState.gridColumns?.find(x => x.dataField == "actualSalesPrice")?.visible;
             let detail = { ...formState.transaction.details[rowIndex] };
-             let outDetail: DeepPartial<TransactionDetail> = {slNo: detail.slNo};
+            let outDetail: DeepPartial<TransactionDetail> = { slNo: detail.slNo };
 
-           if (columnName === "qty") {
-            const units = formState.batchesUnits?.filter(xer => xer.productBatchID == detail.productBatchID)
-            const unitIndex = units?.findIndex(xer => xer.value == detail.unitID)??0
-            const nextUnitIndex = unitIndex < ((units?.length??0)-1) ? unitIndex+1 : 0
-            if(!units) {return { handled: true };}
-            const unitName = units[nextUnitIndex].label
-            const unitID = units[nextUnitIndex].value
-          outDetail.unit = unitName;
-          outDetail.unitID = unitID;
-          const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${value}/${actualPriceVisible}`)
-          if(res) {
-            outDetail.unitPrice = res.unitPrice;
-            outDetail.unitPriceTag = res.unitPrice;
-            outDetail.salesPrice = res.salesPrice;
-            outDetail.minSalePrice = res.minSalePrice;
-            outDetail.actualSalesPrice = res.salesPrice;
-            if(actualPriceVisible) {
-              if(res.specialPrice > 0) {
-           outDetail.actualSalesPrice = res.res.specialPrice; 
+            if (columnName === "qty") {
+              const units = formState.batchesUnits?.filter(xer => xer.productBatchID == detail.productBatchID)
+              const unitIndex = units?.findIndex(xer => xer.value == detail.unitID) ?? 0
+              const nextUnitIndex = unitIndex < ((units?.length ?? 0) - 1) ? unitIndex + 1 : 0
+              if (!units) { return { handled: true }; }
+              const unitName = units[nextUnitIndex].label
+              const unitID = units[nextUnitIndex].value
+              outDetail.unit = unitName;
+              outDetail.unitID = unitID;
+              const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${value}/${actualPriceVisible}`)
+              if (res) {
+                outDetail.unitPrice = res.unitPrice;
+                outDetail.unitPriceTag = res.unitPrice;
+                outDetail.salesPrice = res.salesPrice;
+                outDetail.minSalePrice = res.minSalePrice;
+                outDetail.actualSalesPrice = res.salesPrice;
+                if (actualPriceVisible) {
+                  if (res.specialPrice > 0) {
+                    outDetail.actualSalesPrice = res.res.specialPrice;
+                  }
+                }
+                outState = calculateRowAmount(
+                  Object.assign(detail, outDetail),
+                  columnName,
+                  {
+                    result: {
+                      transaction: {
+                        details: [outDetail],
+                      },
+                    },
+                  },
+                  true
+                );
+                const details = [...formState.transaction.details];
+                let final = { ...detail, ...outState!.transaction!.details![0] };
+                details[rowIndex] = final;
+                const summaryRes = calculateSummary(details, formState, { result: {} });
+
+                const totalRes = calculateTotal(
+                  formState.transaction.master,
+                  summaryRes.summary as SummaryItems,
+                  formState.formElements,
+                  { result: {} }
+                );
+                if (totalRes) {
+                  totalRes.summary = summaryRes.summary;
+                  totalRes.transaction = totalRes.transaction ?? {};
+                  totalRes.transaction.details = outState?.transaction
+                    ?.details as TransactionDetail[];
+                }
+                outState = totalRes;
+
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: totalRes,
+                    updateOnlyGivenDetailsColumns: true,
+                    rowIndex: rowIndex,
+                  })
+                );
               }
             }
-            outState = calculateRowAmount(
-            Object.assign(detail, outDetail),
-            columnName,
-            {
-              result: {
-                transaction: {
-                  details: [outDetail],
-                },
-              },
-            },
-            true
-          );
-          const details = [...formState.transaction.details];
-        let final = { ...detail, ...outState!.transaction!.details![0] };
-        details[rowIndex] = final;
-        const summaryRes = calculateSummary(details, formState, { result: {} });
-
-        const totalRes = calculateTotal(
-          formState.transaction.master,
-          summaryRes.summary as SummaryItems,
-          formState.formElements,
-          { result: {} }
-        );
-        if (totalRes) {
-          totalRes.summary = summaryRes.summary;
-          totalRes.transaction = totalRes.transaction ?? {};
-          totalRes.transaction.details = outState?.transaction
-            ?.details as TransactionDetail[];
-        }
-        outState = totalRes;
-      
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: totalRes,
-          updateOnlyGivenDetailsColumns: true,
-          rowIndex: rowIndex,
-        })
-      );
-          }
-        }
-           break;
+            break;
           }
 
         case "F2":
@@ -2624,7 +2639,7 @@ export const useTransaction = (
           break;
 
         case "Enter":
-            let data = { ...formState.transaction.details[rowIndex] };
+          let data = { ...formState.transaction.details[rowIndex] };
           if (columnName == "pCode") {
             data.pCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -2703,11 +2718,11 @@ export const useTransaction = (
               });
               if (confirm) {
                 const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+                setCurrentCell(res, data.productBatchID)
                 break;
               } else {
                 const res = focusCurrentColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+                setCurrentCell(res, data.productBatchID)
               }
             }
           } else if (columnName == "margin" || columnName == "salesPrice") {
@@ -2747,11 +2762,11 @@ export const useTransaction = (
                 });
                 if (confirm) {
                   const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+                  setCurrentCell(res, data.productBatchID)
                   break;
                 } else {
                   const res = focusCurrentColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+                  setCurrentCell(res, data.productBatchID)
                 }
               }
             } else if (
@@ -2760,8 +2775,8 @@ export const useTransaction = (
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
-                 const res = focusCurrentColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+                const res = focusCurrentColumn(rowIndex, columnName);
+                setCurrentCell(res, data.productBatchID)
               }
             }
           } else if (columnName == "btnPrintBarcode") {
@@ -2795,7 +2810,7 @@ export const useTransaction = (
               }
             } else {
               printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
-                formState.transaction.master.fromWarehouseID,false);
+                formState.transaction.master.fromWarehouseID, false);
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")
@@ -2867,7 +2882,7 @@ export const useTransaction = (
             );
           } else {
             const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID)
+            setCurrentCell(res, data.productBatchID)
           }
           break;
         default:

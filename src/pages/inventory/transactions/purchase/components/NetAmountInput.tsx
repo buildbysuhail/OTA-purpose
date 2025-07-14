@@ -4,7 +4,6 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 interface NetAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
   dispatch: any;
-  showFirstFooter: boolean;
 }
 
 const NetAmountInput: React.FC<NetAmountInputProps> = ({
@@ -12,7 +11,6 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
   dispatch,
   t,
   handleKeyDown,
-  showFirstFooter
 }) => {
   return (
     // <ERPInput

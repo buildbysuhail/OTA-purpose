@@ -78,6 +78,8 @@ import Serials from "./serials";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import ProductInfoSlideUp from "./productInfo";
 import ProductBatchUnitDetails from "./product-batch-unit-details";
+import DocumentProperties from "./document-properties";
+import ProductInformation from "./product-information";
 
 interface BilledItem {
   id?: number;
@@ -167,10 +169,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
     right: isRtl ? headerLeft : "0"
   };
   const purchaseGridRef = useRef<{
-    focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
-    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
-    focusCurrentColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null;
-    focusColumn: (rowIndex: number, column: string) => {column: string; rowIndex: number} | null;
+    focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;
+    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => { column: string; rowIndex: number } | null;
+    focusCurrentColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null;
+    focusColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null;
     gridRef: HTMLDivElement
   }>(null);
 
@@ -204,6 +206,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const focusTaxNoField = () => {
     setTimeout(() => {
@@ -238,7 +241,36 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
 
+  const handleDocumentModalClick = () => {
+    setIsDocumentModalOpen(true);
+  }
+
+  const closeDocumentModal = () => {
+    setIsDocumentModalOpen(false);
+  }
+
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.key === 'F') {
+        event.preventDefault();
+        if (voucherNumberRef.current) {
+          voucherNumberRef.current.focus();
+        }
+      }
+      if (event.shiftKey && event.key === 'D') {
+        event.preventDefault();
+        handleDocumentModalClick();
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, []);
+
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const focusToNextColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.nextCellFind(rowIndex, column) ?? null; };
   const focusColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.focusColumn(rowIndex, column) ?? null; };
@@ -301,7 +333,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     taxableAmountRef,
     refNoRef,
     discountRef,
-    chequeStatusRef
+    chequeStatusRef,
+    handleKeyDown
   );
 
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -897,27 +930,27 @@ const TransactionForm: React.FC<TransactionProps> = ({
     if (formState.currentCell && formState.currentCell.column != "" && formState.currentCell.rowIndex > -1) {
       const targetCellId = `${gridCode}_${formState.currentCell.column}_${formState.currentCell.rowIndex}`;
       const targetCell = document.getElementById(
-          targetCellId
-        ) as HTMLElement | null;
-        if (targetCell) {
-          if (formState.currentCell.column === "product") {
-            const erpSearchInput = targetCell.querySelector(
-              `input[id="${targetCellId}"]`
-            ) as HTMLInputElement | null;
-            if (erpSearchInput) {
-              erpSearchInput.focus();
-              erpSearchInput.select();
-              return;
-            }
+        targetCellId
+      ) as HTMLElement | null;
+      if (targetCell) {
+        if (formState.currentCell.column === "product") {
+          const erpSearchInput = targetCell.querySelector(
+            `input[id="${targetCellId}"]`
+          ) as HTMLInputElement | null;
+          if (erpSearchInput) {
+            erpSearchInput.focus();
+            erpSearchInput.select();
+            return;
           }
-          targetCell.focus();
-          const input =
-            targetCell.tagName === "INPUT"
-              ? (targetCell as HTMLInputElement)
-              : (targetCell.querySelector("input") as HTMLInputElement | null);
-          if (input) input.select();
+        }
+        targetCell.focus();
+        const input =
+          targetCell.tagName === "INPUT"
+            ? (targetCell as HTMLInputElement)
+            : (targetCell.querySelector("input") as HTMLInputElement | null);
+        if (input) input.select();
 
-          //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
+        //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
         if (purchaseGridRef?.current && targetCell) {
           const cellRect = targetCell?.getBoundingClientRect();
           const gridRect = purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
@@ -930,8 +963,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
               scrollLeft + (cellRect?.right - gridRect?.right);
           }
         }
-          
-        }
+
+      }
     }
   }, [formState.currentCell]);
 
@@ -1294,7 +1327,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("barcode_printed"),
         dataType: "boolean",
         visible: true,
-        readOnly:true,
+        readOnly: true,
         width: 250,
         alignment: "left",
       },
@@ -2511,6 +2544,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
             t={t}
           />
         )}
+        {formState.showProductInformation && (
+          <ProductInformation
+            isOpen={formState.showProductInformation}
+            transactionType={transactionType ?? ""}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { showProductInformation: false },
+                })
+              )
+            }
+          />
+        )}
+        {
+          isDocumentModalOpen && (
+            <ERPModal
+              isOpen={isDocumentModalOpen}
+              title={t('document_modal')}
+              width={700}
+              height={620}
+              closeModal={closeDocumentModal}
+              content={<DocumentProperties closeModal={closeDocumentModal} t={t} />}
+            />
+          )
+        }
       </div>
       {/* ) : (
         <>Loading ............</>

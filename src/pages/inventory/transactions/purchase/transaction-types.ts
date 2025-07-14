@@ -468,6 +468,7 @@ export interface TransactionFormState {
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo:boolean;
   ShowProductBatchUnitDetails:boolean;
+  showProductInformation:boolean;
 }
 
 export interface ColumnModel {

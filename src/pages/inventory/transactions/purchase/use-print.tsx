@@ -31,6 +31,7 @@ import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import { initialProductData } from "./transaction-type-data";
+import { data } from "react-router-dom";
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation();
@@ -255,11 +256,12 @@ export const usePrint = () => {
             unitID: row.unitID,
             selectedUnit: row.unitID,
             prevProductBatchID: row.productBatchID,
+            productBatchID: row.productBatchID,
             mrp: row.mrp,
             shelfID: 1,
             brandID: row.brandID,
-            mfgDate: row.mfdDate,
-            expiryDate: row.expDate,
+            mfgDate: isNullOrUndefinedOrEmpty(row.mfdDate)?new Date():row.mfdDate,
+            expiryDate:  isNullOrUndefinedOrEmpty(row.expDate)?new Date():row.expDate,
             batchNo: row.batchNo,
             mannualBarcode: row.manualBarcode,
             openingDate: new Date(),
@@ -286,6 +288,7 @@ export const usePrint = () => {
           batchCreatedList = res.items;
         }
       }
+      debugger;
       // Process each row in the specified range
       for (let i = 0; i < rowIndexes.length; i++) {
         let barcode: BarcodeLabel = initialProductData;
@@ -301,7 +304,7 @@ export const usePrint = () => {
           // Get sticker quantity
           let stickerQty = 0;
 
-          if (row.stickerQty === 0 || row.stickerQty === 0) continue;
+          if ( row.stickerQty === 0) continue;
 
           stickerQty = row.stickerQty;
 
@@ -372,7 +375,6 @@ export const usePrint = () => {
             barcodeLabelAdded = true;
           }
 
-         
         }
       }
       // prit
@@ -383,7 +385,7 @@ export const usePrint = () => {
                 transaction: {
                   details: modifiedDetails,
                 },
-              },
+              },updateOnlyGivenDetailsColumns: true
             })
           );
 

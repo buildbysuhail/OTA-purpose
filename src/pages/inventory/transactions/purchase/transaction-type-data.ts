@@ -193,7 +193,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   salesPrice: 0,
   lpr: 0,
   lpc: 0,
-  stickerQty: 0,
+  stickerQty: 1,
   profit: 0,
   size: '',
   vatPerc: 0,

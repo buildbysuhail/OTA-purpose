@@ -1293,9 +1293,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "barcodePrinted",
         caption: t("barcode_printed"),
         dataType: "boolean",
-        visible: false,
+        visible: true,
+        readOnly:true,
         width: 250,
-        alignment: "center",
+        alignment: "left",
       },
       {
         dataField: "batchCreated",

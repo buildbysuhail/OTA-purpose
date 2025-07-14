@@ -18,6 +18,7 @@ import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
+import { usePrint } from "../../inventory/transactions/purchase/use-print";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -145,6 +146,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const [printing, setPrinting] = useState<boolean>(false);
   const [data, setData] = useState<any>();
   const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
+  const { printBarcode, printVoucher } = usePrint();
   const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -241,8 +243,15 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   }, [voucherForm]);
 
   const barcodeDescSubmit = useCallback(() => {
-    setShowPrint(true);
     setPrinting(true);
+    if(barcodeForm.data?.isFormTo){
+     setShowPrint(true);
+    }else{
+      setShowPrint(false);
+      // printBarcode()
+
+    }
+    
     setTimeout(() => {
       setPrinting(false);
       setBarcodeDesc((prevData: any) => ({
@@ -252,7 +261,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         },
       }));
     }, 1000);
-  }, [barcodeDesc?.data]);
+  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo]);
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(
@@ -683,7 +692,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       </div>
 
       {
-        template && data && showPrint &&
+        barcodeForm.data?.isFormTo&&template && data && showPrint &&
         <ERPModal
           isOpen={showPrint}
           title={t("barcode_print")}

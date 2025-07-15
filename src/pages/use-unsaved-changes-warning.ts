@@ -67,13 +67,22 @@ export const useUnsavedChangesWarning = () => {
     debugger;
     try {
       if (!_formState || !_formState.prev) return false;
+      let currentStateCompare: any;
 if(_formState.isAcc) {
-  
-}
-      const currentStateCompare = {
+currentStateCompare = {
         transaction: _formState.transaction,
         row: _formState.row,
       };
+}
+else if(_formState.isInv)
+      {
+        currentStateCompare = {
+        transaction: {
+          master: _formState.transaction.master,
+          details: _formState.transaction?.details?.filter((x: any) => x.productID > 0)
+        }
+      };
+      }
 
       if (!_formState) return false;
 
@@ -85,10 +94,10 @@ if(_formState.isAcc) {
         }
       });
 
-      if (!_prevState || Object.keys(_prevState).length !== 2) return false;
+      if (!_prevState || Object.keys(_prevState).length !== (_formState.isInv ? 1 :2)) return false;
 
       const base64 = await modelToBase64Unicode(
-        setTransactionForHistory(currentStateCompare)
+        setTransactionForHistory(currentStateCompare, _formState.isAcc ? "acc" : "inv")
       );
       const isEqual = _formState.prev === base64;
       console.log(`isEqual fgfgdf: ${isEqual}`);

@@ -245,7 +245,7 @@ export const useAccTransaction = (
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
-    });
+    },"acc");
     if (_s_isDirty && skipPrompt != true) {
       // if (mode == "increment" || mode == "decrement") {
       //   // const _voucherNumber =
@@ -471,7 +471,7 @@ export const useAccTransaction = (
     }
 
     _formState.prev = modelToBase64Unicode(
-      setTransactionForHistory(_formState)
+      setTransactionForHistory(_formState,"acc")
     );
 
     console.log("accFormStateHandleFieldChange1");

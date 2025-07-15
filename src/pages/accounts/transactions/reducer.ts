@@ -177,7 +177,7 @@ const accTransactionSlice = createSlice({
           setTransactionForHistory({
             transaction: { ...state.transaction },
             row: { ...state.row },
-          })
+          },"acc")
         );
       }
     },

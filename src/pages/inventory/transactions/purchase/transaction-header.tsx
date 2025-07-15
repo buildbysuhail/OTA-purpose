@@ -428,14 +428,8 @@ useEffect(()=>{
                     data={formState.transaction.master}
                     onSelectItem={async(e) => {
                       let barcodeTem= await loadTemplateById(e.value);
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: {
-                            labelDesignID: e.value,
-                            barcodeTemplate:barcodeTem
-                          },
-                        })
-                      );
+                       dispatch(formStateHandleFieldChange({ fields: {barcodeTemplate:barcodeTem}}) );  
+                      dispatch( formStateMasterHandleFieldChange({fields: { labelDesignID: e.value, }, }));
                       handleFieldKeyDown("labelDesignID", "Enter");
                     }}
                     value={formState.transaction.master.labelDesignID}

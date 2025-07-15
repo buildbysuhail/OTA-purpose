@@ -64,7 +64,7 @@ export const useUnsavedChangesWarning = () => {
     return '/';
   }, [_accFormState, _invFormState]);
   const hasUnsavedChanges = useCallback(async () => {
-    debugger;
+   
     try {
       if (!_formState || !_formState.prev) return false;
       let currentStateCompare: any;
@@ -188,7 +188,7 @@ else if(_formState.isInv)
           isNavigationLink = true;
         }
       }
-       debugger;
+  
       if (isNavigationLink) {
         // const unsavedChanges = await hasUnsavedChanges();
         hasUnsavedChanges()

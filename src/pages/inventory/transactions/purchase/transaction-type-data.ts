@@ -165,7 +165,6 @@ export const TransactionMasterInitialData: TransactionMaster = {
   prevTransDate: "",
   oldLedgerID: 0,
   dueDays: 0,
-  barcodeTemplate:{},
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",

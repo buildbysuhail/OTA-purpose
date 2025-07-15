@@ -19,7 +19,7 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({ closeModal, t }
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "userName",
-      caption: t("user_name"),
+      caption: t("username"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,

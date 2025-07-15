@@ -644,5 +644,13 @@
 
   "show_all_list": "عرض كل القوائم",
   "inv_trans_accounts_id": "معرف حسابات معاملة المخزون",
-  "amount_fc": "المبلغ بالعملة الأجنبية"
+  "amount_fc": "المبلغ بالعملة الأجنبية",
+
+  "username": "اسم المستخدم",
+  "action_performed": "الإجراء الذي تم تنفيذه",
+  "date_time_of_action": "تاريخ ووقت الإجراء",
+  "action_name": "اسم الإجراء",
+  "system_name": "اسم النظام",
+  "show_view_action": "عرض إجراء",
+  "document_properties": "خصائص المستند"
 }

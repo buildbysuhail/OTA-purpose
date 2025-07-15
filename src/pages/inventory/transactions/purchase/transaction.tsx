@@ -252,6 +252,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }
 
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
+  const formStateRef = useRef(formState);
+  useEffect(() => {
+    formStateRef.current = formState;
+  }, [formState]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
@@ -261,10 +265,53 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherNumberRef.current.focus();
         }
       }
+      // Focus Voucher Number ☝
       if (event.shiftKey && event.key === 'D') {
         event.preventDefault();
         handleDocumentModalClick();
       }
+      // Document Properties ☝
+      if (event.ctrlKey && event.key.toLowerCase() === 'g') {
+        event.preventDefault();
+        const currentFormState = formStateRef.current;
+        if (currentFormState.transaction.details.length > 0 && purchaseGridRef.current) {
+          const visibleColumns = currentFormState.gridColumns?.filter(
+            col => col.visible !== false && col.dataField != null
+          ) || [];
+          const firstEditableColumn = visibleColumns.find(
+            col => col.allowEditing && !col.readOnly
+          );
+          if (firstEditableColumn) {
+            const columnIndex = visibleColumns.indexOf(firstEditableColumn);
+            const res = purchaseGridRef.current.focusCell(0, columnIndex);
+            if (res) {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: {
+                    currentCell: {
+                      column: res.column,
+                      rowIndex: res.rowIndex,
+                    },
+                  },
+                })
+              );
+            }
+          }
+        }
+      }
+      // Focus Inventory Grid ☝
+      if (event.shiftKey && event.key.toUpperCase() === 'F5') {
+        event.preventDefault();
+        const currentFormState = formStateRef.current;
+        if (
+          !currentFormState.formElements.pnlMasters?.disabled &&
+          currentFormState.transaction.details != null &&
+          currentFormState.transaction.details.length > 0
+        ) {
+          save();
+        }
+      }
+      // Save Document ☝
     };
 
     document.addEventListener('keydown', handleGlobalKeyDown);
@@ -344,11 +391,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const { hasRight } = useUserRights();
 
   useEffect(() => {
-    let height 
+    let height
     if (formState.userConfig?.footerPosition === 'right') {
-     height= window.innerHeight-300
+      height = window.innerHeight - 300
     } else {
-      height = window.innerHeight -520
+      height = window.innerHeight - 520
     }
     setGridHeight(height)
   }, [formState.userConfig?.footerPosition]);
@@ -463,7 +510,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-debugger;
+      debugger;
       let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
@@ -749,7 +796,7 @@ debugger;
           , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
           , useProductCode: data.useProductCode, rowIndex: data.rowIndex
           , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
-        }, { result: {}, formStateHandleFieldChangeKeysOnly },true)
+        }, { result: {}, formStateHandleFieldChangeKeysOnly }, true)
 
     }
   }, [formState.batchSelectionData]);
@@ -2054,14 +2101,13 @@ debugger;
                       e: React.KeyboardEvent<any>,
                       column: keyof TransactionDetail,
                       rowIndex: number
-                    ) =>
-                     {
-                      debugger;  handleTextDataKeyDown(value, e, column, rowIndex, {
+                    ) => {
+                      debugger; handleTextDataKeyDown(value, e, column, rowIndex, {
                         result: {},
                         formStateHandleFieldChangeKeysOnly:
                           formStateHandleFieldChangeKeysOnly,
                       })
-                     }
+                    }
                     }
                     transactionType={transactionType}
                     columns={purchaseGridCol}
@@ -2353,18 +2399,18 @@ debugger;
             content={<ProductSummaryMaster />}
           />
         )}
-      {formState.userConfig?.barCodePrev &&(
-      <ERPModal
-          isOpen={formState.barcodePrevOpen ||  false}
-          title={t("barcode_print")}
-          isForm={true}
-          closeModal={() => dispatch(formStateHandleFieldChange({ fields: {barcodePrevOpen:false }}))}
-          content={<DownloadBarcodePreview  template={formState?.barcodeTemplate} data={formState?.barcodeData} />}
-          width={5000}
-          height={5000}
-        />
-      )}
-      
+        {formState.userConfig?.barCodePrev && (
+          <ERPModal
+            isOpen={formState.barcodePrevOpen || false}
+            title={t("barcode_print")}
+            isForm={true}
+            closeModal={() => dispatch(formStateHandleFieldChange({ fields: { barcodePrevOpen: false } }))}
+            content={<DownloadBarcodePreview template={formState?.barcodeTemplate} data={formState?.barcodeData} />}
+            width={5000}
+            height={5000}
+          />
+        )}
+
 
         {formState.isPartyWiseSummaryOpen && (
           <ERPModal
@@ -2579,7 +2625,7 @@ debugger;
           isDocumentModalOpen && (
             <ERPModal
               isOpen={isDocumentModalOpen}
-              title={t('document_modal')}
+              title={t('document_properties')}
               width={700}
               height={620}
               closeModal={closeDocumentModal}

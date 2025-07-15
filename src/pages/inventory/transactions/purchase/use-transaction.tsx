@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { usePrint } from "./use-print";
 import moment from "moment";
@@ -148,6 +148,28 @@ export const useTransaction = (
     (state: RootState) => state.ClientSession
   );
   const { printBarcode, printVoucher } = usePrint();
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key.toLowerCase() === "l") {
+        event.preventDefault();
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              ledgerDetails: true,
+            },
+          })
+        );
+      }
+    };
+    //  Party Search ☝
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, [dispatch]);
+
   // const clearControlForNew = async () => {
 
   // };
@@ -455,7 +477,7 @@ export const useTransaction = (
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.costCentreID.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-      (formState.userConfig?.presetCostenterId ?? 0) > 0
+        (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -524,10 +546,8 @@ export const useTransaction = (
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${
-        voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
-        isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -885,13 +905,13 @@ export const useTransaction = (
       const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
+            `${Urls.inv_transaction_base}${transactionType}`,
+            params
+          )
           : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
+            `${Urls.inv_transaction_base}${transactionType}`,
+            params
+          );
       if (saveRes.isOk == true) {
         dispatch(
           formStateTransactionUpdate({
@@ -1602,8 +1622,8 @@ export const useTransaction = (
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-            ? "increment"
-            : undefined,
+              ? "increment"
+              : undefined,
           true
         );
       }
@@ -1987,8 +2007,8 @@ export const useTransaction = (
           )?.label;
           outDetail.unit = unitName;
           outDetail.unitID = value;
-          
-          handleChangeUnit(outDetail, detail, actualPriceVisible?? false, outState,columnName, rowIndex)
+
+          handleChangeUnit(outDetail, detail, actualPriceVisible ?? false, outState, columnName, rowIndex)
         }
       }
       if (columnName === "unitPriceFC") {
@@ -2154,8 +2174,7 @@ export const useTransaction = (
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${
-          Urls.inv_transaction_base
+        `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
       debugger;
@@ -2413,9 +2432,9 @@ export const useTransaction = (
           ];
           let final =
             _res?.transaction?.details != undefined &&
-            _res?.transaction?.details.length > 0
+              _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                  ?.details[0] as DeepPartial<TransactionDetail>)
+                ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -2457,7 +2476,7 @@ export const useTransaction = (
             result.batchesUnits.push(unit);
           }
         }
-        
+
 
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&
@@ -2492,8 +2511,8 @@ export const useTransaction = (
     detail: TransactionDetail,
     actualPriceVisible: boolean,
     outState: DeepPartial<TransactionFormState>,
-columnName: keyof TransactionDetail ,
-rowIndex: number
+    columnName: keyof TransactionDetail,
+    rowIndex: number
   ) => {
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${detail.unitID}/${actualPriceVisible}`
@@ -2610,7 +2629,7 @@ rowIndex: number
           }
           break;
 
-          case "i":
+        case "i":
         case 'I':
           if (isCtrlPressed) {
             dispatch(
@@ -2621,6 +2640,7 @@ rowIndex: number
             return { handled: true };
           }
           break;
+        // Product Information ☝
 
         case " ": { // Space key
           debugger;
@@ -2648,7 +2668,7 @@ rowIndex: number
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
-            handleChangeUnit(outDetail, detail, actualPriceVisible?? false, outState,columnName, rowIndex)
+            handleChangeUnit(outDetail, detail, actualPriceVisible ?? false, outState, columnName, rowIndex)
           }
           break;
         }
@@ -2771,7 +2791,7 @@ rowIndex: number
 
             if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-                "WARN" &&
+              "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -2800,7 +2820,7 @@ rowIndex: number
               }
             } else if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-                "BLOCK" &&
+              "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {

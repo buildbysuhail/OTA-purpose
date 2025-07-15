@@ -71,14 +71,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   footerLayout
 }) => {
   const { appState } = useAppState();
-  // const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLedgerDetailsOpen, setIsLedgerDetailsOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef(null);
   const ledgerIdRef = useRef<any>(null);
 
   const isMinimized = appState.toggled && appState.toggled.includes("close");
@@ -101,10 +98,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // const toggleDropdown = () => {
-  //   setIsDropDownOpen(!isDropDownOpen);
-  // };
-
   const handleButtonClick = () => {
     setIsModalOpen(true);
   };
@@ -122,11 +115,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   };
 
   const handleLedgerDetailsClick = () => {
-    setIsLedgerDetailsOpen(true);
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { ledgerDetails: true },
+      })
+    );
   };
 
   const closeLedgerDetailsModal = () => {
-    setIsLedgerDetailsOpen(false);
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { ledgerDetails: false },
+      })
+    );
   };
 
   useEffect(() => {
@@ -152,9 +153,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-useEffect(()=>{
 
-},[])
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const conditionalFooterComponents =
@@ -426,10 +425,10 @@ useEffect(()=>{
                     className="min-w-[180px] !m-0"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
-                    onSelectItem={async(e) => {
-                      let barcodeTem= await loadTemplateById(e.value);
-                       dispatch(formStateHandleFieldChange({ fields: {barcodeTemplate:barcodeTem}}) );  
-                      dispatch( formStateMasterHandleFieldChange({fields: { labelDesignID: e.value, }, }));
+                    onSelectItem={async (e) => {
+                      let barcodeTem = await loadTemplateById(e.value);
+                      dispatch(formStateHandleFieldChange({ fields: { barcodeTemplate: barcodeTem } }));
+                      dispatch(formStateMasterHandleFieldChange({ fields: { labelDesignID: e.value, }, }));
                       handleFieldKeyDown("labelDesignID", "Enter");
                     }}
                     value={formState.transaction.master.labelDesignID}
@@ -480,7 +479,7 @@ useEffect(()=>{
                 )}
               </div>
               {conditionalFooterComponents}
-              {formState.formElements.pnlImport.visible &&
+              {formState.formElements.pnlImport.visible && (
                 <div className="inline-flex items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
                   {formState.formElements.cbCurrency?.visible && (
                     <ERPDataCombobox
@@ -550,7 +549,7 @@ useEffect(()=>{
                     disabled={formState.transactionLoading}
                   />
                 </div>
-              }
+              )}
             </div>
           </div>
 
@@ -600,12 +599,6 @@ useEffect(()=>{
             />
           </div>
 
-          {/* Dropdown content */}
-          {/* <div
-            ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
-              }`}
-          > */}
           <div
             ref={dropdownRef}
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
@@ -950,16 +943,14 @@ useEffect(()=>{
           </div>
         </div>
       )}
-      {isLedgerDetailsOpen && (
-        <ERPModal
-          isOpen={isLedgerDetailsOpen}
-          title={t("ledger_details")}
-          width={600}
-          height={610}
-          closeModal={closeLedgerDetailsModal}
-          content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
-        />
-      )}
+      <ERPModal
+        isOpen={formState.ledgerDetails}
+        title={t("ledger_details")}
+        width={600}
+        height={610}
+        closeModal={closeLedgerDetailsModal}
+        content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
+      />
     </div>
   );
 };

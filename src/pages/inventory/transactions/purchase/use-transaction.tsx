@@ -2447,7 +2447,6 @@ export const useTransaction = (
         debugger;
         for (const unit of product.units) {
           if (!result.batchesUnits) {
-          if (!result.batchesUnits) {
             result.batchesUnits = [];
           }
           const exists = result.batchesUnits.some(
@@ -2458,6 +2457,7 @@ export const useTransaction = (
             result.batchesUnits.push(unit);
           }
         }
+        
 
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&

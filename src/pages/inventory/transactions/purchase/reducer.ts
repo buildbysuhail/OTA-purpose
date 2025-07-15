@@ -20,6 +20,9 @@ import {
   TransactionFormStateInitialData,
 } from "./transaction-type-data";
 import { generateUniqueKey } from "../../../../utilities/Utils";
+import moment from "moment";
+import { modelToBase64Unicode } from "../../../../utilities/jsonConverter";
+import { setTransactionForHistory } from "../../../../helpers/transaction-modified-util";
 
 const InvTransactionSlice = createSlice({
   name: "invTransaction",
@@ -53,6 +56,59 @@ const InvTransactionSlice = createSlice({
         voucherNo,
         rowOnly = false,
       } = action.payload;
+      
+      state.formElements.btnAdd.label = "Add";
+      state.isRowEdit = false;
+      if (!rowOnly) {
+        (state.transaction.master.invTransactionMasterID = 0),
+          (state.transaction.attachments = []);
+        state.transaction.master.remarks = "";
+        state.transaction.master.exchangeRate = 1;
+        state.transaction.master.purchaseInvoiceNumber = "";
+        state.transaction.master.voucherNumber = voucherNo ?? 0;
+        state.transaction.master.transactionDate = moment(
+          softwareDate,
+          "DD/MM/YYYY"
+        )
+          .local()
+          .toISOString();
+
+        state.transaction.details = [];
+        state.isEdit = false;
+        state.printOnSave = true;
+        state.transaction.master.isLocked = false;
+        state.transaction.master.grandTotal = 0;
+        state.transaction.master.grandTotalFc = 0;
+
+        state.transaction.master.employeeID =
+          userSession.employeeId > 0 ? userSession.employeeId : 0;
+
+        state.formElements.ledgerID.reload = true;
+        state.formElements.costCentreID.reload = true;
+        state.formElements.amount.disabled = false;
+        state.formElements.pnlMasters.disabled = false;
+        state.formElements.employee.disabled = false;
+        state.formElements.jvDrCr.disabled = false;
+        state.formElements.masterAccount.disabled = false;
+        state.formElements.referenceDate.disabled = false;
+        state.formElements.referenceNumber.disabled = false;
+        state.formElements.transactionDate.disabled = false;
+        state.formElements.linkEdit.visible = false;
+
+
+        if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
+          state.formElements.costCentreID.disabled = true;
+          state.formElements.linkEdit.visible = false;
+        }
+        state.prev = modelToBase64Unicode(
+          setTransactionForHistory({
+            transaction: { 
+              master: state.transaction.master,
+              details: state.transaction.details.filter((x: any) => x.productID > 0)
+             },
+          },"inv")
+        );
+      }
     },
 
     // Update a specific field in the form state

@@ -259,8 +259,8 @@ export const useTransaction = (
     setVoucherNo?: boolean | false
   ) => {
     const _s_isDirty = isDirtyTransaction(formState.prev, {
-      transaction: { ...formState.transaction },
-    });
+      transaction: { ...formState.transaction }
+    },"inv");
     if (_s_isDirty && skipPrompt != true) {
       dispatch(
         formStateHandleFieldChange({
@@ -341,7 +341,7 @@ export const useTransaction = (
     }
 
     _formState.prev = modelToBase64Unicode(
-      setTransactionForHistory(_formState)
+      setTransactionForHistory(_formState,"inv")
     );
     debugger;
     _formState.transactionLoading = false;

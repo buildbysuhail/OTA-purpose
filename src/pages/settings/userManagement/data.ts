@@ -1,4 +1,4 @@
-export interface UserRight {
+export interface UserRight { 
   id: number;
   headId: number;
   name: string;

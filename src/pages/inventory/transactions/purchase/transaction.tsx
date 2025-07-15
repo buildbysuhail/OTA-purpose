@@ -633,7 +633,7 @@ debugger;
       // }
     };
     initializeFormElements();
-  }, [voucherType, voucherPrefix]);
+  }, [voucherType, voucherPrefix, formType]);
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
     setIsTemplateOpen(true);

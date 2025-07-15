@@ -344,11 +344,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const { hasRight } = useUserRights();
 
   useEffect(() => {
+    let height 
     if (formState.userConfig?.footerPosition === 'right') {
-      setGridHeight(620);
+     height= window.innerHeight-300
     } else {
-      setGridHeight(400);
+      height = window.innerHeight -520
     }
+    setGridHeight(height)
   }, [formState.userConfig?.footerPosition]);
 
   console.log("transaction mj23", { setGridHeight });

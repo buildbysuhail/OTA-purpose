@@ -244,73 +244,73 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Backspace" || e.key === "Delete") return;
-      
+
       onKeyDown(e, column, rowIndex);
     };
 
     return (
       <>
-      {type == "cb" ? (
-<ERPDataCombobox
-options={options??[]}
-// onSelectItem={(e: any) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
-        // ref={cbRef}
-          onChange={(e) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
-        id={column.dataField??""}
-        noLabel
-        enableClearOption={false}
-        className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-        // style={{
-        //   fontSize: `${gridFontSize}px`,
-        //   fontWeight: gridIsBold ? "bold" : "normal",
-        //   whiteSpace: "nowrap",
-        //   overflow: "hidden",
-        //   textOverflow: "ellipsis",
-        //   textAlign: column.alignment || "center",
-        // }}
-        data={{unitID: localValue}}
-        value={value}
-        label={localValue}
-         field={{
+        {type == "cb" ? (
+          <ERPDataCombobox
+            options={options??[]}
+            // onSelectItem={(e: any) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
+            // ref={cbRef}
+            onChange={(e) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
+            id={column.dataField??""}
+            noLabel
+            enableClearOption={false}
+            className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
+            // style={{
+            //   fontSize: `${gridFontSize}px`,
+            //   fontWeight: gridIsBold ? "bold" : "normal",
+            //   whiteSpace: "nowrap",
+            //   overflow: "hidden",
+            //   textOverflow: "ellipsis",
+            //   textAlign: column.alignment || "center",
+            // }}
+            data={{unitID: localValue}}
+            value={value}
+            label={localValue}
+            field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
               valueKey: "value",
               labelKey: "label",
             }}
-        // noBorder
-        // readOnly={column.readOnly}
-        // onInput={handleInput}
-        onFocus={handleFocus}
-        onBlur={onBlur}
-        onKeyDown={handleKeyDown}
-        // tabIndex={0}
-      />
-      ):(
-        <Input
-        ref={inputRef}
-        id={`${gridId}_${column.dataField}_${rowIndex}`}
-        noLabel
-        type={column.dataType === "number" ? "text" : "text"}
-        className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-        style={{
-          fontSize: `${gridFontSize}px`,
-          fontWeight: gridIsBold ? "bold" : "normal",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          textAlign: column.alignment || "center",
-        }}
-        value={localValue}
-        noBorder
-        readOnly={column.readOnly}
-        onInput={handleInput}
-        onFocus={handleFocus}
-        onBlur={onBlur}
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-      />
-      )}
+            // noBorder
+            // readOnly={column.readOnly}
+            // onInput={handleInput}
+            onFocus={handleFocus}
+            onBlur={onBlur}
+            onKeyDown={handleKeyDown}
+          // tabIndex={0}
+          />
+        ):(
+          <Input
+            ref={inputRef}
+            id={`${gridId}_${column.dataField}_${rowIndex}`}
+            noLabel
+            type={column.dataType === "number" ? "text" : "text"}
+            className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
+            style={{
+              fontSize: `${gridFontSize}px`,
+              fontWeight: gridIsBold ? "bold" : "normal",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              textAlign: column.alignment || "center",
+            }}
+            value={localValue}
+            noBorder
+            readOnly={column.readOnly}
+            onInput={handleInput}
+            onFocus={handleFocus}
+            onBlur={onBlur}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
+          />
+        )}
       </>
-      
+
     );
   }
 );
@@ -331,20 +331,20 @@ const Row = React.memo(
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
-  const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
-        if(input) {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            currentCell: {
-              column: input?.column,
-              productBatchID: item.productBatchID, 
-              rowIndex: input?.rowIndex, 
+    const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
+      if(input) {
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              currentCell: {
+                column: input?.column,
+                productBatchID: item.productBatchID,
+                rowIndex: input?.rowIndex,
+              },
             },
-          },
-        })
-      );
-    }
+          })
+        );
+      }
     }
     const applicationSettings = useSelector(
       (state: RootState) => state.ApplicationSettings
@@ -421,38 +421,38 @@ const Row = React.memo(
         switch (e.key) {
           case "ArrowRight":
             if (currentColumnIndex < visibleColumns.length - 1)
-            {
+              {
               const res = data.focusCell(index, currentColumnIndex + 1);
               setCurrentCell(res);
             }
-            
+
             break;
           case "ArrowLeft":
             {
               debugger;
               if (currentColumnIndex > 1){
-                
-              const res =  data.focusCell(index, currentColumnIndex - 1);
-              setCurrentCell(res);
-            }
+
+                const res =  data.focusCell(index, currentColumnIndex - 1);
+                setCurrentCell(res);
+              }
             }
             break;
           case "ArrowUp":
-             {
+            {
               const res = data.focusCell(index - 1, currentColumnIndex);
               setCurrentCell(res);
             }
             break;
           case "ArrowDown":
             {
-               const res = data.focusCell(index + 1, currentColumnIndex);
+              const res = data.focusCell(index + 1, currentColumnIndex);
               setCurrentCell(res);
             }
             break;
         }
       }, [data]
     );
-    
+
     return (
       <tr
         ref={rowRef}
@@ -464,14 +464,14 @@ const Row = React.memo(
           borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
         }}
         className={`py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
-         // column bg transition ☝
+        // column bg transition ☝
         key={`inv_transaction_grid_${index}`}
       >
         {columns
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
-            
+
             const productId = item.productID;
             const cellValue = item[fieldKey];
             let options: any[] = []
@@ -483,7 +483,7 @@ const Row = React.memo(
 
             return (
               <td
-                
+
                 key={column.dataField}
                 className={` p-0 ${column.cssClass || ""} ${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
                 style={{
@@ -539,10 +539,10 @@ const Row = React.memo(
                       display: "block",
                       width: "100%",
                       WebkitUserSelect: "none",
-    MozUserSelect: "none",
-    msUserSelect: "none",
-    caretColor: "transparent",
-    outline: "none",
+                      MozUserSelect: "none",
+                      msUserSelect: "none",
+                      caretColor: "transparent",
+                      outline: "none",
                       textAlign: column.alignment || "center",
                     }}
                     id={cellId}
@@ -608,10 +608,10 @@ const Row = React.memo(
                       display: "block",
                       width: "100%",
                       WebkitUserSelect: "none",
-    MozUserSelect: "none",
-    msUserSelect: "none",
-    caretColor: "transparent",
-    outline: "none",
+                      MozUserSelect: "none",
+                      msUserSelect: "none",
+                      caretColor: "transparent",
+                      outline: "none",
                     }}
                     className="px-1 cursor-default"
                     id={cellId}
@@ -635,10 +635,10 @@ const Row = React.memo(
                       display: "block",
                       width: "100%",
                       WebkitUserSelect: "none",
-    MozUserSelect: "none",
-    msUserSelect: "none",
-    caretColor: "transparent",
-    outline: "none",
+                      MozUserSelect: "none",
+                      msUserSelect: "none",
+                      caretColor: "transparent",
+                      outline: "none",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -659,10 +659,10 @@ const Row = React.memo(
                     {productId > 0 ? cellValue??"" : ""}
                   </div>
                 ) : column.allowEditing && !column.readOnly && txtData.visible == true
-                &&  data.currentCell?.column === column.dataField &&
+                  &&  data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
                   <EditableCell
-                  type={column.dataType == "cb" ? "cb": "any"}
+                    type={column.dataType == "cb" ? "cb": "any"}
                     productId={productId}
                     onChange={data.onChange}
                     blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
@@ -690,10 +690,10 @@ const Row = React.memo(
                       display: "block",
                       width: "100%",
                       WebkitUserSelect: "none",
-    MozUserSelect: "none",
-    msUserSelect: "none",
-    caretColor: "transparent",
-    outline: "none",
+                      MozUserSelect: "none",
+                      msUserSelect: "none",
+                      caretColor: "transparent",
+                      outline: "none",
                     }}
                     id={cellId}
                     tabIndex={0}
@@ -906,7 +906,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       );
       if (rowIndex >= 0 && (targetColumnIndex ?? -1) >= 0) {
         return focusCell(rowIndex, targetColumnIndex ?? -1);
-        
+
       }
       return null
     },
@@ -951,12 +951,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         ? -1
         : editableColumns?.findIndex((col) => col.dataField === column);
 
-         const currentEditable = editableColumns![currentEditableIndex];
-          const targetColumnIndex = visibleColumns?.findIndex(
-            (col) => col.dataField === currentEditable.dataField
-          );
+      const currentEditable = editableColumns![currentEditableIndex];
+      const targetColumnIndex = visibleColumns?.findIndex(
+        (col) => col.dataField === currentEditable.dataField
+      );
 
-        if (targetColumnIndex??-1 >= 0) {
+      if (targetColumnIndex??-1 >= 0) {
         return focusCell(rowIndex, targetColumnIndex!);
       }
       return null;
@@ -1227,11 +1227,11 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
-                      WebkitUserSelect: "none",
-    MozUserSelect: "none",
-    msUserSelect: "none",
-    caretColor: "transparent",
-    outline: "none",
+                            WebkitUserSelect: "none",
+                            MozUserSelect: "none",
+                            msUserSelect: "none",
+                            caretColor: "transparent",
+                            outline: "none",
                           }}
                           title={col.caption}
                         >

@@ -321,9 +321,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   chkSelectDebitAccount: { visible: true, disabled: true, label: "select_debit_account" },
   chkTemporaryVATNumber: { visible: true, disabled: false, label: "temporary_vat_number" },
   dgvInventory: { visible: true, disabled: false, label: "" },
-  dgvProduct: { visible: false, disabled: false, label: "",params: "" },
-  dgvProductBatches: { visible: false, disabled: false, label: "",params: "" },
-  productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window",data:{searchCriteria:'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch:false }  },
+  dgvProduct: { visible: false, disabled: false, label: "", params: "" },
+  dgvProductBatches: { visible: false, disabled: false, label: "", params: "" },
+  productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window", data: { searchCriteria: 'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch: false } },
   lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },
@@ -342,7 +342,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   pnlSearch: { visible: false, disabled: false, label: "search" },
   pnlSettings: { visible: false, disabled: false, label: "settings" },
   pnlSize: { visible: false, disabled: false, label: "size" },
- // productCombo: { visible: true, disabled: false, label: "product_combo" },
+  // productCombo: { visible: true, disabled: false, label: "product_combo" },
   progressBar1: { visible: false, disabled: false, label: "progressbar1" },
   //saveButton1: { visible: false, disabled: true, label: "save_button1" },
   txtData: { visible: true, disabled: false, label: "txt_data" },
@@ -567,10 +567,11 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
   serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
   productInfo: false,
-  ShowProductBatchUnitDetails: false
+  ShowProductBatchUnitDetails: false,
+  ledgerDetails: false,
 }
 
-export  const initialProductData: BarcodeLabel = {
+export const initialProductData: BarcodeLabel = {
   labelCount: 1,
   productCode: "",
   productName: "",

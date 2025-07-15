@@ -644,5 +644,13 @@
 
   "show_all_list": "Show all list",
   "inv_trans_accounts_id": "Inv Transaction Accounts ID",
-  "amount_fc": "Amount Fc"
+  "amount_fc": "Amount Fc",
+
+  "username": "Username",
+  "action_performed": "Action Performed",
+  "date_time_of_action": "Date Time Of Action",
+  "action_name": "Action Name",
+  "system_name": "System Name",
+  "show_view_action": "Show view action",
+  "document_properties": "Document Properties"
 }

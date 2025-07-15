@@ -80,6 +80,7 @@ const createStore = async (
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
+      
       const paramNames = [
         "skip",
         "take",
@@ -212,6 +213,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [store, setStore] = useState<any>();
+     const [showProductGrid, setShowProductGrid] = useState(false);
+  const [showBatchGrid, setShowBatchGrid] = useState(false);
     const [productDetailStore, setProductDetailStore] = useState<any>();
     const [inputValue, setInputValue] = useState({
       searchValue: value,
@@ -222,7 +225,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
-    const { t } = useTranslation("inventory");
+    const { t } = useTranslation("inventory"); 
     const dispatch = useDispatch();
   
     const formState = useSelector(
@@ -231,6 +234,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const applicationSettings = useSelector(
       (state: RootState) => state.ApplicationSettings
     );
+    
     useEffect(() => {
       setInputValue((prev) => ({
         ...prev,
@@ -240,10 +244,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const debouncedFetch = useMemo(
       () =>
-        debounce(async (value: string) => {
+        debounce(async (value: string, byCode: boolean) => {
+          
+          console.log('debouncedFetch')
           if (value.trim() == "" || value.trim() == "%") {
           }
-          let byCode = inputValue.searchByCode;
           let payload: any = {};
           if (searchType === "modal") {
             // dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
@@ -291,30 +296,23 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             const store = await createStore(value, payload, productDataUrl);
 
             setStore(store);
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: { formElements: { dgvProduct: { visible: true } } },
-              })
-            );
+          setShowProductGrid(true);
           }
         }, 200),
-      [productDataUrl, inputValue.searchByCode, searchType]
+      [productDataUrl, searchType]
     );
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+      
       const value = e.target.value;
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: { formElements: { dgvProductBatches: { visible: false } } },
-        })
-      );
+       setShowBatchGrid(false);
       if (value.length >= 3) {
         if (searchType !== "modal") {
-          debouncedFetch(value);
+          await debouncedFetch(value,inputValue.searchByCode);
         }
       } else {
         setStore({
@@ -323,11 +321,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           summary: {},
           groupCount: 0,
         });
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: { formElements: { dgvProduct: { visible: false } } },
-          })
-        );
+       setShowBatchGrid(false);
       }
       if (onChange) onChange(e);
     };
@@ -349,65 +343,41 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
+        
         console.log(`Grid key: ${e.event.key}`);
         if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
-          const grid: any = dataGridRef.current?.instance();
-          const selectedRowKeys = grid.getSelectedRowKeys();
-          if (selectedRowKeys.length > 0) {
-            const selectedRow = grid.getSelectedRowsData()[0];
+          debugger;
+          const gridInstance = dataGridRef.current.instance();
+            const focusedRowIndex = gridInstance.option("focusedRowIndex");
+            const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          if (rowData?.productID > 0) {
             if (onProductSelected) {
-              onProductSelected(selectedRow);
+              onProductSelected(rowData);
             }
             try {
               if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
                 const batchStore = await createBatchStore(
-                  selectedRow.productID,
+                  rowData.productID,
                   batchDataUrl
                 );
                 setProductDetailStore(batchStore);
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: { dgvProductBatches: { visible: true } },
-                    },
-                  })
-                );
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: { dgvProduct: { visible: false } },
-                    },
-                  })
-                );
-              } else {
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: { dgvProduct: { visible: false } },
-                    },
-                  })
-                );
+                  setShowBatchGrid(true);
+              setShowProductGrid(false);
+            } else {
+              setShowProductGrid(false);
                 if (inputRef && "current" in inputRef && inputRef.current) {
                   inputRef.current.focus();
                 }
               }
             } catch (err) {
-              dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: { formElements: { dgvProduct: { visible: false } } },
-                })
-              );
+              setShowProductGrid(false);
               if (inputRef && "current" in inputRef && inputRef.current) {
                 inputRef.current.focus();
               }
             }
           }
         } else if (e.event.key === "Escape") {
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: { formElements: { dgvProduct: { visible: false } } },
-            })
-          );
+           setShowProductGrid(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
           }
@@ -421,20 +391,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       (e: any) => {
         console.log(`Batch grid key: ${e.event.key}`);
         if (
-          e.event.key === "Enter" &&
-          e.component.getSelectedRowKeys().length > 0
+          e.event.key === "Enter" 
         ) {
-          const selectedRow = e.component.getSelectedRowsData()[0];
+          debugger;
+            const gridInstance = batchGridRef.current.instance();
+            const focusedRowIndex = gridInstance.option("focusedRowIndex");
+            const selectedRow = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
           if (onRowSelected) {
             onRowSelected(selectedRow, inputValue.searchValue);
           }
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                formElements: { dgvProductBatches: { visible: false } },
-              },
-            })
-          );
+          setShowBatchGrid(false);
           if (clearAfterSelection) {
             setInputValue((prev) => ({
               ...prev,
@@ -451,13 +417,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         //   e.event.preventDefault();
         // }
         else if (e.event.key === "Escape") {
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                formElements: { dgvProductBatches: { visible: false } },
-              },
-            })
-          );
+          setShowBatchGrid(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
           }
@@ -468,6 +428,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleBatchContentReady = useCallback(() => {
+      debugger;
       if (batchGridRef.current) {
         const gridInstance = batchGridRef.current.instance();
         const visibleRows = gridInstance.getVisibleRows();
@@ -484,7 +445,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
        
         const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
-        if (formState.formElements.dgvProduct.visible && dataGridRef.current) {
+        if ( ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" , "Enter", "Escape"].includes(e.key) && showProductGrid && dataGridRef.current) {
           if (e.key === "ArrowDown") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
@@ -498,15 +459,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
             if (rows.length > 0) {
-              grid.selectRowsByIndexes([rows.length - 1]);
-              grid.navigateToRow(grid.getKeyByRowIndex(rows.length - 1));
-              grid.focus();
+            gridInstance.selectRowsByIndexes([0]);
+            gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+            gridInstance.option("focusedRowIndex", 0); // ✅ explicitly set focused row
+            gridInstance.focus(); // optional: focus container
               e.preventDefault();
             }
-          } else {
-            // rest?.onKeyDown && rest?.onKeyDown(e, e.target.);
           }
-        } else if (e.key === "Enter") {
+          else if (e.key === "Enter") {
           if (searchType !== "modal") {
             rest?.onKeyDown && rest?.onKeyDown(value,e);
           } 
@@ -546,22 +506,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             }
           }
          else if (
-          e.key === "Escape" &&
-          formState.formElements.dgvProduct.visible
+          e.key === "Escape"
+          
         ) {
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                formElements: {
-                  dgvProduct: { visible: false },
-                  dgvProductBatches: { visible: false },
-                },
-              },
-            })
-          );
+          setShowProductGrid(false);
+          setShowBatchGrid(false);
           e.preventDefault();
         } else if (
-          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)
+          ["ArrowLeft", "ArrowRight"].includes(e.key)
         ) {
           const input = e.target as HTMLInputElement;
           const { selectionStart, selectionEnd, value } = input;
@@ -583,15 +535,17 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             rest?.onKeyDown(value,e);
             e.preventDefault();
           }
-        } else {
+        } 
+      }
+      else {
           if (rest.onKeyDown) {
             rest?.onKeyDown(value,e);
           }
         }
       },
       [
-        formState.formElements.dgvProduct.visible,
-        inputValue.searchValue,
+        showProductGrid,
+        setShowProductGrid,
         searchType,
         debouncedFetch,
         rest.onKeyDown,
@@ -602,7 +556,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       const handleFocusTrap = (e: KeyboardEvent) => {
         if (
           !gridContainerRef.current ||
-          !formState.formElements.dgvProduct.visible
+          !showProductGrid
         )
           return;
         const focusableElements = gridContainerRef.current.querySelectorAll(
@@ -626,7 +580,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
       document.addEventListener("keydown", handleFocusTrap);
       return () => document.removeEventListener("keydown", handleFocusTrap);
-    }, [formState.formElements.dgvProduct.visible]);
+    }, [showProductGrid]);
   
     const onClose = useCallback(() => {
     dispatch(
@@ -639,7 +593,34 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   })
                 );
   }, []);
+  
+    const [productGridReady, setProductGridReady] = useState<any>();
+const handleProductGridContentReady = useCallback((e: any) => {
+  const gridInstance = e.component;
+  const visibleRows = gridInstance.getVisibleRows();
+  const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
+  
+  setProductGridReady(hasValidData);
+  
+  if (hasValidData) {
+    // Set initial focus
+    gridInstance.option("focusedRowIndex", 0);
+    gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+  }
+}, []);
+useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .dx-error-row { display: none !important; }
+      .dx-datagrid .dx-error-row { display: none !important; }
+      .dx-error-message { display: none !important; }
+    `;
+    document.head.appendChild(style);
 
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
     return (
       <>
         <div className="flex items-center gap-4">
@@ -675,7 +656,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             />
             {searchType === "grid" && (
               <>
-                {formState.formElements.dgvProduct.visible && (
+                {showProductGrid && (
                   <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
                     <DataGrid
                       ref={dataGridRef}
@@ -693,15 +674,17 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                         summary: false,
                         groupPaging: false,
                       }}
+                     focusedRowEnabled={true}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}
                     >
-                      <Selection mode="single" />
+                      <Selection mode="single"  deferred/>
                       <Paging pageSize={30} />
                       <Scrolling mode="virtual" />
                       <KeyboardNavigation
                         enabled={true}
                         editOnKeyPress={false}
+
                         enterKeyDirection="row"
                       />
                       <Column
@@ -725,7 +708,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                     </DataGrid>
                   </div>
                 )}
-                {formState.formElements.dgvProductBatches.visible &&
+                {showBatchGrid &&
                   !isNullOrUndefinedOrEmpty(batchDataUrl) && (
                     <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
                       <DataGrid
@@ -742,16 +725,26 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                           paging: true,
                           sorting: true,
                         }}
+                        paging={{}}
+                     focusedRowEnabled={true}
                         onKeyDown={handleBatchGridKeyDown}
                         onContentReady={handleBatchContentReady}
                         tabIndex={0}
                       >
+                        <Scrolling
+              mode="virtual"
+              showScrollbar="always"
+              renderAsync={false}
+              useNative={"auto"}
+              rowRenderingMode="virtual"
+              preloadEnabled={true}
+            />
                         <KeyboardNavigation
                           editOnKeyPress={false}
                           enterKeyDirection="row"
                         />
                         <Paging pageSize={10} />
-                        <Selection mode="single" />
+                        <Selection mode="single" deferred/>
                         <Column
                           dataField="productBatchID"
                           caption={t("productBatchID")}

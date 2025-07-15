@@ -2102,7 +2102,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       column: keyof TransactionDetail,
                       rowIndex: number
                     ) => {
-                      debugger; handleTextDataKeyDown(value, e, column, rowIndex, {
+                      handleTextDataKeyDown(value, e, column, rowIndex, {
                         result: {},
                         formStateHandleFieldChangeKeysOnly:
                           formStateHandleFieldChangeKeysOnly,

@@ -366,6 +366,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     checked={formState?.userConfig?.useCodeSearch}
                     onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
                   />
+                  <ERPCheckbox
+                    id="barCodePrev"
+                    label={t("show_barcode_preview")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.barCodePrev}
+                    onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
+                  />
                 </div>
               </div>
             </CollapsibleSection>

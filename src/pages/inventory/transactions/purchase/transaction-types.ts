@@ -185,9 +185,8 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
-  barcodeTemplate?:any;
-  barcodeData?:any;
-  showPrevBar?:boolean;
+
+
 }
 
 export interface TransactionMaster3 {
@@ -369,6 +368,7 @@ export interface UserConfig {
   footerPosition?: "bottom" | "right";
   gridHeaderFontColor?: string;
   gridBorderRadius?: number;
+  barCodePrev?:boolean;
 }
 
 export type FormElementsState = {
@@ -471,7 +471,10 @@ export interface TransactionFormState {
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo:boolean;
   ShowProductBatchUnitDetails:boolean;
-  showProductInformation:boolean;
+  showProductInformation?:boolean;
+  barcodeTemplate?:any;
+  barcodeData?:any;
+  barcodePrevOpen?:boolean;
 }
 
 export interface ColumnModel {

@@ -82,6 +82,7 @@ import ProductBatchUnitDetails from "./product-batch-unit-details";
 import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
+import { barCodeField } from "../../../LabelDesigner/fields";
 interface BilledItem {
   id?: number;
   name: string;
@@ -343,11 +344,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const { hasRight } = useUserRights();
 
   useEffect(() => {
+    let height 
     if (formState.userConfig?.footerPosition === 'right') {
-      setGridHeight(620);
+     height= window.innerHeight-300
     } else {
-      setGridHeight(400);
+      height = window.innerHeight -520
     }
+    setGridHeight(height)
   }, [formState.userConfig?.footerPosition]);
 
   console.log("transaction mj23", { setGridHeight });
@@ -2350,23 +2353,19 @@ debugger;
             content={<ProductSummaryMaster />}
           />
         )}
-
-       <ERPModal
-          isOpen={formState.transaction.master?.showPrevBar ||  false}
+      {formState.userConfig?.barCodePrev &&(
+      <ERPModal
+          isOpen={formState.barcodePrevOpen ||  false}
           title={t("barcode_print")}
           isForm={true}
-          closeModal={() => {    dispatch(
-                                formStateMasterHandleFieldChange({
-                                  fields: {
-                                    
-                                    showPrevBar:false,
-                                  },
-                                })
-                              ); }}
-          content={<DownloadBarcodePreview  template={formState.transaction.master?.barcodeTemplate} data={formState.transaction.master?.barcodeData} />}
-          width={1000}
-          height={800}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: {barcodePrevOpen:false }}))}
+          content={<DownloadBarcodePreview  template={formState?.barcodeTemplate} data={formState?.barcodeData} />}
+          width={5000}
+          height={5000}
         />
+      )}
+      
+
         {formState.isPartyWiseSummaryOpen && (
           <ERPModal
             isOpen={formState.isPartyWiseSummaryOpen}

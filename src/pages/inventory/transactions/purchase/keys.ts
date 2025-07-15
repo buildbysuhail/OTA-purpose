@@ -33,3 +33,4 @@
 //Do you want to print barcode again
 //RePrint Barcode
 // select printer
+// show_barcode_preview

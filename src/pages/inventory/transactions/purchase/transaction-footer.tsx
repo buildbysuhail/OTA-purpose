@@ -558,7 +558,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       <div
         className={`fixed top-[170px] ${
           isRtl ? "left-0" : "right-0"
-        } h-[748px] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg p-2 z-30`}
+        } h-[-webkit-fill-available] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg p-2 z-30`}
       >
         {renderSecondFooter()}
       </div>

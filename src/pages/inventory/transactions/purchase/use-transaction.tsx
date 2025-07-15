@@ -2610,6 +2610,18 @@ rowIndex: number
           }
           break;
 
+          case "i":
+        case 'I':
+          if (isCtrlPressed) {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: { showProductInformation: true },
+              })
+            );
+            return { handled: true };
+          }
+          break;
+
         case " ": { // Space key
           debugger;
           let outState: DeepPartial<TransactionFormState> = {

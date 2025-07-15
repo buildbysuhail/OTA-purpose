@@ -25,15 +25,16 @@ import { pdf, BlobProvider } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./renderSelected-template";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
+import { DesignerElementType, TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import { initialProductData } from "./transaction-type-data";
-import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
+import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { generateBarcodeDataUrl } from "../../../../utilities/barcode";
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation();
@@ -52,16 +53,39 @@ export const usePrint = () => {
    const [showPrint, setShowPrint] = useState<boolean>(false);
   const { hasRight } = useUserRights();
   const voucherTypeSet = new Set(Object.values(VoucherType));
-  const adviceTem = ["PARP", "RARP", "Cheque"];
+   // Add state for barcode images
+  const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
+    // Function to generate barcode images
+
+  const generateBarcodeImagesForPrint = async (data: any[], template: any) => {
+
+      const images: { [key: string]: string } = {};
+     if (template?.barcodeState?.placedComponents) {
+       data?.forEach((item: any) => {
+         template.barcodeState?.placedComponents?.forEach((comp: any) => {
+           if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
+         const key = `${item.siNo}-${comp.id}`;
+         images[key] = generateBarcodeDataUrl(
+           item.autoBarcode ,
+           comp.barcodeProps,
+           comp.width,
+           comp.height
+         );
+           }
+         });
+       });
+     }
+     setBarcodeImages(images);
+     return images;
+  };
+
   const handleDirectPrint = async (template: any,data?:any) => {
     debugger;
     let pdfDocument;
-    if (template.templateGroup === "barcode") {      
+    if (template.templateGroup === "barcode") {     
+      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template); 
       pdfDocument = (
-        <DownloadBarcodePreview 
-          template={template}
-          data={data}
-        />
+      <BarcodePDFDocument template={template} data={data} barcodeImages={barcodeImagesForPrint} />
       );
     } else {
       pdfDocument = renderSelectedTemplate({

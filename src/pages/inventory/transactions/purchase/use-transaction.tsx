@@ -2476,7 +2476,7 @@ export const useTransaction = (
 
         return result;
       } else if (res?.products?.length > 1) {
-        // Multiple products
+        // Open BatchGrid 
       } else {
         return null;
       }

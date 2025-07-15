@@ -82,6 +82,7 @@ import ProductBatchUnitDetails from "./product-batch-unit-details";
 import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
+import { barCodeField } from "../../../LabelDesigner/fields";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2350,23 +2351,19 @@ debugger;
             content={<ProductSummaryMaster />}
           />
         )}
-
-       <ERPModal
-          isOpen={formState.transaction.master?.showPrevBar ||  false}
+      {formState.userConfig?.barCodePrev &&(
+      <ERPModal
+          isOpen={formState.barcodePrevOpen ||  false}
           title={t("barcode_print")}
           isForm={true}
-          closeModal={() => {    dispatch(
-                                formStateMasterHandleFieldChange({
-                                  fields: {
-                                    
-                                    showPrevBar:false,
-                                  },
-                                })
-                              ); }}
-          content={<DownloadBarcodePreview  template={formState.transaction.master?.barcodeTemplate} data={formState.transaction.master?.barcodeData} />}
-          width={1000}
-          height={800}
+          closeModal={() => dispatch(formStateHandleFieldChange({ fields: {barcodePrevOpen:false }}))}
+          content={<DownloadBarcodePreview  template={formState?.barcodeTemplate} data={formState?.barcodeData} />}
+          width={5000}
+          height={5000}
         />
+      )}
+      
+
         {formState.isPartyWiseSummaryOpen && (
           <ERPModal
             isOpen={formState.isPartyWiseSummaryOpen}

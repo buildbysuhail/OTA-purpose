@@ -361,16 +361,17 @@ export const usePrint = () => {
             barcode.qty = stickerQty.toString();
             barcode.labelCount = stickerQty;
 
-            barcode.partyCode = formState.ledgerData.partyCode;
+            barcode.partyCode = formState.ledgerData?.partyCode;
             barcode.unit = row.unit;
             barcode.batchNo = row.batchNo;
             barcode.expiryDate = row.expDate;
             barcode.expiryDays = row.expDays.toString();
             barcode.mfdDate = row.mfdDate;
 
-            barcode.voucherNo =
-              formState.transaction.master.voucherNumber.toString();
-            barcode.transDate = formState.transaction.master.transactionDate;
+            const rawVoucher = formState.transaction.master?.voucherNumber;
+            barcode.voucherNo = rawVoucher != null? rawVoucher.toString(): "";
+
+            barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
             modifiedDetails.push({...batch, slNo: row.slNo, barcodePrinted: true });
@@ -379,17 +380,16 @@ export const usePrint = () => {
           }
 
         }
-      }
-                    dispatch(
-                                formStateMasterHandleFieldChange({
-                                  fields: {
-                                    barcodeData:barcodeData,
-                                    showPrevBar:true,
-                                  },
-                                })
-                              );
-      await handleDirectPrint(formState.transaction.master?.barcodeTemplate,barcodeData)
-       
+      };   
+      if(formState.userConfig?.barCodePrev){
+        
+        dispatch(
+          formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
+        );
+      }else{
+       await handleDirectPrint(formState?.barcodeTemplate,barcodeData)
+      };
+
        dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {

@@ -474,6 +474,7 @@ export interface TransactionFormState {
   showProductInformation?:boolean;
   barcodeTemplate?:any;
   barcodeData?:any;
+  barcodePrevOpen?:boolean;
 }
 
 export interface ColumnModel {

@@ -138,7 +138,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   couponAmt: 0.0,
   projectID: 0,
   // currencyID:0,
-  labelDesignID: -2,
+  labelDesignID: 0,
   customerType: "",
   taxOnDiscount: 0.0,
   draftTransactionMasterID: 0,

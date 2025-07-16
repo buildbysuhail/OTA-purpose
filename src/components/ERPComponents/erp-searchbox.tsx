@@ -346,7 +346,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         
         console.log(`Grid key: ${e.event.key}`);
         if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
-          debugger;
+          
           const gridInstance = dataGridRef.current.instance();
             const focusedRowIndex = gridInstance.option("focusedRowIndex");
             const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
@@ -388,17 +388,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleBatchGridKeyDown = useCallback(
-      (e: any) => {
+     async  (e: any) => {
         console.log(`Batch grid key: ${e.event.key}`);
         if (
           e.event.key === "Enter" 
         ) {
-          debugger;
-            const gridInstance = batchGridRef.current.instance();
-            const focusedRowIndex = gridInstance.option("focusedRowIndex");
-            const selectedRow = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          const gridInstance = batchGridRef.current.instance();   
+          const allSelected = await gridInstance.getSelectedRowsData();
+        const selected = allSelected[0];
           if (onRowSelected) {
-            onRowSelected(selectedRow, inputValue.searchValue);
+            onRowSelected(selected, inputValue.searchValue);
           }
           setShowBatchGrid(false);
           if (clearAfterSelection) {
@@ -424,42 +423,29 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           e.event.preventDefault();
         }
       },
-      [onRowSelected, clearAfterSelection, inputRef]
+      [onRowSelected, clearAfterSelection, inputRef,inputValue]
     );
 
 
-const handleBatchContentReady = useCallback(() => {
-  if (batchGridRef.current) {
-    const gridInstance = batchGridRef.current.instance();
-    const visibleRows = gridInstance.getVisibleRows();
-    if (visibleRows.length > 0) {
-      // Use setTimeout to ensure the grid is fully rendered
-      setTimeout(() => {
-        // Set focused row and column
-        gridInstance.option("focusedRowIndex", 0);
-        gridInstance.option("focusedColumnIndex", 0);
-        
-        // Select the first row
-        gridInstance.selectRowsByIndexes([0]);
-        
-        // Navigate to the first row to ensure proper focus
-        const firstRowKey = gridInstance.getKeyByRowIndex(0);
-        if (firstRowKey !== undefined) {
-          gridInstance.navigateToRow(firstRowKey);
-        }
-        
-        // Focus the grid container to activate keyboard events
-        gridInstance.focus();
-        
-        // Additional focus on the grid element itself
-        const gridElement = gridInstance.element();
-        if (gridElement) {
-          gridElement.focus();
-        }
-      }, 50); // Small delay to ensure DOM is ready
-    }
+const [batchInitialized, setBatchInitialized] = useState(false);
+
+const handleBatchContentReady = useCallback((e: any) => {
+  if (!batchInitialized) {
+    const grid = e.component;
+    // focus and select row 0 on first open
+    grid.option("focusedRowIndex", 0);
+    grid.selectRows([grid.getKeyByRowIndex(0)]);
+    grid.navigateToRow(grid.getKeyByRowIndex(0));
+    grid.focus();
+    setBatchInitialized(true);
   }
+}, [batchInitialized]);
+
+const handleBatchFocusedRowChanged = useCallback((e: any) => {
+  // whenever focus moves (via arrow keys), select that row
+  e.component.selectRows([e.row.key],false);
 }, []);
+
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -771,25 +757,26 @@ useEffect(() => {
                         }}
                         paging={{}}
                      focusedRowEnabled={true}
-                        onKeyDown={handleBatchGridKeyDown}
-                        onContentReady={handleBatchContentReady}
+                      onContentReady={handleBatchContentReady}
+                      onFocusedRowChanged={handleBatchFocusedRowChanged}
+                      onKeyDown={handleBatchGridKeyDown}
                         tabIndex={0}
                       >
                         <Scrolling
-              mode="virtual"
-              // showScrollbar="always"
-              // renderAsync={false}
-              // useNative={"auto"}
-              // rowRenderingMode="virtual"
-              // preloadEnabled={true}
-            />
+                          mode="virtual"
+                          showScrollbar="always"
+                          renderAsync={false}
+                          useNative={"auto"}
+                          rowRenderingMode="virtual"
+                          preloadEnabled={true}
+                        />
                         <KeyboardNavigation
                           enabled={true}
                           editOnKeyPress={false}
                           enterKeyDirection="row"
                         />
                         <Paging pageSize={30} />
-                        <Selection mode="single" deferred/>
+                        <Selection mode="single"/>
                         <Column
                           dataField="productBatchID"
                           caption={t("productBatchID")}

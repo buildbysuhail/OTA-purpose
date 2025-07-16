@@ -944,7 +944,7 @@ export interface LoadTemplateParams {
 }
 
 export const loadTemplateById = async (templateId:LoadTemplateParams) => {
-  debugger;
+  
   try {
     const res = await api.getAsync(`${Urls.templates}${templateId}`);
         let cc: TemplateState = customJsonParse(res.content);

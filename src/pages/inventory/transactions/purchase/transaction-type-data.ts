@@ -567,7 +567,9 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   productInfo: false,
   ShowProductBatchUnitDetails: false,
   ledgerDetails: false,
-    dummyProducts: false,
+  dummyProducts: false,
+  dataWarranty: [],
+  dataBrands: []
 }
 
 export const initialProductData: BarcodeLabel = {

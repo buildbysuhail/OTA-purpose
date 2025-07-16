@@ -918,12 +918,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   }
                 />
 
-                <ERPButton
+                {/* <ERPButton
                   title={t("set")}
                   variant="secondary"
                   className="!m-0"
                   disabled={formState.transactionLoading}
-                />
+                /> */}
               </div>
             </div>
           </div>

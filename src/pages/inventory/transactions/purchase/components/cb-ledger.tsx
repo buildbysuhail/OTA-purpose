@@ -56,7 +56,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 handleKeyDown && handleKeyDown(e, "ledgerID");
               }}
               onSelectItem={(e) => {
-                debugger;
+                
                 dispatch(
                   formStateMasterHandleFieldChange({
                     fields: { ledgerID: e.value, partyName: e.label },

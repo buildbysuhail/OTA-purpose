@@ -365,7 +365,7 @@ export const useTransaction = (
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState,"inv")
     );
-    debugger;
+    
     _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
@@ -494,8 +494,7 @@ export const useTransaction = (
       voucher.transaction.master = updatedMaster;
     }
     if (vch?.details) {
-      voucher.transaction.attachments = refactorAttachments(
-        voucher.transaction
+      voucher.transaction.details = refactorDetails(vch.details,voucherType??"", formType??"", {result:{}},formState
       );
     }
     if (voucher.transaction.attachments) {
@@ -1981,7 +1980,7 @@ export const useTransaction = (
   ) => {
     try {
       console.log("handleTextDataChange");
-      debugger;
+      
       if (!formState.transaction?.details?.[rowIndex]) {
         return false;
       }
@@ -2037,7 +2036,7 @@ export const useTransaction = (
           calculateSummaryAndTotal = true;
         }
       } else if (columnName === "qty" || columnName === "unitPrice") {
-        debugger;
+        
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
@@ -2073,7 +2072,7 @@ export const useTransaction = (
         outDetail.margin = round(marginPerc, 6);
         outState.transaction!.details = [outDetail];
       }
-      debugger;
+      
       if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details];
         let final = { ...detail, ...outState!.transaction!.details![0] };
@@ -2125,7 +2124,7 @@ export const useTransaction = (
       if (!detail) {
         return {};
       }
-      debugger;
+      
       let warehouseId = 1;
       if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
         warehouseId = formState.transaction.master.fromWarehouseID;
@@ -2177,7 +2176,7 @@ export const useTransaction = (
         `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
-      debugger;
+      
       warehouseId = -1;
 
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
@@ -2204,7 +2203,7 @@ export const useTransaction = (
           })
         );
       } else if (res?.products?.length === 1) {
-        debugger;
+        
         let product = res.products[0];
         const _index = formState.transaction.details.findIndex(
           (x) =>
@@ -2371,7 +2370,7 @@ export const useTransaction = (
         }
 
         // Handle VAT and CST based on form type
-        debugger;
+        
         if (formState.transaction.master.voucherForm === "VAT") {
           outDetail.vatPerc = Number(product.pVatPerc || 0);
           outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -2461,9 +2460,9 @@ export const useTransaction = (
           };
         }
 
-        debugger;
+        
 
-        debugger;
+        
         for (const unit of product.units) {
           if (!result.batchesUnits) {
             result.batchesUnits = [];
@@ -2497,7 +2496,8 @@ export const useTransaction = (
       } else if (res?.products?.length > 1) {
         // Open BatchGrid 
       } else {
-        return null;
+        const res = focusToNextColumn(data.rowIndex, data.searchColumn);
+          setCurrentCell(res, outDetail.productBatchID);
       }
 
       return result;
@@ -2643,7 +2643,7 @@ export const useTransaction = (
         // Product Information ☝
 
         case " ": { // Space key
-          debugger;
+          
           let outState: DeepPartial<TransactionFormState> = {
             transaction: { details: [] },
           };
@@ -2712,7 +2712,7 @@ export const useTransaction = (
               setCurrentCell(res, data.productBatchID);
             }
           } else if (columnName == "barCode") {
-            debugger;
+            
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               loadProductDetailsByAutoBarcode(
@@ -2868,7 +2868,7 @@ export const useTransaction = (
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd") {
-            debugger;
+            
             const data: TransactionDetail =
               formState.transaction.details[rowIndex];
 
@@ -2911,10 +2911,10 @@ export const useTransaction = (
               })
             );
           } else if (columnName == "grossConvert") {
-            debugger;
+            
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-            debugger;
+            
             const rowData: TransactionDetail =
               formState.transaction.details[rowIndex];
             dispatch(
@@ -2930,6 +2930,7 @@ export const useTransaction = (
               })
             );
           } else {
+            debugger;
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data.productBatchID);
           }

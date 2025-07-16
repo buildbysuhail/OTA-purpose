@@ -52,7 +52,24 @@ export const LoadingAnimation = () => {
   );
 };
 
+
 function App() {
+   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+useEffect(() => {
+  const handleOnline = () => setIsOnline(true);
+  const handleOffline = () => setIsOnline(false);
+
+  window.addEventListener('online', handleOnline);
+  window.addEventListener('offline', handleOffline);
+
+  return () => {
+    window.removeEventListener('online', handleOnline);
+    window.removeEventListener('offline', handleOffline);
+  };
+}, []);
+
+
   const { appState, updateAppState } = useAppState();
   useEffect(() => {
     const sd = moment().local(); // Ensure local time is used
@@ -61,6 +78,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if(!isOnline) {return}
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
@@ -78,7 +96,7 @@ function App() {
       }
     };
     fetchSettings();
-  }, []);
+  }, [isOnline]);
 
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
@@ -91,7 +109,8 @@ function App() {
   };
   _setDeviceInfo();
 
-  // const { appState, updateAppState } = useAppState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAppReady, setIsAppReady] = useState(false);
   let api = new APIClient();
   const dispatch = useAppDispatch();
   const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
@@ -102,8 +121,30 @@ function App() {
   const { i18n } = useTranslation()
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
+useEffect(() => {
+    // Simulate app initialization process
+    const initializeApp = async () => {
+      try {
+       
+        await new Promise(resolve => setTimeout(resolve, 500));
+       
+        setIsAppReady(true);
+        
+        // Small delay for smooth transition
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        
+      } catch (error) {
+        console.error('App initialization failed:', error);
+        // Handle initialization errors
+      }
+    };
 
+    initializeApp();
+  }, []);
   useEffect(() => {
+    if(!isOnline) {return}
     const {
   token,
   userThemes,
@@ -125,7 +166,7 @@ function App() {
     } else {
       console.error("i18n is not properly initialized:", i18n);
     }
-  }, []);
+  }, [isOnline]);
 
 
 
@@ -180,11 +221,13 @@ function App() {
       document.body.classList.remove('mobile-screen');
     }
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
-  
   const { t } = useTranslation('main')
+   if (isLoading || isOnline != true) {
+    return <>{isOnline.toString()}<Loader isOnline = {isOnline}/></>;
+  }
   return (
     <Fragment>
-      <Loader />
+      {/* <Loader /> */}
       <HelmetProvider>
         <Helmet
           htmlAttributes={{

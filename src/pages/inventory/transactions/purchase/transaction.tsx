@@ -11,6 +11,7 @@ import {
   SummaryItems,
   TransactionDetail,
   TransactionProps,
+  UserConfig,
 } from "./transaction-types";
 import { TransactionData, TransactionFormState } from "./transaction-types";
 import {
@@ -83,6 +84,7 @@ import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
 import { barCodeField } from "../../../LabelDesigner/fields";
+import { customJsonParse } from "../../../../utilities/jsonConverter";
 interface BilledItem {
   id?: number;
   name: string;
@@ -116,6 +118,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   financialYearID,
   isTeller = false,
 }) => {
+
+  
+    const Utc = localStorage.getItem("utInvc");
+    const st = atob(Utc??"");
+    const _st: UserConfig = customJsonParse(st);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
   const handleClearControls = () => {
@@ -157,7 +164,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
-  const isFooterOnRight = formState.userConfig?.footerPosition === "right";
+  const isFooterOnRight = formState.transactionLoading ? _st.footerPosition === "right" : formState.userConfig?.footerPosition === "right";
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
   const { appState } = useAppState();
@@ -285,12 +292,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
             const columnIndex = visibleColumns.indexOf(firstEditableColumn);
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
+              const productBatchID = formState.transaction.details[res.rowIndex]?.productBatchID
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
                     currentCell: {
                       column: res.column,
                       rowIndex: res.rowIndex,
+                      productBatchID:  productBatchID
                     },
                   },
                 })
@@ -392,7 +401,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     let height
-    if (formState.userConfig?.footerPosition === 'right') {
+    if ((formState.transactionLoading && _st.footerPosition === "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")) {
       height = window.innerHeight - 300
     } else {
       height = window.innerHeight - 520
@@ -504,7 +513,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       const dataWarranty = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/warranty`)
-      const dataBrands = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/dataBrands`)
+      const dataBrands = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/brands`)
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
 
@@ -512,7 +521,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-      debugger;
+      
       let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
@@ -985,6 +994,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.quantityFactorData]);
   useEffect(() => {
     if (formState.currentCell && formState.currentCell.column != "" && formState.currentCell.rowIndex > -1) {
+      
       const targetCellId = `${gridCode}_${formState.currentCell.column}_${formState.currentCell.rowIndex}`;
       const targetCell = document.getElementById(
         targetCellId
@@ -1089,21 +1099,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
         alignment: "right",
         visible: false,
       },
-      {
-        dataField: "brand",
-        caption: t("brand"),
-        dataType: "cb",
-        width: 150,
-        alignment: "left",
-        visible: false,
-        allowEditing: true,
-      },
+      // {
+      //   dataField: "brand",
+      //   caption: t("brand"),
+      //   dataType: "cb",
+      //   width: 150,
+      //   alignment: "left",
+      //   visible: false,
+      //   allowEditing: true,
+      // },
       {
         dataField: "brandID",
-        caption: t("brand_id"),
-        dataType: "number",
+        field:{ valueKey: "id",
+              labelKey: "name"},
+        caption: t("brand"),
+        dataType: "cb",
         width: 100,
-        readOnly: true,
+        readOnly: false,
+        allowEditing: true,
         alignment: "right",
         visible: false,
       },
@@ -1464,9 +1477,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "warranty",
         caption: t("warranty"),
         dataType: "cb",
+        field:{ valueKey: "id",
+              labelKey: "name"},
         visible: false,
         width: 150,
-        readOnly: true,
+        readOnly: false,
+        allowEditing: true,
         alignment: "left",
       },
       {
@@ -2088,7 +2104,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             >
               <div
                 className={
-                  formState.userConfig?.footerPosition === "right"
+                  ((formState.transactionLoading && _st.footerPosition === "right") || formState.userConfig?.footerPosition === "right")
                     ? "flex flex-row items-center gap-2"
                     : "flex flex-col"
                 }
@@ -2099,6 +2115,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     // height: `${gridHeight}px`,
                   }}
                 >
+                  
                   <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
@@ -2124,7 +2141,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     summaryConfig={formState.summaryConfig}
                     gridFontSize={formState.userConfig?.gridFontSize}
                     gridIsBold={formState.userConfig?.gridIsBold}
-                    rowHeight={formState.userConfig?.gridRowHeight}
+                    rowHeight={formState.userConfig?.gridRowHeight??_st.gridRowHeight}
                     gridBorderColor={formState.userConfig?.gridBorderColor}
                     gridHeaderBg={formState.userConfig?.gridHeaderBg}
                     gridHeaderFontColor={formState.userConfig?.gridHeaderFontColor}
@@ -2132,8 +2149,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   />
                 </div>
                 <div className="w-[300px]">
-                  {formState.userConfig?.footerPosition === "right" && (
-                    <TransactionFooter
+                  {((formState.transactionLoading && _st.footerPosition === "right") || !(formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
+                  (  <TransactionFooter
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
@@ -2285,7 +2302,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   isDropUpOpen={isDropUpOpen}
                   toggleDropup={toggleFooterDropup}
                   footerLayout={
-                    (formState.userConfig?.footerPosition || "bottom") ===
+                    ((formState.transactionLoading ? _st.footerPosition :formState.userConfig?.footerPosition) || "bottom") ===
                       "right"
                       ? "vertical"
                       : "horizontal"
@@ -2314,7 +2331,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
 
         {/* footer starts here */}
-        {formState.userConfig?.footerPosition !== "right" && (
+        {(formState.transactionLoading && _st.footerPosition !== "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition !== "right")  && (
           <TransactionFooter
             formState={formState}
             dispatch={dispatch}

@@ -128,7 +128,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
       }
     });
     if(isDirty) {
-    debugger;
+    
     if (isChooseVoucherEnabled(_input.title ?? "", userSession) && (_input.voucherNo ==  undefined ||  _input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {

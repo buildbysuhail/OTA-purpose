@@ -878,7 +878,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       let tot = 0;
-
+debugger;
       if (!result) {
         result = {};
       }
@@ -930,7 +930,7 @@ export const useTransactionHelper = (transactionType: string) => {
     formType: string,
     commonParams: CommonParams,
     formState: TransactionFormState
-  ) => {
+  ): TransactionDetail[] => {
     const detailsLength = details.length;
 
     let validDetailsCount = 0;
@@ -938,7 +938,7 @@ export const useTransactionHelper = (transactionType: string) => {
       const row = details[i];
       let detail: TransactionDetail = { ...(details[i] || {}) };
       if (isNullOrUndefinedOrZero(detail.productID)) {
-        return;
+        break;
       }
       validDetailsCount++;
       // Set row header/index

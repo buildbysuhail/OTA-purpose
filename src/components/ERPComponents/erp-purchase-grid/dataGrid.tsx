@@ -35,6 +35,7 @@ import type {
   ColumnModel,
   FormElementState,
   TransactionDetail,
+  UserConfig,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
   formStateHandleFieldChange,
@@ -268,10 +269,10 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         {type == "cb" ? (
           <ERPDataCombobox
             options={options??[]}
-            // onSelectItem={(e: any) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
+            // onSelectItem={(e: any) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
             // ref={cbRef}
-            onChange={(e) => {debugger; onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
-            id={column.dataField??""}
+            onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
+            id={`${gridId}_${column.dataField}_${rowIndex}`}
             noLabel
             enableClearOption={false}
             className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
@@ -283,18 +284,19 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             //   textOverflow: "ellipsis",
             //   textAlign: column.alignment || "center",
             // }}
+            disableEnterNavigation
             value={value}
             label={localValue}
             field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
-              valueKey: "value",
-              labelKey: "label",
+              valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey :"value",
+              labelKey: column?.field && column?.field.labelKey ? column?.field.labelKey : "label",
             }}
             // noBorder
             // readOnly={column.readOnly}
             // onInput={handleInput}
-            onFocus={handleFocus}
-            onBlur={onBlur}
+            // onFocus={handleFocus}
+            // onBlur={onBlur}
             onKeyDown={handleKeyDown}
           // tabIndex={0}
           />
@@ -668,7 +670,7 @@ const Row = React.memo(
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
                   >
-                    {productId > 0 ? cellValue??"" : ""}
+                     {productId > 0 ? cellValue??"" : ""}
                   </div>
                 )}
               </td>
@@ -767,9 +769,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     transactionType,
     onKeyDown,
     onChange,
-    gridId,
+    gridId,rowHeight = 33,
     className = "",
-    rowHeight = 24,
     height = 800,
     allowColumnReordering = true,
     summaryConfig = [],
@@ -904,7 +905,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   );
   const focusColumn = useCallback(
     (rowIndex: number, column: string) => {
-      debugger;
+      
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );

@@ -82,7 +82,7 @@ export const usePrint = () => {
   };
 
   const handleDirectPrint = async (template: any,data?:any) => {
-    debugger;
+    
     let pdfDocument;
     if (template.templateGroup === "barcode") {     
       const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template); 
@@ -317,7 +317,7 @@ export const usePrint = () => {
           batchCreatedList = res.items;
         }
       }
-    debugger;
+    
       // Process each row in the specified range
       for (let i = 0; i < rowIndexes.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};

@@ -38,7 +38,7 @@ const dispatch = useDispatch();
 
 
   useEffect(() => {
-    debugger;
+    
     if (isOpen && data && data !=  "") {
      const formattedData = (data??"").split(',').map((serial: string, index: number) => ({
         slNo: index + 1,

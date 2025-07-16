@@ -44,7 +44,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
   const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
 useEffect(() => {
-            debugger;
+            
   if(formState.batchEntryData.visible && formState.batchEntryData.data != "") {
     const data = JSON.parse(formState.batchEntryData.data)
     setBatchData(data);
@@ -52,7 +52,7 @@ useEffect(() => {
   
 }, [formState.batchEntryData])
 const handleSet = () => {
-            debugger;
+            
     const slNo = formState.transaction.details[rowIndex].slNo;
     dispatch(
                 formStateHandleFieldChangeKeysOnly({

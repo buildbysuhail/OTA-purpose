@@ -202,7 +202,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   };
 
   const handleComboboxChange = async (id: string, data: any) => {
-    debugger;
+    
     switch (id) {
       case 'labelDesign':
         setLoadingTemplate(true);

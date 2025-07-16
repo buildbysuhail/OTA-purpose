@@ -836,7 +836,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         }
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
-          debugger;
+          
           const res = await api.getWithCacheAsync(url, params);
           if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
             localStorage.setItem(btoa(url), JSON.stringify(res));
@@ -1573,7 +1573,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           }}
         >
           <Autocomplete
-            id={id}
+            id={`${id}`}
             options={items}
             value={initial}
             onChange={(event: any, value: any, reason: any) => {
@@ -1770,6 +1770,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           <Combobox as="div" className="relative">
             <div className="flex" ref={comboboxRef}>
               <Combobox.Input
+              id={id}
                 ref={ref}
                 style={{
                   height,

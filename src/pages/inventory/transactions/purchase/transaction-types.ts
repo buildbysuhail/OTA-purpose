@@ -514,6 +514,8 @@ export interface ColumnModel {
     isLocked?: boolean;
     width?: number;
     readOnly?: boolean;
+    field?:{ valueKey: string;
+              labelKey: string}
     cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
 }
 export interface PrintTransProps {

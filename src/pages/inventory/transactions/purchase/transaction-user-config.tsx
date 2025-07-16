@@ -331,9 +331,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                   <ERPCheckbox
                     id="dummyProducts"
                     label={t("dummy_products")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.dummyProducts}
-                    onChangeData={(e) => handleFieldChange("dummyProducts", e.dummyProducts)}
+                    data={formState}
+                    checked={formState?.dummyProducts}
+                    onChangeData={(e) => dispatch(formStateHandleFieldChange({fields:{
+                      dummyProducts: e.dummyProducts
+                    }}))}
                   />
                   <ERPCheckbox
                     id="duplicationMessage"

@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -324,7 +324,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   dgvProduct: { visible: false, disabled: false, label: "", params: "" },
   dgvProductBatches: { visible: false, disabled: false, label: "", params: "" },
   productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window", data: { searchCriteria: 'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch: false } },
-  lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },
   lblWarehouse: { visible: false, disabled: false, label: "warehouse" },
@@ -415,7 +414,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     enableItemCodeSearchInNameColumn: false,
     holdSameCode: false,
     printPreview: false,
-    dummyProducts: false,
     duplicationMessage: false,
     setDefaultQuantity: false,
     inputBoxStyle: {
@@ -569,6 +567,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   productInfo: false,
   ShowProductBatchUnitDetails: false,
   ledgerDetails: false,
+    dummyProducts: false,
 }
 
 export const initialProductData: BarcodeLabel = {
@@ -628,4 +627,24 @@ export const initialProductData: BarcodeLabel = {
   sPrice: 0,
   showPreview: false,
   pluCode: ""
+};
+export const initialProductDisplayData: ProductDisplayDto = {
+  productName: "",
+  productCode: "",
+  groupName: "",
+  productCategoryName: "",
+  unitName: "",
+  stockMin: "",
+  stockMax: "",
+  itemType: "",
+  mfgDate: "",
+  expiryDate: "",
+  batchNo: "",
+  warehouseName: "",
+  brandName: "",
+  autoBarcode: "",
+  stdSalesPrice: "",
+  stdPurchasePrice: "",
+  stock: "",
+  minSalePrice: "",
 };

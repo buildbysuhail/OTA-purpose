@@ -495,6 +495,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           formStateMasterHandleFieldChange({
                             fields: {
                               currencyID: e.value,
+                              exchangeRate: e.name,
                             },
                           })
                         );
@@ -504,7 +505,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       field={{
                         id: "currencyId",
                         valueKey: "id",
-                        labelKey: "code",
+                        labelKey: "name",
+                        nameKey: "alias",
                         getListUrl: Urls.data_currencies,
                       }}
                       disabled={

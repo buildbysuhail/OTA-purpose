@@ -355,7 +355,6 @@ export interface UserConfig {
   enableItemCodeSearchInNameColumn?: boolean;
   holdSameCode?: boolean;
   printPreview?: boolean;
-  dummyProducts?: boolean;
   duplicationMessage?: boolean;
   setDefaultQuantity?: boolean;
   useInSearch?: boolean;
@@ -397,6 +396,27 @@ export interface SummaryItems {
   barCode: string;
   margin: number;
   salesPrice: string;
+}
+
+export interface ProductDisplayDto {
+  productName: string;
+  productCode: string;
+  groupName: string;
+  productCategoryName: string;
+  unitName: string;
+  stockMin: string;
+  stockMax: string;
+  itemType: string;
+  mfgDate: string;
+  expiryDate: string;
+  batchNo: string;
+  warehouseName: string;
+  brandName: string;
+  autoBarcode: string;
+  stdSalesPrice: string;
+  stdPurchasePrice: string;
+  stock: string;
+  minSalePrice: string;
 }
 
 export interface TransactionFormState {
@@ -443,7 +463,8 @@ export interface TransactionFormState {
   inSearch: boolean;
   enableTaxNumber: boolean;
   tmpVoucherNo?: number;
-  dummyCode?: any;
+  dummyCode?: any;  
+  dummyProducts?: boolean;
   remarks?: string;
   prevTransactionDate?: string;
   lb?: boolean;

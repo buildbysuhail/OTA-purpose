@@ -414,11 +414,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
               <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
                 <span className="text-sm font-bold text-gray-900 uppercase">
-                  {t("grand_total")}
+                  {t(formState.formElements.grandTotal.label)}
                 </span>
                 <span className="text-lg font-bold text-[#3b82f6]">
                   {getFormattedValue(
-                    formState.transaction.master?.roundAmount ?? 0
+                    formState.transaction.master?.grandTotal ?? 0
                   )}
                 </span>
               </div>

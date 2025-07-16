@@ -588,10 +588,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           },
         },
         userConfig: {
-          ...formState.userConfig,
-          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
+          ...formState.userConfig
         },
         transactionType: transactionType ?? "",
+          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
 
         formCode: formCode ?? "",
         title:
@@ -2610,8 +2610,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
         {formState.showProductInformation && (
           <ProductInformation
+          formState={formState}
             isOpen={formState.showProductInformation}
-            transactionType={transactionType ?? ""}
+            transactionType={transactionType ?? formState.transactionType??""}
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({

@@ -39,7 +39,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
           productBatchID: formState.currentCell?.productBatchID,
           unitID: data?.unitID,
           unitName: data.unit,
-          priceCategorID: formState.transaction.master.priceCategoryID
+          priceCategoryID: formState.transaction.master.priceCategoryID??0
         }
         const queryParams = new URLSearchParams(payload as any).toString();
         const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams)

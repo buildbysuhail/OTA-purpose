@@ -588,10 +588,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           },
         },
         userConfig: {
-          ...formState.userConfig,
-          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
+          ...formState.userConfig
         },
         transactionType: transactionType ?? "",
+          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
 
         formCode: formCode ?? "",
         title:

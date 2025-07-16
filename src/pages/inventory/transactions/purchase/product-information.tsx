@@ -1,167 +1,174 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
+import { ProductDisplayDto, TransactionFormState } from "./transaction-types";
+import { APIClient } from "../../../../helpers/api-client";
+import Urls from "../../../../redux/urls";
+import { initialProductDisplayData } from "./transaction-type-data";
 
 interface ProductInformationSidebarProps {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   onClose: () => void;
   transactionType: string;
-  productData?: ProductDisplayDto;
+  formState: TransactionFormState;
 }
 
-export interface ProductDisplayDto {
-  productName: string;
-  productCode: string;
-  groupName: string;
-  productCategoryName: string;
-  unitName: string;
-  stockMin: string;
-  stockMax: string;
-  itemType: string;
-  mfgDate: string;
-  expiryDate: string;
-  batchNo: string;
-  warehouseName: string;
-  brandName: string;
-  autoBarcode: string;
-  stdSalesPrice: string;
-  stdPurchasePrice: string;
-  stock: string;
-  minSalePrice: string;
-}
-
+const api = new APIClient();
 const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   isOpen,
   onClose,
   transactionType,
-  productData
+  formState
 }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
   const tabs = ["Item Details", "Transactions"];
+  const [productInfo, setProductInfo] = useState<ProductDisplayDto>(initialProductDisplayData);
+  const [loading, setLoading] = useState({});
+
+  useEffect(() => {
+    setLoading(true);
+    const fetch = async () => {
+      if ((formState.currentCell?.rowIndex ?? 0) >= 0 && (formState.currentCell?.productBatchID ?? 0) > 0) {
+
+        const data = formState.transaction.details[formState.currentCell?.rowIndex ?? 0]
+        const payload = {
+          productBatchID: formState.currentCell?.productBatchID,
+          unitID: data?.unitID,
+          unitName: data.unit,
+          priceCategorID: formState.transaction.master.priceCategoryID
+        }
+        const queryParams = new URLSearchParams(payload as any).toString();
+        const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams)
+        setProductInfo(info);
+        setLoading(false);
+      }
+    }
+    fetch()
+  }, [])
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
 
   const renderItemDetailsTab = () => (
-    <div className="p-4 space-y-6">
+    <div className="p-2 space-y-3">
       {/* Basic Information */}
-      <div>
-        <h6 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+      <div className="pb-3">
+        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#3B82F6] pl-3">
           {t('basic_information')}
         </h6>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Product Name:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.productName || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Product Name:</span>
+            <span className="text-xs font-mono">{productInfo?.productName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Product Code:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.productCode || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Product Code:</span>
+            <span className="text-xs font-mono">{productInfo?.productCode || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Group:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.groupName || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Group:</span>
+            <span className="text-xs font-mono">{productInfo?.groupName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Category:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.productCategoryName || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Category:</span>
+            <span className="text-xs font-mono">{productInfo?.productCategoryName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Unit:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.unitName || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Unit:</span>
+            <span className="text-xs font-mono">{productInfo?.unitName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Item Type:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.itemType || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Item Type:</span>
+            <span className="text-xs font-mono">{productInfo?.itemType || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Brand:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.brandName || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Brand:</span>
+            <span className="text-xs font-mono">{productInfo?.brandName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Barcode:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.autoBarcode || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Barcode:</span>
+            <span className="text-xs font-mono">{productInfo?.autoBarcode || '-'}</span>
           </div>
         </div>
       </div>
 
       {/* Sales Information */}
-      <div>
-        <h6 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+      <div className="pb-3">
+        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#22C55E] pl-3">
           {t('sales_information')}
         </h6>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Std Sales Price:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.stdSalesPrice || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Std Sales Price:</span>
+            <span className="text-xs font-mono">{productInfo?.stdSalesPrice || 0}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Min Sale Price:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.minSalePrice || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Min Sale Price:</span>
+            <span className="text-xs font-mono">{productInfo?.minSalePrice || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Purchase Information */}
-      <div>
-        <h6 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+      <div className="pb-3">
+        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#F97316] pl-3">
           {t('purchase_information')}
         </h6>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Std Purchase Price:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.stdPurchasePrice || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Std Purchase Price:</span>
+            <span className="text-xs font-mono">{productInfo?.stdPurchasePrice || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Stock Information */}
-      <div>
-        <h6 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+      <div className="pb-3">
+        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#A855F7] pl-3">
           {t('stock_information')}
         </h6>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Current Stock:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.stock || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Current Stock:</span>
+            <span className="text-xs font-mono">{productInfo?.stock || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Min Stock:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.stockMin || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Min Stock:</span>
+            <span className="text-xs font-mono">{productInfo?.stockMin || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Max Stock:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.stockMax || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Max Stock:</span>
+            <span className="text-xs font-mono">{productInfo?.stockMax || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Warehouse:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.warehouseName || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Warehouse:</span>
+            <span className="text-xs font-mono">{productInfo?.warehouseName || '-'}</span>
           </div>
         </div>
       </div>
 
       {/* Other Information */}
-      <div>
-        <h6 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+      <div className="">
+        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#6366F1] pl-3">
           {t('other_information')}
         </h6>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Manufacturing Date:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.mfgDate || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Manufacturing Date:</span>
+            <span className="text-xs font-mono">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Expiry Date:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.expiryDate || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Expiry Date:</span>
+            <span className=" text-xs font-mono">{productInfo?.expiryDate || '-'}</span>
           </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-gray-600 text-sm">Batch No:</span>
-            <span className="text-gray-800 text-sm font-medium">{productData?.batchNo || '-'}</span>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-xs font-medium">Batch No:</span>
+            <span className=" text-xs font-mono">{productInfo?.batchNo || '-'}</span>
           </div>
         </div>
       </div>
@@ -169,50 +176,59 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   );
 
   const renderTransactionsTab = () => (
-    <div className="p-4">
-      <div className="text-center text-gray-500 py-8">
-        <p className="text-sm">Transaction history will be displayed here</p>
-        <p className="text-xs mt-2">Transaction Type: {transactionType}</p>
+    <div className="p-2">
+      <div className="text-center py-12">
+        <div className="inline-flex items-center justify-center w-15 h-15 rounded-full mb-4 shadow-lg" style={{ backgroundColor: '#f8fafc', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}>
+          <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h3 className="font-bold text-xl mb-2 text-gray-900">Transaction History</h3>
+        <p className="text-gray-600 text-sm mb-3">Transaction details will be displayed here</p>
+        <div className="inline-block px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide bg-gray-100 text-gray-600">
+          Transaction Type: {transactionType}
+        </div>
       </div>
     </div>
   );
 
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
-      <div className="py-3 bg-gray-50 h-[94vh]">
+      <div className="py-3 h-[94vh] bg-gray-50">
         {/* Header */}
-        <div className="flex justify-between items-center mb-4 px-4">
-          <h6 className="font-semibold text-gray-800">{t("item_details")}</h6>
+        <div className="flex justify-between items-center mb-3 px-3">
+          <h6 className="font-bold text-xl tracking-tight text-gray-900">{t("item_details")}</h6>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-all duration-200 hover:bg-white p-2 rounded-full shadow-sm"
           >
-            <X className="w-[22px] h-[22px] p-1 rounded-full text-[12px] hover:shadow-lg transition-all duration-300 ease-in-out" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Product Name Display */}
-        {productData && (
-          <div className="px-4 mb-4">
-            <div className="bg-white rounded-lg p-3 shadow-sm">
-              <h5 className="font-semibold text-gray-800 text-lg">
-                {productData.productName}
+        {formState && (
+          <div className="px-3 mb-3">
+            <div className="bg-white rounded-lg p-4 shadow-lg border border-gray-200">
+              <h5 className="font-bold text-lg mb-2 leading-tight text-gray-900">
+                {productInfo?.productName || "Product Name"}
               </h5>
-              <p className="text-sm text-gray-600">{productData.productCode}</p>
+              <p className="text-sm font-mono inline-block px-3 py-1 rounded-lg text-gray-600 bg-gray-100">
+                {productInfo?.productCode || 'Product Code'}
+              </p>
             </div>
           </div>
         )}
 
         {/* Tabs */}
-        <div className="px-4 flex-1 overflow-hidden">
+        <div className="px-3 flex-1 overflow-hidden">
           <ERPTab
             tabs={tabs}
             activeTab={activeTab}
             onClickTabAt={handleTabClick}
           >
-            <div className="overflow-y-auto max-h-[calc(94vh-200px)]">
-              {activeTab === 0 ? renderItemDetailsTab() : renderTransactionsTab()}
-            </div>
+            {renderItemDetailsTab()}
+            {renderTransactionsTab()}
           </ERPTab>
         </div>
       </div>

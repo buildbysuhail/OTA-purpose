@@ -12,8 +12,13 @@ interface DocumentPropertiesProps {
   t: any;
 }
 
-const DocumentProperties: React.FC<DocumentPropertiesProps> = ({ closeModal, t }) => {
-  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
+  closeModal,
+  t,
+}) => {
+  const formState = useSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   const [showViewAction, setShowViewAction] = useState(false);
 
   const gridColumns: DevGridColumn[] = [
@@ -74,13 +79,7 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({ closeModal, t }
           checked={showViewAction}
           onChange={() => setShowViewAction(!showViewAction)}
         />
-        <ERPButton
-          title={t('show')}
-          variant="primary"
-          onClick={() => {
-
-          }}
-        />
+        <ERPButton title={t("show")} variant="primary" onClick={() => {}} />
       </div>
       <div className="mt-4">
         <ErpDevGrid

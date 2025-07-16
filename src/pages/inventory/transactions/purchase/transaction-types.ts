@@ -399,6 +399,27 @@ export interface SummaryItems {
   salesPrice: string;
 }
 
+export interface ProductDisplayDto {
+  productName: string;
+  productCode: string;
+  groupName: string;
+  productCategoryName: string;
+  unitName: string;
+  stockMin: string;
+  stockMax: string;
+  itemType: string;
+  mfgDate: string;
+  expiryDate: string;
+  batchNo: string;
+  warehouseName: string;
+  brandName: string;
+  autoBarcode: string;
+  stdSalesPrice: string;
+  stdPurchasePrice: string;
+  stock: string;
+  minSalePrice: string;
+}
+
 export interface TransactionFormState {
   store: any;
   formCode: string;

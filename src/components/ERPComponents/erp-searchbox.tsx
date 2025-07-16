@@ -435,7 +435,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         if (visibleRows.length > 0) {
           gridInstance.selectRowsByIndexes([0]);
           gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-          gridInstance.focus();
+          gridInstance.focus()
         }
       }
     }, []);

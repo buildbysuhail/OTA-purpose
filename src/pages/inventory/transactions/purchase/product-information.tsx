@@ -39,7 +39,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
           productBatchID: formState.currentCell?.productBatchID,
           unitID: data?.unitID,
           unitName: data.unit,
-          priceCategoryID: formState.transaction.master.priceCategoryID??0
+          priceCategoryID: formState.transaction.master.priceCategoryID ?? 0
         }
         const queryParams = new URLSearchParams(payload as any).toString();
         const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams)
@@ -58,117 +58,117 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
     <div className="p-2 space-y-3">
       {/* Basic Information */}
       <div className="pb-3">
-        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#3B82F6] pl-3">
+        <h6 className="font-bold dark:text-dark-text text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#3B82F6] pl-3">
           {t('basic_information')}
         </h6>
-        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Product Name:</span>
-            <span className="text-xs font-mono">{productInfo?.productName || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md dark:bg-dark-bg-card dark:border-dark-border bg-white border">
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Product Name:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Product Code:</span>
-            <span className="text-xs font-mono">{productInfo?.productCode || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Product Code:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCode || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Group:</span>
-            <span className="text-xs font-mono">{productInfo?.groupName || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Group:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.groupName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Category:</span>
-            <span className="text-xs font-mono">{productInfo?.productCategoryName || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Category:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCategoryName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Unit:</span>
-            <span className="text-xs font-mono">{productInfo?.unitName || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Unit:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.unitName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Item Type:</span>
-            <span className="text-xs font-mono">{productInfo?.itemType || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Item Type:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.itemType || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Brand:</span>
-            <span className="text-xs font-mono">{productInfo?.brandName || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Brand:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.brandName || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Barcode:</span>
-            <span className="text-xs font-mono">{productInfo?.autoBarcode || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Barcode:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.autoBarcode || '-'}</span>
           </div>
         </div>
       </div>
 
       {/* Sales Information */}
       <div className="pb-3">
-        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#22C55E] pl-3">
+        <h6 className="font-bold dark:text-dark-text text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#22C55E] pl-3">
           {t('sales_information')}
         </h6>
-        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Std Sales Price:</span>
-            <span className="text-xs font-mono">{productInfo?.stdSalesPrice || 0}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border bg-white border">
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Std Sales Price:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdSalesPrice || 0}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Min Sale Price:</span>
-            <span className="text-xs font-mono">{productInfo?.minSalePrice || 0}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Min Sale Price:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.minSalePrice || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Purchase Information */}
       <div className="pb-3">
-        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#F97316] pl-3">
+        <h6 className="font-bold dark:text-dark-text text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#F97316] pl-3">
           {t('purchase_information')}
         </h6>
-        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Std Purchase Price:</span>
-            <span className="text-xs font-mono">{productInfo?.stdPurchasePrice || 0}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border bg-white border">
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Std Purchase Price:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdPurchasePrice || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Stock Information */}
       <div className="pb-3">
-        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#A855F7] pl-3">
+        <h6 className="font-bold dark:text-dark-text text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#A855F7] pl-3">
           {t('stock_information')}
         </h6>
-        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Current Stock:</span>
-            <span className="text-xs font-mono">{productInfo?.stock || '-'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border bg-white border">
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Current Stock:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stock || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Min Stock:</span>
-            <span className="text-xs font-mono">{productInfo?.stockMin || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Min Stock:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMin || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Max Stock:</span>
-            <span className="text-xs font-mono">{productInfo?.stockMax || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Max Stock:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMax || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Warehouse:</span>
-            <span className="text-xs font-mono">{productInfo?.warehouseName || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Warehouse:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.warehouseName || '-'}</span>
           </div>
         </div>
       </div>
 
       {/* Other Information */}
       <div className="">
-        <h6 className="font-bold text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#6366F1] pl-3">
+        <h6 className="font-bold dark:text-dark-text text-gray-900 mb-2 text-xs uppercase tracking-widest border-l-4 border-[#6366F1] pl-3">
           {t('other_information')}
         </h6>
-        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 hover:transition-all duration-300 ease-in-out hover:shadow-md">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Manufacturing Date:</span>
-            <span className="text-xs font-mono">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
+        <div className="flex flex-col gap-2 rounded-md shadow-sm px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border bg-white border">
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Manufacturing Date:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Expiry Date:</span>
-            <span className=" text-xs font-mono">{productInfo?.expiryDate || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Expiry Date:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.expiryDate || '-'}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs font-medium">Batch No:</span>
-            <span className=" text-xs font-mono">{productInfo?.batchNo || '-'}</span>
+          <div className="flex justify-between items-center group">
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out">Batch No:</span>
+            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.batchNo || '-'}</span>
           </div>
         </div>
       </div>
@@ -178,14 +178,14 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   const renderTransactionsTab = () => (
     <div className="p-2">
       <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-15 h-15 rounded-full mb-4 shadow-lg" style={{ backgroundColor: '#f8fafc', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}>
-          <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="inline-flex items-center justify-center w-15 h-15 rounded-full mb-4 shadow-lg dark:bg-dark-bg-card dark:shadow-dark-shadow" style={{ backgroundColor: '#f8fafc', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}>
+          <svg className="w-7 h-7 dark:text-dark-text-secondary text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
-        <h3 className="font-bold text-xl mb-2 text-gray-900">Transaction History</h3>
-        <p className="text-gray-600 text-sm mb-3">Transaction details will be displayed here</p>
-        <div className="inline-block px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide bg-gray-100 text-gray-600">
+        <h3 className="font-bold text-xl mb-2 dark:text-dark-text text-gray-900">Transaction History</h3>
+        <p className="dark:text-dark-text-secondary text-gray-600 text-sm mb-3">Transaction details will be displayed here</p>
+        <div className="inline-block px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide dark:bg-dark-bg-card dark:text-dark-text-secondary bg-gray-100 text-gray-600">
           Transaction Type: {transactionType}
         </div>
       </div>
@@ -194,26 +194,26 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
 
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
-      <div className="py-3 h-[94vh] bg-gray-50">
+      <div className="py-3 h-[94vh] dark:bg-dark-bg bg-gray-50">
         {/* Header */}
         <div className="flex justify-between items-center mb-3 px-3">
-          <h6 className="font-bold text-xl tracking-tight text-gray-900">{t("item_details")}</h6>
+          <h6 className="font-bold text-lg tracking-tight dark:text-dark-text text-gray-900">{t("item_details")}</h6>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-all duration-200 hover:bg-white p-2 rounded-full shadow-sm"
-          >
-            <X className="w-5 h-5" />
+            aria-label="Close"
+            className="dark:bg-dark-bg-card dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-red-400 bg-white text-[#ef4444] hover:bg-[#ef4444] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#fca5a5] transition-colors duration-200 p-2 rounded-full shadow-md">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Product Name Display */}
         {formState && (
           <div className="px-3 mb-3">
-            <div className="bg-white rounded-lg p-4 shadow-lg border border-gray-200">
-              <h5 className="font-bold text-lg mb-2 leading-tight text-gray-900">
+            <div className="dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-lg p-4 shadow-lg border border-gray-200">
+              <h5 className="font-bold text-lg mb-2 leading-tight dark:text-dark-text text-gray-900">
                 {productInfo?.productName || "Product Name"}
               </h5>
-              <p className="text-sm font-mono inline-block px-3 py-1 rounded-lg text-gray-600 bg-gray-100">
+              <p className="text-sm font-mono inline-block px-3 py-1 rounded-lg dark:text-dark-text-secondary dark:bg-dark-bg text-gray-600 bg-gray-100">
                 {productInfo?.productCode || 'Product Code'}
               </p>
             </div>

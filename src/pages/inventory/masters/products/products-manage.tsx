@@ -89,7 +89,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
     onSuccess: useCallback(() => dispatch(toggleProducts({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.products?.key,
     useApiClient: true,
-    keyField: "productsdsID",
+    keyField: "productID",
     isMessages: true,
     loadInitialData: false,
     initialData: {

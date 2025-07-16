@@ -503,6 +503,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+      const dataWarranty = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/warranty`)
+      const dataBrands = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/dataBrands`)
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
 
@@ -544,7 +546,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherNumber: _voucherNo,
               inventoryLedgerID:
                 applicationSettings.inventorySettings.defaultPurchaseAcc,
-              ledgerID: applicationSettings.accountsSettings.defaultCashAcc
+              ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
           formElements: {
@@ -570,6 +572,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         );
       }
+      
+      _formState.dataWarranty = dataWarranty;
+      _formState.dataBrands = dataBrands;
+
       _formState.inSearch = applicationSettings.productsSettings.batchCriteria != "NB" ? false : true;
       _formState.userRightsFormCode =
         isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
@@ -1086,7 +1092,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       {
         dataField: "brand",
         caption: t("brand"),
-        dataType: "string",
+        dataType: "cb",
         width: 150,
         alignment: "left",
         visible: false,
@@ -1457,7 +1463,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       {
         dataField: "warranty",
         caption: t("warranty"),
-        dataType: "string",
+        dataType: "cb",
         visible: false,
         width: 150,
         readOnly: true,

@@ -283,7 +283,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             //   textOverflow: "ellipsis",
             //   textAlign: column.alignment || "center",
             // }}
-            data={{unitID: localValue}}
             value={value}
             label={localValue}
             field={{
@@ -491,6 +490,11 @@ const Row = React.memo(
             let options: any[] = []
             if(fieldKey == "unitID") {
               options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
+            }  if(fieldKey == "warranty") {
+              options = formState.dataWarranty ??[] as any [];
+            }
+            if(fieldKey == "brandID") {
+              options = formState.dataBrands ??[] as any [];
             }
             const isFocused = false;
             const cellId = `${gridId}_${column.dataField}_${index}`;

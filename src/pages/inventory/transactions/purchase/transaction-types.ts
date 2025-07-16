@@ -497,6 +497,8 @@ export interface TransactionFormState {
   barcodeData?:any;
   barcodePrevOpen?:boolean;
   ledgerDetails:boolean;
+  dataWarranty:[];
+  dataBrands:[];
 }
 
 export interface ColumnModel {

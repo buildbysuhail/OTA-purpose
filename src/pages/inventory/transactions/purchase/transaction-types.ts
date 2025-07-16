@@ -355,7 +355,6 @@ export interface UserConfig {
   enableItemCodeSearchInNameColumn?: boolean;
   holdSameCode?: boolean;
   printPreview?: boolean;
-  dummyProducts?: boolean;
   duplicationMessage?: boolean;
   setDefaultQuantity?: boolean;
   useInSearch?: boolean;
@@ -443,7 +442,8 @@ export interface TransactionFormState {
   inSearch: boolean;
   enableTaxNumber: boolean;
   tmpVoucherNo?: number;
-  dummyCode?: any;
+  dummyCode?: any;  
+  dummyProducts?: boolean;
   remarks?: string;
   prevTransactionDate?: string;
   lb?: boolean;

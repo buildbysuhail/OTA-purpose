@@ -324,7 +324,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   dgvProduct: { visible: false, disabled: false, label: "", params: "" },
   dgvProductBatches: { visible: false, disabled: false, label: "", params: "" },
   productSearchPopupWindow: { visible: false, disabled: false, label: "product_search_popup_window", data: { searchCriteria: 'Code', searchText: "", voucherType: "", warehouseId: 0, inSearch: false } },
-  lblGrandTotalFC: { visible: true, disabled: false, label: "grand_total_fc" },
   lblPosted: { visible: false, disabled: false, label: "posted" },
   lblTotFC: { visible: false, disabled: false, label: "tot_fc" },
   lblWarehouse: { visible: false, disabled: false, label: "warehouse" },
@@ -415,7 +414,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     enableItemCodeSearchInNameColumn: false,
     holdSameCode: false,
     printPreview: false,
-    dummyProducts: false,
     duplicationMessage: false,
     setDefaultQuantity: false,
     inputBoxStyle: {
@@ -569,6 +567,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   productInfo: false,
   ShowProductBatchUnitDetails: false,
   ledgerDetails: false,
+    dummyProducts: false,
 }
 
 export const initialProductData: BarcodeLabel = {

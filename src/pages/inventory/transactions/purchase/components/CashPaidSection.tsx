@@ -46,7 +46,7 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
             const isChecked = e.target.checked;
             dispatch(
               formStateMasterHandleFieldChange({
-                fields: { hasCashPaid: isChecked },
+                fields: { hasCashPaid: isChecked, cashReceived: isChecked? formState.transaction.master.grandTotal : "0.0" },
               })
             );
             isChecked ? focusDiscount() : focusAmount();

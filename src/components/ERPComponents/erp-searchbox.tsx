@@ -427,18 +427,39 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       [onRowSelected, clearAfterSelection, inputRef]
     );
 
-    const handleBatchContentReady = useCallback(() => {
-      debugger;
-      if (batchGridRef.current) {
-        const gridInstance = batchGridRef.current.instance();
-        const visibleRows = gridInstance.getVisibleRows();
-        if (visibleRows.length > 0) {
-          gridInstance.selectRowsByIndexes([0]);
-          gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-          gridInstance.focus()
+
+const handleBatchContentReady = useCallback(() => {
+  if (batchGridRef.current) {
+    const gridInstance = batchGridRef.current.instance();
+    const visibleRows = gridInstance.getVisibleRows();
+    if (visibleRows.length > 0) {
+      // Use setTimeout to ensure the grid is fully rendered
+      setTimeout(() => {
+        // Set focused row and column
+        gridInstance.option("focusedRowIndex", 0);
+        gridInstance.option("focusedColumnIndex", 0);
+        
+        // Select the first row
+        gridInstance.selectRowsByIndexes([0]);
+        
+        // Navigate to the first row to ensure proper focus
+        const firstRowKey = gridInstance.getKeyByRowIndex(0);
+        if (firstRowKey !== undefined) {
+          gridInstance.navigateToRow(firstRowKey);
         }
-      }
-    }, []);
+        
+        // Focus the grid container to activate keyboard events
+        gridInstance.focus();
+        
+        // Additional focus on the grid element itself
+        const gridElement = gridInstance.element();
+        if (gridElement) {
+          gridElement.focus();
+        }
+      }, 50); // Small delay to ensure DOM is ready
+    }
+  }
+}, []);
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -459,10 +480,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
             if (rows.length > 0) {
-            gridInstance.selectRowsByIndexes([0]);
-            gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-            gridInstance.option("focusedRowIndex", 0); // ✅ explicitly set focused row
-            gridInstance.focus(); // optional: focus container
+            grid.selectRowsByIndexes([0]);
+            grid.navigateToRow(grid.getKeyByRowIndex(0));
+            grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
+            grid.focus(); // optional: focus container
               e.preventDefault();
             }
           }
@@ -608,6 +629,7 @@ const handleProductGridContentReady = useCallback((e: any) => {
     gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
   }
 }, []);
+
 useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -687,6 +709,12 @@ useEffect(() => {
 
                         enterKeyDirection="row"
                       />
+                        <Column
+                        dataField="productName"
+                        caption={t("product_name")}
+                        dataType="string"
+                        minWidth={150}
+                      />
                       <Column
                         dataField="productCode"
                         caption={t("product_code")}
@@ -699,9 +727,22 @@ useEffect(() => {
                         dataType="number"
                         visible={false}
                       />
+                    
                       <Column
-                        dataField="productName"
-                        caption={t("ProductName")}
+                        dataField="arabicName"
+                        caption={t("arabic_name")}
+                        dataType="string"
+                        width={150}
+                      />
+                      <Column
+                        dataField="stock"
+                        caption={t("stock")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="stockDetails"
+                        caption={t("stock_details")}
                         dataType="string"
                         minWidth={150}
                       />
@@ -721,9 +762,12 @@ useEffect(() => {
                         showBorders={true}
                         showRowLines={true}
                         remoteOperations={{
-                          filtering: true,
-                          paging: true,
-                          sorting: true,
+                        filtering: true,
+                        paging: true,
+                        sorting: true,
+                        grouping: false,
+                        summary: false,
+                        groupPaging: false,
                         }}
                         paging={{}}
                      focusedRowEnabled={true}
@@ -733,17 +777,18 @@ useEffect(() => {
                       >
                         <Scrolling
               mode="virtual"
-              showScrollbar="always"
-              renderAsync={false}
-              useNative={"auto"}
-              rowRenderingMode="virtual"
-              preloadEnabled={true}
+              // showScrollbar="always"
+              // renderAsync={false}
+              // useNative={"auto"}
+              // rowRenderingMode="virtual"
+              // preloadEnabled={true}
             />
                         <KeyboardNavigation
+                          enabled={true}
                           editOnKeyPress={false}
                           enterKeyDirection="row"
                         />
-                        <Paging pageSize={10} />
+                        <Paging pageSize={30} />
                         <Selection mode="single" deferred/>
                         <Column
                           dataField="productBatchID"

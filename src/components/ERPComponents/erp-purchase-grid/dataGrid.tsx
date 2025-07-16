@@ -111,6 +111,7 @@ interface EditableCellProps {
   gridFontSize: number;
   gridIsBold: boolean;
   type:"any"|"cb"
+  rowHeight:number
 }
 
 interface DragState {
@@ -153,6 +154,7 @@ interface RowData {
   currentCell?: { column: string; rowIndex: number };
   gridFontSize: number;
   gridIsBold: boolean;
+  rowHeight:number;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -172,6 +174,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     gridFontSize,
     gridIsBold,
     type,
+    rowHeight, 
   }) => {
     const dispatch = useAppDispatch();
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
@@ -247,6 +250,18 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
       onKeyDown(e, column, rowIndex);
     };
+       // Common style for consistent height
+    const cellStyle = {
+      fontSize: `${gridFontSize}px`,
+      fontWeight: gridIsBold ? "bold" : "normal",
+      height: `${rowHeight}px`,
+      minHeight: `${rowHeight}px`,
+      maxHeight: `${rowHeight}px`,
+      lineHeight: `${rowHeight}px`,
+      display: "flex",
+      alignItems: "center",
+      textAlign: column.alignment || "center",
+    } as React.CSSProperties
 
     return (
       <>
@@ -291,13 +306,11 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             noLabel
             type={column.dataType === "number" ? "text" : "text"}
             className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-            style={{
-              fontSize: `${gridFontSize}px`,
-              fontWeight: gridIsBold ? "bold" : "normal",
+           style={{
+              ...cellStyle,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              textAlign: column.alignment || "center",
             }}
             value={localValue}
             noBorder
@@ -326,6 +339,7 @@ const Row = React.memo(
     const listRef = data.listRef;
     const itemCount = data.itemCount;
     const gridRef = data.gridRef;
+    const rowHeight = data.rowHeight;
     const rowRef = useRef<HTMLTableRowElement>(null);
     const dispatch = useAppDispatch();
     const formState = useSelector(
@@ -358,36 +372,43 @@ const Row = React.memo(
       if (document.activeElement?.closest(".dx-datagrid")) return;
       setFocusedColumn(null);
     }, []);
-
+  // Common cell content style for consistent height
+  const getCellContentStyle = (column: ColumnModel) => ({
+    fontSize: `${data.gridFontSize}px`,
+    fontWeight: data.gridIsBold ? "bold" : "normal",
+    height: `${rowHeight}px`,
+    minHeight: `${rowHeight}px`,
+    maxHeight: `${rowHeight}px`,
+    lineHeight: `${rowHeight}px`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
+    textAlign: column.alignment || "center",
+    whiteSpace: "nowrap" as const,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    width: "100%",
+    WebkitUserSelect: "none" as const,
+    MozUserSelect: "none" as const,
+    msUserSelect: "none" as const,
+    caretColor: "transparent",
+    outline: "none",
+    paddingLeft: "4px",
+    paddingRight: "4px",
+    boxSizing: "border-box" as const,
+  })
     const handleKeyDown = useCallback(
-      (
-        value: any,
-        e: React.KeyboardEvent<HTMLElement>,
-        column: ColumnModel,
-        rowIndex: number
-      ) => {
-        const target = e.target as HTMLElement;
-        if (!target.id) return;
+    (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
+      const target = e.target as HTMLElement
+      if (!target.id) return
 
-        const visibleColumns = data.columns.filter(
-          (col) => col.visible != false && col.dataField != null
-        );
+      const visibleColumns = data.columns.filter((col) => col.visible != false && col.dataField != null)
+      const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
 
-        const currentColumnIndex = visibleColumns.findIndex(
-          (col) => col.dataField === column.dataField
-        );
-
-        if (
-          !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)
-        ) {
-          data.onKeyDown(
-            value,
-            e,
-            column.dataField as keyof TransactionDetail,
-            rowIndex
-          );
-          return;
-        }
+     if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
+        data.onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
+        return
+      }
 
         let shouldNavigate = true;
         if (target.tagName === "INPUT" || target.querySelector("input")) {
@@ -401,57 +422,48 @@ const Row = React.memo(
             const effectiveStart = selectionStart ?? 0;
             const effectiveEnd = selectionEnd ?? 0;
             if (
-              e.key === "ArrowRight" &&
-              (effectiveStart !== effectiveValue.length ||
-                effectiveEnd !== effectiveValue.length)
-            ) {
-              shouldNavigate = false;
-            } else if (
-              e.key === "ArrowLeft" &&
-              (effectiveStart !== 0 || effectiveEnd !== 0)
-            ) {
-              shouldNavigate = false;
+                e.key === "ArrowRight" &&
+                (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)
+              ) {
+                shouldNavigate = false
+              } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
+                shouldNavigate = false
+              }
             }
           }
-        }
 
         if (!shouldNavigate) return;
 
         e.preventDefault();
-        switch (e.key) {
-          case "ArrowRight":
-            if (currentColumnIndex < visibleColumns.length - 1)
-              {
-              const res = data.focusCell(index, currentColumnIndex + 1);
-              setCurrentCell(res);
-            }
-
-            break;
-          case "ArrowLeft":
-            {
-              debugger;
-              if (currentColumnIndex > 1){
-
-                const res =  data.focusCell(index, currentColumnIndex - 1);
-                setCurrentCell(res);
+          switch (e.key) {
+            case "ArrowRight":
+              if (currentColumnIndex < visibleColumns.length - 1) {
+                const res = data.focusCell(index, currentColumnIndex + 1)
+                setCurrentCell(res)
               }
+              break
+            case "ArrowLeft":
+              if (currentColumnIndex > 1) {
+                const res = data.focusCell(index, currentColumnIndex - 1)
+                setCurrentCell(res)
+              }
+              break
+            case "ArrowUp":
+              {
+                const res = data.focusCell(index - 1, currentColumnIndex)
+                setCurrentCell(res)
+              }
+              break
+            case "ArrowDown":
+              {
+                const res = data.focusCell(index + 1, currentColumnIndex)
+                setCurrentCell(res)
+              }
+              break
             }
-            break;
-          case "ArrowUp":
-            {
-              const res = data.focusCell(index - 1, currentColumnIndex);
-              setCurrentCell(res);
-            }
-            break;
-          case "ArrowDown":
-            {
-              const res = data.focusCell(index + 1, currentColumnIndex);
-              setCurrentCell(res);
-            }
-            break;
-        }
-      }, [data]
-    );
+          },
+          [data],
+        )
 
     return (
       <tr
@@ -462,6 +474,9 @@ const Row = React.memo(
           width: `${tableWidth}px`,
           boxSizing: "border-box",
           borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
+          height: `${rowHeight}px`,
+          minHeight: `${rowHeight}px`,
+          maxHeight: `${rowHeight}px`,
         }}
         className={`py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
         // column bg transition ☝
@@ -471,7 +486,6 @@ const Row = React.memo(
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
-
             const productId = item.productID;
             const cellValue = item[fieldKey];
             let options: any[] = []
@@ -489,6 +503,9 @@ const Row = React.memo(
                 style={{
                   width: column.width ? `${column.width}px` : "150px",
                   minWidth: column.width ? `${column.width}px` : "150px",
+                  height: `${rowHeight}px`,
+                  minHeight: `${rowHeight}px`,
+                  maxHeight: `${rowHeight}px`,
                   boxSizing: "border-box",
                   borderTop: isFocused ? "1px solid #3B82F6" : "none",
                   borderBottom: isFocused ? "1px solid #3B82F6" : "none",
@@ -520,35 +537,18 @@ const Row = React.memo(
                 }}
               >
                 {formState.transactionLoading ? (
-                  <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0" }}>
+                  <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0", height: `${rowHeight}px` }}>
                     <div className="card_description loading"
                       style={{
                         width: `${Math.floor(Math.random() * 50) + 40}%`,
+                        height: `${Math.min(rowHeight - 6, 16)}px`,
                       }}
                     ></div>
                   </div>
                 ) : column.dataField === "slNo" ? (
-                  <div
-                    className="px-1"
-                    style={{
-                      fontSize: `${data.gridFontSize}px`,
-                      fontWeight: data.gridIsBold ? "bold" : "normal",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "block",
-                      width: "100%",
-                      WebkitUserSelect: "none",
-                      MozUserSelect: "none",
-                      msUserSelect: "none",
-                      caretColor: "transparent",
-                      outline: "none",
-                      textAlign: column.alignment || "center",
-                    }}
-                    id={cellId}
-                  >
-                    {index + 1}
-                  </div>
+                 <div style={getCellContentStyle(column)} id={cellId}>
+                  {index + 1}
+                </div>
                 ) : (column.dataField === "product" || column.dataField === "pCode") &&
                   !column.readOnly &&
                   data.currentCell?.column === column.dataField &&
@@ -565,7 +565,7 @@ const Row = React.memo(
                     }
                     noLabel={true}
                     showCheckBox={false}
-                    contextClassNametwo="!h-[22px] !text-sm !px-1 !py-0 !border-none !bg-transparent"
+                   contextClassNametwo={`!h-[${rowHeight}px] !text-sm !px-1 !py-0 !border-none !bg-transparent`}
                     value={(cellValue as string) || ""}
                     productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
                     batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
@@ -598,22 +598,7 @@ const Row = React.memo(
                   />
                 ) : column.dataField === "product" && !column.readOnly ? (
                   <div
-                    style={{
-                      fontSize: `${data.gridFontSize}px`,
-                      fontWeight: data.gridIsBold ? "bold" : "normal",
-                      textAlign: column.alignment || "center",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "block",
-                      width: "100%",
-                      WebkitUserSelect: "none",
-                      MozUserSelect: "none",
-                      msUserSelect: "none",
-                      caretColor: "transparent",
-                      outline: "none",
-                    }}
-                    className="px-1 cursor-default"
+                  style={getCellContentStyle(column)}
                     id={cellId}
                     tabIndex={0}
                     // className="w-full h-full flex items-center px-1 cursor-default"
@@ -625,21 +610,10 @@ const Row = React.memo(
                   </div>
                 ) : column.dataField === "status" ? (
                   <div
-                    style={{
-                      fontSize: `${data.gridFontSize}px`,
-                      fontWeight: data.gridIsBold ? "bold" : "normal",
-                      textAlign: column.alignment || "center",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "block",
-                      width: "100%",
-                      WebkitUserSelect: "none",
-                      MozUserSelect: "none",
-                      msUserSelect: "none",
-                      caretColor: "transparent",
-                      outline: "none",
-                    }}
+                  style={{
+                    ...getCellContentStyle(column),
+                    justifyContent: "center",
+                  }}
                     id={cellId}
                     tabIndex={0}
                     className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
@@ -677,24 +651,11 @@ const Row = React.memo(
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                     gridFontSize={data.gridFontSize}
                     gridIsBold={data.gridIsBold}
+                    rowHeight={rowHeight}
                   />
                 ) : (
                   <div
-                    style={{
-                      fontSize: `${data.gridFontSize}px`,
-                      fontWeight: data.gridIsBold ? "bold" : "normal",
-                      textAlign: column.alignment || "center",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "block",
-                      width: "100%",
-                      WebkitUserSelect: "none",
-                      MozUserSelect: "none",
-                      msUserSelect: "none",
-                      caretColor: "transparent",
-                      outline: "none",
-                    }}
+                   style={getCellContentStyle(column)}
                     id={cellId}
                     tabIndex={0}
                     // className="w-full h-full flex items-center px-1 cursor-default"
@@ -721,6 +682,7 @@ const SummaryRow: React.FC<{
   summaryConfig: SummaryConfig[];
   gridFontSize: number;
   gridIsBold: boolean;
+  rowHeight:number;
 }> = ({
   columns,
   tableWidth,
@@ -728,6 +690,7 @@ const SummaryRow: React.FC<{
   summaryConfig,
   gridFontSize,
   gridIsBold,
+  rowHeight
 }) => {
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
@@ -738,6 +701,9 @@ const SummaryRow: React.FC<{
         className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
         style={{
           width: `${tableWidth}px`,
+          height: `${rowHeight}px`,
+          minHeight: `${rowHeight}px`,
+          maxHeight: `${rowHeight}px`,
           boxSizing: "border-box",
           // borderTop: `1px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`,
           // the above border is the border of the footer
@@ -1042,6 +1008,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       currentCell: formState.currentCell,
       gridFontSize: gridFontSize || 14,
       gridIsBold: gridIsBold || false,
+      rowHeight:rowHeight,
     }),
     [
       formState.transaction?.details,
@@ -1055,6 +1022,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       formState.currentCell,
       gridFontSize,
       gridIsBold,
+      rowHeight
     ]
   );
 
@@ -1127,6 +1095,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 className="flex relative backdrop-blur-sm"
                 style={{
                   width: `${tableWidth}px`,
+                  height: `${rowHeight + 8}px`, // Header slightly taller
+                  minHeight: `${rowHeight + 8}px`,
+                  maxHeight: `${rowHeight + 8}px`,
                   boxSizing: "border-box",
                   borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
                   background: gridHeaderBg
@@ -1192,6 +1163,10 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           fontWeight: gridIsBold ? "bold" : "600",
                           width: col.width ? `${col.width}px` : "150px",
                           minWidth: col.width ? `${col.width}px` : "150px",
+                          height: `100%`,
+                          // height: `${rowHeight + 8}px`,
+                          maxHeight:`${rowHeight + 8}px`,
+                          minHeight: `${rowHeight + 8}px`,
                           textAlign:
                             col.alignment ||
                             (col.dataType === "number" ? "right" : "left"),
@@ -1284,6 +1259,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   summaryConfig={summaryConfig}
                   gridFontSize={gridFontSize}
                   gridIsBold={gridIsBold}
+                  rowHeight={rowHeight} 
                 />
               </tfoot>
             )}

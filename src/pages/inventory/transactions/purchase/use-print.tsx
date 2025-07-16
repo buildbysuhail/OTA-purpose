@@ -11,6 +11,7 @@ import { printCheque_AccTransaction } from "./print-trans-service";
 import {
   BarcodeLabel,
   TransactionData,
+  TransactionDetail,
   TransactionFormState,
 } from "./transaction-types";
 import { logUserAction } from "../../../../redux/slices/user-action/thunk";
@@ -21,6 +22,7 @@ import {
   formStateMasterHandleFieldChange,
   templatesData,
 } from "./reducer";
+import { DeepPartial } from "redux";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./renderSelected-template";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
@@ -264,7 +266,7 @@ export const usePrint = () => {
     isDummyBill: boolean,
    
   ): Promise<void> {
-    let modifiedDetails = [];
+    let modifiedDetails: DeepPartial<TransactionDetail>[] = [];
     let batchCreatedList = [];
     try {
       let barcodeLabelAdded = false;
@@ -315,7 +317,7 @@ export const usePrint = () => {
           batchCreatedList = res.items;
         }
       }
-    
+    debugger;
       // Process each row in the specified range
       for (let i = 0; i < rowIndexes.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};
@@ -345,7 +347,7 @@ export const usePrint = () => {
           // Process only if there are stickers to print
           if (stickerQty > 0) {
             // Set barcode properties
-            barcode.autoBarcode = updateBatch? batch.autoBarcode:  row.barCode;
+            barcode.autoBarcode = updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode;
             barcode.manualBarcode = row.manualBarcode;
             barcode.productCode = row.pCode;
             barcode.productName = row.product;
@@ -398,7 +400,10 @@ export const usePrint = () => {
             barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
-            modifiedDetails.push({...batch, slNo: row.slNo, barcodePrinted: true });
+            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true, 
+              barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode),
+              productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row.productBatchID)
+             });
             barcodeData.push(barcode);
             barcodeLabelAdded = true;
           }

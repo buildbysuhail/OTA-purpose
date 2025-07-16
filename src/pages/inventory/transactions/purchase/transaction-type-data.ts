@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -627,4 +627,24 @@ export const initialProductData: BarcodeLabel = {
   sPrice: 0,
   showPreview: false,
   pluCode: ""
+};
+export const initialProductDisplayData: ProductDisplayDto = {
+  productName: "",
+  productCode: "",
+  groupName: "",
+  productCategoryName: "",
+  unitName: "",
+  stockMin: "",
+  stockMax: "",
+  itemType: "",
+  mfgDate: "",
+  expiryDate: "",
+  batchNo: "",
+  warehouseName: "",
+  brandName: "",
+  autoBarcode: "",
+  stdSalesPrice: "",
+  stdPurchasePrice: "",
+  stock: "",
+  minSalePrice: "",
 };

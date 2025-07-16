@@ -346,7 +346,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         
         console.log(`Grid key: ${e.event.key}`);
         if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
-          debugger;
+          
           const gridInstance = dataGridRef.current.instance();
             const focusedRowIndex = gridInstance.option("focusedRowIndex");
             const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
@@ -388,17 +388,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleBatchGridKeyDown = useCallback(
-      (e: any) => {
+     async  (e: any) => {
         console.log(`Batch grid key: ${e.event.key}`);
         if (
           e.event.key === "Enter" 
         ) {
-          debugger;
-            const gridInstance = batchGridRef.current.instance();
-            const focusedRowIndex = gridInstance.option("focusedRowIndex");
-            const selectedRow = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          const gridInstance = batchGridRef.current.instance();   
+          const allSelected = await gridInstance.getSelectedRowsData();
+        const selected = allSelected[0];
           if (onRowSelected) {
-            onRowSelected(selectedRow, inputValue.searchValue);
+            onRowSelected(selected, inputValue.searchValue);
           }
           setShowBatchGrid(false);
           if (clearAfterSelection) {
@@ -424,21 +423,29 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           e.event.preventDefault();
         }
       },
-      [onRowSelected, clearAfterSelection, inputRef]
+      [onRowSelected, clearAfterSelection, inputRef,inputValue]
     );
 
-    const handleBatchContentReady = useCallback(() => {
-      debugger;
-      if (batchGridRef.current) {
-        const gridInstance = batchGridRef.current.instance();
-        const visibleRows = gridInstance.getVisibleRows();
-        if (visibleRows.length > 0) {
-          gridInstance.selectRowsByIndexes([0]);
-          gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-          gridInstance.focus()
-        }
-      }
-    }, []);
+
+const [batchInitialized, setBatchInitialized] = useState(false);
+
+const handleBatchContentReady = useCallback((e: any) => {
+  if (!batchInitialized) {
+    const grid = e.component;
+    // focus and select row 0 on first open
+    grid.option("focusedRowIndex", 0);
+    grid.selectRows([grid.getKeyByRowIndex(0)]);
+    grid.navigateToRow(grid.getKeyByRowIndex(0));
+    grid.focus();
+    setBatchInitialized(true);
+  }
+}, [batchInitialized]);
+
+const handleBatchFocusedRowChanged = useCallback((e: any) => {
+  // whenever focus moves (via arrow keys), select that row
+  e.component.selectRows([e.row.key],false);
+}, []);
+
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -459,10 +466,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
             if (rows.length > 0) {
-            gridInstance.selectRowsByIndexes([0]);
-            gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-            gridInstance.option("focusedRowIndex", 0); // ✅ explicitly set focused row
-            gridInstance.focus(); // optional: focus container
+            grid.selectRowsByIndexes([0]);
+            grid.navigateToRow(grid.getKeyByRowIndex(0));
+            grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
+            grid.focus(); // optional: focus container
               e.preventDefault();
             }
           }
@@ -608,6 +615,7 @@ const handleProductGridContentReady = useCallback((e: any) => {
     gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
   }
 }, []);
+
 useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -687,6 +695,12 @@ useEffect(() => {
 
                         enterKeyDirection="row"
                       />
+                        <Column
+                        dataField="productName"
+                        caption={t("product_name")}
+                        dataType="string"
+                        minWidth={150}
+                      />
                       <Column
                         dataField="productCode"
                         caption={t("product_code")}
@@ -699,9 +713,22 @@ useEffect(() => {
                         dataType="number"
                         visible={false}
                       />
+                    
                       <Column
-                        dataField="productName"
-                        caption={t("ProductName")}
+                        dataField="arabicName"
+                        caption={t("arabic_name")}
+                        dataType="string"
+                        width={150}
+                      />
+                      <Column
+                        dataField="stock"
+                        caption={t("stock")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="stockDetails"
+                        caption={t("stock_details")}
                         dataType="string"
                         minWidth={150}
                       />
@@ -721,30 +748,35 @@ useEffect(() => {
                         showBorders={true}
                         showRowLines={true}
                         remoteOperations={{
-                          filtering: true,
-                          paging: true,
-                          sorting: true,
+                        filtering: true,
+                        paging: true,
+                        sorting: true,
+                        grouping: false,
+                        summary: false,
+                        groupPaging: false,
                         }}
                         paging={{}}
                      focusedRowEnabled={true}
-                        onKeyDown={handleBatchGridKeyDown}
-                        onContentReady={handleBatchContentReady}
+                      onContentReady={handleBatchContentReady}
+                      onFocusedRowChanged={handleBatchFocusedRowChanged}
+                      onKeyDown={handleBatchGridKeyDown}
                         tabIndex={0}
                       >
                         <Scrolling
-              mode="virtual"
-              showScrollbar="always"
-              renderAsync={false}
-              useNative={"auto"}
-              rowRenderingMode="virtual"
-              preloadEnabled={true}
-            />
+                          mode="virtual"
+                          showScrollbar="always"
+                          renderAsync={false}
+                          useNative={"auto"}
+                          rowRenderingMode="virtual"
+                          preloadEnabled={true}
+                        />
                         <KeyboardNavigation
+                          enabled={true}
                           editOnKeyPress={false}
                           enterKeyDirection="row"
                         />
-                        <Paging pageSize={10} />
-                        <Selection mode="single" deferred/>
+                        <Paging pageSize={30} />
+                        <Selection mode="single"/>
                         <Column
                           dataField="productBatchID"
                           caption={t("productBatchID")}

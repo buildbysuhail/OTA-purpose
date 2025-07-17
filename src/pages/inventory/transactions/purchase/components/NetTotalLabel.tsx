@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react";
-import { TransactionFormState, VoucherElementProps } from "../../purchase/transaction-types";
+import { TransactionFormState } from "../../purchase/transaction-types";
 import { AnyAction } from "redux";
 
 export interface NetTotalProps {
@@ -21,8 +21,8 @@ const NetTotalLabel: React.FC<NetTotalProps> = ({ formState, t }) => {
     //   textAlign="right"
     // />
     <div className="flex justify-between items-center">
-      <span className="text-xs text-gray-600 font-medium">{t(formState.formElements.netTotal.label)}</span>
-      <span className="text-sm font-semibold text-gray-900">: {formState.netTotal}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.netTotal.label)}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {formState.netTotal}</span>
     </div>
   );
 };

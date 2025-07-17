@@ -2149,7 +2149,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   />
                 </div>
                 <div className="w-[300px]">
-                  {((formState.transactionLoading && _st.footerPosition === "right") || !(formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
+                  {((formState.transactionLoading && _st.footerPosition === "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
                   (  <TransactionFooter
                       formState={formState}
                       dispatch={dispatch}

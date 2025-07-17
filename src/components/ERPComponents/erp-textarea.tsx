@@ -53,12 +53,13 @@ const ERPTextarea = ({
   const inputBoxState = React.useMemo(() => {
     return localInputBox || appState?.inputBox;
   }, [localInputBox, appState?.inputBox]);
+
   return (
     <div>
       {!noLabel && (
-        <label className=" capitalize mb-1 block text-xs  text-black">
+        <label className="capitalize mb-1 block text-xs dark:text-dark-text text-gray-700">
           {iLabel}
-          {required && "*"}
+          {required && <span className="text-red-500 dark:text-red-400">*</span>}
         </label>
       )}
       <textarea
@@ -76,16 +77,14 @@ const ERPTextarea = ({
         autoComplete={autocomplete}
         disabled={disabled}
         placeholder={placeholder || label}
-        className="block w-full placeholder:text-xs text-xs sm:text-xs rounded appearance-none border border-gray-300 bg-white/95 px-3 py-2 text-gray-900 placeholder-gray-400 focus:ring-1 focus:border-accent focus:bg-white focus:outline-none focus:ring-accent"
+        className={`block w-full placeholder:text-xs text-xs sm:text-xs rounded appearance-none border dark:border-dark-border dark:bg-dark-bg-card dark:text-dark-text border-gray-300 bg-white/95 px-3 py-2 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-1 focus:border-accent dark:focus:border-accent focus:bg-white dark:focus:bg-dark-bg-card focus:outline-none focus:ring-accent disabled:text-gray-600 dark:disabled:text-gray-500 ${className || ""}`}
+        style={{
+          borderColor: appState?.mode === "dark" ? (value ? "#ffffff" : "#ffffff1a") : `rgb(${inputBoxState?.borderColor})`,
+          backgroundColor: appState?.mode === "dark" ? (value ? "#ffffff" : "#ffffff1a") : `rgb(${inputBoxState?.inputBgColor || "255,255,255"})`,
+        }}
         required={required}
         minLength={minLength}
         maxLength={maxLength}
-      // onInvalid={(e: any) => {
-      // 	e.target.setCustomValidity("Please fill out this field.");
-      // }}
-      // onInput={(e: any) => {
-      // 	e.target.setCustomValidity("");
-      // }}
       />
     </div>
   );

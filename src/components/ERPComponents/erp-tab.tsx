@@ -41,7 +41,7 @@ const ERPTab = ({ tabs, activeTab = 0, onClickTabAt, children }: ERPTabProps) =>
     <div className="flex flex-col">
       <div
         ref={tabsContainerRef}
-        className={`flex overflow-x-auto no-scrollbar border text-center rounded-md ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
+        className={`flex overflow-x-auto no-scrollbar border text-center ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}

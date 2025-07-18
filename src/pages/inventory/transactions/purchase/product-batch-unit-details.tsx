@@ -202,7 +202,7 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
                 dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/UnitPriceDetails/`}
                 method={ActionType.GET}
                 postData={{
-                  productBatchId: formState.currentCell?.productBatchID,
+                  productBatchId: formState.currentCell?.data?.productBatchID,
                   isUnitDetails: true,
                 }}
                 gridId="batchUnitDetailsGrid"

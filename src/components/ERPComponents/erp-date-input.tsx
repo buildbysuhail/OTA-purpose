@@ -465,6 +465,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 ? customSize
                 : inputBoxState?.inputSize
             }
+            disableEnterNavigation= {disableEnterNavigation}
             noLabel={noLabel}
             localInputBox={inputBoxState}
             fetching={fetching}

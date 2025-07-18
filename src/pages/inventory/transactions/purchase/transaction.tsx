@@ -1139,16 +1139,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
       },
       {
         dataField: "unit",
+        idField: "unitID",
         caption: t("unit"),
-        dataType: "string",
+        dataType: "cb",
         width: 150,
         alignment: "left",
-        readOnly: true,
+        allowEditing: true,
+        readOnly: false,
       },
       {
         dataField: "unitID",
         caption: t("unit_id"),
-        dataType: "cb",
         detailsOptionKey: "units",
         allowEditing: true,
         visible: true,
@@ -2078,6 +2079,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}
+              focusToNextColumn={focusToNextColumn}
               loadAndSetTransVoucher={loadAndSetTransVoucher}
               t={t}
               handleLoadByRefNo={handleLoadByRefNo}
@@ -2241,6 +2243,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
+                  focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}
                     handleKeyDown={handleKeyDown}

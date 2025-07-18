@@ -284,7 +284,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             className="!w-full  bg-transparent border-none focus:ring-0 focus:outline-none  !py-0 "
             disableEnterNavigation
             value={value}
-            label={localValue}
+            label={column.dataField}
             field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
               valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey :"value",
@@ -486,10 +486,12 @@ const Row = React.memo(
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
+            const idField = column.idField as keyof TransactionDetail; // for cb
             const productId = item.productID;
             const cellValue = item[fieldKey];
+            const idValue = item[idField]; // for cb
             let options: any[] = []
-            if(fieldKey == "unitID") {
+            if(fieldKey == "unit") {
               options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
             }  if(fieldKey == "warranty") {
               options = formState.dataWarranty ??[] as any [];
@@ -648,7 +650,7 @@ const Row = React.memo(
                     decimalLimit={2}
                     rowIndex={index}
                     column={column}
-                    value={cellValue as string | number}
+                    value={column.dataType == "cb" ? (idValue as string | number): (cellValue as string | number)}
                     options={options}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}

@@ -31,12 +31,16 @@ import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
 import LedgerDetails from "./ledger-details";
-import { loadTemplateById } from "../../../../utilities/Utils";
+import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
   dispatch: any;
   handleKeyDown: any;
+  focusToNextColumn: (rowIndex: number, column: string) => {
+    column: string;
+    rowIndex: number;
+} | null;
   loadAndSetTransVoucher: any;
   t: any;
   handleLoadByRefNo: any;
@@ -68,7 +72,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   refNoRef,
   isDropDownOpen,
   toggleDropdown,
-  footerLayout
+  footerLayout,
+  focusToNextColumn
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -261,6 +266,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <ReferenceDate
               dispatch={dispatch}
               formState={formState}
+              handleKeyDown={(e) => {
+                if(isEnterKey(e.key)) {
+                  debugger;
+                  if(formState.currentCell && formState.currentCell.rowIndex > 0&& formState.currentCell.column != "") {
+                    focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);                  
+                  } else {
+focusToNextColumn(0, "slNo");
+                  }
+                  
+                }
+              }}
               t={t}
             />
 

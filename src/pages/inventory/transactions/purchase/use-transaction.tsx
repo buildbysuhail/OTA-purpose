@@ -1998,7 +1998,8 @@ export const useTransaction = (
       const actualPriceVisible = formState.gridColumns?.find(
         (x) => x.dataField == "actualSalesPrice"
       )?.visible;
-      if (columnName === "unitID") {
+      if (columnName === "unit") {
+        debugger;
         if (value > 0) {
           const unitName = formState.batchesUnits?.find(
             (xer) =>

@@ -29,6 +29,7 @@ import { RootState } from "../../redux/store";
 import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
 import Urls from "../../redux/urls";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
+import { inputBox } from "../../redux/slices/app/types";
 
 interface InputProps {
   id?: string,
@@ -61,6 +62,7 @@ interface InputProps {
   rowIndex?: number;
   textAlign?: "left" | "right" | "center";
   onNextCellFind?: (rowIndex: number, column: string) => void;
+  customStyle?:inputBox
 }
 
 interface LoadResult {
@@ -208,6 +210,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       rowIndex,
       onNextCellFind,
       textAlign,
+      customStyle,
       ...rest
     },
     ref
@@ -634,6 +637,7 @@ useEffect(() => {
         <div className="flex items-center gap-4">
           <div className="relative w-full" ref={gridContainerRef}>
             <ERPInput
+              localInputBox={customStyle}
               textAlignStyle={textAlign}
               ignoreRandomId={true}
               noLabel={noLabel}

@@ -513,6 +513,7 @@ export interface ColumnModel {
   isLocked?: boolean;
   width?: number;
   readOnly?: boolean;
+  idField?: string; //for cb
   field?: { valueKey: string; labelKey: string };
   cellRender?: (
     cellElement: any,

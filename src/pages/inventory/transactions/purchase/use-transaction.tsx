@@ -384,16 +384,31 @@ export const useTransaction = (
     voucherType?: string,
     formType?: string,
     manualInvoiceNumber?: string,
-    transactionMasterID?: number
+    transactionMasterID?: number,
+    loadVType?: string
   ) => {
+    loadVType = loadVType?? "PI"
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
         openUnsavedPrompt: false,
       })
     );
-    const _voucherNumber =
+    let url  = `${Urls.inv_transaction_base}${transactionType}`
+    let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+      if(loadVType == "PO") {
+        _voucherNumber = formState.transaction.master.orderNumber??0
+        voucherType = loadVType
+        formType = ""
+      }
+      if(loadVType == "GRN") {
+        _voucherNumber = formState.transaction.master.orderNumber??0
+        voucherType = loadVType
+        formType = ""
+        url = url + "/ByGRN"
+      }
+
     if (_voucherNumber == undefined || _voucherNumber <= 0) {
       return voucher;
     }
@@ -408,10 +423,19 @@ export const useTransaction = (
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
+    // ByGRN
     let vch = await api.getAsync(
-      `${Urls.inv_transaction_base}${transactionType}`,
+      url,
       new URLSearchParams(params).toString()
     );
+    if(vch?.isOk == false) {
+        ERPAlert.show({
+          title: "",
+          text: `${vch?.message}`,
+          icon: t("warning"),
+        });
+        return false;
+    }
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
@@ -432,6 +456,10 @@ export const useTransaction = (
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
+    voucher.transaction.master.orderNumber = (loadVType == "PO" || loadVType == "GRN") ? undefined : voucher.transaction.master.orderNumber
+if(loadVType == "GRN") {
+  voucher.transaction.master.gRNMasterID = voucher.transaction.master.invTransactionMasterID
+}
 
     voucher.transaction = {
       ...(vch || {}),

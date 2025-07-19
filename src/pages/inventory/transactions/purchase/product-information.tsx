@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "r
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
-import { X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 import { ProductDisplayDto, TransactionFormState } from "./transaction-types";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
@@ -11,7 +11,6 @@ import { ActionType } from "../../../../redux/types";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
@@ -24,11 +23,128 @@ interface ProductInformationSidebarProps {
 }
 
 const api = new APIClient();
-const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
-  isOpen,
-  onClose,
-  transactionType,
-}) => {
+
+const SalesTab: React.FC<{ parm: any; transactionType: string; columns: DevGridColumn[] }> = ({ parm, transactionType, columns }) => {
+  const { t } = useTranslation("transaction");
+  const postData = useMemo(() => ({ ...parm, voucherType: "SI" }), [parm]);
+  return (
+    <ERPDevGrid
+      columns={columns}
+      dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/SI`}
+      postData={postData}
+      method={ActionType.POST}
+      gridHeader={t("sales")}
+      gridId="sales-grid"
+      className="HistorySidebarcustom"
+      remoteOperations={{ paging: true, filtering: true, sorting: true }}
+      pageSize={40}
+      hideGridAddButton={true}
+      columnHidingEnabled={true}
+      hideDefaultExportButton={true}
+      hideDefaultSearchPanel={true}
+      allowSearching={false}
+      allowExport={false}
+      hideGridHeader={false}
+      enablefilter={false}
+      hideToolbar={true}
+      enableScrollButton={false}
+      ShowGridPreferenceChooser={false}
+      showPrintButton={false}
+    />
+  );
+};
+
+const SalesOrderTab: React.FC<{ parm: any; transactionType: string; columns: DevGridColumn[] }> = ({ parm, transactionType, columns }) => {
+  const { t } = useTranslation("transaction");
+  const postData = useMemo(() => ({ ...parm, voucherType: "SO" }), [parm]);
+  return (
+    <ERPDevGrid
+      columns={columns}
+      dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/SO`}
+      postData={postData}
+      method={ActionType.POST}
+      gridHeader={t("sales_order")}
+      gridId="sales-order-grid"
+      className="HistorySidebarcustom"
+      remoteOperations={{ paging: true, filtering: true, sorting: true }}
+      pageSize={40}
+      hideGridAddButton={true}
+      columnHidingEnabled={true}
+      hideDefaultExportButton={true}
+      hideDefaultSearchPanel={true}
+      allowSearching={false}
+      allowExport={false}
+      hideGridHeader={false}
+      enablefilter={false}
+      hideToolbar={true}
+      enableScrollButton={false}
+      ShowGridPreferenceChooser={false}
+      showPrintButton={false}
+    />
+  );
+};
+
+const PurchaseTab: React.FC<{ parm: any; transactionType: string; columns: DevGridColumn[] }> = ({ parm, transactionType, columns }) => {
+  const { t } = useTranslation("transaction");
+  const postData = useMemo(() => ({ ...parm, voucherType: "PI" }), [parm]);
+  return (
+    <ERPDevGrid
+      columns={columns}
+      dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/PI`}
+      postData={postData}
+      method={ActionType.POST}
+      gridHeader={t("purchase")}
+      gridId="purchase-grid"
+      className="HistorySidebarcustom"
+      remoteOperations={{ paging: true, filtering: true, sorting: true }}
+      pageSize={40}
+      hideGridAddButton={true}
+      columnHidingEnabled={true}
+      hideDefaultExportButton={true}
+      hideDefaultSearchPanel={true}
+      allowSearching={false}
+      allowExport={false}
+      hideGridHeader={false}
+      enablefilter={false}
+      hideToolbar={true}
+      enableScrollButton={false}
+      ShowGridPreferenceChooser={false}
+      showPrintButton={false}
+    />
+  );
+};
+
+const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: DevGridColumn[] }> = ({ parm, transactionType, columns }) => {
+  const { t } = useTranslation("transaction");
+  const postData = useMemo(() => ({ ...parm, voucherType: "PO" }), [parm]);
+  return (
+    <ERPDevGrid
+      columns={columns}
+      dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/PO`}
+      postData={postData}
+      method={ActionType.POST}
+      gridHeader={t("purchase_order")}
+      gridId="purchase-order-grid"
+      className="HistorySidebarcustom"
+      remoteOperations={{ paging: true, filtering: true, sorting: true }}
+      pageSize={40}
+      hideGridAddButton={true}
+      columnHidingEnabled={true}
+      hideDefaultExportButton={true}
+      hideDefaultSearchPanel={true}
+      allowSearching={false}
+      allowExport={false}
+      hideGridHeader={false}
+      enablefilter={false}
+      hideToolbar={true}
+      enableScrollButton={false}
+      ShowGridPreferenceChooser={false}
+      showPrintButton={false}
+    />
+  );
+};
+
+const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ isOpen, onClose, transactionType }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
   const tabs = ["Item Details", "Transactions"];
@@ -37,28 +153,42 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   const [showCurrentCustomer, setShowCurrentCustomer] = useState(false);
   const [showCurrentBatch, setShowCurrentBatch] = useState(false);
   const [showCurrentUnit, setShowCurrentUnit] = useState(false);
-  const [voucherType, setVoucherType] = useState<string | null>(null);
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-  const [parm, setParm] = useState<{productID: number | undefined;
-  productBatchID: number | string;
-  unitID: number | undefined;
-  ledgerID: number | string;}>({productID: formState.currentCell?.data?.productID,
-  productBatchID: formState.currentCell?.data?.productBatchID??0,
-  unitID: formState.currentCell?.data?.unitID,
-  ledgerID: formState.transaction.master.ledgerID,});
+  const [parm, setParm] = useState<{
+    productID: number | undefined;
+    productBatchID: number | string;
+    unitID: number | undefined;
+    ledgerID: number | string;
+  }>({
+    productID: formState.currentCell?.data?.productID,
+    productBatchID: formState.currentCell?.data?.productBatchID ?? 0,
+    unitID: formState.currentCell?.data?.unitID,
+    ledgerID: formState.transaction.master.ledgerID,
+  });
+  const [activeSubTab, setActiveSubTab] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const subTabs = ["Sales", "Sales Order", "Purchase", "Purchase Order"];
 
   useEffect(() => {
-    debugger;
-    const data  = formState.currentCell?.data;
-  const payload = {
-    productID: data?.productID,
-    productBatchID: showCurrentBatch ? data?.productBatchID??0 :  0,
-    unitID: showCurrentUnit ? data?.productBatchID??0 :  0,
-    ledgerID: showCurrentCustomer ? formState.transaction.master.ledgerID : 0
-  };
-  setParm(payload)
-  }, [showCurrentBatch, showCurrentCustomer, showCurrentUnit, formState.currentCell?.rowIndex, formState.currentCell?.column, formState.currentCell?.data?.productID, formState.currentCell?.data?.productBatchID, formState.currentCell?.data?.unitID, formState.transaction.master.ledgerID]) // add al other deps vajid
-
+    const data = formState.currentCell?.data;
+    const payload = {
+      productID: data?.productID,
+      productBatchID: showCurrentBatch ? data?.productBatchID ?? 0 : 0,
+      unitID: showCurrentUnit ? data?.unitID ?? 0 : 0,
+      ledgerID: showCurrentCustomer ? formState.transaction.master.ledgerID : 0,
+    };
+    setParm(payload);
+  }, [
+    showCurrentBatch,
+    showCurrentCustomer,
+    showCurrentUnit,
+    formState.currentCell?.rowIndex,
+    formState.currentCell?.column,
+    formState.currentCell?.data?.productID,
+    formState.currentCell?.data?.productBatchID,
+    formState.currentCell?.data?.unitID,
+    formState.transaction.master.ledgerID,
+  ]);
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -71,34 +201,25 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
         fixedPosition: "right",
         width: 1000,
         cellRender: (cellElement: any) => {
-          const status = cellElement.data?.status || "DRAFT";
-          const statusClass = status === "PAID" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800";
-          const transactionDate = cellElement.data?.transactionDate;
-          const formattedDate = transactionDate
-            ? new Date(transactionDate).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })
-            : "N/A";
           return (
-            <div className="bg-white p-3 border-b border-gray-200">
+            <div className="bg-gradient-to-r from-white to-gray-50 p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-200">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <p className="text-gray-800 font-bold text-sm uppercase">
-                    {cellElement.data?.voucherPrefix || "XCVXCXC"} {cellElement.data?.voucherNumber || "INV-0000003"}
+                  <p className="text-gray-900 font-bold text-sm uppercase truncate max-w-xs cursor-pointer hover:text-[#2563EB] transition-colors duration-200" title={cellElement.data?.party}>
+                    {cellElement.data?.party?.length > 20 ? cellElement.data.party.slice(0, 20) + "..." : cellElement.data?.party}
                   </p>
-                  <p className="text-gray-500 text-xs mt-1">{formattedDate}</p>
-                  <span className={`inline-block mt-1 px-2 py-1 text-xs font-medium rounded-full ${statusClass}`}>
-                    {status}
-                  </span>
+                  <p className="text-gray-600 text-xs mt-1.5 font-medium">
+                    <span className="bg-[#EFF6FF] text-[#1D4ED8] px-2 py-0.5 rounded-full text-xs font-semibold">{cellElement.data?.voucherNumber}</span>
+                    <span className="mx-2 text-gray-400">•</span>
+                    <span className="text-gray-500">{cellElement.data?.date}</span>
+                  </p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <p className="text-gray-800 font-bold text-sm">
-                    ₹{cellElement.data?.amount?.toFixed(2) || "0.00"}
+                  <p className="text-gray-600 font-medium text-sm">
+                    Item Price: <span className="font-bold text-[#16A34A] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
                   </p>
-                  <p className="text-gray-500 text-xs mt-1">
-                    Quantity Sold {cellElement.data?.qty?.toFixed(2) || "0.00"}
+                  <p className="text-gray-600 font-medium text-xs mt-1.5">
+                    Quantity Sold: <span className="font-bold text-[#2563EB]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
                   </p>
                 </div>
               </div>
@@ -106,7 +227,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
           );
         },
       },
-    ], [t]
+    ],[t]
   );
 
   useEffect(() => {
@@ -118,7 +239,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
           productBatchID: formState.currentCell?.data?.productBatchID,
           unitID: data?.unitID,
           unitName: data?.unit,
-          priceCategoryID: formState.transaction.master.priceCategoryID ?? 0
+          priceCategoryID: formState.transaction.master.priceCategoryID ?? 0,
         };
         const queryParams = new URLSearchParams(payload as any).toString();
         const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams);
@@ -256,72 +377,43 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
 
   const renderTransactionsTab = () => (
     <div className="p-2">
-      <div className="flex flex-wrap gap-4 mb-4">
-        <ERPCheckbox
-          id="showCurrentCustomer"
-          label="Show only current customer transaction"
-          checked={showCurrentCustomer}
-          onChange={(e) => setShowCurrentCustomer(e.target.checked)}
-        />
-        <ERPCheckbox
-          id="showCurrentBatch"
-          label="Current batch transaction"
-          checked={showCurrentBatch}
-          onChange={(e) => setShowCurrentBatch(e.target.checked)}
-        />
-        <ERPCheckbox
-          id="showCurrentUnit"
-          label="Current unit transaction"
-          checked={showCurrentUnit}
-          onChange={(e) => setShowCurrentUnit(e.target.checked)}
-        />
-        <ERPDataCombobox
-          key={voucherType}
-          field={{
-            id: "voucherType",
-            // getListUrl: Urls.data_vouchertype,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          // pi , so ,pr
-          options={
-            [
-              {id:"SI", name:"Sale Invoice"}
-            ]
-          }
-          noLabel={true}
-          id="voucherType"
-          data={{ voucherType }}
-          value={voucherType}
-          onChange={(e) => {
-            setVoucherType(e?.value ?? null);
-          }}
-        />
+      <div className="flex items-center justify-end mb-2">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="mr-2">
+          <Menu className="w-5 h-5" />
+        </button>
       </div>
-      <ERPDevGrid
-        columns={columns}
-        dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/SI`}
-        postData={parm}
-        method={ActionType.POST}
-        gridHeader={t("transactions")}
-        gridId="transaction-grid"
-        className="HistorySidebarcustom"
-        gridAddButtonIcon="ri-add-line"
-        remoteOperations={{ paging: true, filtering: true, sorting: true }}
-        pageSize={40}
-        hideGridAddButton={true}
-        columnHidingEnabled={true}
-        hideDefaultExportButton={true}
-        hideDefaultSearchPanel={true}
-        allowSearching={false}
-        allowExport={false}
-        hideGridHeader={false}
-        enablefilter={false}
-        hideToolbar={true}
-        enableScrollButton={false}
-        ShowGridPreferenceChooser={false}
-        showPrintButton={false}
-      />
+      {isMenuOpen && (
+        <div className="absolute top-[275px] right-[18px] bg-white p-4 shadow-lg z-10">
+          <ERPCheckbox
+            id="showCurrentCustomer"
+            label="Show only current customer transaction"
+            checked={showCurrentCustomer}
+            onChange={(e) => setShowCurrentCustomer(e.target.checked)}
+          />
+          <ERPCheckbox
+            id="showCurrentBatch"
+            label="Current batch transaction"
+            checked={showCurrentBatch}
+            onChange={(e) => setShowCurrentBatch(e.target.checked)}
+          />
+          <ERPCheckbox
+            id="showCurrentUnit"
+            label="Current unit transaction"
+            checked={showCurrentUnit}
+            onChange={(e) => setShowCurrentUnit(e.target.checked)}
+          />
+        </div>
+      )}
+      <ERPTab
+        tabs={subTabs}
+        activeTab={activeSubTab}
+        onClickTabAt={setActiveSubTab}
+      >
+        <SalesTab parm={parm} transactionType={transactionType} columns={columns} />
+        <SalesOrderTab parm={parm} transactionType={transactionType} columns={columns} />
+        <PurchaseTab parm={parm} transactionType={transactionType} columns={columns} />
+        <PurchaseOrderTab parm={parm} transactionType={transactionType} columns={columns} />
+      </ERPTab>
     </div>
   );
 
@@ -334,7 +426,8 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
           <button
             onClick={onClose}
             aria-label="Close"
-            className="dark:bg-dark-bg-card dark:text-[#f87171] dark:hover:bg-[#dc2626] dark:hover:text-white dark:focus:ring-[#f87171] bg-white text-[#ef4444] hover:bg-[#ef4444] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#fca5a5] transition-colors duration-200 p-2 rounded-full shadow-md">
+            className="dark:bg-dark-bg-card dark:text-[#f87171] dark:hover:bg-[#dc2626] dark:hover:text-white dark:focus:ring-[#f87171] bg-white text-[#ef4444] hover:bg-[#ef4444] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#fca5a5] transition-colors duration-200 p-2 rounded-full shadow-md"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -345,7 +438,10 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
             <div className="dark:bg-dark-bg-card dark:border-dark-border p-4 bg-slate-200">
               <div className="flex items-stretch gap-2">
                 <div className="product-image min-w-[90px] h-[60px] bg-slate-200">
-                  <img src={productInfo?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbngTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s"} className="w-full h-full object-cover object-center rounded-md" />
+                  <img
+                    src={productInfo?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbngTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s"}
+                    className="w-full h-full object-cover object-center rounded-md"
+                  />
                 </div>
                 <div className="flex flex-col gap-1">
                   <h5 className="font-bold text-base leading-tight dark:text-dark-text text-gray-900">
@@ -365,10 +461,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
 
         {/* Tabs */}
         <div className="overflow-hidden">
-          <ERPTab
-            tabs={tabs}
-            activeTab={activeTab}
-            onClickTabAt={handleTabClick}>
+          <ERPTab tabs={tabs} activeTab={activeTab} onClickTabAt={handleTabClick}>
             {renderItemDetailsTab()}
             {renderTransactionsTab()}
           </ERPTab>

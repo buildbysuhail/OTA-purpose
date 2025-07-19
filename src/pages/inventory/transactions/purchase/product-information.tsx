@@ -2,17 +2,18 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "r
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
-import { CalendarDays, X } from "lucide-react";
+import { X } from "lucide-react";
 import { ProductDisplayDto, TransactionFormState } from "./transaction-types";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { initialProductDisplayData } from "./transaction-type-data";
-import urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 interface ProductInformationSidebarProps {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
@@ -27,7 +28,6 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   isOpen,
   onClose,
   transactionType,
-  formState
 }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
@@ -37,61 +37,28 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({
   const [showCurrentCustomer, setShowCurrentCustomer] = useState(false);
   const [showCurrentBatch, setShowCurrentBatch] = useState(false);
   const [showCurrentUnit, setShowCurrentUnit] = useState(false);
-  const [ledgerID, setLedgerID] = useState(false);
   const [voucherType, setVoucherType] = useState<string | null>(null);
-  const [parm, setParm] = useState<{productID: number | string;
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const [parm, setParm] = useState<{productID: number | undefined;
   productBatchID: number | string;
-  unitID: number | string;
-  voucherType: string;
-  ledgerID: number | string;}>({productID: formState.currentCell?.data.productID,
+  unitID: number | undefined;
+  ledgerID: number | string;}>({productID: formState.currentCell?.data?.productID,
   productBatchID: formState.currentCell?.data?.productBatchID??0,
-  unitID: formState.currentCell?.data.unitID,
-  voucherType: "SI", // default type, can be adjusted
+  unitID: formState.currentCell?.data?.unitID,
   ledgerID: formState.transaction.master.ledgerID,});
 
   useEffect(() => {
-    const data  = formState.transaction.details[formState.currentCell?.rowIndex ?? 0];
+    debugger;
+    const data  = formState.currentCell?.data;
   const payload = {
-    productID: data.productID,
-    productBatchID: showCurrentBatch ? data.productBatchID :  0,
-    unitID: showCurrentUnit ? data.productBatchID :  0,
-    voucherType: "SI",
-    ledgerID: ledgerID ? formState.transaction.master.ledgerID : 0
+    productID: data?.productID,
+    productBatchID: showCurrentBatch ? data?.productBatchID??0 :  0,
+    unitID: showCurrentUnit ? data?.productBatchID??0 :  0,
+    ledgerID: showCurrentCustomer ? formState.transaction.master.ledgerID : 0
   };
   setParm(payload)
-  }, [formState.currentCell]) // add al other deps vajid
-  
-const buildQueryParams = () => {
-  const params = new URLSearchParams();
+  }, [showCurrentBatch, showCurrentCustomer, showCurrentUnit, formState.currentCell?.rowIndex, formState.currentCell?.column, formState.currentCell?.data?.productID, formState.currentCell?.data?.productBatchID, formState.currentCell?.data?.unitID, formState.transaction.master.ledgerID]) // add al other deps vajid
 
-  if (showCurrentBatch) {
-    const batchID = formState.transaction.details[formState.currentCell?.rowIndex ?? 0]?.productBatchID;
-    if (batchID) {
-      params.append("batchID", batchID.toString());
-    }
-  }
-
-  if (showCurrentUnit) {
-    const unitID = formState.transaction.details[formState.currentCell?.rowIndex ?? 0]?.unitID;
-    if (unitID) {
-      params.append("unitID", unitID.toString());
-    }
-  }
-
-  if (ledgerID) {
-    const customerLedgerID = formState.transaction.master.ledgerID 
-
-    if (customerLedgerID) {
-      params.append("ledgerID", customerLedgerID.toString());
-    }
-  }
-
-  if (voucherType) {
-    params.append("voucherType", voucherType);
-  }
-
-  return params.toString();
-};
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -150,7 +117,7 @@ const buildQueryParams = () => {
         const payload = {
           productBatchID: formState.currentCell?.data?.productBatchID,
           unitID: data?.unitID,
-          unitName: data.unit,
+          unitName: data?.unit,
           priceCategoryID: formState.transaction.master.priceCategoryID ?? 0
         };
         const queryParams = new URLSearchParams(payload as any).toString();
@@ -308,12 +275,6 @@ const buildQueryParams = () => {
           checked={showCurrentUnit}
           onChange={(e) => setShowCurrentUnit(e.target.checked)}
         />
-        <ERPCheckbox
-          id="ledgerID"
-          label="Current ledgerID transaction"
-          checked={ledgerID}
-          onChange={(e) => setLedgerID(e.target.checked)}
-        />
         <ERPDataCombobox
           key={voucherType}
           field={{
@@ -339,7 +300,8 @@ const buildQueryParams = () => {
       </div>
       <ERPDevGrid
         columns={columns}
-        dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/SI/?productID=${formState.transaction.master.pr}`}
+        dataUrl={`${Urls.inv_transaction_base}${transactionType}/productInfo/SI`}
+        postData={parm}
         method={ActionType.POST}
         gridHeader={t("transactions")}
         gridId="transaction-grid"

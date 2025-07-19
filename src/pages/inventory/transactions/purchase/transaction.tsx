@@ -292,14 +292,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
             const columnIndex = visibleColumns.indexOf(firstEditableColumn);
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
-              const productBatchID = formState.transaction.details[res.rowIndex]?.productBatchID
+              const data = formState.transaction.details[res.rowIndex]?.productBatchID
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
                     currentCell: {
                       column: res.column,
                       rowIndex: res.rowIndex,
-                      productBatchID:  productBatchID
+                      data:  data
                     },
                   },
                 })
@@ -579,7 +579,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           formType,
           undefined,
           transactionMasterID
-        );
+        ) as TransactionFormState;
       }
       
       _formState.dataWarranty = dataWarranty;

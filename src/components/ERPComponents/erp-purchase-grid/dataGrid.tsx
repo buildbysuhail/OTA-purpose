@@ -154,7 +154,7 @@ interface RowData {
   blockUnitOnDecimalPoint: boolean;
   focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
   nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
-  currentCell?: { column: string; rowIndex: number };
+  currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight:number;
@@ -380,7 +380,7 @@ const Row = React.memo(
             fields: {
               currentCell: {
                 column: input?.column,
-                productBatchID: item.productBatchID,
+                data: data.details,
                 rowIndex: input?.rowIndex,
               },
             },
@@ -573,7 +573,7 @@ const Row = React.memo(
                       fields: {
                         currentCell: {
                           column: column.dataField,
-                          productBatchID:item.productBatchID,
+                          data:item,
                           rowIndex: index,
                         },
                       },

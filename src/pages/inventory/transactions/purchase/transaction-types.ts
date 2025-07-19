@@ -105,7 +105,8 @@ export interface TransactionMaster {
   toWarehouseID: number;
   voucherType: string;
   voucherForm: string;
-  orderNumber: number;
+  orderNumber?: number;
+  gRNMasterID: number;
   orderDate: string;
   quotationNumber: string;
   quotationDate: string;
@@ -487,7 +488,7 @@ export interface TransactionFormState {
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
-  currentCell?: { column: string; rowIndex: number; productBatchID: number };
+  currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
   ShowProductBatchUnitDetails: boolean;

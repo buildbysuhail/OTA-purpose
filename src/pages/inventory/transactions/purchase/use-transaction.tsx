@@ -236,7 +236,7 @@ export const useTransaction = (
 
   const setCurrentCell = (
     input: { column: string; rowIndex: number } | null,
-    productBatchID: number
+    data: TransactionDetail
   ) => {
     if (input) {
       dispatch(
@@ -244,7 +244,7 @@ export const useTransaction = (
           fields: {
             currentCell: {
               column: input?.column,
-              productBatchID: productBatchID,
+              data: data,
               rowIndex: input?.rowIndex,
             },
           },
@@ -313,7 +313,9 @@ export const useTransaction = (
       manualInvoiceNumber,
       transactionMasterID
     );
-
+if(typeof(_formState) == "boolean") {
+  return
+}
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -428,7 +430,8 @@ export const useTransaction = (
       url,
       new URLSearchParams(params).toString()
     );
-    if(vch?.isOk == false) {
+     if(loadVType == "GRN") {
+        if(vch?.isOk == false) {
         ERPAlert.show({
           title: "",
           text: `${vch?.message}`,
@@ -436,6 +439,8 @@ export const useTransaction = (
         });
         return false;
     }
+      }
+    
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
@@ -2268,7 +2273,7 @@ if(loadVType == "GRN") {
             if (res) {
               pld.currentCell = {
                 ...res,
-                productBatchID: product.productBatchID,
+                data:formState.transaction.details[_index],
               };
             }
             dispatch(
@@ -2517,7 +2522,7 @@ if(loadVType == "GRN") {
 
         if (data.setFocusToNextColumn) {
           const res = focusToNextColumn(data.rowIndex, data.searchColumn);
-          setCurrentCell(res, outDetail.productBatchID);
+          setCurrentCell(res, result.transaction!.details[0] as TransactionDetail);
         }
 
 
@@ -2526,7 +2531,7 @@ if(loadVType == "GRN") {
         // Open BatchGrid 
       } else {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn);
-          setCurrentCell(res, outDetail.productBatchID);
+          setCurrentCell(res, data.detail as TransactionDetail);
       }
 
       return result;
@@ -2738,7 +2743,7 @@ if(loadVType == "GRN") {
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID);
+              setCurrentCell(res, data);
             }
           } else if (columnName == "barCode") {
             
@@ -2761,7 +2766,7 @@ if(loadVType == "GRN") {
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID);
+              setCurrentCell(res, data);
             }
           } else if (columnName == "unitPrice") {
             dispatch(
@@ -2796,11 +2801,11 @@ if(loadVType == "GRN") {
               });
               if (confirm) {
                 const res = focusToNextColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
                 break;
               } else {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
               }
             }
           } else if (columnName == "margin" || columnName == "salesPrice") {
@@ -2840,11 +2845,11 @@ if(loadVType == "GRN") {
                 });
                 if (confirm) {
                   const res = focusToNextColumn(rowIndex, columnName);
-                  setCurrentCell(res, data.productBatchID);
+                  setCurrentCell(res, data);
                   break;
                 } else {
                   const res = focusCurrentColumn(rowIndex, columnName);
-                  setCurrentCell(res, data.productBatchID);
+                  setCurrentCell(res, data);
                 }
               }
             } else if (
@@ -2854,7 +2859,7 @@ if(loadVType == "GRN") {
             ) {
               if (data.unitPrice > data.salesPrice) {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
               }
             }
           } else if (columnName == "btnPrintBarcode") {
@@ -2961,7 +2966,7 @@ if(loadVType == "GRN") {
           } else {
             debugger;
             const res = focusToNextColumn(rowIndex, columnName);
-            setCurrentCell(res, data.productBatchID);
+            setCurrentCell(res, data);
           }
           break;
         default:

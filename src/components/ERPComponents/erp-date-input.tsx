@@ -502,7 +502,6 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 onBlur(e);
               }
             }}
-            disableEnterNavigation={disableEnterNavigation}
             required={required}
             readOnly={readonly}
             min={

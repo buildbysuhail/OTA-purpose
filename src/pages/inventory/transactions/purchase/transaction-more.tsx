@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
 import Urls from "../../../../redux/urls";
 import { TransactionFormState } from "./transaction-types";
+import OrderNo from "./components/order-number";
 
 interface MoreOptionsModalContentProps {
   formState: TransactionFormState;
@@ -36,17 +37,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
     300
   );
 
-  const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedInput(
-    formState.transaction.master.orderNumber || '',
-    (debouncedValue) => {
-      dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { orderNumber: debouncedValue },
-        })
-      );
-    },
-    300
-  );
+  
 
   const { value: quotationNumberValue, onChange: onQuotationNumberChange } = useDebouncedInput(
     formState.transaction.master.quotationNumber || '',
@@ -144,22 +135,6 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
     300
   );
 
-  const handleLoadByRefNo = useCallback(async () => {
-    if (formState.transaction.master.orderNumber) {
-      await loadAndSetTransVoucher(
-        true,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        formState.transaction.master.orderNumber,
-        undefined,
-        undefined,
-        true
-      );
-    }
-  }, [formState.transaction.master.orderNumber, loadAndSetTransVoucher]);
-
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -229,19 +204,13 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({
                     {t("order_no")} :
                   </label>
                   <div className="flex items-center flex-1">
-                    <ERPInput
-                      id="orderNumber"
-                      noLabel={true}
-                      value={orderNumberValue}
-                      className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
-                      onChange={(e) => onOrderNumberChange(e.target.value)}
-                    />
-                    <button
-                      className="bg-gray-300 p-2 rounded-md ml-1 hover:shadow-md transition duration-300 flex-shrink-0"
-                      onClick={handleLoadByRefNo}
-                    >
-                      <Ellipsis className="w-4 h-4" />
-                    </button>
+                    <OrderNo 
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      >
+                    </OrderNo>
                   </div>
                 </div>
 

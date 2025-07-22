@@ -138,7 +138,7 @@ const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedI
                 id: "FormType",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: Urls.data_employees,
+                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/FormTypeByVoucherType/PO`,
               }}
             />
 
@@ -162,7 +162,7 @@ const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedI
                 id: "Vprefix",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: Urls.data_employees,
+                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/PrefixByVoucherType/PO/${loadData?.formType}`,
               }}
             />
 

@@ -332,12 +332,21 @@ focusToNextColumn(0, "slNo");
                 </div>
 
                 {isModalOpen && (
-                  <GrnNumber
+                  <ERPModal
+                    isOpen={isModalOpen}
+                    title={t("grn_number")}
+                    width={600}
+                    height={280}
+                    closeModal={closeModal}
+                    content={
+                      <GrnNumber
                         dispatch={dispatch}
                         formState={formState}
                         t={t}
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
+                    }
+                  />
                 )}
 
                 <LedgerCode

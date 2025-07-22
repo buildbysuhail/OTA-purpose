@@ -31,31 +31,26 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
       vFormTypeId: any;
       formType: any;
       vPrefix: string;
-      vNumber: number | undefined;
+      vNumber: string | undefined;
       vType: string;
     }>({
       vFormTypeId: -2,
       vPrefixId: -2,
       formType: "",
       vPrefix: "",
-      vNumber: formState.transaction.master.orderNumber,
+      vNumber: "",
       vType: purchaseVoucherTypes.includes(
         formState.transaction.master.voucherType as VoucherType
       )
         ? "GRN"
         : "GRN",
     });
-    const showLoadByRefNo = useCallback(async () => {
-      if (formState.transaction.master.orderNumber) {
-        setShowLoadData(true);
-      }
-    }, [formState.transaction.master.orderNumber]);
     
     const handleLoadByRefNo = useCallback(async () => {
       debugger;
       await props.loadAndSetTransVoucher(
         false,
-        loadData.vNumber,
+        undefined,
         loadData.vPrefix,
         loadData.vType,
         loadData.formType,
@@ -63,6 +58,7 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
         undefined,
         undefined,
         true,
+        false,
         "GRN"
       );
     }, [
@@ -72,39 +68,6 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
       loadData.formType,
       loadData.vNumber,
     ]);
-    const { value: orderNumberValue, onChange: onOrderNumberChange } =
-      useDebouncedInput(
-        formState.transaction.master.orderNumber || "",
-        (debouncedValue) => {
-          props.dispatch(
-            formStateMasterHandleFieldChange({
-              fields: { orderNumber: debouncedValue },
-            })
-          );
-        },
-        300
-      );
-    useEffect(() => {
-      debugger;
-      if (showLoadData) {
-        setLoadData((prev: any) => {
-          return {
-            ...prev,
-            vFormTypeId: -2,
-            vPrefixId: -2,
-            formType: "",
-            vPrefix: "",
-            vNumber: formState.transaction.master.orderNumber,
-            vType: purchaseVoucherTypes.includes(
-              formState.transaction.master.voucherType as VoucherType
-            )
-              ? "PO"
-              : "SO",
-          };
-        });
-      }
-    }, [showLoadData]);
-
     return (
    <>
     <div className="flex items-center mb-6">

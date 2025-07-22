@@ -52,7 +52,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
       debugger;
       await props.loadAndSetTransVoucher(
         false,
-        loadData.vNumber,
+        undefined,
         loadData.vPrefix,
         loadData.vType,
         loadData.formType,
@@ -60,6 +60,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         undefined,
         undefined,
         true,
+        false,
         "PO"
       );
     }, [

@@ -305,6 +305,7 @@ export const useTransaction = (
         })
       );
     }
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -387,7 +388,7 @@ if(typeof(_formState) == "boolean") {
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: string,
+    manualInvoiceNumber?: number,
     transactionMasterID?: number,
     loadVType?: string
   ) => {
@@ -402,12 +403,12 @@ if(typeof(_formState) == "boolean") {
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
       if(loadVType == "PO") {
-        _voucherNumber = formState.transaction.master.orderNumber??0
+        _voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
       }
       if(loadVType == "GRN") {
-        _voucherNumber = formState.transaction.master.orderNumber??0
+        _voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
         url = url + "/ByGRN"

@@ -1159,7 +1159,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("unit_id"),
         detailsOptionKey: "units",
         allowEditing: true,
-        visible: true,
+        visible: false,
         width: 100,
         alignment: "right",
       },

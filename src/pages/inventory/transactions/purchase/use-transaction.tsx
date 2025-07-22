@@ -402,13 +402,15 @@ if(typeof(_formState) == "boolean") {
     let url  = `${Urls.inv_transaction_base}${transactionType}`
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+    let out_voucherNumber =
+      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
       if(loadVType == "PO") {
-        _voucherNumber = manualInvoiceNumber??0
+        out_voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
       }
       if(loadVType == "GRN") {
-        _voucherNumber = manualInvoiceNumber??0
+        out_voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
         url = url + "/ByGRN"
@@ -418,7 +420,7 @@ if(typeof(_formState) == "boolean") {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: _voucherNumber, // Ensuring it's always a string
+      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
       voucherPrefix:
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:

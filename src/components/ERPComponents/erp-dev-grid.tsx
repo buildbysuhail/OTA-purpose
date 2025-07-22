@@ -870,7 +870,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       data,
       keyExpr,
       dataUrl,
-      // postData,
+      postData,
       method,
       filter,
       _reload,

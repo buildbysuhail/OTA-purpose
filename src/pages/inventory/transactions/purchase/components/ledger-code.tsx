@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface LedgerCodeProps extends VoucherElementProps { }
@@ -13,11 +13,11 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   handleKeyDown
 }, ref) => {
   const { value, onChange } = useDebouncedInput(
-    formState.partyId || '',
+    formState.ledgerData?.ledgerCode || '',
     (debouncedValue) => {
       dispatch(
-        formStateHandleFieldChange({
-          fields: { partyId: debouncedValue },
+        formStateHandleFieldChangeKeysOnly({
+          fields: {  },
         })
       );
     },

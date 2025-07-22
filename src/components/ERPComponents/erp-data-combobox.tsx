@@ -98,6 +98,7 @@ interface ERPDataComboboxProps {
   labelInfo?: any;
   labelInfoProps?: any;
   noLabel?: boolean;
+  noBorder?:boolean;
   noXMarkIcon?: boolean;
   triggerEffect?: boolean;
   multiple?: boolean;
@@ -401,6 +402,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       data,
       value,
       noLabel,
+      noBorder=false,
       noXMarkIcon,
       required,
       excludeOptions,
@@ -861,7 +863,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setLoading(true);
       try {
         let _items;
-
+debugger;
               
         // Check if data is available in Redux
         let _continue = true;
@@ -1777,7 +1779,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   fontSize,
                   fontWeight: inputBoxState?.bold ? 700 : fontWeight,
                   color,
-                  borderColor: borderStyles,
+                  borderColor:noBorder?undefined: borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
@@ -1798,9 +1800,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   !fetching
                     ? "!pr-[60px]"
                     : "!pr-[30px]"
-                } dark:!text-dark-text placeholder:capitalize ${
-                  disabled ? "border-dashed" : ""
-                }`}
+                } dark:!text-dark-text placeholder:capitalize 
+                ${disabled ? "border-dashed" : ""}
+                 ${noBorder ? "border-none !shadow-none" : ""} 
+                `}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {
@@ -1812,7 +1815,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={
-                  fetching
+                  fetching || (initial && initial.value && !isNullOrUndefinedOrEmpty(initial.value))
                     ? ""
                     : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }

@@ -212,11 +212,11 @@ const Urls = {
   application_settings_UpdateSettingsScreen:
     "/Core/Preferences/UpdateSettingsScreen",
   sql_commands: "/Core/SQLCommand/",
-  notification_provider: "/Core/NotificationProvider/GetAllByChannel/",
-  notification_provider_update: "/Core/NotificationProvider/UpdateConfig/",
+  notification_provider: "/Core/ServiceProvider/GetAllByChannel/",
+  notification_provider_update: "/Core/ServiceProvider/UpdateConfig/",
   notification_provider_set_as_default:
-    "/Core/NotificationProvider/SetAsDefault/",
-  notification_provider_test: "/Core/NotificationProvider/TestConnection/",
+    "/Core/ServiceProvider/SetAsDefault/",
+  notification_provider_test: "/Core/ServiceProvider/TestConnection/",
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate/",
   headers_footers: "/Core/HeaderFooter/",

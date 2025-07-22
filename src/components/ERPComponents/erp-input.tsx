@@ -943,7 +943,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                     }),
                 }}
-                className={`form-control ${contextClassName || ""} !${inputClassName}   dark:!bg-dark-bg-card placeholder:capitalize ${
+                className={`form-control !${contextClassName || ""} !${inputClassName}   dark:!bg-dark-bg-card placeholder:capitalize ${
                   showCustomNumberChanger
                     ? "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     : "number-input-spinner"

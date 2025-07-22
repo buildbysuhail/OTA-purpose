@@ -21,8 +21,8 @@ const GrandTotalLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
     //   textAlign="right"
     // />
     <div className="flex justify-between items-center">
-      <span className="text-xs text-gray-600 font-medium">{t(formState.formElements.grandTotal.label)}</span>
-      <span className="text-sm font-semibold text-gray-900">: {formState.transaction.master.billDiscount}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.grandTotal.label)}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {formState.transaction.master.billDiscount}</span>
     </div>
   );
 };

@@ -292,14 +292,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
             const columnIndex = visibleColumns.indexOf(firstEditableColumn);
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
-              const productBatchID = formState.transaction.details[res.rowIndex]?.productBatchID
+              const data = formState.transaction.details[res.rowIndex]?.productBatchID
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
                     currentCell: {
                       column: res.column,
                       rowIndex: res.rowIndex,
-                      productBatchID:  productBatchID
+                      data:  data
                     },
                   },
                 })
@@ -478,6 +478,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
               },
             })
           );
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: {
+                tokenNumber: ledgerData?.taxNumber
+              },
+            })
+          );
         } else {
           dispatch(
             formStateHandleFieldChange({
@@ -579,7 +586,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           formType,
           undefined,
           transactionMasterID
-        );
+        ) as TransactionFormState;
       }
       
       _formState.dataWarranty = dataWarranty;
@@ -1139,19 +1146,20 @@ const TransactionForm: React.FC<TransactionProps> = ({
       },
       {
         dataField: "unit",
+        idField: "unitID",
         caption: t("unit"),
-        dataType: "string",
+        dataType: "cb",
         width: 150,
         alignment: "left",
-        readOnly: true,
+        allowEditing: true,
+        readOnly: false,
       },
       {
         dataField: "unitID",
         caption: t("unit_id"),
-        dataType: "cb",
         detailsOptionKey: "units",
         allowEditing: true,
-        visible: true,
+        visible: false,
         width: 100,
         alignment: "right",
       },
@@ -2078,6 +2086,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}
+              focusToNextColumn={focusToNextColumn}
               loadAndSetTransVoucher={loadAndSetTransVoucher}
               t={t}
               handleLoadByRefNo={handleLoadByRefNo}
@@ -2149,7 +2158,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   />
                 </div>
                 <div className="w-[300px]">
-                  {((formState.transactionLoading && _st.footerPosition === "right") || !(formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
+                  {((formState.transactionLoading && _st.footerPosition === "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
                   (  <TransactionFooter
                       formState={formState}
                       dispatch={dispatch}
@@ -2241,6 +2250,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
+                  focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}
                     handleKeyDown={handleKeyDown}

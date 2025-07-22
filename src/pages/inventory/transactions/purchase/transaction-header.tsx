@@ -19,7 +19,7 @@ import InvoiceValue from "./components/invoice-value";
 import GrnNumber from "./components/grn-Number";
 import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from "./reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "./reducer";
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -31,12 +31,16 @@ import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
 import LedgerDetails from "./ledger-details";
-import { loadTemplateById } from "../../../../utilities/Utils";
+import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
   dispatch: any;
   handleKeyDown: any;
+  focusToNextColumn: (rowIndex: number, column: string) => {
+    column: string;
+    rowIndex: number;
+} | null;
   loadAndSetTransVoucher: any;
   t: any;
   handleLoadByRefNo: any;
@@ -68,7 +72,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   refNoRef,
   isDropDownOpen,
   toggleDropdown,
-  footerLayout
+  footerLayout,
+  focusToNextColumn
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -138,7 +143,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         !dropdownRef.current.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest("button")
       ) {
-        toggleDropdown(); // Use prop handler to close dropdown
+        toggleDropdown();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -157,8 +162,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const conditionalFooterComponents =
-    footerLayout === "vertical" &&
-      isSmallHeight ? (
+    footerLayout === "vertical" && isSmallHeight ? (
       <>
         <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
           <WarehouseID
@@ -202,11 +206,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   return (
     <div>
       {isDropDownOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={toggleDropdown} />
+        <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={toggleDropdown} />
       )}
 
       {!deviceInfo?.isMobile && (
-        <div style={headerStyle} className="fixed top-[110px] z-[39] bg-white shadow-md transition-all duration-300">
+        <div style={headerStyle} className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -226,9 +230,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               <button
                 onClick={handleLedgerDetailsClick}
                 aria-label="View Ledger Details"
-                className="p-2 rounded-md shadow-md hover:bg-gray-300 focus:outline-none transition-colors duration-200"
+                className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200"
               >
-                <Search className="w-5 h-5 text-gray-700" />
+                <Search className="w-5 h-5 dark:text-dark-text text-gray-700" />
               </button>
             </div>
 
@@ -261,6 +265,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <ReferenceDate
               dispatch={dispatch}
               formState={formState}
+              handleKeyDown={(e) => {
+                if(isEnterKey(e.key)) {
+                  debugger;
+                  if(formState.currentCell && formState.currentCell.rowIndex > 0&& formState.currentCell.column != "") {
+                    focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);                  
+                  } else {
+focusToNextColumn(0, "slNo");
+                  }
+                  
+                }
+              }}
               t={t}
             />
 
@@ -273,7 +288,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
           {/* Dropdown content */}
           <div ref={dropdownRef} className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"}`}>
-            <div className="p-4 md:p-2 bg-white border-t border-gray-300 shadow-lg">
+            <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
                 <Employee
                   dispatch={dispatch}
@@ -285,6 +300,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 <DebitAccount
                   dispatch={dispatch}
+              transactionType={transactionType}
                   formState={formState}
                   t={t}
                   handleKeyDown={handleKeyDown}
@@ -311,7 +327,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title={t("grn_number")}
                     onClick={handleButtonClick}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    className="!m-0"
+                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                     disabled={formState.transactionLoading}
                   />
                 </div>
@@ -327,10 +343,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       <GrnNumber
                         dispatch={dispatch}
                         formState={formState}
+                    closeModal={closeModal}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
-                        closeModal={closeModal}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
                     }
                   />
@@ -349,7 +364,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="enableTaxNumber"
-                      className="text-left"
+                      className="text-left dark:text-dark-text"
                       label={t(formState.formElements.chkVat.label)}
                       checked={formState.enableTaxNumber}
                       onChange={(e) => {
@@ -368,8 +383,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="tokenNumber"
                       label={t(formState.formElements.chkVat.label)}
-                      className="min-w-[180px] !m-0"
-                      // label={t(formState.formElements.cbVatAccount.label)}
+                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                       noLabel={true}
                       fetching={formState.transactionLoading}
                       data={formState.transaction.master}
@@ -402,7 +416,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="inSearch"
-                    className="text-left !m-0"
+                    className="text-left !m-0 dark:text-dark-text"
                     label={t(formState.formElements.inSearch.label)}
                     checked={formState.inSearch}
                     onChange={(e) => {
@@ -422,7 +436,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     enableClearOption={false}
                     fetching={formState.transactionLoading}
                     id="labelDesignID"
-                    className="min-w-[180px] !m-0"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
                     onSelectItem={async (e) => {
@@ -456,6 +470,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     variant="secondary"
                     onClick={handleMoreButtonClick}
                     disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   />
                 </div>
 
@@ -480,14 +495,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               </div>
               {conditionalFooterComponents}
               {formState.formElements.pnlImport.visible && (
-                <div className="inline-flex items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
+                <div className="inline-flex items-end gap-1 border border-dashed dark:border-dark-border border-gray-400 p-2 rounded-md mt-2">
                   {formState.formElements.cbCurrency?.visible && (
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       enableClearOption={false}
                       fetching={formState.transactionLoading}
                       id="currencyId"
-                      className="min-w-[180px] !m-0"
+                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                       label={t(formState.formElements.cbCurrency.label)}
                       data={formState.transaction.master}
                       onSelectItem={(e) => {
@@ -537,7 +552,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         })
                       )
                     }
-                    className="min-w-[180px] !m-0"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     disabled={
                       formState.formElements.exchangeRate?.disabled ||
                       formState.formElements.pnlMasters?.disabled
@@ -547,7 +562,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPButton
                     title={t("set")}
                     variant="secondary"
-                    className="!m-0"
+                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                     disabled={formState.transactionLoading}
                   />
                 </div>
@@ -560,14 +575,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""}`}
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
                 }}
               >
-                <ChevronDown className={`mx-2 transition-transform duration-500 ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
           </div>
@@ -575,7 +590,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {deviceInfo?.isMobile && (
-        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] bg-white shadow-md transition-all duration-300">
+        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -605,11 +620,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             ref={dropdownRef}
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
             style={{
-              width: "100%", // Ensures the dropdown fits the mobile width
-              boxSizing: "border-box", // Prevents horizontal overflow
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
-            <div className="p-4 md:p-2 bg-white border-t border-gray-300 shadow-lg">
+            <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
                 <Employee
                   dispatch={dispatch}
@@ -620,6 +635,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 />
 
                 <DebitAccount
+              transactionType={transactionType}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -677,7 +693,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title={t("grn_number")}
                     onClick={handleButtonClick}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    className="!m-0"
+                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                     disabled={formState.transactionLoading}
                   />
                 </div>
@@ -694,8 +710,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         dispatch={dispatch}
                         formState={formState}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                         closeModal={closeModal}
                       />
                     }
@@ -715,7 +730,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="enableTaxNumber"
-                      className="text-left"
+                      className="text-left dark:text-dark-text"
                       label={t(formState.formElements.chkVat.label)}
                       checked={formState.enableTaxNumber}
                       onChange={(e) => {
@@ -734,8 +749,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       enableClearOption={false}
                       id="tokenNumber"
-                      className="min-w-[180px] !m-0"
-                      // label={t(formState.formElements.cbVatAccount.label)}
+                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                       noLabel={true}
                       fetching={formState.transactionLoading}
                       data={formState.transaction.master}
@@ -777,7 +791,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="inSearch"
-                    className="text-left !m-0"
+                    className="text-left !m-0 dark:text-dark-text"
                     label={t(formState.formElements.inSearch.label)}
                     checked={formState.inSearch}
                     onChange={(e) => {
@@ -797,7 +811,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     enableClearOption={false}
                     fetching={formState.transactionLoading}
                     id="labelDesignID"
-                    className="min-w-[180px] !m-0"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
                     onSelectItem={(e) => {
@@ -815,7 +829,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       id: "labelDesignID",
                       valueKey: "id",
                       labelKey: "name",
-                      // getListUrl: Urls.data_label_designs,
                     }}
                     disabled={
                       formState.formElements.cbLabelDesign.disabled ||
@@ -833,6 +846,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title={t("more")}
                     variant="secondary"
                     onClick={handleMoreButtonClick}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    disabled={formState.transactionLoading}
                   />
                 </div>
 
@@ -856,14 +871,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
               </div>
               {conditionalFooterComponents}
-              <div className="items-end gap-1 border border-dashed border-gray-400 p-2 rounded-md mt-2">
+              <div className="inline-flex items-end gap-1 border border-dashed dark:border-dark-border border-gray-400 p-2 rounded-md mt-2">
                 {formState.formElements.cbCurrency?.visible && (
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
                     fetching={formState.transactionLoading}
                     id="currencyId"
-                    className="min-w-[180px] !m-0"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbCurrency.label)}
                     data={formState.transaction.master}
                     onSelectItem={(e) => {
@@ -911,7 +926,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       })
                     )
                   }
-                  className="min-w-[180px] !m-0"
+                  className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                   disabled={
                     formState.formElements.exchangeRate?.disabled ||
                     formState.formElements.pnlMasters?.disabled
@@ -931,15 +946,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Chevron button - moves with dropdown content */}
           <div className="relative w-full">
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
-              <button onClick={toggleDropdown}
-                className={`flex items-center justify-center bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "bg-gray-100" : ""}`}
+              <button
+                onClick={toggleDropdown}
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
                 }}
               >
-                <ChevronDown className={`mx-2 transition-transform duration-500 ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
           </div>

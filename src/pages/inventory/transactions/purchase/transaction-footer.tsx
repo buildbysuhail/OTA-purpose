@@ -142,16 +142,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const renderSecondFooter = () => (
     <div
-      className={`${
-        footerLayout === "vertical"
-          ? "flex flex-col justify-between h-full"
-          : ""
-      }`}
+      className={`dark:bg-dark-bg ${footerLayout === "vertical"
+        ? "flex flex-col justify-between h-full"
+        : ""
+        }`}
     >
       <div
-        className={`${
-          footerLayout === "vertical" ? "relative block" : "hidden"
-        }`}
+        className={`${footerLayout === "vertical" ? "relative block" : "hidden"
+          }`}
       >
         <div className="flex justify-end">
           <button
@@ -166,7 +164,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {isPopupVisible && (
           <div
             ref={popupRef}
-            className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+            className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
             style={{
               top: "100%",
               right: "0",
@@ -174,7 +172,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               marginTop: "8px",
             }}
           >
-            <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
+            <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
               <ul className="space-y-1">
                 <li>
                   {formState.formElements.printOnSave.visible && (
@@ -232,24 +230,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       </div>
 
       <div
-        className={`${
-          footerLayout === "vertical"
-            ? ""
-            : "bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"
-        }`}
+        className={`dark:bg-dark-bg-card ${footerLayout === "vertical"
+          ? ""
+          : "bg-white rounded-xl shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"
+          }`}
       >
         <div
-          className={`${
-            footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"
-          }`}
+          className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"
+            }`}
         >
           <div className="mb-2">
             <div
-              className={`grid${
-                footerLayout === "vertical"
-                  ? "grid-cols-1"
-                  : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"
-              }`}
+              className={`grid ${footerLayout === "vertical"
+                ? "grid-cols-1"
+                : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"
+                }`}
             >
               <div className="w-full">
                 <WarehouseID
@@ -300,30 +295,26 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </div>
 
         <div
-          className={`grid ${
-            footerLayout === "vertical"
-              ? "grid-cols-1 gap-1"
-              : "grid-cols-1 md:grid-cols-[1fr_400px]"
-          }`}
+          className={`grid ${footerLayout === "vertical"
+            ? "grid-cols-1 gap-1"
+            : "grid-cols-1 md:grid-cols-[1fr_400px]"
+            }`}
         >
           <div
-            className={`flex ${
-              footerLayout === "vertical"
-                ? "flex-col items-start justify-start"
-                : "p-2 flex-col items-end justify-end"
-            }`}
+            className={`flex ${footerLayout === "vertical"
+              ? "flex-col items-start justify-start"
+              : "p-2 flex-col items-end justify-end"
+              }`}
           >
             <div
-              className={`flex ${
-                footerLayout === "vertical"
-                  ? "flex-col items-start"
-                  : "items-end"
-              } gap-2 mb-2`}
+              className={`flex ${footerLayout === "vertical"
+                ? "flex-col items-start"
+                : "items-end"
+                } gap-2 mb-2`}
             >
               <div
-                className={`flex items-center w-full ${
-                  footerLayout === "vertical" ? "justify-between" : "gap-2"
-                }`}
+                className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"
+                  }`}
               >
                 <CashPaidSection
                   formState={formState}
@@ -357,9 +348,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
 
             <div
-              className={`${
-                footerLayout === "vertical" ? "w-[265px]" : "w-[345px]"
-              }`}
+              className={`${footerLayout === "vertical" ? "w-[265px]" : "w-[345px]"
+                }`}
             >
               <div className="flex flex-col">
                 <ERPTextarea
@@ -379,12 +369,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     formState.formElements.remarks?.disabled ||
                     formState.formElements.pnlMasters?.disabled
                   }
+                  className="dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                 />
               </div>
             </div>
           </div>
 
-          <div className="p-2 bg-gray-50 border-l border-gray-200">
+          <div className="p-2 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
             <div className="flex flex-col gap-1.5">
               <NetAmountInput
                 formState={formState}
@@ -406,14 +397,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <NetTotalLabel formState={formState} dispatch={dispatch} t={t} />
               {formState.formElements.grandTotalFc.visible && (
                 <div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between dark:text-dark-text">
                     <span>{t(formState.formElements.grandTotalFc.label)}:</span>
                     <span>{formState.transaction.master.grandTotalFc}</span>
                   </div>
                 </div>
               )}
               <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
-                <span className="text-sm font-bold text-gray-900 uppercase">
+                <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
                   {t(formState.formElements.grandTotal.label)}
                 </span>
                 <span className="text-lg font-bold text-[#3b82f6]">
@@ -427,11 +418,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </div>
 
         <div
-          className={`p-2 bg-gray-100 border-t border-gray-200 flex ${
-            footerLayout === "vertical"
-              ? "flex-col"
-              : "flex-col md:flex-row justify-end items-center gap-4"
-          }`}
+          className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical"
+            ? "flex-col"
+            : "flex-col md:flex-row justify-end items-center gap-4"
+            }`}
         >
           <div className="flex justify-end gap-2">
             <ERPButton
@@ -443,10 +433,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               startIcon={<Check className="w-3.5 h-3.5" />}
               localInputBox={formState?.userConfig?.inputBoxStyle}
               disabled={
-              formState.formElements.pnlMasters?.disabled ||
-              formState.transaction.details == null ||
-              formState.transaction.details.length == 0
-            }
+                formState.formElements.pnlMasters?.disabled ||
+                formState.transaction.details == null ||
+                formState.transaction.details.length == 0
+              }
+              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
             />
             <ERPButton
               title={t("cancel")}
@@ -454,6 +445,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               onClick={() => goToPreviousPage()}
               localInputBox={formState?.userConfig?.inputBoxStyle}
               startIcon={<X className="w-3.5 h-3.5" />}
+              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
             />
           </div>
         </div>
@@ -462,7 +454,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const dropdownContent = (
-    <div className="p-4 md:p-2 bg-white border border-gray-300 rounded-t-lg shadow-lg">
+    <div className="p-4 md:p-2 dark:bg-dark-bg-card dark:border-dark-border bg-white border border-gray-300 rounded-t-lg shadow-lg">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end">
         <div className="w-full">
           <WarehouseID
@@ -523,6 +515,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 )
               }
               disabled={formState.formElements.printOnSave?.disabled}
+              className="dark:text-dark-text"
             />
           )}
           <AutoCalculationCheckbox
@@ -532,9 +525,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           />
           <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
         </div>
-        <button className="text-[#2563eb]">
+        <button className="text-[#2563eb] dark:text-[#60a5fa]">
           <span
-            className="hover:underline text-[#0ea5e9] capitalize"
+            className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize"
             onClick={selectAttachment}
           >
             {t("attachment")}
@@ -545,6 +538,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             title={t("grn_print")}
             variant="secondary"
             disabled={formState.transactionLoading}
+            className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
           />
         </div>
       </div>
@@ -556,9 +550,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <div
-        className={`fixed top-[170px] ${
-          isRtl ? "left-0" : "right-0"
-        } h-[-webkit-fill-available] overflow-y-scroll w-[300px] bg-[#f8f8ff] shadow-lg p-2 z-30`}
+        className={`fixed top-[170px] ${isRtl ? "left-0" : "right-0"
+          } h-[-webkit-fill-available] overflow-y-scroll w-[300px] dark:bg-dark-bg bg-[#f8f8ff] shadow-lg p-2 z-30`}
       >
         {renderSecondFooter()}
       </div>
@@ -568,19 +561,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       <>
         {isDropUpOpen && (
           <div
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
+            className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30"
             onClick={toggleDropup}
           />
         )}
         {!deviceInfo?.isMobile && (
           <div
-            className={`fixed dark:bg-dark-bg ${
-              footerLayout === "vertical"
-                ? `top-[170px] ${
-                    isRtl ? "left-0" : "right-0"
-                  } h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l border-l-slate-200`
-                : "z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 bg-[#f8f8ff]"
-            }`}
+            className={`fixed dark:bg-dark-bg ${footerLayout === "vertical"
+              ? `top-[170px] ${isRtl ? "left-0" : "right-0"
+              } h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200`
+              : "z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 dark:bg-dark-bg bg-[#f8f8ff]"
+              }`}
           >
             <div
               className={`${footerLayout === "vertical" ? "hidden" : "block"}`}
@@ -589,19 +580,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[-22px]">
                   <button
                     onClick={toggleDropup}
-                    className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${
-                      isDropUpOpen ? "bg-gray-100" : ""
-                    }`}
-                    style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}
+                    className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                      }`}
+                    style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0. gas1)" }}
                   >
                     <ChevronUp
-                      className={`mx-2 transition-transform duration-500 ${
-                        isDropUpOpen
-                          ? "transform rotate-180"
-                          : hasAnimated
+                      className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen
+                        ? "transform rotate-180"
+                        : hasAnimated
                           ? ""
                           : "animate-[bounce_2s_1]"
-                      }`}
+                        }`}
                       size={24}
                     />
                   </button>
@@ -609,9 +598,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               <div
                 ref={dropUpRef}
-                className={`w-full transition-all duration-500 ease-in-out overflow-y-auto ${
-                  isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
-                }`}
+                className={`w-full transition-all duration-500 ease-in-out overflow-y-auto ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
+                  }`}
               >
                 {dropdownContent}
               </div>
@@ -627,7 +615,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <div>
                 <div style={sidebarHeaderStyle}>
                   <button
-                    style={closeButtonStyle}
+                    style={{
+                      ...closeButtonStyle,
+                      color: "var(--dark-text, #374151)",
+                      borderColor: "var(--dark-border, #e5e7eb)",
+                    }}
                     onClick={() => setIsOpentwo(false)}
                   >
                     <X />
@@ -649,19 +641,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
                 <button
                   onClick={toggleDropup}
-                  className={`flex items-center justify-center bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${
-                    isDropUpOpen ? "bg-gray-100" : ""
-                  }`}
+                  className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                    }`}
                   style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}
                 >
                   <ChevronUp
-                    className={`mx-2 transition-transform duration-500 ${
-                      isDropUpOpen
-                        ? "transform rotate-180"
-                        : hasAnimated
+                    className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen
+                      ? "transform rotate-180"
+                      : hasAnimated
                         ? ""
                         : "animate-[bounce_2s_1]"
-                    }`}
+                      }`}
                     size={24}
                   />
                 </button>
@@ -669,11 +659,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
             <div
               ref={dropUpRef}
-              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
-                isDropUpOpen
-                  ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6"
-                  : "max-h-0 overflow-hidden"
-              }`}
+              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen
+                ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6"
+                : "max-h-0 overflow-hidden"
+                }`}
               style={{ width: "100%", boxSizing: "border-box" }}
             >
               {dropdownContent}
@@ -708,7 +697,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     t={t}
                   />
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between dark:text-dark-text">
                       <span>
                         {t(formState.formElements.grandTotalFc.label)}
                       </span>
@@ -718,8 +707,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="hidden md:block mr-2">
-                    <h6 className="font-semibold whitespace-nowrap text-[20px]">
-                      <span className="!font-medium !text-gray-600">
+                    <h6 className="font-semibold whitespace-nowrap text-[20px] dark:text-dark-text">
+                      <span className="!font-medium dark:!text-dark-text !text-gray-600">
                         {t("total")}:{" "}
                       </span>
                       {getFormattedValue(
@@ -727,11 +716,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       )}
                     </h6>
                   </div>
-                  <div className="fixed bottom-0 left-0 w-full bg-white flex p-0 z-10">
+                  <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-white flex p-0 z-10">
                     <ERPButton
                       title={t("close")}
                       onClick={() => goToPreviousPage()}
-                      className="flex-1 rounded-none !m-0"
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                     />
                     <ERPButton
@@ -740,7 +729,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       title={t("save")}
                       jumpTarget="save"
                       variant="primary"
-                      className="flex-1 rounded-none !m-0"
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                       onClick={save}
                       disabled={
                         formState.formElements.pnlMasters?.disabled ||
@@ -763,7 +752,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <div>
                 <div style={sidebarHeaderStyle}>
                   <button
-                    style={closeButtonStyle}
+                    style={{
+                      ...closeButtonStyle,
+                      color: "var(--dark-text, #374151)",
+                      borderColor: "var(--dark-border, #e5e7eb)",
+                    }}
                     onClick={() => setIsOpentwo(false)}
                   >
                     <X />

@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { LoadMulti, LoadMultiFooter } from "../load-multi";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -87,6 +88,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
+
+        const openLoadMultiModal = () => {
+      setIsLoadMultiModalOpen(true);
+    };
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
@@ -450,6 +456,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         />
                       </li>
                     )}
+                    <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          onClick={openLoadMultiModal}
+                        >
+                          <span>{t('load_multi')}</span>
+                        </button>
+                      </li>
+                      <ERPModal
+                        isOpen={isLoadMultiModalOpen}
+                        closeModal={() => setIsLoadMultiModalOpen(false)}
+                        title="Load Multi"
+                        width={800}
+                        height={200}
+                        content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
+                        footer={<LoadMultiFooter/>}
+                      />
                   </ul>
                 </nav>
               </div>
@@ -867,7 +890,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 isFullHeight={true}
                 closeModal={() => setShowValidation(false)}
                 content={<ExcelImport />}
-              ></ERPModal>
+              />
             )}
           </div>
 

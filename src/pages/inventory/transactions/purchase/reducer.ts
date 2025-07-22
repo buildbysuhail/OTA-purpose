@@ -596,7 +596,7 @@ const InvTransactionSlice = createSlice({
         console.error("Invalid fields in payload");
         return;
       }
-
+debugger;
       // Helper function to update nested objects
       const updateNested = (
         target: Record<string, any>,
@@ -682,8 +682,26 @@ const InvTransactionSlice = createSlice({
           // Handle other transaction fields (non-details)
           Object.keys(transactionValue).forEach((transactionKey: string) => {
             if (transactionKey !== "details") {
-              (state as any).transaction[transactionKey] =
-                transactionValue[transactionKey as keyof TransactionData];
+              const _fieldValue = fields[key as keyof TransactionFormState][transactionKey];
+              if (_fieldValue?.constructor === Object) {
+          // Nested object
+          if (!(state as any)[key] || typeof (state as any)[key] !== "object") {
+            (state as any)[key] = {};
+          }
+          updateNested(
+            (state as any)[key][transactionKey] as Record<string, any>,
+            _fieldValue as Record<string, any>
+          );
+        } else {
+          // Primitive, array, or other object type
+          if (Array.isArray(_fieldValue)) {
+            (state as any)[key] = [..._fieldValue];
+          } else if (_fieldValue instanceof Date) {
+            (state as any)[key] = _fieldValue.toISOString();
+          } else {
+            (state as any)[key] = _fieldValue;
+          }
+        }
             }
           });
 

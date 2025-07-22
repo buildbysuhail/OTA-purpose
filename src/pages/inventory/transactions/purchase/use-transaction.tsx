@@ -236,7 +236,7 @@ export const useTransaction = (
 
   const setCurrentCell = (
     input: { column: string; rowIndex: number } | null,
-    productBatchID: number
+    data: TransactionDetail
   ) => {
     if (input) {
       dispatch(
@@ -244,7 +244,7 @@ export const useTransaction = (
           fields: {
             currentCell: {
               column: input?.column,
-              productBatchID: productBatchID,
+              data: data,
               rowIndex: input?.rowIndex,
             },
           },
@@ -278,7 +278,8 @@ export const useTransaction = (
     transactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false
+    setVoucherNo?: boolean | false,
+    loadVType?: string
   ) => {
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction }
@@ -304,6 +305,7 @@ export const useTransaction = (
         })
       );
     }
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -311,9 +313,12 @@ export const useTransaction = (
       voucherType,
       formType,
       manualInvoiceNumber,
-      transactionMasterID
+      transactionMasterID,
+      loadVType
     );
-
+if(typeof(_formState) == "boolean") {
+  return
+}
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -383,22 +388,40 @@ export const useTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: string,
-    transactionMasterID?: number
+    manualInvoiceNumber?: any,
+    transactionMasterID?: number,
+    loadVType?: string
   ) => {
+    loadVType = loadVType?? "PI"
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
         openUnsavedPrompt: false,
       })
     );
-    const _voucherNumber =
+    debugger;
+    let url  = `${Urls.inv_transaction_base}${transactionType}`
+    let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+    let out_voucherNumber =
+      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+      if(loadVType == "PO") {
+        out_voucherNumber = manualInvoiceNumber??0
+        voucherType = loadVType
+        formType = ""
+      }
+      if(loadVType == "GRN") {
+        out_voucherNumber = manualInvoiceNumber??0
+        voucherType = loadVType
+        formType = ""
+        url = url + "/ByGRN"
+      }
+
     if (_voucherNumber == undefined || _voucherNumber <= 0) {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: _voucherNumber, // Ensuring it's always a string
+      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
       voucherPrefix:
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
@@ -408,10 +431,22 @@ export const useTransaction = (
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
+    // ByGRN
     let vch = await api.getAsync(
-      `${Urls.inv_transaction_base}${transactionType}`,
+      url,
       new URLSearchParams(params).toString()
     );
+     if(loadVType == "GRN") {
+        if(vch?.isOk == false) {
+        ERPAlert.show({
+          title: "",
+          text: `${vch?.message}`,
+          icon: t("warning"),
+        });
+        return false;
+    }
+      }
+    
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
@@ -426,12 +461,26 @@ export const useTransaction = (
         },
       };
     }
+    if(usingManualInvNumber) {
+      vch.master =  {
 
+          ...vch.master,
+          voucherNumber: _voucherNumber,
+          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix:
+            voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          formType: formType ?? formState.transaction.master.voucherForm,
+    }
+  }
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
+    voucher.transaction.master.orderNumber = (loadVType == "PO" || loadVType == "GRN") ? undefined : voucher.transaction.master.orderNumber
+if(loadVType == "GRN") {
+  voucher.transaction.master.gRNMasterID = voucher.transaction.master.invTransactionMasterID
+}
 
     voucher.transaction = {
       ...(vch || {}),
@@ -1998,7 +2047,8 @@ export const useTransaction = (
       const actualPriceVisible = formState.gridColumns?.find(
         (x) => x.dataField == "actualSalesPrice"
       )?.visible;
-      if (columnName === "unitID") {
+      if (columnName === "unit") {
+        debugger;
         if (value > 0) {
           const unitName = formState.batchesUnits?.find(
             (xer) =>
@@ -2239,7 +2289,7 @@ export const useTransaction = (
             if (res) {
               pld.currentCell = {
                 ...res,
-                productBatchID: product.productBatchID,
+                data:formState.transaction.details[_index],
               };
             }
             dispatch(
@@ -2488,7 +2538,7 @@ export const useTransaction = (
 
         if (data.setFocusToNextColumn) {
           const res = focusToNextColumn(data.rowIndex, data.searchColumn);
-          setCurrentCell(res, outDetail.productBatchID);
+          setCurrentCell(res, result.transaction!.details[0] as TransactionDetail);
         }
 
 
@@ -2497,7 +2547,7 @@ export const useTransaction = (
         // Open BatchGrid 
       } else {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn);
-          setCurrentCell(res, outDetail.productBatchID);
+          setCurrentCell(res, data.detail as TransactionDetail);
       }
 
       return result;
@@ -2709,7 +2759,7 @@ export const useTransaction = (
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID);
+              setCurrentCell(res, data);
             }
           } else if (columnName == "barCode") {
             
@@ -2732,7 +2782,7 @@ export const useTransaction = (
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data.productBatchID);
+              setCurrentCell(res, data);
             }
           } else if (columnName == "unitPrice") {
             dispatch(
@@ -2767,11 +2817,11 @@ export const useTransaction = (
               });
               if (confirm) {
                 const res = focusToNextColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
                 break;
               } else {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
               }
             }
           } else if (columnName == "margin" || columnName == "salesPrice") {
@@ -2811,11 +2861,11 @@ export const useTransaction = (
                 });
                 if (confirm) {
                   const res = focusToNextColumn(rowIndex, columnName);
-                  setCurrentCell(res, data.productBatchID);
+                  setCurrentCell(res, data);
                   break;
                 } else {
                   const res = focusCurrentColumn(rowIndex, columnName);
-                  setCurrentCell(res, data.productBatchID);
+                  setCurrentCell(res, data);
                 }
               }
             } else if (
@@ -2825,7 +2875,7 @@ export const useTransaction = (
             ) {
               if (data.unitPrice > data.salesPrice) {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data.productBatchID);
+                setCurrentCell(res, data);
               }
             }
           } else if (columnName == "btnPrintBarcode") {
@@ -2932,7 +2982,7 @@ export const useTransaction = (
           } else {
             debugger;
             const res = focusToNextColumn(rowIndex, columnName);
-            setCurrentCell(res, data.productBatchID);
+            setCurrentCell(res, data);
           }
           break;
         default:

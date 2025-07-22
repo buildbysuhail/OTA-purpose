@@ -105,7 +105,8 @@ export interface TransactionMaster {
   toWarehouseID: number;
   voucherType: string;
   voucherForm: string;
-  orderNumber: number;
+  orderNumber?: number;
+  gRNMasterID: number;
   orderDate: string;
   quotationNumber: string;
   quotationDate: string;
@@ -185,8 +186,6 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
-
-
 }
 
 export interface TransactionMaster3 {
@@ -211,8 +210,8 @@ export interface TransactionMaster3 {
   shipStateCode: number;
 }
 
-export interface TransactionMaster3Validations {}
-export interface TransactionMasterValidations {}
+export interface TransactionMaster3Validations { }
+export interface TransactionMasterValidations { }
 export interface CommonParams {
   result: DeepPartial<TransactionFormState>;
   formStateHandleFieldChangeKeysOnly?: any;
@@ -367,7 +366,7 @@ export interface UserConfig {
   footerPosition?: "bottom" | "right";
   gridHeaderFontColor?: string;
   gridBorderRadius?: number;
-  barCodePrev?:boolean;
+  barCodePrev?: boolean;
 }
 
 export type FormElementsState = {
@@ -399,6 +398,7 @@ export interface SummaryItems {
 }
 
 export interface ProductDisplayDto {
+  image: string;
   productName: string;
   productCode: string;
   groupName: string;
@@ -463,7 +463,7 @@ export interface TransactionFormState {
   inSearch: boolean;
   enableTaxNumber: boolean;
   tmpVoucherNo?: number;
-  dummyCode?: any;  
+  dummyCode?: any;
   dummyProducts?: boolean;
   remarks?: string;
   prevTransactionDate?: string;
@@ -488,35 +488,40 @@ export interface TransactionFormState {
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
-  currentCell?: { column: string; rowIndex: number, productBatchID: number };
+  currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
   batchesUnits?: UnitByBatchDetailsDto[];
-  productInfo:boolean;
-  ShowProductBatchUnitDetails:boolean;
-  showProductInformation?:boolean;
-  barcodeTemplate?:any;
-  barcodeData?:any;
-  barcodePrevOpen?:boolean;
-  ledgerDetails:boolean;
-  dataWarranty:[];
-  dataBrands:[];
+  productInfo: boolean;
+  ShowProductBatchUnitDetails: boolean;
+  showProductInformation?: boolean;
+  barcodeTemplate?: any;
+  barcodeData?: any;
+  barcodePrevOpen?: boolean;
+  ledgerDetails: boolean;
+  dataWarranty: [];
+  dataBrands: [];
 }
 
 export interface ColumnModel {
   dataField?: string;
   formStateOptionKey?: string;
   cssClass?: string;
-    caption?: string;
-    dataType?: "string" | "number" | "cb" |"date" |"boolean";
-    allowEditing?: boolean;
-    alignment?: "center" | "left" | "right";
-    format?: string;
-    visible?: boolean;
-    isLocked?: boolean;
-    width?: number;
-    readOnly?: boolean;
-    field?:{ valueKey: string;
-              labelKey: string}
-    cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
+  caption?: string;
+  dataType?: "string" | "number" | "cb" | "date" | "boolean";
+  allowEditing?: boolean;
+  alignment?: "center" | "left" | "right";
+  format?: string;
+  visible?: boolean;
+  isLocked?: boolean;
+  width?: number;
+  readOnly?: boolean;
+  idField?: string; //for cb
+  field?: { valueKey: string; labelKey: string };
+  cellRender?: (
+    cellElement: any,
+    cellInfo: any,
+    filter?: any,
+    pdfCell?: any
+  ) => any;
 }
 export interface PrintTransProps {
   masterAccount: string;
@@ -711,11 +716,11 @@ export interface BarcodeLabel {
   pluCode: string;
 }
 interface UnitByBatchDetailsDto {
-    unitCode?: string;
-    value?: number;
-    label?: string;
-    multiFactor?: string; // default '' in C#
-    unitDescription?: string; // default '' in C#
-    decimalPoints?: number;
-    productBatchID?: number;
+  unitCode?: string;
+  value?: number;
+  label?: string;
+  multiFactor?: string; // default '' in C#
+  unitDescription?: string; // default '' in C#
+  decimalPoints?: number;
+  productBatchID?: number;
 }

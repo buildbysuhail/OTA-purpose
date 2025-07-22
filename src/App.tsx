@@ -223,7 +223,7 @@ useEffect(() => {
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   const { t } = useTranslation('main')
    if (isLoading || isOnline != true) {
-    return <>{isOnline.toString()}<Loader isOnline = {isOnline}/></>;
+    return <><Loader isOnline = {isOnline}/></>;
   }
   return (
     <Fragment>

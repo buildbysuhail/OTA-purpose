@@ -3,12 +3,12 @@ import { formStateMasterHandleFieldChange } from "../reducer";
 import React from "react";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 
-interface AccReferenceDateProps extends VoucherElementProps {}
+interface AccReferenceDateProps extends VoucherElementProps {
+  handleKeyDown?: (e: any) => void;}
 
 const AccReferenceDate = React.forwardRef<
-  HTMLInputElement,
-  AccReferenceDateProps
->(({ formState, dispatch, t }, ref) => {
+  HTMLDivElement,AccReferenceDateProps
+>(({ formState, dispatch, t, handleKeyDown }, ref) => {
   return (
     <>
       {formState.formElements.referenceDate.visible && (
@@ -19,6 +19,7 @@ const AccReferenceDate = React.forwardRef<
           label={t(formState.formElements.referenceDate.label)}
           className="md:w-[150px]"
           value={formState.transaction.master.purchaseInvoiceDate}
+          disableEnterNavigation
           onChange={(e) =>
             dispatch(
               formStateMasterHandleFieldChange({
@@ -26,6 +27,10 @@ const AccReferenceDate = React.forwardRef<
               })
             )
           }
+          onKeyDown={(e) => {
+            debugger;
+            handleKeyDown && handleKeyDown(e)
+          }}
           disabled={
             formState.formElements.referenceDate?.disabled ||
             formState.formElements.pnlMasters?.disabled

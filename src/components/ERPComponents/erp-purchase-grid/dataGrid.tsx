@@ -45,6 +45,7 @@ import useDebounce from "../../../pages/inventory/transactions/purchase/use-debo
 import { generateUniqueKey } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
 import ERPSimpleCombobox, { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
+import { inputBox } from "../../../redux/slices/app/types";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -113,6 +114,7 @@ interface EditableCellProps {
   gridIsBold: boolean;
   type:"any"|"cb"
   rowHeight:number
+  formState:any
 }
 
 interface DragState {
@@ -152,7 +154,7 @@ interface RowData {
   blockUnitOnDecimalPoint: boolean;
   focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
   nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
-  currentCell?: { column: string; rowIndex: number };
+  currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight:number;
@@ -174,13 +176,44 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     productId,
     gridFontSize,
     gridIsBold,
+    formState,
     type,
     rowHeight, 
   }) => {
-    const dispatch = useAppDispatch();
+
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+  const editCellComboBox:inputBox= formState?.userConfig?.inputBoxStyle
+  const gridBorderCol = formState?.userConfig?.gridBorderCol
+  const mergedInputBox: inputBox = {
+    inputStyle: "normal",
+    inputSize: "customize",
+    checkButtonInputSize: editCellComboBox?.checkButtonInputSize ?? "md",
+    inputHeight: (rowHeight-1) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
+    fontSize: gridFontSize ?? 13,
+    fontWeight: gridIsBold?700:400,
+    labelFontSize: editCellComboBox?.labelFontSize ?? 11,
+    otherLabelFontSize: editCellComboBox?.otherLabelFontSize ?? 11,
+    inputBgColor: editCellComboBox?.inputBgColor,
+    buttonFocusBg: editCellComboBox?.buttonFocusBg,
+    borderColor: gridBorderCol,
+    selectColor:editCellComboBox?.selectColor ,
+    fontColor: editCellComboBox?.fontColor,
+    labelColor: editCellComboBox?.labelColor,
+    borderFocus: editCellComboBox?.borderFocus,
+    borderRadius: 0,
+    adjustA:  0,
+    adjustB: 0,
+    adjustC: 0,
+    adjustD: 0,
+    marginTop:  0,
+    marginBottom:  0,
+    focusForeColor: editCellComboBox?.focusForeColor ,
+    focusBgColor: editCellComboBox?.focusBgColor ,
+    defaultBgColor: editCellComboBox?.defaultBgColor,
+    bold: editCellComboBox?.bold,
+  };
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
@@ -253,62 +286,55 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     };
        // Common style for consistent height
     const cellStyle = {
-      fontSize: `${gridFontSize}px`,
-      fontWeight: gridIsBold ? "bold" : "normal",
       height: `${rowHeight}px`,
       minHeight: `${rowHeight}px`,
       maxHeight: `${rowHeight}px`,
-      lineHeight: `${rowHeight}px`,
+      lineHeight: "normal",
+      fontSize: `${gridFontSize}px`,
+      fontWeight: gridIsBold ? "bold" : "normal",
       display: "flex",
       alignItems: "center",
       textAlign: column.alignment || "center",
+      paddingLeft: "4px",
+      paddingRight: "4px",
     } as React.CSSProperties
 
     return (
       <>
         {type == "cb" ? (
-          <ERPDataCombobox
+         
+
+         <ERPDataCombobox
+     
             options={options??[]}
-            // onSelectItem={(e: any) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex)}}
-            // ref={cbRef}
             onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
             noLabel
             enableClearOption={false}
-            className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-            // style={{
-            //   fontSize: `${gridFontSize}px`,
-            //   fontWeight: gridIsBold ? "bold" : "normal",
-            //   whiteSpace: "nowrap",
-            //   overflow: "hidden",
-            //   textOverflow: "ellipsis",
-            //   textAlign: column.alignment || "center",
-            // }}
-            disableEnterNavigation
+            className="!w-full !h-full !bg-inherit   !p-0 !space-y-0"
+            
             value={value}
-            label={localValue}
+            label={column.dataField}
             field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
               valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey :"value",
               labelKey: column?.field && column?.field.labelKey ? column?.field.labelKey : "label",
             }}
-            // noBorder
-            // readOnly={column.readOnly}
-            // onInput={handleInput}
-            // onFocus={handleFocus}
-            // onBlur={onBlur}
+            noBorder
             onKeyDown={handleKeyDown}
-          // tabIndex={0}
+            localInputBox={mergedInputBox}
           />
+    
+ 
         ):(
           <Input
             ref={inputRef}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
             noLabel
             type={column.dataType === "number" ? "text" : "text"}
-            className="w-full h-full bg-transparent border-none focus:ring-0 focus:outline-none !px-1 !py-0 flex items-center"
-           style={{
-              ...cellStyle,
+            className="bg-transparent border-none focus:ring-0 focus:outline-none  "
+            inputStyle={{
+             ...cellStyle,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -321,6 +347,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             onBlur={onBlur}
             onKeyDown={handleKeyDown}
             tabIndex={0}
+
           />
         )}
       </>
@@ -353,7 +380,7 @@ const Row = React.memo(
             fields: {
               currentCell: {
                 column: input?.column,
-                productBatchID: item.productBatchID,
+                data: data.details,
                 rowIndex: input?.rowIndex,
               },
             },
@@ -380,7 +407,7 @@ const Row = React.memo(
     height: `${rowHeight}px`,
     minHeight: `${rowHeight}px`,
     maxHeight: `${rowHeight}px`,
-    lineHeight: `${rowHeight}px`,
+    lineHeight: "normal",
     display: "flex",
     alignItems: "center",
     justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
@@ -398,6 +425,16 @@ const Row = React.memo(
     paddingRight: "4px",
     boxSizing: "border-box" as const,
   })
+
+  const customStyle = {
+  ...formState.userConfig?.inputBoxStyle,
+  inputSize: 'customize',
+ inputHeight: (rowHeight) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
+      fontSize: data.gridFontSize ?? 13,
+      fontWeight: data.gridIsBold ?700:400,
+} as inputBox;
+
+
     const handleKeyDown = useCallback(
     (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
       const target = e.target as HTMLElement
@@ -487,10 +524,12 @@ const Row = React.memo(
           .filter((col) => col.visible != false && col.dataField != null)
           .map((column, columnIndex) => {
             const fieldKey = column.dataField as keyof TransactionDetail;
+            const idField = column.idField as keyof TransactionDetail; // for cb
             const productId = item.productID;
             const cellValue = item[fieldKey];
+            const idValue = item[idField]; // for cb
             let options: any[] = []
-            if(fieldKey == "unitID") {
+            if(fieldKey == "unit") {
               options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
             }  if(fieldKey == "warranty") {
               options = formState.dataWarranty ??[] as any [];
@@ -534,7 +573,7 @@ const Row = React.memo(
                       fields: {
                         currentCell: {
                           column: column.dataField,
-                          productBatchID:item.productBatchID,
+                          data:item,
                           rowIndex: index,
                         },
                       },
@@ -560,6 +599,7 @@ const Row = React.memo(
                   data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
+                  customStyle={customStyle}
                     textAlign={column.alignment === "right" ? "right" : "left"}
                     rowIndex={index}
                     id={cellId}
@@ -571,7 +611,7 @@ const Row = React.memo(
                     }
                     noLabel={true}
                     showCheckBox={false}
-                   contextClassNametwo={`!h-[${rowHeight}px] !text-sm !px-1 !py-0 !border-none !bg-transparent`}
+                   contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
                     value={(cellValue as string) || ""}
                     productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
                     batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
@@ -649,7 +689,7 @@ const Row = React.memo(
                     decimalLimit={2}
                     rowIndex={index}
                     column={column}
-                    value={cellValue as string | number}
+                    value={column.dataType == "cb" ? (idValue as string | number): (cellValue as string | number)}
                     options={options}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
@@ -657,6 +697,7 @@ const Row = React.memo(
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                     gridFontSize={data.gridFontSize}
                     gridIsBold={data.gridIsBold}
+                    formState={formState}
                     rowHeight={rowHeight}
                   />
                 ) : (
@@ -711,7 +752,8 @@ const SummaryRow: React.FC<{
           minHeight: `${rowHeight}px`,
           maxHeight: `${rowHeight}px`,
           boxSizing: "border-box",
-          // borderTop: `1px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`,
+          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
+          
           // the above border is the border of the footer
         }}
       >
@@ -1168,8 +1210,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           fontWeight: gridIsBold ? "bold" : "600",
                           width: col.width ? `${col.width}px` : "150px",
                           minWidth: col.width ? `${col.width}px` : "150px",
-                          height: `100%`,
-                          // height: `${rowHeight + 8}px`,
+                          height: `${rowHeight + 8}px`,
                           maxHeight:`${rowHeight + 8}px`,
                           minHeight: `${rowHeight + 8}px`,
                           textAlign:

@@ -165,6 +165,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   prevTransDate: "",
   oldLedgerID: 0,
   dueDays: 0,
+  gRNMasterID: 0
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -649,4 +650,5 @@ export const initialProductDisplayData: ProductDisplayDto = {
   stdPurchasePrice: "",
   stock: "",
   minSalePrice: "",
+  image: ""
 };

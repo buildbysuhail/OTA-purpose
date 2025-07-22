@@ -413,7 +413,7 @@ if(typeof(_formState) == "boolean") {
         out_voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
-        url = url + "/ByGRN"
+        // url = url + "/ByGRN"
       }
 
     if (_voucherNumber == undefined || _voucherNumber <= 0) {

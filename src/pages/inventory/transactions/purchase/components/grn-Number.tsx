@@ -18,6 +18,7 @@ import VoucherType, { purchaseVoucherTypes } from "../../../../../enums/voucher-
 
 interface GrnNumberProps extends VoucherElementProps {
   loadAndSetTransVoucher: any;
+  closeModal: any
 }
 
 const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
@@ -49,7 +50,7 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
     const handleLoadByRefNo = useCallback(async () => {
       debugger;
       await props.loadAndSetTransVoucher(
-        false,
+        true,
         undefined,
         loadData.vPrefix,
         loadData.vType,
@@ -61,6 +62,7 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
         false,
         "GRN"
       );
+      props.closeModal();
     }, [
       formState.transaction.master.voucherNumber,
       loadData.vPrefix,

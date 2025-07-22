@@ -343,6 +343,7 @@ focusToNextColumn(0, "slNo");
                       <GrnNumber
                         dispatch={dispatch}
                         formState={formState}
+                    closeModal={closeModal}
                         t={t}
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
@@ -710,6 +711,7 @@ focusToNextColumn(0, "slNo");
                         formState={formState}
                         t={t}
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
+                        closeModal={closeModal}
                       />
                     }
                   />

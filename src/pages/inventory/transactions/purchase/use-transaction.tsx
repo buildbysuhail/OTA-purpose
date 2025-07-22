@@ -399,6 +399,7 @@ if(typeof(_formState) == "boolean") {
         openUnsavedPrompt: false,
       })
     );
+    debugger;
     let url  = `${Urls.inv_transaction_base}${transactionType}`
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
@@ -460,7 +461,17 @@ if(typeof(_formState) == "boolean") {
         },
       };
     }
+    if(usingManualInvNumber) {
+      vch.master =  {
 
+          ...vch.master,
+          voucherNumber: _voucherNumber,
+          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix:
+            voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          formType: formType ?? formState.transaction.master.voucherForm,
+    }
+  }
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,

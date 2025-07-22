@@ -343,9 +343,7 @@ focusToNextColumn(0, "slNo");
                         dispatch={dispatch}
                         formState={formState}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
-                        closeModal={closeModal}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
                     }
                   />
@@ -709,9 +707,7 @@ focusToNextColumn(0, "slNo");
                         dispatch={dispatch}
                         formState={formState}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
-                        closeModal={closeModal}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
                     }
                   />

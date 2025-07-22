@@ -42,8 +42,8 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
       vType: purchaseVoucherTypes.includes(
         formState.transaction.master.voucherType as VoucherType
       )
-        ? "PO"
-        : "SO",
+        ? "GRN"
+        : "GRN",
     });
     const showLoadByRefNo = useCallback(async () => {
       if (formState.transaction.master.orderNumber) {

@@ -1,8 +1,8 @@
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateLoadDataUpdate } from "../reducer";
-import React, { useCallback } from "react";
+import { formStateLoadDataUpdate, formStateMasterHandleFieldChange } from "../reducer";
+import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../../../redux/urls";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPFormButtons from "../../../../../components/ERPComponents/erp-form-buttons";
@@ -13,149 +13,219 @@ import { useAppSelector } from "../../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../../redux/store";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
+import { useSelector } from "react-redux";
+import VoucherType, { purchaseVoucherTypes } from "../../../../../enums/voucher-types";
 
 interface GrnNumberProps extends VoucherElementProps {
-  handleLoadByRefNo: () => Promise<void>;
-  handleFieldChange: (key: string, value: any) => void;
-  closeModal: () => void;
+  loadAndSetTransVoucher: any;
 }
-
-// interface LoadDataUpdatePayload {
-//   key: keyof LoadData;
-//   value: any[] | TransactionMaster | TransactionValidationsData | TransactionDetail[] | string | undefined; // Added string
-// }
-  
 
 const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
   (props, ref) => {
-    
-
-    const goToPreviousPage = () => {
-      window.history.back();
-    };
-    // const dispatch = useDispatch();
-    const rootState = useRootState();
-    const formState = useAppSelector((state: RootState) => ({
-      ...state.AccTransaction,
-      loadData: {
-        formType: "",
-        vPrefix: "",
-        vNumber: "",
-      },
-    }));
-
-    const {
-      isEdit,
-      handleSubmit,
-      handleFieldChange,
-      getFieldProps,
-      handleClear,
-      handleClose,
-      isLoading,
-  // formState,
-    } = useFormManager<GrnNumberData>({
-  url: Urls.account_group, // Change this if needed
-      onSuccess: useCallback(() => props.dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: true })), [props.dispatch]),
-      onClose: useCallback(() => props.dispatch(toggleGrnNumber({ isOpen: false, key: null, reload: false })), [props.dispatch]),
-  key: rootState.PopupData.accountGroup.key, // Consider renaming if not account group
-      useApiClient: true,
-      initialData: initialGrnNumber,
-    });
-
-  // const handleLoadClick = async () => {
-  //   try {
-  //     const response = await apiClient.post("/api/load-data", {
-  //       formType: formState?.loadData?.formType,
-  //       vPrefix: formState?.loadData?.vPrefix,
-  //       vNumber: formState?.loadData?.vNumber,
-  //     });
-  //     console.log("API Response:", response.data);
-  //     // Handle the response data as needed
-  //   } catch (error) {
-  //     console.error("API Error:", error);
-  //     // Handle the error as needed
-  //   }
-  // };
-
-
-    const { value: vNumberValue, onChange: onVNumberChange } = useDebouncedInput(
-      formState?.loadData?.vNumber || '',
-      (debouncedValue) => {
-        props.dispatch(
-          formStateLoadDataUpdate({
-            key: "vNumber",
-            value: debouncedValue,
-          })
-        );
-      },
-      300
+    const formState = useSelector(
+      (state: RootState) => state.InventoryTransaction
     );
+    const [showLoadData, setShowLoadData] = useState<boolean>(false);
+    const [loadData, setLoadData] = useState<{
+      vPrefixId: any;
+      vFormTypeId: any;
+      formType: any;
+      vPrefix: string;
+      vNumber: number | undefined;
+      vType: string;
+    }>({
+      vFormTypeId: -2,
+      vPrefixId: -2,
+      formType: "",
+      vPrefix: "",
+      vNumber: formState.transaction.master.orderNumber,
+      vType: purchaseVoucherTypes.includes(
+        formState.transaction.master.voucherType as VoucherType
+      )
+        ? "PO"
+        : "SO",
+    });
+    const showLoadByRefNo = useCallback(async () => {
+      if (formState.transaction.master.orderNumber) {
+        setShowLoadData(true);
+      }
+    }, [formState.transaction.master.orderNumber]);
+    
+    const handleLoadByRefNo = useCallback(async () => {
+      debugger;
+      await props.loadAndSetTransVoucher(
+        true,
+        formState.transaction.master.voucherNumber,
+        loadData.vPrefix,
+        formState.transaction.master.voucherType,
+        loadData.formType,
+        loadData.vNumber,
+        undefined,
+        undefined,
+        true
+      );
+    }, [
+      formState.transaction.master.voucherNumber,
+      loadData.vPrefix,
+      formState.transaction.master.voucherType,
+      loadData.formType,
+      loadData.vNumber,
+    ]);
+    const { value: orderNumberValue, onChange: onOrderNumberChange } =
+      useDebouncedInput(
+        formState.transaction.master.orderNumber || "",
+        (debouncedValue) => {
+          props.dispatch(
+            formStateMasterHandleFieldChange({
+              fields: { orderNumber: debouncedValue },
+            })
+          );
+        },
+        300
+      );
+    useEffect(() => {
+      debugger;
+      if (showLoadData) {
+        setLoadData((prev: any) => {
+          return {
+            ...prev,
+            vFormTypeId: -2,
+            vPrefixId: -2,
+            formType: "",
+            vPrefix: "",
+            vNumber: formState.transaction.master.orderNumber,
+            vType: purchaseVoucherTypes.includes(
+              formState.transaction.master.voucherType as VoucherType
+            )
+              ? "PO"
+              : "SO",
+          };
+        });
+      }
+    }, [showLoadData]);
 
     return (
-      <div className="flex items-center mb-6">
-        {/* FIXED-HEIGHT LABEL */}
-        <label
-          className="w-24 mr-4 flex items-center justify-end h-10 text-sm font-medium"
-        >
-          {props.t("GRN No")}:
-        </label>
-
-        {/* INPUT ROW */}
-        <div className="flex items-center gap-3 flex-wrap flex-1">
-          <ERPDataCombobox
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-            enableClearOption={false}
-            id="FormType"
-            className="min-w-[160px]"
-          /** remove its own “label” rendering and just use placeholder **/
-            label=""
-          // placeholder={t("Form_Type")}
-            data={formState?.loadData}
-            onSelectItem={(e) =>
-              props.dispatch(formStateLoadDataUpdate({ key: "formType", value: e.value }))
-            }
-            value={formState?.loadData?.formType}
-            field={{ id: "FormType", valueKey: "id", labelKey: "name", getListUrl: Urls.data_employees }}
-          />
-
-          <ERPDataCombobox
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-            enableClearOption={false}
-            id="Vprefix"
-            className="min-w-[120px]"
-            label=""
-          // placeholder={t("Vprefix")}
-            data={formState.transaction.master}
-            onSelectItem={() => {}}
-            field={{ id: "Vprefix", valueKey: "id", labelKey: "name", getListUrl: Urls.data_employees }}
-          />
-
-          <ERPInput
-            disableEnterNavigation={true}
-            id="VNumber"
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-            min={1}
-          label=""                   /* turn off its internal label */
-            placeholder={props.t("V Number")}
-            type="number"
-            className="w-[80px]"
-            value={vNumberValue}
-            onChange={(e) => onVNumberChange(e.target.value)}
-            ref={ref}
-          />
-
-          <ERPButton
-            title={props.t("Load")}
-          className="h-10"           /* match the inputs’ height */
-          />
-        </div>
-
-        <ERPFormButtons
-          isEdit={isEdit}
-          isLoading={isLoading}
-          onCancel={props.closeModal}
-        />
-      </div>
+     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+                  {/* Modal Header */}
+                  <div className="flex items-center justify-between mb-6 border-b pb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">&nbsp;</h2>
+                    <button
+                      onClick={() => setShowLoadData(false)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                      aria-label="Close modal"
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+    
+                  {/* Modal Content - Your Original Form */}
+                  <div className="flex items-center mb-6">
+                    {/* INPUT ROW */}
+                    <div className="flex items-center gap-3 flex-wrap flex-1">
+                      <ERPDataCombobox
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        enableClearOption={false}
+                        id="FormType"
+                        className="min-w-[160px]"
+                        label=""
+                        data={loadData}
+                        onSelectItem={(e) =>
+                          setLoadData((prev) => {
+                            return {
+                              ...prev,
+                              formType: e.label,
+                              vFormTypeId: e.value
+                            };
+                          })
+                        }
+                        value={loadData?.vFormTypeId}
+                        field={{
+                          id: "FormType",
+                          valueKey: "id",
+                          labelKey: "name",
+                          getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/FormTypeByVoucherType/${loadData.vType}`,
+                        }}
+                      />
+    
+                      <ERPDataCombobox
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        enableClearOption={false}
+                        id="Vprefix"
+                        className="min-w-[120px]"
+                        label=""
+                        value={loadData.vPrefixId}
+                        data={loadData}
+                        onSelectItem={(e) =>
+                          setLoadData((prev) => {
+                            return {
+                              ...prev,
+                              vPrefix: e.label, // Fixed: should be vPrefix, not formType
+                              vPrefixId: e.value,
+                            };
+                          })
+                        }
+                        field={{
+                          id: "Vprefix",
+                          valueKey: "id",
+                          labelKey: "name",
+                          getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/PrefixByVoucherType/`,
+                          params: `voucherType=${loadData.vType}&formType=${loadData?.formType}`,
+                        }}
+                      />
+    
+                      <ERPInput
+                        disableEnterNavigation={true}
+                        id="VNumber"
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        min={1}
+                        label=""
+                        placeholder={props.t("V Number")}
+                        type="number"
+                        className="w-[80px]"
+                        // value={orderNumberValue}
+                        value={loadData.vNumber}
+                        onChange={(e) =>
+                          setLoadData((prev: any) => {
+                            return {
+                              ...prev,
+                              vNumber: e.target?.value, // Fixed: should be vNumber, not formType
+                            };
+                          })
+                        }
+                        ref={ref}
+                      />
+                    </div>
+                  </div>
+    
+                  {/* Modal Footer (Optional) */}
+                  <div className="flex justify-end gap-3 pt-4 border-t">
+                    <ERPButton
+                      onClick={handleLoadByRefNo}
+                      title={props.t("Load")}
+                      className="h-10"
+                    />
+                    <button
+                      onClick={() => setShowLoadData(false)}
+                      className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                    >
+                      {props.t("Cancel") || "Cancel"}
+                    </button>
+                  </div>
+                </div>
+              </div>
     );
   }
 );

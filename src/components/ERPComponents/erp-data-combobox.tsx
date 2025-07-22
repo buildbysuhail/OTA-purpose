@@ -1815,7 +1815,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={
-                  fetching
+                  fetching || (initial && initial.value && !isNullOrUndefinedOrEmpty(initial.value))
                     ? ""
                     : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }

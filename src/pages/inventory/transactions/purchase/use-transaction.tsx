@@ -278,7 +278,8 @@ export const useTransaction = (
     transactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false
+    setVoucherNo?: boolean | false,
+    loadVType?: string
   ) => {
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction }
@@ -311,7 +312,8 @@ export const useTransaction = (
       voucherType,
       formType,
       manualInvoiceNumber,
-      transactionMasterID
+      transactionMasterID,
+      loadVType
     );
 if(typeof(_formState) == "boolean") {
   return

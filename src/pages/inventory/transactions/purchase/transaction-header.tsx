@@ -300,6 +300,7 @@ focusToNextColumn(0, "slNo");
 
                 <DebitAccount
                   dispatch={dispatch}
+              transactionType={transactionType}
                   formState={formState}
                   t={t}
                   handleKeyDown={handleKeyDown}
@@ -633,6 +634,7 @@ focusToNextColumn(0, "slNo");
                 />
 
                 <DebitAccount
+              transactionType={transactionType}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}

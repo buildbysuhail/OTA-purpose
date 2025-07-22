@@ -863,7 +863,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setLoading(true);
       try {
         let _items;
-
+debugger;
               
         // Check if data is available in Redux
         let _continue = true;

@@ -388,7 +388,7 @@ if(typeof(_formState) == "boolean") {
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: number,
+    manualInvoiceNumber?: any,
     transactionMasterID?: number,
     loadVType?: string
   ) => {

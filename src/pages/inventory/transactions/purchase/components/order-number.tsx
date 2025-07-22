@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { Ellipsis } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { formStateMasterHandleFieldChange } from "../reducer";
+import VoucherType, { purchaseVoucherTypes } from "../../../../../enums/voucher-types";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
   loadAndSetTransVoucher: any;
@@ -24,7 +25,8 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
       formType: string;
       vPrefix: string;
       vNumber: string;
-    }>({ formType: "", vPrefix: "", vNumber: "" });
+      vType: string;
+    }>({ formType: "", vPrefix: "", vNumber: "" , vType: purchaseVoucherTypes.includes(formState.transaction.master.voucherType as VoucherType) ? "PO" : "SO"});
      const showLoadByRefNo = useCallback(async () => {
     if (formState.transaction.master.orderNumber) {
        setShowLoadData(true);
@@ -138,7 +140,7 @@ const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedI
                 id: "FormType",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/FormTypeByVoucherType/PO`,
+                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/FormTypeByVoucherType/${loadData.vType}`,
               }}
             />
 
@@ -162,7 +164,8 @@ const { value: orderNumberValue, onChange: onOrderNumberChange } = useDebouncedI
                 id: "Vprefix",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/PrefixByVoucherType/PO/${loadData?.formType}`,
+                getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/PrefixByVoucherType/`,
+                params:`voucherType=${loadData.vType}&formType${loadData?.formType}`
               }}
             />
 

@@ -478,6 +478,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
               },
             })
           );
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: {
+                tokenNumber: ledgerData?.taxNumber
+              },
+            })
+          );
         } else {
           dispatch(
             formStateHandleFieldChange({

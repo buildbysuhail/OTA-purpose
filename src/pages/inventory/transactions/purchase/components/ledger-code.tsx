@@ -13,7 +13,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   handleKeyDown
 }, ref) => {
   const { value, onChange } = useDebouncedInput(
-    formState.ledgerData.ledgerCode || '',
+    formState.ledgerData?.ledgerCode || '',
     (debouncedValue) => {
       dispatch(
         formStateHandleFieldChangeKeysOnly({

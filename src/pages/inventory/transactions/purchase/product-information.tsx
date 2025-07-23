@@ -216,10 +216,10 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
                 </div>
                 <div className="flex flex-col items-end">
                   <p className="text-gray-600 font-medium text-sm">
-                    Item Price: <span className="font-bold text-[#16A34A] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
+                    {t("item_price")}: <span className="font-bold text-[#16A34A] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
                   </p>
                   <p className="text-gray-600 font-medium text-xs mt-1.5">
-                    Quantity Sold: <span className="font-bold text-[#2563EB]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
+                    {t("quantity_sold")}: <span className="font-bold text-[#2563EB]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
                   </p>
                 </div>
               </div>
@@ -227,7 +227,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
           );
         },
       },
-    ],[t]
+    ], [t]
   );
 
   useEffect(() => {
@@ -263,35 +263,35 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Product Name:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_name")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out text-right">{productInfo?.productName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Product Code:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_code")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCode || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Group:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("group")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.groupName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Category:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("category")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCategoryName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Unit:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("unit")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.unitName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Item Type:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("item_type")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.itemType || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Brand:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("brand")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.brandName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Barcode:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("barcode")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.autoBarcode || '-'}</span>
           </div>
         </div>
@@ -304,11 +304,11 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Std Sales Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_sales_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdSalesPrice || 0}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Min Sale Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_sale_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.minSalePrice || 0}</span>
           </div>
         </div>
@@ -321,7 +321,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Std Purchase Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_purchase_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdPurchasePrice || 0}</span>
           </div>
         </div>
@@ -334,19 +334,19 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Current Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("current_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stock || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Min Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMin || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Max Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("max_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMax || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Warehouse:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("warehouse")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.warehouseName || '-'}</span>
           </div>
         </div>
@@ -359,15 +359,15 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Manufacturing Date:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("manufacturing_date")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Expiry Date:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("expiry_date")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.expiryDate || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Batch No:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("batch_no")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.batchNo || '-'}</span>
           </div>
         </div>
@@ -383,22 +383,22 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </button>
       </div>
       {isMenuOpen && (
-        <div className="absolute top-[275px] right-[18px] bg-white p-4 shadow-lg z-10">
+        <div className="absolute top-[275px] right-[18px] bg-white p-4 shadow-lg rounded-md z-10">
           <ERPCheckbox
             id="showCurrentCustomer"
-            label="Show only current customer transaction"
+            label={t("show_only_current_customer_transaction")}
             checked={showCurrentCustomer}
             onChange={(e) => setShowCurrentCustomer(e.target.checked)}
           />
           <ERPCheckbox
             id="showCurrentBatch"
-            label="Current batch transaction"
+            label={t("current_batch_transaction")}
             checked={showCurrentBatch}
             onChange={(e) => setShowCurrentBatch(e.target.checked)}
           />
           <ERPCheckbox
             id="showCurrentUnit"
-            label="Current unit transaction"
+            label={t("current_unit_transaction")}
             checked={showCurrentUnit}
             onChange={(e) => setShowCurrentUnit(e.target.checked)}
           />
@@ -437,14 +437,11 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
           <div className="w-full">
             <div className="dark:bg-dark-bg-card dark:border-dark-border p-4 bg-slate-200">
               <div className="flex items-stretch gap-2">
-                <div className="product-image min-w-[90px] h-[60px] bg-slate-200">
-                  <img
-                    src={productInfo?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbngTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s"}
-                    className="w-full h-full object-cover object-center rounded-md"
-                  />
+                <div className="product-image w-[60px] h-[60px] bg-slate-200">
+                  <img src={productInfo?.image ? productInfo.image : "https://loremipsum.imgix.net/4Yp1F82NF8yN9gUHXMphNz/c254302efb588196d9a607832cb24e28/lorem-picsum-1280x720.jpg?w=1920&q=60&auto=format,compress"} className="w-full h-full object-cover object-center" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h5 className="font-bold text-base leading-tight dark:text-dark-text text-gray-900">
+                  <h5 className="font-bold text-sm leading-tight dark:text-dark-text text-gray-900">
                     {productInfo?.productName || "Product Name"}
                   </h5>
                   <p className="text-xs font-medium dark:text-dark-text-secondary dark:bg-dark-bg text-gray-600">

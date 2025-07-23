@@ -319,6 +319,7 @@ export const useTransaction = (
 if(typeof(_formState) == "boolean") {
   return
 }
+debugger;
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -338,7 +339,7 @@ if(typeof(_formState) == "boolean") {
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled: _formState.transaction.master.invTransactionMasterID > 0,
+        disabled: _formState.transaction.master.invTransactionMasterID > 0 && !["GRN", "PO", "SO"].includes(loadVType??""),
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -470,6 +471,7 @@ if(typeof(_formState) == "boolean") {
           voucherPrefix:
             voucherPrefix ?? formState.transaction.master.voucherPrefix,
           formType: formType ?? formState.transaction.master.voucherForm,
+          invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType??"") ? null: vch.master.invTransactionMasterID
     }
   }
     // clearControlForNew();
@@ -2785,14 +2787,14 @@ if(loadVType == "GRN") {
               setCurrentCell(res, data);
             }
           } else if (columnName == "unitPrice") {
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  productInfo: true,
-                },
-              })
-            );
-            return { handled: true };
+            // dispatch(
+            //   commonParams.formStateHandleFieldChangeKeysOnly({
+            //     fields: {
+            //       productInfo: true,
+            //     },
+            //   })
+            // );
+            // return { handled: true };
           } else if (columnName == "unitPriceFC") {
             if (
               (() => {

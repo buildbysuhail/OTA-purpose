@@ -177,7 +177,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
           const transDateOnly = new Date(transDate);
           transDateOnly.setHours(0, 0, 0, 0); // Removes time part
-
+debugger;
           if (transDateOnly < minPreDate) {
             return {
               valid: false,

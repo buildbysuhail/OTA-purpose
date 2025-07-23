@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -308,7 +308,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   cbColour: { visible: false, disabled: false, label: "color" },
   cbCostCentre: { visible: false, disabled: false, label: "cost_centre" },
   cbDummyCode: { visible: false, disabled: false, label: "dummy_code" },
-  cbEmployee: { visible: true, disabled: false, label: "purchaser" },
+  cbEmployee: { visible: true, disabled: false, label: "purchaser", employeeType: EmployeeType.All},
   cbDebitAccount: { visible: true, disabled: false, label: "" },
   chkDebitAccount: { visible: true, disabled: false, label: "debit_account" },
   chkTaxNumber: { visible: true, disabled: false, label: "" },

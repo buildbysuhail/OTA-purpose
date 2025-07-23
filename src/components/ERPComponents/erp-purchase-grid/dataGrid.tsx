@@ -115,7 +115,7 @@ interface EditableCellProps {
   type:"any"|"cb"
   rowHeight:number
   formState:any
-  // appState:any
+  appState:any
 }
 
 interface DragState {
@@ -178,13 +178,14 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     gridFontSize,
     gridIsBold,
     formState,
-    // appState,
+    appState,
     type,
     rowHeight, 
   }) => {
 
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+console.log(appState);
 
   const editCellComboBox:inputBox= formState?.userConfig?.inputBoxStyle
   const gridBorderCol = formState?.userConfig?.gridBorderCol
@@ -219,24 +220,22 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
-    //     const [isFocused, setIsFocused] = useState(false);
-    //     const handleFocus = () => setIsFocused(true);
-    // const handleBlur = (e: any) => {
-    //   e.stopPropagation();
-    //   setTimeout(() => {
-    //     setIsFocused(false);
-    //     setIsOpen(false);
-    //     onBlur?.(e);
-    //   }, 200);
-    // };
-    //  const [bgColor, setBgColor] = useState<string>(
-    //       appState.mode == "dark"
-    //         ? isFocused == true
-    //           ? "#ffffff"
-    //           : "#ffffff1a"
-    //         : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
-    //     );
+     const [bgColor, setBgColor] = useState<string>(
+          appState.mode == "dark"
+            ? document.activeElement === inputRef.current
+              ? "#ffffff"
+              : "#ffffff1a"
+            : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
+        );
     
+
+    useEffect(() => {
+      setBgColor(appState.mode == "dark"
+            ? document.activeElement === inputRef.current
+              ? "#ffffff"
+              : "#ffffff1a"
+            : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
+    }, [document.activeElement, inputRef.current]);
 
     useEffect(() => {
       setLocalValue(value?.toString());
@@ -347,6 +346,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     
  
         ):(
+          <>
           <Input
             ref={inputRef}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
@@ -358,6 +358,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              backgroundColor: bgColor,
             }}
             value={localValue}
             noBorder
@@ -369,6 +370,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             tabIndex={0}
 
           />
+          </>
         )}
       </>
 
@@ -392,6 +394,9 @@ const Row = React.memo(
     const dispatch = useAppDispatch();
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
+    );
+    const appState = useSelector(
+      (state: RootState) => state.AppState
     );
     const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
       if(input) {
@@ -702,6 +707,7 @@ const Row = React.memo(
                   &&  data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
                   <EditableCell
+                    appState={appState.appState}
                     type={column.dataType == "cb" ? "cb": "any"}
                     productId={productId}
                     onChange={data.onChange}

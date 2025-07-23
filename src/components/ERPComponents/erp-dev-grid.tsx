@@ -39,7 +39,7 @@ import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from "jspdf";
 import { Workbook } from "exceljs";
 import { saveAs } from "file-saver";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
 import {
   applyGridColumnPreferences,
@@ -754,6 +754,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       useState(filterInitialData);
     const [_reload, set_reload] = useState(reload);
     const [isPdfMode, setIsPdfMode] = useState(false);
+    const _location = useLocation()
     useEffect(() => {
       set_reload(reload);
     }, [reload]);
@@ -775,6 +776,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         onApplyPreferences(getInitialPreference(gridId, columns));
       }
     }, [gridId]);
+    useEffect(() => {
+      set_reload(true)
+    }, [_location.pathname]);
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
         setPreferences(pref);

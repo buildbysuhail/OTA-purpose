@@ -300,6 +300,7 @@ focusToNextColumn(0, "slNo");
 
                 <DebitAccount
                   dispatch={dispatch}
+              transactionType={transactionType}
                   formState={formState}
                   t={t}
                   handleKeyDown={handleKeyDown}
@@ -342,10 +343,9 @@ focusToNextColumn(0, "slNo");
                       <GrnNumber
                         dispatch={dispatch}
                         formState={formState}
+                    closeModal={closeModal}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
-                        closeModal={closeModal}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
                     }
                   />
@@ -635,6 +635,7 @@ focusToNextColumn(0, "slNo");
                 />
 
                 <DebitAccount
+              transactionType={transactionType}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -709,8 +710,7 @@ focusToNextColumn(0, "slNo");
                         dispatch={dispatch}
                         formState={formState}
                         t={t}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        handleFieldChange={handleFieldChange}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
                         closeModal={closeModal}
                       />
                     }

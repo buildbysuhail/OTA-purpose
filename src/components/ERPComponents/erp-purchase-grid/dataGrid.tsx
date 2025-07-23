@@ -115,6 +115,7 @@ interface EditableCellProps {
   type:"any"|"cb"
   rowHeight:number
   formState:any
+  // appState:any
 }
 
 interface DragState {
@@ -177,6 +178,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     gridFontSize,
     gridIsBold,
     formState,
+    // appState,
     type,
     rowHeight, 
   }) => {
@@ -217,6 +219,24 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
+    //     const [isFocused, setIsFocused] = useState(false);
+    //     const handleFocus = () => setIsFocused(true);
+    // const handleBlur = (e: any) => {
+    //   e.stopPropagation();
+    //   setTimeout(() => {
+    //     setIsFocused(false);
+    //     setIsOpen(false);
+    //     onBlur?.(e);
+    //   }, 200);
+    // };
+    //  const [bgColor, setBgColor] = useState<string>(
+    //       appState.mode == "dark"
+    //         ? isFocused == true
+    //           ? "#ffffff"
+    //           : "#ffffff1a"
+    //         : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
+    //     );
+    
 
     useEffect(() => {
       setLocalValue(value?.toString());

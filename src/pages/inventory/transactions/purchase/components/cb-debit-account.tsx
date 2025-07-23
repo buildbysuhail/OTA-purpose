@@ -8,10 +8,12 @@ import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "..
 
 interface DebitAccountProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
+  transactionType: string
 }
 const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
   formState,
   dispatch,
+  transactionType,
   t,
 }, ref) => {
   return (
@@ -60,13 +62,12 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
             );
           }}
           value={formState.transaction.master.inventoryLedgerID}
-          field={{
-            id: "inventoryLedgerID",
-            valueKey: "id",
-            labelKey: "name",
-            getListUrl: Urls.data_employees,
-            params: `ledgerType=${formState.formElements?.cbDebitAccount?.accLedgerType || LedgerType.All}`,
-          }}
+           field={{
+                id: "inventoryLedgerID",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${LedgerType.All}`,
+              }}
           disabled={
             formState.formElements.cbDebitAccount.disabled ||
             formState.enableDebitAccount == false ||

@@ -278,7 +278,8 @@ export const useTransaction = (
     transactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false
+    setVoucherNo?: boolean | false,
+    loadVType?: string
   ) => {
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction }
@@ -304,6 +305,7 @@ export const useTransaction = (
         })
       );
     }
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -311,11 +313,13 @@ export const useTransaction = (
       voucherType,
       formType,
       manualInvoiceNumber,
-      transactionMasterID
+      transactionMasterID,
+      loadVType
     );
 if(typeof(_formState) == "boolean") {
   return
 }
+debugger;
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -335,7 +339,7 @@ if(typeof(_formState) == "boolean") {
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled: _formState.transaction.master.invTransactionMasterID > 0,
+        disabled: _formState.transaction.master.invTransactionMasterID > 0 && !["GRN", "PO", "SO"].includes(loadVType??""),
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -385,7 +389,7 @@ if(typeof(_formState) == "boolean") {
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: string,
+    manualInvoiceNumber?: any,
     transactionMasterID?: number,
     loadVType?: string
   ) => {
@@ -396,16 +400,19 @@ if(typeof(_formState) == "boolean") {
         openUnsavedPrompt: false,
       })
     );
+    debugger;
     let url  = `${Urls.inv_transaction_base}${transactionType}`
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+    let out_voucherNumber =
+      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
       if(loadVType == "PO") {
-        _voucherNumber = formState.transaction.master.orderNumber??0
+        out_voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
       }
       if(loadVType == "GRN") {
-        _voucherNumber = formState.transaction.master.orderNumber??0
+        out_voucherNumber = manualInvoiceNumber??0
         voucherType = loadVType
         formType = ""
         url = url + "/ByGRN"
@@ -415,7 +422,7 @@ if(typeof(_formState) == "boolean") {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: _voucherNumber, // Ensuring it's always a string
+      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
       voucherPrefix:
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
@@ -455,7 +462,18 @@ if(typeof(_formState) == "boolean") {
         },
       };
     }
+    if(usingManualInvNumber) {
+      vch.master =  {
 
+          ...vch.master,
+          voucherNumber: _voucherNumber,
+          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix:
+            voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          formType: formType ?? formState.transaction.master.voucherForm,
+          invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType??"") ? null: vch.master.invTransactionMasterID
+    }
+  }
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -2769,14 +2787,14 @@ if(loadVType == "GRN") {
               setCurrentCell(res, data);
             }
           } else if (columnName == "unitPrice") {
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  productInfo: true,
-                },
-              })
-            );
-            return { handled: true };
+            // dispatch(
+            //   commonParams.formStateHandleFieldChangeKeysOnly({
+            //     fields: {
+            //       productInfo: true,
+            //     },
+            //   })
+            // );
+            // return { handled: true };
           } else if (columnName == "unitPriceFC") {
             if (
               (() => {

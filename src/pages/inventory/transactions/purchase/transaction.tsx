@@ -478,6 +478,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
               },
             })
           );
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: {
+                tokenNumber: ledgerData?.taxNumber
+              },
+            })
+          );
         } else {
           dispatch(
             formStateHandleFieldChange({
@@ -1152,7 +1159,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         caption: t("unit_id"),
         detailsOptionKey: "units",
         allowEditing: true,
-        visible: true,
+        visible: false,
         width: 100,
         alignment: "right",
       },

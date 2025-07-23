@@ -244,6 +244,7 @@ export interface PropertiesState {
   template_kind?: TemplateKindType;
   template_group?: VoucherType | string;
   language_prefer?:"Eng"|"Arb";
+  ask_start_index?:boolean;
   templateName?: string;
   pageSize?: string;
   width?:number;

@@ -230,7 +230,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    let sliceData = response?.slice(0, 10);
+    let sliceData = response?.slice(0, 3);
     setData(sliceData);
   }, [barcodeForm.data]);
 

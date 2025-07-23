@@ -29,7 +29,7 @@ export interface DownloadPreviewProps {
 
 // --- PDF Document Component ---
 export function BarcodePDFDocument({ template, data, barcodeImages }: { template: any, data: any, barcodeImages: any }) {
-  const pxToPoint = (px: number) => px * (72 / 96);
+const pxToPoint = (px: number) => px * (72 / 96);
 
   // ...chunkedData logic (copy from your useEffect, but as a function)
   const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
@@ -49,8 +49,8 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
   const renderComponent = (component: any, item: any) => {
     const baseStyle: Style = {
       position: 'absolute',
-      left: pxToPoint(component.x),
-      top: pxToPoint(component.y),
+      left: (component.x),
+      top: (component.y),
       transform: `rotate(${component.rotate || 0}deg)`,
       transformOrigin: "center",
     };
@@ -66,8 +66,8 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
               fontSize: (component.fontSize) || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
-              height: pxToPoint(component.height) || 50,
-              width: pxToPoint(component.width) || 50,
+              height: (component.height) || 50,
+              width: (component.width) || 50,
             }}
           >
             {component.content}
@@ -82,8 +82,8 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
                 fontSize: (component.fontSize) || 12,
                 fontStyle: component.fontStyle || "normal",
                 textAlign: component.textAlign || "center",
-                height: pxToPoint(component.height) || 50,
-                width: pxToPoint(component.width) || 50,
+                height: (component.height) || 50,
+                width: (component.width) || 50,
               }}
             >
               {item[component.content] || " "}
@@ -98,8 +98,8 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              height: pxToPoint(component.height) || 50,
-              width: pxToPoint(component.width) || 50,
+               height:(component.height),
+               width: (component.width),
             }}
           />
         ) : null;
@@ -112,7 +112,7 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
     <Document>
       <FontRegistration />
       <Page size={{
-        width: pxToPoint(
+        width: (
           (template?.barcodeState?.labelState?.labelWidth ?? 300) *
           (template?.barcodeState?.labelState?.columnsPerRow ?? 1)
         ) +
@@ -120,17 +120,17 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
             chunkedData &&
               chunkedData[0] &&
               chunkedData[0].length > 1
-              ? pxToPoint((template?.barcodeState?.labelState?.gap?.hgap ?? 0) * (chunkedData[0].length - 1))
+              ? ((template?.barcodeState?.labelState?.gap?.hgap ?? 0) * (chunkedData[0].length - 1))
               : 0
           ),
-        height: pxToPoint(
+        height: (
           (template?.barcodeState?.labelState?.labelHeight ?? 300) *
           (template?.barcodeState?.labelState?.rowsPerPage ?? 1)
         ) +
           (
             template?.barcodeState?.labelState?.rowsPerPage &&
               template.barcodeState.labelState.rowsPerPage > 1
-              ? pxToPoint((template?.barcodeState?.labelState?.gap?.vgap ?? 0) * (template.barcodeState.labelState.rowsPerPage - 1))
+              ? ((template?.barcodeState?.labelState?.gap?.vgap ?? 0) * (template.barcodeState.labelState.rowsPerPage - 1))
               : 0
           ),
       }} style={styles.page}>
@@ -140,17 +140,17 @@ export function BarcodePDFDocument({ template, data, barcodeImages }: { template
               flexDirection: 'row',
               flexWrap: 'wrap',
               marginTop: index % (template?.barcodeState?.labelState?.rowsPerPage || 1) !== 0
-                ? pxToPoint(template?.barcodeState?.labelState?.gap?.vgap || 0)
+                ? (template?.barcodeState?.labelState?.gap?.vgap || 0)
                 : '0pt',
             }}>
             {label?.map((item: any, colIndex: number) => (
               <View
                 key={item.siNo}
                 style={{
-                  width: pxToPoint(template?.barcodeState?.labelState?.labelWidth || 200),
-                  height: pxToPoint(template?.barcodeState?.labelState?.labelHeight || 200),
+                  width: (template?.barcodeState?.labelState?.labelWidth || 200),
+                  height: (template?.barcodeState?.labelState?.labelHeight || 200),
                   position: "relative",
-                  marginLeft: colIndex > 0 ? pxToPoint(template?.barcodeState?.labelState?.gap?.hgap || 0) : '0pt'
+                  marginLeft: colIndex > 0 ? (template?.barcodeState?.labelState?.gap?.hgap || 0) : '0pt'
                 }}
               >
                 {template?.barcodeState?.placedComponents?.map((component: any) => renderComponent(component, item))}

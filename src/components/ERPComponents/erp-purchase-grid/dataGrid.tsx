@@ -312,7 +312,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             noLabel
             enableClearOption={false}
             className="!w-full !h-full !bg-inherit   !p-0 !space-y-0"
-            
+            disableEnterNavigation
             value={value}
             label={column.dataField}
             field={{

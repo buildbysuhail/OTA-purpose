@@ -235,7 +235,7 @@ console.log(appState);
               ? "#ffffff"
               : "#ffffff1a"
             : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
-    }, [document.activeElement]);
+    }, [document.activeElement, inputRef.current]);
 
     useEffect(() => {
       setLocalValue(value?.toString());

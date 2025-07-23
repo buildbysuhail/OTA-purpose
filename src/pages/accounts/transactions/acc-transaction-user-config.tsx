@@ -34,7 +34,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = () => {
@@ -116,11 +116,11 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
 
   return (
     <>
-      <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-1.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
-          <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-        </button>
-      </div>
+      <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("settings")}>
+          <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
+            <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+        </div>
       <ERPModal
         isOpen={isOpen}
         title={t("user_config")}

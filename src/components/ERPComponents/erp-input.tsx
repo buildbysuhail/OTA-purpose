@@ -212,7 +212,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
-      
+
       if (type === "number") {
         const value = e.target.value;
         // Allow empty string, decimal point, or valid numbers
@@ -252,25 +252,38 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
 
+    const [foreColor,setForeColor]=useState<string>(
+      appState.mode=='dark'?
+      isFocused==true
+      ? "#ffffff"
+      : "#ffffff1a"
+      : `${isFocused?`rgb (${inputBoxState?.focusForeColor})`: ``}`
+    )
+
     useEffect(() => {
-      let border, bgCol;
+      let border, bgCol, bgFor;
       if (appState?.mode === "dark") {
         border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
         bgCol = isFocused ? "#ffffff" : "#ffffff1a";
+        bgFor = isFocused ? "#fff" : "#ccc";
       } else {
-        border =
-          isFocused || isHovered
-            ? `rgb(${inputBoxState?.borderFocus})`
-            : `rgb(${inputBoxState?.borderColor})`;
-        // bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : `${inputBoxState?.inputBgColor? `!rgb(${inputBoxState?.inputBgColor})`:``}`;
+        border = isFocused || isHovered
+          ? `rgb(${inputBoxState?.borderFocus})`
+          : `rgb(${inputBoxState?.borderColor})`;
         bgCol = isFocused
           ? `rgb(${inputBoxState?.focusBgColor})`
           : inputBoxState?.inputBgColor
-            ? `rgb(${inputBoxState?.inputBgColor})`
-            : "";
+          ? `rgb(${inputBoxState?.inputBgColor})`
+          : "";
+        bgFor = isFocused
+          ? `rgb(${inputBoxState?.focusForeColor})`
+          : inputBoxState?.fontColor
+          ? `rgb(${inputBoxState?.fontColor})`
+          : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);
+      setForeColor(bgFor);
     }, [appState.mode, isFocused, isHovered, inputBoxState]);
 
     useEffect(() => {
@@ -570,7 +583,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       return sizeStyles.regular.height || '2rem';
     };
 
-    const remToPx = (rem: number) => 
+    const remToPx = (rem: number) =>
     {
       const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
       return rem * rootFontSize;
@@ -578,8 +591,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
   const rawRem = parseFloat(getInputHeight()); // removes "rem" from e.g., "2.1rem"
   const inputHeight = remToPx(rawRem) - 2.1;
- 
-    
+
+
 
     const commonProps = {
       id: ignoreRandomId ? id : `${id}_${Math.random()}`,
@@ -816,7 +829,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
           }}>
-          
+
             <div className="flex justify-between">
             {!noLabel && (
               <label
@@ -874,7 +887,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   )}
               </label>
             </div>
-          
+
           <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`}>
             {prefix && (
               <div
@@ -886,7 +899,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {prefix}
               </div>
             )}
-            <div className="relative flex-1">
+            <div className="relative flex-1" style={{  backgroundColor: bgColor}}>
               <input
                 {...commonProps}
                 {...numberInputProps}
@@ -912,7 +925,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   height:!inputClassName?height:"",
                   fontSize,
                   fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,
-                  color: disabled ? "#606060 !important" : color,
+                  color: disabled ? "#606060" : foreColor,
                   borderColor:!inputClassName?borderStyles:"",
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
@@ -934,10 +947,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     type === "number" && showCustomNumberChanger
                       ? "16px"
                       : type === "number"?"20px":undefined,
-                      ...(type === "number" && {
+                  ...(type === "number" && {
                         "-moz-appearance": "number-input", // Firefox
                         "-webkit-appearance": "number-input", // WebKit (though limited effect)
-                      }),
+                  }),
                   ...(!prefix &&
                     !suffix && {
                       borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
@@ -961,7 +974,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onKeyDown={(e) => {
                   const isEnter =
                     e.key === "NumpadEnter" || e.key === "Enter" || e.keyCode === 13 || e.which === 13;
-                  
+
                   if (disableEnterNavigation === true) {
                     if (isEnter && onEnterKeyDown) {
                       onEnterKeyDown(e);
@@ -969,7 +982,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     if (onKeyDown) {
                       onKeyDown(e);
                     }
-                    
+
                   } else {
                     handleKeyDown(e);
                   }

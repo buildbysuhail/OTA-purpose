@@ -177,7 +177,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
           const transDateOnly = new Date(transDate);
           transDateOnly.setHours(0, 0, 0, 0); // Removes time part
-debugger;
+          debugger;
           if (transDateOnly < minPreDate) {
             return {
               valid: false,
@@ -454,7 +454,7 @@ debugger;
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
         let details = [...formState.transaction.details];
-        let current = {...formState.transaction.details[rowIndex]};
+        let current = { ...formState.transaction.details[rowIndex] };
         const final = { ...current, ...detail };
         details[rowIndex] = final;
 
@@ -473,7 +473,7 @@ debugger;
         );
         _result.transaction = _result.transaction ? _result.transaction : {};
         _result.summary = summaryRes.summary;
-        _result.transaction.details = [{...detail, slNo: current.slNo}];
+        _result.transaction.details = [{ ...detail, slNo: current.slNo }];
         result = _result;
       }
       commonParams.formStateHandleFieldChangeKeysOnly &&
@@ -878,7 +878,7 @@ debugger;
 
     try {
       let tot = 0;
-debugger;
+      debugger;
       if (!result) {
         result = {};
       }
@@ -1370,6 +1370,74 @@ debugger;
         ? moment().local().toISOString()
         : master.prevTransDate;
     return formState.transaction.master;
+  };
+  const btnApplyDiscountsToItems_Click = (): void => {
+    try {
+      let outState: DeepPartial<TransactionFormState> = {
+        transaction: { master: {}, details: [] },
+      };
+      let billDisc = 0,
+        totalGross = 0,
+        itemGross = 0,
+        grossPerc = 0,
+        itemDisc = 0,
+        discPerc = 0;
+
+      let details = formState.transaction.details.filter(
+        (x) => x.productID > 0
+      );
+      billDisc = formState.transaction.master.billDiscount;
+      outState.transaction!.master!.billDiscount = 0;
+      // Calculate total gross for items with productID > 0
+      totalGross = formState.summary.gross;
+      // Apply discount to each item with productID > 0
+      if(details.length > 0) {
+      details.forEach((item, i) => {
+        itemGross = item.gross ?? 0;
+        grossPerc = (itemGross / totalGross) * 100;
+        itemDisc = (billDisc * grossPerc) / 100;
+        discPerc = round((itemDisc / itemGross) * 100, 5);
+
+        const detail = { slNo: item.slNo, discPerc: discPerc };
+        const updatedRow = calculateRowAmount(
+          item,
+          "discPerc",
+          { result: {transaction:{details:[detail]}} },
+          true
+        );
+        outState.transaction!.details!.push(updatedRow);
+        item = {...item, ...updatedRow}
+      });
+      const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
+        let totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+         if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+
+          dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: totalRes,
+          updateOnlyGivenDetailsColumns: true
+        })
+      );
+        }
+    }
+    } catch (ex: any) {
+      console.error("Error applying discounts:", ex);
+    }
   };
   return {
     clearEntryControl,

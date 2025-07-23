@@ -724,3 +724,17 @@ interface UnitByBatchDetailsDto {
   decimalPoints?: number;
   productBatchID?: number;
 }
+ export enum EmployeeType
+ {
+    All = "All",
+    Purchaser = "PUR",
+    SalesMan = "SMAN",
+    Receipt = "RPT",
+    Purchaser_SalesMan = "PURSMAN",
+    Purchaser_Receipt = "PURRPT",
+    SalesMan_Receipt = "SMANRPT",
+    Accountant = "ACCT",
+    Driver = "DV",
+    Deliveryman = "DMAN"
+
+ };

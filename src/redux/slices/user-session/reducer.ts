@@ -15,7 +15,7 @@ export interface BranchSelectDto {
 export enum Countries {
   India = 48,
   Saudi = 1,
-  Oman = 100,
+  Oman = 104,
   Qatar = 124,
   Kuwait = 118,
   UAE = 120,

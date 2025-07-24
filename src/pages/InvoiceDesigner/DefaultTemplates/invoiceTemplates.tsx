@@ -102,6 +102,8 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         label_font_color: "#000000",
         label_font_weight: 400,
         pageSize: "A4",
+        height:500,
+        width:500,
         padding: {
           top: 10,
           bottom: 10,

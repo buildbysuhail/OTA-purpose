@@ -8,6 +8,9 @@ export const PAGE_DIMENSIONS = {
     LETTER: { width: 612, height: 792 },
     LEGAL: { width: 612, height: 1008 },
     TABLOID: { width: 792, height: 1224 },
+    ROLL_2_INCH: { width: 144, height: 1000 },   // 2-inch roll
+    ROLL_3_INCH: { width: 216, height: 1000 },   // 3-inch roll
+    ROLL_4_INCH: { width: 288, height: 1000 },   // 4-inch roll
     CUSTOM: { width: 0, height: 0 }, // Placeholder for custom sizes
   }
   
@@ -24,10 +27,12 @@ export const PAGE_DIMENSIONS = {
     const upperCasePageSize = pageSize.toUpperCase() as PageSizeKey
   
     // Handle custom page size
-    if (upperCasePageSize === "CUSTOM" && (customWidth || customHeight)) {
+    if (upperCasePageSize === "CUSTOM") {
+      const defaultWidth = 500; 
+    const defaultHeight = 500; 
       return {
-        width: Number(customWidth) ,
-        height: Number(customHeight) ,
+        width: Number(customWidth??defaultWidth) ,
+        height: Number(customHeight??defaultHeight) ,
       }
     }
   

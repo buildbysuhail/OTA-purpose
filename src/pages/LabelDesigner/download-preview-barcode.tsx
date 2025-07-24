@@ -107,32 +107,117 @@ const pxToPoint = (px: number) => px * (72 / 96);
         return null;
     }
   };
-
+  const debugYourSizeCalculation = (template: any, chunkedData: any) => {
+  console.log('=== DEBUGGING YOUR EXACT SIZE CALCULATION ===');
+  
+  // Extract all the values first
+  const labelWidth = template?.barcodeState?.labelState?.labelWidth ?? 300;
+  const labelHeight = template?.barcodeState?.labelState?.labelHeight ?? 300;
+  const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 1;
+  const rowsPerPage = template?.barcodeState?.labelState?.rowsPerPage ?? 1;
+  const hgap = template?.barcodeState?.labelState?.gap?.hgap ?? 0;
+  const vgap = template?.barcodeState?.labelState?.gap?.vgap ?? 0;
+  
+  // Log all individual values with inch conversions
+  console.log('📊 Template Values:');
+  console.log('  labelWidth:', labelWidth, 'px =', (labelWidth * 0.75 / 72).toFixed(2), 'inches');
+  console.log('  labelHeight:', labelHeight, 'px =', (labelHeight * 0.75 / 72).toFixed(2), 'inches');
+  console.log('  columnsPerRow:', columnsPerRow);
+  console.log('  rowsPerPage:', rowsPerPage);
+  console.log('  hgap:', hgap, 'px =', (hgap * 0.75 / 72).toFixed(2), 'inches');
+  console.log('  vgap:', vgap, 'px =', (vgap * 0.75 / 72).toFixed(2), 'inches');
+  
+  // Log chunked data info
+  console.log('📋 Chunked Data:');
+  console.log('  chunkedData exists:', !!chunkedData);
+  console.log('  chunkedData[0] exists:', !!(chunkedData && chunkedData[0]));
+  console.log('  chunkedData[0].length:', chunkedData?.[0]?.length);
+  console.log('  chunkedData[0].length > 1:', chunkedData?.[0]?.length > 1);
+  console.log('  Total rows in chunkedData:', chunkedData?.length);
+  
+  // Calculate WIDTH step by step (your exact formula)
+  const widthPart1 = labelWidth * columnsPerRow;
+  console.log('🔢 WIDTH Calculation:');
+  console.log('  Part 1: labelWidth * columnsPerRow =', `${labelWidth} * ${columnsPerRow} =`, widthPart1, 'px =', (widthPart1 * 0.75 / 72).toFixed(2), 'inches');
+  
+  const hasMultipleColumns = chunkedData && chunkedData[0] && chunkedData[0].length > 1;
+  const widthPart2 = hasMultipleColumns 
+    ? (hgap * (chunkedData[0].length - 1))
+    : 0;
+  console.log('  Part 2: Gap calculation');
+  console.log('    Has multiple columns?', hasMultipleColumns);
+  if (hasMultipleColumns) {
+    console.log('    hgap * (chunkedData[0].length - 1) =', `${hgap} * (${chunkedData[0].length} - 1) =`, `${hgap} * ${chunkedData[0].length - 1} =`, widthPart2, 'px =', (widthPart2 * 0.75 / 72).toFixed(2), 'inches');
+  } else {
+    console.log('    Gap = 0 (single column or no data)');
+  }
+  
+  const totalWidth = widthPart1 + widthPart2;
+  console.log('  📏 TOTAL WIDTH:', `${widthPart1} + ${widthPart2} =`, totalWidth, 'px =', (totalWidth * 0.75 / 72).toFixed(2), 'inches');
+  
+  // Calculate HEIGHT step by step (your exact formula)
+  const heightPart1 = labelHeight * rowsPerPage;
+  console.log('🔢 HEIGHT Calculation:');
+  console.log('  Part 1: labelHeight * rowsPerPage =', `${labelHeight} * ${rowsPerPage} =`, heightPart1, 'px =', (heightPart1 * 0.75 / 72).toFixed(2), 'inches');
+  
+  const hasMultipleRows = template?.barcodeState?.labelState?.rowsPerPage && 
+                         template.barcodeState.labelState.rowsPerPage > 1;
+  const heightPart2 = hasMultipleRows 
+    ? (vgap * (template.barcodeState.labelState.rowsPerPage - 1))
+    : 0;
+  console.log('  Part 2: Gap calculation');
+  console.log('    Has multiple rows?', hasMultipleRows);
+  if (hasMultipleRows) {
+    console.log('    vgap * (rowsPerPage - 1) =', `${vgap} * (${rowsPerPage} - 1) =`, `${vgap} * ${rowsPerPage - 1} =`, heightPart2, 'px =', (heightPart2 * 0.75 / 72).toFixed(2), 'inches');
+  } else {
+    console.log('    Gap = 0 (single row)');
+  }
+  
+  const totalHeight = heightPart1 + heightPart2;
+  console.log('  📏 TOTAL HEIGHT:', `${heightPart1} + ${heightPart2} =`, totalHeight, 'px =', (totalHeight * 0.75 / 72).toFixed(2), 'inches');
+  
+  // Final results
+  console.log('🎯 FINAL RESULTS:');
+  console.log('  Page Width (pixels):', totalWidth);
+  console.log('  Page Height (pixels):', totalHeight);
+  console.log('  Page Width (points):', totalWidth * 0.75);
+  console.log('  Page Height (points):', totalHeight * 0.75);
+  console.log('  Page Width (inches):', (totalWidth * 0.75 / 72).toFixed(2));
+  console.log('  Page Height (inches):', (totalHeight * 0.75 / 72).toFixed(2));
+  
+  // Compare with what you see in preview
+  console.log('🔍 ANALYSIS & COMPARISON:');
+  console.log('  📊 COMPARISON TABLE:');
+  console.log('  ┌─────────────────────┬──────────────┬──────────────┐');
+  console.log('  │ Source              │ Width        │ Height       │');
+  console.log('  ├─────────────────────┼──────────────┼──────────────┤');
+  console.log(`  │ Your calculation    │ ${(totalWidth * 0.75 / 72).toFixed(2)}" │ ${(totalHeight * 0.75 / 72).toFixed(2)}" │`);
+  console.log('  │ PDF Preview shows   │ 11.01"       │ 15.60"       │');
+  console.log('  │ Should be (approx)  │ 2-3"         │ 4-5"         │');
+  console.log('  └─────────────────────┴──────────────┴──────────────┘');
+  
+  if (totalWidth > 1000 || totalHeight > 1000) {
+    console.log('  ❌ PROBLEM: Your template values are too large!');
+    console.log('  💡 SOLUTION: Reduce labelWidth/labelHeight in your template');
+    console.log('  🎯 SUGGESTED VALUES:');
+    console.log('    labelWidth: 100-150 px (instead of', labelWidth, 'px)');
+    console.log('    labelHeight: 80-120 px (instead of', labelHeight, 'px)');
+  }
+  
+  return {
+    width: totalWidth,
+    height: totalHeight,
+    widthPoints: totalWidth * 0.75,
+    heightPoints: totalHeight * 0.75
+  };
+};
+const calculatedSize = debugYourSizeCalculation(template, chunkedData);
   return (
     <Document>
       <FontRegistration />
       <Page size={{
-        width: (
-          (template?.barcodeState?.labelState?.labelWidth ?? 300) *
-          (template?.barcodeState?.labelState?.columnsPerRow ?? 1)
-        ) +
-          (
-            chunkedData &&
-              chunkedData[0] &&
-              chunkedData[0].length > 1
-              ? ((template?.barcodeState?.labelState?.gap?.hgap ?? 0) * (chunkedData[0].length - 1))
-              : 0
-          ),
-        height: (
-          (template?.barcodeState?.labelState?.labelHeight ?? 300) *
-          (template?.barcodeState?.labelState?.rowsPerPage ?? 1)
-        ) +
-          (
-            template?.barcodeState?.labelState?.rowsPerPage &&
-              template.barcodeState.labelState.rowsPerPage > 1
-              ? ((template?.barcodeState?.labelState?.gap?.vgap ?? 0) * (template.barcodeState.labelState.rowsPerPage - 1))
-              : 0
-          ),
+        width:calculatedSize.width,
+        height: calculatedSize.height,
       }} style={styles.page}>
         {chunkedData?.map((label: any, index: number) => (
           <View key={index}

@@ -39,7 +39,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const currentBranch = useCurrentBranch();
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
@@ -62,7 +61,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const previewWidth = orientedDimensions.width * scale;
   const previewHeight = orientedDimensions.height *scale ;
   // Validate templateGroup from searchParams
-  const validatedTemplateGroup = searchParams.get("template_group") || templateGroup;
+  const validatedTemplateGroup = templateGroup;
 
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
@@ -96,7 +95,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   // Filter design sections based on designer type
   useEffect(() => {
     if (validatedTemplateGroup && (accTransaction.includes(validatedTemplateGroup as VoucherType) || ["PARP", "RARP", "Cheque", "CBR"].includes(validatedTemplateGroup))) {
-      const sections = designerSectionsConfig[designerType] || designerSectionsConfig.standard;
+      const sections = designerSectionsConfig[templateKind] || designerSectionsConfig.standard;
       setDesignTabs(designSections.filter((section) => sections.includes(section.type)));
       setCurrentSection(designSections.find((section) => sections.includes(section.type)) || designSections[0]);
     }
@@ -145,6 +144,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
           ...templateData.activeTemplate.propertiesState,
           template_group: validatedTemplateGroup,
           template_kind: templateKind,
+          template_type:designerType,
         },
       };
 

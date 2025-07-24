@@ -149,7 +149,7 @@ interface RowData {
     rowIndex: number
   ) => void;
   useInSearch?: boolean;
-  useCodeSearch?: boolean;
+  searchByCodeAndName?: boolean;
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
@@ -648,7 +648,8 @@ const Row = React.memo(
                     searchKey={column.dataField}
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
-                    useCodeSearch={data.useCodeSearch}
+                    
+                    searchByCodeAndName={data.searchByCodeAndName}
                     onNextCellFind={data.nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
                       const res = {
@@ -1049,7 +1050,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     focusCurrentColumn,
   }));
 
-  const itemData = useMemo(
+  const itemData: RowData = useMemo(
     () => ({
       details: formState.transaction?.details || [],
       columns: formState.gridColumns || [],
@@ -1083,6 +1084,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       gridFontSize: gridFontSize || 14,
       gridIsBold: gridIsBold || false,
       rowHeight:rowHeight,
+      searchByCodeAndName: formState.userConfig?.enableItemCodeSearchInNameColumn
     }),
     [
       formState.transaction?.details,
@@ -1096,7 +1098,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       formState.currentCell,
       gridFontSize,
       gridIsBold,
-      rowHeight
+      rowHeight,
+      formState.userConfig?.enableItemCodeSearchInNameColumn
     ]
   );
 

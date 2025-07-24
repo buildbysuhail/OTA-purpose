@@ -310,6 +310,7 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
+  isValid?: boolean;
 }
 
 export interface TransactionDetails2 {
@@ -738,3 +739,13 @@ interface UnitByBatchDetailsDto {
     Deliveryman = "DMAN"
 
  };
+ export interface ExcelRowData {
+  Barcode: string;
+  Quantity: number;
+  Disc_per?: number;
+  Discount?: number;
+  MRP?: number;
+  SalesPrice: number;
+  PurchasePrice: number;
+  PartyName?: string;
+}

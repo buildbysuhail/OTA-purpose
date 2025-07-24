@@ -57,6 +57,7 @@ interface InputProps {
   noLabel?: boolean;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
+  searchByCodeAndName?: boolean;
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
@@ -206,6 +207,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       searchType = "grid",
       useInSearch = false,
       useCodeSearch = false,
+      searchByCodeAndName = true,
       advancedProductSearching = false,
       searchKey = "",
       rowIndex,
@@ -274,7 +276,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }
               payload.searchText = searchText;
             } else if (searchKey == "product") {
-              payload.searchByCodeAndName = true;
+              debugger;
+              payload.searchByCodeAndName = searchByCodeAndName;
               payload.searchByCode = false;
               if (value.trim() === "%") {
                 return null;
@@ -671,7 +674,9 @@ useEffect(() => {
             {searchType === "grid" && (
               <>
                 {showProductGrid && (
+                  
                   <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+                    
                     <DataGrid
                       ref={dataGridRef}
                       loadPanel={{ enabled: false }}

@@ -493,7 +493,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
               : 0,
             api.getAsync(
-              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${_drcr}`
+              `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
             ),
           ]);
           dispatch(

@@ -25,6 +25,8 @@ import {
   isNullOrUndefinedOrZero,
   isNullOrUndefinedOrEmpty,
   isEnterKey,
+  getExcelCellValue,
+  generateUniqueKey,
 } from "../../../../utilities/Utils";
 import { BillwiseData } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
@@ -56,6 +58,7 @@ import {
   DataAutoBarcode,
   FormElementsState,
   EmployeeType,
+  ExcelRowData,
 } from "./transaction-types";
 import {
   initialInventoryTotals,
@@ -70,7 +73,7 @@ import {
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
-import useDebounce from "./use-debounce";
+import ExcelJS from 'exceljs';
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -2167,7 +2170,8 @@ if(loadVType == "GRN") {
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
     commonParams: CommonParams,
-    proceedAll?: boolean
+    proceedAll?: boolean,
+    forImport?: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
 
@@ -2241,7 +2245,7 @@ if(loadVType == "GRN") {
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
         warehouseId = 0;
       }
-      if (res?.isShowItemPopUp) {
+      if (res?.isShowItemPopUp && forImport != true) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
@@ -2264,12 +2268,12 @@ if(loadVType == "GRN") {
       } else if (res?.products?.length === 1) {
         
         let product = res.products[0];
-        const _index = formState.transaction.details.findIndex(
+        const _index = forImport != true ? formState.transaction.details.findIndex(
           (x) =>
             x.barCode == product.autoBarcode &&
             x.productID > 0 &&
             x.slNo != detail.slNo
-        );
+        ): -1;
         if (
           product.autoBarcode != "" &&
           _index > -1 &&
@@ -2552,9 +2556,9 @@ if(loadVType == "GRN") {
 
 
         return result;
-      } else if (res?.products?.length > 1) {
+      } else if (res?.products?.length > 1 &&  forImport != true) {
         // Open BatchGrid 
-      } else {
+      } else if(forImport != true) {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn);
           setCurrentCell(res, data.detail as TransactionDetail);
       }
@@ -3016,85 +3020,109 @@ if(loadVType == "GRN") {
     }
   };
 
-  // Handle unit cycling when space is pressed on quantity column
-  // const handleUnitCycling = async (detail: any) => {
-  //   try {
-  //     const productBatchId = Number(detail.productBatchId || 0);
-  //     const currentUnitId = Number(detail.unitId || 0);
-
-  //     const batches = formState.batchesUnits?.filter(
-  //       (x: any) => x.productBatchID == productBatchId
-  //     );
-
-  //     // Get next unit ID (this would be an API call)
-  //     const nextUnitId = await getNextUnitId(productBatchId, currentUnitId);
-
-  //     if (currentUnitId !== nextUnitId) {
-  //       // Update unit information
-  //       const unitDetails = await getUnitDetails(productBatchId, nextUnitId);
-
-  //       if (unitDetails) {
-  //         detail.unitId = nextUnitId;
-  //         detail.unit = unitDetails.unitName;
-  //         detail.unitPrice = unitDetails.standardPurchasePrice;
-  //         detail.unitPriceTag = unitDetails.standardPurchasePrice;
-  //         detail.salesPrice = unitDetails.standardSalesPrice;
-  //         detail.minSalePrice = unitDetails.standardMinSalePrice;
-
-  //         // Handle actual sales price if visible
-  //         if (result.ui?.visibleColumns?.includes("actualSalesPrice")) {
-  //           detail.actualSalesPrice = detail.salesPrice;
-
-  //           try {
-  //             const otherUnitPrice = await getProductOtherUnitPrice(
-  //               productBatchId,
-  //               nextUnitId
-  //             );
-  //             if (otherUnitPrice > 0) {
-  //               detail.actualSalesPrice = otherUnitPrice;
-  //             }
-  //           } catch (error) {
-  //             console.error("Error getting other unit price:", error);
-  //           }
-  //         }
-
-  //         // Handle price category pricing
-  //         try {
-  //           const priceCategoryId = result.ui?.selectedPriceCategory || 0;
-  //           const priceCategoryPrice =
-  //             await getProductPriceCategoryPurchasePrice(
-  //               productBatchId,
-  //               priceCategoryId,
-  //               nextUnitId
-  //             );
-  //           if (priceCategoryPrice !== 0) {
-  //             detail.unitPrice = priceCategoryPrice;
-  //           }
-  //         } catch (error) {
-  //           console.error("Error getting price category price:", error);
-  //         }
-
-  //         // Calculate row amounts
-  //         const calculateResult = calculateRowAmount(
-  //           detail,
-  //           "slNo",
-  //           applicationSettings,
-  //           commonParams,
-  //           true
-  //         );
-  //         if (calculateResult?.transaction?.details?.[0]) {
-  //           result.transaction.details[rowIndex] =
-  //             calculateResult.transaction.details[0];
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in handleUnitCycling:", error);
-  //   }
-  // };
-
-  // Handle Enter key press
-
+  interface TemplateColumn {
+  header: string;
+  key: string;
+  width: number;
+}
+// Alternative version without sample data - just headers
+const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
+  debugger;
+  
+  try {
+    // Create a new workbook
+    const workbook = new ExcelJS.Workbook();
+    
+    // Set workbook properties
+    workbook.creator = 'Purchase Import System';
+    workbook.created = new Date();
+    
+    // Add Purchase worksheet
+    const worksheet = workbook.addWorksheet('Purchase', {
+      properties: {
+        tabColor: { argb: 'FF0070C0' }
+      }
+    });
+    
+    // Define columns
+    const columns: TemplateColumn[] = [
+      { header: 'Barcode', key: 'barcode', width: 15 },
+      { header: 'Quantity', key: 'quantity', width: 12 },
+      { header: 'Disc_per', key: 'discPerc', width: 12 },
+      { header: 'Discount', key: 'discount', width: 12 },
+      { header: 'MRP', key: 'mrp', width: 12 },
+      { header: 'SalesPrice', key: 'salesPrice', width: 15 },
+      { header: 'PurchasePrice', key: 'purchasePrice', width: 15 },
+      { header: 'PartyName', key: 'partyName', width: 20 }
+    ];
+    
+    // Set worksheet columns
+    worksheet.columns = columns.map(col => ({
+      header: col.header,
+      key: col.key,
+      width: col.width
+    }));
+    
+    // Style the header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.height = 25;
+    
+    columns.forEach((col, index) => {
+      const cell = headerRow.getCell(index + 1);
+      
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF4472C4' }
+      };
+      
+      cell.font = {
+        name: 'Calibri',
+        size: 12,
+        bold: true,
+        color: { argb: 'FFFFFFFF' }
+      };
+      
+      cell.alignment = {
+        vertical: 'middle',
+        horizontal: 'center'
+      };
+      
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FF000000' } },
+        left: { style: 'thin', color: { argb: 'FF000000' } },
+        bottom: { style: 'thin', color: { argb: 'FF000000' } },
+        right: { style: 'thin', color: { argb: 'FF000000' } }
+      };
+    });
+    
+    // Freeze the header row
+    worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+    
+    // Generate and download
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Purchase_Import_Template_${new Date().toISOString().split('T')[0]}.xlsx`;
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    // showSuccessMessage('Import template downloaded successfully!');
+    
+  } catch (ex: any) {
+    console.error('Error downloading import template:', ex);
+    // showErrorMessage("Template Download Error", ex.message || ex.toString(), "Download Failed");
+  }
+};
   return {
     undoEditMode,
     handleTextDataKeyDown,

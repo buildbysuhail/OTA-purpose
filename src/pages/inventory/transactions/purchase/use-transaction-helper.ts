@@ -4,6 +4,7 @@ import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import {
   CommonParams,
+  ExcelRowData,
   FormElementsState,
   SummaryItems,
   TransactionDetail,
@@ -16,6 +17,7 @@ import Urls from "../../../../redux/urls";
 import { DeepPartial } from "redux";
 import {
   generateUniqueKey,
+  getExcelCellValue,
   isNullOrUndefinedOrZero,
 } from "../../../../utilities/Utils";
 import {
@@ -27,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { useCallback } from "react";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -281,6 +284,7 @@ export const useTransactionHelper = (transactionType: string) => {
     }
     return result;
   };
+  
   const calculateRowAmount = (
     transactionDetail: TransactionDetail,
     currentColumn: keyof TransactionDetail,
@@ -1446,6 +1450,7 @@ export const useTransactionHelper = (transactionType: string) => {
       console.error("Error applying discounts:", ex);
     }
   };
+  
   return {
     clearEntryControl,
     setUserRightsFn,

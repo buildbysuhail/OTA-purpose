@@ -967,5 +967,27 @@ export const loadTemplateById = async (templateId:LoadTemplateParams) => {
     throw error;
   }
 };
-
+export const getExcelCellValue = (cell: any): string | null => {
+    if (!cell || cell.value === null || cell.value === undefined) {
+      return null;
+    }
+    
+    const value = cell.value;
+    
+    if (typeof value === 'string' || typeof value === 'number') {
+      return value.toString();
+    }
+    
+    // Handle formula cells
+    if (typeof value === 'object' && 'result' in value) {
+      return (value as any).result?.toString() || null;
+    }
+    
+    // Handle date cells
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    
+    return value?.toString() || null;
+  };
 

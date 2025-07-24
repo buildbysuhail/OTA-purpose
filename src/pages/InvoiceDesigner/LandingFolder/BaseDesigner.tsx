@@ -171,7 +171,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
               <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span>Template: {templateGroup}</span>
                 <div className="w-px h-3 bg-gray-300 dark:bg-gray-600" />
-                <span>Type: {designerType}</span>
+                <span>Type: {designerKind}</span>
               </div>
             </div>
           </div>

@@ -63,7 +63,7 @@ const ERPTab = ({ tabs, activeTab = 0, onClickTabAt, children }: ERPTabProps) =>
         }
 
       </div>
-      <div className="mt-4">
+      <div>
         {children && Array.isArray(children) && children[activeTab]}
       </div>
     </div>

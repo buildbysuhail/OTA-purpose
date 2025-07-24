@@ -180,7 +180,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     formState,
     appState,
     type,
-    rowHeight, 
+    rowHeight,
   }) => {
 
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
@@ -227,7 +227,7 @@ console.log(appState);
               : "#ffffff1a"
             : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
         );
-    
+
 
     useEffect(() => {
       setBgColor(appState.mode == "dark"
@@ -321,10 +321,10 @@ console.log(appState);
     return (
       <>
         {type == "cb" ? (
-         
+
 
          <ERPDataCombobox
-     
+
             options={options??[]}
             onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
@@ -343,8 +343,8 @@ console.log(appState);
             onKeyDown={handleKeyDown}
             localInputBox={mergedInputBox}
           />
-    
- 
+
+
         ):(
           <>
           <Input
@@ -454,7 +454,7 @@ const Row = React.memo(
   const customStyle = {
   ...formState.userConfig?.inputBoxStyle,
   inputSize: 'customize',
- inputHeight: (rowHeight) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
+ inputHeight: (rowHeight-1) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
       fontSize: data.gridFontSize ?? 13,
       fontWeight: data.gridIsBold ?700:400,
 } as inputBox;
@@ -625,6 +625,7 @@ const Row = React.memo(
                   data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
                   customStyle={customStyle}
+                  appState={appState.appState}
                     textAlign={column.alignment === "right" ? "right" : "left"}
                     rowIndex={index}
                     id={cellId}
@@ -779,7 +780,7 @@ const SummaryRow: React.FC<{
           maxHeight: `${rowHeight}px`,
           boxSizing: "border-box",
           borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
-          
+
           // the above border is the border of the footer
         }}
       >
@@ -973,7 +974,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   );
   const focusColumn = useCallback(
     (rowIndex: number, column: string) => {
-      
+
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );
@@ -1331,7 +1332,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   summaryConfig={summaryConfig}
                   gridFontSize={gridFontSize}
                   gridIsBold={gridIsBold}
-                  rowHeight={rowHeight} 
+                  rowHeight={rowHeight}
                 />
               </tfoot>
             )}

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
@@ -50,6 +50,7 @@ const SalesTab: React.FC<{ parm: any; transactionType: string; columns: DevGridC
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -80,6 +81,7 @@ const SalesOrderTab: React.FC<{ parm: any; transactionType: string; columns: Dev
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -110,6 +112,7 @@ const PurchaseTab: React.FC<{ parm: any; transactionType: string; columns: DevGr
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -140,6 +143,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -147,7 +151,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
 const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ isOpen, onClose, transactionType }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
-  const tabs = ["Item Details", "Transactions"];
+  const tabs = [t("item_details"), t("transactions")];
   const [productInfo, setProductInfo] = useState<ProductDisplayDto>(initialProductDisplayData);
   const [loading, setLoading] = useState({});
   const [showCurrentCustomer, setShowCurrentCustomer] = useState(false);
@@ -167,7 +171,26 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   });
   const [activeSubTab, setActiveSubTab] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const subTabs = ["Sales", "Sales Order", "Purchase", "Purchase Order"];
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const subTabs = [t("sales"), t("sales_order"), t("purchase"), t("purchase_order")];
+
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (isMenuOpen && 
+        menuRef.current && 
+        menuButtonRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        !menuButtonRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [isMenuOpen]);
 
   useEffect(() => {
     const data = formState.currentCell?.data;
@@ -194,7 +217,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
     () => [
       {
         dataField: "actions",
-        caption: t("Actions"),
+        caption: t("actions"),
         allowSearch: true,
         allowFiltering: false,
         fixed: true,
@@ -378,12 +401,18 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   const renderTransactionsTab = () => (
     <div className="p-2">
       <div className="flex items-center justify-end mb-2">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="mr-2">
-          <Menu className="w-5 h-5" />
-        </button>
+        <button
+  ref={menuButtonRef}
+  onClick={() => setIsMenuOpen(!isMenuOpen)}
+  className="p-2 rounded-md bg-white shadow-md hover:bg-gray-100 focus:outline-none transition duration-200"
+  aria-label="Toggle menu"
+>
+  <Menu className="w-5 h-5 text-gray-700" />
+</button>
+
       </div>
       {isMenuOpen && (
-        <div className="absolute top-[275px] right-[18px] bg-white p-4 shadow-lg rounded-md z-10">
+        <div ref={menuRef} className="absolute top-[252px] right-[9px] bg-white p-4 shadow-lg rounded-md z-10">
           <ERPCheckbox
             id="showCurrentCustomer"
             label={t("show_only_current_customer_transaction")}

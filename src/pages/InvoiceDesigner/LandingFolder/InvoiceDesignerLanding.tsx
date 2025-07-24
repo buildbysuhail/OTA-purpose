@@ -34,26 +34,30 @@ const InvoiceDesigner = () => {
   const templateGroup = searchParams.get("template_group") || "";
    const { templateKind,templateType} = (location.state as LocationState) || {};
 
-// Validate templateType and templateKind
-  const isValidTemplateType = (type: any): type is keyof DesignerConfigMap => {
-    return type && Object.keys(templateConfig).includes(type);
-  };
+  const groupKey = templateGroup;
+  const typeKey = templateType?.toUpperCase() ?? "STANDARD";
+  const kindsForMap = templateConfig[groupKey]?.[typeKey] || {};
+  const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
+  const config = templateConfig[groupKey]?.[typeKey]?.[kindKey];
+  
+console.log("🔍 Template Lookup Info", {
+  groupKey,
+  typeKey,
+  kindKey,
+  availableTypes: Object.keys(templateConfig[groupKey] || {}),
+  availableKinds: Object.keys(kindsForMap),
+  configExists: !!templateConfig[groupKey]?.[typeKey]?.[kindKey],
+});
+  
+  if (!config) {
+    throw new Error(`No config for group='${groupKey}', type='${typeKey}', kind='${kindKey}'`);
+  }
 
-  const isValidTemplateKind = (type: string, kind: any): kind is string => {
-    return kind && isValidTemplateType(type) && Object.keys(templateConfig[type]).includes(kind);
-  };
-
- const selectedTemplateType = isValidTemplateType(templateType) ? templateType : "Standard";
-  const selectedTemplateKind = isValidTemplateKind(selectedTemplateType, templateKind)
-    ? templateKind
-    : Object.keys(templateConfig[selectedTemplateType])[0] || "standard";
-
-  const config = templateConfig[selectedTemplateType][selectedTemplateKind];
 
   return (
     <div className="h-full">
         <BaseDesigner
-          designerType={templateType || "Standard"}
+          designerType={templateType || "STANDARD"}
           designerKind={templateKind ||"standard"}
           templateGroup={templateGroup} // Pass templateGroup explicitly
           templateComponent={config.PreviewComponent}

@@ -61,7 +61,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const previewWidth = orientedDimensions.width * scale;
   const previewHeight = orientedDimensions.height *scale ;
   // Validate templateGroup from searchParams
-  const validatedTemplateGroup = templateGroup;
+
 
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
@@ -93,13 +93,20 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   }, []);
 
   // Filter design sections based on designer type
+  // Filter design sections based on type & kind
   useEffect(() => {
-    if (validatedTemplateGroup && (accTransaction.includes(validatedTemplateGroup as VoucherType) || ["PARP", "RARP", "Cheque", "CBR"].includes(validatedTemplateGroup))) {
-      const sections = designerSectionsConfig[templateKind] || designerSectionsConfig.standard;
-      setDesignTabs(designSections.filter((section) => sections.includes(section.type)));
-      setCurrentSection(designSections.find((section) => sections.includes(section.type)) || designSections[0]);
+    if (templateGroup) {
+      const typeKey = designerType.toUpperCase();
+      const validKinds = designerSectionsConfig[typeKey] || {};
+      const sectionsForKind = validKinds[templateKind] || validKinds[Object.keys(validKinds)[0]] || [];
+      setDesignTabs(
+        designSections.filter((section) => sectionsForKind.includes(section.type))
+      );
+      setCurrentSection(
+        designSections.find((section) => sectionsForKind.includes(section.type)) || designSections[0]
+      );
     }
-  }, [validatedTemplateGroup, designerType]);
+  }, [templateGroup, designerType, templateKind]);
 
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
@@ -142,7 +149,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
         ...templateData.activeTemplate,
         propertiesState: {
           ...templateData.activeTemplate.propertiesState,
-          template_group: validatedTemplateGroup,
+          template_group: templateGroup,
           template_kind: templateKind,
           template_type:designerType,
         },
@@ -170,7 +177,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
       try {
         const res = await api.postAsync(Urls.templates, activeTemplate);
         handleResponse(res, () => {
-          navigate(`/templates?template_group=${validatedTemplateGroup}`);
+          navigate(`/templates?template_group=${templateGroup}`);
         });
       } catch (error) {
         console.error("Error saving template:", error);
@@ -179,7 +186,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
         setLoading(false);
       }
     },
-    [templateData, validatedTemplateGroup, templateKind, dispatch, navigate, t]
+    [templateData, templateGroup, templateKind, dispatch, navigate, t]
   );
 
   // Debounced save to prevent frequent updates
@@ -205,7 +212,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     t,
     id,
     navigate,
-    templateGroup: validatedTemplateGroup,
+    templateGroup: templateGroup,
     designTabs,
     currentSection,
     setCurrentSection,

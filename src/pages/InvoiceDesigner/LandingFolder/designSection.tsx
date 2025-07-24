@@ -40,92 +40,105 @@ export interface DesignerConfig {
   };
 }
 
-export type DesignerConfigMap = {
-  [templateType: string]: {
-    [templateKind: string]: DesignerConfig;
-  };
-};
+// Map: templateGroup -> templateType -> templateKind
+export type DesignerConfigMap = Record<
+  string,
+  Record<
+    string,
+    Record<string, DesignerConfig>
+  >
+>;
 export const templateConfig: DesignerConfigMap = {
-  Standard: {
-    standard: {
-        downloadComponent: <AccountDowTransactionsVoucher/>,
-        PreviewComponent:<AccountPrvTransactionsVoucher/>,
-        sections: {
-          transactions: AccStandardTransaction,
-          total: TotalStdDesigner,
-          others: () => null, // Placeholder for "others" section
-        },
-      },
-  // Add more templateKind configurations under Standard if needed
-    // e.g., anotherKind: { ... }
-},
-Premium: {
-  premium: {
-    downloadComponent: <AccountTransactionsTemplate />,
-     PreviewComponent:<AccountTransactionsTemplate />,
-    sections: {
-      transactions: AccPremiumTransaction,
-      table: TablePremiumDesigner,
-      total: TotalPremiumDesigner,
-      others: () => null,
-    },
-  },
-},
-Universal: {
-  universal: {
-    downloadComponent: <AccountTransactionsUniversal/>,
-     PreviewComponent:<AccountTransactionsUniversal/>,
-    sections: {
-      transactions: AccUniversalTransaction,
-      others: () => null,
-    },
-  },
-},
-Retail: {
-    retail: {
-      downloadComponent: <AccountTransactionsTemplate />, // Adjust as needed
-      PreviewComponent: <AccountTransactionsTemplate />, // Adjust as needed
-      sections: {
-        transactions: AccStandardTransaction, // Adjust as needed
-        total: TotalStdDesigner,
-        others: () => null,
+  SI: {
+    STANDARD: {
+      standard: {
+        downloadComponent: <AccountDowTransactionsVoucher />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccStandardTransaction, total: TotalStdDesigner, others: () => null },
       },
     },
-  },
- Advice: {
-    advice: {
-      downloadComponent: <AdviceTemplate />,
-      PreviewComponent: <AdviceTemplate />,
-      sections: {
-        transactions: AdviceTableDesigner,
-        total: () => null,
-        others: () => null,
+    PREMIUM: {
+      premium: {
+        downloadComponent: <AccountTransactionsTemplate />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, total: TotalPremiumDesigner, others: () => null },
       },
     },
-  },
-  Cheque: {
-    cheque: {
-      downloadComponent: <ChequeTemplate />,
-      PreviewComponent: <ChequeTemplate />,
-      sections: {
-        transactions: () => null,
-        total: () => null,
-        others: () => null,
+    UNIVERSAL: {
+      universal: {
+        downloadComponent: <AccountTransactionsUniversal />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccUniversalTransaction, others: () => null },
       },
     },
+    SPREDSHEET:{
+       spreadsheet:{
+        downloadComponent: <AccountTransactionsTemplate />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, total: TotalPremiumDesigner, others: () => null },
+    }
+    },
+   
+    RETAIL: {
+      "retail-standard": {
+        downloadComponent: <AccountTransactionsTemplate />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccStandardTransaction, total: TotalStdDesigner, others: () => null },
+      },
+      "2inch": {
+        downloadComponent: <AccountTransactionsTemplate />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccStandardTransaction, total: TotalStdDesigner, others: () => null },
+      },
+    },
+
   },
-  CustomerBalance: {
-    customerBalance: {
-      downloadComponent: <CustomerBalanceTemplateDesigner />,
-      PreviewComponent: <CustomerBalanceTemplateDesigner />,
-      sections: {
-        transactions: () => null,
-        total: () => null,
-        others: () => null,
+  CP:{
+    STANDARD: {
+      standard: {
+        downloadComponent: <AccountDowTransactionsVoucher />,
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccStandardTransaction, total: TotalStdDesigner, others: () => null },
+      },
+    },
+    PREMIUM: {
+      premium: {
+        downloadComponent: <AccountTransactionsTemplate />,
+        PreviewComponent: <AccountTransactionsTemplate />,
+        sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, total: TotalPremiumDesigner, others: () => null },
+      },
+    },
+    UNIVERSAL: {
+      universal: {
+        downloadComponent: <AccountTransactionsUniversal />,
+        PreviewComponent: <AccountTransactionsUniversal />,
+        sections: { transactions: AccUniversalTransaction, others: () => null },
       },
     },
   },
+      // ADVANCE: {
+    //   advice: {
+    //     downloadComponent: <AdviceTemplate />,
+    //     PreviewComponent: <AdviceTemplate />,
+    //     sections: { transactions: AdviceTableDesigner, total: () => null, others: () => null },
+    //   },
+    // },
+    // CHEQUE: {
+    //   cheque: {
+    //     downloadComponent: <ChequeTemplate />,
+    //     PreviewComponent: <ChequeTemplate />,
+    //     sections: { transactions: () => null, total: () => null, others: () => null },
+    //   },
+    // },
+    // CUSTOMERBALANCE: {
+    //   customerBalance: {
+    //     downloadComponent: <CustomerBalanceTemplateDesigner />,
+    //     PreviewComponent: <CustomerBalanceTemplateDesigner />,
+    //     sections: { transactions: () => null, total: () => null, others: () => null },
+    //   },
+    // },
 };
+
 export const designSections: DesignSectionType[] = [
   {
     id: 1,
@@ -171,13 +184,28 @@ export const designSections: DesignSectionType[] = [
   },
 ];
 
-export const designerSectionsConfig: Record<string, string[]> = {
-  standard: ["properties", "header&footer", "transactions", "total", "others"],
-  retail:["properties", "header&footer", "transactions", "table", "total", "others"],
-  premium: ["properties", "header&footer", "transactions", "table", "total", "others"],
-  universal: ["properties", "header&footer", "transactions", "others"],
-  advice: ["properties", "header&footer", "transactions", "total", "others"],
-  cheque: ["properties", "header&footer", "transactions", "total", "others"],
-  customerBalance: ["properties", "header&footer", "transactions", "total", "others"],
+// Now nested by templateType -> templateKind -> section types
+export const designerSectionsConfig: Record<string, Record<string, string[]>> = {
+  STANDARD: {
+    standard: ["properties", "header&footer", "transactions", "total", "others"],
+  },
+  PREMIUM: {
+    premium: ["properties", "header&footer", "transactions", "table", "total", "others"],
+  },
+  UNIVERSAL: {
+    universal: ["properties", "header&footer", "transactions", "others"],
+  },
+  RETAIL: {
+    "retail-standard": ["properties", "header&footer", "transactions", "table", "total", "others"],
+    "2inch": ["properties", "header&footer", "transactions", "table", "total", "others"],
+  },
+  ADVANCE: {
+    advice: ["properties", "header&footer", "transactions", "total", "others"],
+  },
+  CHEQUE: {
+    cheque: ["properties", "header&footer", "transactions", "total", "others"],
+  },
+  CUSTOMERBALANCE: {
+    customerBalance: ["properties", "header&footer", "transactions", "total", "others"],
+  },
 };
-

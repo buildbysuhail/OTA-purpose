@@ -35,7 +35,7 @@ const SalesTab: React.FC<{ parm: any; transactionType: string; columns: DevGridC
       method={ActionType.POST}
       gridHeader={t("sales")}
       gridId="sales-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -66,7 +66,7 @@ const SalesOrderTab: React.FC<{ parm: any; transactionType: string; columns: Dev
       method={ActionType.POST}
       gridHeader={t("sales_order")}
       gridId="sales-order-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -97,7 +97,7 @@ const PurchaseTab: React.FC<{ parm: any; transactionType: string; columns: DevGr
       method={ActionType.POST}
       gridHeader={t("purchase")}
       gridId="purchase-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -128,7 +128,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
       method={ActionType.POST}
       gridHeader={t("purchase_order")}
       gridId="purchase-order-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -176,21 +176,21 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   const subTabs = [t("sales"), t("sales_order"), t("purchase"), t("purchase_order")];
 
   useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (isMenuOpen && 
-        menuRef.current && 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen &&
+        menuRef.current &&
         menuButtonRef.current &&
         !menuRef.current.contains(event.target as Node) &&
         !menuButtonRef.current.contains(event.target as Node)) {
-      setIsMenuOpen(false);
-    }
-  };
+        setIsMenuOpen(false);
+      }
+    };
 
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
-  };
-}, [isMenuOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const data = formState.currentCell?.data;
@@ -225,24 +225,24 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         width: 1000,
         cellRender: (cellElement: any) => {
           return (
-            <div className="bg-gradient-to-r from-white to-gray-50 p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-200">
+            <div className="bg-gradient-to-r from-white to-gray-50 dark:from-dark-bg-card dark:to-dark-bg p-4 border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-200 dark:hover:border-dark-border">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <p className="text-gray-900 font-bold text-sm uppercase truncate max-w-xs cursor-pointer hover:text-[#2563EB] transition-colors duration-200" title={cellElement.data?.party}>
+                  <p className="text-gray-900 dark:text-dark-text font-bold text-sm uppercase truncate max-w-xs cursor-pointer hover:text-[#2563EB] dark:hover:text-[#93C5FD] transition-colors duration-200" title={cellElement.data?.party}>
                     {cellElement.data?.party?.length > 20 ? cellElement.data.party.slice(0, 20) + "..." : cellElement.data?.party}
                   </p>
-                  <p className="text-gray-600 text-xs mt-1.5 font-medium">
-                    <span className="bg-[#EFF6FF] text-[#1D4ED8] px-2 py-0.5 rounded-full text-xs font-semibold">{cellElement.data?.voucherNumber}</span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-gray-500">{cellElement.data?.date}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary text-xs mt-1.5 font-medium">
+                    <span className="bg-[#EFF6FF] dark:bg-[#1E3A8A] text-[#1D4ED8] dark:text-[#93C5FD] px-2 py-0.5 rounded-full text-xs font-semibold">{cellElement.data?.voucherNumber}</span>
+                    <span className="mx-2 text-gray-400 dark:text-dark-text-secondary">•</span>
+                    <span className="text-gray-500 dark:text-dark-text-secondary">{cellElement.data?.date}</span>
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <p className="text-gray-600 font-medium text-sm">
-                    {t("item_price")}: <span className="font-bold text-[#16A34A] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary font-medium text-sm">
+                    {t("item_price")}: <span className="font-bold text-[#16A34A] dark:text-[#4ADE80] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
                   </p>
-                  <p className="text-gray-600 font-medium text-xs mt-1.5">
-                    {t("quantity_sold")}: <span className="font-bold text-[#2563EB]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary font-medium text-xs mt-1.5">
+                    {t("quantity_sold")}: <span className="font-bold text-[#2563EB] dark:text-[#93C5FD]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
                   </p>
                 </div>
               </div>
@@ -402,13 +402,13 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
     <div className="p-2">
       <div className="flex items-center justify-end mb-2">
         <button
-  ref={menuButtonRef}
-  onClick={() => setIsMenuOpen(!isMenuOpen)}
-  className="p-2 rounded-md bg-white shadow-md hover:bg-gray-100 focus:outline-none transition duration-200"
-  aria-label="Toggle menu"
->
-  <Menu className="w-5 h-5 text-gray-700" />
-</button>
+          ref={menuButtonRef}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 rounded-md bg-white shadow-md hover:bg-gray-100 focus:outline-none transition duration-200"
+          aria-label="Toggle menu"
+        >
+          <Menu className="w-5 h-5 text-gray-700" />
+        </button>
 
       </div>
       {isMenuOpen && (

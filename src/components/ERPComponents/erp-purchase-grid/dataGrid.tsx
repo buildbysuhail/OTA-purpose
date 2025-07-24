@@ -17,8 +17,7 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import Input from "./erp-grid-input";
-import { GripVertical } from "lucide-react";
+import { EllipsisVertical, GripVertical } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
 import type {
@@ -35,7 +34,6 @@ import type {
   ColumnModel,
   FormElementState,
   TransactionDetail,
-  UserConfig,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
   formStateHandleFieldChange,
@@ -44,8 +42,9 @@ import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { generateUniqueKey } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
-import ERPSimpleCombobox, { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
+import { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
 import { inputBox } from "../../../redux/slices/app/types";
+import { useTranslation } from "react-i18next";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -185,57 +184,83 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-console.log(appState);
+    console.log(appState);
 
   const editCellComboBox:inputBox= formState?.userConfig?.inputBoxStyle
-  const gridBorderCol = formState?.userConfig?.gridBorderCol
-  const mergedInputBox: inputBox = {
-    inputStyle: "normal",
-    inputSize: "customize",
-    checkButtonInputSize: editCellComboBox?.checkButtonInputSize ?? "md",
-    inputHeight: (rowHeight-1) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
-    fontSize: gridFontSize ?? 13,
+    const gridBorderCol = formState?.userConfig?.gridBorderCol
+    const mergedInputBox: inputBox = {
+      inputStyle: "normal",
+      inputSize: "customize",
+      checkButtonInputSize: editCellComboBox?.checkButtonInputSize ?? "md",
+      inputHeight: (rowHeight - 0.6) / 16,
+      fontSize: gridFontSize ?? 13,
     fontWeight: gridIsBold?700:400,
-    labelFontSize: editCellComboBox?.labelFontSize ?? 11,
-    otherLabelFontSize: editCellComboBox?.otherLabelFontSize ?? 11,
-    inputBgColor: editCellComboBox?.inputBgColor,
-    buttonFocusBg: editCellComboBox?.buttonFocusBg,
-    borderColor: gridBorderCol,
+      labelFontSize: editCellComboBox?.labelFontSize ?? 11,
+      otherLabelFontSize: editCellComboBox?.otherLabelFontSize ?? 11,
+      inputBgColor: editCellComboBox?.inputBgColor,
+      buttonFocusBg: editCellComboBox?.buttonFocusBg,
+      borderColor: gridBorderCol,
     selectColor:editCellComboBox?.selectColor ,
-    fontColor: editCellComboBox?.fontColor,
-    labelColor: editCellComboBox?.labelColor,
-    borderFocus: editCellComboBox?.borderFocus,
-    borderRadius: 0,
+      fontColor: editCellComboBox?.fontColor,
+      labelColor: editCellComboBox?.labelColor,
+      borderFocus: editCellComboBox?.borderFocus,
+      borderRadius: 0,
     adjustA:  0,
-    adjustB: 0,
-    adjustC: 0,
-    adjustD: 0,
+      adjustB: 0,
+      adjustC: 0,
+      adjustD: 0,
     marginTop:  0,
     marginBottom:  0,
     focusForeColor: editCellComboBox?.focusForeColor ,
     focusBgColor: editCellComboBox?.focusBgColor ,
-    defaultBgColor: editCellComboBox?.defaultBgColor,
-    bold: editCellComboBox?.bold,
-  };
+      defaultBgColor: editCellComboBox?.defaultBgColor,
+      bold: editCellComboBox?.bold,
+    };
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
-     const [bgColor, setBgColor] = useState<string>(
-          appState.mode == "dark"
-            ? document.activeElement === inputRef.current
-              ? "#ffffff"
-              : "#ffffff1a"
-            : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
-        );
+    const [bgColor, setBgColor] = useState<string>(
+      appState.mode == "dark"
+        ? document.activeElement === inputRef.current
+          ? "#ffffff"
+          : "#ffffff1a"
+        : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
+    );
 
+    const [foreColor, setForeColor] = useState<string>(
+      appState.mode === "dark"
+        ? document.activeElement === inputRef.current
+          ? "#000000"
+          : "#ffffff"
+        : document.activeElement === inputRef.current ||
+          document.activeElement?.tagName.toUpperCase() === "DIV"
+          ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
+          : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+    );
 
     useEffect(() => {
       setBgColor(appState.mode == "dark"
-            ? document.activeElement === inputRef.current
-              ? "#ffffff"
-              : "#ffffff1a"
-            : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
-    }, [document.activeElement, inputRef.current]);
+        ? document.activeElement === inputRef.current
+          ? "#ffffff"
+          : "#ffffff1a"
+        : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
+      setForeColor(
+        appState.mode === "dark"
+          ? document.activeElement === inputRef.current
+            ? "#000000"
+            : "#ffffff"
+          : document.activeElement === inputRef.current ||
+            document.activeElement?.tagName.toUpperCase() === "DIV"
+            ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
+            : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+      );
+    }, [document.activeElement,
+    inputRef.current,
+    appState.mode,
+    mergedInputBox?.focusBgColor,
+    mergedInputBox?.defaultBgColor,
+    mergedInputBox?.focusForeColor,
+    mergedInputBox?.fontColor,]);
 
     useEffect(() => {
       setLocalValue(value?.toString());
@@ -303,10 +328,10 @@ console.log(appState);
 
       onKeyDown(e, column, rowIndex);
     };
-       // Common style for consistent height
+    // Common style for consistent height
     const cellStyle = {
-      height: `${rowHeight}px`,
-      minHeight: `${rowHeight}px`,
+      height: `${rowHeight - 0.6}px`,
+      minHeight: `${rowHeight - 0.6}px`,
       maxHeight: `${rowHeight}px`,
       lineHeight: "normal",
       fontSize: `${gridFontSize}px`,
@@ -323,7 +348,7 @@ console.log(appState);
         {type == "cb" ? (
 
 
-         <ERPDataCombobox
+          <ERPDataCombobox
 
             options={options??[]}
             onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
@@ -347,29 +372,30 @@ console.log(appState);
 
         ):(
           <>
-          <input
-            ref={inputRef}
-            id={`${gridId}_${column.dataField}_${rowIndex}`}
-            type={column.dataType === "number" ? "text" : "text"}
-            className="bg-transparent border-none focus:ring-0 focus:outline-none  "
-            style={{
-             ...cellStyle,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              backgroundColor: bgColor,
-              border: "none",
-              width: "100%"
-            }}
-            value={localValue}
-            readOnly={column.readOnly}
-            onInput={handleInput}
-            onFocus={handleFocus}
-            onBlur={onBlur}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
+            <input
+              ref={inputRef}
+              id={`${gridId}_${column.dataField}_${rowIndex}`}
+              type={column.dataType === "number" ? "text" : "text"}
+              className="bg-transparent border-none focus:ring-0 focus:outline-none  "
+              style={{
+                ...cellStyle,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                backgroundColor: bgColor,
+                color: foreColor,
+                border: "none",
+                width: "100%"
+              }}
+              value={localValue}
+              readOnly={column.readOnly}
+              onInput={handleInput}
+              onFocus={handleFocus}
+              onBlur={onBlur}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
 
-          />
+            />
           </>
         )}
       </>
@@ -425,53 +451,53 @@ const Row = React.memo(
       if (document.activeElement?.closest(".dx-datagrid")) return;
       setFocusedColumn(null);
     }, []);
-  // Common cell content style for consistent height
-  const getCellContentStyle = (column: ColumnModel) => ({
-    fontSize: `${data.gridFontSize}px`,
-    fontWeight: data.gridIsBold ? "bold" : "normal",
-    height: `${rowHeight}px`,
-    minHeight: `${rowHeight}px`,
-    maxHeight: `${rowHeight}px`,
-    lineHeight: "normal",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
-    textAlign: column.alignment || "center",
-    whiteSpace: "nowrap" as const,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    width: "100%",
-    WebkitUserSelect: "none" as const,
-    MozUserSelect: "none" as const,
-    msUserSelect: "none" as const,
-    caretColor: "transparent",
-    outline: "none",
-    paddingLeft: "4px",
-    paddingRight: "4px",
-    boxSizing: "border-box" as const,
-  })
+    // Common cell content style for consistent height
+    const getCellContentStyle = (column: ColumnModel) => ({
+      fontSize: `${data.gridFontSize}px`,
+      fontWeight: data.gridIsBold ? "bold" : "normal",
+      height: `${rowHeight}px`,
+      minHeight: `${rowHeight}px`,
+      maxHeight: `${rowHeight}px`,
+      lineHeight: "normal",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
+      textAlign: column.alignment || "center",
+      whiteSpace: "nowrap" as const,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      width: "100%",
+      WebkitUserSelect: "none" as const,
+      MozUserSelect: "none" as const,
+      msUserSelect: "none" as const,
+      caretColor: "transparent",
+      outline: "none",
+      paddingLeft: "4px",
+      paddingRight: "4px",
+      boxSizing: "border-box" as const,
+    })
 
-  const customStyle = {
-  ...formState.userConfig?.inputBoxStyle,
-  inputSize: 'customize',
- inputHeight: (rowHeight-1) / 16, // Convert pixels to rem (e.g., 33px / 16 = 2.0625)
+    const customStyle = {
+      ...formState.userConfig?.inputBoxStyle,
+      inputSize: 'customize',
+      inputHeight: (rowHeight - 0.6) / 16,
       fontSize: data.gridFontSize ?? 13,
       fontWeight: data.gridIsBold ?700:400,
-} as inputBox;
+    } as inputBox;
 
 
     const handleKeyDown = useCallback(
-    (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
-      const target = e.target as HTMLElement
-      if (!target.id) return
+      (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
+        const target = e.target as HTMLElement
+        if (!target.id) return
 
-      const visibleColumns = data.columns.filter((col) => col.visible != false && col.dataField != null)
-      const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
+        const visibleColumns = data.columns.filter((col) => col.visible != false && col.dataField != null)
+        const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
 
-     if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-        data.onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
-        return
-      }
+        if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
+          data.onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
+          return
+        }
 
         let shouldNavigate = true;
         if (target.tagName === "INPUT" || target.querySelector("input")) {
@@ -485,48 +511,48 @@ const Row = React.memo(
             const effectiveStart = selectionStart ?? 0;
             const effectiveEnd = selectionEnd ?? 0;
             if (
-                e.key === "ArrowRight" &&
-                (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)
-              ) {
-                shouldNavigate = false
-              } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
-                shouldNavigate = false
-              }
+              e.key === "ArrowRight" &&
+              (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)
+            ) {
+              shouldNavigate = false
+            } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
+              shouldNavigate = false
             }
           }
+        }
 
         if (!shouldNavigate) return;
 
         e.preventDefault();
-          switch (e.key) {
-            case "ArrowRight":
-              if (currentColumnIndex < visibleColumns.length - 1) {
-                const res = data.focusCell(index, currentColumnIndex + 1)
-                setCurrentCell(res)
-              }
-              break
-            case "ArrowLeft":
-              if (currentColumnIndex > 1) {
-                const res = data.focusCell(index, currentColumnIndex - 1)
-                setCurrentCell(res)
-              }
-              break
-            case "ArrowUp":
-              {
-                const res = data.focusCell(index - 1, currentColumnIndex)
-                setCurrentCell(res)
-              }
-              break
-            case "ArrowDown":
-              {
-                const res = data.focusCell(index + 1, currentColumnIndex)
-                setCurrentCell(res)
-              }
-              break
+        switch (e.key) {
+          case "ArrowRight":
+            if (currentColumnIndex < visibleColumns.length - 1) {
+              const res = data.focusCell(index, currentColumnIndex + 1)
+              setCurrentCell(res)
             }
-          },
-          [data],
-        )
+            break
+          case "ArrowLeft":
+            if (currentColumnIndex > 1) {
+              const res = data.focusCell(index, currentColumnIndex - 1)
+              setCurrentCell(res)
+            }
+            break
+          case "ArrowUp":
+            {
+              const res = data.focusCell(index - 1, currentColumnIndex)
+              setCurrentCell(res)
+            }
+            break
+          case "ArrowDown":
+            {
+              const res = data.focusCell(index + 1, currentColumnIndex)
+              setCurrentCell(res)
+            }
+            break
+        }
+      },
+      [data],
+    )
 
     return (
       <tr
@@ -616,16 +642,16 @@ const Row = React.memo(
                     ></div>
                   </div>
                 ) : column.dataField === "slNo" ? (
-                 <div style={getCellContentStyle(column)} id={cellId}>
-                  {index + 1}
-                </div>
+                  <div style={getCellContentStyle(column)} id={cellId}>
+                    {index + 1}
+                  </div>
                 ) : (column.dataField === "product" || column.dataField === "pCode") &&
                   !column.readOnly &&
                   data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
                   <ERPProductSearch
-                  customStyle={customStyle}
-                  appState={appState.appState}
+                    customStyle={customStyle}
+                    appState={appState.appState}
                     textAlign={column.alignment === "right" ? "right" : "left"}
                     rowIndex={index}
                     id={cellId}
@@ -637,7 +663,7 @@ const Row = React.memo(
                     }
                     noLabel={true}
                     showCheckBox={false}
-                   contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
+                    contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
                     value={(cellValue as string) || ""}
                     productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
                     batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
@@ -648,7 +674,7 @@ const Row = React.memo(
                     searchKey={column.dataField}
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
-                    
+
                     searchByCodeAndName={data.searchByCodeAndName}
                     onNextCellFind={data.nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
@@ -671,7 +697,7 @@ const Row = React.memo(
                   />
                 ) : column.dataField === "product" && !column.readOnly ? (
                   <div
-                  style={getCellContentStyle(column)}
+                    style={getCellContentStyle(column)}
                     id={cellId}
                     tabIndex={0}
                     // className="w-full h-full flex items-center px-1 cursor-default"
@@ -683,10 +709,10 @@ const Row = React.memo(
                   </div>
                 ) : column.dataField === "status" ? (
                   <div
-                  style={{
-                    ...getCellContentStyle(column),
-                    justifyContent: "center",
-                  }}
+                    style={{
+                      ...getCellContentStyle(column),
+                      justifyContent: "center",
+                    }}
                     id={cellId}
                     tabIndex={0}
                     className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
@@ -730,7 +756,7 @@ const Row = React.memo(
                   />
                 ) : (
                   <div
-                   style={getCellContentStyle(column)}
+                    style={getCellContentStyle(column)}
                     id={cellId}
                     tabIndex={0}
                     // className="w-full h-full flex items-center px-1 cursor-default"
@@ -871,6 +897,19 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     (state: RootState) => state.ApplicationSettings
   );
   const dispatch = useAppDispatch();
+  const { t } = useTranslation('transaction')
+  const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
+  const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+  const openGridMenu = () => {
+    setIsGridMenuOpen(true);
+  }
+
+  const closeGridMenu = () => {
+    setIsGridMenuOpen(false);
+  }
 
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
@@ -1146,17 +1185,56 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
     >
       <div className={`relative ${className} w-full overflow-hidden`}>
-        <div
-          className={`absolute top-[-7px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}
-        >
-          <GridPreferenceChooser
+        <div className={`absolute top-[7px] ${appState.dir === "ltr" ? "left-[6px]" : "right-[3px]"} z-20`}>
+          {/* <GridPreferenceChooser
             ref={preferenceChooserRef}
             gridId={gridId}
             columns={(formState.gridColumns ?? [])as DevGridColumn[]}
             onApplyPreferences={onApplyPreferences}
             showChooserOnGridHead
             eclipseClass="m-0 p-0"
-          />
+          /> */}
+          {/* <button onClick={openGridMenu}>
+            <EllipsisVertical />
+          </button> */}
+          <div className="relative">
+            <button
+              ref={buttonRef}
+              onClick={() => setIsGridMenuOpen((prev: any) => !prev)}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors`}
+              title={t("previous_page")}
+            >
+              <EllipsisVertical className="w-5 h-5 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+
+            {isGridMenuOpen && (
+              <div
+                ref={popupRef}
+                className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+                style={{
+                  top: "26px",
+                  left: "-5px",
+                  width: "251px",
+                  marginTop: "8px",
+                }}
+              >
+                <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
+                  <ul className="space-y-1">
+                    <li>
+                      <GridPreferenceChooser
+                          ref={preferenceChooserRef}
+                          gridId={gridId}
+                          columns={(formState.gridColumns ?? [])as DevGridColumn[]}
+                          onApplyPreferences={onApplyPreferences}
+                          showChooserOnGridHead
+                          eclipseClass="m-0 p-0"
+                        />
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="w-full overflow-x-auto scrollbar sticky top-0 z-10">

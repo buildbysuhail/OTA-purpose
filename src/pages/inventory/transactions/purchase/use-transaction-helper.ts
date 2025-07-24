@@ -304,6 +304,8 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       // Initialize variables with proper null checks and defaults
+
+      transactionDetail = {...transactionDetail, ...detail}
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);
       let rate = Number(transactionDetail.unitPrice || 0);
@@ -1371,7 +1373,8 @@ export const useTransactionHelper = (transactionType: string) => {
         : master.prevTransDate;
     return formState.transaction.master;
   };
-  const btnApplyDiscountsToItems_Click = (): void => {
+  const     applyDiscountsToItems = (): void => {
+    debugger;
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
@@ -1405,8 +1408,10 @@ export const useTransactionHelper = (transactionType: string) => {
           { result: {transaction:{details:[detail]}} },
           true
         );
-        outState.transaction!.details!.push(updatedRow);
-        item = {...item, ...updatedRow}
+        if(updatedRow?.transaction?.details?.length??0 > 0) {
+        outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
+        item = {...item, ...updatedRow.transaction!.details![0]}
+        }
       });
       const summaryRes = calculateSummary(details, formState, {
           result: {},
@@ -1424,6 +1429,8 @@ export const useTransactionHelper = (transactionType: string) => {
          if (totalRes) {
           totalRes.summary = summaryRes.summary;
           totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
           totalRes.transaction.details = outState?.transaction
             ?.details as TransactionDetail[];
 
@@ -1454,5 +1461,6 @@ export const useTransactionHelper = (transactionType: string) => {
     refactorDetails,
     attachDetails,
     attachMaster,
+        applyDiscountsToItems
   };
 };

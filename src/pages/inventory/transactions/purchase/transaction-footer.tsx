@@ -41,6 +41,7 @@ interface TransactionFooterProps {
   isDropUpOpen: boolean;
   toggleDropup: () => void;
   footerLayout: "horizontal" | "vertical";
+  applyDiscountsToItems: any;
 }
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
@@ -57,6 +58,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   isDropUpOpen,
   toggleDropup,
   footerLayout,
+  applyDiscountsToItems,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -343,6 +345,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   t={t}
                   handleKeyDown={handleKeyDown}
                   footerLayout={footerLayout}
+                  applyDiscountsToItems={applyDiscountsToItems}
                 />
               </div>
             </div>

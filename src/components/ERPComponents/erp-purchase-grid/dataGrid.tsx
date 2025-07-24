@@ -225,7 +225,7 @@ console.log(appState);
             ? document.activeElement === inputRef.current
               ? "#ffffff"
               : "#ffffff1a"
-            : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
+            : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
         );
 
 
@@ -234,7 +234,7 @@ console.log(appState);
             ? document.activeElement === inputRef.current
               ? "#ffffff"
               : "#ffffff1a"
-            : `${document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
+            : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
     }, [document.activeElement, inputRef.current]);
 
     useEffect(() => {
@@ -347,21 +347,21 @@ console.log(appState);
 
         ):(
           <>
-          <Input
+          <input
             ref={inputRef}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
-            noLabel
             type={column.dataType === "number" ? "text" : "text"}
             className="bg-transparent border-none focus:ring-0 focus:outline-none  "
-            inputStyle={{
+            style={{
              ...cellStyle,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
               backgroundColor: bgColor,
+              border: "none",
+              width: "100%"
             }}
             value={localValue}
-            noBorder
             readOnly={column.readOnly}
             onInput={handleInput}
             onFocus={handleFocus}

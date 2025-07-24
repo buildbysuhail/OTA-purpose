@@ -404,6 +404,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
+        applyDiscountsToItems
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -2277,6 +2278,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     (!formState.transactionLoading &&
                       formState.userConfig?.footerPosition === "right")) && (
                     <TransactionFooter
+                    applyDiscountsToItems={applyDiscountsToItems}
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
@@ -2418,6 +2420,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   }
                 />
                 <TransactionFooter
+                applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
                   dispatch={dispatch}
                   t={t}

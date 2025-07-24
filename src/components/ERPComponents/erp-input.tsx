@@ -4,7 +4,7 @@ import { setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { inputBox } from "../../redux/slices/app/types";
 
 // Mocking the ERPElementValidationMessage component
@@ -57,6 +57,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   noLabel?: boolean;
   noBorder?: boolean;
   showCustomNumberChanger?: boolean;
+  numberChangerStyle?: "vertical" | "horizontal";
   labelDirection?: "horizontal" | "vertical";
   labelInfo?: any;
   labelInfoProps?: any;
@@ -156,6 +157,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       noLabel,
       noBorder,
       showCustomNumberChanger,
+      numberChangerStyle,
       labelDirection = "vertical",
       labelInfo,
       labelInfoProps,
@@ -950,10 +952,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     }px`,
                   backgroundColor: bgColor,
                   textAlign:inputTextAlign,
-                  paddingRight:
-                    type === "number" && showCustomNumberChanger
-                      ? "16px"
-                      : type === "number"?"20px":undefined,
+                  paddingLeft: type === "number" && showCustomNumberChanger && numberChangerStyle === "horizontal" ? "28px" : undefined,
+                  paddingRight: type === "number" && showCustomNumberChanger
+                    ? numberChangerStyle === "horizontal"
+                      ? "33px"
+                      : "16px"
+                    : type === "number"
+                      ? "20px"
+                      : undefined,
+                  width: "100%",
+                  border: `1px solid ${borderStyles}`,
                   ...(type === "number" && {
                         "-moz-appearance": "number-input", // Firefox
                         "-webkit-appearance": "number-input", // WebKit (though limited effect)
@@ -1004,7 +1012,80 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   <LoadingBar />
                 </LoadingContainer>
               )}
-              {showCustomNumberChanger && (
+          {showCustomNumberChanger && numberChangerStyle === 'horizontal' ? (
+            <>
+              <button
+                type="button"
+                className={`absolute left-0 top-0 h-full flex items-center justify-center w-7 
+                  dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg  bg-[#f9f9f9] hover:bg-gray-100
+                  ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
+                onClick={() => {
+                  if (disabled) return;
+                  const currentValue = parseFloat(value as string) || 0;
+                  const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
+                  if (min === undefined || newValue >= parseFloat(min.toString())) {
+                    const event = {
+                      isCustomNumberChangerEvent: true,
+                      target: { value: newValue.toString() },
+                      mode: "down",
+                    } as any;
+                    handleChange(event);
+                  }
+                }}
+                style={{
+                  borderTop: `1px solid ${borderStyles}`,
+                  borderBottom: `1px solid ${borderStyles}`,
+                  borderLeft: `1px solid ${borderStyles}`,
+                  // backgroundColor: bgColor,
+                  borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                  borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                }}
+              >
+                <ChevronLeft 
+                  className={`h-4 w-4 transition-colors duration-200 
+                    ${disabled 
+                      ? 'text-gray-400 dark:text-gray-600' 
+                      : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                    }`}
+                />
+              </button>
+              <button
+                type="button"
+                className={`absolute right-0 top-0 h-full flex items-center justify-center w-7
+                  dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100
+                  ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
+                onClick={() => {
+                  if (disabled) return;
+                  const currentValue = parseFloat(value as string) || 0;
+                  const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
+                  if (max === undefined || newValue <= parseFloat(max.toString())) {
+                    const event = {
+                      isCustomNumberChangerEvent: true,
+                      target: { value: newValue.toString() },
+                      mode: "up",
+                    } as any;
+                    handleChange(event);
+                  }
+                }}
+                style={{
+                  borderTop: `1px solid ${borderStyles}`,
+                  borderBottom: `1px solid ${borderStyles}`,
+                  borderRight: `1px solid ${borderStyles}`,
+                  // backgroundColor: bgColor,
+                  borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                  borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                }}
+              >
+                <ChevronRight 
+                  className={`h-4 w-4 transition-colors duration-200
+                    ${disabled 
+                      ? 'text-gray-400 dark:text-gray-600' 
+                      : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                    }`}
+                />
+              </button>
+            </>
+          ) : showCustomNumberChanger ? (
                 <div
                   className="absolute right-0 top-0 flex flex-col border-l dark:border-dark-border border-gray-300 m-[2px]"
                   style={{
@@ -1060,7 +1141,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
                       //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
                       // }}
-                    />
+                  />
                   </button>
                   <button
                     type="button"
@@ -1097,10 +1178,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
                       //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
                       // }}
-                    />
+                  />
                   </button>
                 </div>
-              )}
+              ) : null}
             </div>
             {suffix && (
               <div

@@ -78,6 +78,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   localInputBox?: inputBox; // Local styling preferences
   boldInput?: boolean;
   contextClassName?: string;
+  customButton?: React.ReactNode;
 }
 
 const LoadingContainer = styled("div")`
@@ -159,6 +160,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       labelInfo,
       labelInfoProps,
       prefix,
+      customButton,
       suffix,
       step,
       accept,
@@ -889,6 +891,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             </div>
 
           <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`}>
+            {customButton && (
+            <div style={{ height, marginRight: "7px" }}>
+             {customButton}
+            </div>
+            )}
             {prefix && (
               <div
                 onClick={onClickPrefix}

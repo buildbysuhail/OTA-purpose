@@ -62,7 +62,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
         <button
           type="button"
           style={{
-            background: "#d32828",
+            background: "#8080809c",
             border: "none",
             borderRadius: "6px 6px 6px 6px",
             padding: "0px 0px",

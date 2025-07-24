@@ -39,25 +39,27 @@ export interface DesignerConfig {
     others?: ComponentType<any>;
   };
 }
-export type DesignerConfigMap = {
-  standard: DesignerConfig;
-  premium: DesignerConfig;
-  universal: DesignerConfig;
-  advice: DesignerConfig;
-  cheque: DesignerConfig;
-  customerBalance: DesignerConfig;
-};
 
+export type DesignerConfigMap = {
+  [templateType: string]: {
+    [templateKind: string]: DesignerConfig;
+  };
+};
 export const templateConfig: DesignerConfigMap = {
- standard: {
-    downloadComponent: <AccountDowTransactionsVoucher/>,
-    PreviewComponent:<AccountPrvTransactionsVoucher/>,
-    sections: {
-      transactions: AccStandardTransaction,
-      total: TotalStdDesigner,
-      others: () => null, // Placeholder for "others" section
-    },
-  },
+  Standard: {
+    standard: {
+        downloadComponent: <AccountDowTransactionsVoucher/>,
+        PreviewComponent:<AccountPrvTransactionsVoucher/>,
+        sections: {
+          transactions: AccStandardTransaction,
+          total: TotalStdDesigner,
+          others: () => null, // Placeholder for "others" section
+        },
+      },
+  // Add more templateKind configurations under Standard if needed
+    // e.g., anotherKind: { ... }
+},
+Premium: {
   premium: {
     downloadComponent: <AccountTransactionsTemplate />,
      PreviewComponent:<AccountTransactionsTemplate />,
@@ -68,6 +70,8 @@ export const templateConfig: DesignerConfigMap = {
       others: () => null,
     },
   },
+},
+Universal: {
   universal: {
     downloadComponent: <AccountTransactionsUniversal/>,
      PreviewComponent:<AccountTransactionsUniversal/>,
@@ -76,31 +80,49 @@ export const templateConfig: DesignerConfigMap = {
       others: () => null,
     },
   },
-  advice: {
-    downloadComponent: <AdviceTemplate />,
-     PreviewComponent:<AdviceTemplate />,
-    sections: {
-      transactions: AdviceTableDesigner,
-      total: () => null, // Placeholder for "total" section
-      others: () => null,
+},
+Retail: {
+    retail: {
+      downloadComponent: <AccountTransactionsTemplate />, // Adjust as needed
+      PreviewComponent: <AccountTransactionsTemplate />, // Adjust as needed
+      sections: {
+        transactions: AccStandardTransaction, // Adjust as needed
+        total: TotalStdDesigner,
+        others: () => null,
+      },
     },
   },
-  cheque: {
-    downloadComponent: <ChequeTemplate />,
-     PreviewComponent:<ChequeTemplate />,
-    sections: {
-      transactions: () => null, // Placeholder for cheque-specific designer
-      total: () => null,
-      others: () => null,
+ Advice: {
+    advice: {
+      downloadComponent: <AdviceTemplate />,
+      PreviewComponent: <AdviceTemplate />,
+      sections: {
+        transactions: AdviceTableDesigner,
+        total: () => null,
+        others: () => null,
+      },
     },
   },
-  customerBalance: {
-    downloadComponent: <CustomerBalanceTemplateDesigner />,
-     PreviewComponent:<CustomerBalanceTemplateDesigner />,
-    sections: {
-      transactions: () => null,
-      total: () => null,
-      others: () => null,
+  Cheque: {
+    cheque: {
+      downloadComponent: <ChequeTemplate />,
+      PreviewComponent: <ChequeTemplate />,
+      sections: {
+        transactions: () => null,
+        total: () => null,
+        others: () => null,
+      },
+    },
+  },
+  CustomerBalance: {
+    customerBalance: {
+      downloadComponent: <CustomerBalanceTemplateDesigner />,
+      PreviewComponent: <CustomerBalanceTemplateDesigner />,
+      sections: {
+        transactions: () => null,
+        total: () => null,
+        others: () => null,
+      },
     },
   },
 };
@@ -151,10 +173,11 @@ export const designSections: DesignSectionType[] = [
 
 export const designerSectionsConfig: Record<string, string[]> = {
   standard: ["properties", "header&footer", "transactions", "total", "others"],
-  // premium: ["properties", "header&footer", "transactions", "table", "total", "others"],
-  // universal: ["properties", "header&footer", "transactions", "others"],
-  // advice: ["properties", "header&footer", "transactions", "total", "others"],
-  // cheque: ["properties", "header&footer", "transactions", "total", "others"],
-  // customerBalance: ["properties", "header&footer", "transactions", "total", "others"],
+  retail:["properties", "header&footer", "transactions", "table", "total", "others"],
+  premium: ["properties", "header&footer", "transactions", "table", "total", "others"],
+  universal: ["properties", "header&footer", "transactions", "others"],
+  advice: ["properties", "header&footer", "transactions", "total", "others"],
+  cheque: ["properties", "header&footer", "transactions", "total", "others"],
+  customerBalance: ["properties", "header&footer", "transactions", "total", "others"],
 };
 

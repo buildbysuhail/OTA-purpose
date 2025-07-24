@@ -11,13 +11,14 @@ import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar"
 
 interface BaseDesignerProps {
   designerType: string
+  designerKind:string
   templateGroup: string
   templateComponent: React.ReactElement
   sections: Record<string, React.ComponentType>
 }
 
 const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
-  ({ templateGroup, designerType, templateComponent, sections }) => {
+  ({ templateGroup, designerType, designerKind,templateComponent, sections }) => {
     const {
       t,
       navigate,
@@ -37,7 +38,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       dispatch,
       previewWidth,
       previewHeight,
-    } = useTemplateDesigner({ templateGroup, templateKind: designerType, designerType })
+    } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
 
     const SectionComponent = currentSection ? sections[currentSection.type] : null
 

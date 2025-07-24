@@ -6,9 +6,12 @@ import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { ChevronUp } from "lucide-react";
 
 interface BillDiscountInputProps extends VoucherElementProps {
-  handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
+  handleKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: string
+  ) => void;
   dispatch: any;
-  footerLayout?: 'horizontal' | 'vertical';
+  footerLayout?: "horizontal" | "vertical";
   applyDiscountsToItems?: () => void; // Add this line
 }
 
@@ -21,7 +24,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
   applyDiscountsToItems, // Add this line
 }) => {
   const { value, onChange } = useDebouncedInput(
-    formState.transaction.master.billDiscount || '',
+    formState.transaction.master.billDiscount || "",
     (debouncedValue) => {
       dispatch(
         formStateMasterHandleFieldChange({
@@ -33,12 +36,12 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
   );
 
   return (
-    <ERPInput 
+    <ERPInput
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
       id="billDiscount"
       type="number"
-      labelDirection={footerLayout === 'vertical' ? 'horizontal' : 'vertical'}
+      labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
       label={t(formState.formElements.billDiscount.label)}
       value={value}
       disableEnterNavigation={true}
@@ -46,28 +49,32 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
         handleKeyDown && handleKeyDown(e, "billDiscount");
       }}
       onChange={(e) => onChange(e.target.value)}
-      className={`${footerLayout === "vertical" ? 'w-full' : 'max-w-[110px] min-w-[110px] !m-0'}`}
+      className={`${
+        footerLayout === "vertical"
+          ? "w-full"
+          : "max-w-[110px] min-w-[110px] !m-0"
+      }`}
       disabled={
         formState.formElements.billDiscount?.disabled ||
         formState.formElements.pnlMasters?.disabled
       }
-      prefix={
+      customButton={
         <button
           type="button"
           style={{
             background: "#d32828",
             border: "none",
-            borderRadius: "6px 0 0 6px",
+            borderRadius: "6px 6px 6px 6px",
             padding: "0px 0px",
             height: "100%",
             display: "flex",
             alignItems: "center",
             cursor: "pointer",
-            marginRight: "-7px",
-            marginLeft: "-7px"
+            // marginRight: "-7px",
+            // marginLeft: "-7px"
           }}
           onClick={() => {
-            if (applyDiscountsToItems) applyDiscountsToItems(); 
+            if (applyDiscountsToItems) applyDiscountsToItems();
           }}
         >
           <ChevronUp size={20} color="#fff" />

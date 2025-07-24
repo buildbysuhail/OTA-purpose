@@ -1371,7 +1371,7 @@ export const useTransactionHelper = (transactionType: string) => {
         : master.prevTransDate;
     return formState.transaction.master;
   };
-  const btnApplyDiscountsToItems_Click = (): void => {
+  const     applyDiscountsToItems = (): void => {
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
@@ -1454,5 +1454,6 @@ export const useTransactionHelper = (transactionType: string) => {
     refactorDetails,
     attachDetails,
     attachMaster,
+        applyDiscountsToItems
   };
 };

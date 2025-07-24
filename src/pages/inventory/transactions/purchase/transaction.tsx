@@ -404,6 +404,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
+        applyDiscountsToItems
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,

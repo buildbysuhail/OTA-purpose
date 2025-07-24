@@ -140,6 +140,7 @@ export const useTransaction = (
     clearEntryControl,
     changeGrossToUnitRate,
     calculateRowAmount,
+        applyDiscountsToItems
   } = useTransactionHelper(transactionType);
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -3131,5 +3132,6 @@ if(loadVType == "GRN") {
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
+        applyDiscountsToItems
   };
 };

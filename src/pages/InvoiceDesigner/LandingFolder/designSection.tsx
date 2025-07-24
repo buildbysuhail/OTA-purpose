@@ -21,6 +21,7 @@ import AdviceTemplate  from "../DownloadPreview/advice-template";
 import ChequeTemplate  from "../DownloadPreview/cheque-template";
 import CustomerBalanceTemplateDesigner   from "./reports/customerBalace/customer-balance-report-designe";
 import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transaction_standard";
+import RetailRollSheetPrev from "../DesignPreview/RetailPreview/two-inch-preview";
 
 export  interface DesignSectionType {
   id: number;
@@ -87,7 +88,7 @@ export const templateConfig: DesignerConfigMap = {
       },
       "2inch": {
         downloadComponent: <AccountTransactionsTemplate />,
-        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        PreviewComponent: <RetailRollSheetPrev />,
         sections: { transactions: AccStandardTransaction, total: TotalStdDesigner, others: () => null },
       },
     },

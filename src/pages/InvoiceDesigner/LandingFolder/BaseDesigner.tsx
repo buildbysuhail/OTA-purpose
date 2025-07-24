@@ -38,6 +38,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       dispatch,
       previewWidth,
       previewHeight,
+      pageBgCol,
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
 
     const SectionComponent = currentSection ? sections[currentSection.type] : null
@@ -73,7 +74,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
         </div>
 
         {/* Designer Panel */}
-        <div className="flex flex-col border-r min-w-[280px] w-[500px] h-full print:hidden">
+        <div className="flex flex-col border-r min-w-[180px] w-full max-w-[350px] h-full print:hidden">
           <div className="flex justify-between items-center border-b p-4 h-[70px]">
             <h1 className="text-base">{currentSection ? t(currentSection.name) : ""}</h1>
             <button
@@ -131,20 +132,22 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
           </div>
 
           {/* Preview Content   overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1*/}
-          <ERPScrollArea className={`overflow-auto max-h-[${maxHeight - 100}px] flex-1 p-6`}>
+          <ERPScrollArea className={`overflow-auto  flex-1 p-6`}
+          maxHeight={maxHeight - 100}>
             <div className="flex justify-center">
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
                 <div
-                  className="bg-white rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+                  className="shadow-lg border border-gray-200  overflow-hidden"
                   style={{
-                    width: `${previewWidth}pt`,
-                    height: `${previewHeight}pt`,
+                    width: `${previewWidth??500}pt`,
+                    height: `${previewHeight??500}pt`,
                     minHeight: "400px",
+                    backgroundColor:pageBgCol
                   }}
                 >
                   {/* Paper Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" />
+                  {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
 
                   {/* Template Content */}
                   <div className="relative h-full overflow-auto">
@@ -159,6 +162,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                     width: `${previewWidth}pt`,
                     height: `${previewHeight}pt`,
                     minHeight: "400px",
+                    
                   }}
                 />
               </div>

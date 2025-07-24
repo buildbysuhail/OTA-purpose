@@ -47,7 +47,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     // Add page size and orientation logic
   const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
   const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
-
+  const pageBgCol = templateData?.activeTemplate?.propertiesState?.bg_color
     const selectedPageSize = getPageDimensions(
     pageSize,
     templateData?.activeTemplate?.propertiesState?.width,
@@ -233,5 +233,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     previewHeight,
     orientedDimensions,
     scale,
+  pageBgCol,
+    
   };
 };

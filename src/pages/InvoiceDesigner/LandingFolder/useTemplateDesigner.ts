@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-
+import html2canvas from 'html2canvas';
 import { TemplateDto, TemplateState } from "../Designer/interfaces";
 
 import { convertPdfBlobToImage, generatePdfBlob } from "../utils/pdf-save";
@@ -43,26 +43,46 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const templateData = useSelector((state: RootState) => state.Template) as TemplateReducerState;
+  // Add ref for preview container
+  const previewContainerRef = useRef<HTMLDivElement>(null);
 
-    // Add page size and orientation logic
-  const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-  const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
-  const pageBgCol = templateData?.activeTemplate?.propertiesState?.bg_color
+//  Create consolidated template style properties object
+  const templateStyleProperties = useMemo(() => {
+    const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+    const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
+    const backgroundColor = templateData?.activeTemplate?.propertiesState?.bg_color ?? "#ffffff";
+    const paddingLeft = templateData?.activeTemplate?.propertiesState?.padding?.left || 10;
+    const paddingRight = templateData?.activeTemplate?.propertiesState?.padding?.right || 10;
+    const paddingTop = templateData?.activeTemplate?.propertiesState?.padding?.top || 10;
+    const paddingBottom = templateData?.activeTemplate?.propertiesState?.padding?.bottom || 10;
     const selectedPageSize = getPageDimensions(
-    pageSize,
+      pageSize,
+      templateData?.activeTemplate?.propertiesState?.width,
+      templateData?.activeTemplate?.propertiesState?.height,
+    );
+
+    const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
+    const scale = 0.9; // You can adjust this or make it dynamic
+    const previewWidth = orientedDimensions.width * scale;
+    const previewHeight = orientedDimensions.height * scale;
+
+    return {
+      backgroundColor,
+      previewWidth,
+      previewHeight,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom
+    };
+  }, [
+    templateData?.activeTemplate?.propertiesState?.orientation,
+    templateData?.activeTemplate?.propertiesState?.pageSize,
+    templateData?.activeTemplate?.propertiesState?.bg_color,
     templateData?.activeTemplate?.propertiesState?.width,
     templateData?.activeTemplate?.propertiesState?.height,
-  );
-
-  const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
-
-  // Optional: preview scaling
-  const scale = 0.9; // You can adjust this or make it dynamic
-  const previewWidth = orientedDimensions.width * scale;
-  const previewHeight = orientedDimensions.height *scale ;
-  // Validate templateGroup from searchParams
-
-
+    templateData?.activeTemplate?.propertiesState?.padding,
+  ]);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
   const [loading, setLoading] = useState(false);
@@ -142,6 +162,29 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     getPDFTemplateData();
   }, [getPDFTemplateData]);
 
+   // Function to convert preview component to image
+ const capturePreviewAsImage = useCallback(async (): Promise<string> => {
+  if (!previewContainerRef.current) {
+    throw new Error("Preview container not found");
+  }
+
+  // Find the actual preview content container (the one with template styling)
+  const previewContent = previewContainerRef.current.querySelector('[data-template-preview]') as HTMLElement;
+  const targetElement = previewContent || previewContainerRef.current;
+
+try {
+    const canvas = await html2canvas(targetElement, {
+      backgroundColor: "#ffffff", // or your bg
+      scale: 2,                   // smooth scaling
+      useCORS: true,
+    });
+    return canvas.toDataURL("image/png", 0.95);
+  } catch (err) {
+    console.error("Image capture failed:", err);
+    throw err;
+  }
+}, [templateStyleProperties]);
+
   // Handle template saving
   const handleSave = useCallback(
     async (dataUrl: string) => {
@@ -189,23 +232,30 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     [templateData, templateGroup, templateKind, dispatch, navigate, t]
   );
 
-  // Debounced save to prevent frequent updates
+  // Updated save function that captures preview as image
+  const manageSaveAccTemplate = useCallback(async () => {
+    if (id === "new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
+      ERPToast.show(t("template_name_is_required"));
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Capture the preview as image
+      const imageDataUrl = await capturePreviewAsImage();
+      // Save with the captured image
+      await handleSave(imageDataUrl);
+    } catch (error) {
+      console.error("Error saving template:", error);
+      ERPToast.show(t("failed_to_save_template"));
+      setLoading(false);
+    }
+  }, [id, templateData, capturePreviewAsImage, handleSave, t]);
+
+  // Debounced version if needed
   const debouncedSaveAccTemplate = useCallback(
-    debounce(async (Component: React.ReactElement) => {
-      if (id === "new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
-        ERPToast.show(t("template_name_is_required"));
-        return;
-      }
-      try {
-        const pdfBlob = await generatePdfBlob(Component);
-        const imageDataUrl = await convertPdfBlobToImage(pdfBlob);
-        await handleSave(imageDataUrl);
-      } catch (error) {
-        console.error("Error saving component:", error);
-        ERPToast.show(t("failed_to_save_template"));
-      }
-    }, 500),
-    [id, templateData, handleSave, t]
+    debounce(manageSaveAccTemplate, 500),
+    [manageSaveAccTemplate]
   );
 
   return {
@@ -225,15 +275,9 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     clientSession,
     templateData,
     stableTemplateProps,
-    manageSaveAccTemplate: debouncedSaveAccTemplate,
+    manageSaveAccTemplate,
     dispatch,
-    pageOrientation,
-    pageSize,
-    previewWidth,
-    previewHeight,
-    orientedDimensions,
-    scale,
-  pageBgCol,
-    
+   templateStyleProperties,
+    previewContainerRef,
   };
 };

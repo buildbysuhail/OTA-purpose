@@ -311,7 +311,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           columns={mainGridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingOrderMaster/`}
           postData={{
-            voucherType: formState.transaction.master.voucherType,
+            voucherType: voucherType,
             ledgerID: formState.transaction.master.ledgerID,
           }}
           method={ActionType.GET}

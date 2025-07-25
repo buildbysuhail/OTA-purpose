@@ -329,7 +329,7 @@ debugger;
       cbEmployee: {
         ..._formState.formElements.cbEmployee,
         employeeType: _formState.userConfig?.showPurchaserOnly
-           ? EmployeeType.Purchaser :_formState.formElements.cbEmployee.employeeType    
+           ? EmployeeType.Purchaser :_formState.formElements.cbEmployee.employeeType
       },
       btnAdd: {
         ..._formState.formElements.btnAdd,
@@ -380,7 +380,7 @@ debugger;
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState,"inv")
     );
-    
+
     _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
@@ -456,7 +456,7 @@ debugger;
         return false;
     }
       }
-    
+
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
@@ -2039,7 +2039,7 @@ if(loadVType == "GRN") {
   ) => {
     try {
       console.log("handleTextDataChange");
-      
+
       if (!formState.transaction?.details?.[rowIndex]) {
         return false;
       }
@@ -2096,7 +2096,7 @@ if(loadVType == "GRN") {
           calculateSummaryAndTotal = true;
         }
       } else if (columnName === "qty" || columnName === "unitPrice") {
-        
+
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
@@ -2132,7 +2132,7 @@ if(loadVType == "GRN") {
         outDetail.margin = round(marginPerc, 6);
         outState.transaction!.details = [outDetail];
       }
-      
+
       if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details];
         let final = { ...detail, ...outState!.transaction!.details![0] };
@@ -2185,7 +2185,7 @@ if(loadVType == "GRN") {
       if (!detail) {
         return {};
       }
-      
+
       let warehouseId = 1;
       if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
         warehouseId = formState.transaction.master.fromWarehouseID;
@@ -2237,7 +2237,7 @@ if(loadVType == "GRN") {
         `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
-      
+
       warehouseId = -1;
 
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
@@ -2264,7 +2264,7 @@ if(loadVType == "GRN") {
           })
         );
       } else if (res?.products?.length === 1) {
-        
+
         let product = res.products[0];
         const _index = forImport != true ? formState.transaction.details.findIndex(
           (x) =>
@@ -2431,7 +2431,7 @@ if(loadVType == "GRN") {
         }
 
         // Handle VAT and CST based on form type
-        
+
         if (formState.transaction.master.voucherForm === "VAT") {
           outDetail.vatPerc = Number(product.pVatPerc || 0);
           outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -2521,9 +2521,9 @@ if(loadVType == "GRN") {
           };
         }
 
-        
 
-        
+
+
         for (const unit of product.units) {
           if (!result.batchesUnits) {
             result.batchesUnits = [];
@@ -2555,7 +2555,7 @@ if(loadVType == "GRN") {
 
         return result;
       } else if (res?.products?.length > 1 &&  forImport != true) {
-        // Open BatchGrid 
+        // Open BatchGrid
       } else if(forImport != true) {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn);
           setCurrentCell(res, data.detail as TransactionDetail);
@@ -2704,7 +2704,7 @@ if(loadVType == "GRN") {
         // Product Information ☝
 
         case " ": { // Space key
-          
+
           let outState: DeepPartial<TransactionFormState> = {
             transaction: { details: [] },
           };
@@ -2773,7 +2773,7 @@ if(loadVType == "GRN") {
               setCurrentCell(res, data);
             }
           } else if (columnName == "barCode") {
-            
+
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               loadProductDetailsByAutoBarcode(
@@ -2929,7 +2929,7 @@ if(loadVType == "GRN") {
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd") {
-            
+
             const data: TransactionDetail =
               formState.transaction.details[rowIndex];
 
@@ -2972,10 +2972,10 @@ if(loadVType == "GRN") {
               })
             );
           } else if (columnName == "grossConvert") {
-            
+
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-            
+
             const rowData: TransactionDetail =
               formState.transaction.details[rowIndex];
             dispatch(
@@ -3026,22 +3026,22 @@ if(loadVType == "GRN") {
 // Alternative version without sample data - just headers
 const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
   debugger;
-  
+
   try {
     // Create a new workbook
     const workbook = new ExcelJS.Workbook();
-    
+
     // Set workbook properties
     workbook.creator = 'Purchase Import System';
     workbook.created = new Date();
-    
+
     // Add Purchase worksheet
     const worksheet = workbook.addWorksheet('Purchase', {
       properties: {
         tabColor: { argb: 'FF0070C0' }
       }
     });
-    
+
     // Define columns
     const columns: TemplateColumn[] = [
       { header: 'Barcode', key: 'barcode', width: 15 },
@@ -3053,39 +3053,39 @@ const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
       { header: 'PurchasePrice', key: 'purchasePrice', width: 15 },
       { header: 'PartyName', key: 'partyName', width: 20 }
     ];
-    
+
     // Set worksheet columns
     worksheet.columns = columns.map(col => ({
       header: col.header,
       key: col.key,
       width: col.width
     }));
-    
+
     // Style the header row
     const headerRow = worksheet.getRow(1);
     headerRow.height = 25;
-    
+
     columns.forEach((col, index) => {
       const cell = headerRow.getCell(index + 1);
-      
+
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: 'FF4472C4' }
       };
-      
+
       cell.font = {
         name: 'Calibri',
         size: 12,
         bold: true,
         color: { argb: 'FFFFFFFF' }
       };
-      
+
       cell.alignment = {
         vertical: 'middle',
         horizontal: 'center'
       };
-      
+
       cell.border = {
         top: { style: 'thin', color: { argb: 'FF000000' } },
         left: { style: 'thin', color: { argb: 'FF000000' } },
@@ -3093,35 +3093,234 @@ const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
         right: { style: 'thin', color: { argb: 'FF000000' } }
       };
     });
-    
+
     // Freeze the header row
     worksheet.views = [{ state: 'frozen', ySplit: 1 }];
-    
+
     // Generate and download
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-    
+
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `Purchase_Import_Template_${new Date().toISOString().split('T')[0]}.xlsx`;
     link.style.display = 'none';
-    
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-    
+
     // showSuccessMessage('Import template downloaded successfully!');
-    
+
   } catch (ex: any) {
     console.error('Error downloading import template:', ex);
     // showErrorMessage("Template Download Error", ex.message || ex.toString(), "Download Failed");
   }
 };
+const importFromExcel = async (e:  React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+debugger;
+      try {
+        // Create file input element
+        const file = e.target.files?.[0] || null;
+        if (!file) {
+          // setIsLoading(false);
+          return; // User cancelled
+        }
+
+        // Read Excel file using ExcelJS
+        const workbook = new ExcelJS.Workbook();
+        const fileBuffer = await file.arrayBuffer();
+        await workbook.xlsx.load(fileBuffer);
+
+        // Get 'Purchase' worksheet
+        const purchaseWorksheet = workbook.getWorksheet('Purchase');
+        if (!purchaseWorksheet) {
+          throw new Error('Purchase worksheet not found in the Excel file');
+        }
+
+        // Get the range of used cells
+        const rowCount = purchaseWorksheet.rowCount;
+
+        if (rowCount <= 1) {
+          throw new Error('No data rows found in the Excel file');
+        }
+
+        // Extract data from Excel (starting from row 2, skipping header)
+        const excelData: ExcelRowData[] = [];
+
+        for (let rowNumber = 2; rowNumber <= rowCount; rowNumber++) {
+          const row = purchaseWorksheet.getRow(rowNumber);
+
+          // Skip empty rows
+          if (!row.hasValues) {
+            continue;
+          }
+
+          try {
+            const rowData: ExcelRowData = {
+              Barcode: getExcelCellValue(row.getCell(1)) || '',
+              Quantity: parseFloat(getExcelCellValue(row.getCell(2)) || '0') || 0,
+              Disc_per: getExcelCellValue(row.getCell(3)) ? parseFloat(getExcelCellValue(row.getCell(3))!) : 0,
+              Discount: getExcelCellValue(row.getCell(4)) ? parseFloat(getExcelCellValue(row.getCell(4))!) : 0,
+              MRP: getExcelCellValue(row.getCell(5)) ? parseFloat(getExcelCellValue(row.getCell(5))!) : 0,
+              SalesPrice: parseFloat(getExcelCellValue(row.getCell(6)) || '0') || 0,
+              PurchasePrice: parseFloat(getExcelCellValue(row.getCell(7)) || '0') || 0,
+              PartyName: getExcelCellValue(row.getCell(8)) || ''
+            };
+
+            // Only add rows with valid barcode
+            if (rowData.Barcode.trim() !== '') {
+              excelData.push(rowData);
+            }
+          } catch (err) {
+            console.warn(`Error parsing row ${rowNumber}:`, err);
+            continue; // Skip this row and continue with next
+          }
+        }
+
+        if (excelData.length === 0) {
+          throw new Error('No valid data found in the Excel file');
+        }
+
+        // Prepare state update for inventory items
+        let outState: any = {
+          transaction: { master: {}, details: [] },
+        };
+
+        // Process each Excel row
+        for (let i = 0; i < excelData.length; i++) {
+          const rowData = excelData[i];
+
+          try {
+            let detailItem: any = {
+              slNo: generateUniqueKey(),
+              barCode: rowData.Barcode,
+              qty: rowData.Quantity,
+              discPerc: rowData.Disc_per || 0,
+              discount: rowData.Discount || 0,
+              mrp: rowData.MRP || 0,
+              salesPrice: rowData.SalesPrice,
+              unitPrice: rowData.PurchasePrice
+            };
+            const productDetails = await  loadProductDetailsByAutoBarcode(
+            {
+              productCode: "",
+              autoBarcode: rowData.Barcode,
+              productBatchID: 0,
+              searchText: rowData.Barcode,
+              detail: detailItem,
+              useProductCode: false,
+              rowIndex: 0,
+              searchColumn: "barCode",
+              setFocusToNextColumn: false,
+            },
+            { result: {}, formStateHandleFieldChangeKeysOnly },
+            true
+          );
+            // Load product details by barcode
+            if (productDetails) {
+             detailItem =  Object.assign(productDetails.transaction!.details![0] as DeepPartial<TransactionDetail>, detailItem);
+            const calculatedRow = calculateRowAmount(
+                detailItem,
+                "barCode",
+                { result: { transaction: { details: [detailItem] } } },
+                true
+              );
+
+              outState.transaction.details.push(calculatedRow.transaction!.details![0]);
+            }
+            else {
+              detailItem.isValid = false
+              outState.transaction.details.push(detailItem);
+            }
+
+
+
+          } catch (rowError: any) {
+            console.error(`Error processing row ${i + 1}:`, rowError);
+            // Continue with next row instead of stopping entire import
+          }
+        }
+
+        // Handle party information if available
+        if (excelData[0]?.PartyName && excelData[0].PartyName.trim() !== '') {
+          try {
+            const partyDetails = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/partyDetails?partyName=${excelData[0].PartyName}` );
+
+            if (partyDetails) {
+              outState.transaction.master = {
+                ...outState.transaction.master,
+                partyId: partyDetails.LedgerID,
+                partyName: partyDetails.PartyName,
+                partyDisplayName: partyDetails.DisplayName,
+                partyAddress: partyDetails.Address1,
+                partyAddress2: partyDetails.Address2,
+                partyTaxNumber: partyDetails.TaxNumber
+              };
+            } else {
+              throw new Error(`PartyName - ${excelData[0].PartyName} - Not Found. Please recheck PartyName`);
+            }
+          } catch (partyError: any) {
+            console.error('Error loading party details:', partyError);
+            const errorMsg = partyError.message || 'Error loading party details';
+            // setError(errorMsg);
+            // onError?.("Party Loading Error", errorMsg, "1");
+            return;
+          }
+        }
+
+        // Calculate summary and totals if functions are provided
+        const details = outState.transaction?.details?.filter((x: any) => x.isValid == true) || [];
+        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+          const summaryRes = calculateSummary(details, formState, {
+            result: {},
+          });
+
+          const totalRes = calculateTotal(
+            formState.transaction.master,
+            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+            formState.formElements,
+            {
+              result: outState,
+            }
+          );
+
+          if (totalRes) {
+            totalRes.summary = summaryRes.summary;
+            totalRes.transaction = totalRes.transaction ?? {};
+            totalRes.transaction.master = { ...totalRes.transaction.master };
+            totalRes.transaction.details = outState.transaction.details;
+
+            // Dispatch the state update
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: totalRes,
+                updateOnlyGivenDetailsColumns: true
+              })
+            );
+          }
+        }
+
+        // setImportedCount(excelData.length);
+        // const successMsg = `Successfully imported ${excelData.length} items from Excel`;
+        // onSuccess?.(successMsg);
+
+      } catch (ex: any) {
+        // const errorMsg = ex.message || ex.toString();
+        // console.error('Error importing from Excel:', ex);
+        // setError(errorMsg);
+        // onError?.("Import Failed", errorMsg, "Excel Import Error");
+      } finally {
+        // setIsLoading(false);
+      }
+    };
   return {
+    downloadImportTemplateHeadersOnly,
+    importFromExcel,
     undoEditMode,
     handleTextDataKeyDown,
     getNextVoucherNumber,

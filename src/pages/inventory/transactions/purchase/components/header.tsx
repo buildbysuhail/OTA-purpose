@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import ExcelImport from "../../purchase/excel-Import";
 import { TransactionUserConfig } from "../../purchase/transaction-user-config";
 import {
   EllipsisVertical,
@@ -26,11 +25,13 @@ import {
   Boxes,
   Group,
   ListPlus,
+  FileDown,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { LoadMulti, LoadMultiFooter } from "../load-multi";
 import PendingOrderList from "../pending-order-list";
+import ExcelImport from "../import-excel";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -57,6 +58,8 @@ interface HeaderProps extends VoucherElementProps {
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onProcessSelected: ((masterIds: string, loadType: string) => void) | undefined;
+  downloadImportTemplateHeadersOnly: any;
+  importFromExcel: any;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -84,7 +87,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       goToPreviousPage,
       phone = false,
       setIsPrintModalOpen,
-      onProcessSelected
+      onProcessSelected,
+      downloadImportTemplateHeadersOnly,
+      importFromExcel
     },
     ref
   ) => {
@@ -93,6 +98,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
     const [isPendingOrderOpen, setIsPendingOrderOpen]=useState(false);
+    const [isImportExcelOpen,setIsImportExcelOpen]=useState(false)
+
+    const openExcelImport = () =>{
+      setIsImportExcelOpen(true)
+    }
 
         const openLoadMultiModal = () => {
       setIsLoadMultiModalOpen(true);
@@ -480,6 +490,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <span>{t('pending_order')}</span>
                         </button>
                       </li>
+                    <li>
+                        <button  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={openExcelImport}>
+                        <FileDown className="w-4 h-4"/>  {t('import_from_excel')}
+                        </button>
+                      </li>
                       <ERPModal
                         isOpen={isLoadMultiModalOpen}
                         closeModal={() => setIsLoadMultiModalOpen(false)}
@@ -501,20 +516,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 </nav>
               </div>
             )}
-            {showValidation && (
+            {isImportExcelOpen && (
               <ERPModal
                 isForm={true}
-                isOpen={showValidation}
+                isOpen={isImportExcelOpen}
                 closeButton="LeftArrow"
                 hasSubmit={false}
                 closeTitle={t("close")}
-                title={t("MJV_excel_import")}
+                title={t("import_from_excel")}
                 width={1000}
-                height={800}
+                height={740}
                 isFullHeight={true}
-                closeModal={() => setShowValidation(false)}
-                content={<ExcelImport />}
-              ></ERPModal>
+                closeModal={() => setIsImportExcelOpen(false)}
+                content={<ExcelImport downloadImportTemplateHeadersOnly ={downloadImportTemplateHeadersOnly}  importFromExcel={importFromExcel}/>}
+              />
             )}
           </div>
 
@@ -530,6 +545,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
         </div>
         )}
+
         {deviceInfo?.isMobile && (
         <div
           className={`!overflow-visible flex items-center ${
@@ -913,7 +929,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 height={800}
                 isFullHeight={true}
                 closeModal={() => setShowValidation(false)}
-                content={<ExcelImport />}
+                content={<ExcelImport downloadImportTemplateHeadersOnly ={downloadImportTemplateHeadersOnly}  importFromExcel={importFromExcel}/>}
               />
             )}
           </div>

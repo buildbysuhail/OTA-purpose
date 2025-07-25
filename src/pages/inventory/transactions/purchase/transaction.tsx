@@ -406,7 +406,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
-        applyDiscountsToItems
+        applyDiscountsToItems,
+        downloadImportTemplateHeadersOnly,
+    importFromExcel,
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -724,12 +726,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
-       
+
 
         if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
           _formState.transaction.master.fromWarehouseID =
             _formState.userConfig?.presetWarehouseId ?? 0;
-         
+
         } else {
           if (
             applicationSettings.accountsSettings.allowSalesCounter &&
@@ -2201,6 +2203,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
                     onProcessSelected={onProcessSelected}
+                    downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                    importFromExcel= {importFromExcel}
                   />
                 </div>
               </div>
@@ -2378,6 +2382,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 isHistorySidebarOpen={isHistorySidebarOpen}
                 setIsPrintModalOpen={setIsPrintModalOpen}
                 onProcessSelected={onProcessSelected}
+                downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                    importFromExcel= {importFromExcel}
               />
 
               {/* Voucher Info */}
@@ -2829,7 +2835,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
       </div>
-     {formState.loading && formState.loading.isLoading == true && 
+     {formState.loading && formState.loading.isLoading == true &&
      <BlurLoader text={formState.loading.text}></BlurLoader>
      }
     </>

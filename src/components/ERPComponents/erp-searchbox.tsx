@@ -276,7 +276,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }
               payload.searchText = searchText;
             } else if (searchKey == "product") {
-              debugger;
+              
               payload.searchByCodeAndName = searchByCodeAndName;
               payload.searchByCode = false;
               if (value.trim() === "%") {

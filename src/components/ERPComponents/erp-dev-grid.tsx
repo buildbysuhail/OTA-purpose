@@ -771,9 +771,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilter(filterData.data);
       }
     }, [filterData]);
-    useEffect(() => {
+     useEffect(() => {
+      const fetchPreferences = async () => {
+        onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
+      };
+      
       if (gridId != "" && columns != undefined && columns != null) {
-        onApplyPreferences(getInitialPreference(gridId, columns));
+        fetchPreferences();
       }
     }, [gridId]);
     useEffect(() => {

@@ -49,7 +49,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
     }, [formState.transaction.master.orderNumber]);
     
     const handleLoadByRefNo = useCallback(async () => {
-      debugger;
+      
       await props.loadAndSetTransVoucher(
         true,
         undefined,
@@ -84,7 +84,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         300
       );
     useEffect(() => {
-      debugger;
+      
       if (showLoadData) {
         setLoadData((prev: any) => {
           return {

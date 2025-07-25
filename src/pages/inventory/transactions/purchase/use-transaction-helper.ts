@@ -180,7 +180,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
           const transDateOnly = new Date(transDate);
           transDateOnly.setHours(0, 0, 0, 0); // Removes time part
-          debugger;
+          
           if (transDateOnly < minPreDate) {
             return {
               valid: false,
@@ -884,7 +884,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       let tot = 0;
-      debugger;
+      
       if (!result) {
         result = {};
       }
@@ -1387,7 +1387,7 @@ export const useTransactionHelper = (transactionType: string) => {
     return formState.transaction.master;
   };
   const     applyDiscountsToItems = (): void => {
-    debugger;
+    
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },

@@ -88,6 +88,7 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { barCodeField } from "../../../LabelDesigner/fields";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 interface BilledItem {
   id?: number;
   name: string;
@@ -137,7 +138,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}-grid`
+    `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -319,7 +320,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
               const data =
-                formState.transaction.details[res.rowIndex]?.productBatchID;
+                formState.transaction.details[res.rowIndex];
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
@@ -405,7 +406,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
-        applyDiscountsToItems
+        applyDiscountsToItems,
+        downloadImportTemplateHeadersOnly,
+    importFromExcel,
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -723,12 +726,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
-       
+
 
         if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
           _formState.transaction.master.fromWarehouseID =
             _formState.userConfig?.presetWarehouseId ?? 0;
-         
+
         } else {
           if (
             applicationSettings.accountsSettings.allowSalesCounter &&
@@ -776,12 +779,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
    if(masterIds.length > 0) {
-    dispatch(formStateHandleFieldChange({fields:{loading: true}}));
+    dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
      const PendingTransDetails: TransactionDetail[] = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransDetails`,`masterIDs=${masterIds}`)
      if(PendingTransDetails && PendingTransDetails.length > 0) {
       const details = refactorDetails(PendingTransDetails, loadType,{result:{}}, formState.transaction.master.voucherForm);
       dispatch(formStateSetDetails(details));
-      dispatch(formStateHandleFieldChange({fields:{loading: false}}));
+      dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }
    }
   }, []);
@@ -2200,6 +2203,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
                     onProcessSelected={onProcessSelected}
+                    downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                    importFromExcel= {importFromExcel}
                   />
                 </div>
               </div>
@@ -2377,6 +2382,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 isHistorySidebarOpen={isHistorySidebarOpen}
                 setIsPrintModalOpen={setIsPrintModalOpen}
                 onProcessSelected={onProcessSelected}
+                downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                    importFromExcel= {importFromExcel}
               />
 
               {/* Voucher Info */}
@@ -2828,9 +2835,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
       </div>
-      {/* ) : (
-        <>Loading ............</>
-      )} */}
+     {formState.loading && formState.loading.isLoading == true &&
+     <BlurLoader text={formState.loading.text}></BlurLoader>
+     }
     </>
   );
 };

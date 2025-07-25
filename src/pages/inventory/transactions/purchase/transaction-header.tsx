@@ -267,7 +267,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               formState={formState}
               handleKeyDown={(e) => {
                 if(isEnterKey(e.key)) {
-                  debugger;
+                  
                   if(formState.currentCell && formState.currentCell.rowIndex > 0&& formState.currentCell.column != "") {
                     focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);                  
                   } else {

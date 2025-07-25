@@ -228,6 +228,7 @@ export interface TransactionDetail {
   brand: string;
   brandID: number;
   qty: number;
+  qtyTag?: number;
   free: number;
   multiFactor: number;
   unit: string;
@@ -293,6 +294,7 @@ export interface TransactionDetail {
   barcodeUnit3Printed: boolean;
   location: string;
   grTransDetailsID: number;
+  grTransDetailsIDTag?: number;
   arabicName: string;
   supplierReferenceProductCode: string;
   poTransDetailsID: number;
@@ -498,6 +500,7 @@ export interface TransactionFormState {
   barcodeData?: any;
   barcodePrevOpen?: boolean;
   ledgerDetails: boolean;
+  loading?: boolean;
   dataWarranty: [];
   dataBrands: [];
 }

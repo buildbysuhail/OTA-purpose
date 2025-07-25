@@ -932,10 +932,9 @@ export const useTransactionHelper = (transactionType: string) => {
 
   const refactorDetails = (
     details: any[],
-    vType: string,
     formType: string,
     commonParams: CommonParams,
-    formState: TransactionFormState
+    loadType?: string
   ): TransactionDetail[] => {
     const detailsLength = details.length;
 
@@ -979,10 +978,20 @@ export const useTransactionHelper = (transactionType: string) => {
       );
 
       // Special handling for GRN type
-      if (vType === "GRN") {
+      if (loadType === "GRN") {
         detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
           Number(row.unitPrice || 0)
         );
+        detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.quantity || 0)
+        );
+        detail.grTransDetailsID = row.invTransactionDetailID
+        detail.grTransDetailsIDTag = row.PendingQty
+      }
+      // Special handling for GRN type
+      if (loadType === "PO") {
+         detail.poTransDetailsID = row.invTransactionDetailID
+        detail.poTransDetailsIDTag = row.PendingQty
       }
 
       // Cost calculations

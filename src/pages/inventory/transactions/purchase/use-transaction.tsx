@@ -498,10 +498,9 @@ if(loadVType == "GRN") {
       ...(vch || {}),
       details: refactorDetails(
         vch.details,
-        vch.master.voucherType,
-        vch.master.voucherForm,
+        "",
         { result: {} },
-        voucher
+        vch.master.voucherForm,
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
@@ -555,7 +554,7 @@ if(loadVType == "GRN") {
       voucher.transaction.master = updatedMaster;
     }
     if (vch?.details) {
-      voucher.transaction.details = refactorDetails(vch.details,voucherType??"", formType??"", {result:{}},formState
+      voucher.transaction.details = refactorDetails(vch.details,"", {result:{}},formType??"",
       );
     }
     if (voucher.transaction.attachments) {
@@ -3132,7 +3131,7 @@ const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
     setTransVoucher,
     deleteTransVoucher,
     validate,
-    // setupBahamdoonPOSReceipts,
+    refactorDetails,
     save: preSave,
     clearControls,
     addOrEditRow,

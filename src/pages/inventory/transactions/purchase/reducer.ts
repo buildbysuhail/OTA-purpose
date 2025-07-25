@@ -378,6 +378,11 @@ const InvTransactionSlice = createSlice({
       // Iterate over all rows in details
       state.transaction.details = [];
     },
+    formStateSetDetails: ( state,
+      action: PayloadAction<TransactionDetail[]>) => {
+      // Iterate over all rows in details
+      state.transaction.details = action.payload;
+    },
     // Remove a specific row from the transaction details by index
     formStateTransactionDetailsRowRemove: (
       state,
@@ -792,6 +797,7 @@ export const {
   formStateMasterHandleFieldChange,
   formStateTransactionMaster3HandleFieldChange,
   formStateLoadDataUpdate,
+  formStateSetDetails
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

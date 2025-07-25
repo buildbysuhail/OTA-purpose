@@ -18,7 +18,7 @@ interface PendingOrderListProps {
   formType?: string;
   closeModal: () => void;
   t: any;
-  onProcessSelected?: (data: ProcessSelectedData) => void;
+  onProcessSelected?: (masterIds: string, loadType: string) => void;
 }
 
 interface ProcessSelectedData {
@@ -55,12 +55,7 @@ interface OrderDetailRow {
 
 const PendingOrderList: React.FC<PendingOrderListProps> = ({
   objForm,
-  partyLedgerID = 0,
   voucherType = "SO",
-  toVoucherType = "SI",
-  branchID,
-  showAllBranchPending = false,
-  formType = "",
   closeModal,
   t,
   onProcessSelected,
@@ -285,7 +280,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     };
 
     // Call the callback function to pass data back to parent
-    onProcessSelected?.(processData);
+    onProcessSelected?.(processData.masterIDs, voucherType);
     closeModal?.();
   }, [selectedRows, voucherType, onProcessSelected, closeModal]);
 
@@ -319,7 +314,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
             voucherType: formState.transaction.master.voucherType,
             ledgerID: formState.transaction.master.ledgerID,
           }}
-          method={ActionType.POST}
+          method={ActionType.GET}
           gridId="grd_pending_orders"
           height={300}
           hideGridAddButton={true}
@@ -341,7 +336,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
               formState.transaction.master.invTransactionMasterID,
             branchID: formState.transaction.master.branchID,
           }}
-          method={ActionType.POST}
+          method={ActionType.GET}
           gridId="grd_order_details"
           height={300}
           hideGridAddButton={true}

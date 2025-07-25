@@ -56,6 +56,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onProcessSelected: ((masterIds: string, loadType: string) => void) | undefined;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -83,6 +84,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       goToPreviousPage,
       phone = false,
       setIsPrintModalOpen,
+      onProcessSelected
     },
     ref
   ) => {
@@ -493,7 +495,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         title={t("pending_order")}
                         width={800}
                         height={780}
-                        content={<PendingOrderList closeModal={() => setIsPendingOrderOpen(false)} t={t} />}
+                        content={<PendingOrderList closeModal={() => setIsPendingOrderOpen(false)} t={t} onProcessSelected={onProcessSelected}/>}
                       />
                   </ul>
                 </nav>

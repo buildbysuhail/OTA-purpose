@@ -25,6 +25,7 @@ import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
+  formStateSetDetails,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -393,7 +394,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleRefresh,
     createNewVoucher,
     handleTextDataChange,
-    focusCostCenterRef,
+    refactorDetails,
     focusLedgerCode,
     focusRefNo,
     focusAmount,
@@ -772,6 +773,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
     } finally {
       setTemplateLoad(false);
     }
+  }, []);
+  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
+   if(masterIds.length > 0) {
+    dispatch(formStateHandleFieldChange({fields:{loading: true}}));
+     const PendingTransDetails: TransactionDetail[] = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransDetails`,`masterIDs=${masterIds}`)
+     if(PendingTransDetails && PendingTransDetails.length > 0) {
+      const details = refactorDetails(PendingTransDetails, loadType,{result:{}}, formState.transaction.master.voucherForm);
+      dispatch(formStateSetDetails(details));
+      dispatch(formStateHandleFieldChange({fields:{loading: false}}));
+     }
+   }
   }, []);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
@@ -2187,6 +2199,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
+                    onProcessSelected={onProcessSelected}
                   />
                 </div>
               </div>
@@ -2363,6 +2376,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 goToPreviousPage={goToPreviousPage}
                 isHistorySidebarOpen={isHistorySidebarOpen}
                 setIsPrintModalOpen={setIsPrintModalOpen}
+                onProcessSelected={onProcessSelected}
               />
 
               {/* Voucher Info */}
@@ -2482,6 +2496,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 isDropUpOpen={isDropUpOpen}
                 toggleDropup={toggleFooterDropup}
                 footerLayout={"horizontal"}
+                applyDiscountsToItems={applyDiscountsToItems}
               />
             ))}
         {/* footer ends here */}

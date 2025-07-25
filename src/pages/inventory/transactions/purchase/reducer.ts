@@ -9,6 +9,7 @@ import {
   TransactionMaster3,
   LoadData,
   TransactionValidationsData,
+  InvAccTransaction,
 } from "./transaction-types";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
@@ -271,7 +272,13 @@ const InvTransactionSlice = createSlice({
       // state.transaction.details.push(...serializedRows);
     },
 
-    // Add single row to the transaction details
+
+    formStateTransactionIvAccTransactionsRowsUpdate: (
+      state,
+      action: PayloadAction<InvAccTransaction[]>
+    ) => {
+       state.transaction.invAccTransactions = action.payload;
+    },
     formStateTransactionDetailsRowAdd: (
       state,
       action: PayloadAction<{
@@ -320,60 +327,6 @@ const InvTransactionSlice = createSlice({
       );
     },
 
-    // Update a specific row in the transaction details
-    formStateTransactionDetailsRowUpdate: (
-      state,
-      action: PayloadAction<
-        | {
-            index: number;
-            key: keyof TransactionDetail;
-            value: TransactionDetail[keyof TransactionDetail];
-          }
-        | Array<{
-            index: number;
-            key: keyof TransactionDetail;
-            value: TransactionDetail[keyof TransactionDetail];
-          }>
-      >
-    ) => {
-      const updates = Array.isArray(action.payload)
-        ? action.payload
-        : [action.payload];
-
-      for (const { index, key, value } of updates) {
-        const row = state.transaction.details[index];
-        if (row) {
-          (state.transaction.details[index][key] as typeof value) = value;
-        }
-      }
-    },
-
-    formStateTransdactionDetailsRowUpdate: (
-      state,
-      action: PayloadAction<
-        | {
-            index: number;
-            key: keyof TransactionDetail;
-            value: TransactionDetail[keyof TransactionDetail];
-          }
-        | Array<{
-            index: number;
-            key: keyof TransactionDetail;
-            value: TransactionDetail[keyof TransactionDetail];
-          }>
-      >
-    ) => {
-      const updates = Array.isArray(action.payload)
-        ? action.payload
-        : [action.payload];
-
-      for (const { index, key, value } of updates) {
-        const row = state.transaction.details[index];
-        if (row) {
-          (row[key] as typeof value) = value;
-        }
-      }
-    },
     formStateClearDetails: (state) => {
       // Iterate over all rows in details
       state.transaction.details = [];
@@ -779,7 +732,7 @@ export const {
   formStateTransactionMasterHandleFieldChange,
   formStateTransactionDetailsRowAdd,
   formStateTransactionDetailsRowsAdd,
-  formStateTransactionDetailsRowUpdate,
+  formStateTransactionIvAccTransactionsRowsUpdate,
   formStateTransactionDetailsRowRemove,
   formStateReset,
   formStateClearRowForNew,

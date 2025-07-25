@@ -1,8 +1,8 @@
 import React, {  useState } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
+import { InvAccTransaction, VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { formStateMasterHandleFieldChange } from "../reducer";
+import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../reducer";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
@@ -22,19 +22,6 @@ interface AdjustmentAmountInputProps extends VoucherElementProps {
   ) => void;
 }
 
-export interface InvAccTransaction {
-  invTransAccountsID: number;
-  invTransactionMasterID: number;
-  ledgerID: number;
-  debit: number;
-  credit: number;
-  remarks: string;
-  ledgerName: string;
-  amount: number;
-  amountFC: number;
-  isIncome: boolean;
-  slNo: number;
-}
 
 export interface AmountModalTransaction {
   ledCode: string;
@@ -69,7 +56,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
     amountFc: 0, //CP
   });
 
-  const [gridData, setGridData] = useState<InvAccTransaction[]>([]);
+  const [gridData, setGridData] = useState<InvAccTransaction[]>(formState.transaction.invAccTransactions);
   const isFcTrans = formState.transaction.master.voucherForm.toUpperCase() == "IMPORT";
   const exchangeRate = formState.transaction.master.exchangeRate || 1;
   // For testing const isFcTrans = true, const exchangeRate = 2;
@@ -257,6 +244,16 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
       });
       return;
     }
+    gridData.map((x: InvAccTransaction, index: number) => {
+      return {
+        ...x,
+        slNo: index+1
+
+      }})
+    dispatch(formStateTransactionIvAccTransactionsRowsUpdate(gridData))
+    dispatch(formStateMasterHandleFieldChange({fields: {
+      adjustmentAmount: totalCredit
+    }}))
     closeModal();
   };
 
@@ -412,6 +409,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
         type="number"
         className="!m-0"
         noLabel={true}
+        readOnly
         value={adjustmentAmountValue}
         disableEnterNavigation={true}
         onKeyDown={(e) => {

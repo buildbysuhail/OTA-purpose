@@ -1,5 +1,5 @@
 import React from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+// import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface BlurLoaderProps {
   text: string;
@@ -103,13 +103,13 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({
         aria-label="Loading"
       >
         <div className="lottie-wrapper" aria-hidden="true">
-          <DotLottieReact
+          {/* <DotLottieReact
             autoplay
             loop
             src="https://lottie.host/9163bda5-cb32-4cf8-8354-ea549c27bb4b/ZbSrbFIMjE.lottie"
             // src="https://lottie.host/28a5bd0c-1d35-45d4-8758-13534f8e5f3a/QzhX59zfks.lottie"
             style={{ width: "100%", height: "100%" }}
-          />
+          /> */}
         </div>
 
         <div className="blrloader-card">

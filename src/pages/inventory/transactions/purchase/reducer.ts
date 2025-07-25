@@ -555,7 +555,7 @@ const InvTransactionSlice = createSlice({
         console.error("Invalid fields in payload");
         return;
       }
-debugger;
+
       // Helper function to update nested objects
       const updateNested = (
         target: Record<string, any>,

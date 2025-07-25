@@ -309,7 +309,7 @@ export const useTransaction = (
         })
       );
     }
-    debugger;
+    
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -323,7 +323,7 @@ export const useTransaction = (
 if(typeof(_formState) == "boolean") {
   return
 }
-debugger;
+
     _formState.formElements = {
       ..._formState.formElements,
       cbEmployee: {
@@ -409,7 +409,7 @@ debugger;
         openUnsavedPrompt: false,
       })
     );
-    debugger;
+    
     let url  = `${Urls.inv_transaction_base}${transactionType}`
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
@@ -2058,7 +2058,7 @@ if(loadVType == "GRN") {
         (x) => x.dataField == "actualSalesPrice"
       )?.visible;
       if (columnName === "unit") {
-        debugger;
+        
         if (value > 0) {
           const unitName = formState.batchesUnits?.find(
             (xer) =>
@@ -2991,7 +2991,7 @@ if(loadVType == "GRN") {
               })
             );
           } else {
-            debugger;
+            
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data);
           }
@@ -3025,7 +3025,7 @@ if(loadVType == "GRN") {
 }
 // Alternative version without sample data - just headers
 const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
-  debugger;
+  
 
   try {
     // Create a new workbook
@@ -3122,7 +3122,7 @@ const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
   }
 };
 const importFromExcel = async (e:  React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-debugger;
+
       try {
         // Create file input element
         const file = e.target.files?.[0] || null;
@@ -3159,7 +3159,7 @@ debugger;
           if (!row.hasValues) {
             continue;
           }
-
+debugger;
           try {
             const rowData: ExcelRowData = {
               Barcode: getExcelCellValue(row.getCell(1)) || '',
@@ -3230,7 +3230,7 @@ debugger;
                 { result: { transaction: { details: [detailItem] } } },
                 true
               );
-
+outState.batchesUnits = productDetails.batchesUnits;
               outState.transaction.details.push(calculatedRow.transaction!.details![0]);
             }
             else {
@@ -3294,6 +3294,7 @@ debugger;
             totalRes.transaction = totalRes.transaction ?? {};
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = outState.transaction.details;
+            totalRes.batchesUnits = outState.batchesUnits;
 
             // Dispatch the state update
             dispatch(

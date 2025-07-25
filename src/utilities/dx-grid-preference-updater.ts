@@ -58,7 +58,7 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
 export const getInitialPreference = async(gridId: any, columns: any, api: APIClient) =>{
   
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
-    debugger;
+    
     let updatedPreferences: GridPreference;
 
     let parsedPreferences: GridPreference;

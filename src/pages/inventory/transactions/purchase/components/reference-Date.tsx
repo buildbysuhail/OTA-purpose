@@ -28,7 +28,7 @@ const AccReferenceDate = React.forwardRef<
             )
           }
           onKeyDown={(e) => {
-            debugger;
+            
             handleKeyDown && handleKeyDown(e)
           }}
           disabled={

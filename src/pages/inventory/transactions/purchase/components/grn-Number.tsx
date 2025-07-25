@@ -48,7 +48,7 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
     });
     
     const handleLoadByRefNo = useCallback(async () => {
-      debugger;
+      
       await props.loadAndSetTransVoucher(
         true,
         undefined,

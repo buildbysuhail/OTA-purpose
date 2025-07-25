@@ -500,11 +500,14 @@ export interface TransactionFormState {
   barcodeData?: any;
   barcodePrevOpen?: boolean;
   ledgerDetails: boolean;
-  loading?: boolean;
+  loading?: loadingResult;
   dataWarranty: [];
   dataBrands: [];
 }
-
+interface loadingResult {isLoading: boolean, text: string}
+export type PartialTransactionFormFields = {
+  [K in keyof TransactionFormState]?: TransactionFormState[K];
+};
 export interface ColumnModel {
   dataField?: string;
   formStateOptionKey?: string;

@@ -88,6 +88,7 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { barCodeField } from "../../../LabelDesigner/fields";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 interface BilledItem {
   id?: number;
   name: string;
@@ -319,7 +320,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
               const data =
-                formState.transaction.details[res.rowIndex]?.productBatchID;
+                formState.transaction.details[res.rowIndex];
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
@@ -776,12 +777,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
    if(masterIds.length > 0) {
-    dispatch(formStateHandleFieldChange({fields:{loading: true}}));
+    dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
      const PendingTransDetails: TransactionDetail[] = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransDetails`,`masterIDs=${masterIds}`)
      if(PendingTransDetails && PendingTransDetails.length > 0) {
       const details = refactorDetails(PendingTransDetails, loadType,{result:{}}, formState.transaction.master.voucherForm);
       dispatch(formStateSetDetails(details));
-      dispatch(formStateHandleFieldChange({fields:{loading: false}}));
+      dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }
    }
   }, []);
@@ -2828,9 +2829,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
       </div>
-      {/* ) : (
-        <>Loading ............</>
-      )} */}
+     {formState.loading && formState.loading.isLoading == true && 
+     <BlurLoader text={formState.loading.text}></BlurLoader>
+     }
     </>
   );
 };

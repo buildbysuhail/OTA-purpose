@@ -191,7 +191,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             id="top"
             label={t("top")}
             type="number"
-            value={propertiesState?.padding?.top??10}
+            value={propertiesState?.padding?.top}
             onChange={(e) => {
               const value = e.target.value;
               const top = value === "" ? 0 : parseInt(value, 10);
@@ -210,7 +210,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             maxLength={3}
           />
            <ERPInput
-            value={propertiesState?.padding?.bottom ?? 10} 
+            value={propertiesState?.padding?.bottom } 
             onChange={(e) => {
               const value = e.target.value;
               const bottomValue = value === "" ? 0 : parseInt(value, 10); // Prevent NaN
@@ -232,7 +232,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             maxLength={3}
           />
             <ERPInput
-              value={propertiesState?.padding?.left??10}
+              value={propertiesState?.padding?.left}
            
               onChange={(e) => {
               const value = e.target.value;
@@ -256,7 +256,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             />
              
             <ERPInput
-              value={propertiesState?.padding?.right??10}
+              value={propertiesState?.padding?.right}
                  onChange={(e) => {
               const value = e.target.value;
               const right = value === "" ? 0 : parseInt(value, 10);

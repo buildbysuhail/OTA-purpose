@@ -652,5 +652,8 @@
   "action_name": "اسم الإجراء",
   "system_name": "اسم النظام",
   "show_view_action": "عرض إجراء",
-  "document_properties": "خصائص المستند"
+  "document_properties": "خصائص المستند",
+
+  "fc_amount": "المبلغ بالعملة الأجنبية",
+  "invalid_zero_amount": "المبلغ غير صالح، يرجى التحقق!"
 }

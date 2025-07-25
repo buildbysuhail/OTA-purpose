@@ -218,7 +218,7 @@
   "duplicate_ledger": "Duplicate Ledger",
   "master_ledger_exists_in_row": "Master Ledger Exists in Row",
   "debit/credit": "Debit/Credit",
-  "total_debit_and_credit": "Total Debit and Credit amount should be Same",
+  "total_debit_and_credit": "Total Debit and Credit amount should be same",
   "are_you_sure_to_modify": "Are you sure to modify this transaction.",
   "please_select_ledger": "Please select Ledger..!",
   "are_you_sure_save_now": "Are you sure save now?",
@@ -536,7 +536,7 @@
   "update": "Update",
   "total_debit": "Total Debit",
   "total_credit": "Total Credit",
-  "total_fc": "Total Fc",
+  "total_fc": "Total FC",
   "product_summary": "Product summary",
   "party_wise_summary": "Party wise summary",
 
@@ -652,5 +652,8 @@
   "action_name": "Action Name",
   "system_name": "System Name",
   "show_view_action": "Show view action",
-  "document_properties": "Document Properties"
+  "document_properties": "Document Properties",
+
+  "fc_amount": "Amount FC",
+  "invalid_zero_amount": "Invalid amount, please check!"
 }

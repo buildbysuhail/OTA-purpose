@@ -222,7 +222,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       defaultBgColor: editCellComboBox?.defaultBgColor,
       bold: editCellComboBox?.bold,
     };
-    const [localValue, setLocalValue] = useState<string>(
+     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
     const [bgColor, setBgColor] = useState<string>(
@@ -230,7 +230,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         ? document.activeElement === inputRef.current
           ? "#ffffff"
           : "#ffffff1a"
-        : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `
+        : `rgb(${mergedInputBox?.focusBgColor})`
     );
 
     const [foreColor, setForeColor] = useState<string>(
@@ -238,10 +238,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         ? document.activeElement === inputRef.current
           ? "#000000"
           : "#ffffff"
-        : document.activeElement === inputRef.current ||
-          document.activeElement?.tagName.toUpperCase() === "DIV"
-        ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
-        : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+        : `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
     );
 
     useEffect(() => {
@@ -249,16 +246,13 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           ? document.activeElement === inputRef.current
             ? "#ffffff"
             : "#ffffff1a"
-        : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
+        : `rgb(${mergedInputBox?.focusBgColor})`);
       setForeColor(
         appState.mode === "dark"
           ? document.activeElement === inputRef.current
             ? "#000000"
             : "#ffffff"
-          : document.activeElement === inputRef.current ||
-            document.activeElement?.tagName.toUpperCase() === "DIV"
-          ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
-          : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+          : `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
       );
     }, [document.activeElement,
       inputRef.current,

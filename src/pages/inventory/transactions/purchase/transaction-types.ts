@@ -649,15 +649,7 @@ interface ProductBatchDetailsForAutoBarcodeData {
   units: UnitByBatchDetailsDto[];
 }
 
-interface UnitByBatchDetailsDto {
-  unitCode?: string;
-  productBatchID?: number; // C# long -> TS number
-  unitID?: number;
-  unitName?: string;
-  multiFactor?: string;
-  unitDescription?: string;
-  decimalPoints?: number;
-}
+
 
 export interface DataAutoBarcode {
   products: ProductBatchDetailsForAutoBarcodeData[];
@@ -722,15 +714,6 @@ export interface BarcodeLabel {
   showPreview: boolean;
   pluCode: string;
 }
-interface UnitByBatchDetailsDto {
-  unitCode?: string;
-  value?: number;
-  label?: string;
-  multiFactor?: string; // default '' in C#
-  unitDescription?: string; // default '' in C#
-  decimalPoints?: number;
-  productBatchID?: number;
-}
  export enum EmployeeType
  {
     All = "All",
@@ -754,4 +737,13 @@ interface UnitByBatchDetailsDto {
   SalesPrice: number;
   PurchasePrice: number;
   PartyName?: string;
+}
+export interface UnitByBatchDetailsDto {
+  unitCode?: string;
+  productBatchID?: number; // C# long -> TS number
+  value?: number;
+  label?: string;
+  multiFactor?: string;
+  unitDescription?: string;
+  decimalPoints?: number;
 }

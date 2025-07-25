@@ -11,6 +11,7 @@ import {
   TransactionValidationsData,
   InvAccTransaction,
   PartialTransactionFormFields,
+  UnitByBatchDetailsDto,
 } from "./transaction-types";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
@@ -58,7 +59,7 @@ const InvTransactionSlice = createSlice({
         voucherNo,
         rowOnly = false,
       } = action.payload;
-      
+
       state.formElements.btnAdd.label = "Add";
       state.isRowEdit = false;
       if (!rowOnly) {
@@ -97,18 +98,22 @@ const InvTransactionSlice = createSlice({
         state.formElements.transactionDate.disabled = false;
         state.formElements.linkEdit.visible = false;
 
-
         if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
           state.formElements.costCentreID.disabled = true;
           state.formElements.linkEdit.visible = false;
         }
         state.prev = modelToBase64Unicode(
-          setTransactionForHistory({
-            transaction: { 
-              master: state.transaction.master,
-              details: state.transaction.details.filter((x: any) => x.productID > 0)
-             },
-          },"inv")
+          setTransactionForHistory(
+            {
+              transaction: {
+                master: state.transaction.master,
+                details: state.transaction.details.filter(
+                  (x: any) => x.productID > 0
+                ),
+              },
+            },
+            "inv"
+          )
         );
       }
     },
@@ -273,12 +278,11 @@ const InvTransactionSlice = createSlice({
       // state.transaction.details.push(...serializedRows);
     },
 
-
     formStateTransactionIvAccTransactionsRowsUpdate: (
       state,
       action: PayloadAction<InvAccTransaction[]>
     ) => {
-       state.transaction.invAccTransactions = action.payload;
+      state.transaction.invAccTransactions = action.payload;
     },
     formStateTransactionDetailsRowAdd: (
       state,
@@ -332,8 +336,10 @@ const InvTransactionSlice = createSlice({
       // Iterate over all rows in details
       state.transaction.details = [];
     },
-    formStateSetDetails: ( state,
-      action: PayloadAction<TransactionDetail[]>) => {
+    formStateSetDetails: (
+      state,
+      action: PayloadAction<TransactionDetail[]>
+    ) => {
       // Iterate over all rows in details
       state.transaction.details = action.payload;
     },
@@ -547,9 +553,12 @@ const InvTransactionSlice = createSlice({
         itemsToAddToDetails?: TransactionDetail[];
       }>
     ) => {
-     
-      const { fields, updateOnlyGivenDetailsColumns = false, itemsToAddToDetails = undefined, rowIndex = -1 } =
-        action.payload || {};
+      const {
+        fields,
+        updateOnlyGivenDetailsColumns = false,
+        itemsToAddToDetails = undefined,
+        rowIndex = -1,
+      } = action.payload || {};
 
       if (!fields || typeof fields !== "object") {
         console.error("Invalid fields in payload");
@@ -621,18 +630,23 @@ const InvTransactionSlice = createSlice({
 
             transactionValue.details.forEach(
               (detailItem: TransactionDetail, index: number) => {
-                const toIndex = (state as any).transaction.details.findIndex((x: TransactionDetail) => x.slNo == detailItem.slNo)
+                const toIndex = (state as any).transaction.details.findIndex(
+                  (x: TransactionDetail) => x.slNo == detailItem.slNo
+                );
                 if (updateOnlyGivenDetailsColumns === true) {
                   // Update only specific columns in the row
                   if (!state.transaction.details[toIndex]) {
-                    state.transaction.details[toIndex] = {} as TransactionDetail;
+                    state.transaction.details[toIndex] =
+                      {} as TransactionDetail;
                   }
 
                   // Batch assign instead of individual property updates
                   Object.assign(state.transaction.details[toIndex], detailItem);
                 } else {
                   // Replace the entire row
-                  (state as any).transaction.details[toIndex] = { ...detailItem };
+                  (state as any).transaction.details[toIndex] = {
+                    ...detailItem,
+                  };
                 }
               }
             );
@@ -641,59 +655,36 @@ const InvTransactionSlice = createSlice({
           // Handle other transaction fields (non-details)
           Object.keys(transactionValue).forEach((transactionKey: string) => {
             if (transactionKey !== "details") {
-              const _fieldValue = fields[key as keyof TransactionFormState][transactionKey];
+              const _fieldValue =
+                fields[key as keyof TransactionFormState][transactionKey];
               if (_fieldValue?.constructor === Object) {
-          // Nested object
-          if (!(state as any)[key] || typeof (state as any)[key] !== "object") {
-            (state as any)[key] = {};
-          }
-          updateNested(
-            (state as any)[key][transactionKey] as Record<string, any>,
-            _fieldValue as Record<string, any>
-          );
-        } else {
-          // Primitive, array, or other object type
-          if (Array.isArray(_fieldValue)) {
-            (state as any)[key] = [..._fieldValue];
-          } else if (_fieldValue instanceof Date) {
-            (state as any)[key] = _fieldValue.toISOString();
-          } else {
-            (state as any)[key] = _fieldValue;
-          }
-        }
+                // Nested object
+                if (
+                  !(state as any)[key] ||
+                  typeof (state as any)[key] !== "object"
+                ) {
+                  (state as any)[key] = {};
+                }
+                updateNested(
+                  (state as any)[key][transactionKey] as Record<string, any>,
+                  _fieldValue as Record<string, any>
+                );
+              } else {
+                // Primitive, array, or other object type
+                if (Array.isArray(_fieldValue)) {
+                  (state as any)[key] = [..._fieldValue];
+                } else if (_fieldValue instanceof Date) {
+                  (state as any)[key] = _fieldValue.toISOString();
+                } else {
+                  (state as any)[key] = _fieldValue;
+                }
+              }
             }
           });
 
           return;
         }
 
-        // // Handle details array directly (if fields.details is provided)
-        // if (key === 'details' && Array.isArray(fieldValue)) {
-        //   const detailsArray = fieldValue as DetailItem[];
-
-        //   if (!Array.isArray((state as any).details)) {
-        //     (state as any).details = [];
-        //   }
-
-        //   detailsArray.forEach((detailItem: DetailItem, index: number) => {
-        //     if (updateOnlyGivenDetailsColumns === true) {
-        //       // Update only specific columns in the row
-        //       if (!(state as any).details[index]) {
-        //         (state as any).details[index] = {};
-        //       }
-        //       Object.keys(detailItem).forEach((column: string) => {
-        //         (state as any).details[index][column] = detailItem[column];
-        //       });
-        //     } else {
-        //       // Replace the entire row
-        //       (state as any).details[index] = { ...detailItem };
-        //     }
-        //   });
-
-        //   return;
-        // }
-
-        // Standard field handling
         if (fieldValue === null || fieldValue === undefined) {
           (state as any)[key] = fieldValue;
         } else if (fieldValue?.constructor === Object) {
@@ -708,7 +699,14 @@ const InvTransactionSlice = createSlice({
         } else {
           // Primitive, array, or other object type
           if (Array.isArray(fieldValue)) {
+            if(key == "batchesUnits") {
+             if(state.batchesUnits) {
+    const units = fieldValue as UnitByBatchDetailsDto[]
+    state.batchesUnits.push(...units); // Spread the array elements
+}
+            } else {
             (state as any)[key] = [...fieldValue];
+            }
           } else if (fieldValue instanceof Date) {
             (state as any)[key] = fieldValue.toISOString();
           } else {
@@ -717,8 +715,16 @@ const InvTransactionSlice = createSlice({
         }
       });
 
-      if(itemsToAddToDetails && itemsToAddToDetails.length > 0 && rowIndex >= 0) {
-        state.transaction.details.splice(rowIndex + 1, 0, ...itemsToAddToDetails);
+      if (
+        itemsToAddToDetails &&
+        itemsToAddToDetails.length > 0 &&
+        rowIndex >= 0
+      ) {
+        state.transaction.details.splice(
+          rowIndex + 1,
+          0,
+          ...itemsToAddToDetails
+        );
       }
     },
   },
@@ -751,7 +757,7 @@ export const {
   formStateMasterHandleFieldChange,
   formStateTransactionMaster3HandleFieldChange,
   formStateLoadDataUpdate,
-  formStateSetDetails
+  formStateSetDetails,
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

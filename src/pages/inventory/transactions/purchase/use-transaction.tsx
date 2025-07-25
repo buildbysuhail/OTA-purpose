@@ -2172,7 +2172,7 @@ if(loadVType == "GRN") {
     forImport?: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
-
+debugger;
     try {
       let detail = data.detail;
       let outDetail: DeepPartial<TransactionDetail> = {};
@@ -2488,7 +2488,7 @@ if(loadVType == "GRN") {
             true
           );
           let currentDetails = [
-            ...formState.transaction.details.filter((x) => x.productID > 0),
+            ...formState.transaction.details.filter((x) => x.productID > 0 || x.slNo == latestData.slNo),
           ];
           let final =
             _res?.transaction?.details != undefined &&
@@ -3218,12 +3218,13 @@ debugger;
               searchColumn: "barCode",
               setFocusToNextColumn: false,
             },
-            { result: {}, formStateHandleFieldChangeKeysOnly },
-            true
+            { result: {} },
+            false, true
           );
             // Load product details by barcode
             if (productDetails) {
              detailItem =  Object.assign(productDetails.transaction!.details![0] as DeepPartial<TransactionDetail>, detailItem);
+             detailItem.isValid = true
             const calculatedRow = calculateRowAmount(
                 detailItem,
                 "barCode",
@@ -3255,11 +3256,7 @@ outState.batchesUnits = productDetails.batchesUnits;
               outState.transaction.master = {
                 ...outState.transaction.master,
                 partyId: partyDetails.LedgerID,
-                partyName: partyDetails.PartyName,
-                partyDisplayName: partyDetails.DisplayName,
-                partyAddress: partyDetails.Address1,
-                partyAddress2: partyDetails.Address2,
-                partyTaxNumber: partyDetails.TaxNumber
+                partyName: partyDetails.LedgerName,
               };
             } else {
               throw new Error(`PartyName - ${excelData[0].PartyName} - Not Found. Please recheck PartyName`);
@@ -3274,7 +3271,8 @@ outState.batchesUnits = productDetails.batchesUnits;
         }
 
         // Calculate summary and totals if functions are provided
-        const details = outState.transaction?.details?.filter((x: any) => x.isValid == true) || [];
+        const _details = outState.transaction?.details?.filter((x: any) => x.isValid == true) || [];
+        const details = [..._details, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
         if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
           const summaryRes = calculateSummary(details, formState, {
             result: {},
@@ -3293,14 +3291,16 @@ outState.batchesUnits = productDetails.batchesUnits;
             totalRes.summary = summaryRes.summary;
             totalRes.transaction = totalRes.transaction ?? {};
             totalRes.transaction.master = { ...totalRes.transaction.master };
-            totalRes.transaction.details = outState.transaction.details;
+            totalRes.transaction.details = [];
             totalRes.batchesUnits = outState.batchesUnits;
-
+debugger;
             // Dispatch the state update
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: totalRes,
-                updateOnlyGivenDetailsColumns: true
+                updateOnlyGivenDetailsColumns: true,
+                rowIndex:0,
+                itemsToAddToDetails: _details
               })
             );
           }

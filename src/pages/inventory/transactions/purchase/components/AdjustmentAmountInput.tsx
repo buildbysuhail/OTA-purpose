@@ -426,7 +426,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           isOpen={isModalOpen}
           closeModal={closeModal}
           width={1200}
-          height={624}  //610
+          height={634}  //610
           title={t("add_amount_or_jv")}
           content={
             <>
@@ -612,17 +612,22 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
                 }}
               />
               <div className="flex flex-col items-end mt-2">
-                <div className="flex justify-between items-center px-6 font-bold gap-6">
-                  <div className="flex flex-col">
-                    <div className="text-base font-semibold">{t("total_credit")}</div>
-                    <div className="text-base font-semibold">{t("total_fc")}</div>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="text-base font-bold">{totalCredit}</div>
-                    <div className="text-base font-bold">{totalFc}</div>
-                  </div>
+                <div className="flex flex-row gap-8 p-2 bg-gray-100 rounded-md">
+                <div className="text-right">
+                <div className="text-sm text-gray-600">{t("total_credit")}</div>
+                <div className="text-lg font-bold text-red">
+                  {totalCredit}
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2">
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-gray-600">{t("total_fc")}</div>
+                <div className="text-lg font-bold text-green">
+                  {totalFc}
+                </div>
+              </div>
+              </div>
+
+                <div className="flex items-center gap-2 px-2 py-2">
                   <ERPButton
                     title={t("close")}
                     variant="secondary"

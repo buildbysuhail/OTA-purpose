@@ -1269,7 +1269,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const fetchPreferences = async () => {
     onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
   };
-  
+
   if (gridId && columns) {
     fetchPreferences();
   }
@@ -1330,39 +1330,52 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
             </button>
 
             {isGridMenuOpen && (
-              <div
-                ref={popupRef}
-                className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-                style={{
-                  top: "26px",
-                  left: "-5px",
-                  width: "251px",
-                  marginTop: "8px",
-                }}
-              >
-                <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
-                  <ul className="space-y-2">
-                    <li>
+            <div
+              ref={popupRef}
+              className="absolute rounded-lg bg-white text-black dark:bg-[#1f2937] dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#4b5563] p-3 z-50 backdrop-blur-sm"
+              style={{
+                top: "37px",
+                left: "-5px",
+                width: "251px",
+              }}
+            >
+              <nav className="w-full">
+                <ul className="space-y-3">
+
+                  {/* Grid Preference Chooser */}
+                  <li>
+                    <div className="p-2 rounded-md bg-[#f9fafb] dark:bg-[#37415180] border border-[#e5e7eb] dark:border-[#4b5563]">
                       <GridPreferenceChooser
                         ref={preferenceChooserRef}
                         gridId={gridId}
-                          columns={(formState.gridColumns ?? [])as DevGridColumn[]}
+                        columns={(formState.gridColumns ?? []) as DevGridColumn[]}
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
                         eclipseClass="m-0 p-0"
                       />
-                    </li>
-                    <li>
-                      <button
-                        onClick={openExcelMenu}
-                        className="flex items-center gap-2 text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out">
-                        <FileUp  className="w-5 h-5"/> {t('export_to_excel')}
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            )}
+                    </div>
+                  </li>
+
+                  {/* Divider */}
+                  <li>
+                    <hr className="border-[#e5e7eb] dark:border-[#4b5563]" />
+                  </li>
+
+                  {/* Export to Excel */}
+                  <li>
+                    <button
+                      onClick={openExcelMenu}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
+                    >
+                      <FileUp className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      <span>{t('export_to_excel')}</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
+
           </div>
         </div>
         {isExcelMenuOpen && (

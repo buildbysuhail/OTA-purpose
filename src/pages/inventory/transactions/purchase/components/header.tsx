@@ -31,7 +31,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { LoadMulti, LoadMultiFooter } from "../load-multi";
 import PendingOrderList from "../pending-order-list";
-import ExcelImport from "../import-excel";
+import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -131,6 +132,16 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       };
     }, []);
     const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+
+      const onChooseTemplate = async () => {
+    debugger;
+      downloadImportTemplateHeadersOnly && downloadImportTemplateHeadersOnly()
+  }
+
+      const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        debugger;
+        importFromExcel && importFromExcel(event)
+      };
 
     return (
       <>
@@ -370,167 +381,181 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
             {isPopupVisible && (
               <div
                 ref={popupRef}
-                className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+                className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
                 style={{
-                  top: "100%",
-                  left: "-180px",
-                  width: "251px",
-                  marginTop: "8px",
+                  top: "45px",
+                  left: "-233px",
+                  width: "275px",
                 }}
               >
-                <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
+                <nav className="w-full">
                   <ul className="space-y-1">
-                    {/* <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                        onClick={(e) => {
-                          printPaymentReceiptAdvice(formState, voucherType);
-                        }}
-                      >
-                        <Printer className="h-4 w-4" />
-                        <span>{t("print_payment_advise")}</span>
-                      </button>
-                    </li> */}
 
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          onClick={(e) => {
-                            unlockVoucher();
-                          }}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#eff6ff] hover:text-[#1d4ed8] dark:hover:bg-[#1e3a8a4d] dark:hover:text-[#93c5fd] transition-all duration-200 rounded-md group text-left"
+                          onClick={unlockVoucher}
                         >
-                          <KeyRound className="h-4 w-4" />
-                          <span>{t("unlock_voucher")}</span>
+                          <KeyRound className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          <span className="font-medium">{t("unlock_voucher")}</span>
                         </button>
                       </li>
                     )}
 
+                    {/* MJV Excel Import */}
                     {formState.transaction.master.voucherType === "MJV" &&
                       userSession.dbIdValue === "ABCO" && (
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
                             onClick={() => setShowValidation(true)}
                           >
-                            <FileUp className="h-4 w-4" />
-                            <span>{t("MJV_excel_import")}</span>
+                            <FileUp className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                            <span className="font-medium">{t("MJV_excel_import")}</span>
                           </button>
                         </li>
                       )}
 
+                    {/* Foreign Currency Checkbox */}
                     {formState.formElements.foreignCurrency?.visible && (
                       <li>
-                        <ERPCheckbox
-                          id="foreignCurrency"
-                          label={formState.formElements.foreignCurrency.label}
-                          className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          checked={formState.foreignCurrency}
-                          onChange={(e) =>
-                            dispatch(
-                              formStateHandleFieldChange({
-                                fields: {
-                                  foreignCurrency: e.target.checked,
-                                },
-                              })
-                            )
-                          }
-                          disabled={
-                            formState.formElements.foreignCurrency?.disabled ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
-                        />
+                        <div className="px-3 py-2.5 hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md">
+                          <ERPCheckbox
+                            id="foreignCurrency"
+                            label={formState.formElements.foreignCurrency.label}
+                            className="w-full flex items-center gap-3"
+                            checked={formState.foreignCurrency}
+                            onChange={(e) =>
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    foreignCurrency: e.target.checked,
+                                  },
+                                })
+                              )
+                            }
+                            disabled={
+                              formState.formElements.foreignCurrency?.disabled ||
+                              formState.formElements.pnlMasters?.disabled
+                            }
+                          />
+                        </div>
                       </li>
                     )}
+
+                    {/* Change Template */}
                     <li>
                       <button
                         onClick={selectTemplates}
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
                       >
-                        <AlignHorizontalSpaceBetween className="h-4 w-4" />
-                        {t("change_template")}
+                        <AlignHorizontalSpaceBetween className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">{t("change_template")}</span>
                       </button>
                     </li>
+
+                    {/* Print Preview Checkbox */}
                     {formState.formElements.printPreview?.visible && (
                       <li>
-                        <ERPCheckbox
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="printPreview"
-                          className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          label={t(formState.formElements.printPreview.label)}
-                          checked={formState.printPreview}
-                          onChange={(e) =>
-                            dispatch(
-                              formStateHandleFieldChange({
-                                fields: {
-                                  printPreview: e.target.checked,
-                                },
-                              })
-                            )
-                          }
-                          disabled={
-                            formState.formElements.printPreview?.disabled
-                          }
-                        />
+                        <div className="px-3 py-2.5 hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md">
+                          <ERPCheckbox
+                            localInputBox={formState?.userConfig?.inputBoxStyle}
+                            id="printPreview"
+                            className="w-full flex items-center gap-3"
+                            label={t(formState.formElements.printPreview.label)}
+                            checked={formState.printPreview}
+                            onChange={(e) =>
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    printPreview: e.target.checked,
+                                  },
+                                })
+                              )
+                            }
+                            disabled={formState.formElements.printPreview?.disabled}
+                          />
+                        </div>
                       </li>
                     )}
+
+                    {/* Divider */}
                     <li>
-                        <button
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          onClick={openLoadMultiModal}
-                        >
-                          <span>{t('load_multi')}</span>
-                        </button>
-                      </li>
+                      <hr className="my-2 border-[#e5e7eb] dark:border-[#4b5563]" />
+                    </li>
+
+                    {/* Load Multi */}
                     <li>
-                        <button
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                          onClick={openPendingOrder}
-                        >
-                          <span>{t('pending_order')}</span>
-                        </button>
-                      </li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#f0fdfa] hover:text-[#0f766e] dark:hover:bg-[#134e4a4d] dark:hover:text-[#5eead4] transition-all duration-200 rounded-md group text-left"
+                        onClick={openLoadMultiModal}
+                      >
+                        <span className="font-medium">{t('load_multi')}</span>
+                      </button>
+                    </li>
+
+                    {/* Pending Order */}
                     <li>
-                        <button  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={openExcelImport}>
-                        <FileDown className="w-4 h-4"/>  {t('import_from_excel')}
-                        </button>
-                      </li>
-                      <ERPModal
-                        isOpen={isLoadMultiModalOpen}
-                        closeModal={() => setIsLoadMultiModalOpen(false)}
-                        title={t("load_multi")}
-                        width={800}
-                        height={200}
-                        content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
-                        footer={<LoadMultiFooter/>}
-                      />
-                      <ERPModal
-                        isOpen={isPendingOrderOpen}
-                        closeModal={() => setIsPendingOrderOpen(false)}
-                        title={t("pending_order")}
-                        width={800}
-                        height={780}
-                        content={<PendingOrderList closeModal={() => setIsPendingOrderOpen(false)} t={t} onProcessSelected={onProcessSelected}/>}
-                      />
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
+                        onClick={openPendingOrder}
+                      >
+                        <span className="font-medium">{t('pending_order')}</span>
+                      </button>
+                    </li>
+
+                    {/* Choose Template */}
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
+                        onClick={onChooseTemplate}
+                      >
+                        <span className="font-medium">{t("download_for_excel_template_import")}</span>
+                      </button>
+                    </li>
+
+                    {/* Import Excel Template */}
+                    <li>
+                      <div className="px-3 py-2.5 hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md">
+                        <ERPFileUploadButton
+                          buttonText={t("import_excel_template")}
+                          handleFileChange={onSelectExcel}
+                          buttonClassName="w-full text-left font-medium bg-transparent border-none p-0 hover:bg-transparent"
+                        />
+                      </div>
+                    </li>
                   </ul>
                 </nav>
+
+                {/* Modals */}
+                <ERPModal
+                  isOpen={isLoadMultiModalOpen}
+                  closeModal={() => setIsLoadMultiModalOpen(false)}
+                  title={t("load_multi")}
+                  width={800}
+                  height={200}
+                  content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
+                  footer={<LoadMultiFooter />}
+                />
+
+                <ERPModal
+                  isOpen={isPendingOrderOpen}
+                  closeModal={() => setIsPendingOrderOpen(false)}
+                  title={t("pending_order")}
+                  width={800}
+                  height={780}
+                  content={
+                    <PendingOrderList
+                      closeModal={() => setIsPendingOrderOpen(false)}
+                      t={t}
+                      onProcessSelected={onProcessSelected}
+                    />
+                  }
+                />
               </div>
             )}
-            {isImportExcelOpen && (
-              <ERPModal
-                isForm={true}
-                isOpen={isImportExcelOpen}
-                closeButton="LeftArrow"
-                hasSubmit={false}
-                closeTitle={t("close")}
-                title={t("import_from_excel")}
-                width={1000}
-                height={740}
-                isFullHeight={true}
-                closeModal={() => setIsImportExcelOpen(false)}
-                content={<ExcelImport downloadImportTemplateHeadersOnly ={downloadImportTemplateHeadersOnly}  importFromExcel={importFromExcel}/>}
-              />
-            )}
+
           </div>
 
           {/* Previous Page Button */}
@@ -916,21 +941,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   </ul>
                 </nav>
               </div>
-            )}
-            {showValidation && (
-              <ERPModal
-                isForm={true}
-                isOpen={showValidation}
-                closeButton="LeftArrow"
-                hasSubmit={false}
-                closeTitle={t("close")}
-                title={t("MJV_excel_import")}
-                width={1000}
-                height={800}
-                isFullHeight={true}
-                closeModal={() => setShowValidation(false)}
-                content={<ExcelImport downloadImportTemplateHeadersOnly ={downloadImportTemplateHeadersOnly}  importFromExcel={importFromExcel}/>}
-              />
             )}
           </div>
 

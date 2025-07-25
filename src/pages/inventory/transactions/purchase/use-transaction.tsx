@@ -3121,6 +3121,223 @@ const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
     // showErrorMessage("Template Download Error", ex.message || ex.toString(), "Download Failed");
   }
 };
+const importFromExcel = async (): Promise<void> => {
+  
+      try {
+        // Create file input element
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.xls,.xlsx';
+        fileInput.style.display = 'none';
+        
+        // Promise to handle file selection
+        const fileSelected = new Promise<File | null>((resolve) => {
+          fileInput.onchange = (event: Event) => {
+            const target = event.target as HTMLInputElement;
+            const file = target.files?.[0] || null;
+            resolve(file);
+          };
+          fileInput.oncancel = () => resolve(null);
+        });
+        
+        // Trigger file dialog
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+        
+        const selectedFile = await fileSelected;
+        if (!selectedFile) {
+          // setIsLoading(false);
+          return; // User cancelled
+        }
+        
+        // Read Excel file using ExcelJS
+        const workbook = new ExcelJS.Workbook();
+        const fileBuffer = await selectedFile.arrayBuffer();
+        await workbook.xlsx.load(fileBuffer);
+        
+        // Get 'Purchase' worksheet
+        const purchaseWorksheet = workbook.getWorksheet('Purchase');
+        if (!purchaseWorksheet) {
+          throw new Error('Purchase worksheet not found in the Excel file');
+        }
+        
+        // Get the range of used cells
+        const rowCount = purchaseWorksheet.rowCount;
+        
+        if (rowCount <= 1) {
+          throw new Error('No data rows found in the Excel file');
+        }
+        
+        // Extract data from Excel (starting from row 2, skipping header)
+        const excelData: ExcelRowData[] = [];
+        
+        for (let rowNumber = 2; rowNumber <= rowCount; rowNumber++) {
+          const row = purchaseWorksheet.getRow(rowNumber);
+          
+          // Skip empty rows
+          if (!row.hasValues) {
+            continue;
+          }
+          
+          try {
+            const rowData: ExcelRowData = {
+              Barcode: getExcelCellValue(row.getCell(1)) || '',
+              Quantity: parseFloat(getExcelCellValue(row.getCell(2)) || '0') || 0,
+              Disc_per: getExcelCellValue(row.getCell(3)) ? parseFloat(getExcelCellValue(row.getCell(3))!) : 0,
+              Discount: getExcelCellValue(row.getCell(4)) ? parseFloat(getExcelCellValue(row.getCell(4))!) : 0,
+              MRP: getExcelCellValue(row.getCell(5)) ? parseFloat(getExcelCellValue(row.getCell(5))!) : 0,
+              SalesPrice: parseFloat(getExcelCellValue(row.getCell(6)) || '0') || 0,
+              PurchasePrice: parseFloat(getExcelCellValue(row.getCell(7)) || '0') || 0,
+              PartyName: getExcelCellValue(row.getCell(8)) || ''
+            };
+            
+            // Only add rows with valid barcode
+            if (rowData.Barcode.trim() !== '') {
+              excelData.push(rowData);
+            }
+          } catch (err) {
+            console.warn(`Error parsing row ${rowNumber}:`, err);
+            continue; // Skip this row and continue with next
+          }
+        }
+        
+        if (excelData.length === 0) {
+          throw new Error('No valid data found in the Excel file');
+        }
+        
+        // Prepare state update for inventory items
+        let outState: any = {
+          transaction: { master: {}, details: [] },
+        };
+        
+        // Process each Excel row
+        for (let i = 0; i < excelData.length; i++) {
+          const rowData = excelData[i];
+          
+          try {
+            let detailItem: any = {
+              slNo: generateUniqueKey(),
+              barCode: rowData.Barcode,
+              qty: rowData.Quantity,
+              discPerc: rowData.Disc_per || 0,
+              discount: rowData.Discount || 0,
+              mrp: rowData.MRP || 0,
+              salesPrice: rowData.SalesPrice,
+              unitPrice: rowData.PurchasePrice
+            };
+            const productDetails = await  loadProductDetailsByAutoBarcode(
+            {
+              productCode: "",
+              autoBarcode: rowData.Barcode,
+              productBatchID: 0,
+              searchText: rowData.Barcode,
+              detail: detailItem,
+              useProductCode: false,
+              rowIndex: 0,
+              searchColumn: "barCode",
+              setFocusToNextColumn: false,
+            },
+            { result: {}, formStateHandleFieldChangeKeysOnly },
+            true
+          );
+            // Load product details by barcode
+            if (productDetails) {
+             detailItem =  Object.assign(productDetails, detailItem);
+            const calculatedRow = calculateRowAmount(
+                detailItem,
+                "barCode",
+                { result: { transaction: { details: [detailItem] } } },
+                true
+              );
+              
+              outState.transaction.details.push(calculatedRow.transaction!.details![0]);
+            }
+            else {
+              detailItem.isValid = false
+              outState.transaction.details.push(detailItem);
+            }
+            
+          
+            
+          } catch (rowError: any) {
+            console.error(`Error processing row ${i + 1}:`, rowError);
+            // Continue with next row instead of stopping entire import
+          }
+        }
+        
+        // Handle party information if available
+        if (excelData[0]?.PartyName && excelData[0].PartyName.trim() !== '') {
+          try {
+            const partyDetails = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/partyDetails?partyName=${excelData[0].PartyName}` );
+            
+            if (partyDetails) {
+              outState.transaction.master = {
+                ...outState.transaction.master,
+                partyId: partyDetails.LedgerID,
+                partyName: partyDetails.PartyName,
+                partyDisplayName: partyDetails.DisplayName,
+                partyAddress: partyDetails.Address1,
+                partyAddress2: partyDetails.Address2,
+                partyTaxNumber: partyDetails.TaxNumber
+              };
+            } else {
+              throw new Error(`PartyName - ${excelData[0].PartyName} - Not Found. Please recheck PartyName`);
+            }
+          } catch (partyError: any) {
+            console.error('Error loading party details:', partyError);
+            const errorMsg = partyError.message || 'Error loading party details';
+            // setError(errorMsg);
+            // onError?.("Party Loading Error", errorMsg, "1");
+            return;
+          }
+        }
+        
+        // Calculate summary and totals if functions are provided
+        const details = outState.transaction?.details?.filter((x: any) => x.isValid == true) || [];
+        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+          const summaryRes = calculateSummary(details, formState, {
+            result: {},
+          });
+          
+          const totalRes = calculateTotal(
+            formState.transaction.master,
+            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+            formState.formElements,
+            {
+              result: outState,
+            }
+          );
+          
+          if (totalRes) {
+            totalRes.summary = summaryRes.summary;
+            totalRes.transaction = totalRes.transaction ?? {};
+            totalRes.transaction.master = { ...totalRes.transaction.master };
+            totalRes.transaction.details = outState.transaction.details;
+            
+            // Dispatch the state update
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: totalRes,
+                updateOnlyGivenDetailsColumns: true
+              })
+            );
+          }
+        }
+        
+        // setImportedCount(excelData.length);
+        // const successMsg = `Successfully imported ${excelData.length} items from Excel`;
+        // onSuccess?.(successMsg);
+        
+      } catch (ex: any) {
+        // const errorMsg = ex.message || ex.toString();
+        // console.error('Error importing from Excel:', ex);
+        // setError(errorMsg);
+        // onError?.("Import Failed", errorMsg, "Excel Import Error");
+      } finally {
+        // setIsLoading(false);
+      }
+    };
   return {
     undoEditMode,
     handleTextDataKeyDown,

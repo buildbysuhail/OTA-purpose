@@ -228,6 +228,7 @@ export interface TransactionDetail {
   brand: string;
   brandID: number;
   qty: number;
+  qtyTag?: number;
   free: number;
   multiFactor: number;
   unit: string;
@@ -293,6 +294,7 @@ export interface TransactionDetail {
   barcodeUnit3Printed: boolean;
   location: string;
   grTransDetailsID: number;
+  grTransDetailsIDTag?: number;
   arabicName: string;
   supplierReferenceProductCode: string;
   poTransDetailsID: number;
@@ -310,6 +312,7 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
+  isValid?: boolean;
 }
 
 export interface TransactionDetails2 {
@@ -497,6 +500,7 @@ export interface TransactionFormState {
   barcodeData?: any;
   barcodePrevOpen?: boolean;
   ledgerDetails: boolean;
+  loading?: boolean;
   dataWarranty: [];
   dataBrands: [];
 }
@@ -723,4 +727,28 @@ interface UnitByBatchDetailsDto {
   unitDescription?: string; // default '' in C#
   decimalPoints?: number;
   productBatchID?: number;
+}
+ export enum EmployeeType
+ {
+    All = "All",
+    Purchaser = "PUR",
+    SalesMan = "SMAN",
+    Receipt = "RPT",
+    Purchaser_SalesMan = "PURSMAN",
+    Purchaser_Receipt = "PURRPT",
+    SalesMan_Receipt = "SMANRPT",
+    Accountant = "ACCT",
+    Driver = "DV",
+    Deliveryman = "DMAN"
+
+ };
+ export interface ExcelRowData {
+  Barcode: string;
+  Quantity: number;
+  Disc_per?: number;
+  Discount?: number;
+  MRP?: number;
+  SalesPrice: number;
+  PurchasePrice: number;
+  PartyName?: string;
 }

@@ -118,7 +118,7 @@ interface ERPDataComboboxProps {
   useMUI?: boolean;
   variant?: "filled" | "outlined" | "standard" | "normal";
   localInputBox?: inputBox; // Local styling preferences
-  name?: any; 
+  name?: any;
   addNewOption?:boolean;
   addNewOptionCobonent?:{
     popupAction?:any;
@@ -198,7 +198,7 @@ const mapItemsToOptions = (
   labelKey: string,
   valueKey: string,
   nameKey: string
-): Option[] => { 
+): Option[] => {
   if (!items) return [];
   const itemsArray = Array.isArray(items) ? items : Object.values(items);
 return itemsArray.map((item: any) => ({
@@ -672,24 +672,35 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
 
+    const [foreColor,setForeColor]=useState<string>(
+      appState.mode=='dark'
+      ?isFocused==true
+      ? "#ffffff"
+          : "#ffffff1a"
+      :`${isFocused?`rgb(${inputBoxState?.focusForeColor})`:``}`
+    )
+
     useEffect(() => {
-      let border, bgCol;
+      let border, bgCol,bgFor;
       if (appState?.mode === "dark") {
         border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
         bgCol = isFocused ? "#313334" : "#ffffff1a";
+        bgFor = isFocused?"#fff" :'#ccc';
       } else {
         border =
           isFocused || isHovered
             ? `rgb(${inputBoxState?.borderFocus})`
             : `rgb(${inputBoxState?.borderColor})`;
         bgCol = isFocused
-          ? `rgb(${inputBoxState?.focusBgColor})`
-          : inputBoxState?.inputBgColor
-          ? `rgb(${inputBoxState?.inputBgColor})`
-          : "";
+          ? `rgb(${inputBoxState?.focusBgColor})`: inputBoxState?.inputBgColor
+          ? `rgb(${inputBoxState?.inputBgColor})`: "";
+          bgFor =isFocused
+          ? `rgb(${inputBoxState?.focusForeColor})`:inputBoxState?.fontColor
+          ?`rgb(${inputBoxState?.fontColor})`:'';
       }
       setBorderStyles(border);
       setBgColor(bgCol);
+      setForeColor(bgFor);
     }, [
       appState.mode,
       isFocused,
@@ -698,6 +709,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       inputBoxState?.borderFocus,
       inputBoxState?.focusBgColor,
       inputBoxState?.defaultBgColor,
+      inputBoxState?.fontColor,
+      inputBoxState?.focusForeColor,
     ]);
 
     useEffect(() => {
@@ -726,7 +739,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         if ((_reload !== undefined && _reload !== true) || fetching) {
           return;
         }
-        
+
         setGetListUrl(`${field?.getListUrl ?? ""}${field?.params ?? ""}`);
         if (!disabledApiCall && field?.freezeDataLoad !== true) {
           await loadData();
@@ -838,7 +851,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         }
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
-          
+
           const res = await api.getWithCacheAsync(url, params);
           if (CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
             localStorage.setItem(btoa(url), JSON.stringify(res));
@@ -863,8 +876,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setLoading(true);
       try {
         let _items;
-debugger;
-              
+
         // Check if data is available in Redux
         let _continue = true;
         let fetchWithCache = false;
@@ -906,7 +918,7 @@ debugger;
         console.error("Error loading data:", error);
       } finally {
         // setLcct(localStorage.getItem("lcct")??"")
-        
+
       lcct.current = localStorage.getItem("lcct") ?? "";
         if (_reload === true) {
           changeReload && changeReload(false);
@@ -952,10 +964,10 @@ debugger;
       );
       let final: Option | null = null;
       // Handle value == -2 by selecting the first item if items are loaded
-        
+
         const x = getListUrl;
         const y = `${field?.getListUrl??""}${field?.params??""}`;
-        
+
         if(field?.dataNameField != undefined && field?.dataNameField != "") {
           const dataNameFieldValue = data[field.dataNameField]
           if(isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
@@ -963,7 +975,7 @@ debugger;
             if(dfo) {
               handleItemClick(dfo);
               return;
-            }          
+            }
           }
         }
         if (value === -2 && x== y) {
@@ -984,7 +996,7 @@ debugger;
             fieldKey === "currency";
           final = _selected || _default || _exceptional || initialValue || null;
         }
-        
+
         const dfdf = inputValue;
         if (
           (value === undefined || value === null) &&
@@ -1127,7 +1139,7 @@ debugger;
     };
 
     // const handleAddNewClick = () => {
-    //   
+    //
     //   if (addNewOptionCobonent && addNewOptionCobonent.popupAction) {
     //     dispatch(addNewOptionCobonent.popupAction({ isOpen: true, key: null, reload: false }));
     //     setIsOpen(false); // Close the dropdown
@@ -1778,7 +1790,7 @@ debugger;
                   height,
                   fontSize,
                   fontWeight: inputBoxState?.bold ? 700 : fontWeight,
-                  color,
+                  color:foreColor,
                   borderColor:noBorder?undefined: borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
@@ -1800,9 +1812,9 @@ debugger;
                   !fetching
                     ? "!pr-[60px]"
                     : "!pr-[30px]"
-                } dark:!text-dark-text placeholder:capitalize 
+                } dark:!text-dark-text placeholder:capitalize
                 ${disabled ? "border-dashed" : ""}
-                 ${noBorder ? "border-none !shadow-none" : ""} 
+                 ${noBorder ? "border-none !shadow-none" : ""}
                 `}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
@@ -1829,14 +1841,14 @@ debugger;
                 title={initial?.label || ""}
                 value={
                   // isOpen
-                  //   ? 
-                  
+                  //   ?
+
                   truncateText(
                     inputValue || "",
                     ref as React.RefObject<HTMLInputElement>
                   )
                     // inputValue
-                    // : 
+                    // :
                     // truncateText(
                     //     initial?.label || "",
                     //     ref as React.RefObject<HTMLInputElement>
@@ -2004,14 +2016,14 @@ debugger;
                       )}
 
                   </>
-               
+
                   )}
-                
-      
+
+
                 </div>,
                 document.body // Render to body to escape parent constraints
               )}
-        
+
 
           </Combobox>
           {info != undefined && info != null && info != "" && (
@@ -2041,7 +2053,7 @@ debugger;
                   }}
                   content={addNewOptionCobonent.content}
                 />
-               
+
               )}
         </div>
       );
@@ -2114,7 +2126,7 @@ const propNames: string[] = [
 //     dfd
 //   );
 //   const keysToCompare = _arr.filter(key => !propNames.includes(key));
-// 
+//
 //   for (const key of keysToCompare) {
 //     const prevValue = prevProps[key as keyof ERPDataComboboxProps];
 //     const nextValue = nextProps[key as keyof ERPDataComboboxProps];
@@ -2159,16 +2171,16 @@ const propNames: string[] = [
 const safeCompare = (obj1: any, obj2: any): boolean => {
   // Handle simple equality cases
   if (obj1 === obj2) return true;
-  
+
   // Handle null/undefined cases
   if (obj1 == null || obj2 == null) return obj1 === obj2;
-  
+
   // Different types
   if (typeof obj1 !== typeof obj2) return false;
-  
+
   // Handle primitives
   if (typeof obj1 !== 'object') return obj1 === obj2;
-  
+
   // Handle arrays
   if (Array.isArray(obj1) && Array.isArray(obj2)) {
     if (obj1.length !== obj2.length) return false;
@@ -2177,32 +2189,32 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
     }
     return true;
   }
-  
+
   // Simple check for React elements - just check the type and key
-  if (obj1?.$$typeof === Symbol.for('react.element') && 
+  if (obj1?.$$typeof === Symbol.for('react.element') &&
       obj2?.$$typeof === Symbol.for('react.element')) {
     return obj1.type === obj2.type && obj1.key === obj2.key;
   }
-  
+
   // Handle DOM nodes or anything with circular references - assume they're equal
   // if they're not objects or we've already handled their specific cases
   if (typeof obj1 === 'object' && (
-      obj1 instanceof Node || 
-      obj1 instanceof Window || 
+      obj1 instanceof Node ||
+      obj1 instanceof Window ||
       obj1?.constructor?.name?.includes('Fiber'))) {
     return true; // Skip complex DOM/React internal objects
   }
-  
+
   // Handle regular objects - check keys and values
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
   if (keys1.length !== keys2.length) return false;
-  
+
   // Check if all keys in obj1 exist in obj2 with the same values
   return keys1.every(key => {
     // Skip known problematic properties
-    if (key.startsWith('__react') || 
-        key === 'ref' || 
+    if (key.startsWith('__react') ||
+        key === 'ref' ||
         key === 'children' ||
         key === '_owner') {
       return true;
@@ -2227,7 +2239,7 @@ const propsAreEqual = (
 
     // Skip ref objects comparison
     if (key === 'ref') continue;
-    
+
     // Handle function comparisons - compare references
     if (typeof prevValue === "function" && typeof nextValue === "function") {
       if (prevValue !== nextValue) {
@@ -2235,7 +2247,7 @@ const propsAreEqual = (
       }
       continue;
     }
-    
+
     // Use our safe comparison function for objects and arrays
     if (!safeCompare(prevValue, nextValue)) {
       return false;

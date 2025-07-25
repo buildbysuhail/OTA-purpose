@@ -29,12 +29,14 @@ const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
   { label: "Letter", value: "LETTER" },
-  // { label: "Custom", value: "CUSTOM" },
+  { label: "Custom", value: "CUSTOM" },
 ];
 
 const retailPageSizes = [
-  { label: `3 "`, value: "3Inch" },
-  { label: `4 "`, value: "4Inch" }
+  { label: `2 "`, value: "ROLL_2_INCH" },
+  { label: `3 "`, value: "ROLL_3_INCH" },
+  { label: `4 "`, value: "ROLL_4_INCH" },
+  { label: "Custom", value: "CUSTOM" },
 ]
 
 const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
@@ -50,16 +52,14 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
     setMaxHeight(wh);
   }, []);
 
-  const isRetailTemplate = () => {
-    return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize!));
-  }
+  const isRetailTemplate = () => templateGroup === "SI";
   /* ########################################################################################### */
 
   return (
     <ERPScrollArea className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
   
 
-      <div className="transition-all  flex flex-col gap-4  p-4 ">
+      <div className="transition-all  flex flex-col gap-4  p-4">
         <div>
           <label htmlFor="template_name" className="font-light text-[#ef4444] text-sm">
             {t("template_name_header")}
@@ -90,15 +90,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
           label={t("page_size")}
         />
-           {/* <ERPDataCombobox
-                       defaultData={propertiesState?.pageSize ?? "A4"}
-                       
-                      handleChange={(id, value) => onChange?.({  ...propertiesState, pageSize: value })}
-                       id="pageSize"
-                   
-                    options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
-                     label={t("page_size")} 
-                    /> */}
+    
         {
           propertiesState?.pageSize == "CUSTOM" &&(
             <>
@@ -296,7 +288,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               checked={propertiesState?.includePaymentStub}
               onChange={(e) => onChange?.({ ...propertiesState, includePaymentStub: e.target.checked })}
             />
-            {propertiesState?.includePaymentStub && <div className="space-y-3 my-3">
+            {propertiesState?.includePaymentStub && <div className="">
               <ERPInput
                 label={t("payment_stub")}
                 id="payment_stub_label"

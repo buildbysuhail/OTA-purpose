@@ -27,7 +27,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
   childrenHeight = 800,
 }) => {
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-  const [sidebarWidth, setSidebarWidth] = useState(initialWidth ?? (deviceInfo.isMobile ? 350 : 400));
+  const [sidebarWidth, setSidebarWidth] = useState(initialWidth ?? (deviceInfo.isMobile ? 350 : 410));
   const appState = useAppState();
 
   return (

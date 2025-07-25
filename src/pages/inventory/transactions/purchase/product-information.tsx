@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
@@ -35,7 +35,7 @@ const SalesTab: React.FC<{ parm: any; transactionType: string; columns: DevGridC
       method={ActionType.POST}
       gridHeader={t("sales")}
       gridId="sales-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -50,6 +50,7 @@ const SalesTab: React.FC<{ parm: any; transactionType: string; columns: DevGridC
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -65,7 +66,7 @@ const SalesOrderTab: React.FC<{ parm: any; transactionType: string; columns: Dev
       method={ActionType.POST}
       gridHeader={t("sales_order")}
       gridId="sales-order-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -80,6 +81,7 @@ const SalesOrderTab: React.FC<{ parm: any; transactionType: string; columns: Dev
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -95,7 +97,7 @@ const PurchaseTab: React.FC<{ parm: any; transactionType: string; columns: DevGr
       method={ActionType.POST}
       gridHeader={t("purchase")}
       gridId="purchase-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -110,6 +112,7 @@ const PurchaseTab: React.FC<{ parm: any; transactionType: string; columns: DevGr
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -125,7 +128,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
       method={ActionType.POST}
       gridHeader={t("purchase_order")}
       gridId="purchase-order-grid"
-      className="HistorySidebarcustom"
+      className="HistorySidebarcustom dark:bg-dark-bg-card dark:text-dark-text dark:border-dark-border"
       remoteOperations={{ paging: true, filtering: true, sorting: true }}
       pageSize={40}
       hideGridAddButton={true}
@@ -140,6 +143,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
       enableScrollButton={false}
       ShowGridPreferenceChooser={false}
       showPrintButton={false}
+      height={540}
     />
   );
 };
@@ -147,7 +151,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
 const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ isOpen, onClose, transactionType }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
-  const tabs = ["Item Details", "Transactions"];
+  const tabs = [t("item_details"), t("transactions")];
   const [productInfo, setProductInfo] = useState<ProductDisplayDto>(initialProductDisplayData);
   const [loading, setLoading] = useState({});
   const [showCurrentCustomer, setShowCurrentCustomer] = useState(false);
@@ -167,7 +171,26 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   });
   const [activeSubTab, setActiveSubTab] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const subTabs = ["Sales", "Sales Order", "Purchase", "Purchase Order"];
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const subTabs = [t("sales"), t("sales_order"), t("purchase"), t("purchase_order")];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen &&
+        menuRef.current &&
+        menuButtonRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        !menuButtonRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const data = formState.currentCell?.data;
@@ -194,7 +217,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
     () => [
       {
         dataField: "actions",
-        caption: t("Actions"),
+        caption: t("actions"),
         allowSearch: true,
         allowFiltering: false,
         fixed: true,
@@ -202,24 +225,24 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         width: 1000,
         cellRender: (cellElement: any) => {
           return (
-            <div className="bg-gradient-to-r from-white to-gray-50 p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-200">
+            <div className="bg-gradient-to-r from-white to-gray-50 dark:from-dark-bg-card dark:to-dark-bg p-4 border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-200 dark:hover:border-dark-border">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <p className="text-gray-900 font-bold text-sm uppercase truncate max-w-xs cursor-pointer hover:text-[#2563EB] transition-colors duration-200" title={cellElement.data?.party}>
+                  <p className="text-gray-900 dark:text-dark-text font-bold text-sm uppercase truncate max-w-xs cursor-pointer hover:text-[#2563EB] dark:hover:text-[#93C5FD] transition-colors duration-200" title={cellElement.data?.party}>
                     {cellElement.data?.party?.length > 20 ? cellElement.data.party.slice(0, 20) + "..." : cellElement.data?.party}
                   </p>
-                  <p className="text-gray-600 text-xs mt-1.5 font-medium">
-                    <span className="bg-[#EFF6FF] text-[#1D4ED8] px-2 py-0.5 rounded-full text-xs font-semibold">{cellElement.data?.voucherNumber}</span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-gray-500">{cellElement.data?.date}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary text-xs mt-1.5 font-medium">
+                    <span className="bg-[#EFF6FF] dark:bg-[#1E3A8A] text-[#1D4ED8] dark:text-[#93C5FD] px-2 py-0.5 rounded-full text-xs font-semibold">{cellElement.data?.voucherNumber}</span>
+                    <span className="mx-2 text-gray-400 dark:text-dark-text-secondary">•</span>
+                    <span className="text-gray-500 dark:text-dark-text-secondary">{cellElement.data?.date}</span>
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <p className="text-gray-600 font-medium text-sm">
-                    Item Price: <span className="font-bold text-[#16A34A] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary font-medium text-sm">
+                    {t("item_price")}: <span className="font-bold text-[#16A34A] dark:text-[#4ADE80] text-base">₹{cellElement.data?.rateWithTax?.toFixed(2) || "0.00"}</span>
                   </p>
-                  <p className="text-gray-600 font-medium text-xs mt-1.5">
-                    Quantity Sold: <span className="font-bold text-[#2563EB]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
+                  <p className="text-gray-600 dark:text-dark-text-secondary font-medium text-xs mt-1.5">
+                    {t("quantity_sold")}: <span className="font-bold text-[#2563EB] dark:text-[#93C5FD]">{cellElement.data?.qty?.toFixed(2) || "0.00"}</span>
                   </p>
                 </div>
               </div>
@@ -227,7 +250,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
           );
         },
       },
-    ],[t]
+    ], [t]
   );
 
   useEffect(() => {
@@ -263,35 +286,35 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Product Name:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_name")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out text-right">{productInfo?.productName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Product Code:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_code")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCode || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Group:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("group")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.groupName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Category:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("category")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCategoryName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Unit:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("unit")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.unitName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Item Type:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("item_type")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.itemType || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Brand:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("brand")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.brandName || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Barcode:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("barcode")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.autoBarcode || '-'}</span>
           </div>
         </div>
@@ -304,11 +327,11 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Std Sales Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_sales_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdSalesPrice || 0}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Min Sale Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_sale_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.minSalePrice || 0}</span>
           </div>
         </div>
@@ -321,7 +344,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Std Purchase Price:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_purchase_price")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdPurchasePrice || 0}</span>
           </div>
         </div>
@@ -334,19 +357,19 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Current Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("current_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stock || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Min Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMin || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Max Stock:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("max_stock")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMax || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Warehouse:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("warehouse")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.warehouseName || '-'}</span>
           </div>
         </div>
@@ -359,15 +382,15 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         </h6>
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Manufacturing Date:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("manufacturing_date")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Expiry Date:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("expiry_date")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.expiryDate || '-'}</span>
           </div>
           <div className="flex justify-between items-center group">
-            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">Batch No:</span>
+            <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("batch_no")}:</span>
             <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.batchNo || '-'}</span>
           </div>
         </div>
@@ -378,27 +401,33 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   const renderTransactionsTab = () => (
     <div className="p-2">
       <div className="flex items-center justify-end mb-2">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="mr-2">
-          <Menu className="w-5 h-5" />
+        <button
+          ref={menuButtonRef}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 rounded-md bg-white shadow-md hover:bg-gray-100 focus:outline-none transition duration-200"
+          aria-label="Toggle menu"
+        >
+          <Menu className="w-5 h-5 text-gray-700" />
         </button>
+
       </div>
       {isMenuOpen && (
-        <div className="absolute top-[275px] right-[18px] bg-white p-4 shadow-lg z-10">
+        <div ref={menuRef} className="absolute top-[252px] right-[9px] bg-white p-4 shadow-lg rounded-md z-10">
           <ERPCheckbox
             id="showCurrentCustomer"
-            label="Show only current customer transaction"
+            label={t("show_only_current_customer_transaction")}
             checked={showCurrentCustomer}
             onChange={(e) => setShowCurrentCustomer(e.target.checked)}
           />
           <ERPCheckbox
             id="showCurrentBatch"
-            label="Current batch transaction"
+            label={t("current_batch_transaction")}
             checked={showCurrentBatch}
             onChange={(e) => setShowCurrentBatch(e.target.checked)}
           />
           <ERPCheckbox
             id="showCurrentUnit"
-            label="Current unit transaction"
+            label={t("current_unit_transaction")}
             checked={showCurrentUnit}
             onChange={(e) => setShowCurrentUnit(e.target.checked)}
           />
@@ -437,14 +466,11 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
           <div className="w-full">
             <div className="dark:bg-dark-bg-card dark:border-dark-border p-4 bg-slate-200">
               <div className="flex items-stretch gap-2">
-                <div className="product-image min-w-[90px] h-[60px] bg-slate-200">
-                  <img
-                    src={productInfo?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbngTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s"}
-                    className="w-full h-full object-cover object-center rounded-md"
-                  />
+                <div className="product-image w-[60px] h-[60px] bg-slate-200">
+                  <img src={productInfo?.image ? productInfo.image : "https://loremipsum.imgix.net/4Yp1F82NF8yN9gUHXMphNz/c254302efb588196d9a607832cb24e28/lorem-picsum-1280x720.jpg?w=1920&q=60&auto=format,compress"} className="w-full h-full object-cover object-center" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h5 className="font-bold text-base leading-tight dark:text-dark-text text-gray-900">
+                  <h5 className="font-bold text-sm leading-tight dark:text-dark-text text-gray-900">
                     {productInfo?.productName || "Product Name"}
                   </h5>
                   <p className="text-xs font-medium dark:text-dark-text-secondary dark:bg-dark-bg text-gray-600">

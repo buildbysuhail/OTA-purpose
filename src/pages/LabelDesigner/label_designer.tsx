@@ -98,6 +98,7 @@ import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { usePrinters } from "../InvoiceDesigner/utils/get_printers";
+import { renderBarcode } from "../../utilities/barcode";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -205,7 +206,26 @@ interface PDFBarcodeDesignerProps {
   customTemplate?: any;
   onSuccess?: () => void;
 }
+export interface barcodeCreateProps {
+  format: string;
+  field: string;
+  barWidth: number;
+  height: number;
+  margin: number;
+  background: string;
+  lineColor: string;
+  showText: boolean;
+  textAlign: 'left' | 'center' | 'right';
+  font: string;
+  fontSize: number;
+  textMargin: number;
+  fontStyle: 'normal' | 'bold' | 'italic';
+}
 
+// Utility: convert points (pt) to device pixels for <canvas>
+function ptToPx(pt: number) {
+  return pt * (96 / 72); // 1pt = 1.3333px at 96 dpi
+}
 const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   forCustomRows = false,
   template,
@@ -896,36 +916,39 @@ const handleRemoveImage =()=>{
   type GapSides = "hgap" | "vgap";
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
-  const generateBarcode = useCallback((component: PlacedComponent) => {
+   const generateBarcode = useCallback((component: PlacedComponent) => {
     if (
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
     ) {
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
-        const ctx = canvasElement.getContext('2d');
-           const scale = window.devicePixelRatio || 1;
-         
-            const canvasHeight = component.height * scale;
-
-        canvasElement.height = canvasHeight;
-      
        
-            canvasElement.style.height = component.height+ "px" ;
+          const widthPx =ptToPx(component.width);  
+          const heightPx = ptToPx(component.height ); 
+           const scale = window.devicePixelRatio || 1;
+          // Set CSS dimensions in points for consistent display
 
-         if (ctx) {
-                    ctx.scale(scale, scale);
-                  }
-            }
+
+
+        canvasElement.height = heightPx * scale;
+        canvasElement.width = widthPx * scale;
+        canvasElement.style.width = `${component.width}pt`;
+        canvasElement.style.height = `${component.height}pt`;
+       
+         const ctx = canvasElement.getContext('2d');
+         if (!ctx) return;
+          ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transforms
+         ctx.scale(scale, scale);
    
         try {
           JsBarcode(canvasElement, component.content, {
             ...component.barcodeProps,
-            width: component.barcodeProps.barWidth,
-            height: (component.height),
+            width: component.barcodeProps.barWidth??1,
+            height: (heightPx),
             margin:component.barcodeProps?.margin,
-            marginBottom: 0,
-            textAlign:component.barcodeProps?.textAlign,
+       
+            textAlign:component.barcodeProps?.textAlign??1,
             textMargin: component.barcodeProps.textMargin,
             textPosition: "bottom",
             background: component.barcodeProps?.background || "#ffffff",
@@ -965,7 +988,8 @@ const handleRemoveImage =()=>{
         }
       }
     
-  }, []);
+     }
+    }, []);
 
   const appDispatch = useAppDispatch();
 
@@ -3310,6 +3334,19 @@ const handleRemoveImage =()=>{
                     }
                   />
                 </Box>
+                <Box sx={{ mb: 1 }}>
+               <ERPCheckbox
+                    id="ask_start_index"
+                    label={t("ask_start_index")}
+                    checked={templateData?.propertiesState?.ask_start_index}
+                    data={templateData?.propertiesState}
+                    onChange={async (e) => {
+                      const checked = e.target.checked;
+                      handlePagePropsChange("ask_start_index", checked);
+                    }}
+                  />
+                </Box>
+                
 
                 {/* {templateGroup !== "barcode" && (
                   <>

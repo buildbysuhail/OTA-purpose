@@ -57,12 +57,14 @@ interface InputProps {
   noLabel?: boolean;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
+  searchByCodeAndName?: boolean;
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
   textAlign?: "left" | "right" | "center";
   onNextCellFind?: (rowIndex: number, column: string) => void;
   customStyle?:inputBox
+  appState:any
 }
 
 interface LoadResult {
@@ -82,7 +84,7 @@ const createStore = async (
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      
+
       const paramNames = [
         "skip",
         "take",
@@ -205,12 +207,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       searchType = "grid",
       useInSearch = false,
       useCodeSearch = false,
+      searchByCodeAndName = true,
       advancedProductSearching = false,
       searchKey = "",
       rowIndex,
       onNextCellFind,
       textAlign,
       customStyle,
+      appState,
       ...rest
     },
     ref
@@ -228,16 +232,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
-    const { t } = useTranslation("inventory"); 
+    const { t } = useTranslation("inventory");
     const dispatch = useDispatch();
-  
+
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
     const applicationSettings = useSelector(
       (state: RootState) => state.ApplicationSettings
     );
-    
+
     useEffect(() => {
       setInputValue((prev) => ({
         ...prev,
@@ -248,7 +252,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const debouncedFetch = useMemo(
       () =>
         debounce(async (value: string, byCode: boolean) => {
-          
+
           console.log('debouncedFetch')
           if (value.trim() == "" || value.trim() == "%") {
           }
@@ -272,7 +276,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }
               payload.searchText = searchText;
             } else if (searchKey == "product") {
-              payload.searchByCodeAndName = true;
+              debugger;
+              payload.searchByCodeAndName = searchByCodeAndName;
               payload.searchByCode = false;
               if (value.trim() === "%") {
                 return null;
@@ -306,7 +311,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
-      
+
       const value = e.target.value;
       setInputValue((prev) => ({
         ...prev,
@@ -337,7 +342,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     useEffect(() => {
-     
+
       if (inputRef && "current" in inputRef && inputRef.current) {
         inputRef.current.focus();
         inputRef.current.select();
@@ -346,10 +351,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
-        
+
         console.log(`Grid key: ${e.event.key}`);
         if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
-          
+
           const gridInstance = dataGridRef.current.instance();
             const focusedRowIndex = gridInstance.option("focusedRowIndex");
             const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
@@ -394,9 +399,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
      async  (e: any) => {
         console.log(`Batch grid key: ${e.event.key}`);
         if (
-          e.event.key === "Enter" 
+          e.event.key === "Enter"
         ) {
-          const gridInstance = batchGridRef.current.instance();   
+          const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
         const selected = allSelected[0];
           if (onRowSelected) {
@@ -452,7 +457,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
-       
+
         const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
         if ( ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" , "Enter", "Escape"].includes(e.key) && showProductGrid && dataGridRef.current) {
@@ -479,10 +484,10 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
           else if (e.key === "Enter") {
           if (searchType !== "modal") {
             rest?.onKeyDown && rest?.onKeyDown(value,e);
-          } 
+          }
           else {
             if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
-              if (searchKey == "product" ) 
+              if (searchKey == "product" )
                 {
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
@@ -506,7 +511,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
                     })
                   );
                   e.preventDefault();
-                } 
+                }
                 else {
                 rest?.onKeyDown && rest?.onKeyDown(value,e);
               }
@@ -517,7 +522,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
           }
          else if (
           e.key === "Escape"
-          
+
         ) {
           setShowProductGrid(false);
           setShowBatchGrid(false);
@@ -545,7 +550,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
             rest?.onKeyDown(value,e);
             e.preventDefault();
           }
-        } 
+        }
       }
       else {
           if (rest.onKeyDown) {
@@ -591,7 +596,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
       document.addEventListener("keydown", handleFocusTrap);
       return () => document.removeEventListener("keydown", handleFocusTrap);
     }, [showProductGrid]);
-  
+
     const onClose = useCallback(() => {
     dispatch(
                   formStateHandleFieldChangeKeysOnly({
@@ -603,15 +608,15 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
                   })
                 );
   }, []);
-  
+
     const [productGridReady, setProductGridReady] = useState<any>();
 const handleProductGridContentReady = useCallback((e: any) => {
   const gridInstance = e.component;
   const visibleRows = gridInstance.getVisibleRows();
   const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
-  
+
   setProductGridReady(hasValidData);
-  
+
   if (hasValidData) {
     // Set initial focus
     gridInstance.option("focusedRowIndex", 0);
@@ -669,7 +674,9 @@ useEffect(() => {
             {searchType === "grid" && (
               <>
                 {showProductGrid && (
+                  
                   <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
+                    
                     <DataGrid
                       ref={dataGridRef}
                       loadPanel={{ enabled: false }}
@@ -717,7 +724,7 @@ useEffect(() => {
                         dataType="number"
                         visible={false}
                       />
-                    
+
                       <Column
                         dataField="arabicName"
                         caption={t("arabic_name")}

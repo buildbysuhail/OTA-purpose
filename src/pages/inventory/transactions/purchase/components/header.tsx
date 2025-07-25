@@ -30,6 +30,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { LoadMulti, LoadMultiFooter } from "../load-multi";
+import PendingOrderList from "../pending-order-list";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -55,6 +56,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onProcessSelected: ((masterIds: string, loadType: string) => void) | undefined;
 }
 
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
@@ -82,6 +84,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       goToPreviousPage,
       phone = false,
       setIsPrintModalOpen,
+      onProcessSelected
     },
     ref
   ) => {
@@ -89,10 +92,15 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
+    const [isPendingOrderOpen, setIsPendingOrderOpen]=useState(false);
 
         const openLoadMultiModal = () => {
       setIsLoadMultiModalOpen(true);
     };
+
+    const openPendingOrder =()=>{
+      setIsPendingOrderOpen(true);
+    }
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
@@ -464,14 +472,30 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <span>{t('load_multi')}</span>
                         </button>
                       </li>
+                    <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          onClick={openPendingOrder}
+                        >
+                          <span>{t('pending_order')}</span>
+                        </button>
+                      </li>
                       <ERPModal
                         isOpen={isLoadMultiModalOpen}
                         closeModal={() => setIsLoadMultiModalOpen(false)}
-                        title="Load Multi"
+                        title={t("load_multi")}
                         width={800}
                         height={200}
                         content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
                         footer={<LoadMultiFooter/>}
+                      />
+                      <ERPModal
+                        isOpen={isPendingOrderOpen}
+                        closeModal={() => setIsPendingOrderOpen(false)}
+                        title={t("pending_order")}
+                        width={800}
+                        height={780}
+                        content={<PendingOrderList closeModal={() => setIsPendingOrderOpen(false)} t={t} onProcessSelected={onProcessSelected}/>}
                       />
                   </ul>
                 </nav>
@@ -752,7 +776,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               >
                 <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                   <ul className="space-y-1">
-                  
+
 
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>

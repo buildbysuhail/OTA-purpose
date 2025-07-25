@@ -655,5 +655,30 @@
   "document_properties": "Document Properties",
 
   "fc_amount": "Amount FC",
-  "invalid_zero_amount": "Invalid amount, please check!"
+  "invalid_zero_amount": "Invalid amount, please check!",
+
+  "sales": "Sales",
+  "sales_order": "Sales Order",
+  "purchase": "Purchase",
+  "item_details": "Item Details",
+  "item_price": "Item price",
+  "quantity_sold": "Quantity sold",
+  "basic_information": "Basic Information",
+  "product_code": "Product code",
+  "group": "Group",
+  "category": "Category",
+  "item_type": "Item type",
+  "sales_information": "Sales Information",
+  "std_sales_price": "Std Sales Price",
+  "purchase_information": "Purchase Information",
+  "std_purchase_price": "Std Purchase Price",
+  "stock_information": "Stock Information",
+  "current_stock": "Current stock",
+  "min_stock": "Min stock",
+  "max_stock": "Max stock",
+  "other_information": "Other Information",
+  "manufacturing_date": "Manufacturing date",
+  "show_only_current_customer_transaction": "Show only current customer transaction",
+  "current_batch_transaction": "Current batch transaction",
+  "current_unit_transaction": "Current unit transaction"
 }

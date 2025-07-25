@@ -208,7 +208,7 @@ const Templates = ({ }) => {
                                 className="w-3 text-accent cursor-pointer"
                                 // onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
                                 // onClick={() => navigate(`/label-designer/${temp?.id}`)}
-                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, { state: { templateKind: temp?.templateKind } })}
+                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, { state: { templateKind: temp?.templateKind ,templateType: temp?.templateType,} })}
                               />
                             </div>
                             <div>
@@ -328,7 +328,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
 
     dispatch(setTemplate(_template));
-    const state = template?.templateKind ? { templateKind: template.templateKind } : {};
+    const state = template?.templateType ? { templateKind: template?.templateKind,
+                                            templateType: template?.templateType,} : {};
     templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) :
       navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
   };
@@ -337,15 +338,15 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     <div className="text-xs p-5">
       <div className="flex justify-between text-base">
         <div>{t("choose_a_template")}</div>
-        <div className="cursor-pointer" onClick={() => setShowTemplateListing(true)}>
+        <div className="cursor-pointer bg-black w-7 h-7 rounded-full text-white flex items-center justify-center" onClick={() => setShowTemplateListing(true)}>
           X
         </div>
       </div>
-      <div className="my-3 text-sm ">
+      {/* <div className="my-3 text-sm ">
         <div className="border-accent max-w-min">{t("all")}</div>
-      </div>
+      </div> */}
       <div>
-        <div className="py-2">{t("standard")}</div>
+        {/* <div className="py-2">{t("standard")}</div> */}
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
             ?.map((template: TemplateState, index: number) => {

@@ -4,6 +4,7 @@ import { UserAction } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import {
   CommonParams,
+  ExcelRowData,
   FormElementsState,
   SummaryItems,
   TransactionDetail,
@@ -16,6 +17,7 @@ import Urls from "../../../../redux/urls";
 import { DeepPartial } from "redux";
 import {
   generateUniqueKey,
+  getExcelCellValue,
   isNullOrUndefinedOrZero,
 } from "../../../../utilities/Utils";
 import {
@@ -27,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { useCallback } from "react";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -177,7 +180,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
           const transDateOnly = new Date(transDate);
           transDateOnly.setHours(0, 0, 0, 0); // Removes time part
-
+          debugger;
           if (transDateOnly < minPreDate) {
             return {
               valid: false,
@@ -281,6 +284,7 @@ export const useTransactionHelper = (transactionType: string) => {
     }
     return result;
   };
+  
   const calculateRowAmount = (
     transactionDetail: TransactionDetail,
     currentColumn: keyof TransactionDetail,
@@ -304,6 +308,8 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       // Initialize variables with proper null checks and defaults
+
+      transactionDetail = {...transactionDetail, ...detail}
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);
       let rate = Number(transactionDetail.unitPrice || 0);
@@ -454,7 +460,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
         let details = [...formState.transaction.details];
-        let current = {...formState.transaction.details[rowIndex]};
+        let current = { ...formState.transaction.details[rowIndex] };
         const final = { ...current, ...detail };
         details[rowIndex] = final;
 
@@ -473,7 +479,7 @@ export const useTransactionHelper = (transactionType: string) => {
         );
         _result.transaction = _result.transaction ? _result.transaction : {};
         _result.summary = summaryRes.summary;
-        _result.transaction.details = [{...detail, slNo: current.slNo}];
+        _result.transaction.details = [{ ...detail, slNo: current.slNo }];
         result = _result;
       }
       commonParams.formStateHandleFieldChangeKeysOnly &&
@@ -878,7 +884,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       let tot = 0;
-debugger;
+      debugger;
       if (!result) {
         result = {};
       }
@@ -926,10 +932,9 @@ debugger;
 
   const refactorDetails = (
     details: any[],
-    vType: string,
     formType: string,
     commonParams: CommonParams,
-    formState: TransactionFormState
+    loadType?: string
   ): TransactionDetail[] => {
     const detailsLength = details.length;
 
@@ -973,10 +978,20 @@ debugger;
       );
 
       // Special handling for GRN type
-      if (vType === "GRN") {
+      if (loadType === "GRN") {
         detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
           Number(row.unitPrice || 0)
         );
+        detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.quantity || 0)
+        );
+        detail.grTransDetailsID = row.invTransactionDetailID
+        detail.grTransDetailsIDTag = row.PendingQty
+      }
+      // Special handling for GRN type
+      if (loadType === "PO") {
+         detail.poTransDetailsID = row.invTransactionDetailID
+        detail.poTransDetailsIDTag = row.PendingQty
       }
 
       // Cost calculations
@@ -1371,6 +1386,80 @@ debugger;
         : master.prevTransDate;
     return formState.transaction.master;
   };
+  const     applyDiscountsToItems = (): void => {
+    debugger;
+    try {
+      let outState: DeepPartial<TransactionFormState> = {
+        transaction: { master: {}, details: [] },
+      };
+      let billDisc = 0,
+        totalGross = 0,
+        itemGross = 0,
+        grossPerc = 0,
+        itemDisc = 0,
+        discPerc = 0;
+
+      let details = formState.transaction.details.filter(
+        (x) => x.productID > 0
+      );
+      billDisc = formState.transaction.master.billDiscount;
+      outState.transaction!.master!.billDiscount = 0;
+      // Calculate total gross for items with productID > 0
+      totalGross = formState.summary.gross;
+      // Apply discount to each item with productID > 0
+      if(details.length > 0) {
+      details.forEach((item, i) => {
+        itemGross = item.gross ?? 0;
+        grossPerc = (itemGross / totalGross) * 100;
+        itemDisc = (billDisc * grossPerc) / 100;
+        discPerc = round((itemDisc / itemGross) * 100, 5);
+
+        const detail = { slNo: item.slNo, discPerc: discPerc };
+        const updatedRow = calculateRowAmount(
+          item,
+          "discPerc",
+          { result: {transaction:{details:[detail]}} },
+          true
+        );
+        if(updatedRow?.transaction?.details?.length??0 > 0) {
+        outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
+        item = {...item, ...updatedRow.transaction!.details![0]}
+        }
+      });
+      const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
+        let totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+         if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+
+          dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: totalRes,
+          updateOnlyGivenDetailsColumns: true
+        })
+      );
+        }
+    }
+    } catch (ex: any) {
+      console.error("Error applying discounts:", ex);
+    }
+  };
+  
   return {
     clearEntryControl,
     setUserRightsFn,
@@ -1386,5 +1475,6 @@ debugger;
     refactorDetails,
     attachDetails,
     attachMaster,
+        applyDiscountsToItems
   };
 };

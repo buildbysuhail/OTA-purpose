@@ -46,6 +46,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
             valueKey: "id",
             labelKey: "name",
             getListUrl: Urls.data_employees,
+            params:`employeeType=${formState.formElements.cbEmployee.employeeType}`
           }}
           disabled={
             (formState.userConfig?.presetCostenterId ?? 0) > 0 ||

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {
   ColumnModel,
+  EmployeeType,
   GridQtyFactors,
   SummaryItems,
   TransactionDetail,
@@ -24,6 +25,7 @@ import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
+  formStateSetDetails,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,6 +87,7 @@ import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
 import { barCodeField } from "../../../LabelDesigner/fields";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
 interface BilledItem {
   id?: number;
   name: string;
@@ -118,11 +121,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
   financialYearID,
   isTeller = false,
 }) => {
-
-  
-    const Utc = localStorage.getItem("utInvc");
-    const st = atob(Utc??"");
-    const _st: UserConfig = customJsonParse(st);
+  const Utc = localStorage.getItem("utInvc");
+  const st = atob(Utc ?? "");
+  const _st: UserConfig = customJsonParse(st);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
   const handleClearControls = () => {
@@ -135,13 +136,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const { t } = useTranslation("transaction");
-  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}-grid`);
+  const [gridCode, setGridCode] = useState<string>(
+    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}-grid`
+  );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
-  const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   const currentBranch = useCurrentBranch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
+  const clientSession = useAppSelector(
+    (state: RootState) => state.ClientSession
+  );
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
@@ -164,7 +171,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
-  const isFooterOnRight = formState.transactionLoading ? _st.footerPosition === "right" : formState.userConfig?.footerPosition === "right";
+  const isFooterOnRight = formState.transactionLoading
+    ? _st.footerPosition === "right"
+    : formState.userConfig?.footerPosition === "right";
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
   const { appState } = useAppState();
@@ -175,14 +184,27 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isRtl = appState.locale.rtl;
   const headerStyle = {
     left: isRtl ? "0" : headerLeft,
-    right: isRtl ? headerLeft : "0"
+    right: isRtl ? headerLeft : "0",
   };
   const purchaseGridRef = useRef<{
-    focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;
-    nextCellFind: (rowIndex: number, column: string, focus?: boolean) => { column: string; rowIndex: number } | null;
-    focusCurrentColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null;
-    focusColumn: (rowIndex: number, column: string) => { column: string; rowIndex: number } | null;
-    gridRef: HTMLDivElement
+    focusCell: (
+      targetRow: number,
+      targetColumnIndex: number
+    ) => { column: string; rowIndex: number } | null;
+    nextCellFind: (
+      rowIndex: number,
+      column: string,
+      focus?: boolean
+    ) => { column: string; rowIndex: number } | null;
+    focusCurrentColumn: (
+      rowIndex: number,
+      column: string
+    ) => { column: string; rowIndex: number } | null;
+    focusColumn: (
+      rowIndex: number,
+      column: string
+    ) => { column: string; rowIndex: number } | null;
+    gridRef: HTMLDivElement;
   }>(null);
 
   const toggleHeaderDropdown = () => {
@@ -252,13 +274,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const handleDocumentModalClick = () => {
     setIsDocumentModalOpen(true);
-  }
+  };
 
   const closeDocumentModal = () => {
     setIsDocumentModalOpen(false);
-  }
+  };
 
-  const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => {};
   const formStateRef = useRef(formState);
   useEffect(() => {
     formStateRef.current = formState;
@@ -266,40 +288,45 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
-      if (event.shiftKey && event.key === 'F') {
+      if (event.shiftKey && event.key === "F") {
         event.preventDefault();
         if (voucherNumberRef.current) {
           voucherNumberRef.current.focus();
         }
       }
       // Focus Voucher Number ☝
-      if (event.shiftKey && event.key === 'D') {
+      if (event.shiftKey && event.key === "D") {
         event.preventDefault();
         handleDocumentModalClick();
       }
       // Document Properties ☝
-      if (event.ctrlKey && event.key.toLowerCase() === 'g') {
+      if (event.ctrlKey && event.key.toLowerCase() === "g") {
         event.preventDefault();
         const currentFormState = formStateRef.current;
-        if (currentFormState.transaction.details.length > 0 && purchaseGridRef.current) {
-          const visibleColumns = currentFormState.gridColumns?.filter(
-            col => col.visible !== false && col.dataField != null
-          ) || [];
+        if (
+          currentFormState.transaction.details.length > 0 &&
+          purchaseGridRef.current
+        ) {
+          const visibleColumns =
+            currentFormState.gridColumns?.filter(
+              (col) => col.visible !== false && col.dataField != null
+            ) || [];
           const firstEditableColumn = visibleColumns.find(
-            col => col.allowEditing && !col.readOnly
+            (col) => col.allowEditing && !col.readOnly
           );
           if (firstEditableColumn) {
             const columnIndex = visibleColumns.indexOf(firstEditableColumn);
             const res = purchaseGridRef.current.focusCell(0, columnIndex);
             if (res) {
-              const data = formState.transaction.details[res.rowIndex]?.productBatchID
+              const data =
+                formState.transaction.details[res.rowIndex]?.productBatchID;
               dispatch(
                 formStateHandleFieldChange({
                   fields: {
                     currentCell: {
                       column: res.column,
                       rowIndex: res.rowIndex,
-                      data:  data
+                      data: data,
                     },
                   },
                 })
@@ -309,7 +336,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         }
       }
       // Focus Inventory Grid ☝
-      if (event.shiftKey && event.key.toUpperCase() === 'F5') {
+      if (event.shiftKey && event.key.toUpperCase() === "F5") {
         event.preventDefault();
         const currentFormState = formStateRef.current;
         if (
@@ -323,16 +350,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
       // Save Document ☝
     };
 
-    document.addEventListener('keydown', handleGlobalKeyDown);
+    document.addEventListener("keydown", handleGlobalKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleGlobalKeyDown);
+      document.removeEventListener("keydown", handleGlobalKeyDown);
     };
   }, []);
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-  const focusToNextColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.nextCellFind(rowIndex, column) ?? null; };
-  const focusColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.focusColumn(rowIndex, column) ?? null; };
-  const focusCurrentColumn = (rowIndex: number, column: string) => { return purchaseGridRef?.current?.focusCurrentColumn(rowIndex, column) ?? null; };
+  const focusToNextColumn = (rowIndex: number, column: string) => {
+    return purchaseGridRef?.current?.nextCellFind(rowIndex, column) ?? null;
+  };
+  const focusColumn = (rowIndex: number, column: string) => {
+    return purchaseGridRef?.current?.focusColumn(rowIndex, column) ?? null;
+  };
+  const focusCurrentColumn = (rowIndex: number, column: string) => {
+    return (
+      purchaseGridRef?.current?.focusCurrentColumn(rowIndex, column) ?? null
+    );
+  };
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
@@ -359,7 +394,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleRefresh,
     createNewVoucher,
     handleTextDataChange,
-    focusCostCenterRef,
+    refactorDetails,
     focusLedgerCode,
     focusRefNo,
     focusAmount,
@@ -370,6 +405,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
+        applyDiscountsToItems
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -395,18 +431,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown
   );
 
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const [gridHeight, setGridHeight] = useState(200);
   const { hasRight } = useUserRights();
 
   useEffect(() => {
-    let height
-    if ((formState.transactionLoading && _st.footerPosition === "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")) {
-      height = window.innerHeight - 300
+    let height;
+    if (
+      (formState.transactionLoading && _st.footerPosition === "right") ||
+      (!formState.transactionLoading &&
+        formState.userConfig?.footerPosition === "right")
+    ) {
+      height = window.innerHeight - 300;
     } else {
-      height = window.innerHeight - 520
+      height = window.innerHeight - 520;
     }
-    setGridHeight(height)
+    setGridHeight(height);
   }, [formState.userConfig?.footerPosition]);
 
   console.log("transaction mj23", { setGridHeight });
@@ -452,7 +494,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
               : 0,
             api.getAsync(
-              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${_drcr}`
+              `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
             ),
           ]);
           dispatch(
@@ -481,7 +523,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           dispatch(
             formStateMasterHandleFieldChange({
               fields: {
-                tokenNumber: ledgerData?.taxNumber
+                tokenNumber: ledgerData?.taxNumber,
               },
             })
           );
@@ -519,8 +561,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      const dataWarranty = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/warranty`)
-      const dataBrands = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/brands`)
+      const dataWarranty = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/data/warranty`
+      );
+      const dataBrands = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/data/brands`
+      );
       let _formState: TransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
 
@@ -528,7 +574,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-      
+
       let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
@@ -578,7 +624,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-        _formState = await loadTransVoucher(
+        _formState = (await loadTransVoucher(
           false,
           voucherNo,
           voucherPrefix,
@@ -586,13 +632,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
           formType,
           undefined,
           transactionMasterID
-        ) as TransactionFormState;
+        )) as TransactionFormState;
       }
-      
+
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
-      _formState.inSearch = applicationSettings.productsSettings.batchCriteria != "NB" ? false : true;
+      _formState.inSearch =
+        applicationSettings.productsSettings.batchCriteria != "NB"
+          ? false
+          : true;
       _formState.userRightsFormCode =
         isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
 
@@ -610,10 +659,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           },
         },
         userConfig: {
-          ...formState.userConfig
+          ...formState.userConfig,
         },
         transactionType: transactionType ?? "",
-          dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
+        dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
 
         formCode: formCode ?? "",
         title:
@@ -647,15 +696,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings.maintainWarehouse,
+        disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
+        },
+        cbEmployee: {
+          ...initialFormElements.cbEmployee,
+          employeeType:  _formState.userConfig
+        ?.showPurchaserOnly
+        ? EmployeeType.Purchaser
+        : _formState.formElements.cbEmployee.employeeType
         },
         ledgerID: {
           ...initialFormElements.ledgerID,
           accLedgerType:
-            formType == "BT" ? LedgerType.Branch_Recv_Payable :
-              !applicationSettings.inventorySettings
-                .showAccountReceivableInPurchase
-                ? LedgerType.Cash_Bank_Suppliers
-                : LedgerType.Cash_Bank_Suppliers_Customers,
+            formType == "BT"
+              ? LedgerType.Branch_Recv_Payable
+              : !applicationSettings.inventorySettings
+                  .showAccountReceivableInPurchase
+              ? LedgerType.Cash_Bank_Suppliers
+              : LedgerType.Cash_Bank_Suppliers_Customers,
         },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
@@ -665,12 +723,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
-        _formState.formElements.cbWarehouse.visible = true;
+       
 
         if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
           _formState.transaction.master.fromWarehouseID =
             _formState.userConfig?.presetWarehouseId ?? 0;
-          _formState.formElements.cbWarehouse.disabled = true;
+         
         } else {
           if (
             applicationSettings.accountsSettings.allowSalesCounter &&
@@ -715,6 +773,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
     } finally {
       setTemplateLoad(false);
     }
+  }, []);
+  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
+   if(masterIds.length > 0) {
+    dispatch(formStateHandleFieldChange({fields:{loading: true}}));
+     const PendingTransDetails: TransactionDetail[] = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransDetails`,`masterIDs=${masterIds}`)
+     if(PendingTransDetails && PendingTransDetails.length > 0) {
+      const details = refactorDetails(PendingTransDetails, loadType,{result:{}}, formState.transaction.master.voucherForm);
+      dispatch(formStateSetDetails(details));
+      dispatch(formStateHandleFieldChange({fields:{loading: false}}));
+     }
+   }
   }, []);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
@@ -805,28 +874,32 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   useEffect(() => {
-
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
       if (data.rowIndex < 0) {
         return;
       }
-      const baseDetail = { ...formState.transaction.details[data.rowIndex] }
+      const baseDetail = { ...formState.transaction.details[data.rowIndex] };
       loadProductDetailsByAutoBarcode(
         {
-          productCode: data.productCode, autoBarcode: data.autoBarcode
-          , productBatchID: data.productBatchID, searchText: data.searchText, detail: baseDetail
-          , useProductCode: data.useProductCode, rowIndex: data.rowIndex
-          , searchColumn: data.useProductCode ? "pCode" : "product", setFocusToNextColumn: true
-        }, { result: {}, formStateHandleFieldChangeKeysOnly }, true)
-
+          productCode: data.productCode,
+          autoBarcode: data.autoBarcode,
+          productBatchID: data.productBatchID,
+          searchText: data.searchText,
+          detail: baseDetail,
+          useProductCode: data.useProductCode,
+          rowIndex: data.rowIndex,
+          searchColumn: data.useProductCode ? "pCode" : "product",
+          setFocusToNextColumn: true,
+        },
+        { result: {}, formStateHandleFieldChangeKeysOnly },
+        true
+      );
     }
   }, [formState.batchSelectionData]);
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-
         if (formState.popupSearchSelectionData != "") {
           const data = JSON.parse(formState.popupSearchSelectionData);
 
@@ -839,74 +912,109 @@ const TransactionForm: React.FC<TransactionProps> = ({
             let currentDetails = [
               ...formState.transaction.details.filter((x) => x.productID > 0),
             ];
-            if (currentDetails.find(x => x.slNo == baseRowData.slNo) == undefined) {
-              currentDetails.push(baseRowData)
+            if (
+              currentDetails.find((x) => x.slNo == baseRowData.slNo) ==
+              undefined
+            ) {
+              currentDetails.push(baseRowData);
             }
             let res: DeepPartial<TransactionFormState> = {};
             let addDetails: TransactionDetail[] = [];
 
             for (const [index, item] of items.entries()) {
-
-              const input = { barCode: item.autoBarcode, productBatchID: item.productBatchID, warehouseID: item.warehouseID, warehouseName: item.warehouse };
+              const input = {
+                barCode: item.autoBarcode,
+                productBatchID: item.productBatchID,
+                warehouseID: item.warehouseID,
+                warehouseName: item.warehouse,
+              };
               if (index == 0) {
                 const rowData: TransactionDetail = { ...baseRowData, ...input };
                 const autBarcodeRes = await loadProductDetailsByAutoBarcode(
                   {
-                    autoBarcode: rowData.barCode
-                    , productBatchID: rowData.productBatchID
-                    , rowIndex: rowIndex
-                    , searchColumn: searchColumn
-                    , searchText: rowData.barCode
-                    , detail: rowData,
+                    autoBarcode: rowData.barCode,
+                    productBatchID: rowData.productBatchID,
+                    rowIndex: rowIndex,
+                    searchColumn: searchColumn,
+                    searchText: rowData.barCode,
+                    detail: rowData,
                     productCode: "",
-                    useProductCode: false, setFocusToNextColumn: false
-                  }, { result: { transaction: { details: [rowData] } } })
+                    useProductCode: false,
+                    setFocusToNextColumn: false,
+                  },
+                  { result: { transaction: { details: [rowData] } } }
+                );
 
-
-                const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const latestData =
+                  autBarcodeRes?.transaction?.details?.[0] ?? {};
                 const mergedRowData: TransactionDetail = {
                   ...rowData,
-                  ...latestData
+                  ...latestData,
                 };
                 currentDetails[rowIndex] = mergedRowData;
-                res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: { transaction: { details: [mergedRowData] } } }, true);
-                if (res?.transaction?.details && res?.transaction?.details.length > 0) {
-                  currentDetails[rowIndex] = res.transaction.details[0] as TransactionDetail
+                res = calculateRowAmount(
+                  mergedRowData as TransactionDetail,
+                  searchColumn,
+                  { result: { transaction: { details: [mergedRowData] } } },
+                  true
+                );
+                if (
+                  res?.transaction?.details &&
+                  res?.transaction?.details.length > 0
+                ) {
+                  currentDetails[rowIndex] = res.transaction
+                    .details[0] as TransactionDetail;
                 }
               } else {
                 let rowData: DeepPartial<TransactionDetail> = {
-                  ...input
+                  ...input,
                 };
-                rowData.slNo = generateUniqueKey()
+                rowData.slNo = generateUniqueKey();
 
                 const autBarcodeRes = await loadProductDetailsByAutoBarcode(
                   {
-                    autoBarcode: rowData.barCode ?? ""
-                    , productBatchID: rowData.productBatchID ?? 0
-                    , rowIndex: rowIndex
-                    , searchColumn: searchColumn
-                    , searchText: rowData.barCode ?? ""
-                    , detail: rowData as TransactionDetail,
+                    autoBarcode: rowData.barCode ?? "",
+                    productBatchID: rowData.productBatchID ?? 0,
+                    rowIndex: rowIndex,
+                    searchColumn: searchColumn,
+                    searchText: rowData.barCode ?? "",
+                    detail: rowData as TransactionDetail,
                     productCode: "",
-                    useProductCode: false, setFocusToNextColumn: false
-                  }, { result: { transaction: { details: [rowData] } } })
+                    useProductCode: false,
+                    setFocusToNextColumn: false,
+                  },
+                  { result: { transaction: { details: [rowData] } } }
+                );
 
-                const latestData = autBarcodeRes?.transaction?.details?.[0] ?? {};
+                const latestData =
+                  autBarcodeRes?.transaction?.details?.[0] ?? {};
                 const mergedRowData: TransactionDetail = {
-                  ...rowData as TransactionDetail,
-                  ...latestData
+                  ...(rowData as TransactionDetail),
+                  ...latestData,
                 };
 
-                let _res = calculateRowAmount(mergedRowData as TransactionDetail, searchColumn, { result: { transaction: { details: [mergedRowData] } } }, true);
+                let _res = calculateRowAmount(
+                  mergedRowData as TransactionDetail,
+                  searchColumn,
+                  { result: { transaction: { details: [mergedRowData] } } },
+                  true
+                );
 
-                if (_res?.transaction?.details && _res?.transaction?.details.length > 0) {
-                  addDetails.push(_res!.transaction!.details![0] as TransactionDetail);
+                if (
+                  _res?.transaction?.details &&
+                  _res?.transaction?.details.length > 0
+                ) {
+                  addDetails.push(
+                    _res!.transaction!.details![0] as TransactionDetail
+                  );
                 }
               }
-            };
+            }
 
             let final = [...currentDetails, ...addDetails];
-            const summaryRes = calculateSummary(final, formState, { result: {} });
+            const summaryRes = calculateSummary(final, formState, {
+              result: {},
+            });
 
             const totalRes = calculateTotal(
               formState.transaction.master,
@@ -931,7 +1039,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
               })
             );
           }
-
         }
       } catch (error) {
         console.error(error);
@@ -966,7 +1073,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
           res = calculateRowAmount(rowData, "qty", { result: {} }, true);
-          if (res?.transaction?.details && res?.transaction?.details.length > 0) {
+          if (
+            res?.transaction?.details &&
+            res?.transaction?.details.length > 0
+          ) {
             addDetails.push(res!.transaction!.details![0] as TransactionDetail);
           }
         }
@@ -1000,8 +1110,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.quantityFactorData]);
   useEffect(() => {
-    if (formState.currentCell && formState.currentCell.column != "" && formState.currentCell.rowIndex > -1) {
-      
+    if (
+      formState.currentCell &&
+      formState.currentCell.column != "" &&
+      formState.currentCell.rowIndex > -1
+    ) {
       const targetCellId = `${gridCode}_${formState.currentCell.column}_${formState.currentCell.rowIndex}`;
       const targetCell = document.getElementById(
         targetCellId
@@ -1027,17 +1140,27 @@ const TransactionForm: React.FC<TransactionProps> = ({
         //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
         if (purchaseGridRef?.current && targetCell) {
           const cellRect = targetCell?.getBoundingClientRect();
-          const gridRect = purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
+          const gridRect =
+            purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
           const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
-          if (cellRect?.left < gridRect?.left && purchaseGridRef && purchaseGridRef.current && purchaseGridRef?.current?.gridRef) {
+          if (
+            cellRect?.left < gridRect?.left &&
+            purchaseGridRef &&
+            purchaseGridRef.current &&
+            purchaseGridRef?.current?.gridRef
+          ) {
             purchaseGridRef.current.gridRef.scrollLeft =
               scrollLeft + (cellRect?.left - gridRect?.left);
-          } else if (cellRect?.right > gridRect?.right && purchaseGridRef && purchaseGridRef.current && purchaseGridRef?.current?.gridRef) {
+          } else if (
+            cellRect?.right > gridRect?.right &&
+            purchaseGridRef &&
+            purchaseGridRef.current &&
+            purchaseGridRef?.current?.gridRef
+          ) {
             purchaseGridRef.current.gridRef.scrollLeft =
               scrollLeft + (cellRect?.right - gridRect?.right);
           }
         }
-
       }
     }
   }, [formState.currentCell]);
@@ -1117,8 +1240,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       // },
       {
         dataField: "brandID",
-        field:{ valueKey: "id",
-              labelKey: "name"},
+        field: { valueKey: "id", labelKey: "name" },
         caption: t("brand"),
         dataType: "cb",
         width: 100,
@@ -1279,7 +1401,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         visible: false,
         width: 130,
         alignment: "right",
-        allowEditing: true
+        allowEditing: true,
       },
       {
         dataField: "profit",
@@ -1354,7 +1476,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataType: "date",
         visible: false,
         width: 100,
-        format: "dd-MMM-yyyy"
+        format: "dd-MMM-yyyy",
       },
       {
         dataField: "expDate",
@@ -1363,7 +1485,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         visible: false,
         width: 100,
         readOnly: true,
-        format: "dd-MMM-yyyy"
+        format: "dd-MMM-yyyy",
       },
       {
         dataField: "expDays",
@@ -1388,8 +1510,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 <X className="w-4 h-4" />
               </a>
             </div>
-          )
-        }
+          );
+        },
       },
       {
         dataField: "btnPrintBarcode",
@@ -1485,8 +1607,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         dataField: "warranty",
         caption: t("warranty"),
         dataType: "cb",
-        field:{ valueKey: "id",
-              labelKey: "name"},
+        field: { valueKey: "id", labelKey: "name" },
         visible: false,
         width: 150,
         readOnly: false,
@@ -1925,7 +2046,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ApplicationMainSettingsInitialState
   );
 
-  const handleChange = (selectedOption: { value: string; label: string }) => { };
+  const handleChange = (selectedOption: { value: string; label: string }) => {};
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -2040,8 +2161,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 {formState.isEdit}
                 <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                   <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                    <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
-                      style={headerStyle}>
+                    <h6
+                      className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2"
+                      style={headerStyle}
+                    >
                       {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
@@ -2076,6 +2199,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
+                    onProcessSelected={onProcessSelected}
                   />
                 </div>
               </div>
@@ -2113,7 +2237,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
             >
               <div
                 className={
-                  ((formState.transactionLoading && _st.footerPosition === "right") || formState.userConfig?.footerPosition === "right")
+                  (formState.transactionLoading &&
+                    _st.footerPosition === "right") ||
+                  formState.userConfig?.footerPosition === "right"
                     ? "flex flex-row items-center gap-2"
                     : "flex flex-col"
                 }
@@ -2124,7 +2250,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     // height: `${gridHeight}px`,
                   }}
                 >
-                  
                   <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
@@ -2138,9 +2263,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         result: {},
                         formStateHandleFieldChangeKeysOnly:
                           formStateHandleFieldChangeKeysOnly,
-                      })
-                    }
-                    }
+                      });
+                    }}
                     transactionType={transactionType}
                     columns={purchaseGridCol}
                     keyField={"productID"}
@@ -2150,16 +2274,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     summaryConfig={formState.summaryConfig}
                     gridFontSize={formState.userConfig?.gridFontSize}
                     gridIsBold={formState.userConfig?.gridIsBold}
-                    rowHeight={formState.userConfig?.gridRowHeight??_st.gridRowHeight}
+                    rowHeight={
+                      formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
+                    }
                     gridBorderColor={formState.userConfig?.gridBorderColor}
                     gridHeaderBg={formState.userConfig?.gridHeaderBg}
-                    gridHeaderFontColor={formState.userConfig?.gridHeaderFontColor}
+                    gridHeaderFontColor={
+                      formState.userConfig?.gridHeaderFontColor
+                    }
                     gridBorderRadius={formState.userConfig?.gridBorderRadius}
                   />
                 </div>
                 <div className="w-[300px]">
-                  {((formState.transactionLoading && _st.footerPosition === "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")) &&
-                  (  <TransactionFooter
+                  {((formState.transactionLoading &&
+                    _st.footerPosition === "right") ||
+                    (!formState.transactionLoading &&
+                      formState.userConfig?.footerPosition === "right")) && (
+                    <TransactionFooter
+                    applyDiscountsToItems={applyDiscountsToItems}
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
@@ -2244,13 +2376,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 goToPreviousPage={goToPreviousPage}
                 isHistorySidebarOpen={isHistorySidebarOpen}
                 setIsPrintModalOpen={setIsPrintModalOpen}
+                onProcessSelected={onProcessSelected}
               />
 
               {/* Voucher Info */}
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
-                  focusToNextColumn={focusToNextColumn}
+                    focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}
                     handleKeyDown={handleKeyDown}
@@ -2259,7 +2392,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     handleLoadByRefNo={handleLoadByRefNo}
                     handleFieldChange={handleFieldChange}
                     setIsPartyDetailsOpen={setIsPartyDetailsOpen}
-                    transactionType={transactionType ?? formState.transactionType}
+                    transactionType={
+                      transactionType ?? formState.transactionType
+                    }
                     handleFieldKeyDown={handleFieldKeyDown}
                     ledgerCodeRef={ledgerCodeRef}
                     voucherNumberRef={voucherNumberRef}
@@ -2299,6 +2434,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   }
                 />
                 <TransactionFooter
+                applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
@@ -2312,8 +2448,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   isDropUpOpen={isDropUpOpen}
                   toggleDropup={toggleFooterDropup}
                   footerLayout={
-                    ((formState.transactionLoading ? _st.footerPosition :formState.userConfig?.footerPosition) || "bottom") ===
-                      "right"
+                    ((formState.transactionLoading
+                      ? _st.footerPosition
+                      : formState.userConfig?.footerPosition) || "bottom") ===
+                    "right"
                       ? "vertical"
                       : "horizontal"
                   }
@@ -2341,23 +2479,26 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
 
         {/* footer starts here */}
-        {(formState.transactionLoading && _st.footerPosition !== "right") || (!formState.transactionLoading && formState.userConfig?.footerPosition !== "right")  && (
-          <TransactionFooter
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            handleKeyDown={handleKeyDown}
-            handleFieldKeyDown={handleFieldKeyDown}
-            focusDiscount={focusDiscount}
-            focusAmount={focusAmount}
-            goToPreviousPage={goToPreviousPage}
-            save={save}
-            selectAttachment={selectAttachment}
-            isDropUpOpen={isDropUpOpen}
-            toggleDropup={toggleFooterDropup}
-            footerLayout={"horizontal"}
-          />
-        )}
+        {(formState.transactionLoading && _st.footerPosition !== "right") ||
+          (!formState.transactionLoading &&
+            formState.userConfig?.footerPosition !== "right" && (
+              <TransactionFooter
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                handleFieldKeyDown={handleFieldKeyDown}
+                focusDiscount={focusDiscount}
+                focusAmount={focusAmount}
+                goToPreviousPage={goToPreviousPage}
+                save={save}
+                selectAttachment={selectAttachment}
+                isDropUpOpen={isDropUpOpen}
+                toggleDropup={toggleFooterDropup}
+                footerLayout={"horizontal"}
+                applyDiscountsToItems={applyDiscountsToItems}
+              />
+            ))}
         {/* footer ends here */}
 
         {formState.transaction && formState.template && (
@@ -2437,13 +2578,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
             isOpen={formState.barcodePrevOpen || false}
             title={t("barcode_print")}
             isForm={true}
-            closeModal={() => dispatch(formStateHandleFieldChange({ fields: { barcodePrevOpen: false } }))}
-            content={<DownloadBarcodePreview template={formState?.barcodeTemplate} data={formState?.barcodeData} />}
+            closeModal={() =>
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { barcodePrevOpen: false },
+                })
+              )
+            }
+            content={
+              <DownloadBarcodePreview
+                template={formState?.barcodeTemplate}
+                data={formState?.barcodeData}
+              />
+            }
             width={5000}
             height={5000}
           />
         )}
-
 
         {formState.isPartyWiseSummaryOpen && (
           <ERPModal
@@ -2595,11 +2746,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <BatchEntryModal
             data={formState.batchEntryData.data}
             isOpen={formState.batchEntryData.visible}
-            onClose={() => dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: { batchEntryData: { visible: false, data: "" } }, updateOnlyGivenDetailsColumns: true
-              })
-            )}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { batchEntryData: { visible: false, data: "" } },
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              )
+            }
             rowIndex={formState.batchEntryData.rowIndex}
             t={t}
           />
@@ -2608,12 +2762,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <Serials
             data={formState.serialNoEntryData.data}
             isOpen={formState.serialNoEntryData.visible}
-            onClose={() => dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: { serialNoEntryData: { visible: false, data: "" } }, updateOnlyGivenDetailsColumns: true
-              })
-            )}
-            t={t} productId={null} rowIndex={formState.serialNoEntryData.rowIndex} />
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { serialNoEntryData: { visible: false, data: "" } },
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              )
+            }
+            t={t}
+            productId={null}
+            rowIndex={formState.serialNoEntryData.rowIndex}
+          />
         )}
         {formState.productInfo && (
           <ProductInfoSlideUp
@@ -2643,9 +2803,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
         {formState.showProductInformation && (
           <ProductInformation
-          formState={formState}
+            formState={formState}
             isOpen={formState.showProductInformation}
-            transactionType={transactionType ?? formState.transactionType??""}
+            transactionType={transactionType ?? formState.transactionType ?? ""}
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
@@ -2655,24 +2815,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }
           />
         )}
-        {
-          isDocumentModalOpen && (
-            <ERPModal
-              isOpen={isDocumentModalOpen}
-              title={t('document_properties')}
-              width={700}
-              height={620}
-              closeModal={closeDocumentModal}
-              content={<DocumentProperties closeModal={closeDocumentModal} t={t} />}
-            />
-          )
-        }
+        {isDocumentModalOpen && (
+          <ERPModal
+            isOpen={isDocumentModalOpen}
+            title={t("document_properties")}
+            width={700}
+            height={620}
+            closeModal={closeDocumentModal}
+            content={
+              <DocumentProperties closeModal={closeDocumentModal} t={t} />
+            }
+          />
+        )}
       </div>
       {/* ) : (
         <>Loading ............</>
       )} */}
     </>
-
   );
 };
 

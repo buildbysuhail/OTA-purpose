@@ -47,6 +47,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>
             showCustomNumberChanger={
               formState.formElements.voucherNumberUpDownBtns.visible == true
             }
+            numberChangerStyle="horizontal" // or "vertical"
             className="max-w-[150px]"
             onChange={async (e: any) => {
               if (e.isCustomNumberChangerEvent == true) {

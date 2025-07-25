@@ -36,9 +36,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       stableTemplateProps,
       manageSaveAccTemplate,
       dispatch,
-      previewWidth,
-      previewHeight,
-      pageBgCol,
+     templateStyleProperties ,
+     previewContainerRef
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
 
     const SectionComponent = currentSection ? sections[currentSection.type] : null
@@ -79,7 +78,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <h1 className="text-base">{currentSection ? t(currentSection.name) : ""}</h1>
             <button
               title={t("save_template")}
-              onClick={() => manageSaveAccTemplate(React.cloneElement(templateComponent, stableTemplateProps))}
+              onClick={manageSaveAccTemplate}
+              disabled={loading}
               className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden"
             >
               <img src={save_svg || "/placeholder.svg"} className="w-5 h-5" />
@@ -111,7 +111,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</h2>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {previewWidth}pt × {previewHeight}pt
+                {templateStyleProperties.previewWidth}pt × {templateStyleProperties.previewHeight}pt
               </div>
             </div>
 
@@ -134,16 +134,21 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
           {/* Preview Content   overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1*/}
           <ERPScrollArea className={`overflow-auto  flex-1 p-6`}
           maxHeight={maxHeight - 100}>
-            <div className="flex justify-center">
+            <div className="flex justify-center"  >
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
                 <div
+                ref={previewContainerRef}
                   className="shadow-lg border border-gray-200  overflow-hidden"
                   style={{
-                    width: `${previewWidth??500}pt`,
-                    height: `${previewHeight??500}pt`,
+                    width: `${templateStyleProperties.previewWidth??500}pt`,
+                    height: `${templateStyleProperties.previewHeight??500}pt`,
                     minHeight: "400px",
-                    backgroundColor:pageBgCol
+                    backgroundColor:templateStyleProperties.backgroundColor,
+                     paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
+                    paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
+                    paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
+                    paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
                   }}
                 >
                   {/* Paper Effect */}
@@ -159,8 +164,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                 <div
                   className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
                   style={{
-                    width: `${previewWidth}pt`,
-                    height: `${previewHeight}pt`,
+                    width: `${templateStyleProperties.previewWidth}pt`,
+                    height: `${templateStyleProperties.previewHeight}pt`,
                     minHeight: "400px",
                     
                   }}

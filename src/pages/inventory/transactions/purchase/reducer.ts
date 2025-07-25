@@ -10,6 +10,7 @@ import {
   LoadData,
   TransactionValidationsData,
   InvAccTransaction,
+  PartialTransactionFormFields,
 } from "./transaction-types";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
@@ -116,7 +117,7 @@ const InvTransactionSlice = createSlice({
     formStateHandleFieldChange: (
       state,
       action: PayloadAction<{
-        fields: { [fieldId in keyof TransactionFormState]?: any };
+        fields: PartialTransactionFormFields;
       }>
     ) => {
       const { fields } = action.payload;

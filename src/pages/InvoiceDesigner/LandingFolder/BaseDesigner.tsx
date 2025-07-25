@@ -145,7 +145,10 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                     height: `${templateStyleProperties.previewHeight??500}pt`,
                     minHeight: "400px",
                     backgroundColor:templateStyleProperties.backgroundColor,
-                    padding: `${templateStyleProperties.paddingTop}px ${templateStyleProperties.paddingRight}px ${templateStyleProperties.paddingBottom}px ${templateStyleProperties.paddingLeft}px` ,
+                     paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
+                    paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
+                    paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
+                    paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
                   }}
                 >
                   {/* Paper Effect */}

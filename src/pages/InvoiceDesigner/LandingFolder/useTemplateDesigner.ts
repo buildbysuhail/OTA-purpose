@@ -51,10 +51,10 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
     const backgroundColor = templateData?.activeTemplate?.propertiesState?.bg_color ?? "#ffffff";
-    const paddingLeft = templateData?.activeTemplate?.propertiesState?.padding?.left || 10;
-    const paddingRight = templateData?.activeTemplate?.propertiesState?.padding?.right || 10;
-    const paddingTop = templateData?.activeTemplate?.propertiesState?.padding?.top || 10;
-    const paddingBottom = templateData?.activeTemplate?.propertiesState?.padding?.bottom || 10;
+    const paddingLeft = templateData?.activeTemplate?.propertiesState?.padding?.left ;
+    const paddingRight = templateData?.activeTemplate?.propertiesState?.padding?.right ;
+    const paddingTop = templateData?.activeTemplate?.propertiesState?.padding?.top ;
+    const paddingBottom = templateData?.activeTemplate?.propertiesState?.padding?.bottom;
     const selectedPageSize = getPageDimensions(
       pageSize,
       templateData?.activeTemplate?.propertiesState?.width,
@@ -81,7 +81,11 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     templateData?.activeTemplate?.propertiesState?.bg_color,
     templateData?.activeTemplate?.propertiesState?.width,
     templateData?.activeTemplate?.propertiesState?.height,
-    templateData?.activeTemplate?.propertiesState?.padding,
+    templateData?.activeTemplate?.propertiesState?.padding?.bottom,
+    templateData?.activeTemplate?.propertiesState?.padding?.left,
+    templateData?.activeTemplate?.propertiesState?.padding?.right,
+    templateData?.activeTemplate?.propertiesState?.padding?.top,
+  
   ]);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);

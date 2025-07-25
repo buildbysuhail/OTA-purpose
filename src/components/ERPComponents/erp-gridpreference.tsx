@@ -82,8 +82,11 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
 
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
-  useEffect(() => {
-    setPreferences(getInitialPreference(gridId, columns));
+    useEffect(() => {
+    const fetchPreferences = async () => {
+    setPreferences(await getInitialPreference(gridId, columns, new APIClient()));
+  };
+    fetchPreferences();
   }, [gridId, columns, onApplyPreferences]);
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({

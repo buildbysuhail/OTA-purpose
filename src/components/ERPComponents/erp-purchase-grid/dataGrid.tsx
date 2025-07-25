@@ -50,6 +50,7 @@ import ERPCheckbox from "../erp-checkbox";
 import ERPButton from "../erp-button";
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { APIClient } from "../../../helpers/api-client";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -436,7 +437,7 @@ const Row = React.memo(
             fields: {
               currentCell: {
                 column: input?.column,
-                data: data.details,
+                data: item,
                 rowIndex: input?.rowIndex,
               },
             },
@@ -628,7 +629,7 @@ const Row = React.memo(
                     formStateHandleFieldChange({
                       fields: {
                         currentCell: {
-                          column: column.dataField,
+                          column: column.dataField??"",
                           data:item,
                           rowIndex: index,
                         },
@@ -1265,10 +1266,14 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   }, [formState.gridColumns]);
 
   useEffect(() => {
-    if (gridId && columns) {
-      onApplyPreferences(getInitialPreference(gridId, columns));
-    }
-  }, [gridId, columns]);
+  const fetchPreferences = async () => {
+    onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
+  };
+  
+  if (gridId && columns) {
+    fetchPreferences();
+  }
+}, [gridId, columns]);
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
@@ -1277,7 +1282,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         pref
       );
       dispatch(
-        formStateHandleFieldChange({ fields: { gridColumns: updated } })
+        formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
       );
     },
     [columns, dispatch, formState.gridColumns]

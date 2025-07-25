@@ -1,6 +1,8 @@
 // gridPreferencesUtil.ts
 
 import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference } from "../components/types/dev-grid-column";
+import { APIClient } from "../helpers/api-client";
+import Urls from "../redux/urls";
 import { capitalizeAndAddSpace, removeSpacesAndCapitalize } from "./Utils";
 
 export function applyGridColumnPreferences(columns: DevGridColumn[], preferences?: GridPreference): DevGridColumn[] {
@@ -53,36 +55,22 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     readOnly: column.readOnly ?? false,
     }
   };
-export function getInitialPreference(gridId: any, columns: any) {
+export const getInitialPreference = async(gridId: any, columns: any, api: APIClient) =>{
   
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
-    
+    debugger;
     let updatedPreferences: GridPreference;
 
+    let parsedPreferences: GridPreference;
     if (savedPreferences) {
-      const parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
+      parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
+    } else {
+      const res = await api.getAsync(`${Urls.grid_preference}/${gridId}`);
+      localStorage.setItem(`gridPreferences_${gridId}`,JSON.stringify(res));
+      parsedPreferences = res && res as GridPreference;
+    }
+    if(parsedPreferences) {     
       const mergedPreferences = new Array<ColumnPreference>();
-      
-      // Create a mapping of columns by their `dataField` for easy lookup
-      // const columnMap = new Map<string, DevGridColumn>();
-      // columns?.forEach((column: any) => {
-      //   const dataField = column.dataField ?? removeSpacesAndCapitalize(column.caption ?? "");
-      //   columnMap.set(dataField, column);
-      // });
-      
-      // Go through parsedPreferences.columnPreferences to preserve the order
-      // parsedPreferences.columnPreferences?.forEach((savedPreference) => {
-      //   const column = columnMap.get(savedPreference.dataField);
-      //   
-      //   if (column) {
-      //     mergedPreferences.push({
-      //       ...savedPreference,
-      //       dataField: savedPreference.dataField,
-      //     });
-      //     columnMap.delete(savedPreference.dataField); // Remove the matched column
-      //   }
-      // });
-      
       // Add any remaining columns that weren't in parsedPreferences.columnPreferences
       columns?.forEach((column: any, index: any) => {
         // if (columnMap.has(column.dataField)) {

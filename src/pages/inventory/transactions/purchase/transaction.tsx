@@ -138,7 +138,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}-grid`
+    `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();

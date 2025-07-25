@@ -17,7 +17,7 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { EllipsisVertical, GripVertical } from "lucide-react";
+import { EllipsisVertical, FileUp, FileX2, GripVertical } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
 import type {
@@ -45,6 +45,11 @@ import "../../../assets/css/loader-style.css";
 import { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
 import { inputBox } from "../../../redux/slices/app/types";
 import { useTranslation } from "react-i18next";
+import ERPModal from "../erp-modal";
+import ERPCheckbox from "../erp-checkbox";
+import ERPButton from "../erp-button";
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -234,15 +239,15 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           : "#ffffff"
         : document.activeElement === inputRef.current ||
           document.activeElement?.tagName.toUpperCase() === "DIV"
-          ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
-          : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+        ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
+        : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
     );
 
     useEffect(() => {
       setBgColor(appState.mode == "dark"
-        ? document.activeElement === inputRef.current
-          ? "#ffffff"
-          : "#ffffff1a"
+          ? document.activeElement === inputRef.current
+            ? "#ffffff"
+            : "#ffffff1a"
         : `${document.activeElement === inputRef.current || document.activeElement?.tagName.toUpperCase() === "DIV" ? `rgb(${mergedInputBox?.focusBgColor})` : ``} `);
       setForeColor(
         appState.mode === "dark"
@@ -251,15 +256,15 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             : "#ffffff"
           : document.activeElement === inputRef.current ||
             document.activeElement?.tagName.toUpperCase() === "DIV"
-            ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
-            : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+          ? `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
+          : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
       );
     }, [document.activeElement,
-    inputRef.current,
-    appState.mode,
-    mergedInputBox?.focusBgColor,
-    mergedInputBox?.defaultBgColor,
-    mergedInputBox?.focusForeColor,
+      inputRef.current,
+      appState.mode,
+      mergedInputBox?.focusBgColor,
+      mergedInputBox?.defaultBgColor,
+      mergedInputBox?.focusForeColor,
     mergedInputBox?.fontColor,]);
 
     useEffect(() => {
@@ -372,30 +377,30 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
         ):(
           <>
-            <input
-              ref={inputRef}
-              id={`${gridId}_${column.dataField}_${rowIndex}`}
-              type={column.dataType === "number" ? "text" : "text"}
+          <input
+            ref={inputRef}
+            id={`${gridId}_${column.dataField}_${rowIndex}`}
+            type={column.dataType === "number" ? "text" : "text"}
               className="bg-transparent border-none focus:ring-0 focus:outline-none  "
-              style={{
-                ...cellStyle,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                backgroundColor: bgColor,
-                color: foreColor,
-                border: "none",
+            style={{
+              ...cellStyle,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              backgroundColor: bgColor,
+              color: foreColor,
+              border: "none",
                 width: "100%"
-              }}
-              value={localValue}
-              readOnly={column.readOnly}
-              onInput={handleInput}
-              onFocus={handleFocus}
-              onBlur={onBlur}
-              onKeyDown={handleKeyDown}
-              tabIndex={0}
+            }}
+            value={localValue}
+            readOnly={column.readOnly}
+            onInput={handleInput}
+            onFocus={handleFocus}
+            onBlur={onBlur}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
 
-            />
+          />
           </>
         )}
       </>
@@ -612,8 +617,8 @@ const Row = React.memo(
                       columns.filter(
                         (__col) => __col.visible != false && __col.dataField != null
                       ).length - 1
-                      ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
-                      : "none",
+                    ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
+                    : "none",
                   boxShadow: isFocused ? "0 0 0 3px rgba(59, 130, 246, 0.1)" : "none",
                 }}
                 role="gridcell"
@@ -716,15 +721,15 @@ const Row = React.memo(
                     id={cellId}
                     tabIndex={0}
                     className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
-                      ? "bg-[#dcfce7] text-[#166534]"
-                      : ""
+                        ? "bg-[#dcfce7] text-[#166534]"
+                        : ""
                       } ${cellValue === "Inactive"
                         ? "bg-[#fee2e2] text-[#991b1b]"
                         : ""
                       } ${cellValue === "Pending"
                         ? "bg-[#fef9c3] text-[#854d0e]"
                         : ""
-                      }`}
+                    }`}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
@@ -793,70 +798,70 @@ const SummaryRow: React.FC<{
   gridIsBold,
   rowHeight
 }) => {
-    const formState = useAppSelector(
-      (state: RootState) => state.InventoryTransaction
-    );
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
 
-    return (
-      <tr
-        className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
-        style={{
-          width: `${tableWidth}px`,
-          height: `${rowHeight}px`,
-          minHeight: `${rowHeight}px`,
-          maxHeight: `${rowHeight}px`,
-          boxSizing: "border-box",
+  return (
+    <tr
+      className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
+      style={{
+        width: `${tableWidth}px`,
+        height: `${rowHeight}px`,
+        minHeight: `${rowHeight}px`,
+        maxHeight: `${rowHeight}px`,
+        boxSizing: "border-box",
           borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
 
           // the above border is the border of the footer
-        }}
-      >
-        {columns
-          .filter((col) => col.visible != false && col.dataField != null)
-          .map((column, index) => {
-            const summary = summaryConfig.find(
-              (s) =>
-                s.showInColumn === column.dataField ||
-                s.column === column.dataField
-            );
-            const value = summary
-              ? summaryValues[summary.column as string]
-              : null;
-            const formattedValue = summary?.customizeText
-              ? summary.customizeText({ value })
-              : value;
+      }}
+    >
+      {columns
+        .filter((col) => col.visible != false && col.dataField != null)
+        .map((column, index) => {
+          const summary = summaryConfig.find(
+            (s) =>
+              s.showInColumn === column.dataField ||
+              s.column === column.dataField
+          );
+          const value = summary
+            ? summaryValues[summary.column as string]
+            : null;
+          const formattedValue = summary?.customizeText
+            ? summary.customizeText({ value })
+            : value;
 
-            return (
-              <td
-                key={`summary_${column.dataField}`}
-                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
-                style={{
-                  fontSize: `${gridFontSize}px`,
-                  fontWeight: gridIsBold ? "bold" : "600",
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign:
-                    summary?.alignment ||
-                    column.alignment ||
-                    (column.dataType === "number" ? "right" : "left"),
-                  boxSizing: "border-box",
-                  borderRight:
-                    index <
-                      columns.filter(
-                        (col) => col.visible != false && col.dataField != null
-                      ).length - 1
-                      ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
-                      : "none",
-                }}
-              >
-                {summary ? formattedValue : ""}
-              </td>
+          return (
+            <td
+              key={`summary_${column.dataField}`}
+              className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
+              style={{
+                fontSize: `${gridFontSize}px`,
+                fontWeight: gridIsBold ? "bold" : "600",
+                width: column.width ? `${column.width}px` : "150px",
+                minWidth: column.width ? `${column.width}px` : "150px",
+                textAlign:
+                  summary?.alignment ||
+                  column.alignment ||
+                  (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "border-box",
+                borderRight:
+                  index <
+                  columns.filter(
+                    (col) => col.visible != false && col.dataField != null
+                  ).length - 1
+                    ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
+                    : "none",
+              }}
+            >
+              {summary ? formattedValue : ""}
+            </td>
               // footer td
-            );
-          })}
-      </tr>
-    );
-  };
+          );
+        })}
+    </tr>
+  );
+};
 
 const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
@@ -899,17 +904,49 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   const dispatch = useAppDispatch();
   const { t } = useTranslation('transaction')
   const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
+  const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
   const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   const openGridMenu = () => {
     setIsGridMenuOpen(true);
-  }
+  };
+
+  const openExcelMenu = () => {
+    setIsExcelMenuOpen(true);
+  };
 
   const closeGridMenu = () => {
     setIsGridMenuOpen(false);
-  }
+  };
+
+  const closeExcelMenu = () => {
+    setIsExcelMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        closeGridMenu();
+      }
+    };
+
+    if (isGridMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isGridMenuOpen]);
 
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
@@ -933,6 +970,87 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   };
 
   const [tableWidth, setTableWidth] = useState(calculateTotalWidth());
+
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Grid Data');
+
+    const excelColumns = exportVisibleColumns
+      ? formState.gridColumns?.filter((col) => col.visible != false && col.dataField != null)
+      : formState.gridColumns;
+
+    worksheet.columns = (excelColumns ?? []).map((col) => ({
+      header: col.caption,
+      key: col.dataField,
+      width: col.width ? col.width / 7 : 20,
+    }));
+
+    formState.transaction?.details.forEach((item, index) => {
+      const row: { [key: string]: any } = {};
+      excelColumns?.forEach((col) => {
+        const fieldKey = col.dataField as keyof TransactionDetail;
+        if (fieldKey === 'slNo') {
+          row[fieldKey] = index + 1;
+        } else {
+          row[fieldKey] = item[fieldKey] ?? '';
+        }
+      });
+      worksheet.addRow(row);
+    });
+
+    if (summaryConfig.length > 0) {
+      const summaryRow: { [key: string]: any } = {};
+      excelColumns?.forEach((col) => {
+        const summary = summaryConfig.find(
+          (s) => s.showInColumn === col.dataField || s.column === col.dataField
+        );
+        if (summary && col.dataField !== undefined) {
+          const value = formState.summary[summary.column as keyof typeof formState.summary];
+          summaryRow[col.dataField] = summary.customizeText
+            ? summary.customizeText({ value })
+            : value ?? '';
+        } else {
+          if (col.dataField !== undefined) {
+            summaryRow[col.dataField] = '';
+          }
+        }
+      });
+      worksheet.addRow(summaryRow);
+    }
+
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.border = {
+      top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      };
+    });
+    if (summaryConfig.length > 0) {
+      const lastRowIndex = worksheet.rowCount;
+      const summaryRow = worksheet.getRow(lastRowIndex);
+      summaryRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF8FAFC' },
+      };
+      summaryRow.eachCell((cell) => {
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      };
+      });
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, `${gridId}_export.xlsx`);
+  };
 
   const focusCell = useCallback(
     (targetRow: number, targetColumnIndex: number) => {
@@ -1185,7 +1303,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
     >
       <div className={`relative ${className} w-full overflow-hidden`}>
-        <div className={`absolute top-[7px] ${appState.dir === "ltr" ? "left-[6px]" : "right-[3px]"} z-20`}>
+        <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           {/* <GridPreferenceChooser
             ref={preferenceChooserRef}
             gridId={gridId}
@@ -1201,10 +1319,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
             <button
               ref={buttonRef}
               onClick={() => setIsGridMenuOpen((prev: any) => !prev)}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors`}
-              title={t("previous_page")}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2`}
             >
-              <EllipsisVertical className="w-5 h-5 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
 
             {isGridMenuOpen && (
@@ -1219,16 +1336,23 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                 }}
               >
                 <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
-                  <ul className="space-y-1">
+                  <ul className="space-y-2">
                     <li>
                       <GridPreferenceChooser
-                          ref={preferenceChooserRef}
-                          gridId={gridId}
+                        ref={preferenceChooserRef}
+                        gridId={gridId}
                           columns={(formState.gridColumns ?? [])as DevGridColumn[]}
-                          onApplyPreferences={onApplyPreferences}
-                          showChooserOnGridHead
-                          eclipseClass="m-0 p-0"
-                        />
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserName={true}
+                        eclipseClass="m-0 p-0"
+                      />
+                    </li>
+                    <li>
+                      <button
+                        onClick={openExcelMenu}
+                        className="flex items-center gap-2 text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out">
+                        <FileUp  className="w-5 h-5"/> {t('export_to_excel')}
+                      </button>
                     </li>
                   </ul>
                 </nav>
@@ -1236,6 +1360,34 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
             )}
           </div>
         </div>
+        {isExcelMenuOpen && (
+          <ERPModal
+            isOpen={isExcelMenuOpen}
+            title={t("Export Options")}
+            width={400}
+            height={200}
+            closeModal={closeExcelMenu}
+            content={
+              <>
+                <ERPCheckbox
+                  id="exportVisibleColumns"
+                  label={t("export_only_visible_column")}
+                  checked={exportVisibleColumns}
+                  onChange={() => setExportVisibleColumns(!exportVisibleColumns)}
+                />
+              </>
+            }
+            footer={
+                <div className="flex items-center justify-end p-1 border-t border-gray-200">
+                  <ERPButton
+                  variant="primary"
+                  title={t("export")}
+                  onClick={exportToExcel}
+                  />
+                </div>
+            }
+          />
+        )}
 
         <div className="w-full overflow-x-auto scrollbar sticky top-0 z-10">
           <table
@@ -1271,22 +1423,22 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                             left:
                               appState.dir === "ltr"
                                 ? `${(formState.gridColumns ?? [])
-                                  .filter((c) => c.visible != false)
-                                  .slice(0, index)
-                                  .reduce(
-                                    (sum, c) => sum + (c.width || 150),
-                                    0
-                                  )}px`
+                                    .filter((c) => c.visible != false)
+                                    .slice(0, index)
+                                    .reduce(
+                                      (sum, c) => sum + (c.width || 150),
+                                      0
+                                    )}px`
                                 : undefined,
                             right:
                               appState.dir === "rtl"
                                 ? `${(formState.gridColumns ?? [])
-                                  .filter((c) => c.visible != false)
-                                  .slice(0, index)
-                                  .reduce(
-                                    (sum, c) => sum + (c.width || 150),
-                                    0
-                                  )}px`
+                                    .filter((c) => c.visible != false)
+                                    .slice(0, index)
+                                    .reduce(
+                                      (sum, c) => sum + (c.width || 150),
+                                      0
+                                    )}px`
                                 : undefined,
                             boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)",
                           }}
@@ -1327,9 +1479,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           boxSizing: "border-box",
                           borderRight:
                             index <
-                              (formState.gridColumns?.filter(
-                                (c) => c.visible != false
-                              ).length ?? 0) - 1
+                            (formState.gridColumns?.filter(
+                              (c) => c.visible != false
+                            ).length ?? 0) - 1
                               ? `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`
                               : "none",
                           background: "transparent",

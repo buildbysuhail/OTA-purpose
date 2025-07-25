@@ -16,11 +16,11 @@ interface GridPreferenceChooserProps {
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
   showChooserOnGridHead?: boolean;
+  showChooserName?: boolean;
   eclipseClass?: string;
 }
 
 const api = new APIClient();
-
 const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   {
     gridId,
@@ -28,6 +28,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     onApplyPreferences,
     showChooserOnGridHead,
     eclipseClass,
+    showChooserName,
   }: GridPreferenceChooserProps,
   ref: Ref<any>
 ) {
@@ -51,20 +52,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     dragOverItem.current = e.currentTarget.id;
   };
 
- const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number|null, endIndex?: number|null) => {
-  
-     const draggedDataField = dragItem.current ? dragItem.current.split("_")[0] : null;
+  const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number | null, endIndex?: number | null) => {
+    const draggedDataField = dragItem.current ? dragItem.current.split("_")[0] : null;
     const targetDataField = dragOverItem.current ? dragOverItem.current.split("_")[0] : null;
-
-    startIndex = startIndex != null ? startIndex :preferences.columnPreferences?.findIndex(
-      (fld: any) => fld?.dataField === draggedDataField
-    );
-    endIndex = endIndex != null ? endIndex : preferences.columnPreferences?.findIndex(
-      (fld: any) => fld?.dataField === targetDataField
-    );
+    startIndex = startIndex != null ? startIndex : preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === draggedDataField);
+    endIndex = endIndex != null ? endIndex : preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === targetDataField);
 
     if (startIndex !== -1 && endIndex !== -1) {
-      
       setPreferences((prevPreferences: any) => {
         const updatedPreferences = {
           ...prevPreferences,
@@ -74,8 +68,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
             endIndex
           ),
         };
-      console.log(`updatedPreferences`);
-      
+        console.log(`updatedPreferences`);
         if (eFromDataGrid) {
           onChange(updatedPreferences);
         }
@@ -143,16 +136,15 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
         columnPreferences: updatedColumnPreferences,
       };
       if (eFromDataGrid) {
-          onChange(updatedPreferences);
-        }
-        return updatedPreferences;
+        onChange(updatedPreferences);
+      }
+      return updatedPreferences;
     });
   };
 
   const handleApplyPreferences = async () => {
     if (isSaving) return;
     setIsSaving(true);
-
     try {
       const preference = JSON.stringify(preferences);
       localStorage.setItem(`gridPreferences_${gridId}`, preference);
@@ -166,8 +158,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     }
   };
 
-  const onClose = () => {};
-
+  const onClose = () => { };
   // Expose drag-and-drop functions via ref
   React.useImperativeHandle(ref, () => ({
     handleDragStart,
@@ -187,20 +178,26 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
           onClick={(e) => {
             e.stopPropagation();
             setIsOpen(true);
-          }}  
+          }}
           onTouchEnd={() => setIsOpen(true)}
-          className={`${
-            eclipseClass !== "" ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0 z-10 pointer-events-auto"
-          }`}
+          className={`${eclipseClass !== "" ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0 z-10 pointer-events-auto"}`}
           style={{ zIndex: 10 }}
         >
           <Ellipsis className="text-[#0ea5e9] mjtestnow" />
         </button>
-      ) : (
+      ) : showChooserName ? (
         <button
-          onClick={() => setIsOpen(true)}
-          className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(true);
+          }}
+          onTouchEnd={() => setIsOpen(true)}
+          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out"
         >
+          Grid Preference Chooser
+        </button>
+      ) : (
+        <button onClick={() => setIsOpen(true)} className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]">
           <i className="ri-apps-line"></i>
         </button>
       )}
@@ -250,9 +247,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                         onDragEnter={handleDragEnd}
                         onDragEnd={() => handleDropping(false)}
                       >
-                        <div
-                          className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4"
-                        >
+                        <div className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4">
                           <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                             ⋮⋮
                             {column?.isLocked ? (

@@ -1,10 +1,21 @@
 import React from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface BlurLoaderProps {
   text: string;
+  width?: number | string;
+  height?: number | string;
 }
 
-const BlurLoader: React.FC<BlurLoaderProps> = ({ text }) => {
+const BlurLoader: React.FC<BlurLoaderProps> = ({
+  text,
+  width = 120,
+  height = 120,
+}) => {
+  // Normalize width/height for style (if number => append "px")
+  const normalizeSize = (size: number | string) =>
+    typeof size === "number" ? `${size}px` : size;
+
   return (
     <>
       <style>
@@ -16,25 +27,12 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({ text }) => {
             --card-bg: rgba(36, 40, 56, 0.93);
             --card-border: rgba(143, 220, 250, 0.12);
             --text-color: #e5f7fe;
+            --font-family: 'Ubuntu', sans-serif;
           }
 
           @keyframes blur-fade-in {
             0% { opacity: 0; transform: scale(1.03); }
             100% { opacity: 1; transform: scale(1); }
-          }
-
-          @keyframes spinner-rotate {
-            0% { transform: rotate(0); }
-            100% { transform: rotate(360deg); }
-          }
-
-          @keyframes spinner-glow {
-            0%, 100% {
-              box-shadow: 0 0 10px 2px var(--loader-color);
-            }
-            50% {
-              box-shadow: 0 0 20px 6px var(--loader-color);
-            }
           }
 
           @keyframes loading-dots {
@@ -60,24 +58,23 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({ text }) => {
             justify-content: center;
             z-index: 9999;
             cursor: wait;
+            padding: 1rem;
+            box-sizing: border-box;
           }
 
-          .blur-loader-spinner {
-            animation: spinner-rotate 1.5s ease-in-out infinite, spinner-glow 2.8s ease-in-out infinite;
-            border: 6px solid var(--loader-bg);
-            border-top: 6px solid var(--loader-color);
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            margin-bottom: 26px;
-            transform-origin: center;
-            will-change: transform, box-shadow;
+          .lottie-wrapper {
+            width: ${normalizeSize(width)};
+            height: ${normalizeSize(height)};
+            margin-bottom: 28px;
+            user-select: none;
+            /* Optional: add subtle glow shadow */
+            filter: drop-shadow(0 0 10px var(--loader-color));
           }
 
           .blrloader-card {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
             padding: 1.15rem 2.6rem;
             background: var(--card-bg);
             color: var(--text-color);
@@ -85,9 +82,10 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({ text }) => {
             font-size: 26px;
             font-weight: 600;
             letter-spacing: 2.5px;
-            box-shadow: 0 6px 36px 0 rgba(88,188,250,0.07);
+            box-shadow: 0 6px 36px 0 rgba(88, 188, 250, 0.07);
             border: 1.5px solid var(--card-border);
-            position: relative;
+            font-family: var(--font-family);
+            white-space: nowrap;
           }
 
           .blur-loader-dots::after {
@@ -104,10 +102,19 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({ text }) => {
         aria-live="polite"
         aria-label="Loading"
       >
-        <div className="blur-loader-spinner" />
+        <div className="lottie-wrapper" aria-hidden="true">
+          <DotLottieReact
+            autoplay
+            loop
+            src="https://lottie.host/9163bda5-cb32-4cf8-8354-ea549c27bb4b/ZbSrbFIMjE.lottie"
+            // src="https://lottie.host/28a5bd0c-1d35-45d4-8758-13534f8e5f3a/QzhX59zfks.lottie"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
+
         <div className="blrloader-card">
           <span>{text}</span>
-          <span className="blur-loader-dots" />
+          {/* <span className="blur-loader-dots" /> */}
         </div>
       </div>
     </>

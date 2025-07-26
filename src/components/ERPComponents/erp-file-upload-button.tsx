@@ -8,6 +8,7 @@ interface FileUploadButtonProps {
   multiple?: boolean;
   accept?: string;
   disabled?: boolean;
+  hideIcon?: boolean;
 }
 
 const ERPFileUploadButton: React.FC<FileUploadButtonProps> = ({
@@ -18,6 +19,7 @@ const ERPFileUploadButton: React.FC<FileUploadButtonProps> = ({
   multiple = false,
   accept,
   disabled = false,
+  hideIcon = false,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -36,7 +38,7 @@ const ERPFileUploadButton: React.FC<FileUploadButtonProps> = ({
         disabled={disabled}
       >
         <span className="me-2">{buttonText}</span>
-        <i className={iconClassName}></i>
+        {!hideIcon && <i className={iconClassName}></i>}
       </button>
       <input
         type="file"

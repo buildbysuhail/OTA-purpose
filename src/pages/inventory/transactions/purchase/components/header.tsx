@@ -26,6 +26,12 @@ import {
   Group,
   ListPlus,
   FileDown,
+  DollarSign,
+  Download,
+  Layers,
+  Package,
+  ShoppingCart,
+  Upload,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
@@ -375,53 +381,61 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
 
-            {isPopupVisible && (
-              <div
-                ref={popupRef}
-                className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
-                style={{
-                  top: "45px",
-                  left: "-233px",
-                  width: "275px",
-                }}
-              >
-                <nav className="w-full">
-                  <ul className="space-y-1">
+           {isPopupVisible && (
+            <div
+              ref={popupRef}
+              className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+              style={{
+                          top: "45px",
+                          left: "-283px",
+                          width: "323px",
+                        }}
+            >
+              <nav className="w-full">
+                <ul className="space-y-1">
 
-                    {formState.formElements.lnkUnlockVoucher?.visible && (
+                  {formState.formElements.lnkUnlockVoucher?.visible && (
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#eff6ff] hover:text-[#1d4ed8] dark:hover:bg-[#1e3a8a4d] dark:hover:text-[#93c5fd] transition-all duration-200 rounded-md group text-left"
+                        onClick={unlockVoucher}
+                      >
+                        <div className="w-8 h-8 bg-[#dbeafe] dark:bg-[#1e40af4d] rounded-full flex items-center justify-center group-hover:bg-[#bfdbfe] dark:group-hover:bg-[#1e3a8a4d] group-hover:scale-110 transition-all duration-200">
+                          <KeyRound className="h-4 w-4 text-[#1e40af] dark:text-[#93c5fd]" />
+                        </div>
+                        <span className="font-medium">{t("unlock_voucher")}</span>
+                      </button>
+                    </li>
+                  )}
+
+                  {/* MJV Excel Import */}
+                  {formState.transaction.master.voucherType === "MJV" &&
+                    userSession.dbIdValue === "ABCO" && (
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#eff6ff] hover:text-[#1d4ed8] dark:hover:bg-[#1e3a8a4d] dark:hover:text-[#93c5fd] transition-all duration-200 rounded-md group text-left"
-                          onClick={unlockVoucher}
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
+                          onClick={() => setShowValidation(true)}
                         >
-                          <KeyRound className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                          <span className="font-medium">{t("unlock_voucher")}</span>
+                            <div className="w-8 h-8 bg-[#bbf7d0] dark:bg-[#1665344d] rounded-full flex items-center justify-center group-hover:bg-[#86efac] dark:group-hover:bg-[#16653499] group-hover:scale-110 transition-all duration-200">
+                            <FileUp className="h-4 w-4 text-[#166534] dark:text-[#bbf7d0]" />
+                            </div>
+                          <span className="font-medium">{t("MJV_excel_import")}</span>
                         </button>
                       </li>
                     )}
 
-                    {/* MJV Excel Import */}
-                    {formState.transaction.master.voucherType === "MJV" &&
-                      userSession.dbIdValue === "ABCO" && (
-                        <li>
-                          <button
-                            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => setShowValidation(true)}
-                          >
-                            <FileUp className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                            <span className="font-medium">{t("MJV_excel_import")}</span>
-                          </button>
-                        </li>
-                      )}
-
-                    {/* Foreign Currency Checkbox */}
-                    {formState.formElements.foreignCurrency?.visible && (
-                      <li>
-                        <div className="px-3 py-2.5 hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md">
+                  {/* Foreign Currency Checkbox */}
+                  {formState.formElements.foreignCurrency?.visible && (
+                    <li>
+                      <div className="px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group">
+                        <div className="w-full flex items-center gap-3">
+                            <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#7c3aed4d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#7c3aed99] group-hover:scale-110 transition-all duration-200">
+                            <DollarSign className="h-4 w-4 text-[#7c3aed] dark:text-[#f3e8ff]" />
+                            </div>
                           <ERPCheckbox
                             id="foreignCurrency"
                             label={formState.formElements.foreignCurrency.label}
-                            className="w-full flex items-center gap-3"
+                            className="flex-1"
                             checked={formState.foreignCurrency}
                             onChange={(e) =>
                               dispatch(
@@ -438,28 +452,35 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             }
                           />
                         </div>
-                      </li>
-                    )}
-
-                    {/* Change Template */}
-                    <li>
-                      <button
-                        onClick={selectTemplates}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
-                      >
-                        <AlignHorizontalSpaceBetween className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                        <span className="font-medium">{t("change_template")}</span>
-                      </button>
+                      </div>
                     </li>
+                  )}
 
-                    {/* Print Preview Checkbox */}
-                    {formState.formElements.printPreview?.visible && (
-                      <li>
-                        <div className="px-3 py-2.5 hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md">
+                  {/* Change Template */}
+                  <li>
+                    <button
+                      onClick={selectTemplates}
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
+                    >
+                        <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#7c2d124d] rounded-full flex items-center justify-center group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110 transition-all duration-200">
+                        <AlignHorizontalSpaceBetween className="h-4 w-4 text-[#ea580c] dark:text-[#ffedd5]" />
+                        </div>
+                      <span className="font-medium">{t("change_template")}</span>
+                    </button>
+                  </li>
+
+                  {/* Print Preview Checkbox */}
+                  {formState.formElements.printPreview?.visible && (
+                    <li>
+                      <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
+                        <div className="w-full flex items-center gap-3">
+                          <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
+                          </div>
                           <ERPCheckbox
                             localInputBox={formState?.userConfig?.inputBoxStyle}
                             id="printPreview"
-                            className="w-full flex items-center gap-3"
+                            className="flex-1"
                             label={t(formState.formElements.printPreview.label)}
                             checked={formState.printPreview}
                             onChange={(e) =>
@@ -474,68 +495,83 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             disabled={formState.formElements.printPreview?.disabled}
                           />
                         </div>
-                      </li>
-                    )}
-
-                    {/* Divider */}
-                    <li>
-                      <hr className="my-2 border-[#e5e7eb] dark:border-[#4b5563]" />
+                      </div>
                     </li>
+                  )}
 
-                    {/* Load Multi */}
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#f0fdfa] hover:text-[#0f766e] dark:hover:bg-[#134e4a4d] dark:hover:text-[#5eead4] transition-all duration-200 rounded-md group text-left"
-                        onClick={openLoadMultiModal}
-                      >
-                        <span className="font-medium">{t('load_multi')}</span>
-                      </button>
-                    </li>
+                  {/* Load Multi */}
+                  <li>
+                    <button
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdfa] hover:text-[#0f766e] dark:hover:bg-[#134e4a4d] dark:hover:text-[#5eead4] transition-all duration-200 rounded-md group text-left"
+                      onClick={openLoadMultiModal}
+                    >
+                        <div className="w-8 h-8 bg-[#ccfbf1] dark:bg-[#134e4a4d] rounded-full flex items-center justify-center group-hover:bg-[#99f6e4] dark:group-hover:bg-[#134e4a99] group-hover:scale-110 transition-all duration-200">
+                        <Layers className="h-4 w-4 text-[#134e4a] dark:text-[#ccfbf1]" />
+                        </div>
+                      <span className="font-medium">{t('load_multi')}</span>
+                    </button>
+                  </li>
 
-                    {/* Pending Order */}
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                        onClick={(e) => setIsPendingOrderOpen({open: true, type:"PO"})}
-                      >
-                        <span className="font-medium">{t('pending_order')}</span>
-                      </button>
-                    </li>
-                    {/* Pending GRN */}
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                        onClick={(e) => setIsPendingOrderOpen({open: true, type:"GRN"})}
-                      >
-                        <span className="font-medium">{t('pending_order')}</span>
-                      </button>
-                    </li>
+                  {/* Pending Order */}
+                  <li>
+                    <button
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
+                      onClick={(e) => setIsPendingOrderOpen({open: true, type:"PO"})}
+                    >
+                        <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
+                        <ShoppingCart className="h-4 w-4 text-[#be123c]" />
+                        </div>
+                      <span className="font-medium">{t('pending_purchase_order_list')}</span>
+                    </button>
+                  </li>
 
-                    {/* Choose Template */}
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
-                        onClick={onChooseTemplate}
-                      >
-                        <span className="font-medium">{t("download_for_excel_template_import")}</span>
-                      </button>
-                    </li>
+                  {/* Pending GRN */}
+                  <li>
+                    <button
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                      onClick={(e) => setIsPendingOrderOpen({open: true, type:"GRN"})}
+                    >
+                        <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
+                        <Package className="h-4 w-4 text-[#a16207]" />
+                        </div>
+                      <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                    </button>
+                  </li>
 
-                    {/* Import Excel Template */}
-                    <li>
-                      <div className="px-3 py-2.5 hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md">
+                  {/* Choose Template */}
+                  <li>
+                    <button
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
+                      onClick={onChooseTemplate}
+                    >
+                        <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
+                        <Download className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
+                        </div>
+                      <span className="font-medium">{t("download_for_excel_template_import")}</span>
+                    </button>
+                  </li>
+
+                  {/* Import Excel Template */}
+                  <li>
+                    <div className="px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group">
+                      <div className="w-full flex items-center gap-3">
+                        <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
+                          <Upload className="h-4 w-4 text-[#065f46]" />
+                        </div>
                         <ERPFileUploadButton
                           buttonText={t("import_excel_template")}
                           handleFileChange={onSelectExcel}
-                          buttonClassName="w-full text-left font-medium bg-transparent border-none p-0 hover:bg-transparent"
+                          hideIcon={true}
+                          buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1"
                         />
                       </div>
-                    </li>
-                  </ul>
-                </nav>
+                    </div>
+                  </li>
+                </ul>
+              </nav>
 
-                {/* Modals */}
-                {isLoadMultiModalOpen &&
+              {/* Modals */}
+              {isLoadMultiModalOpen &&
                 <ERPModal
                   isOpen={isLoadMultiModalOpen}
                   closeModal={() => setIsLoadMultiModalOpen(false)}
@@ -545,8 +581,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
                   footer={<LoadMultiFooter />}
                 />
-  }
-{isPendingOrderOpen && isPendingOrderOpen.open &&
+              }
+              {isPendingOrderOpen && isPendingOrderOpen.open &&
                 <ERPModal
                   isOpen={isPendingOrderOpen.open}
                   closeModal={() => setIsPendingOrderOpen({open: false, type:"PO"})}
@@ -562,9 +598,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     />
                   }
                 />
-  }
-              </div>
-            )}
+              }
+            </div>
+          )}
 
           </div>
 

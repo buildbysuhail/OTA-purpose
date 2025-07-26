@@ -1,5 +1,4 @@
 import React from "react";
-// import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface BlurLoaderProps {
   text: string;
@@ -43,6 +42,15 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({
             100% { content: ""; }
           }
 
+          @keyframes wave {
+            50%, 75% {
+              transform: scale(2.5);
+            }
+            80%, 100% {
+              opacity: 0;
+            }
+          }
+
           .blur-loader-overlay {
             animation: blur-fade-in 0.35s cubic-bezier(0.4,0.2,0.1,1);
             backdrop-filter: blur(6px);
@@ -67,8 +75,73 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({
             height: ${normalizeSize(height)};
             margin-bottom: 28px;
             user-select: none;
-            /* Optional: add subtle glow shadow */
-            filter: drop-shadow(0 0 10px var(--loader-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .loading .dot {
+            position: relative;
+            width: 2em;
+            height: 2em;
+            margin: 0.8em;
+            border-radius: 50%;
+          }
+
+          .loading .dot::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            animation: wave 2s ease-out infinite;
+          }
+
+          .loading .dot:nth-child(1) {
+            background: #7ef9ff;
+          }
+
+          .loading .dot:nth-child(1)::before {
+            animation-delay: 0.2s;
+          }
+
+          .loading .dot:nth-child(2) {
+            background: #89cff0;
+          }
+
+          .loading .dot:nth-child(2)::before {
+            animation-delay: 0.4s;
+          }
+
+          .loading .dot:nth-child(3) {
+            background: #4682b4;
+          }
+
+          .loading .dot:nth-child(3)::before {
+            animation-delay: 0.6s;
+          }
+
+          .loading .dot:nth-child(4) {
+            background: #0f52ba;
+          }
+
+          .loading .dot:nth-child(4)::before {
+            animation-delay: 0.8s;
+          }
+
+          .loading .dot:nth-child(5) {
+            background: #000080;
+          }
+
+          .loading .dot:nth-child(5)::before {
+            animation-delay: 1.0s;
           }
 
           .blrloader-card {
@@ -103,13 +176,13 @@ const BlurLoader: React.FC<BlurLoaderProps> = ({
         aria-label="Loading"
       >
         <div className="lottie-wrapper" aria-hidden="true">
-          {/* <DotLottieReact
-            autoplay
-            loop
-            src="https://lottie.host/9163bda5-cb32-4cf8-8354-ea549c27bb4b/ZbSrbFIMjE.lottie"
-            // src="https://lottie.host/28a5bd0c-1d35-45d4-8758-13534f8e5f3a/QzhX59zfks.lottie"
-            style={{ width: "100%", height: "100%" }}
-          /> */}
+          <div className="loading">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>
         </div>
 
         <div className="blrloader-card">

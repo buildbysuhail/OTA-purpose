@@ -169,11 +169,11 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   />
                   
                   {/* Template Type Badge */}
-                  {template?.templateType && template.templateType !== "standard" && (
-                    <div className="absolute top-[0px] right-[0px] rounded-bl-[15px] bg-primary text-white text-xs px-2 py-1 capitalize">
+                  {/* {template?.templateType && template.templateType !== "standard" && ( */}
+                    {/* <div className="absolute top-[0px] right-[0px] rounded-bl-[15px] bg-primary text-white text-xs px-2 py-1 capitalize">
                       {template.templateType}
-                    </div>
-                  )}
+                    </div> */}
+                  {/* )} */}
                   
                   <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
                 </div>
@@ -349,7 +349,7 @@ const Templates = ({ }) => {
                       key={`ti_${temp?.id}`}
                       tabIndex={0}
                       onClick={() => { }}
-                      className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded">
+                      className="group  relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded">
                       <div className="relative group">
                         <img
                           src={temp?.thumbImage}
@@ -357,6 +357,9 @@ const Templates = ({ }) => {
                           alt=""
                           className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
                         />
+                         <div className="absolute top-[0px] right-[0px] rounded-bl-[15px] bg-primary/50 group-hover:bg-primary text-white text-xs px-2 py-1 capitalize">
+                          {temp?.templateType}
+                        </div>
                         {/* <div className=" bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center">
                           <div
                             tabIndex={0}

@@ -98,7 +98,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
-    const [isPendingOrderOpen, setIsPendingOrderOpen]=useState(false);
+    const [isPendingOrderOpen, setIsPendingOrderOpen]=useState({open: false, type: "PO"});
     const [isImportExcelOpen,setIsImportExcelOpen]=useState(false)
 
     const openExcelImport = () =>{
@@ -109,9 +109,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       setIsLoadMultiModalOpen(true);
     };
 
-    const openPendingOrder =()=>{
-      setIsPendingOrderOpen(true);
-    }
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
@@ -499,7 +496,16 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                        onClick={openPendingOrder}
+                        onClick={(e) => setIsPendingOrderOpen({open: true, type:"PO"})}
+                      >
+                        <span className="font-medium">{t('pending_order')}</span>
+                      </button>
+                    </li>
+                    {/* Pending GRN */}
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
+                        onClick={(e) => setIsPendingOrderOpen({open: true, type:"GRN"})}
                       >
                         <span className="font-medium">{t('pending_order')}</span>
                       </button>
@@ -529,6 +535,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 </nav>
 
                 {/* Modals */}
+                {isLoadMultiModalOpen &&
                 <ERPModal
                   isOpen={isLoadMultiModalOpen}
                   closeModal={() => setIsLoadMultiModalOpen(false)}
@@ -538,21 +545,24 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
                   footer={<LoadMultiFooter />}
                 />
-
+  }
+{isPendingOrderOpen && isPendingOrderOpen.open &&
                 <ERPModal
-                  isOpen={isPendingOrderOpen}
-                  closeModal={() => setIsPendingOrderOpen(false)}
+                  isOpen={isPendingOrderOpen.open}
+                  closeModal={() => setIsPendingOrderOpen({open: false, type:"PO"})}
                   title={t("pending_order")}
                   width={800}
                   height={780}
                   content={
                     <PendingOrderList
-                      closeModal={() => setIsPendingOrderOpen(false)}
+                      closeModal={() => setIsPendingOrderOpen({open: false, type:"PO"})}
                       t={t}
+                      voucherType="PO"
                       onProcessSelected={onProcessSelected}
                     />
                   }
                 />
+  }
               </div>
             )}
 

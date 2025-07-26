@@ -310,7 +310,7 @@ const _masterIDs = gridRef.current
         <ErpDevGrid
         ref={gridRef}
           columns={mainGridColumns}
-          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingOrderMaster/`}
+          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`}
           postData={{
             voucherType: voucherType,
             ledgerID: formState.transaction.master.ledgerID,
@@ -336,7 +336,7 @@ const _masterIDs = gridRef.current
       <div className="mt-4">
         <ErpDevGrid
           columns={detailGridColumns}
-          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingOrderDetails/`}
+          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionDetails/`}
           postData={{
             transactionMasterID:
               selectedMaster.masterID,

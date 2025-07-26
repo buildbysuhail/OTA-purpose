@@ -779,10 +779,58 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
    if(masterIds.length > 0) {
-    dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
-     const PendingTransDetails: TransactionDetail[] = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransDetails`,`masterIDs=${masterIds}`)
-     if(PendingTransDetails && PendingTransDetails.length > 0) {
-      const details = refactorDetails(PendingTransDetails, loadType,{result:{}}, formState.transaction.master.voucherForm);
+    debugger;
+    dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
+     const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
+     if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
+
+      const calculatedDetails: TransactionDetail[] = [];
+      const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType,{result:{}}, formState.transaction.master.voucherForm);
+      for (let index = 0; index < refactoredDetails.length; index++) {
+        const element = refactoredDetails[index];
+        const calculated = calculateRowAmount(
+                element,
+                "barCode",
+                { result: { transaction: { details: [element] } } },
+                true
+              );
+        calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
+      }
+      
+              const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
+              if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+                const summaryRes = calculateSummary(details, formState, {
+                  result: {},
+                });
+      
+                const totalRes = calculateTotal(
+                  formState.transaction.master,
+                  summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+                  formState.formElements,
+                  {
+                    result: outState,
+                  }
+                );
+      
+                if (totalRes) {
+                  totalRes.summary = summaryRes.summary;
+                  totalRes.transaction = totalRes.transaction ?? {};
+                  totalRes.transaction.master = { ...totalRes.transaction.master };
+                  totalRes.transaction.details = [];
+                  totalRes.batchesUnits = outState.batchesUnits;
+      debugger;
+                  // Dispatch the state update
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: totalRes,
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex:0,
+                      itemsToAddToDetails: _details
+                    })
+                  );
+                }
+              }
+
       dispatch(formStateSetDetails(details));
       dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }

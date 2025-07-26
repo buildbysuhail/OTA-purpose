@@ -65,6 +65,7 @@ import {
   transactionInitialData,
   TransactionFormStateInitialData,
   initialFormElements,
+  initialInventoryTotals,
 } from "./transaction-type-data";
 import ErpPurchaseGrid, {
   SummaryConfig,
@@ -808,7 +809,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
                   formState.formElements,
                   {
-                    result: outState,
+                    result: {},
                   }
                 );
       
@@ -817,21 +818,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   totalRes.transaction = totalRes.transaction ?? {};
                   totalRes.transaction.master = { ...totalRes.transaction.master };
                   totalRes.transaction.details = [];
-                  totalRes.batchesUnits = outState.batchesUnits;
+                  totalRes.batchesUnits = PendingTransDetails.batchesUnits;
+                  totalRes.loading = {isLoading: false, text: ''}
       debugger;
                   // Dispatch the state update
+                  const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
                       fields: totalRes,
                       updateOnlyGivenDetailsColumns: true,
-                      rowIndex:0,
-                      itemsToAddToDetails: _details
+                      rowIndex:lastIndex+1,
+                      itemsToAddToDetails: calculatedDetails
                     })
                   );
                 }
               }
 
-      dispatch(formStateSetDetails(details));
+     } else {
+      
       dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }
    }

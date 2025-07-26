@@ -46,15 +46,15 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
                     {cellElement.data?.partyName?.length > 45 ? cellElement.data.partyName.slice(0, 45) + "..." : cellElement.data?.partyName}
                   </p>
                   <div className="flex justify-between items-end">
-                  <p className="text-[#64748b] dark:text-[#94a3b8] text-xs mt-1.5 font-medium">
-                    <span className="inline-flex items-center bg-gradient-to-r from-[#dbeafe] to-[#c7d2fe] dark:from-[#1e40af]/50 dark:to-[#312e81]/50 text-[#2563eb] dark:text-[#60a5fa] px-2 py-0.5 rounded-full text-xs font-semibold border border-[#bfdbfe]/50 dark:border-[#1e40af]/50 shadow-sm">  {cellElement.data?.voucherNumber || "N/A"}</span>
-                    <span className="mx-2 text-[#e2e8f0] dark:text-[#334155]">•</span>
-                    <span className="text-[#64748b] dark:text-[#94a3b8]">  {formattedDate}</span>
-                  </p>
-                  <p className="text-[#64748b] dark:text-[#94a3b8] font-medium text-sm">
-                    {t("grand_total")}:
-                    <span className="font-bold text-[#059669] dark:text-[#34d399] text-base">  ₹{cellElement.data?.grandTotal?.toFixed(2) || "0.00"}</span>
-                  </p>
+                    <p className="text-[#64748b] dark:text-[#94a3b8] text-xs mt-1.5 font-medium">
+                      <span className="inline-flex items-center bg-gradient-to-r from-[#dbeafe] to-[#c7d2fe] dark:from-[#1e40af]/50 dark:to-[#312e81]/50 text-[#2563eb] dark:text-[#60a5fa] px-2 py-0.5 rounded-full text-xs font-semibold border border-[#bfdbfe]/50 dark:border-[#1e40af]/50 shadow-sm">  {cellElement.data?.voucherNumber || "N/A"}</span>
+                      <span className="mx-2 text-[#e2e8f0] dark:text-[#334155]">•</span>
+                      <span className="text-[#64748b] dark:text-[#94a3b8]">  {formattedDate}</span>
+                    </p>
+                    <p className="text-[#64748b] dark:text-[#94a3b8] font-medium text-sm">
+                      {t("grand_total")}:
+                      <span className="font-bold text-[#059669] dark:text-[#34d399] text-base">  ₹{cellElement.data?.grandTotal?.toFixed(2) || "0.00"}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
               </div>
               <div>
                 <h6 className="text-lg font-bold bg-gradient-to-r from-[#0f172a] to-[#334155] dark:from-[#f1f5f9] dark:to-[#cbd5e1] bg-clip-text text-transparent">{t('transaction_history')}</h6>
-                <p className="text-xs text-[#64748b] dark:text-[#94a3b8] mt-0.5 font-medium bg-[#f1f5f9]/50 dark:bg-[#1e293b]/50 px-2 py-0.5 rounded-md border border-[#e2e8f0]/50 dark:border-[#334155]/50">{transactionType} transactions</p>
+                <p className="text-xs text-[#64748b] dark:text-[#94a3b8] mt-0.5 font-medium bg-[#f1f5f9]/50 dark:bg-[#1e293b]/50 px-2 py-0.5 rounded-md border border-[#e2e8f0]/50 dark:border-[#334155]/50">{transactionType} {t('transactions_sidebar')}</p>
               </div>
             </div>
 
@@ -119,7 +119,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
             enableScrollButton={false}
             ShowGridPreferenceChooser={false}
             showPrintButton={false}
-            height={540}
+            height={761}
           />
         </div>
       </div>

@@ -17,7 +17,7 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { EllipsisVertical, FileUp, FileX2, GripVertical } from "lucide-react";
+import { EllipsisVertical, FileUp, GripVertical, Settings } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
 import type {
@@ -117,10 +117,10 @@ interface EditableCellProps {
   productId: number;
   gridFontSize: number;
   gridIsBold: boolean;
-  type:"any"|"cb"
-  rowHeight:number
-  formState:any
-  appState:any
+  type: "any" | "cb"
+  rowHeight: number
+  formState: any
+  appState: any
 }
 
 interface DragState {
@@ -158,12 +158,12 @@ interface RowData {
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
-  focusCell: (targetRow: number, targetColumnIndex: number) => {column: string; rowIndex: number} | null;
-  nextCellFind: (rowIndex: number, column: string, focus?: boolean) => {column: string; rowIndex: number} | null;
+  focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;
+  nextCellFind: (rowIndex: number, column: string, focus?: boolean) => { column: string; rowIndex: number } | null;
   currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
   gridFontSize: number;
   gridIsBold: boolean;
-  rowHeight:number;
+  rowHeight: number;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -192,7 +192,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const inputRef = useRef<HTMLInputElement>(null);
     console.log(appState);
 
-  const editCellComboBox:inputBox= formState?.userConfig?.inputBoxStyle
+    const editCellComboBox: inputBox = formState?.userConfig?.inputBoxStyle
     const gridBorderCol = formState?.userConfig?.gridBorderCol
     const mergedInputBox: inputBox = {
       inputStyle: "normal",
@@ -200,29 +200,29 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       checkButtonInputSize: editCellComboBox?.checkButtonInputSize ?? "md",
       inputHeight: (rowHeight - 0.6) / 16,
       fontSize: gridFontSize ?? 13,
-    fontWeight: gridIsBold?700:400,
+      fontWeight: gridIsBold ? 700 : 400,
       labelFontSize: editCellComboBox?.labelFontSize ?? 11,
       otherLabelFontSize: editCellComboBox?.otherLabelFontSize ?? 11,
       inputBgColor: editCellComboBox?.inputBgColor,
       buttonFocusBg: editCellComboBox?.buttonFocusBg,
       borderColor: gridBorderCol,
-    selectColor:editCellComboBox?.selectColor ,
+      selectColor: editCellComboBox?.selectColor,
       fontColor: editCellComboBox?.fontColor,
       labelColor: editCellComboBox?.labelColor,
       borderFocus: editCellComboBox?.borderFocus,
       borderRadius: 0,
-    adjustA:  0,
+      adjustA: 0,
       adjustB: 0,
       adjustC: 0,
       adjustD: 0,
-    marginTop:  0,
-    marginBottom:  0,
-    focusForeColor: editCellComboBox?.focusForeColor ,
-    focusBgColor: editCellComboBox?.focusBgColor ,
+      marginTop: 0,
+      marginBottom: 0,
+      focusForeColor: editCellComboBox?.focusForeColor,
+      focusBgColor: editCellComboBox?.focusBgColor,
       defaultBgColor: editCellComboBox?.defaultBgColor,
       bold: editCellComboBox?.bold,
     };
-     const [localValue, setLocalValue] = useState<string>(
+    const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
     const [bgColor, setBgColor] = useState<string>(
@@ -243,9 +243,9 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
     useEffect(() => {
       setBgColor(appState.mode == "dark"
-          ? document.activeElement === inputRef.current
-            ? "#ffffff"
-            : "#ffffff1a"
+        ? document.activeElement === inputRef.current
+          ? "#ffffff"
+          : "#ffffff1a"
         : `rgb(${mergedInputBox?.focusBgColor})`);
       setForeColor(
         appState.mode === "dark"
@@ -255,11 +255,11 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           : `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
       );
     }, [document.activeElement,
-      inputRef.current,
-      appState.mode,
-      mergedInputBox?.focusBgColor,
-      mergedInputBox?.defaultBgColor,
-      mergedInputBox?.focusForeColor,
+    inputRef.current,
+    appState.mode,
+    mergedInputBox?.focusBgColor,
+    mergedInputBox?.defaultBgColor,
+    mergedInputBox?.focusForeColor,
     mergedInputBox?.fontColor,]);
 
     useEffect(() => {
@@ -350,7 +350,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
           <ERPDataCombobox
 
-            options={options??[]}
+            options={options ?? []}
             onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
             noLabel
@@ -361,7 +361,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             label={column.dataField}
             field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
-              valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey :"value",
+              valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey : "value",
               labelKey: column?.field && column?.field.labelKey ? column?.field.labelKey : "label",
             }}
             noBorder
@@ -370,32 +370,32 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           />
 
 
-        ):(
+        ) : (
           <>
-          <input
-            ref={inputRef}
-            id={`${gridId}_${column.dataField}_${rowIndex}`}
-            type={column.dataType === "number" ? "text" : "text"}
+            <input
+              ref={inputRef}
+              id={`${gridId}_${column.dataField}_${rowIndex}`}
+              type={column.dataType === "number" ? "text" : "text"}
               className="bg-transparent border-none focus:ring-0 focus:outline-none  "
-            style={{
-              ...cellStyle,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              backgroundColor: bgColor,
-              color: foreColor,
-              border: "none",
+              style={{
+                ...cellStyle,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                backgroundColor: bgColor,
+                color: foreColor,
+                border: "none",
                 width: "100%"
-            }}
-            value={localValue}
-            readOnly={column.readOnly}
-            onInput={handleInput}
-            onFocus={handleFocus}
-            onBlur={onBlur}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
+              }}
+              value={localValue}
+              readOnly={column.readOnly}
+              onInput={handleInput}
+              onFocus={handleFocus}
+              onBlur={onBlur}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
 
-          />
+            />
           </>
         )}
       </>
@@ -424,8 +424,8 @@ const Row = React.memo(
     const appState = useSelector(
       (state: RootState) => state.AppState
     );
-    const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
-      if(input) {
+    const setCurrentCell = (input: { column: string; rowIndex: number } | null) => {
+      if (input) {
         dispatch(
           formStateHandleFieldChange({
             fields: {
@@ -482,7 +482,7 @@ const Row = React.memo(
       inputSize: 'customize',
       inputHeight: (rowHeight - 0.6) / 16,
       fontSize: data.gridFontSize ?? 13,
-      fontWeight: data.gridIsBold ?700:400,
+      fontWeight: data.gridIsBold ? 700 : 400,
     } as inputBox;
 
 
@@ -580,20 +580,19 @@ const Row = React.memo(
             const cellValue = item[fieldKey];
             const idValue = item[idField]; // for cb
             let options: any[] = []
-            if(fieldKey == "unit") {
-              options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
-            }  if(fieldKey == "warranty") {
-              options = formState.dataWarranty ??[] as any [];
+            if (fieldKey == "unit") {
+              options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ?? [] as any[];
+            } if (fieldKey == "warranty") {
+              options = formState.dataWarranty ?? [] as any[];
             }
-            if(fieldKey == "brandID") {
-              options = formState.dataBrands ??[] as any [];
+            if (fieldKey == "brandID") {
+              options = formState.dataBrands ?? [] as any[];
             }
             const isFocused = false;
             const cellId = `${gridId}_${column.dataField}_${index}`;
 
             return (
               <td
-
                 key={column.dataField}
                 className={` p-0 ${column.cssClass || ""} ${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
                 style={{
@@ -612,8 +611,8 @@ const Row = React.memo(
                       columns.filter(
                         (__col) => __col.visible != false && __col.dataField != null
                       ).length - 1
-                    ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
-                    : "none",
+                      ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
+                      : "none",
                   boxShadow: isFocused ? "0 0 0 3px rgba(59, 130, 246, 0.1)" : "none",
                 }}
                 role="gridcell"
@@ -623,23 +622,23 @@ const Row = React.memo(
                     formStateHandleFieldChange({
                       fields: {
                         currentCell: {
-                          column: column.dataField??"",
-                          data:item,
+                          column: column.dataField ?? "",
+                          data: item,
                           rowIndex: index,
                         },
                       },
                     })
                   );
-                }}
-              >
+                }}>
+
                 {formState.transactionLoading ? (
                   <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0", height: `${rowHeight}px` }}>
                     <div className="card_description loading"
                       style={{
                         width: `${Math.floor(Math.random() * 50) + 40}%`,
                         height: `${Math.min(rowHeight - 6, 16)}px`,
-                      }}
-                    ></div>
+                      }}>
+                    </div>
                   </div>
                 ) : column.dataField === "slNo" ? (
                   <div style={getCellContentStyle(column)} id={cellId}>
@@ -674,7 +673,6 @@ const Row = React.memo(
                     searchKey={column.dataField}
                     advancedProductSearching={data.advancedProductSearching}
                     useInSearch={data.useInSearch}
-
                     searchByCodeAndName={data.searchByCodeAndName}
                     onNextCellFind={data.nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
@@ -705,7 +703,7 @@ const Row = React.memo(
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                   >
-                    {productId > 0 ? cellValue??"" : ""}
+                    {productId > 0 ? cellValue ?? "" : ""}
                   </div>
                 ) : column.dataField === "status" ? (
                   <div
@@ -716,34 +714,34 @@ const Row = React.memo(
                     id={cellId}
                     tabIndex={0}
                     className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
-                        ? "bg-[#dcfce7] text-[#166534]"
-                        : ""
+                      ? "bg-[#dcfce7] text-[#166534]"
+                      : ""
                       } ${cellValue === "Inactive"
                         ? "bg-[#fee2e2] text-[#991b1b]"
                         : ""
                       } ${cellValue === "Pending"
                         ? "bg-[#fef9c3] text-[#854d0e]"
                         : ""
-                    }`}
+                      }`}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
                   >
-                    {productId > 0 ? cellValue??"" : ""}
+                    {productId > 0 ? cellValue ?? "" : ""}
                   </div>
                 ) : column.allowEditing && !column.readOnly && txtData.visible == true
-                  &&  data.currentCell?.column === column.dataField &&
+                  && data.currentCell?.column === column.dataField &&
                   data.currentCell?.rowIndex === index ? (
                   <EditableCell
                     appState={appState.appState}
-                    type={column.dataType == "cb" ? "cb": "any"}
+                    type={column.dataType == "cb" ? "cb" : "any"}
                     productId={productId}
                     onChange={data.onChange}
                     blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
                     decimalLimit={2}
                     rowIndex={index}
                     column={column}
-                    value={column.dataType == "cb" ? (idValue as string | number): (cellValue as string | number)}
+                    value={column.dataType == "cb" ? (idValue as string | number) : (cellValue as string | number)}
                     options={options}
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
@@ -763,9 +761,9 @@ const Row = React.memo(
                     className="px-1 cursor-default"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
-                    onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
+                    onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}
                   >
-                     {productId > 0 ? cellValue??"" : ""}
+                    {productId > 0 ? cellValue ?? "" : ""}
                   </div>
                 )}
               </td>
@@ -783,7 +781,7 @@ const SummaryRow: React.FC<{
   summaryConfig: SummaryConfig[];
   gridFontSize: number;
   gridIsBold: boolean;
-  rowHeight:number;
+  rowHeight: number;
 }> = ({
   columns,
   tableWidth,
@@ -793,70 +791,69 @@ const SummaryRow: React.FC<{
   gridIsBold,
   rowHeight
 }) => {
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
+    const formState = useAppSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
 
-  return (
-    <tr
-      className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
-      style={{
-        width: `${tableWidth}px`,
-        height: `${rowHeight}px`,
-        minHeight: `${rowHeight}px`,
-        maxHeight: `${rowHeight}px`,
-        boxSizing: "border-box",
-          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
-
+    return (
+      <tr
+        className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
+        style={{
+          width: `${tableWidth}px`,
+          height: `${rowHeight}px`,
+          minHeight: `${rowHeight}px`,
+          maxHeight: `${rowHeight}px`,
+          boxSizing: "border-box",
+          borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
           // the above border is the border of the footer
-      }}
-    >
-      {columns
-        .filter((col) => col.visible != false && col.dataField != null)
-        .map((column, index) => {
-          const summary = summaryConfig.find(
-            (s) =>
-              s.showInColumn === column.dataField ||
-              s.column === column.dataField
-          );
-          const value = summary
-            ? summaryValues[summary.column as string]
-            : null;
-          const formattedValue = summary?.customizeText
-            ? summary.customizeText({ value })
-            : value;
+        }}
+      >
+        {columns
+          .filter((col) => col.visible != false && col.dataField != null)
+          .map((column, index) => {
+            const summary = summaryConfig.find(
+              (s) =>
+                s.showInColumn === column.dataField ||
+                s.column === column.dataField
+            );
+            const value = summary
+              ? summaryValues[summary.column as string]
+              : null;
+            const formattedValue = summary?.customizeText
+              ? summary.customizeText({ value })
+              : value;
 
-          return (
-            <td
-              key={`summary_${column.dataField}`}
-              className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
-              style={{
-                fontSize: `${gridFontSize}px`,
-                fontWeight: gridIsBold ? "bold" : "600",
-                width: column.width ? `${column.width}px` : "150px",
-                minWidth: column.width ? `${column.width}px` : "150px",
-                textAlign:
-                  summary?.alignment ||
-                  column.alignment ||
-                  (column.dataType === "number" ? "right" : "left"),
-                boxSizing: "border-box",
-                borderRight:
-                  index <
-                  columns.filter(
-                    (col) => col.visible != false && col.dataField != null
-                  ).length - 1
-                    ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
-                    : "none",
-              }}
-            >
-              {summary ? formattedValue : ""}
-            </td>
+            return (
+              <td
+                key={`summary_${column.dataField}`}
+                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
+                style={{
+                  fontSize: `${gridFontSize}px`,
+                  fontWeight: gridIsBold ? "bold" : "600",
+                  width: column.width ? `${column.width}px` : "150px",
+                  minWidth: column.width ? `${column.width}px` : "150px",
+                  textAlign:
+                    summary?.alignment ||
+                    column.alignment ||
+                    (column.dataType === "number" ? "right" : "left"),
+                  boxSizing: "border-box",
+                  borderRight:
+                    index <
+                      columns.filter(
+                        (col) => col.visible != false && col.dataField != null
+                      ).length - 1
+                      ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
+                      : "none",
+                }}
+              >
+                {summary ? formattedValue : ""}
+              </td>
               // footer td
-          );
-        })}
-    </tr>
-  );
-};
+            );
+          })}
+      </tr>
+    );
+  };
 
 const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   {
@@ -865,7 +862,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     transactionType,
     onKeyDown,
     onChange,
-    gridId,rowHeight = 33,
+    gridId, rowHeight = 33,
     className = "",
     height = 800,
     allowColumnReordering = true,
@@ -1018,27 +1015,27 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } };
     worksheet.getRow(1).eachCell((cell) => {
       cell.border = {
-      top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-      left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-      bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-      right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
       };
     });
     if (summaryConfig.length > 0) {
       const lastRowIndex = worksheet.rowCount;
       const summaryRow = worksheet.getRow(lastRowIndex);
       summaryRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFF8FAFC' },
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFF8FAFC' },
       };
       summaryRow.eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-      };
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        };
       });
     }
 
@@ -1067,7 +1064,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       if (listRef.current) listRef.current.scrollToItem(targetRow, "smart");
 
       const attemptFocus = () => {
-        return {column: targetColumn.dataField??"", rowIndex: targetRow};
+        return { column: targetColumn.dataField ?? "", rowIndex: targetRow };
       };
 
       return attemptFocus();
@@ -1149,7 +1146,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         (col) => col.dataField === currentEditable.dataField
       );
 
-      if (targetColumnIndex??-1 >= 0) {
+      if (targetColumnIndex ?? -1 >= 0) {
         return focusCell(rowIndex, targetColumnIndex!);
       }
       return null;
@@ -1230,12 +1227,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       transactionType: transactionType ?? formState.transactionType,
       blockUnitOnDecimalPoint:
         applicationState.inventorySettings?.blockUnitOnDecimalPoint,
-      focusCell: focusCell??null,
-      nextCellFind: nextCellFind??null,
+      focusCell: focusCell ?? null,
+      nextCellFind: nextCellFind ?? null,
       currentCell: formState.currentCell,
       gridFontSize: gridFontSize || 14,
       gridIsBold: gridIsBold || false,
-      rowHeight:rowHeight,
+      rowHeight: rowHeight,
       searchByCodeAndName: formState.userConfig?.enableItemCodeSearchInNameColumn
     }),
     [
@@ -1260,14 +1257,14 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   }, [formState.gridColumns]);
 
   useEffect(() => {
-  const fetchPreferences = async () => {
-    onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
-  };
+    const fetchPreferences = async () => {
+      onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
+    };
 
-  if (gridId && columns) {
-    fetchPreferences();
-  }
-}, [gridId, columns]);
+    if (gridId && columns) {
+      fetchPreferences();
+    }
+  }, [gridId, columns]);
 
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
@@ -1324,58 +1321,64 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
             </button>
 
             {isGridMenuOpen && (
-            <div
-              ref={popupRef}
-              className="absolute rounded-lg bg-white text-black dark:bg-[#1f2937] dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#4b5563] p-3 z-50 backdrop-blur-sm"
-              style={{
-                top: "37px",
-                left: "-5px",
-                width: "251px",
-              }}
-            >
-              <nav className="w-full">
-                <ul className="space-y-3">
+              <div
+                ref={popupRef}
+                className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+                style={{
+                  top: "37px",
+                  left: "-5px",
+                  width: "251px",
+                }}
+              >
+                <nav className="w-full">
+                  <ul className="space-y-1">
 
-                  {/* Grid Preference Chooser */}
-                  <li>
-                    <div className="p-2 rounded-md bg-[#f9fafb] dark:bg-[#37415180] border border-[#e5e7eb] dark:border-[#4b5563]">
-                      <GridPreferenceChooser
-                        ref={preferenceChooserRef}
-                        gridId={gridId}
-                        columns={(formState.gridColumns ?? []) as DevGridColumn[]}
-                        onApplyPreferences={onApplyPreferences}
-                        showChooserName={true}
-                        eclipseClass="m-0 p-0"
-                      />
-                    </div>
-                  </li>
+                    {/* Grid Preference Chooser */}
+                    <li>
+                      <div
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer"
+                      >
+                        <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
+                          <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
+                        </div>
+                        <GridPreferenceChooser
+                          ref={preferenceChooserRef}
+                          gridId={gridId}
+                          columns={(formState.gridColumns ?? []) as DevGridColumn[]}
+                          onApplyPreferences={onApplyPreferences}
+                          showChooserName={true}
+                          eclipseClass="m-0 p-0 font-medium"
+                        />
+                      </div>
+                    </li>
 
-                  {/* Divider */}
-                  <li>
-                    <hr className="border-[#e5e7eb] dark:border-[#4b5563]" />
-                  </li>
 
-                  {/* Export to Excel */}
-                  <li>
-                    <button
-                      onClick={openExcelMenu}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
-                    >
-                      <FileUp className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                      <span>{t('export_to_excel')}</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          )}
+
+                    {/* Export to Excel */}
+                    <li>
+                      <button
+                        onClick={openExcelMenu}
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff8e1] hover:text-[#ff8f00] dark:hover:bg-[#3e2f004d] dark:hover:text-[#ffe082] transition-all duration-200 rounded-md group text-left"
+                      >
+                        <div className="w-8 h-8 bg-[#ffecb3] dark:bg-[#3e2f004d] rounded-full flex items-center justify-center group-hover:bg-[#ffe082] dark:group-hover:bg-[#3e2f0099] group-hover:scale-110 transition-all duration-200">
+                          <FileUp className="h-4 w-4 text-[#ff8f00] dark:text-[#ffe082]" />
+                        </div>
+                        <span className="font-medium">{t('export_to_excel')}</span>
+                      </button>
+                    </li>
+
+
+                  </ul>
+                </nav>
+              </div>
+            )}
 
           </div>
         </div>
         {isExcelMenuOpen && (
           <ERPModal
             isOpen={isExcelMenuOpen}
-            title={t("Export Options")}
+            title={t("export_options")}
             width={400}
             height={200}
             closeModal={closeExcelMenu}
@@ -1390,13 +1393,13 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
               </>
             }
             footer={
-                <div className="flex items-center justify-end p-1 border-t border-gray-200">
-                  <ERPButton
+              <div className="flex items-center justify-end p-1 border-t border-gray-200">
+                <ERPButton
                   variant="primary"
                   title={t("export")}
                   onClick={exportToExcel}
-                  />
-                </div>
+                />
+              </div>
             }
           />
         )}
@@ -1435,22 +1438,22 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                             left:
                               appState.dir === "ltr"
                                 ? `${(formState.gridColumns ?? [])
-                                    .filter((c) => c.visible != false)
-                                    .slice(0, index)
-                                    .reduce(
-                                      (sum, c) => sum + (c.width || 150),
-                                      0
-                                    )}px`
+                                  .filter((c) => c.visible != false)
+                                  .slice(0, index)
+                                  .reduce(
+                                    (sum, c) => sum + (c.width || 150),
+                                    0
+                                  )}px`
                                 : undefined,
                             right:
                               appState.dir === "rtl"
                                 ? `${(formState.gridColumns ?? [])
-                                    .filter((c) => c.visible != false)
-                                    .slice(0, index)
-                                    .reduce(
-                                      (sum, c) => sum + (c.width || 150),
-                                      0
-                                    )}px`
+                                  .filter((c) => c.visible != false)
+                                  .slice(0, index)
+                                  .reduce(
+                                    (sum, c) => sum + (c.width || 150),
+                                    0
+                                  )}px`
                                 : undefined,
                             boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)",
                           }}
@@ -1483,7 +1486,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           width: col.width ? `${col.width}px` : "150px",
                           minWidth: col.width ? `${col.width}px` : "150px",
                           height: `${rowHeight + 8}px`,
-                          maxHeight:`${rowHeight + 8}px`,
+                          maxHeight: `${rowHeight + 8}px`,
                           minHeight: `${rowHeight + 8}px`,
                           textAlign:
                             col.alignment ||
@@ -1491,9 +1494,9 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           boxSizing: "border-box",
                           borderRight:
                             index <
-                            (formState.gridColumns?.filter(
-                              (c) => c.visible != false
-                            ).length ?? 0) - 1
+                              (formState.gridColumns?.filter(
+                                (c) => c.visible != false
+                              ).length ?? 0) - 1
                               ? `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`
                               : "none",
                           background: "transparent",

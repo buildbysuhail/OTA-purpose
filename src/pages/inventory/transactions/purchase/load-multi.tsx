@@ -1,10 +1,8 @@
 import React, { useState, memo } from "react";
-import { useSelector } from "react-redux/es/exports";
-import { RootState } from "../../../../redux/store";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { useTranslation } from "react-i18next";
 
 interface DocumentPropertiesProps {
   closeModal: () => void;
@@ -82,22 +80,12 @@ export const LoadMulti: React.FC<DocumentPropertiesProps> = memo(({ closeModal, 
   );
 });
 
-export const LoadMultiFooter: React.FC = React.memo(() => {
-
+export const LoadMultiFooter: React.FC<DocumentPropertiesProps> = memo(({ t, closeModal }) => {
   return (
-    <div className="flex items-end gap-2 justify-end  border-t dark:!border-dark-border mt-0 p-2">
-      <ERPButton
-              title="load"
-              variant="primary"
-            />
-            <ERPButton
-              title="clear"
-              variant="secondary"
-            />
-            <ERPButton
-              title="close"
-              variant="secondary"
-            />
+    <div className="flex items-end gap-2 justify-end border-t dark:!border-dark-border mt-0 p-2">
+      <ERPButton title={t("load")} variant="primary" />
+      <ERPButton title={t("clear")} variant="secondary" />
+      <ERPButton title={t("close")} variant="secondary" onClick={closeModal} />
     </div>
   );
 });

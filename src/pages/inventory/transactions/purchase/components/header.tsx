@@ -579,7 +579,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   width={800}
                   height={200}
                   content={<LoadMulti closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
-                  footer={<LoadMultiFooter />}
+                  footer={<LoadMultiFooter closeModal={() => setIsLoadMultiModalOpen(false)} t={t} />}
                 />
               }
               {isPendingOrderOpen && isPendingOrderOpen.open &&

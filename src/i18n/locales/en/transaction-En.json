@@ -60,7 +60,7 @@
   "discount": "Discount",
   "total_amount": "Total amount",
   "print_cheque": "Print cheque",
-  "change_template": "change template",
+  "change_template": "Change Template",
   "total": "Total",
   "barcode_print": "Barcode print",
 
@@ -680,5 +680,28 @@
   "manufacturing_date": "Manufacturing date",
   "show_only_current_customer_transaction": "Show only current customer transaction",
   "current_batch_transaction": "Current batch transaction",
-  "current_unit_transaction": "Current unit transaction"
+  "current_unit_transaction": "Current unit transaction",
+
+  "load_multi": "Load Multi",
+  "pending_purchase_order_list": "Pending Purchase Order List",
+  "pending_goods_receipt_list": "Pending Goods Receipt List",
+  "download_for_excel_template_import": "Download for Excel Template Import",
+  "import_excel_template": "Import Excel Template",
+  "export_to_excel": "Export to Excel",
+  "grid_preferences": "Grid Preferences",
+  "export_options": "Export Options",
+  "export_only_visible_column": " Export only visible column",
+  "export": "Export",
+  "transactions_sidebar": "transactions",
+  "transaction_history": "Transaction History",
+  "v_number": "V Number",
+  "voucher_form": "Voucher Form",
+  "order_amount": "Order Amount",
+  "processed": "Processed",
+  "pending_amount": "Pending Amount",
+  "quantity": "Quantity",
+  "processed_qty": "Processed Qty",
+  "pending_qty": "Pending Qty",
+  "process_selected": "Process Selected",
+  "pending_order": "Pending Order"
 }

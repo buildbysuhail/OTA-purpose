@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { APIClient } from "../../../../helpers/api-client";
 import { ActionType } from "../../../../redux/types";
 
 interface PendingOrderListProps {
@@ -64,10 +63,10 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     (state: RootState) => state.InventoryTransaction
   );
   const [toDate] = useState(() => new Date().toISOString().split("T")[0]);
-  const [selectedMaster, setSelectedMaster] = useState<{masterID: number; branchID: number}>({masterID:0, branchID: 0});
+  const [selectedMaster, setSelectedMaster] = useState<{ masterID: number; branchID: number }>({ masterID: 0, branchID: 0 });
   const [selectedRows, setSelectedRows] = useState<PendingOrderRow[]>([]);
   const [isProcessButtonVisible, setIsProcessButtonVisible] = useState(false);
-    const gridRef = useRef<any>(null);
+  const gridRef = useRef<any>(null);
 
   // Main grid columns configuration
   const mainGridColumns: DevGridColumn[] = React.useMemo(() => {
@@ -221,24 +220,20 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   // // Handle row selection change
   const handleMainGridRowClick = useCallback(
     (e: any) => {
-      setSelectedMaster({masterID: e.data.invTransactionMasterID, branchID: e.data.branchID})
-      
+      setSelectedMaster({ masterID: e.data.invTransactionMasterID, branchID: e.data.branchID })
     },
     []
   );
 
-  
-// useEffect(() => {
-//   console.log(selectedRows, "MAR"); 
-// }, [selectedRows]);
+  // useEffect(() => {
+  //   console.log(selectedRows, "MAR"); 
+  // }, [selectedRows]);
 
-
-  
   // Process selected orders
   const handleProcessSelected = useCallback(() => {
     // if (selectedRows.length === 0) return;
     debugger;
-const _masterIDs = gridRef.current
+    const _masterIDs = gridRef.current
       ?.instance()
       ?.getSelectedRowsData("all")
       ?.map((x: any) => x.invTransactionMasterID) ?? []
@@ -295,26 +290,23 @@ const _masterIDs = gridRef.current
     <>
       {/* Process Selected Button */}
       {/* {isProcessButtonVisible && ( */}
-        <div className="flex justify-end mb-4">
-          <ERPButton
-            variant="primary"
-            onClick={handleProcessSelected}
-            title={t("process_selected")}
-            // disabled={selectedRows.length === 0}
-          />
-        </div>
+      <div className="flex justify-end mb-4">
+        <ERPButton
+          variant="primary"
+          onClick={handleProcessSelected}
+          title={t("process_selected")}
+        // disabled={selectedRows.length === 0}
+        />
+      </div>
       {/* )} */}
 
       {/* Main Grid - Pending Orders */}
       <div className="mb-4">
         <ErpDevGrid
-        ref={gridRef}
+          ref={gridRef}
           columns={mainGridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`}
-          postData={{
-            voucherType: voucherType,
-            ledgerID: formState.transaction.master.ledgerID,
-          }}
+          postData={{ voucherType: voucherType, ledgerID: formState.transaction.master.ledgerID, }}
           method={ActionType.GET}
           gridId="grd_pending_orders"
           height={300}
@@ -333,27 +325,24 @@ const _masterIDs = gridRef.current
 
       {/* Detail Grid - Order Details */}
       {selectedMaster && selectedMaster.masterID > 0 &&
-      <div className="mt-4">
-        <ErpDevGrid
-          columns={detailGridColumns}
-          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionDetails/`}
-          postData={{
-            transactionMasterID:
-              selectedMaster.masterID,
-          }}
-          method={ActionType.GET}
-          gridId="grd_order_details"
-          height={300}
-          hideGridAddButton={true}
-          enableScrollButton={false}
-          selectionMode="none"
-          showPrintButton={false}
-          allowExport={false}
-          allowSearching={false}
-          hideToolbar={true}
-        />
-      </div>
-}
+        <div className="mt-4">
+          <ErpDevGrid
+            columns={detailGridColumns}
+            dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionDetails/`}
+            postData={{ transactionMasterID: selectedMaster.masterID, }}
+            method={ActionType.GET}
+            gridId="grd_order_details"
+            height={300}
+            hideGridAddButton={true}
+            enableScrollButton={false}
+            selectionMode="none"
+            showPrintButton={false}
+            allowExport={false}
+            allowSearching={false}
+            hideToolbar={true}
+          />
+        </div>
+      }
     </>
   );
 };

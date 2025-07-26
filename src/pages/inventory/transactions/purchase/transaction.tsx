@@ -822,6 +822,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   totalRes.loading = {isLoading: false, text: ''}
       debugger;
                   // Dispatch the state update
+                  debugger;
                   const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({

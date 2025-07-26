@@ -697,15 +697,29 @@ const InvTransactionSlice = createSlice({
             fieldValue as Record<string, any>
           );
         } else {
+          debugger;
           // Primitive, array, or other object type
           if (Array.isArray(fieldValue)) {
-            if(key == "batchesUnits") {
-             if(state.batchesUnits) {
-    const units = fieldValue as UnitByBatchDetailsDto[]
-    state.batchesUnits.push(...units); // Spread the array elements
-}
+            if (key == "batchesUnits") {
+              if (fieldValue) {
+                if(!state.batchesUnits) {
+                  state.batchesUnits = []
+                }
+                const units = fieldValue as UnitByBatchDetailsDto[];
+
+                const newUnits = units.filter(
+                  (unit) =>
+                    !state.batchesUnits?.some(
+                      (existing) =>
+                        existing.value === unit.value &&
+                        existing.productBatchID === unit.productBatchID
+                    )
+                );
+
+                state.batchesUnits?.push(...newUnits);
+              }
             } else {
-            (state as any)[key] = [...fieldValue];
+              (state as any)[key] = [...fieldValue];
             }
           } else if (fieldValue instanceof Date) {
             (state as any)[key] = fieldValue.toISOString();
@@ -720,11 +734,7 @@ const InvTransactionSlice = createSlice({
         itemsToAddToDetails.length > 0 &&
         rowIndex >= 0
       ) {
-        state.transaction.details.splice(
-          rowIndex + 1,
-          0,
-          ...itemsToAddToDetails
-        );
+        state.transaction.details.splice(rowIndex, 0, ...itemsToAddToDetails);
       }
     },
   },

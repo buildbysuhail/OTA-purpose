@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
@@ -26,7 +26,190 @@ interface previewState {
   template?: TemplateState;
 }
 
+interface ChooseTemplateProps {
+  templateGroup: VoucherType | string;
+  setShowTemplateListing: any;
+  tempData: any;
+}
+
 const api = new APIClient();
+
+const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { t } = useTranslation("system");
+  const [activeTab, setActiveTab] = useState<string>("all");
+
+  // Group templates by templateType and get counts
+  const groupedTemplates = useMemo(() => {
+    if (!tempData) return {};
+    
+    return tempData.reduce((acc: any, template: TemplateState) => {
+      const type = template.templateType || "standard";
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(template);
+      return acc;
+    }, {});
+  }, [tempData]);
+
+  // Get available template types with counts
+  const templateTypes = useMemo(() => {
+    const types = Object.keys(groupedTemplates);
+    const allCount = tempData?.length || 0;
+    
+    return [
+      { key: "all", label: t("all"), count: allCount },
+      ...types.map(type => ({
+        key: type,
+        label: type.charAt(0).toUpperCase() + type.slice(1),
+        count: groupedTemplates[type]?.length || 0
+      }))
+    ];
+  }, [groupedTemplates, tempData, t]);
+
+  // Get filtered templates based on active tab
+  const filteredTemplates = useMemo(() => {
+    if (activeTab === "all") {
+      return tempData || [];
+    }
+    return groupedTemplates[activeTab] || [];
+  }, [activeTab, tempData, groupedTemplates]);
+
+  const handleChooseTemplate = async (template: TemplateState) => {
+    const length = tempData?.length || 0;
+    let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
+    let cc: TemplateState = customJsonParse(res.content);
+    
+    const propertiesState = {
+      ...cc.propertiesState,
+      templateName: t("untitled_template") + (length + 1)
+    };
+    
+    const newTemplate = {
+      ...cc,
+      id: null,
+      templateName: "",
+      propertiesState: propertiesState
+    };
+    
+    dispatch(setTemplate(newTemplate));
+    
+    const state = template?.templateType ? { 
+      templateKind: template?.templateKind,
+      templateType: template?.templateType,
+    } : {};
+    
+    templateGroup == "barcode" ? 
+      navigate(`/label-designer/new?template_group=${templateGroup}`) :
+      navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
+  };
+
+  return (
+    <div className="text-xs p-5">
+      {/* Header */}
+      <div className="flex justify-between text-base mb-4">
+        <div className="font-medium text-xl ">{t("choose_a_template")}</div>
+        <div className="cursor-pointer bg-black w-7 h-7 rounded-full text-white flex items-center justify-center" onClick={() => setShowTemplateListing(true)}>
+          X
+        </div>
+      </div>
+
+      {/* Template Type Tabs */}
+      <div className="border-b border-gray-200 mb-6">
+        <nav className="flex space-x-8">
+          {templateTypes.map((type) => (
+            <button
+              key={type.key}
+              onClick={() => setActiveTab(type.key)}
+              className={`py-3 px-1 border-b-4 font-medium text-sm transition-colors relative ${
+                activeTab === type.key
+                  ? 'border-[#3b82f6] rounded-b-sm text-gray-900'
+                  : 'border-transparent text-gray-600 hover:text-gray-700'
+              }`}
+            >
+              {type.label} ({type.count})
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Template Grid */}
+      <div>
+        {/* <div className="py-2">{activeTab === "all" ? t("standard") : activeTab.toUpperCase()}</div> */}
+        
+        <div className="flex gap-4 flex-wrap p-5">
+          {filteredTemplates.map((template: TemplateState, index: number) => {
+            console.log('Template data:', {
+              id: template?.id,
+              templateName: template?.templateName,
+              thumbImage: template?.thumbImage ? template.thumbImage.substring(0, 50) + '...' : 'No thumbImage',
+              hasThumbImage: !!template?.thumbImage
+            });
+            
+            return (
+              <div
+                key={`ti_${template.id}_${index}`}
+                tabIndex={0}
+                className="relative hover:ring-2 hover:shadow-md cursor-pointer w-[100px] md:w-[140px] lg:w-[200px] aspect-[2.3/3] border rounded border-gray-400"
+              >
+                {/* Template Preview */}
+                <div className="relative">
+                  <img
+                    src={template?.thumbImage || `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300"><rect width="100%" height="100%" fill="#f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#6b7280">No Preview</text></svg>')}`}
+                    alt={template?.templateKind || template?.templateName}
+                    style={{ objectFit: 'scale-down' }}
+                    className="antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2]"
+                    onError={(e) => {
+                      console.log('Image load error for template:', template?.id, template?.thumbImage);
+                      const target = e.target as HTMLImageElement;
+                      target.src = `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300"><rect width="100%" height="100%" fill="#f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#6b7280">Preview Error</text></svg>')}`;
+                    }}
+                  />
+                  
+                  {/* Template Type Badge */}
+                  {template?.templateType && template.templateType !== "standard" && (
+                    <div className="absolute top-[0px] right-[0px] rounded-bl-[15px] bg-primary text-white text-xs px-2 py-1 capitalize">
+                      {template.templateType}
+                    </div>
+                  )}
+                  
+                  <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
+                </div>
+
+                {/* Template Info */}
+                <div className="flex flex-col justify-center items-center text-center py-3">
+                  <h1 className="font-medium text-xs capitalize break-words mb-2">
+                    {template?.templateKind || template?.templateName}
+                  </h1>
+                  
+                  <div
+                    className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
+                    onClick={() => handleChooseTemplate(template)}
+                  >
+                    {t("use_this")}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Empty State */}
+        {filteredTemplates.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            <div className="text-lg mb-2">📄</div>
+            <div className="text-sm">
+              {t("no_templates_found", { type: activeTab === "all" ? "" : activeTab })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Templates = ({ }) => {
   const navigate = useNavigate();
   const appDispatch = useAppDispatch();
@@ -44,7 +227,6 @@ const Templates = ({ }) => {
     (searchParams?.get("template_group")! as VoucherType | string) ?? "SI"
   );
   const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
-  /* ########################################################################################### */
   const [maxSidePage, setMaxSidePage] = useState<number>(500);
 
   useEffect(() => {
@@ -74,8 +256,6 @@ const Templates = ({ }) => {
     default:
       paperWidth = "w-[500px]";
   }
-
-  /* ########################################################################################### */
 
   const setDefaultTemplate = async (id: any) => {
     const res = await api.patch(`${Urls.templates}${id}`, {});
@@ -121,6 +301,7 @@ const Templates = ({ }) => {
   }, [templateGroup]);
 
   const { t } = useTranslation("system");
+  
   return (
     <>
       {showTemplateListing ? (
@@ -299,87 +480,3 @@ const Templates = ({ }) => {
 };
 
 export default Templates;
-
-interface ChooseTemplateProps {
-  templateGroup: VoucherType | string;
-  setShowTemplateListing: any;
-  tempData: any;
-}
-
-const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { t } = useTranslation("system")
-  const handleChooseTemplate = async (template: TemplateState) => {
-    const length = tempData?.length || 0;
-    let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
-    let cc: TemplateState = customJsonParse(res.content)
-
-    const propertiesState = {
-      ...cc.propertiesState,
-      templateName: t("untitled_template") + (length + 1)
-    };
-
-    const _template = {
-      ...cc,
-      id: null,
-      templateName: "",
-      propertiesState: propertiesState
-    }
-
-    dispatch(setTemplate(_template));
-    const state = template?.templateType ? { templateKind: template?.templateKind,
-                                            templateType: template?.templateType,} : {};
-    templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) :
-      navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
-  };
-
-  return (
-    <div className="text-xs p-5">
-      <div className="flex justify-between text-base">
-        <div>{t("choose_a_template")}</div>
-        <div className="cursor-pointer bg-black w-7 h-7 rounded-full text-white flex items-center justify-center" onClick={() => setShowTemplateListing(true)}>
-          X
-        </div>
-      </div>
-      {/* <div className="my-3 text-sm ">
-        <div className="border-accent max-w-min">{t("all")}</div>
-      </div> */}
-      <div>
-        {/* <div className="py-2">{t("standard")}</div> */}
-        <div className="flex gap-4 flex-wrap p-5">
-          {tempData
-            ?.map((template: TemplateState, index: number) => {
-
-              const paperSize = template?.propertiesState?.pageSize;
-              const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
-              return (
-                <div
-                  key={`ti_${index}`}
-                  tabIndex={0}
-                  className=" relative hover:ring-2 hover:shadow-md  100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border rounded border-gray-400">
-                  <div className=" relative">
-                    <img
-                      src={template?.thumbImage ?? thumbImage}
-                      alt=""
-                      style={{ objectFit: 'scale-down' }}
-                      className="antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2]"
-                    />
-                    <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
-                  </div>
-                  <div className="flex flex-col justify-center items-center text-center py-3">
-                    <h1 className="font-medium text-xs capitalize break-words">{template?.templateKind}</h1>
-                    <div
-                      className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
-                      onClick={() => handleChooseTemplate(template)}>
-                      {t("use_this")}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-    </div>
-  );
-};

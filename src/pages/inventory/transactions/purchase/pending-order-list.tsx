@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -23,9 +23,9 @@ interface PendingOrderListProps {
 
 interface ProcessSelectedData {
   masterIDs: string;
-  branchIDs: string;
-  voucherNumbers: string;
-  referenceNumber: string;
+  // branchIDs: string;
+  // voucherNumbers: string;
+  // referenceNumber: string;
 }
 
 interface PendingOrderRow {
@@ -64,22 +64,14 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     (state: RootState) => state.InventoryTransaction
   );
   const [toDate] = useState(() => new Date().toISOString().split("T")[0]);
-  const [selectedMasterID, setSelectedMasterID] = useState<number>(0);
+  const [selectedMaster, setSelectedMaster] = useState<{masterID: number; branchID: number}>({masterID:0, branchID: 0});
   const [selectedRows, setSelectedRows] = useState<PendingOrderRow[]>([]);
   const [isProcessButtonVisible, setIsProcessButtonVisible] = useState(false);
+    const gridRef = useRef<any>(null);
 
   // Main grid columns configuration
   const mainGridColumns: DevGridColumn[] = React.useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-      {
-        dataField: "select",
-        caption: t("select"),
-        dataType: "boolean",
-        allowSorting: false,
-        allowSearch: false,
-        allowFiltering: false,
-        width: 80,
-      },
       {
         dataField: "date",
         caption: t("date"),
@@ -216,35 +208,43 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     return baseColumns;
   }, []);
 
-  // Handle row selection in main grid
+  // // Handle row selection in main grid
+  // const handleSelectionChange = useCallback(
+  //   (params: any) => {
+  //     const masterID = params.data?.invTransactionMasterID;
+  //     if (masterID && masterID !== selectedMasterID) {
+  //       setSelectedMasterID(masterID); 
+  //     }
+  //   },
+  //   []
+  // );
+  // // Handle row selection change
   const handleMainGridRowClick = useCallback(
-    (params: any) => {
-      const masterID = params.data?.invTransactionMasterID;
-      if (masterID && masterID !== selectedMasterID) {
-        setSelectedMasterID(masterID);
-      }
-    },
-    [selectedMasterID]
-  );
-
-  // Handle row selection change
-  const handleSelectionChange = useCallback(
-    (selectedRowsData: PendingOrderRow[]) => {
-      setSelectedRows(selectedRowsData);
-      setIsProcessButtonVisible(selectedRowsData.length > 0);
+    (e: any) => {
+      setSelectedMaster({masterID: e.data.invTransactionMasterID, branchID: e.data.branchID})
+      
     },
     []
   );
 
+  
+// useEffect(() => {
+//   console.log(selectedRows, "MAR"); 
+// }, [selectedRows]);
+
+
+  
   // Process selected orders
   const handleProcessSelected = useCallback(() => {
-    if (selectedRows.length === 0) return;
-
-    const masterIDs = selectedRows
-      .map((row) => row.invTransactionMasterID)
-      .join(",");
-    const branchIDs = selectedRows.map((row) => row.branchID || "").join(",");
-    const referenceNumber = selectedRows[0]?.referenceNumber || "";
+    // if (selectedRows.length === 0) return;
+    debugger;
+const _masterIDs = gridRef.current
+      ?.instance()
+      ?.getSelectedRowsData("all")
+      ?.map((x: any) => x.invTransactionMasterID) ?? []
+    const masterIDs = _masterIDs.join(",");
+    // const branchIDs = selectedRows.map((row) => row.branchID || "").join(",");
+    // const referenceNumber = selectedRows[0]?.referenceNumber || "";
 
     // Build voucher numbers string based on voucher type
     let voucherPrefix = "Ord #:";
@@ -274,9 +274,9 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
     const processData: ProcessSelectedData = {
       masterIDs,
-      branchIDs,
-      voucherNumbers,
-      referenceNumber,
+      // branchIDs,
+      // voucherNumbers,
+      // referenceNumber,
     };
 
     // Call the callback function to pass data back to parent
@@ -285,29 +285,30 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   }, [selectedRows, voucherType, onProcessSelected, closeModal]);
 
   // Initialize process button visibility
-  useEffect(() => {
-    if (!objForm) {
-      setIsProcessButtonVisible(false);
-    }
-  }, [objForm]);
+  // useEffect(() => {
+  //   if (!objForm) {
+  //     setIsProcessButtonVisible(false);
+  //   }
+  // }, [objForm]);
 
   return (
     <>
       {/* Process Selected Button */}
-      {isProcessButtonVisible && (
+      {/* {isProcessButtonVisible && ( */}
         <div className="flex justify-end mb-4">
           <ERPButton
             variant="primary"
             onClick={handleProcessSelected}
             title={t("process_selected")}
-            disabled={selectedRows.length === 0}
+            // disabled={selectedRows.length === 0}
           />
         </div>
-      )}
+      {/* )} */}
 
       {/* Main Grid - Pending Orders */}
       <div className="mb-4">
         <ErpDevGrid
+        ref={gridRef}
           columns={mainGridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingOrderMaster/`}
           postData={{
@@ -320,21 +321,25 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           hideGridAddButton={true}
           enableScrollButton={false}
           selectionMode="multiple"
-          gridHeader={t("pending_goods_receipt")}
+          // gridHeader={t("pending_goods_receipt")}
           onRowClick={handleMainGridRowClick}
-          onSelectionChange={handleSelectionChange}
+          // onSelectionChanged={handleSelectionChange}
+          showPrintButton={false}
+          allowExport={false}
+          allowSearching={false}
+          hideToolbar={true}
         />
       </div>
 
       {/* Detail Grid - Order Details */}
+      {selectedMaster && selectedMaster.masterID > 0 &&
       <div className="mt-4">
         <ErpDevGrid
           columns={detailGridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingOrderDetails/`}
           postData={{
             transactionMasterID:
-              formState.transaction.master.invTransactionMasterID,
-            branchID: formState.transaction.master.branchID,
+              selectedMaster.masterID,
           }}
           method={ActionType.GET}
           gridId="grd_order_details"
@@ -342,10 +347,13 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           hideGridAddButton={true}
           enableScrollButton={false}
           selectionMode="none"
-          key={selectedMasterID}
-          gridHeader={t("pending_purchase_order")}
+          showPrintButton={false}
+          allowExport={false}
+          allowSearching={false}
+          hideToolbar={true}
         />
       </div>
+}
     </>
   );
 };

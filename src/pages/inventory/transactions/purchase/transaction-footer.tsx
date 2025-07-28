@@ -144,21 +144,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const renderSecondFooter = () => (
     <div
-      className={`dark:bg-dark-bg ${footerLayout === "vertical"
-        ? "flex flex-col justify-between h-full"
-        : ""
-        }`}
-    >
-      <div
-        className={`${footerLayout === "vertical" ? "relative block" : "hidden"
-          }`}
-      >
+      className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
+      style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
+      <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
         <div className="flex justify-end">
-          <button
-            ref={buttonRef}
-            onClick={() => setIsPopupVisible((prev) => !prev)}
-            className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
-          >
+          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
             <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         </div>
@@ -167,13 +157,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div
             ref={popupRef}
             className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-            style={{
-              top: "100%",
-              right: "0",
-              width: "251px",
-              marginTop: "8px",
-            }}
-          >
+            style={{ top: "100%", right: "0", width: "251px", marginTop: "8px", }}>
             <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
               <ul className="space-y-1">
                 <li>
@@ -210,10 +194,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </li>
                 <li>
                   <button className="text-[#2563eb]">
-                    <span
-                      className="hover:underline text-[#0ea5e9] capitalize"
-                      onClick={selectAttachment}
-                    >
+                    <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
                       {t("attachment")}
                     </span>
                   </button>
@@ -231,23 +212,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
       </div>
 
-      <div
-        className={`dark:bg-dark-bg-card ${footerLayout === "vertical"
-          ? ""
-          : "bg-white rounded-xl shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"
-          }`}
-      >
-        <div
-          className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"
-            }`}
-        >
+      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white rounded-xl shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
+        <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
           <div className="mb-2">
-            <div
-              className={`grid ${footerLayout === "vertical"
-                ? "grid-cols-1"
-                : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"
-                }`}
-            >
+            <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
               <div className="w-full">
                 <WarehouseID
                   formState={formState}
@@ -296,28 +264,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         </div>
 
-        <div
-          className={`grid ${footerLayout === "vertical"
-            ? "grid-cols-1 gap-1"
-            : "grid-cols-1 md:grid-cols-[1fr_400px]"
-            }`}
-        >
-          <div
-            className={`flex ${footerLayout === "vertical"
-              ? "flex-col items-start justify-start"
-              : "p-2 flex-col items-end justify-end"
-              }`}
-          >
-            <div
-              className={`flex ${footerLayout === "vertical"
-                ? "flex-col items-start"
-                : "items-end"
-                } gap-2 mb-2`}
-            >
-              <div
-                className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"
-                  }`}
-              >
+        <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
+          <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col items-end justify-end"}`}>
+            <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
+              <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
                 <CashPaidSection
                   formState={formState}
                   dispatch={dispatch}
@@ -330,12 +280,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   dispatch={dispatch}
                   t={t}
                   handleKeyDown={handleKeyDown}
-                  focusDiscount={() =>
-                    document.getElementById("discountID")?.focus()
-                  }
-                  focusAmount={() =>
-                    document.getElementById("amountID")?.focus()
-                  }
+                  focusDiscount={() => document.getElementById("discountID")?.focus()}
+                  focusAmount={() => document.getElementById("amountID")?.focus()}
                 />
               </div>
               <div className="flex flex-col">
@@ -350,10 +296,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             </div>
 
-            <div
-              className={`${footerLayout === "vertical" ? "w-[265px]" : "w-[345px]"
-                }`}
-            >
+            <div className={`${footerLayout === "vertical" ? "w-[265px]" : "w-[345px]"}`}>
               <div className="flex flex-col">
                 <ERPTextarea
                   id="remarks"
@@ -420,12 +363,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         </div>
 
-        <div
-          className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical"
-            ? "flex-col"
-            : "flex-col md:flex-row justify-end items-center gap-4"
-            }`}
-        >
+        <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-end items-center gap-4"}`}>
           <div className="flex justify-end gap-2">
             <ERPButton
               variant="primary"
@@ -529,10 +467,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
         </div>
         <button className="text-[#2563eb] dark:text-[#60a5fa]">
-          <span
-            className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize"
-            onClick={selectAttachment}
-          >
+          <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
             {t("attachment")}
           </span>
         </button>
@@ -553,9 +488,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <div
-        className={`fixed top-[170px] ${isRtl ? "left-0" : "right-0"
-          } h-[-webkit-fill-available] overflow-y-scroll w-[300px] dark:bg-dark-bg bg-[#f8f8ff] shadow-lg p-2 z-30`}
-      >
+        className={`fixed top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[300px] shadow-lg p-2 z-30`}
+        style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
         {renderSecondFooter()}
       </div>
     );
@@ -563,47 +497,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return (
       <>
         {isDropUpOpen && (
-          <div
-            className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30"
-            onClick={toggleDropup}
-          />
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={toggleDropup} />
         )}
         {!deviceInfo?.isMobile && (
-          <div
-            className={`fixed dark:bg-dark-bg ${footerLayout === "vertical"
-              ? `top-[170px] ${isRtl ? "left-0" : "right-0"
-              } h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200`
-              : "z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 dark:bg-dark-bg bg-[#f8f8ff]"
-              }`}
-          >
-            <div
-              className={`${footerLayout === "vertical" ? "hidden" : "block"}`}
-            >
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width lg:px-3 py-2 md:px-2 dark:bg-dark-bg bg-[#f8f8ff]"}`}>
+            <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
               <div className="relative w-full">
                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[-22px]">
-                  <button
-                    onClick={toggleDropup}
-                    className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
-                      }`}
-                    style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0. gas1)" }}
-                  >
-                    <ChevronUp
-                      className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen
-                        ? "transform rotate-180"
-                        : hasAnimated
-                          ? ""
-                          : "animate-[bounce_2s_1]"
-                        }`}
-                      size={24}
-                    />
+                  <button onClick={toggleDropup} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`} style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0. gas1)" }}>
+                    <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
                   </button>
                 </div>
               </div>
-              <div
-                ref={dropUpRef}
-                className={`w-full transition-all duration-500 ease-in-out overflow-y-auto ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"
-                  }`}
-              >
+              <div ref={dropUpRef} className={`w-full transition-all duration-500 ease-in-out overflow-y-auto ${isDropUpOpen ? "max-h-[50vh] mb-6" : "max-h-0"}`}>
                 {dropdownContent}
               </div>
             </div>
@@ -613,18 +519,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               setIsOpen={setIsOpentwo}
               minHeight={200}
               maxHeight={600}
-              initialHeight={400}
-            >
+              initialHeight={400}>
               <div>
                 <div style={sidebarHeaderStyle}>
-                  <button
-                    style={{
-                      ...closeButtonStyle,
-                      color: "var(--dark-text, #374151)",
-                      borderColor: "var(--dark-border, #e5e7eb)",
-                    }}
-                    onClick={() => setIsOpentwo(false)}
-                  >
+                  <button style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }} onClick={() => setIsOpentwo(false)}>
                     <X />
                   </button>
                 </div>
@@ -633,41 +531,22 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         )}
         {deviceInfo?.isMobile && (
-          <div
-            className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2 me-[14px] mb-[39px]"
-            style={{
-              boxShadow:
-                "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
-            }}
-          >
+          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2 me-[14px] mb-[39px]"
+            style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
             <div className="relative w-full">
               <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
                 <button
                   onClick={toggleDropup}
-                  className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
-                    }`}
-                  style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}
-                >
-                  <ChevronUp
-                    className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen
-                      ? "transform rotate-180"
-                      : hasAnimated
-                        ? ""
-                        : "animate-[bounce_2s_1]"
-                      }`}
-                    size={24}
-                  />
+                  className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
+                  style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
+                  <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
                 </button>
               </div>
             </div>
             <div
               ref={dropUpRef}
-              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen
-                ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6"
-                : "max-h-0 overflow-hidden"
-                }`}
-              style={{ width: "100%", boxSizing: "border-box" }}
-            >
+              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6" : "max-h-0 overflow-hidden"}`}
+              style={{ width: "100%", boxSizing: "border-box" }}>
               {dropdownContent}
             </div>
             <div className="flex items-end justify-between">
@@ -714,9 +593,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       <span className="!font-medium dark:!text-dark-text !text-gray-600">
                         {t("total")}:{" "}
                       </span>
-                      {getFormattedValue(
-                        formState.transaction.master?.roundAmount ?? 0
-                      )}
+                      {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
                     </h6>
                   </div>
                   <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-white flex p-0 z-10">
@@ -750,18 +627,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               setIsOpen={setIsOpentwo}
               minHeight={200}
               maxHeight={600}
-              initialHeight={400}
-            >
+              initialHeight={400}>
               <div>
                 <div style={sidebarHeaderStyle}>
                   <button
-                    style={{
-                      ...closeButtonStyle,
-                      color: "var(--dark-text, #374151)",
-                      borderColor: "var(--dark-border, #e5e7eb)",
-                    }}
-                    onClick={() => setIsOpentwo(false)}
-                  >
+                    style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }}
+                    onClick={() => setIsOpentwo(false)} >
                     <X />
                   </button>
                 </div>

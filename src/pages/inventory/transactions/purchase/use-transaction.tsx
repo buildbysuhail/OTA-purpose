@@ -94,7 +94,7 @@ export const useTransaction = (
   btnAddRef: any,
   focusToNextColumn: (
     rowIndex: number,
-    column: string
+    column: string, excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null,
   focusColumn: (
     rowIndex: number,
@@ -2546,9 +2546,8 @@ debugger;
               updateOnlyGivenDetailsColumns: true,
             })
           );
-
         if (data.setFocusToNextColumn) {
-          const res = focusToNextColumn(data.rowIndex, data.searchColumn);
+          const res = focusToNextColumn(data.rowIndex, data.searchColumn, ["pCode","product","barCode"]);
           setCurrentCell(res, result.transaction!.details[0] as TransactionDetail);
         }
 
@@ -2557,7 +2556,7 @@ debugger;
       } else if (res?.products?.length > 1 &&  forImport != true) {
         // Open BatchGrid
       } else if(forImport != true) {
-        const res = focusToNextColumn(data.rowIndex, data.searchColumn);
+        const res = focusToNextColumn(data.rowIndex, data.searchColumn, ["pCode","product","barCode"]);
           setCurrentCell(res, data.detail as TransactionDetail);
       }
 

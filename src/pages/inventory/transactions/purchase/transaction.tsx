@@ -196,7 +196,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     nextCellFind: (
       rowIndex: number,
       column: string,
-      focus?: boolean
+      excludedColumns?: (keyof TransactionDetail)[]
     ) => { column: string; rowIndex: number } | null;
     focusCurrentColumn: (
       rowIndex: number,
@@ -359,8 +359,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-  const focusToNextColumn = (rowIndex: number, column: string) => {
-    return purchaseGridRef?.current?.nextCellFind(rowIndex, column) ?? null;
+  const focusToNextColumn = (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
+    return purchaseGridRef?.current?.nextCellFind(rowIndex, column, excludedColumns) ?? null;
   };
   const focusColumn = (rowIndex: number, column: string) => {
     return purchaseGridRef?.current?.focusColumn(rowIndex, column) ?? null;
@@ -438,24 +438,27 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const [gridHeight, setGridHeight] = useState(200);
   const { hasRight } = useUserRights();
+ const gridHeight = useMemo(() => {
+  let height;
+  if (
+    (formState.transactionLoading && _st.footerPosition === "right") ||
+    (!formState.transactionLoading &&
+      formState.userConfig?.footerPosition === "right")
+  ) {
+    height = window.innerHeight - 300;
+  } else {
+    height = window.innerHeight - 520;
+  }
+  
+  console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
+  console.log('Max value:', Number.MAX_VALUE);
+  console.log('Positive infinity:', Number.POSITIVE_INFINITY);
+  console.log('Current grid height:', height);
+  
+  return height;
+}, [formState.transactionLoading, formState.userConfig?.footerPosition, _st.footerPosition]);
 
-  useEffect(() => {
-    let height;
-    if (
-      (formState.transactionLoading && _st.footerPosition === "right") ||
-      (!formState.transactionLoading &&
-        formState.userConfig?.footerPosition === "right")
-    ) {
-      height = window.innerHeight - 300;
-    } else {
-      height = window.innerHeight - 520;
-    }
-    setGridHeight(height);
-  }, [formState.userConfig?.footerPosition]);
-
-  console.log("transaction mj23", { setGridHeight });
 
   useEffect(() => {
     dispatch(
@@ -840,7 +843,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }
    }
-  }, []);
+  }, [formState.transaction.details, formState.transaction.master]);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
   }, []);
@@ -2308,7 +2311,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     // height: `${gridHeight}px`,
                   }}
                 >
-                  <ErpPurchaseGrid
+                  {/* <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
                     onKeyDown={(
@@ -2341,7 +2344,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       formState.userConfig?.gridHeaderFontColor
                     }
                     gridBorderRadius={formState.userConfig?.gridBorderRadius}
-                  />
+                  /> */}
+                  Grid Under Modification
                 </div>
                 <div className="w-[300px]">
                   {((formState.transactionLoading &&
@@ -2469,7 +2473,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               {/* Form Section */}
               <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
                 <div className="space-y-2"></div>
-                <ErpPurchaseGrid
+                {/* <ErpPurchaseGrid
                   onChange={handleTextDataChange}
                   ref={purchaseGridRef}
                   onKeyDown={(
@@ -2492,7 +2496,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   summaryConfig={
                     formState.summaryConfig as SummaryConfig<TransactionDetail>[]
                   }
-                />
+                /> */}
+                Grid Under Modification
                 <TransactionFooter
                 applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
@@ -2888,9 +2893,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
       </div>
-     {formState.loading && formState.loading.isLoading == true &&
+     {/* {formState.loading && formState.loading.isLoading == true &&
      <BlurLoader text={formState.loading.text}></BlurLoader>
-     }
+     } */}
     </>
   );
 };

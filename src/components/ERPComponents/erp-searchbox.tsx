@@ -62,7 +62,7 @@ interface InputProps {
   searchKey?: string;
   rowIndex?: number;
   textAlign?: "left" | "right" | "center";
-  onNextCellFind?: (rowIndex: number, column: string) => void;
+  onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
   customStyle?:inputBox
   appState:any
 }

@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import WarehouseID from "./components/warehouse-id ";
-import { TransactionFormState } from "./transaction-types";
+import { TransactionDetail, TransactionFormState } from "./transaction-types";
 import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
 import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
@@ -37,7 +37,7 @@ interface TransactionHeaderProps {
   formState: TransactionFormState;
   dispatch: any;
   handleKeyDown: any;
-  focusToNextColumn: (rowIndex: number, column: string) => {
+  focusToNextColumn: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
     column: string;
     rowIndex: number;
 } | null;

@@ -51,6 +51,8 @@ import ERPButton from "../erp-button";
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { APIClient } from "../../../helpers/api-client";
+import { useTableResizeAndReorder } from "./use-resizing";
+import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -158,12 +160,19 @@ interface RowData {
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
-  focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;
-  nextCellFind: (rowIndex: number, column: string, focus?: boolean) => { column: string; rowIndex: number } | null;
+    index: number;
+    top: number
+  focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;  
+ nextCellFind: (
+    rowIndex: number,
+    column: string,
+    excludedColumns?: (keyof TransactionDetail)[]
+  ) => { column: string; rowIndex: number } | null;
   currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
+  dir: "ltr" | "rtl";
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -405,18 +414,13 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 );
 
 const Row = React.memo(
-  ({ index, style, data }: ListChildComponentProps<RowData>) => {
+  ({ index, 
+  top, details, columns, tableWidth,txtData,gridId,rowHeight,gridRef, itemCount, listRef,gridFontSize
+  , onKeyDown, focusCell , dir,transactionType,advancedProductSearching,useInSearch
+  ,searchByCodeAndName,nextCellFind, currentCell, onChange,blockUnitOnDecimalPoint, gridIsBold}: RowData) => {
     const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
-    const item = data.details[index];
-    const columns = data.columns;
-    const tableWidth = data.tableWidth;
-    const txtData = data.txtData;
-    const gridId = data.gridId;
-    const listRef = data.listRef;
-    const itemCount = data.itemCount;
-    const gridRef = data.gridRef;
-    const rowHeight = data.rowHeight;
-    const rowRef = useRef<HTMLTableRowElement>(null);
+    const item = details[index];
+    const rowRef = useRef<HTMLDivElement>(null);
     const dispatch = useAppDispatch();
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
@@ -453,8 +457,8 @@ const Row = React.memo(
     }, []);
     // Common cell content style for consistent height
     const getCellContentStyle = (column: ColumnModel) => ({
-      fontSize: `${data.gridFontSize}px`,
-      fontWeight: data.gridIsBold ? "bold" : "normal",
+      fontSize: `${gridFontSize}px`,
+      fontWeight: gridIsBold ? "bold" : "normal",
       height: `${rowHeight}px`,
       minHeight: `${rowHeight}px`,
       maxHeight: `${rowHeight}px`,
@@ -481,8 +485,8 @@ const Row = React.memo(
       ...formState.userConfig?.inputBoxStyle,
       inputSize: 'customize',
       inputHeight: (rowHeight - 0.6) / 16,
-      fontSize: data.gridFontSize ?? 13,
-      fontWeight: data.gridIsBold ? 700 : 400,
+      fontSize: gridFontSize ?? 13,
+      fontWeight: gridIsBold ? 700 : 400,
     } as inputBox;
 
 
@@ -491,11 +495,11 @@ const Row = React.memo(
         const target = e.target as HTMLElement
         if (!target.id) return
 
-        const visibleColumns = data.columns.filter((col) => col.visible != false && col.dataField != null)
+        const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
         const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
 
         if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-          data.onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
+          onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
           return
         }
 
@@ -527,49 +531,58 @@ const Row = React.memo(
         switch (e.key) {
           case "ArrowRight":
             if (currentColumnIndex < visibleColumns.length - 1) {
-              const res = data.focusCell(index, currentColumnIndex + 1)
+              const res = focusCell(index, currentColumnIndex + 1)
               setCurrentCell(res)
             }
             break
           case "ArrowLeft":
             if (currentColumnIndex > 1) {
-              const res = data.focusCell(index, currentColumnIndex - 1)
+              const res = focusCell(index, currentColumnIndex - 1)
               setCurrentCell(res)
             }
             break
           case "ArrowUp":
             {
-              const res = data.focusCell(index - 1, currentColumnIndex)
+              const res = focusCell(index - 1, currentColumnIndex)
               setCurrentCell(res)
             }
             break
           case "ArrowDown":
             {
-              const res = data.focusCell(index + 1, currentColumnIndex)
+              const res = focusCell(index + 1, currentColumnIndex)
               setCurrentCell(res)
             }
             break
         }
       },
-      [data],
+      [],
     )
 
     return (
-      <tr
-        ref={rowRef}
+      <div
+        ref={rowRef} 
         style={{
-          ...style,
-          display: "flex",
-          width: `${tableWidth}px`,
-          boxSizing: "border-box",
+          position: 'absolute',
+        transform: `translateY(${top}px)`, // Use transform for better performance
+        left: 0,
+        width: '100%',
+        display: 'flex',
+        backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
+        willChange: 'transform', // Optimize for animations
+
+          direction: dir,
+                  overflowX: "hidden",
+                  background: "transparent",
           borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
           height: `${rowHeight}px`,
           minHeight: `${rowHeight}px`,
           maxHeight: `${rowHeight}px`,
-        }}
-        className={`py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
+        
         // column bg transition ☝
-        key={`inv_transaction_grid_${index}`}
+        }}
+        className = {`table-body py-0 ${index % 2 === 1 ? 'bg-slate-100' : ''} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
+
+        key ={`inv_transaction_grid_${index}`}
       >
         {columns
           .filter((col) => col.visible != false && col.dataField != null)
@@ -592,12 +605,12 @@ const Row = React.memo(
             const cellId = `${gridId}_${column.dataField}_${index}`;
 
             return (
-              <td
+              <div
                 key={column.dataField}
                 className={` p-0 ${column.cssClass || ""} ${column.allowEditing && !column.readOnly ? "hover:bg-gradient-to-r hover:from-gray-50/60 hover:to-slate-50/40 transition-all duration-150" : ""}`}
                 style={{
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
+                   width:  column.width ? `${column.width}px` : "150px",
+                          minWidth:  column.width ? `${column.width}px` : "150px",
                   height: `${rowHeight}px`,
                   minHeight: `${rowHeight}px`,
                   maxHeight: `${rowHeight}px`,
@@ -614,6 +627,15 @@ const Row = React.memo(
                       ? `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`
                       : "none",
                   boxShadow: isFocused ? "0 0 0 3px rgba(59, 130, 246, 0.1)" : "none",
+
+            padding: '6px 12px',
+            fontSize: '13px',
+            textAlign: column.alignment,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center'
                 }}
                 role="gridcell"
                 onClick={(e) => {
@@ -646,8 +668,8 @@ const Row = React.memo(
                   </div>
                 ) : (column.dataField === "product" || column.dataField === "pCode") &&
                   !column.readOnly &&
-                  data.currentCell?.column === column.dataField &&
-                  data.currentCell?.rowIndex === index ? (
+                  currentCell?.column === column.dataField &&
+                  currentCell?.rowIndex === index ? (
                   <ERPProductSearch
                     customStyle={customStyle}
                     appState={appState.appState}
@@ -664,17 +686,17 @@ const Row = React.memo(
                     showCheckBox={false}
                     contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
                     value={(cellValue as string) || ""}
-                    productDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/products`}
-                    batchDataUrl={`${Urls.inv_transaction_base}${data.transactionType}/batches/`}
+                    productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
+                    batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
                     className="h-[22px] text-sm"
                     onFocus={() => handleFocus(column.dataField!)}
                     onBlur={handleBlur}
                     onKeyDown={(value, e) => handleKeyDown(value, e, column, index)}
                     searchKey={column.dataField}
-                    advancedProductSearching={data.advancedProductSearching}
-                    useInSearch={data.useInSearch}
-                    searchByCodeAndName={data.searchByCodeAndName}
-                    onNextCellFind={data.nextCellFind}
+                    advancedProductSearching={advancedProductSearching}
+                    useInSearch={useInSearch}
+                    searchByCodeAndName={searchByCodeAndName}
+                    onNextCellFind={nextCellFind}
                     onRowSelected={(data: any, rowValue?: string) => {
                       const res = {
                         slNo: item.slNo,
@@ -730,14 +752,14 @@ const Row = React.memo(
                     {productId > 0 ? cellValue ?? "" : ""}
                   </div>
                 ) : column.allowEditing && !column.readOnly && txtData.visible == true
-                  && data.currentCell?.column === column.dataField &&
-                  data.currentCell?.rowIndex === index ? (
+                  && currentCell?.column === column.dataField &&
+                  currentCell?.rowIndex === index ? (
                   <EditableCell
                     appState={appState.appState}
                     type={column.dataType == "cb" ? "cb" : "any"}
                     productId={productId}
-                    onChange={data.onChange}
-                    blockUnitOnDecimalPoint={data.blockUnitOnDecimalPoint}
+                    onChange={onChange}
+                    blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
                     decimalLimit={2}
                     rowIndex={index}
                     column={column}
@@ -747,8 +769,8 @@ const Row = React.memo(
                     onBlur={handleBlur}
                     gridId={gridId}
                     onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                    gridFontSize={data.gridFontSize}
-                    gridIsBold={data.gridIsBold}
+                    gridFontSize={gridFontSize}
+                    gridIsBold={gridIsBold}
                     formState={formState}
                     rowHeight={rowHeight}
                   />
@@ -766,10 +788,10 @@ const Row = React.memo(
                     {productId > 0 ? cellValue ?? "" : ""}
                   </div>
                 )}
-              </td>
+              </div>
             );
           })}
-      </tr>
+      </div>
     );
   }
 );
@@ -1154,8 +1176,12 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     [formState.gridColumns, focusCell]
   );
 
-  const nextCellFind = useCallback(
-    (rowIndex: number, column: string) => {
+const nextCellFind = useCallback(
+    (
+      rowIndex: number,
+      column: string,
+      excludedColumns?: (keyof TransactionDetail)[]
+    ) => {
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );
@@ -1171,9 +1197,29 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
           currentEditableIndex >= 0 &&
           currentEditableIndex < editableColumns?.length - 1
         ) {
-          const nextEditable = editableColumns![currentEditableIndex + 1];
+        const nextEditable = excludedColumns
+  ? (() => {
+      // Start from the next index after current
+      for (let i = currentEditableIndex + 1; i < editableColumns.length; i++) {
+        const column = editableColumns[i];
+        if (column.dataField && 
+            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
+          return column;
+        }
+      }
+      // If no next column found, wrap around to beginning
+      for (let i = 0; i <= currentEditableIndex; i++) {
+        const column = editableColumns[i];
+        if (column.dataField && 
+            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
+          return column;
+        }
+      }
+      return null; // or undefined, depending on your needs
+    })()
+  : editableColumns[currentEditableIndex + 1];
           targetColumnIndex = visibleColumns.findIndex(
-            (col) => col.dataField === nextEditable.dataField
+            (col) => col.dataField === nextEditable?.dataField
           );
         } else {
           targetRow += 1;
@@ -1192,6 +1238,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     [formState.gridColumns, focusCell]
   );
 
+
   React.useImperativeHandle(ref, () => ({
     focusCell,
     nextCellFind,
@@ -1199,59 +1246,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     focusCurrentColumn,
   }));
 
-  const itemData: RowData = useMemo(
-    () => ({
-      details: formState.transaction?.details || [],
-      columns: formState.gridColumns || [],
-      tableWidth: tableWidth,
-      txtData: formState.formElements.txtData,
-      gridId: gridId,
-      listRef: listRef,
-      itemCount: formState.transaction?.details.length || 0,
-      gridRef: gridRef,
-      onKeyDown: (
-        value: any,
-        e: any,
-        column: keyof TransactionDetail,
-        rowIndex: number
-      ) => {
-        onKeyDown(value, e, column, rowIndex);
-      },
-      onChange: (
-        value: any,
-        column: keyof TransactionDetail,
-        rowIndex: number
-      ) => {
-        onChange(value, column, rowIndex);
-      },
-      transactionType: transactionType ?? formState.transactionType,
-      blockUnitOnDecimalPoint:
-        applicationState.inventorySettings?.blockUnitOnDecimalPoint,
-      focusCell: focusCell ?? null,
-      nextCellFind: nextCellFind ?? null,
-      currentCell: formState.currentCell,
-      gridFontSize: gridFontSize || 14,
-      gridIsBold: gridIsBold || false,
-      rowHeight: rowHeight,
-      searchByCodeAndName: formState.userConfig?.enableItemCodeSearchInNameColumn
-    }),
-    [
-      formState.transaction?.details,
-      formState.gridColumns,
-      tableWidth,
-      formState.formElements.txtData,
-      gridId,
-      formState.transactionType,
-      focusCell,
-      nextCellFind,
-      formState.currentCell,
-      gridFontSize,
-      gridIsBold,
-      rowHeight,
-      formState.userConfig?.enableItemCodeSearchInNameColumn
-    ]
-  );
-
+  
   useEffect(() => {
     setTableWidth(calculateTotalWidth());
   }, [formState.gridColumns]);
@@ -1278,12 +1273,75 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
     },
     [columns, dispatch, formState.gridColumns]
   );
+   const { 
+    startResize, 
+    columnWidths, 
+    setColumnWidths, 
+    columnOrder, 
+    setColumnOrder,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+    handleDrop,
+    dragOverIndex
+  } = useTableResizeAndReorder();
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const virtualContainerRef = useRef<HTMLDivElement>(null);
+  const ITEM_HEIGHT = 32;
+  const CONTAINER_HEIGHT = 400;
+  
+  const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
+    formState.transaction.details.length,
+    ITEM_HEIGHT,
+    CONTAINER_HEIGHT
+  );
+
+  // Initialize column order and widths
+  useEffect(() => {
+    if (columnOrder.length === 0 && formState.gridColumns) {
+      setColumnOrder(formState.gridColumns!.map((_, index) => index));
+    }
+    if (columnWidths.length === 0 && formState.gridColumns) {
+      setColumnWidths(formState.gridColumns!.map(col => col.width??0));
+    }
+  }, [formState.gridColumns, columnOrder.length, columnWidths.length, setColumnOrder, setColumnWidths]);
+// Ultra-fast scroll handler with immediate updates to prevent white areas
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    updateScroll(scrollTop);
+  }, [updateScroll]);
+  useEffect(() => {
+    if (!containerRef.current || columnWidths.length === 0) return;
+
+    const handles = containerRef.current.querySelectorAll('[data-resize-handle]');
+    const cleanupFunctions: (() => void)[] = [];
+    
+    handles.forEach((handle, index) => {
+      const handleMouseDown = (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        if (containerRef.current) {
+          startResize(mouseEvent, index, containerRef.current, columnWidths);
+        }
+      };
+
+      handle.addEventListener('mousedown', handleMouseDown);
+      cleanupFunctions.push(() => {
+        handle.removeEventListener('mousedown', handleMouseDown);
+      });
+    });
+
+    return () => {
+      cleanupFunctions.forEach(cleanup => cleanup());
+    };
+  }, [startResize, columns, columnWidths]);
+
 
   return (
     <div
       ref={gridRef}
       style={{
-        width: `${tableWidth}px`,
+        // width: `${tableWidth}px`,
         maxWidth: "100%",
         overflow: "hidden",
         boxSizing: "border-box",
@@ -1298,6 +1356,7 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
       }}
       className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
     >
+     
       <div className={`relative ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           {/* <GridPreferenceChooser
@@ -1405,87 +1464,43 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
         )}
 
         <div className="w-full overflow-x-auto scrollbar sticky top-0 z-10">
-          <table
-            className="w-full border-collapse"
-            style={{
-              border: "none",
-              borderSpacing: "0",
-            }}
-          >
-            <thead>
-              <tr
-                className="flex relative backdrop-blur-sm"
-                style={{
-                  width: `${tableWidth}px`,
+        <div 
+        ref={containerRef}
+        className="border border-gray-300 rounded overflow-hidden"
+      >
+          {/* Header */}
+          <div className="table-header">
+          <div style={{ 
+            display: 'flex', 
+            backgroundColor: '#f8f9fa', 
+            // borderBottom: '2px solid #dee2e6',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+            // width: `${tableWidth}px`,
                   height: `${rowHeight + 8}px`, // Header slightly taller
                   minHeight: `${rowHeight + 8}px`,
                   maxHeight: `${rowHeight + 8}px`,
-                  boxSizing: "border-box",
-                  borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
+            borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
                   background: gridHeaderBg
                     ? `rgb(${gridHeaderBg})`
                     : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-                }}
-              >
-                {formState.gridColumns
+          }}>
+              {formState.gridColumns
                   ?.filter((c) => c.visible != false)
                   .map((col, index) => (
                     <React.Fragment key={col.dataField}>
-                      {dragState.dropPosition === index && (
-                        <div
-                          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#60A5FA] to-[#2563EB] shadow-lg z-10 rounded-full"
-                          style={{
-                            left:
-                              appState.dir === "ltr"
-                                ? `${(formState.gridColumns ?? [])
-                                  .filter((c) => c.visible != false)
-                                  .slice(0, index)
-                                  .reduce(
-                                    (sum, c) => sum + (c.width || 150),
-                                    0
-                                  )}px`
-                                : undefined,
-                            right:
-                              appState.dir === "rtl"
-                                ? `${(formState.gridColumns ?? [])
-                                  .filter((c) => c.visible != false)
-                                  .slice(0, index)
-                                  .reduce(
-                                    (sum, c) => sum + (c.width || 150),
-                                    0
-                                  )}px`
-                                : undefined,
-                            boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)",
-                          }}
-                        />
-                      )}
-                      {dragState.dropPosition ===
-                        (formState.gridColumns?.filter(
-                          (c) => c.visible != false
-                        ).length ?? 0) &&
-                        index ===
-                        (formState.gridColumns?.filter(
-                          (c) => c.visible != false
-                        ).length ?? 0) - 1 && (
-                          <div
-                            className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#60A5FA] to-[#2563EB] shadow-lg z-10 rounded-full"
-                            style={{
-                              right: appState.dir === "ltr" ? 0 : undefined,
-                              left: appState.dir === "rtl" ? 0 : undefined,
-                              boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)",
-                            }}
-                          />
-                        )}
-                      <th
-                        id={`${col.dataField}_${col.dataField}`}
-                        key={col.dataField}
-                        className="relative p-2 text-left font-semibold transition-all duration-300 hover:bg-white/50 cursor-pointer group"
-                        style={{
-                          fontSize: `${gridFontSize}px`,
+                     
+                <div
+                   id={`${col.dataField}_${col.dataField}`}
+                       key={`th-${col.dataField}`}
+                  style={{
+                    width: `${col.width}px`,
+                    minWidth: `${col.width}px`,
+                    maxWidth: `${col.width}px`,
+                    fontSize: `${gridFontSize}px`,
                           fontWeight: gridIsBold ? "bold" : "600",
-                          width: col.width ? `${col.width}px` : "150px",
-                          minWidth: col.width ? `${col.width}px` : "150px",
-                          height: `${rowHeight + 8}px`,
+                           height: `${rowHeight + 8}px`,
                           maxHeight: `${rowHeight + 8}px`,
                           minHeight: `${rowHeight + 8}px`,
                           textAlign:
@@ -1503,69 +1518,117 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                           color: gridHeaderFontColor
                             ? `rgb(${gridHeaderFontColor})`
                             : "#1f2937",
-                        }}
-                        draggable={!col.isLocked}
-                        onDragStart={(e) =>
-                          preferenceChooserRef.current?.handleDragStart(e)
-                        }
-                        onDragEnter={(e) =>
-                          preferenceChooserRef.current?.handleDragEnd(e)
-                        }
-                        onDragEnd={() =>
-                          preferenceChooserRef.current?.handleDropping(true)
-                        }
-                      >
-                        <div
-                          // className="relative z-10 group-hover:text-[#1e40af] transition-all duration-300 max-w-full truncate group-hover:scale-105"
-                          style={{
-                            display: "inline-block",
-                            maxWidth: "100%",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            WebkitUserSelect: "none",
-                            MozUserSelect: "none",
-                            msUserSelect: "none",
-                            caretColor: "transparent",
-                            outline: "none",
-                          }}
-                          title={col.caption}
-                        >
-                          {col.caption}
-                          {/* <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3b82f6] to-[#1e40af] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" /> */}
-                        </div>
-                        {!col.isLocked && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#DBEAFE33] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
-                        )}
-                      </th>
-                    </React.Fragment>
-                  ))}
-              </tr>
-            </thead>
 
-            <tbody style={{ background: "linear-gradient(180deg, #ffffff 0%, #fefefe 50%, #f9fafb 100%)" }}>
-              <List
-                key={String(keyField)}
-                ref={listRef}
-                height={height}
-                itemCount={formState.transaction?.details.length || 0}
-                itemSize={rowHeight}
-                width={tableWidth + 1}
-                outerRef={outerRef}
-                itemData={itemData}
-                itemKey={(index) => `${gridId}-${index}`}
-                className="bg-transparent"
-                style={{
-                  direction: appState?.dir,
-                  overflowX: "hidden",
-                  background: "transparent",
-                }}
-              >
-                {Row}
-              </List>
-            </tbody>
+                    padding: '8px 12px',
+                    // borderRight: index < columns.length - 1 ? '1px solid #dee2e6' : 'none',
+                    borderBottom: '1px solid #dee2e6',
+                    // fontWeight: '600',
+                    // fontSize: '14px',
+                    position: 'relative',
+                  //   backgroundColor: '#f8f9fa',
+                  //   userSelect: 'none',
+                  //    display: 'flex',
+                  // alignItems: 'center',
+                  // cursor: 'move',
+                  // transition: 'background-color 0.1s ease',
+                  // borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none'
+                  }}
+                  draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                >
+                  {t(col.caption)}
+                  
+                  {/* Resize Handle */}
+                  {index < columns.length - 1 && (
+                    <div
+                      data-resize-handle
+                      style={{
+                        position: 'absolute',
+                        right: '-2px',
+                        top: 0,
+                        bottom: 0,
+                        width: '4px',
+                        cursor: 'col-resize',
+                        backgroundColor: 'transparent',
+                        zIndex: 10
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.target as HTMLElement).style.backgroundColor = '#007bff';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                      }}
+                    />
+                  )}
+                </div>
+                 </React.Fragment>
+              ))}
+            </div>
+          </div>
 
-            {summaryConfig.length > 0 && (
+          {/* Body */}
+        <div 
+          ref={virtualContainerRef}
+          style={{ 
+            background: "linear-gradient(180deg, #ffffff 0%, #fefefe 50%, #f9fafb 100%)",
+            height: `${CONTAINER_HEIGHT}px`, 
+            overflow: 'auto',
+            position: 'relative',
+            willChange: 'scroll-position',
+            // Force hardware acceleration
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
+          onScroll={handleScroll}
+         >
+           <div style={{ 
+            height: `${totalHeight}px`, 
+            position: 'relative',
+            contain: 'layout style paint',
+            // Improve rendering performance
+            isolation: 'isolate'
+          }}>
+            {/* Ultra-fast visible rows with aggressive buffering */}
+            {visibleItems.map(({ index, top }) => (
+              <Row
+                key={index}
+                index={index}
+                top={top}
+                dir={appState.direction as "ltr" | "rtl"}
+                details={formState.transaction?.details || []}
+  columns={formState.gridColumns || []}
+  tableWidth={tableWidth}
+  txtData={formState.formElements.txtData}
+  gridId={gridId}
+  listRef={listRef}
+  itemCount={formState.transaction?.details.length || 0}
+  gridRef={gridRef}
+  onKeyDown={(value: any, e: any, column: keyof TransactionDetail, rowIndex: number) => {
+    onKeyDown(value, e, column, rowIndex);
+  }}
+  onChange={(value: any, column: keyof TransactionDetail, rowIndex: number) => {
+    onChange(value, column, rowIndex);
+  }}
+  transactionType={transactionType ?? formState.transactionType}
+  blockUnitOnDecimalPoint={applicationState.inventorySettings?.blockUnitOnDecimalPoint}
+  focusCell={focusCell ?? null}
+  nextCellFind={nextCellFind ?? null}
+  currentCell={formState.currentCell}
+  gridFontSize={gridFontSize || 14}
+  gridIsBold={gridIsBold || false}
+  rowHeight={rowHeight}
+  searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
+              />
+            ))}
+          </div>
+              
+            </div>
+
+          {/* Footer */}
+         {/* {summaryConfig.length > 0 && (
               <tfoot
                 style={{
                   background:
@@ -1583,8 +1646,8 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
                   rowHeight={rowHeight}
                 />
               </tfoot>
-            )}
-          </table>
+            )} */}
+        </div>
         </div>
       </div>
       {dragState.isDragging && dragState.draggedColumn && (
@@ -1620,4 +1683,602 @@ const ErpPurchaseGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
   );
 });
 
-export default ErpPurchaseGrid;
+// Ultra-fast memoized row component
+const VirtualRow = React.memo(({ 
+  index, 
+  top, 
+  columns, 
+  columnWidths, 
+  sampleData, 
+  itemHeight 
+}: { 
+  index: number; 
+  top: number; 
+  columns: any[]; 
+  columnWidths: number[]; 
+  sampleData: any[]; 
+  itemHeight: number; 
+}) => {
+  const row = sampleData[index];
+  const totalColumnWidth = columnWidths.reduce((sum, width) => sum + width, 0);
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        transform: `translateY(${top}px)`, // Use transform for better performance
+        left: 0,
+        height: `${itemHeight}px`,
+        width: `${totalColumnWidth}px`, // Add this line
+        minWidth: `${totalColumnWidth}px`, // Add this line
+        display: 'flex',
+        borderBottom: '1px solid #eee',
+        backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
+        willChange: 'transform', // Optimize for animations
+        //  fontSize: `${gridFontSize}px`,
+        // fontWeight: gridIsBold ? '600' : 'normal'
+      }}
+    >
+      {columns.map((column, colIndex) => (
+        <div
+          key={`${column.id}`}
+          style={{
+            width: `${columnWidths[colIndex]}px`,
+            minWidth: `${columnWidths[colIndex]}px`,
+            maxWidth: `${columnWidths[colIndex]}px`,
+            padding: '6px 12px',
+            borderRight: colIndex < columns.length - 1 ? '1px solid #eee' : 'none',
+            fontSize: '13px',
+            textAlign: column.id === 'slNo' ? 'center' : 
+                     ['quantity', 'rate', 'amount', 'discount', 'tax', 'total'].includes(column.id) ? 'right' : 'left',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          {row[column.id as keyof RowData]}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
+  {
+    // columns = [],
+    keyField,
+    transactionType,
+    onKeyDown,
+    onChange,
+    gridId, rowHeight = 33,
+    className = "",
+    height = 800,
+    allowColumnReordering = true,
+    summaryConfig = [],
+    gridFontSize = 14,
+    gridIsBold = false,
+    gridBorderColor,
+    gridHeaderBg,
+    gridHeaderFontColor,
+  }: DataGridProps<T>,
+  ref: Ref<any>
+) {
+  const { 
+    startResize, 
+    columnWidths, 
+    setColumnWidths, 
+    columnOrder, 
+    setColumnOrder,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+    handleDrop,
+    dragOverIndex
+  } = useTableResizeAndReorder();
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState?.appState
+  );
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
+  const applicationState = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+   const preferenceChooserRef = useRef<{
+    handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
+    handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
+    handleDropping: (eFromDataGrid?: boolean) => void;
+  }>(null);
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation('transaction')
+  const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
+  const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
+  const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const virtualContainerRef = useRef<HTMLDivElement>(null);
+
+  const [baseColumns] = useState<any[]>([
+    { id: 'slNo', title: 'Sl No', width: 80 },
+    { id: 'itemCode', title: 'Item Code', width: 120 },
+    { id: 'itemName', title: 'Item Name', width: 200 },
+    { id: 'quantity', title: 'Quantity', width: 100 },
+    { id: 'rate', title: 'Rate', width: 100 },
+    { id: 'amount', title: 'Amount', width: 520 },
+    { id: 'discount', title: 'Discount', width: 100 },
+    { id: 'tax', title: 'Tax', width: 80 },
+    { id: 'total', title: 'Total', width: 520 },
+    { id: 'qwqwq', title: 'Toasdastal', width: 520 },
+    { id: 'toasatal', title: 'Totaasdsal', width: 520 },
+    { id: 'sasasasa', title: 'Totaasdasl', width: 520 },
+    { id: 'tawwaotal', title: 'Totsadasdal', width: 520 },
+  ]);
+
+   const totalGridWidth = useMemo(() => {
+    return columnWidths.reduce((sum, width) => sum + width, 0);
+  }, [columnWidths]);
+  const onApplyPreferences = useCallback(
+    (pref: GridPreference) => {
+      const updated = applyGridColumnPreferences(
+        (formState.gridColumns || columns) as DevGridColumn[],
+        pref
+      );
+      dispatch(
+        formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
+      );
+    },
+    [ dispatch, formState.gridColumns]
+  );
+  // Memoized ordered columns
+  const columns = useMemo(() => 
+    columnOrder.length > 0 
+      ? columnOrder.map(index => baseColumns[index])
+      : baseColumns,
+    [columnOrder, baseColumns]
+  );
+
+  // Memoized large dataset
+  const sampleData = useMemo(() => 
+    Array.from({ length: 10000 }, (_, index) => ({
+      slNo: index + 1,
+      itemCode: `ITM${(index + 1).toString().padStart(5, '0')}`,
+      itemName: `Sample Item ${index + 1} - Long name for testing overflow`,
+      quantity: (Math.random() * 100).toFixed(0),
+      rate: (Math.random() * 1000).toFixed(2),
+      amount: (Math.random() * 5000).toFixed(2),
+      discount: (Math.random() * 500).toFixed(2),
+      tax: (Math.random() * 200).toFixed(2),
+      total: (Math.random() * 6000).toFixed(2),
+      qwqwq: (Math.random() * 6000).toFixed(2),
+      toasatal: (Math.random() * 6000).toFixed(2),
+      sasasasa: (Math.random() * 6000).toFixed(2),
+      tawwaotal: (Math.random() * 6000).toFixed(2),
+    })), []
+  );
+
+  // Virtual scrolling configuration
+  const ITEM_HEIGHT = 32;
+  
+  const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
+    sampleData.length,
+    ITEM_HEIGHT,
+    height
+  );
+
+  // Initialize column order and widths
+  useEffect(() => {
+    if (columnOrder.length === 0) {
+      setColumnOrder(baseColumns.map((_, index) => index));
+    }
+    if (columnWidths.length === 0) {
+      setColumnWidths(baseColumns.map(col => col.width));
+    }
+  }, [baseColumns, columnOrder.length, columnWidths.length, setColumnOrder, setColumnWidths]);
+
+  // Memoized footer data
+  const footerData = useMemo(() => ({
+    slNo: '',
+    itemCode: '',
+    itemName: 'TOTAL',
+    quantity: sampleData.slice(0, 100).reduce((sum, item) => sum + parseFloat(item.quantity), 0).toFixed(0),
+    rate: '',
+    amount: sampleData.slice(0, 100).reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2),
+    discount: sampleData.slice(0, 100).reduce((sum, item) => sum + parseFloat(item.discount), 0).toFixed(2),
+    tax: sampleData.slice(0, 100).reduce((sum, item) => sum + parseFloat(item.tax), 0).toFixed(2),
+    total: sampleData.slice(0, 100).reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2),
+  }), [sampleData]);
+
+  // Ultra-fast scroll handler with immediate updates to prevent white areas
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    updateScroll(scrollTop);
+  }, [updateScroll]);
+
+  // Attach resize handlers
+  useEffect(() => {
+    if (!containerRef.current || columnWidths.length === 0) return;
+
+    const handles = containerRef.current.querySelectorAll('[data-resize-handle]');
+    const cleanupFunctions: (() => void)[] = [];
+    
+    handles.forEach((handle, index) => {
+      const handleMouseDown = (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        if (containerRef.current) {
+          startResize(mouseEvent, index, containerRef.current, columnWidths);
+        }
+      };
+
+      handle.addEventListener('mousedown', handleMouseDown);
+      cleanupFunctions.push(() => {
+        handle.removeEventListener('mousedown', handleMouseDown);
+      });
+    });
+
+    return () => {
+      cleanupFunctions.forEach(cleanup => cleanup());
+    };
+  }, [startResize, columns, columnWidths]);
+
+  if (columnWidths.length === 0 || columnOrder.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+
+ const openExcelMenu = () => {
+    setIsExcelMenuOpen(true);
+  };
+  
+  const closeExcelMenu = () => {
+    setIsExcelMenuOpen(false);
+  };
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Grid Data');
+
+    const excelColumns = exportVisibleColumns
+      ? formState.gridColumns?.filter((col) => col.visible != false && col.dataField != null)
+      : formState.gridColumns;
+
+    worksheet.columns = (excelColumns ?? []).map((col) => ({
+      header: col.caption,
+      key: col.dataField,
+      width: col.width ? col.width / 7 : 20,
+    }));
+
+    formState.transaction?.details.forEach((item, index) => {
+      const row: { [key: string]: any } = {};
+      excelColumns?.forEach((col) => {
+        const fieldKey = col.dataField as keyof TransactionDetail;
+        if (fieldKey === 'slNo') {
+          row[fieldKey] = index + 1;
+        } else {
+          row[fieldKey] = item[fieldKey] ?? '';
+        }
+      });
+      worksheet.addRow(row);
+    });
+
+    if (summaryConfig.length > 0) {
+      const summaryRow: { [key: string]: any } = {};
+      excelColumns?.forEach((col) => {
+        const summary = summaryConfig.find(
+          (s) => s.showInColumn === col.dataField || s.column === col.dataField
+        );
+        if (summary && col.dataField !== undefined) {
+          const value = formState.summary[summary.column as keyof typeof formState.summary];
+          summaryRow[col.dataField] = summary.customizeText
+            ? summary.customizeText({ value })
+            : value ?? '';
+        } else {
+          if (col.dataField !== undefined) {
+            summaryRow[col.dataField] = '';
+          }
+        }
+      });
+      worksheet.addRow(summaryRow);
+    }
+
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+      };
+    });
+    if (summaryConfig.length > 0) {
+      const lastRowIndex = worksheet.rowCount;
+      const summaryRow = worksheet.getRow(lastRowIndex);
+      summaryRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFF8FAFC' },
+      };
+      summaryRow.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        };
+      });
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, `${gridId}_export.xlsx`);
+  };
+
+  return (
+     <div
+      style={{
+        maxWidth: "100%",
+        width: "100%",
+        overflowX: 'auto', // Single horizontal scrollbar
+          overflowY: 'hidden',
+        boxSizing: "border-box",
+        border: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
+        // borderRadius: "16px",
+        boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+        borderRadius: formState.userConfig?.gridBorderRadius
+          ? `${formState.userConfig.gridBorderRadius}px`
+          : "0px",
+        // boxShadow: "0 4px 25px rgba(0, 0, 0, 0.08)",
+        // table whole shadow
+      }}
+      className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
+    >
+     
+      <div className={`relative ${className} w-full overflow-hidden`}>
+        <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
+          
+          <div className="relative">
+            <button
+              ref={buttonRef}
+              onClick={() => setIsGridMenuOpen((prev: any) => !prev)}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2`}
+            >
+              <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+
+            {isGridMenuOpen && (
+              <div
+                ref={popupRef}
+                className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+                style={{
+                  top: "37px",
+                  left: "-5px",
+                  width: "251px",
+                }}
+              >
+                <nav className="w-full">
+                  <ul className="space-y-1">
+
+                    {/* Grid Preference Chooser */}
+                    <li>
+                      <div
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer"
+                      >
+                        <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
+                          <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
+                        </div>
+                        <GridPreferenceChooser
+                          ref={preferenceChooserRef}
+                          gridId={gridId}
+                          columns={(formState.gridColumns ?? []) as DevGridColumn[]}
+                          onApplyPreferences={onApplyPreferences}
+                          showChooserName={true}
+                          eclipseClass="m-0 p-0 font-medium"
+                        />
+                      </div>
+                    </li>
+
+
+
+                    {/* Export to Excel */}
+                    <li>
+                      <button
+                        onClick={openExcelMenu}
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff8e1] hover:text-[#ff8f00] dark:hover:bg-[#3e2f004d] dark:hover:text-[#ffe082] transition-all duration-200 rounded-md group text-left"
+                      >
+                        <div className="w-8 h-8 bg-[#ffecb3] dark:bg-[#3e2f004d] rounded-full flex items-center justify-center group-hover:bg-[#ffe082] dark:group-hover:bg-[#3e2f0099] group-hover:scale-110 transition-all duration-200">
+                          <FileUp className="h-4 w-4 text-[#ff8f00] dark:text-[#ffe082]" />
+                        </div>
+                        <span className="font-medium">{t('export_to_excel')}</span>
+                      </button>
+                    </li>
+
+
+                  </ul>
+                </nav>
+              </div>
+            )}
+
+          </div>
+        </div>
+        {isExcelMenuOpen && (
+          <ERPModal
+            isOpen={isExcelMenuOpen}
+            title={t("export_options")}
+            width={400}
+            height={200}
+            closeModal={closeExcelMenu}
+            content={
+              <>
+                <ERPCheckbox
+                  id="exportVisibleColumns"
+                  label={t("export_only_visible_column")}
+                  checked={exportVisibleColumns}
+                  onChange={() => setExportVisibleColumns(!exportVisibleColumns)}
+                />
+              </>
+            }
+            footer={
+              <div className="flex items-center justify-end p-1 border-t border-gray-200">
+                <ERPButton
+                  variant="primary"
+                  title={t("export")}
+                  onClick={exportToExcel}
+                />
+              </div>
+            }
+          />
+        )}
+
+      </div>
+     <div 
+        ref={containerRef}
+        style={{ width: `${totalGridWidth}px`, minWidth: `${totalGridWidth}px` }}
+        className="border border-gray-300 rounded overflow-scroll"
+      >
+        {/* Header */}
+        <div className="table-header">
+          <div style={{ 
+            display: 'flex', 
+            backgroundColor: '#f8f9fa', 
+            borderBottom: '2px solid #dee2e6',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10
+          }}>
+            {columns.map((column, index) => (
+              <div
+                key={`${column.id}-${index}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                style={{
+                  width: `${columnWidths[index]}px`,
+                  minWidth: `${columnWidths[index]}px`,
+                  maxWidth: `${columnWidths[index]}px`,
+                  padding: '8px 12px',
+                  borderRight: index < columns.length - 1 ? '1px solid #dee2e6' : 'none',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  position: 'relative',
+                  backgroundColor: dragOverIndex === index ? '#e3f2fd' : '#f8f9fa',
+                  userSelect: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'move',
+                  transition: 'background-color 0.1s ease',
+                  borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none'
+                }}
+              >
+                <span style={{ marginRight: '8px', opacity: 0.6 }}>⋮⋮</span>
+                {column.title}
+                
+                {/* Resize Handle */}
+                {index < columns.length - 1 && (
+                  <div
+                    data-resize-handle
+                    style={{
+                      position: 'absolute',
+                      right: '-2px',
+                      top: 0,
+                      bottom: 0,
+                      width: '4px',
+                      cursor: 'col-resize',
+                      backgroundColor: 'transparent',
+                      zIndex: 10
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor = '#007bff';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Ultra-Fast Virtual Body with Enhanced Buffering */}
+        <div 
+          ref={virtualContainerRef}
+          style={{ 
+            height: `${height}px`, 
+            width:'100%',
+            overflow: 'auto',
+             overflowX: 'auto', // Explicitly enable horizontal scrolling
+    overflowY: 'auto', // Explicitly enable vertical scrolling
+            position: 'relative',
+            willChange: 'scroll-position',
+            // Force hardware acceleration
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
+          onScroll={handleScroll}
+        >
+          {/* Virtual spacer for total height */}
+          <div style={{ 
+            height: `${totalHeight}px`, 
+            position: 'relative',
+            contain: 'layout style paint',
+            // Improve rendering performance
+            isolation: 'isolate'
+          }}>
+            {/* Ultra-fast visible rows with aggressive buffering */}
+            {visibleItems.map(({ index, top }) => (
+              <VirtualRow
+                key={index}
+                index={index}
+                top={top}
+                columns={columns}
+                columnWidths={columnWidths}
+                sampleData={sampleData}
+                itemHeight={ITEM_HEIGHT}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="table-footer">
+          <div style={{ 
+            display: 'flex', 
+            backgroundColor: '#f8f9fa', 
+            borderTop: '2px solid #dee2e6' 
+          }}>
+            {columns.map((column, colIndex) => (
+              <div
+                key={`footer-${column.id}`}
+                style={{
+                  width: `${columnWidths[colIndex]}px`,
+                  minWidth: `${columnWidths[colIndex]}px`,
+                  maxWidth: `${columnWidths[colIndex]}px`,
+                  padding: '8px 12px',
+                  borderRight: colIndex < columns.length - 1 ? '1px solid #dee2e6' : 'none',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  textAlign: column.id === 'slNo' ? 'center' : 
+                           ['quantity', 'rate', 'amount', 'discount', 'tax', 'total'].includes(column.id) ? 'right' : 'left',
+                  backgroundColor: '#f8f9fa',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                {footerData[column.id as keyof typeof footerData]}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      </div>
+  );
+})
+export default UltraFastReorderableVirtualTableGrid;
+

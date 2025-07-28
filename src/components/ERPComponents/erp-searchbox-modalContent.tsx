@@ -68,7 +68,7 @@ interface GridContainerProps {
   handleEnter: (e: any) => void;
   searchColumn: keyof TransactionDetail;
   rowIndex: number;
-  onNextCellFind?: (rowIndex: number, column: string) => void;
+  onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
   onClose?: () => void;
 }
 const GridContainer = React.memo(({
@@ -139,7 +139,7 @@ interface ProductModalGridProps {
   searchColumn: keyof TransactionDetail;
   rowIndex: number;
   onClose?: () => void;
-  onNextCellFind?: (rowIndex: number, column: string) => void;
+  onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
 }
 
 const ProductModalGrid = ({

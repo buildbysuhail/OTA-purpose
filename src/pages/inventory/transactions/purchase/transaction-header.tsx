@@ -53,7 +53,7 @@ interface TransactionHeaderProps {
   refNoRef: any;
   isDropDownOpen: boolean;
   toggleDropdown: () => void;
-  footerLayout: "horizontal" | "vertical";
+  footerLayout: "horizontal" | "abc";
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({

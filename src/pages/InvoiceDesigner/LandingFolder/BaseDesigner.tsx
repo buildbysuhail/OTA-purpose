@@ -87,7 +87,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
               {loading && <div className="bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>}
             </button>
           </div>
-
+ 
           {currentSection?.type === "properties" && (
             <PropertiesDesigner
               templateGroup={templateGroup}

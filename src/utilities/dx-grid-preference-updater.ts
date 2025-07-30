@@ -42,6 +42,7 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
 }
 export function getDefaultColumnPreference(column: DevGridColumn, index: number): ColumnPreference {
     return {
+      ...column,
     dataField: column.dataField??"",
     isLocked: column.isLocked??false,    
     caption: column.caption??capitalizeAndAddSpace(column.dataField??""),

@@ -8,6 +8,7 @@ import {
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { moveArrayElement } from "../../../utilities/Utils";
 import {
+  ColumnPreference,
   GridPreference,
   initialGridPreference,
 } from "../../types/dev-grid-column";
@@ -121,26 +122,34 @@ useEffect(() => {
     );
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
 
-    let parsedPreferences: GridPreference;
+    let _parsedPreferences: GridPreference;
     if (
       savedPreferences != undefined &&
       savedPreferences != null &&
       savedPreferences != `""` &&
       savedPreferences != ""
     ) {
-      parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
+      _parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
     } else {
-      parsedPreferences = {
+      _parsedPreferences = {
         ...initialGridPreference,
-        columnPreferences: (formState.gridColumns ?? []) as any,
+        columnPreferences: [...(formState.gridColumns ?? [])] as Array<ColumnPreference>,
       };
     }
-    const ind = parsedPreferences.columnPreferences.findIndex(
+    let parsedPreferences = {
+  ..._parsedPreferences,
+  columnPreferences: [..._parsedPreferences.columnPreferences] // Deep copy the array
+};
+
+    const ind = (parsedPreferences.columnPreferences as Array<ColumnPreference>).findIndex(
       (x) => x.dataField == column.dataField
     );
     if (ind > -1) {
-      parsedPreferences.columnPreferences[ind].width =
-        currentWidths[currentColumnIndex.current];
+       parsedPreferences.columnPreferences[ind] = {
+    ...parsedPreferences.columnPreferences[ind],
+    width: currentWidths[currentColumnIndex.current]
+  };
+     
       const preference = JSON.stringify(parsedPreferences);
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
     }

@@ -33,6 +33,7 @@ import {
 import type {
   ColumnModel,
   FormElementState,
+  SummaryItems,
   TransactionDetail,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
@@ -600,6 +601,7 @@ const VirtualRow = React.memo(({
       const handleKeyDown = useCallback(
         (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
           const target = e.target as HTMLElement
+          debugger;
           if (!target.id) return
   
           const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
@@ -662,7 +664,7 @@ const VirtualRow = React.memo(({
               break
           }
         },
-        [],
+        [columns, focusCell, setCurrentCell, onKeyDown],
       )
   
   const totalColumnWidth = columnWidths.reduce((sum, width) => sum + width, 0);
@@ -708,7 +710,6 @@ const VirtualRow = React.memo(({
             width: `${columnWidths[colIndex]}px`,
             minWidth: `${columnWidths[colIndex]}px`,
             maxWidth: `${columnWidths[colIndex]}px`,
-            padding: '6px 12px',
             borderRight: colIndex < columns.length - 1 ? '1px solid #eee' : 'none',
             fontSize: '13px',
             textAlign: column.dataField === 'slNo' ? 'center' : 
@@ -869,7 +870,6 @@ const VirtualRow = React.memo(({
                               onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
                             >
                                {productId > 0 ? cellValue??"" : ""}
-                               {cellValue??""}
                             </div>
                           )}
         </div>
@@ -997,7 +997,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
  
 
   // Virtual scrolling configuration
-  const ITEM_HEIGHT = 32;
+  const ITEM_HEIGHT =formState?.userConfig?.gridRowHeight??36;
   
   const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
     formState.transaction.details.length,
@@ -1302,7 +1302,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     },
     [formState.gridColumns, focusCell]
   );
-
+ React.useImperativeHandle(ref, () => ({
+    focusCell,
+    nextCellFind,
+    focusColumn,
+    focusCurrentColumn,
+  }));
   return (
      <div
       style={{
@@ -1430,7 +1435,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                         />
      <div 
         ref={containerRef}
-        style={{ width: `${totalGridWidth}px`, minWidth: `${totalGridWidth}px` }}
+        style={{ width: `${totalGridWidth+2}px`, minWidth: `${totalGridWidth+2}px` }}
         className="border border-gray-300 rounded overflow-scroll"
       >
         {/* Header */}
@@ -1570,8 +1575,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           </div>
         </div>
 
-        {/* Footer */}
-        {/* <div className="table-footer">
+        {/* Footer  */}
+        <div className="table-footer">
           <div style={{ 
             display: 'flex', 
             backgroundColor: '#f8f9fa', 
@@ -1579,7 +1584,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           }}>
             {columns?.map((column, colIndex) => (
               <div
-                key={`footer-${column.id}`}
+                key={`footer-${column.dataField}`}
                 style={{
                   width: `${columnWidths[colIndex]}px`,
                   minWidth: `${columnWidths[colIndex]}px`,
@@ -1588,8 +1593,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   borderRight: colIndex < columns.length - 1 ? '1px solid #dee2e6' : 'none',
                   fontSize: '13px',
                   fontWeight: '600',
-                  textAlign: column.id === 'slNo' ? 'center' : 
-                           ['quantity', 'rate', 'amount', 'discount', 'tax', 'total'].includes(column.id) ? 'right' : 'left',
+                  textAlign: column.alignment,
                   backgroundColor: '#f8f9fa',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -1598,11 +1602,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   alignItems: 'center'
                 }}
               >
-                {footerData[column.id as keyof typeof footerData]}
+                {formState.summary?.[column.dataField as keyof SummaryItems] ?? ""}
               </div>
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
       </div>
   );

@@ -2794,7 +2794,7 @@ if(loadVType == "GRN") {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data);
             }
-          } else if (columnName == "unitPrice") {
+          // } else if (columnName == "unitPrice") {
             // dispatch(
             //   commonParams.formStateHandleFieldChangeKeysOnly({
             //     fields: {

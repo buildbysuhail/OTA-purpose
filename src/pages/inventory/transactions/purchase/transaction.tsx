@@ -447,9 +447,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     (!formState.transactionLoading &&
       formState.userConfig?.footerPosition === "right")
   ) {
-    height = window.innerHeight - 300;
+    height = window.innerHeight - 330;
   } else {
-    height = window.innerHeight - 520;
+    height = window.innerHeight - 550;
   }
   
   console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -1285,7 +1285,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         caption: t("product"),
         dataType: "string",
         allowEditing: true,
-        minWidth: 200,
+        width: 250,
         alignment: "left",
       },
       {
@@ -1424,7 +1424,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataType: "string",
         readOnly: true,
         visible: false,
-        minWidth: 200,
+        width: 200,
         alignment: "left",
       },
       {
@@ -1620,7 +1620,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataField: "productDescription",
         caption: t("product_description"),
         dataType: "string",
-        minWidth: 250,
+        width: 250,
         readOnly: true,
         alignment: "left",
         visible: false,
@@ -1958,7 +1958,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         caption: t("memo"),
         dataType: "string",
         visible: false,
-        minWidth: 200,
+        width: 200,
         readOnly: true,
         alignment: "left",
       },

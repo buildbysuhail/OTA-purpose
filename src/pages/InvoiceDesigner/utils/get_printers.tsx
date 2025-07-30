@@ -33,19 +33,28 @@ export const usePrinters = () => {
     };
   }, []);
 
-  const getPrinters = async () => {
-    try {
-      const printersList = await JSPrintManager.getPrintersInfo(PrintersInfoLevel.Extended,"",PrinterIcon.None) as any[];
-      setPrinters(printersList.map((printer: any) => ({
-        name: printer.name,
-        id: printer.name, 
-        isConnected: printer.isConnected,
-        isNetwork: printer.isNetwork,
-      })));
-    } catch (error) {
-      console.error('Error fetching printers:', error);
-    }
-  };
+
+const getPrinters = async () => {
+  try {
+    const printersList = (await JSPrintManager.getPrintersInfo(
+      PrintersInfoLevel.Extended,
+      "",
+      PrinterIcon.None
+    )) as any[];
+
+    setPrinters(
+      printersList.map((printer: any) => ({
+        name: printer.Name || printer.name || "Unnamed Printer",
+        id: printer.Name || printer.name || "unknown",
+        status: printer.Status || "Unknown",
+        isNetwork: false,
+        isConnected: true,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching printers:", error);
+  }
+};
 
 
   return { printers, jspmStatus };

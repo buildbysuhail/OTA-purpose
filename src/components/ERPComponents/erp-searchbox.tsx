@@ -31,6 +31,7 @@ import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transa
 import Urls from "../../redux/urls";
 import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { inputBox } from "../../redux/slices/app/types";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 
 interface InputProps {
   id?: string,
@@ -242,7 +243,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const applicationSettings = useSelector(
       (state: RootState) => state.ApplicationSettings
     );
-
+  const appStater= useAppSelector(
+      (state: RootState) => state?.AppState?.appState
+    );
     // Initialize portal container
     useEffect(() => {
       portalContainerRef.current = document.getElementById("portal-root");
@@ -267,9 +270,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       if (inputRef && "current" in inputRef && inputRef.current && gridContainerRef.current) {
         const inputRect = inputRef.current.getBoundingClientRect();
         const containerRect = gridContainerRef.current.getBoundingClientRect();
+        const isRtl = appStater?.dir === "rtl";
         return {
           top: inputRect.bottom + window.scrollY, // Position below input
-          left: containerRect.left + window.scrollX, // Align with container
+          left: containerRect.left + window.scrollX,
+           right: window.innerWidth - (containerRect.right + window.scrollX),
           width: containerRect.width, // Match container width
         };
       }
@@ -666,9 +671,21 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     // Render DataGrid components in a portal
     const renderDataGridPortal = () => {
       if (!portalContainerRef.current) return null;
-
-      const { top, left, width } = getGridPosition();
-
+const direction = appStater?.dir || "ltr";
+      const { top, left,right, width } = getGridPosition();
+      // build a positionStyle that uses left in LTR, right in RTL
+  const positionStyle: React.CSSProperties = {
+    top: `${top}px`,
+    width: "100%",
+    minWidth: "300px",
+    maxWidth: "800px",
+    minHeight: "200px",
+    maxHeight: "400px",
+    // conditionally assign left or right
+    ...(direction === "rtl"
+      ? { right: `${right}px`, left: undefined }
+      : { left: `${left}px`, right: undefined }),
+  };
       return createPortal(
         <>
           {searchType === "grid" && (
@@ -676,19 +693,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               {showProductGrid && (
                 <div
                   className="absolute mt-0 !z-[100] bg-white shadow-lg"
-                  style={{
-                    top: `${top}px`,
-                    left: `${left}px`,
-                    width: "100%",
-                    minWidth: "300px",
-                    maxWidth: "800px",
-                    minHeight: "200px",
-                    maxHeight: "400px",
-                  }}
+                   style={positionStyle}
                 >
                   <DataGrid
                     ref={dataGridRef}
                     loadPanel={{ enabled: false }}
+                    rtlEnabled={appStater?.dir === "rtl"}
                     dataSource={store}
                     height={300}
                     keyExpr={"productID"}
@@ -758,19 +768,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
                 <div
                   className="absolute mt-1 !z-[100] bg-white shadow-lg"
-                  style={{
-                    top: `${top}px`,
-                    left: `${left}px`,
-                    width: "100%",
-                    minWidth: "300px",
-                    maxWidth: "800px",
-                    minHeight: "200px",
-                    maxHeight: "400px",
-                  }}
+                style={positionStyle}
                 >
                   <DataGrid
                     ref={batchGridRef}
                     loadPanel={{ enabled: false }}
+                    rtlEnabled={appStater?.dir === "rtl"}
                     className="custom-data-grid-dark-only"
                     dataSource={productDetailStore}
                     height={300}

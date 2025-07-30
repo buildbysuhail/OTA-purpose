@@ -638,7 +638,7 @@ Background Image
   @apply before:border-e before:border-dashed before:border-success/20 before:h-[42%];
 }
 .crm-recent-activity-content:nth-child(4) {
-  @apply before:border-e before:border-dashed before:border-pink/20 before:h-[60%];
+  @apply before:border-e before:border-dashed before:border-[#ec4899]/20 before:h-[60%];
 }
 .crm-recent-activity-content:nth-child(5) {
   @apply before:border-e before:border-dashed before:border-warning/20 before:h-[47%];
@@ -1162,7 +1162,7 @@ Background Image
 }
 
 .bg-primary-gradient {
-  @apply text-white bg-gradient-to-r from-primary to-blue;
+  @apply text-white bg-gradient-to-r from-primary to-[#3b82f6];
 }
 
 .swiper {
@@ -1305,7 +1305,7 @@ Background Image
 }
 
 #visitors-countries circle:nth-child(8) {
-  @apply fill-pink stroke-pink/20 stroke-[30];
+  @apply fill-[#ec4899] stroke-[#ec4899]/20 stroke-[30];
 }
 
 #visitors-countries circle:nth-child(9) {
@@ -1313,7 +1313,7 @@ Background Image
 }
 
 #visitors-countries circle:nth-child(10) {
-  @apply fill-indigo stroke-indigo/20 stroke-[30];
+  @apply fill-[#6366f1] stroke-[#6366f1]/20 stroke-[30];
 }
 
 #vector-map #jvm-regions-group path,
@@ -9054,7 +9054,7 @@ pre[class*=language-] > code {
 }
 
 .c-5-color {
-  @apply bg-indigo !important;
+  @apply bg-[#6366f1] !important;
 }
 
 #secondary-colored-slider .noUi-connect {
@@ -9392,11 +9392,11 @@ input.gridjs-input {
 }
 
 .ti-btn-purple-full {
-  @apply bg-purple text-white;
+  @apply bg-[#a855f7] text-white;
 }
 
 .ti-btn-orange-full {
-  @apply bg-orange text-white;
+  @apply bg-[#f97316] text-white;
 }
 
 .ti-btn-teal-full {
@@ -9451,7 +9451,7 @@ input.gridjs-input {
 }
 
 .ti-btn-purple {
-  @apply bg-purple/10 text-purple hover:text-white hover:bg-purple focus:ring-purple dark:focus:ring-offset-white/10;
+  @apply bg-[#a855f7]/10 text-[#a855f7] hover:text-white hover:bg-[#a855f7] focus:ring-[#a855f7] dark:focus:ring-offset-white/10;
 }
 
 .ti-btn-teal {
@@ -9459,7 +9459,7 @@ input.gridjs-input {
 }
 
 .ti-btn-orange {
-  @apply bg-orange/10 text-orange hover:text-white hover:bg-orange focus:ring-orange dark:focus:ring-offset-white/10;
+  @apply bg-[#f97316]/10 text-[#f97316] hover:text-white hover:bg-[#f97316] focus:ring-[#f97316] dark:focus:ring-offset-white/10;
 }
 
 .ti-btn-outline-primary {
@@ -9531,11 +9531,11 @@ input.gridjs-input {
 }
 
 .ti-btn-ghost-orange {
-  @apply text-orange hover:bg-orange/10;
+  @apply text-[#f97316] hover:bg-[#f97316]/10;
 }
 
 .ti-btn-ghost-purple {
-  @apply text-purple hover:bg-purple/10;
+  @apply text-[#a855f7] hover:bg-[#a855f7]/10;
 }
 
 .ti-btn-ghost-teal {
@@ -9718,7 +9718,7 @@ input.gridjs-input {
 }
 
 .ti-btn-border-end.ti-btn-purple {
-  @apply border-e-[0.1875rem] border-t-0 border-s-0 border-b-0 border-solid border-purple !important;
+  @apply border-e-[0.1875rem] border-t-0 border-s-0 border-b-0 border-solid border-[#a855f7] !important;
 }
 
 .ti-btn-border-top.ti-btn-warning {
@@ -10519,7 +10519,7 @@ body {
 
 /* End:: backgrounds */
 code {
-  @apply text-[0.675rem] text-red break-words !important;
+  @apply text-[0.675rem] text-[#ef4444] break-words !important;
 }
 
 .color-container {

@@ -56,23 +56,23 @@ const ReferenceNumber = React.forwardRef<
                   formState.formElements.referenceNumber?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
-                labelInfo={
-                  // <ERPButton
-                  //   id="btnLoadByRef"
-                  //   title=":"
-                  //   className="!p-0 !m-0 !bg-none"
-                  //   onClick={handleLoadByRefNo}
-                  // ></ERPButton>
-                  <div className="relative">
-                    {/* <button onClick={handleLoadByRefNo} className="m-[-1px_0_-13px_0] p-[0px_0_7px_0] text-[#0ea5e9]"> */}
-                    <button
-                      onClick={handleLoadByRefNo}
-                      className="absolute right-0 top-[-5px] text-[#0ea5e9]"
-                    >
-                      <Ellipsis />
-                    </button>
-                  </div>
-                }
+              // labelInfo={
+              //   // <ERPButton
+              //   //   id="btnLoadByRef"
+              //   //   title=":"
+              //   //   className="!p-0 !m-0 !bg-none"
+              //   //   onClick={handleLoadByRefNo}
+              //   // ></ERPButton>
+              //   <div className="relative">
+              //     {/* <button onClick={handleLoadByRefNo} className="m-[-1px_0_-13px_0] p-[0px_0_7px_0] text-[#0ea5e9]"> */}
+              //     <button
+              //       onClick={handleLoadByRefNo}
+              //       className="absolute right-0 top-[-5px] text-[#0ea5e9]"
+              //     >
+              //       <Ellipsis />
+              //     </button>
+              //   </div>
+              // }
               />
             </div>
           </>

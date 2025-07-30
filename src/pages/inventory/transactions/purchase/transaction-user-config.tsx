@@ -140,9 +140,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
     };
     updateAppState(_appState);
   };
+
   const debouncedHandleScrollbarChange = useDebounce(handleScrollbarChange, 300);
   const debouncedHandleFieldChange = useDebounce(handleFieldChange, 300);
-
   const resetThemeChange = async () => {
     try {
       ERPAlert.show({
@@ -333,9 +333,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     label={t("dummy_products")}
                     data={formState}
                     checked={formState?.dummyProducts}
-                    onChangeData={(e) => dispatch(formStateHandleFieldChange({fields:{
-                      dummyProducts: e.dummyProducts
-                    }}))}
+                    onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
                   />
                   <ERPCheckbox
                     id="duplicationMessage"
@@ -646,6 +644,36 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         </label>
                         <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
                           rgb({formState.userConfig?.innerPageBg})
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                        style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}
+                      >
+                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                        <input
+                          type="color"
+                          value={formState.userConfig?.footerBg ? rgbToHex(formState.userConfig.footerBg) : '#f8f8ff'}
+                          onChange={(e) => {
+                            const rgb = hexToRgb(e.target?.value);
+                            if (rgb) {
+                              debouncedHandleFieldChange("footerBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                            }
+                          }}
+                          className="opacity-0 w-full h-full cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                          {t("footer_background_color")}
+                        </label>
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                          rgb({formState.userConfig?.footerBg || "248,248,255"})
                         </div>
                       </div>
                     </div>

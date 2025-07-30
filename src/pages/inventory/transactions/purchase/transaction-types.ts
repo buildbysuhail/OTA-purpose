@@ -210,8 +210,8 @@ export interface TransactionMaster3 {
   shipStateCode: number;
 }
 
-export interface TransactionMaster3Validations { }
-export interface TransactionMasterValidations { }
+export interface TransactionMaster3Validations {}
+export interface TransactionMasterValidations {}
 export interface CommonParams {
   result: DeepPartial<TransactionFormState>;
   formStateHandleFieldChangeKeysOnly?: any;
@@ -370,6 +370,7 @@ export interface UserConfig {
   gridHeaderFontColor?: string;
   gridBorderRadius?: number;
   barCodePrev?: boolean;
+  footerBg?: string;
 }
 
 export type FormElementsState = {
@@ -504,7 +505,10 @@ export interface TransactionFormState {
   dataWarranty: [];
   dataBrands: [];
 }
-interface loadingResult {isLoading: boolean, text: string}
+interface loadingResult {
+  isLoading: boolean;
+  text: string;
+}
 export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };
@@ -649,8 +653,6 @@ interface ProductBatchDetailsForAutoBarcodeData {
   units: UnitByBatchDetailsDto[];
 }
 
-
-
 export interface DataAutoBarcode {
   products: ProductBatchDetailsForAutoBarcodeData[];
   units: UnitByBatchDetailsDto[];
@@ -714,21 +716,19 @@ export interface BarcodeLabel {
   showPreview: boolean;
   pluCode: string;
 }
- export enum EmployeeType
- {
-    All = "All",
-    Purchaser = "PUR",
-    SalesMan = "SMAN",
-    Receipt = "RPT",
-    Purchaser_SalesMan = "PURSMAN",
-    Purchaser_Receipt = "PURRPT",
-    SalesMan_Receipt = "SMANRPT",
-    Accountant = "ACCT",
-    Driver = "DV",
-    Deliveryman = "DMAN"
-
- };
- export interface ExcelRowData {
+export enum EmployeeType {
+  All = "All",
+  Purchaser = "PUR",
+  SalesMan = "SMAN",
+  Receipt = "RPT",
+  Purchaser_SalesMan = "PURSMAN",
+  Purchaser_Receipt = "PURRPT",
+  SalesMan_Receipt = "SMANRPT",
+  Accountant = "ACCT",
+  Driver = "DV",
+  Deliveryman = "DMAN",
+}
+export interface ExcelRowData {
   Barcode: string;
   Quantity: number;
   Disc_per?: number;

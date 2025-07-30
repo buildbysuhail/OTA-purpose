@@ -40,7 +40,7 @@ interface TransactionHeaderProps {
   focusToNextColumn: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
     column: string;
     rowIndex: number;
-} | null;
+  } | null;
   loadAndSetTransVoucher: any;
   t: any;
   handleLoadByRefNo: any;
@@ -205,10 +205,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   return (
     <div>
-      {isDropDownOpen && (
-        <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={toggleDropdown} />
-      )}
-
+      {isDropDownOpen && (<div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={toggleDropdown} />)}
       {!deviceInfo?.isMobile && (
         <div style={headerStyle} className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300">
           <div className="flex items-end gap-1 relative px-2 !pb-3">
@@ -227,11 +224,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               }}
             />
             <div>
-              <button
-                onClick={handleLedgerDetailsClick}
-                aria-label="View Ledger Details"
-                className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200"
-              >
+              <button onClick={handleLedgerDetailsClick} aria-label="View Ledger Details" className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200">
                 <Search className="w-5 h-5 dark:text-dark-text text-gray-700" />
               </button>
             </div>
@@ -266,14 +259,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               dispatch={dispatch}
               formState={formState}
               handleKeyDown={(e) => {
-                if(isEnterKey(e.key)) {
-                  
-                  if(formState.currentCell && formState.currentCell.rowIndex > 0&& formState.currentCell.column != "") {
-                    focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);                  
+                if (isEnterKey(e.key)) {
+
+                  if (formState.currentCell && formState.currentCell.rowIndex > 0 && formState.currentCell.column != "") {
+                    focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);
                   } else {
-focusToNextColumn(0, "slNo");
+                    focusToNextColumn(0, "slNo");
                   }
-                  
                 }
               }}
               t={t}
@@ -300,7 +292,7 @@ focusToNextColumn(0, "slNo");
 
                 <DebitAccount
                   dispatch={dispatch}
-              transactionType={transactionType}
+                  transactionType={transactionType}
                   formState={formState}
                   t={t}
                   handleKeyDown={handleKeyDown}
@@ -343,7 +335,7 @@ focusToNextColumn(0, "slNo");
                       <GrnNumber
                         dispatch={dispatch}
                         formState={formState}
-                    closeModal={closeModal}
+                        closeModal={closeModal}
                         t={t}
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
                       />
@@ -493,6 +485,7 @@ focusToNextColumn(0, "slNo");
                   />
                 )}
               </div>
+
               {conditionalFooterComponents}
               {formState.formElements.pnlImport.visible && (
                 <div className="inline-flex items-end gap-1 border border-dashed dark:border-dark-border border-gray-400 p-2 rounded-md mt-2">
@@ -576,12 +569,7 @@ focusToNextColumn(0, "slNo");
               <button
                 onClick={toggleDropdown}
                 className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-                style={{
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
-                  transition: "transform 0.5s ease-in-out",
-                }}
-              >
+                style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", transform: isDropDownOpen ? "translateY(0)" : "translateY(0)", transition: "transform 0.5s ease-in-out", }} >
                 <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
@@ -619,10 +607,7 @@ focusToNextColumn(0, "slNo");
           <div
             ref={dropdownRef}
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-            }}
+            style={{ width: "100%", boxSizing: "border-box", }}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
@@ -635,7 +620,7 @@ focusToNextColumn(0, "slNo");
                 />
 
                 <DebitAccount
-              transactionType={transactionType}
+                  transactionType={transactionType}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -949,12 +934,7 @@ focusToNextColumn(0, "slNo");
               <button
                 onClick={toggleDropdown}
                 className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-                style={{
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
-                  transition: "transform 0.5s ease-in-out",
-                }}
-              >
+                style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", transform: isDropDownOpen ? "translateY(0)" : "translateY(0)", transition: "transform 0.5s ease-in-out", }}>
                 <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>

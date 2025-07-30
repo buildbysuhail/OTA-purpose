@@ -637,10 +637,13 @@ useEffect(() => {
       document.head.removeChild(style);
     };
   }, []);
-    return (
+return (
       <>
-        <div className="flex items-center gap-4">
-          <div className="relative w-full" ref={gridContainerRef}>
+        <div
+          className="flex items-center w-full"
+          style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }}
+        >
+          <div className="relative flex-1" ref={gridContainerRef}>
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}
@@ -651,11 +654,10 @@ useEffect(() => {
               id={inputId || "test"}
               placeholder={placeholder}
               labelDirection={labelDirection}
-              contextClassName={contextClassNametwo}
+              contextClassName={contextClassNametwo?.replace("!px-1", "")} // Remove !px-1 to avoid padding
               value={inputValue.searchValue}
               onChange={handleChange}
               onKeyDown={handleInputKeyDown}
-              // onEnterKeyDown={onEnterKeyDown}
               disableEnterNavigation
               ref={inputRef}
               onFocus={(e) => {
@@ -670,13 +672,15 @@ useEffect(() => {
                   rest.onBlur(e);
                 }
               }}
+              style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }} // Ensure full width
             />
             {searchType === "grid" && (
               <>
                 {showProductGrid && (
-                  
-                  <div className="absolute top-full left-0 mt-0 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
-                    
+                  <div
+                    className="absolute top-full left-0 mt-0 z-10 w-full min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white"
+                    style={{ width: "100%" }} // Ensure grid takes full column width
+                  >
                     <DataGrid
                       ref={dataGridRef}
                       loadPanel={{ enabled: false }}
@@ -693,20 +697,20 @@ useEffect(() => {
                         summary: false,
                         groupPaging: false,
                       }}
-                     focusedRowEnabled={true}
+                      focusedRowEnabled={true}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}
+                      width="100%" // Ensure DataGrid takes full width
                     >
-                      <Selection mode="single"  deferred/>
+                      <Selection mode="single" deferred />
                       <Paging pageSize={30} />
                       <Scrolling mode="virtual" />
                       <KeyboardNavigation
                         enabled={true}
                         editOnKeyPress={false}
-
                         enterKeyDirection="row"
                       />
-                        <Column
+                      <Column
                         dataField="productName"
                         caption={t("product_name")}
                         dataType="string"
@@ -724,7 +728,6 @@ useEffect(() => {
                         dataType="number"
                         visible={false}
                       />
-
                       <Column
                         dataField="arabicName"
                         caption={t("arabic_name")}
@@ -746,117 +749,120 @@ useEffect(() => {
                     </DataGrid>
                   </div>
                 )}
-                {showBatchGrid &&
-                  !isNullOrUndefinedOrEmpty(batchDataUrl) && (
-                    <div className="absolute top-full left-0 mt-1 z-10 w-auto min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white">
-                      <DataGrid
-                        ref={batchGridRef}
-                        loadPanel={{ enabled: false }}
-                        className="custom-data-grid-dark-only"
-                        dataSource={productDetailStore}
-                        height={300}
-                        keyExpr={"productBatchID"}
-                        showBorders={true}
-                        showRowLines={true}
-                        remoteOperations={{
+                {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
+                  <div
+                    className="absolute top-full left-0 mt-1 z-10 w-full min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white"
+                    style={{ width: "100%" }} // Ensure batch grid takes full column width
+                  >
+                    <DataGrid
+                      ref={batchGridRef}
+                      loadPanel={{ enabled: false }}
+                      className="custom-data-grid-dark-only"
+                      dataSource={productDetailStore}
+                      height={300}
+                      keyExpr={"productBatchID"}
+                      showBorders={true}
+                      showRowLines={true}
+                      remoteOperations={{
                         filtering: true,
                         paging: true,
                         sorting: true,
                         grouping: false,
                         summary: false,
                         groupPaging: false,
-                        }}
-                        paging={{}}
-                     focusedRowEnabled={true}
+                      }}
+                      paging={{}}
+                      focusedRowEnabled={true}
                       onContentReady={handleBatchContentReady}
                       onFocusedRowChanged={handleBatchFocusedRowChanged}
                       onKeyDown={handleBatchGridKeyDown}
-                        tabIndex={0}
-                      >
-                        <Scrolling
-                          mode="virtual"
-                          showScrollbar="always"
-                          renderAsync={false}
-                          useNative={"auto"}
-                          rowRenderingMode="virtual"
-                          preloadEnabled={true}
-                        />
-                        <KeyboardNavigation
-                          enabled={true}
-                          editOnKeyPress={false}
-                          enterKeyDirection="row"
-                        />
-                        <Paging pageSize={30} />
-                        <Selection mode="single"/>
-                        <Column
-                          dataField="productBatchID"
-                          caption={t("productBatchID")}
-                          dataType="number"
-                          width={150}
-                        />
-                        <Column
-                          dataField="productCode"
-                          caption={t("productCode")}
-                          dataType="string"
-                          width={150}
-                        />
-                        <Column
-                          dataField="autoBarcode"
-                          caption={t("autoBarcode")}
-                          dataType="string"
-                          width={150}
-                        />
-                        <Column
-                          dataField="sPrice"
-                          caption={t("sprice")}
-                          dataType="number"
-                          width={100}
-                        />
-                        <Column
-                          dataField="pPrice"
-                          caption={t("pPrice")}
-                          dataType="number"
-                          width={100}
-                        />
-                        <Column
-                          dataField="mrp"
-                          caption={t("mrp")}
-                          dataType="number"
-                          width={100}
-                        />
-                        <Column
-                          dataField="stock"
-                          caption={t("stock")}
-                          dataType="number"
-                          width={100}
-                        />
-                        <Column
-                          dataField="unitID"
-                          caption={t("unitID")}
-                          dataType="number"
-                          minWidth={100}
-                        />
-                        <Column
-                          dataField="unit"
-                          caption={t("unit")}
-                          dataType="string"
-                          minWidth={100}
-                        />
-                        <Column
-                          dataField="brandID"
-                          caption={t("brandID")}
-                          dataType="number"
-                          minWidth={100}
-                        />
-                        <Column
-                          dataField="brandName"
-                          caption={t("brandName")}
-                          dataType="string"
-                          minWidth={100}
-                        />
-                      </DataGrid>
-                    </div>
-                  )}
+                      tabIndex={0}
+                      width="100%" // Ensure DataGrid takes full width
+                    >
+                      <Scrolling
+                        mode="virtual"
+                        showScrollbar="always"
+                        renderAsync={false}
+                        useNative={"auto"}
+                        rowRenderingMode="virtual"
+                        preloadEnabled={true}
+                      />
+                      <KeyboardNavigation
+                        enabled={true}
+                        editOnKeyPress={false}
+                        enterKeyDirection="row"
+                      />
+                      <Paging pageSize={30} />
+                      <Selection mode="single" />
+                      <Column
+                        dataField="productBatchID"
+                        caption={t("productBatchID")}
+                        dataType="number"
+                        width={150}
+                      />
+                      <Column
+                        dataField="productCode"
+                        caption={t("productCode")}
+                        dataType="string"
+                        width={150}
+                      />
+                      <Column
+                        dataField="autoBarcode"
+                        caption={t("autoBarcode")}
+                        dataType="string"
+                        width={150}
+                      />
+                      <Column
+                        dataField="sPrice"
+                        caption={t("sprice")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="pPrice"
+                        caption={t("pPrice")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="mrp"
+                        caption={t("mrp")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="stock"
+                        caption={t("stock")}
+                        dataType="number"
+                        width={100}
+                      />
+                      <Column
+                        dataField="unitID"
+                        caption={t("unitID")}
+                        dataType="number"
+                        minWidth={100}
+                      />
+                      <Column
+                        dataField="unit"
+                        caption={t("unit")}
+                        dataType="string"
+                        minWidth={100}
+                      />
+                      <Column
+                        dataField="brandID"
+                        caption={t("brandID")}
+                        dataType="number"
+                        minWidth={100}
+                      />
+                      <Column
+                        dataField="brandName"
+                        caption={t("brandName")}
+                        dataType="string"
+                        minWidth={100}
+                      />
+                    </DataGrid>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -885,10 +891,10 @@ useEffect(() => {
               closeModal={onClose}
               content={
                 <ProductModalGrid
-                transactionType={formState.transactionType}
-                userConfig={formState.userConfig}
-                onNextCellFind={onNextCellFind}
-                onClose={onClose}
+                  transactionType={formState.transactionType}
+                  userConfig={formState.userConfig}
+                  onNextCellFind={onNextCellFind}
+                  onClose={onClose}
                   rowIndex={
                     formState.formElements.productSearchPopupWindow.data
                       .rowIndex

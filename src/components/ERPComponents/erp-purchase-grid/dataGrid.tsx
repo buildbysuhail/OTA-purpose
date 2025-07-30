@@ -997,7 +997,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
  
 
   // Virtual scrolling configuration
-  const ITEM_HEIGHT = 32;
+  const ITEM_HEIGHT =formState?.userConfig?.gridRowHeight??36;
   
   const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
     formState.transaction.details.length,
@@ -1327,6 +1327,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
       }}
       className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
     >
+     
       <div className={`relative ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           

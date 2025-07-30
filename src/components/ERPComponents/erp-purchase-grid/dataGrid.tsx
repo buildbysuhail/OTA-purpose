@@ -33,6 +33,7 @@ import {
 import type {
   ColumnModel,
   FormElementState,
+  SummaryItems,
   TransactionDetail,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
@@ -1573,8 +1574,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           </div>
         </div>
 
-        {/* Footer */}
-        {/* <div className="table-footer">
+        {/* Footer  */}
+        <div className="table-footer">
           <div style={{ 
             display: 'flex', 
             backgroundColor: '#f8f9fa', 
@@ -1582,7 +1583,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           }}>
             {columns?.map((column, colIndex) => (
               <div
-                key={`footer-${column.id}`}
+                key={`footer-${column.dataField}`}
                 style={{
                   width: `${columnWidths[colIndex]}px`,
                   minWidth: `${columnWidths[colIndex]}px`,
@@ -1591,8 +1592,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   borderRight: colIndex < columns.length - 1 ? '1px solid #dee2e6' : 'none',
                   fontSize: '13px',
                   fontWeight: '600',
-                  textAlign: column.id === 'slNo' ? 'center' : 
-                           ['quantity', 'rate', 'amount', 'discount', 'tax', 'total'].includes(column.id) ? 'right' : 'left',
+                  textAlign: column.alignment,
                   backgroundColor: '#f8f9fa',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -1601,11 +1601,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   alignItems: 'center'
                 }}
               >
-                {footerData[column.id as keyof typeof footerData]}
+                {formState.summary?.[column.dataField as keyof SummaryItems] ?? ""}
               </div>
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
       </div>
   );

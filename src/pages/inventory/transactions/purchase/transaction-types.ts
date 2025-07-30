@@ -481,7 +481,7 @@ export interface TransactionFormState {
   isPartyWiseSummaryOpen: boolean;
   isFormStateDetailOpen?: boolean;
   selectedRow?: TransactionDetail;
-  gridColumns?: ColumnModel[];
+  gridColumns: ColumnModel[];
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];

@@ -32,7 +32,7 @@ const InvoiceDesigner = () => {
   const templateData = useSelector((state: any) => state.Template) as TemplateReducerState;
   const rootState = useRootState();
   const templateGroup = searchParams.get("template_group") || "";
-   const { templateKind,templateType} = (location.state as LocationState) || {};
+  const { templateKind,templateType} = (location.state as LocationState) || {};
 
   const groupKey = templateGroup;
   const typeKey = templateType?.toUpperCase() ?? "STANDARD";

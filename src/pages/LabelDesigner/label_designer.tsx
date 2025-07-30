@@ -320,9 +320,9 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
-const { printers,printerLoading, hasPermission, requestPrinterPermission } = usePrinters();
+const { printers } = usePrinters();
 
-
+console.log("avilable printers",printers);
   let paperWidth, paperHeight;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
@@ -3516,15 +3516,10 @@ const handleRemoveImage =()=>{
                       const checked = e.target.checked;
                       // Always update checkbox state first
                       handlePagePropsChange("select_printer", checked);
-                      if (checked && !hasPermission) {
-                        await requestPrinterPermission();
-                        if (printers[0]){
-                          handlePagePropsChange("printer", printers[0].name);
-                        }
-                      }
+
                     }}
                   />
-              {templateData?.propertiesState?.select_printer && (
+              {/* {templateData?.propertiesState?.select_printer && (
                 <>
                   {printerLoading ? (
                     <p className="text-sm text-gray-500">{t("Loading printers...")}</p>
@@ -3568,7 +3563,7 @@ const handleRemoveImage =()=>{
                     </Box>
                   ) : null}
                 </>
-              )}
+              )} */}
 
 
               </Box>

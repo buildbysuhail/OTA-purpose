@@ -2172,7 +2172,7 @@ if(loadVType == "GRN") {
     forImport?: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
-debugger;
+
     try {
       let detail = data.detail;
       let outDetail: DeepPartial<TransactionDetail> = {};
@@ -2752,7 +2752,7 @@ debugger;
           if (columnName == "pCode") {
             data.pCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
-              loadProductDetailsByAutoBarcode(
+              await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
                   autoBarcode: data.barCode,
@@ -2775,7 +2775,7 @@ debugger;
 
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
-              loadProductDetailsByAutoBarcode(
+              await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
                   autoBarcode: data.barCode,
@@ -2794,7 +2794,7 @@ debugger;
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data);
             }
-          } else if (columnName == "unitPrice") {
+          // } else if (columnName == "unitPrice") {
             // dispatch(
             //   commonParams.formStateHandleFieldChangeKeysOnly({
             //     fields: {
@@ -3158,7 +3158,7 @@ const importFromExcel = async (e:  React.ChangeEvent<HTMLInputElement>): Promise
           if (!row.hasValues) {
             continue;
           }
-debugger;
+
           try {
             const rowData: ExcelRowData = {
               Barcode: getExcelCellValue(row.getCell(1)) || '',
@@ -3292,7 +3292,7 @@ outState.batchesUnits = productDetails.batchesUnits;
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = outState.batchesUnits;
-debugger;
+
             // Dispatch the state update
             dispatch(
               formStateHandleFieldChangeKeysOnly({

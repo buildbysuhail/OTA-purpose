@@ -514,6 +514,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             </div>
             {selectedFooter}
+            {setIsOpentwo &&
             <BottomSidebar
               isOpen={isOpentwo}
               setIsOpen={setIsOpentwo}
@@ -528,6 +529,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
             </BottomSidebar>
+  }
           </div>
         )}
         {deviceInfo?.isMobile && (
@@ -622,6 +624,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
             </div>
+            {setIsOpentwo &&
             <BottomSidebar
               isOpen={isOpentwo}
               setIsOpen={setIsOpentwo}
@@ -638,6 +641,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
             </BottomSidebar>
+  }
           </div>
         )}
       </>

@@ -54,18 +54,19 @@ export interface DevGridColumn {
     dataField: '',
     format: '',
     isLocked: false,
-    caption: "Column Header",        // string: the text to display in the header
-    width: 150,                         // number: column width in pixels
-    minWidth: 150,                         // number: column width in pixels
-    alignment: 'left',                      // 'left' | 'center' | 'right': text alignment
-    visible: true,                      // boolean: whether the column is visible
-    readOnly: false,                    // boolean: whether the column is read-only
-    fontBold: false,                    // boolean: whether the font is bold
-    fontColor: "#000000",               // string: font color in hex
-    fontSize: 12,   
-    showInPdf: true,                    // number: font size
-    displayOrder: 1  ,                // number: the order in which the column appears
-    groupIndex:0
+    caption: "Column Header", // string: the text to display in the header
+    width: 150, // number: column width in pixels
+    minWidth: 150, // number: column width in pixels
+    alignment: 'left', // 'left' | 'center' | 'right': text alignment
+    visible: true, // boolean: whether the column is visible
+    readOnly: false, // boolean: whether the column is read-only
+    fontBold: false, // boolean: whether the font is bold
+    fontColor: "#000000", // string: font color in hex
+    fontSize: 12,
+    showInPdf: true, // number: font size
+    displayOrder: 1, // number: the order in which the column appears
+    groupIndex: 0,
+    allowEditing: false
   };
   export interface Preferences {
     [dataField: string]: ColumnPreference;
@@ -85,8 +86,11 @@ export interface DevGridColumn {
     fontColor: string;
     fontSize: number;
     showInPdf: boolean;
+    allowEditing: boolean;
     displayOrder: number;
     groupIndex?:any
+    order?:number
+    type?:string
   }
   export interface GridPreference {
     font: string;

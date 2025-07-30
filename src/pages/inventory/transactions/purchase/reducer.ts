@@ -12,6 +12,7 @@ import {
   InvAccTransaction,
   PartialTransactionFormFields,
   UnitByBatchDetailsDto,
+  ColumnModel,
 } from "./transaction-types";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../../helpers/user-right-helper";
@@ -544,6 +545,34 @@ const InvTransactionSlice = createSlice({
     ) => {
       state = action.payload.disableControlsFn(state);
     },
+    reOrderGridCols: (
+      state,
+      action: PayloadAction<{ column: string, toBefore: string}>
+    ) => {
+      const { column, toBefore } = action.payload;
+      
+      // Find the index of the column to move
+      const fromIndex = state.gridColumns.findIndex(x => x.dataField === column);
+      
+      // Find the index of the target position (before which to insert)
+      const toIndex = state.gridColumns.findIndex(x => x.dataField === toBefore);
+      
+      // Check if both columns exist
+      if (fromIndex === -1 || toIndex === -1) {
+        return; // Column not found, no changes
+      }
+      
+      // Remove the column from its current position
+      const columnToMove = state.gridColumns[fromIndex];
+      state.gridColumns.splice(fromIndex, 1);
+      
+      // Calculate the new insertion index
+      // If we removed an item before the target, adjust the index
+      const adjustedToIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+      
+      // Insert the column at the new position
+      state.gridColumns.splice(adjustedToIndex, 0, columnToMove);
+    },
     formStateHandleFieldChangeKeysOnly: (
       state: TransactionFormState,
       action: PayloadAction<{
@@ -553,6 +582,7 @@ const InvTransactionSlice = createSlice({
         itemsToAddToDetails?: TransactionDetail[];
       }>
     ) => {
+      
       const {
         fields,
         updateOnlyGivenDetailsColumns = false,
@@ -607,6 +637,36 @@ const InvTransactionSlice = createSlice({
         const fieldValue = fields[key as keyof TransactionFormState];
 
         // Special handling for transaction.details array
+        if (
+          key === "gridColumns" &&
+          fieldValue 
+        ) {
+          let ddf = typeof fieldValue
+          const gridColumns = fieldValue as ColumnModel[];
+          gridColumns.forEach(
+              (detailItem: ColumnModel, index: number) => {
+                const toIndex = (state as any).gridColumns.findIndex(
+                  (x: ColumnModel) => x.dataField == detailItem.dataField
+                );
+                if (updateOnlyGivenDetailsColumns === true) {
+                  // Update only specific columns in the row
+                  if (!state.gridColumns[toIndex]) {
+                    state.gridColumns[toIndex] =
+                      {} as ColumnModel;
+                  }
+
+                  // Batch assign instead of individual property updates
+                  Object.assign(state.gridColumns[toIndex], detailItem);
+                } else {
+                  // Replace the entire row
+                  (state as any).gridColumns[toIndex] = {
+                    ...detailItem,
+                  };
+                }
+              }
+            );
+            
+        } else
         if (
           key === "transaction" &&
           fieldValue &&
@@ -682,10 +742,10 @@ const InvTransactionSlice = createSlice({
             }
           });
 
-          return;
         }
 
-        if (fieldValue === null || fieldValue === undefined) {
+        else {
+          if (fieldValue === null || fieldValue === undefined) {
           (state as any)[key] = fieldValue;
         } else if (fieldValue?.constructor === Object) {
           // Nested object
@@ -697,7 +757,7 @@ const InvTransactionSlice = createSlice({
             fieldValue as Record<string, any>
           );
         } else {
-          debugger;
+          
           // Primitive, array, or other object type
           if (Array.isArray(fieldValue)) {
             if (key == "batchesUnits") {
@@ -726,6 +786,7 @@ const InvTransactionSlice = createSlice({
           } else {
             (state as any)[key] = fieldValue;
           }
+        }
         }
       });
 
@@ -768,6 +829,7 @@ export const {
   formStateTransactionMaster3HandleFieldChange,
   formStateLoadDataUpdate,
   formStateSetDetails,
+  reOrderGridCols
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

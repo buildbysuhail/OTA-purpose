@@ -30,6 +30,8 @@ export const useTableResizeAndReorder = (gridID: string) => {
   );
   const dispatch = useDispatch();
 
+  const appState = useSelector((state: RootState) => state.AppState.appState);
+
   // Resize functionality with optimizations
   const startResize = (
     e: MouseEvent,
@@ -51,13 +53,13 @@ export const useTableResizeAndReorder = (gridID: string) => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", stopResize);
   };
-// Add this ref at the top of your hook
-const columnWidthsRef = useRef(columnWidths);
+  // Add this ref at the top of your hook
+  const columnWidthsRef = useRef(columnWidths);
 
-// Update ref whenever columnWidths changes
-useEffect(() => {
-  columnWidthsRef.current = columnWidths;
-}, [columnWidths]);
+  // Update ref whenever columnWidths changes
+  useEffect(() => {
+    columnWidthsRef.current = columnWidths;
+  }, [columnWidths]);
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (
       !isResizing.current ||
@@ -66,22 +68,31 @@ useEffect(() => {
     )
       return;
 
+    // const diff = e.clientX - startX.current;
+    // const newWidth = Math.max(50, startWidth.current + diff);
+    // const columnIndex = currentColumnIndex.current;
+
+
+    const isRTL = appState.direction === 'rtl';
+
     const diff = e.clientX - startX.current;
-    const newWidth = Math.max(50, startWidth.current + diff);
+    // Reverse the diff calculation for RTL
+    const adjustedDiff = isRTL ? -diff : diff;
+    const newWidth = Math.max(50, startWidth.current + adjustedDiff);
     const columnIndex = currentColumnIndex.current;
 
     // Batch state update
     // Batch state update
-  setColumnWidths((prevWidths) => {
-    const newWidths = [...prevWidths];
-    newWidths[columnIndex] = newWidth;
-    console.log(newWidths);
-    
-    // Store current widths in ref for stopResize to access
-    columnWidthsRef.current = newWidths;
-    
-    return newWidths;
-  });
+    setColumnWidths((prevWidths) => {
+      const newWidths = [...prevWidths];
+      newWidths[columnIndex] = newWidth;
+      console.log(newWidths);
+
+      // Store current widths in ref for stopResize to access
+      columnWidthsRef.current = newWidths;
+
+      return newWidths;
+    });
 
     // Direct DOM manipulation for immediate visual feedback
     const headerCells = containerRef.current!.querySelectorAll(`
@@ -103,10 +114,10 @@ useEffect(() => {
     const column = formState.gridColumns?.filter((x) => x.visible != false)![
       currentColumnIndex.current
     ];
-    
-  const currentWidths = columnWidthsRef.current;
-  console.log(currentWidths);
-      console.log(columnWidths);
+
+    const currentWidths = columnWidthsRef.current;
+    console.log(currentWidths);
+    console.log(columnWidths);
     dispatch(
       formStateHandleFieldChangeKeysOnly({
         fields: {
@@ -137,19 +148,19 @@ useEffect(() => {
       };
     }
     let parsedPreferences = {
-  ..._parsedPreferences,
-  columnPreferences: [..._parsedPreferences.columnPreferences] // Deep copy the array
-};
+      ..._parsedPreferences,
+      columnPreferences: [..._parsedPreferences.columnPreferences] // Deep copy the array
+    };
 
     const ind = (parsedPreferences.columnPreferences as Array<ColumnPreference>).findIndex(
       (x) => x.dataField == column.dataField
     );
     if (ind > -1) {
-       parsedPreferences.columnPreferences[ind] = {
-    ...parsedPreferences.columnPreferences[ind],
-    width: currentWidths[currentColumnIndex.current]
-  };
-     
+      parsedPreferences.columnPreferences[ind] = {
+        ...parsedPreferences.columnPreferences[ind],
+        width: currentWidths[currentColumnIndex.current]
+      };
+
       const preference = JSON.stringify(parsedPreferences);
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
     }
@@ -223,7 +234,7 @@ useEffect(() => {
         toBefore: toColumn.dataField ?? "",
       })
     );
-const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
+    const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
 
     let parsedPreferences: GridPreference;
     if (
@@ -240,7 +251,7 @@ const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
       };
     }
     if (parsedPreferences && parsedPreferences.columnPreferences?.length > 0) {
-      parsedPreferences.columnPreferences = moveArrayElement(parsedPreferences.columnPreferences,_fromColumn,_toColumn)
+      parsedPreferences.columnPreferences = moveArrayElement(parsedPreferences.columnPreferences, _fromColumn, _toColumn)
       const preference = JSON.stringify(parsedPreferences);
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
     }

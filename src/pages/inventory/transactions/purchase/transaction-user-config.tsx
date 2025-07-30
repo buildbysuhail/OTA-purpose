@@ -221,11 +221,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     />
                     <label
                       htmlFor="toggle-view"
-                      className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded
-                        ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]"
-                        : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"
-                        }`}
-                    >
+                      className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
                       <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
                     </label>
                   </div>
@@ -484,7 +480,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             >
               <div className="space-y-4">
                 <div className="p-4">
-
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <h6 className="font-semibold text-gray-700 dark:text-dark-text text-sm flex items-center space-x-2">
@@ -513,8 +508,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         <div className="flex items-center space-x-2">
                           <div
                             className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                            style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}
-                          >
+                            style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
                             <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                             <input
                               type="color"
@@ -593,8 +587,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}
-                      >
+                        style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
@@ -623,8 +616,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}
-                      >
+                        style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
@@ -653,8 +645,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}
-                      >
+                        style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
@@ -699,8 +690,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             <CollapsibleSection
               title={t("grid_settings")}
               defaultExpanded={false}
-              icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}
-            >
+              icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
               <div className="space-y-4">
                 {/* Existing grid settings fields */}
                 <div className="flex items-end gap-3">
@@ -745,12 +735,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{
-                          backgroundColor: formState.userConfig?.gridBorderColor
-                            ? `rgb(${formState.userConfig.gridBorderColor})`
-                            : "#000000"
-                        }}
-                      >
+                        style={{ backgroundColor: formState.userConfig?.gridBorderColor ? `rgb(${formState.userConfig.gridBorderColor})` : "#000000" }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
@@ -780,12 +765,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{
-                          backgroundColor: formState.userConfig?.gridHeaderBg
-                            ? `rgb(${formState.userConfig.gridHeaderBg})`
-                            : "#ffffff"
-                        }}
-                      >
+                        style={{ backgroundColor: formState.userConfig?.gridHeaderBg ? `rgb(${formState.userConfig.gridHeaderBg})` : "#ffffff" }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
@@ -815,11 +795,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     <div className="flex items-center space-x-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{
-                          backgroundColor: formState.userConfig?.gridHeaderFontColor
-                            ? `rgb(${formState.userConfig.gridHeaderFontColor})`
-                            : "#1f2937"
-                        }}
+                        style={{ backgroundColor: formState.userConfig?.gridHeaderFontColor ? `rgb(${formState.userConfig.gridHeaderFontColor})` : "#1f2937" }}
                       >
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input

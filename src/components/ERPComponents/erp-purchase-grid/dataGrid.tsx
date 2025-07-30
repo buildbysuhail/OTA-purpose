@@ -175,6 +175,7 @@ interface RowData {
   rowHeight: number;
   dir: "ltr" | "rtl";
    columnWidths: number[]; 
+   gridBorderColor?: string;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -424,6 +425,7 @@ const SummaryRow: React.FC<{
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
+  gridBorderColor?: string;
 }> = ({
   columns,
   tableWidth,
@@ -431,7 +433,8 @@ const SummaryRow: React.FC<{
   summaryConfig,
   gridFontSize,
   gridIsBold,
-  rowHeight
+  rowHeight,
+  gridBorderColor,
 }) => {
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
@@ -452,7 +455,7 @@ const SummaryRow: React.FC<{
       >
         {columns
           .filter((col) => col.visible != false && col.dataField != null)
-          .map((column, index) => {
+          .map((column, columnIndex) => {
             const summary = summaryConfig.find(
               (s) =>
                 s.showInColumn === column.dataField ||
@@ -465,10 +468,12 @@ const SummaryRow: React.FC<{
               ? summary.customizeText({ value })
               : value;
 
+              const isFocused = false;
+
             return (
               <td
                 key={`summary_${column.dataField}`}
-                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 border-r border-gray-200/50 last:border-r-0"
+                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 "
                 style={{
                   fontSize: `${gridFontSize}px`,
                   fontWeight: gridIsBold ? "bold" : "600",
@@ -479,14 +484,8 @@ const SummaryRow: React.FC<{
                     column.alignment ||
                     (column.dataType === "number" ? "right" : "left"),
                   boxSizing: "border-box",
-                  borderRight:
-                    index <
-                      columns.filter(
-                        (col) => col.visible != false && col.dataField != null
-                      ).length - 1
-                      ? `0px solid rgb(${formState.userConfig?.gridBorderColor || "209,213,219"})`
-                      : "none",
-                }}
+                  borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+              }}
               >
                 {summary ? formattedValue : ""}
               </td>
@@ -525,6 +524,7 @@ const VirtualRow = React.memo(({
     rowHeight,
     dir,
     columnWidths,
+    gridBorderColor,
 }: RowData) => {
    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
       const item = details[index];
@@ -678,11 +678,11 @@ const VirtualRow = React.memo(({
         width: `${totalColumnWidth}px`, // Add this line
         minWidth: `${totalColumnWidth}px`, // Add this line
         display: 'flex',
-        borderBottom: '1px solid #eee',
+          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
         backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
         willChange: 'transform', // Optimize for animations
-        //  fontSize: `${gridFontSize}px`,
-        // fontWeight: gridIsBold ? '600' : 'normal'
+         fontSize: `${gridFontSize}px`,
+        fontWeight: gridIsBold ? 'bold' : '600'
       }}
     >
       {columns.map((column, colIndex) => {
@@ -710,8 +710,8 @@ const VirtualRow = React.memo(({
             width: `${columnWidths[colIndex]}px`,
             minWidth: `${columnWidths[colIndex]}px`,
             maxWidth: `${columnWidths[colIndex]}px`,
-            borderRight: colIndex < columns.length - 1 ? '1px solid #eee' : 'none',
-            fontSize: '13px',
+            borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+            fontSize: `${gridFontSize}px`,
             textAlign: column.dataField === 'slNo' ? 'center' : 
                      ['qty'].includes(column.dataField??"") ? 'right' : 'left',
             overflow: 'hidden',
@@ -997,7 +997,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
  
 
   // Virtual scrolling configuration
-  const ITEM_HEIGHT =formState?.userConfig?.gridRowHeight??36;
+  const ITEM_HEIGHT =formState.userConfig?.gridRowHeight??32;
   
   const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
     formState.transaction.details.length,
@@ -1043,12 +1043,13 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
 
     const handles = containerRef.current.querySelectorAll('[data-resize-handle]');
     const cleanupFunctions: (() => void)[] = [];
-    
+     const isRTL =appState.direction==='rtl';
     handles.forEach((handle, index) => {
       const handleMouseDown = (e: Event) => {
         const mouseEvent = e as MouseEvent;
         if (containerRef.current) {
-          startResize(mouseEvent, index, containerRef.current, columnWidths);
+          //Arabic resize
+          startResize(mouseEvent,isRTL? index-1:index, containerRef.current, columnWidths);
         }
       };
 
@@ -1308,56 +1309,70 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     focusColumn,
     focusCurrentColumn,
   }));
-  return (
-     <div
+
+  const isMinimized = appState.toggled && appState.toggled.includes("close");
+  const sidebarWidth = isMinimized ? "0" : "0";
+  const isLargeScreen = window.innerWidth >= 1000;
+  const headerLeft = isLargeScreen ? sidebarWidth : "0";
+  const isRtl = appState.locale.rtl;
+
+  const headerStyle = {
+    left: isRtl ? "0" : headerLeft,
+    right: isRtl ? headerLeft : "0"
+  };
+
+    const closeGridMenu = () => {
+    setIsGridMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        closeGridMenu();
+      }
+    };
+
+    if (isGridMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isGridMenuOpen]);
+  
+ return (
+    <div
       style={{
         maxWidth: "100%",
         width: "100%",
-        overflowX: 'auto', // Single horizontal scrollbar
-          overflowY: 'hidden',
+        overflowX: 'auto',
+        overflowY: 'hidden',
         boxSizing: "border-box",
         border: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
-        // borderRadius: "16px",
+        borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",
         boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
-        borderRadius: formState.userConfig?.gridBorderRadius
-          ? `${formState.userConfig.gridBorderRadius}px`
-          : "0px",
-        // boxShadow: "0 4px 25px rgba(0, 0, 0, 0.08)",
-        // table whole shadow
       }}
-      className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
+      className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl backdrop-blur-sm"
     >
-     
-      <div className={`relative ${className} w-full overflow-hidden`}>
-        <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
-          
-          <div className="relative">
-            <button
-              ref={buttonRef}
-              onClick={() => setIsGridMenuOpen((prev: any) => !prev)}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2`}
-            >
-              <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-            </button>
-
+          <div className={`relative ${className} w-full`}>
             {isGridMenuOpen && (
               <div
                 ref={popupRef}
-                className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
-                style={{
-                  top: "37px",
-                  left: "-5px",
-                  width: "251px",
-                }}
+                className="fixed top-[49px] w-[251px] rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+                style={headerStyle}
               >
                 <nav className="w-full">
                   <ul className="space-y-1">
-
-                    {/* Grid Preference Chooser */}
                     <li>
-                      <div
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer"
-                      >
+                      <div className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer">
                         <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
                           <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
                         </div>
@@ -1371,10 +1386,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                         />
                       </div>
                     </li>
-
-
-
-                    {/* Export to Excel */}
                     <li>
                       <button
                         onClick={openExcelMenu}
@@ -1386,15 +1397,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                         <span className="font-medium">{t('export_to_excel')}</span>
                       </button>
                     </li>
-
-
                   </ul>
                 </nav>
               </div>
             )}
-
-          </div>
-        </div>
         {isExcelMenuOpen && (
           <ERPModal
             isOpen={isExcelMenuOpen}
@@ -1423,31 +1429,25 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
             }
           />
         )}
-
-      </div>
-      <GridPreferenceChooser
-                          ref={preferenceChooserRef}
-                          gridId={gridId}
-                          columns={(formState.gridColumns ?? []) as DevGridColumn[]}
-                          onApplyPreferences={onApplyPreferences}
-                          showChooserName={true}
-                          eclipseClass="m-0 p-0 font-medium"
-                        />
-     <div 
+        <div
         ref={containerRef}
-        style={{ width: `${totalGridWidth+2}px`, minWidth: `${totalGridWidth+2}px` }}
-        className="border border-gray-300 rounded overflow-scroll"
+        style={{ width: `${totalGridWidth + 2}px`, minWidth: `${totalGridWidth + 2}px` ,borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}
+        className="overflow-x-auto"
       >
         {/* Header */}
         <div className="table-header">
-          <div style={{ 
-            display: 'flex', 
-            backgroundColor: '#f8f9fa', 
-            borderBottom: '2px solid #dee2e6',
+        <div
+          style={{
+            display: 'flex',
+            background: gridHeaderBg
+              ? `rgb(${gridHeaderBg})`
+              : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+            borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
             position: 'sticky',
             top: 0,
-            zIndex: 10
-          }}>
+            zIndex: 10,
+          }}
+        >
             {columns?.map((column, index) => (
               <div
                 key={`${column.dataField}-${index}`}
@@ -1461,23 +1461,41 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   minWidth: `${columnWidths[index]}px`,
                   maxWidth: `${columnWidths[index]}px`,
                   padding: '8px 12px',
-                  borderRight: index < columns.length - 1 ? '1px solid #dee2e6' : 'none',
-                  fontWeight: '600',
-                  fontSize: '14px',
+                  borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+                  fontWeight: gridIsBold ? 700 : 500,
+                  fontSize: gridFontSize ?? 14,
                   position: 'relative',
-                  backgroundColor: dragOverIndex === index ? '#e3f2fd' : '#f8f9fa',
+                  background: gridHeaderBg
+                    ? `rgb(${gridHeaderBg})`
+                    : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
                   userSelect: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   cursor: 'move',
                   transition: 'background-color 0.1s ease',
-                  borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none'
+                  borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
                 }}
               >
+            {index === 0 ? (
+              <>
+                <button
+                  ref={buttonRef}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsGridMenuOpen((prev) => !prev);
+                  }}
+                  className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2 mr-2`}
+                >
+                  <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                </button>
+                {column.caption}
+              </>
+            ) : (
+              <>
                 <span style={{ marginRight: '8px', opacity: 0.6 }}>⋮⋮</span>
                 {column.caption}
-                
-                {/* Resize Handle */}
+              </>
+            )}
                 {index < columns.length - 1 && (
                   <div
                     data-resize-handle
@@ -1489,7 +1507,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                       width: '4px',
                       cursor: 'col-resize',
                       backgroundColor: 'transparent',
-                      zIndex: 10
+                      zIndex: 10,
                     }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.backgroundColor = '#007bff';
@@ -1503,33 +1521,32 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
             ))}
           </div>
         </div>
-
-        {/* Ultra-Fast Virtual Body with Enhanced Buffering */}
-        <div 
+        {/* Ultra-Fast Virtual Body */}
+        <div
           ref={virtualContainerRef}
-          style={{ 
-            height: `${height}px`, 
-            width:'100%',
-            overflow: 'auto',
-             overflowX: 'auto', // Explicitly enable horizontal scrolling
-    overflowY: 'auto', // Explicitly enable vertical scrolling
+          style={{
+            height: `${height}px`,
+            width: `${totalGridWidth + 2}px`,
+            minWidth: `${totalGridWidth + 2}px`,
+            overflowX: 'auto',
+            overflowY: 'auto',
             position: 'relative',
             willChange: 'scroll-position',
-            // Force hardware acceleration
             transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden'
+            backfaceVisibility: 'hidden',
           }}
           onScroll={handleScroll}
         >
-          {/* Virtual spacer for total height */}
-          <div style={{ 
-            height: `${totalHeight}px`, 
-            position: 'relative',
-            contain: 'layout style paint',
-            // Improve rendering performance
-            isolation: 'isolate'
-          }}>
-            {/* Ultra-fast visible rows with aggressive buffering */}
+          <div
+            style={{
+              height: `${totalHeight}px`,
+              width: `${totalGridWidth}px`,
+              minWidth: `${totalGridWidth}px`,
+              position: 'relative',
+              contain: 'layout style paint',
+              isolation: 'isolate',
+            }}
+          >
             {visibleItems.map(({ index, top }) => (
               <VirtualRow
                 key={index}
@@ -1539,27 +1556,19 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                 columnWidths={columnWidths}
                 details={formState.transaction.details}
                 rowHeight={ITEM_HEIGHT}
-                tableWidth={0}
+                tableWidth={totalGridWidth}
                 txtData={formState.formElements.txtData}
                 gridId={gridId}
                 listRef={containerRef as any}
                 itemCount={formState.transaction.details.length}
                 gridRef={containerRef as any}
-                onKeyDown={(
-                        value: any,
-                               e: any,
-                               column: keyof TransactionDetail,
-                               rowIndex: number
-                      ) => {
-                        debugger;
-                        onKeyDown(value, e, column, rowIndex)}}
-                onChange={(
-                        value: any,
-                        column: keyof TransactionDetail,
-                        rowIndex: number
-                      ) => {
-                        onChange(value, column, rowIndex);
-                      }}
+                onKeyDown={(value, e, column, rowIndex) => {
+                  debugger;
+                  onKeyDown(value, e, column, rowIndex);
+                }}
+                onChange={(value, column, rowIndex) => {
+                  onChange(value, column, rowIndex);
+                }}
                 searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
                 advancedProductSearching={false}
                 transactionType={transactionType ?? formState.transactionType}
@@ -1570,18 +1579,22 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                 gridFontSize={gridFontSize}
                 gridIsBold={gridIsBold}
                 dir={appState.direction as "ltr" | "rtl"}
+                gridBorderColor={gridBorderColor}
               />
             ))}
           </div>
         </div>
-
-        {/* Footer  */}
+        {/* Footer */}
         <div className="table-footer">
-          <div style={{ 
-            display: 'flex', 
-            backgroundColor: '#f8f9fa', 
-            borderTop: '2px solid #dee2e6' 
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              width: `${totalGridWidth}px`,
+              minWidth: `${totalGridWidth}px`,
+              backgroundColor: '#f8f9fa',
+              borderTop: `0px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+            }}
+          >
             {columns?.map((column, colIndex) => (
               <div
                 key={`footer-${column.dataField}`}
@@ -1590,16 +1603,16 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                   minWidth: `${columnWidths[colIndex]}px`,
                   maxWidth: `${columnWidths[colIndex]}px`,
                   padding: '8px 12px',
-                  borderRight: colIndex < columns.length - 1 ? '1px solid #dee2e6' : 'none',
-                  fontSize: '13px',
-                  fontWeight: '600',
+                  borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+                  fontSize: `${gridFontSize}px`,
+                  fontWeight: gridIsBold ? "bold" : "600",
                   textAlign: column.alignment,
                   backgroundColor: '#f8f9fa',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 {formState.summary?.[column.dataField as keyof SummaryItems] ?? ""}
@@ -1608,8 +1621,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           </div>
         </div>
       </div>
-      </div>
-  );
+    </div>
+  </div>
+);
 })
 export default UltraFastReorderableVirtualTableGrid;
 

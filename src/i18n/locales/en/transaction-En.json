@@ -685,8 +685,8 @@
   "load_multi": "Load Multi",
   "pending_purchase_order_list": "Pending Purchase Order List",
   "pending_goods_receipt_list": "Pending Goods Receipt List",
-  "download_for_excel_template_import": "Download for Excel Template Import",
-  "import_excel_template": "Import Excel Template",
+  "download_excel_template": "Download Excel Template ",
+  "import_from_excel": "Import from Excel",
   "export_to_excel": "Export to Excel",
   "grid_preferences": "Grid Preferences",
   "export_options": "Export Options",
@@ -703,5 +703,6 @@
   "processed_qty": "Processed Qty",
   "pending_qty": "Pending Qty",
   "process_selected": "Process Selected",
-  "pending_order": "Pending Order"
+  "pending_order": "Pending Order",
+  "footer_background_color": "Footer background color"
 }

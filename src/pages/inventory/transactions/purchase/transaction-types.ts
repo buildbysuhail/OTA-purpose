@@ -504,6 +504,7 @@ export interface TransactionFormState {
   loading?: loadingResult;
   dataWarranty: [];
   dataBrands: [];
+  isPopupVisible:boolean
 }
 interface loadingResult {
   isLoading: boolean;

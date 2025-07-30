@@ -682,8 +682,8 @@
   "load_multi": "تحميل متعدد",
   "pending_purchase_order_list": "قائمة أوامر الشراء المعلقة",
   "pending_goods_receipt_list": "قائمة استلام البضاعة المعلقة",
-  "download_for_excel_template_import": "تنزيل لنموذج استيراد Excel",
-  "import_excel_template": "استيراد نموذج Excel",
+  "download_excel_template": "تنزيل قالب Excel",
+  "import_from_excel": "استيراد من Excel",
   "export_to_excel": "تصدير إلى Excel",
   "grid_preferences": "تفضيلات الشبكة",
   "export_options": "خيارات التصدير",
@@ -700,5 +700,6 @@
   "processed_qty": "الكمية المعالجة",
   "pending_qty": "الكمية المعلقة",
   "process_selected": "معالجة المحدد",
-  "pending_order": "طلب معلق"
+  "pending_order": "طلب معلق",
+  "footer_background_color": "لون خلفية التذييل"
 }

@@ -600,6 +600,7 @@ const VirtualRow = React.memo(({
       const handleKeyDown = useCallback(
         (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
           const target = e.target as HTMLElement
+          debugger;
           if (!target.id) return
   
           const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
@@ -662,7 +663,7 @@ const VirtualRow = React.memo(({
               break
           }
         },
-        [],
+        [columns, focusCell, setCurrentCell, onKeyDown],
       )
   
   const totalColumnWidth = columnWidths.reduce((sum, width) => sum + width, 0);
@@ -708,7 +709,6 @@ const VirtualRow = React.memo(({
             width: `${columnWidths[colIndex]}px`,
             minWidth: `${columnWidths[colIndex]}px`,
             maxWidth: `${columnWidths[colIndex]}px`,
-            padding: '6px 12px',
             borderRight: colIndex < columns.length - 1 ? '1px solid #eee' : 'none',
             fontSize: '13px',
             textAlign: column.dataField === 'slNo' ? 'center' : 
@@ -869,7 +869,6 @@ const VirtualRow = React.memo(({
                               onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
                             >
                                {productId > 0 ? cellValue??"" : ""}
-                               {cellValue??""}
                             </div>
                           )}
         </div>
@@ -1302,7 +1301,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     },
     [formState.gridColumns, focusCell]
   );
-
+ React.useImperativeHandle(ref, () => ({
+    focusCell,
+    nextCellFind,
+    focusColumn,
+    focusCurrentColumn,
+  }));
   return (
      <div
       style={{
@@ -1430,7 +1434,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                         />
      <div 
         ref={containerRef}
-        style={{ width: `${totalGridWidth}px`, minWidth: `${totalGridWidth}px` }}
+        style={{ width: `${totalGridWidth+2}px`, minWidth: `${totalGridWidth+2}px` }}
         className="border border-gray-300 rounded overflow-scroll"
       >
         {/* Header */}

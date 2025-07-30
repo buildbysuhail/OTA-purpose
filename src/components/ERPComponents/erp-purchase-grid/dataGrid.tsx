@@ -1326,7 +1326,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
       }}
       className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
     >
-     {JSON.stringify(columns)}
       <div className={`relative ${className} w-full overflow-hidden`}>
         <div className={`absolute top-[4px] ${appState.dir === "ltr" ? "left-[3px]" : "right-[3px]"} z-20`}>
           

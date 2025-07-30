@@ -90,6 +90,7 @@ export interface DevGridColumn {
     displayOrder: number;
     groupIndex?:any
     order?:number
+    type?:string
   }
   export interface GridPreference {
     font: string;

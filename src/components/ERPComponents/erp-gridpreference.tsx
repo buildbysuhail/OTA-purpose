@@ -91,6 +91,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   }, [gridId, columns, onApplyPreferences]);
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
+    ...column,
     dataField: column.dataField ?? "",
     isLocked: column.isLocked ?? false,
     caption: column.caption || capitalizeAndAddSpace(column.dataField ?? ""),
@@ -104,6 +105,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     displayOrder: index,
     showInPdf: column.showInPdf || false,
     groupIndex: undefined,
+  allowEditing: column.allowEditing ?? true,
   });
 
   const handlePreferenceChange = (key: string, value: any) => {

@@ -6,6 +6,7 @@ import React, {
   useState,
   forwardRef,
 } from "react";
+import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
 import debounce from "lodash/debounce";
 import { DataGrid } from "devextreme-react";
@@ -42,10 +43,10 @@ interface InputProps {
   onRowSelected?: (data: any, rowValue?: string) => void;
   onEnterKeyDown?: () => void;
   onChange?: (e: any) => void;
-  onKeyDown?: (value: any,e: React.KeyboardEvent<HTMLInputElement>) => void;
-    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    className?: string;
+  onKeyDown?: (value: any, e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  className?: string;
   checkboxLabel?: string;
   value?: string;
   clearAfterSelection?: boolean;
@@ -63,8 +64,8 @@ interface InputProps {
   rowIndex?: number;
   textAlign?: "left" | "right" | "center";
   onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
-  customStyle?:inputBox
-  appState:any
+  customStyle?: inputBox
+  appState?: any
 }
 
 interface LoadResult {
@@ -116,15 +117,15 @@ const createStore = async (
         const result = response;
         return result !== undefined && result !== null
           ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
+            data: result.data,
+            totalCount: result.totalCount,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
@@ -166,15 +167,15 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
         const result = response;
         return result !== undefined && result !== null
           ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
+            data: result.data,
+            totalCount: result.totalCount,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         throw new Error("Batch Data Loading Error");
       }
@@ -220,8 +221,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [store, setStore] = useState<any>();
-     const [showProductGrid, setShowProductGrid] = useState(false);
-  const [showBatchGrid, setShowBatchGrid] = useState(false);
+    const [showProductGrid, setShowProductGrid] = useState(false);
+    const [showBatchGrid, setShowBatchGrid] = useState(false);
     const [productDetailStore, setProductDetailStore] = useState<any>();
     const [inputValue, setInputValue] = useState({
       searchValue: value,
@@ -234,7 +235,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const inputRef = ref || internalRef;
     const { t } = useTranslation("inventory");
     const dispatch = useDispatch();
-
+    const portalContainerRef = useRef<HTMLElement | null>(null);
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -242,12 +243,38 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       (state: RootState) => state.ApplicationSettings
     );
 
+    // Initialize portal container
+    useEffect(() => {
+      portalContainerRef.current = document.getElementById("portal-root");
+      if (!portalContainerRef.current) {
+        // Create portal container if it doesn't exist
+        const portalDiv = document.createElement("div");
+        portalDiv.id = "portal-root";
+        document.body.appendChild(portalDiv);
+        portalContainerRef.current = portalDiv;
+      }
+    }, []);
+
     useEffect(() => {
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
     }, [value]);
+
+    // Calculate position for the DataGrid
+    const getGridPosition = useCallback(() => {
+      if (inputRef && "current" in inputRef && inputRef.current && gridContainerRef.current) {
+        const inputRect = inputRef.current.getBoundingClientRect();
+        const containerRect = gridContainerRef.current.getBoundingClientRect();
+        return {
+          top: inputRect.bottom + window.scrollY, // Position below input
+          left: containerRect.left + window.scrollX, // Align with container
+          width: containerRect.width, // Match container width
+        };
+      }
+      return { top: 0, left: 0, width: "100%" };
+    }, [inputRef]);
 
     const debouncedFetch = useMemo(
       () =>
@@ -276,7 +303,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }
               payload.searchText = searchText;
             } else if (searchKey == "product") {
-              
+
               payload.searchByCodeAndName = searchByCodeAndName;
               payload.searchByCode = false;
               if (value.trim() === "%") {
@@ -304,23 +331,23 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             const store = await createStore(value, payload, productDataUrl);
 
             setStore(store);
-          setShowProductGrid(true);
+            setShowProductGrid(true);
           }
         }, 200),
       [productDataUrl, searchType]
     );
 
-    const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
       const value = e.target.value;
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
-       setShowBatchGrid(false);
+      setShowBatchGrid(false);
       if (value.length >= 3) {
         if (searchType !== "modal") {
-          await debouncedFetch(value,inputValue.searchByCode);
+          await debouncedFetch(value, inputValue.searchByCode);
         }
       } else {
         setStore({
@@ -329,7 +356,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           summary: {},
           groupCount: 0,
         });
-       setShowBatchGrid(false);
+        setShowBatchGrid(false);
       }
       if (onChange) onChange(e);
     };
@@ -356,8 +383,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         if (e.event.key === "Enter" || e.event.key === "NumpadEnter") {
 
           const gridInstance = dataGridRef.current.instance();
-            const focusedRowIndex = gridInstance.option("focusedRowIndex");
-            const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          const focusedRowIndex = gridInstance.option("focusedRowIndex");
+          const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
           if (rowData?.productID > 0) {
             if (onProductSelected) {
               onProductSelected(rowData);
@@ -369,10 +396,10 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   batchDataUrl
                 );
                 setProductDetailStore(batchStore);
-                  setShowBatchGrid(true);
-              setShowProductGrid(false);
-            } else {
-              setShowProductGrid(false);
+                setShowBatchGrid(true);
+                setShowProductGrid(false);
+              } else {
+                setShowProductGrid(false);
                 if (inputRef && "current" in inputRef && inputRef.current) {
                   inputRef.current.focus();
                 }
@@ -385,7 +412,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             }
           }
         } else if (e.event.key === "Escape") {
-           setShowProductGrid(false);
+          setShowProductGrid(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
           }
@@ -396,14 +423,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleBatchGridKeyDown = useCallback(
-     async  (e: any) => {
+      async (e: any) => {
         console.log(`Batch grid key: ${e.event.key}`);
         if (
           e.event.key === "Enter"
         ) {
           const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
-        const selected = allSelected[0];
+          const selected = allSelected[0];
           if (onRowSelected) {
             onRowSelected(selected, inputValue.searchValue);
           }
@@ -431,28 +458,28 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           e.event.preventDefault();
         }
       },
-      [onRowSelected, clearAfterSelection, inputRef,inputValue]
+      [onRowSelected, clearAfterSelection, inputRef, inputValue]
     );
 
 
-const [batchInitialized, setBatchInitialized] = useState(false);
+    const [batchInitialized, setBatchInitialized] = useState(false);
 
-const handleBatchContentReady = useCallback((e: any) => {
-  if (!batchInitialized) {
-    const grid = e.component;
-    // focus and select row 0 on first open
-    grid.option("focusedRowIndex", 0);
-    grid.selectRows([grid.getKeyByRowIndex(0)]);
-    grid.navigateToRow(grid.getKeyByRowIndex(0));
-    grid.focus();
-    setBatchInitialized(true);
-  }
-}, [batchInitialized]);
+    const handleBatchContentReady = useCallback((e: any) => {
+      if (!batchInitialized) {
+        const grid = e.component;
+        // focus and select row 0 on first open
+        grid.option("focusedRowIndex", 0);
+        grid.selectRows([grid.getKeyByRowIndex(0)]);
+        grid.navigateToRow(grid.getKeyByRowIndex(0));
+        grid.focus();
+        setBatchInitialized(true);
+      }
+    }, [batchInitialized]);
 
-const handleBatchFocusedRowChanged = useCallback((e: any) => {
-  // whenever focus moves (via arrow keys), select that row
-  e.component.selectRows([e.row.key],false);
-}, []);
+    const handleBatchFocusedRowChanged = useCallback((e: any) => {
+      // whenever focus moves (via arrow keys), select that row
+      e.component.selectRows([e.row.key], false);
+    }, []);
 
 
     const handleInputKeyDown = useCallback(
@@ -460,7 +487,7 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
 
         const value = e.currentTarget.value;
         // console.log(`Input key: ${e.key}`);
-        if ( ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" , "Enter", "Escape"].includes(e.key) && showProductGrid && dataGridRef.current) {
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) && showProductGrid && dataGridRef.current) {
           if (e.key === "ArrowDown") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
@@ -474,21 +501,20 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
             if (rows.length > 0) {
-            grid.selectRowsByIndexes([0]);
-            grid.navigateToRow(grid.getKeyByRowIndex(0));
-            grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
-            grid.focus(); // optional: focus container
+              grid.selectRowsByIndexes([0]);
+              grid.navigateToRow(grid.getKeyByRowIndex(0));
+              grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
+              grid.focus(); // optional: focus container
               e.preventDefault();
             }
           }
           else if (e.key === "Enter") {
-          if (searchType !== "modal") {
-            rest?.onKeyDown && rest?.onKeyDown(value,e);
-          }
-          else {
-            if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
-              if (searchKey == "product" )
-                {
+            if (searchType !== "modal") {
+              rest?.onKeyDown && rest?.onKeyDown(value, e);
+            }
+            else {
+              if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+                if (searchKey == "product") {
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
                       fields: {
@@ -513,48 +539,48 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
                   e.preventDefault();
                 }
                 else {
-                rest?.onKeyDown && rest?.onKeyDown(value,e);
-              }
+                  rest?.onKeyDown && rest?.onKeyDown(value, e);
+                }
               } else {
-                rest?.onKeyDown && rest?.onKeyDown(value,e);
+                rest?.onKeyDown && rest?.onKeyDown(value, e);
               }
             }
           }
-         else if (
-          e.key === "Escape"
+          else if (
+            e.key === "Escape"
 
-        ) {
-          setShowProductGrid(false);
-          setShowBatchGrid(false);
-          e.preventDefault();
-        } else if (
-          ["ArrowLeft", "ArrowRight"].includes(e.key)
-        ) {
-          const input = e.target as HTMLInputElement;
-          const { selectionStart, selectionEnd, value } = input;
-          let shouldNavigate = true;
-          if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-            if (
-              e.key === "ArrowRight" &&
-              (selectionStart !== value.length || selectionEnd !== value.length)
-            ) {
-              shouldNavigate = false;
-            } else if (
-              e.key === "ArrowLeft" &&
-              (selectionStart !== 0 || selectionEnd !== 0)
-            ) {
-              shouldNavigate = false;
-            }
-          }
-          if (shouldNavigate && rest.onKeyDown) {
-            rest?.onKeyDown(value,e);
+          ) {
+            setShowProductGrid(false);
+            setShowBatchGrid(false);
             e.preventDefault();
+          } else if (
+            ["ArrowLeft", "ArrowRight"].includes(e.key)
+          ) {
+            const input = e.target as HTMLInputElement;
+            const { selectionStart, selectionEnd, value } = input;
+            let shouldNavigate = true;
+            if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+              if (
+                e.key === "ArrowRight" &&
+                (selectionStart !== value.length || selectionEnd !== value.length)
+              ) {
+                shouldNavigate = false;
+              } else if (
+                e.key === "ArrowLeft" &&
+                (selectionStart !== 0 || selectionEnd !== 0)
+              ) {
+                shouldNavigate = false;
+              }
+            }
+            if (shouldNavigate && rest.onKeyDown) {
+              rest?.onKeyDown(value, e);
+              e.preventDefault();
+            }
           }
         }
-      }
-      else {
+        else {
           if (rest.onKeyDown) {
-            rest?.onKeyDown(value,e);
+            rest?.onKeyDown(value, e);
           }
         }
       },
@@ -598,46 +624,266 @@ const handleBatchFocusedRowChanged = useCallback((e: any) => {
     }, [showProductGrid]);
 
     const onClose = useCallback(() => {
-    dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      formElements: {
-                        productSearchPopupWindow: { visible: false, data:"" },
-                      },
-                    },
-                  })
-                );
-  }, []);
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            formElements: {
+              productSearchPopupWindow: { visible: false, data: "" },
+            },
+          },
+        })
+      );
+    }, []);
 
     const [productGridReady, setProductGridReady] = useState<any>();
-const handleProductGridContentReady = useCallback((e: any) => {
-  const gridInstance = e.component;
-  const visibleRows = gridInstance.getVisibleRows();
-  const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
+    const handleProductGridContentReady = useCallback((e: any) => {
+      const gridInstance = e.component;
+      const visibleRows = gridInstance.getVisibleRows();
+      const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
 
-  setProductGridReady(hasValidData);
+      setProductGridReady(hasValidData);
 
-  if (hasValidData) {
-    // Set initial focus
-    gridInstance.option("focusedRowIndex", 0);
-    gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-  }
-}, []);
+      if (hasValidData) {
+        // Set initial focus
+        gridInstance.option("focusedRowIndex", 0);
+        gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+      }
+    }, []);
 
-useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
+    useEffect(() => {
+      const style = document.createElement('style');
+      style.textContent = `
       .dx-error-row { display: none !important; }
       .dx-datagrid .dx-error-row { display: none !important; }
       .dx-error-message { display: none !important; }
     `;
-    document.head.appendChild(style);
+      document.head.appendChild(style);
 
-    return () => {
-      document.head.removeChild(style);
+      return () => {
+        document.head.removeChild(style);
+      };
+    }, []);
+    // Render DataGrid components in a portal
+    const renderDataGridPortal = () => {
+      if (!portalContainerRef.current) return null;
+
+      const { top, left, width } = getGridPosition();
+
+      return createPortal(
+        <>
+          {searchType === "grid" && (
+            <>
+              {showProductGrid && (
+                <div
+                  className="absolute mt-0 !z-[100] bg-white shadow-lg"
+                  style={{
+                    top: `${top}px`,
+                    left: `${left}px`,
+                    width: "100%",
+                    minWidth: "300px",
+                    maxWidth: "800px",
+                    minHeight: "200px",
+                    maxHeight: "400px",
+                  }}
+                >
+                  <DataGrid
+                    ref={dataGridRef}
+                    loadPanel={{ enabled: false }}
+                    dataSource={store}
+                    height={300}
+                    keyExpr={"productID"}
+                    showBorders={true}
+                    showRowLines={true}
+                    remoteOperations={{
+                      filtering: true,
+                      paging: true,
+                      sorting: true,
+                      grouping: false,
+                      summary: false,
+                      groupPaging: false,
+                    }}
+                    focusedRowEnabled={true}
+                    onKeyDown={handleGridKeyDown}
+
+                    tabIndex={0}
+                    width="100%"
+                  >
+                    <Selection mode="single" deferred />
+                    <Paging pageSize={30} />
+                    <Scrolling mode="virtual" />
+                    <KeyboardNavigation
+                      enabled={true}
+                      editOnKeyPress={false}
+                      enterKeyDirection="row"
+                    />
+                    <Column
+                      dataField="productName"
+                      caption={t("product_name")}
+                      dataType="string"
+                      minWidth={150}
+                    />
+                    <Column
+                      dataField="productCode"
+                      caption={t("product_code")}
+                      dataType="string"
+                      width={100}
+                    />
+                    <Column
+                      dataField="productID"
+                      caption={t("productID")}
+                      dataType="number"
+                      visible={false}
+                    />
+                    <Column
+                      dataField="arabicName"
+                      caption={t("arabic_name")}
+                      dataType="string"
+                      width={150}
+                    />
+                    <Column
+                      dataField="stock"
+                      caption={t("stock")}
+                      dataType="number"
+                      width={100}
+                    />
+                    <Column
+                      dataField="stockDetails"
+                      caption={t("stock_details")}
+                      dataType="string"
+                      minWidth={150}
+                    />
+                  </DataGrid>
+                </div>
+              )}
+              {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
+                <div
+                  className="absolute mt-1 !z-[100] bg-white shadow-lg"
+                  style={{
+                    top: `${top}px`,
+                    left: `${left}px`,
+                    width: "100%",
+                    minWidth: "300px",
+                    maxWidth: "800px",
+                    minHeight: "200px",
+                    maxHeight: "400px",
+                  }}
+                >
+                  <DataGrid
+                    ref={batchGridRef}
+                    loadPanel={{ enabled: false }}
+                    className="custom-data-grid-dark-only"
+                    dataSource={productDetailStore}
+                    height={300}
+                    keyExpr={"productBatchID"}
+                    showBorders={true}
+                    showRowLines={true}
+                    remoteOperations={{
+                      filtering: true,
+                      paging: true,
+                      sorting: true,
+                      grouping: false,
+                      summary: false,
+                      groupPaging: false,
+                    }}
+                    paging={{}}
+                    focusedRowEnabled={true}
+                    onContentReady={handleBatchContentReady}
+                    onFocusedRowChanged={handleBatchFocusedRowChanged}
+                    onKeyDown={handleBatchGridKeyDown}
+                    tabIndex={0}
+                    width="100%"
+                  >
+                    <Scrolling
+                      mode="virtual"
+                      showScrollbar="always"
+                      renderAsync={false}
+                      useNative={"auto"}
+                      rowRenderingMode="virtual"
+                      preloadEnabled={true}
+                    />
+                    <KeyboardNavigation
+                      enabled={true}
+                      editOnKeyPress={false}
+                      enterKeyDirection="row"
+                    />
+                    <Paging pageSize={30} />
+                    <Selection mode="single" />
+                    <Column
+                      dataField="productBatchID"
+                      caption={t("productBatchID")}
+                      dataType="number"
+                      width={150}
+                    />
+                    <Column
+                      dataField="productCode"
+                      caption={t("productCode")}
+                      dataType="string"
+                      width={150}
+                    />
+                    <Column
+                      dataField="autoBarcode"
+                      caption={t("autoBarcode")}
+                      dataType="string"
+                      width={150}
+                    />
+                    <Column
+                      dataField="sPrice"
+                      caption={t("sprice")}
+                      dataType="number"
+                      width={100}
+                    />
+                    <Column
+                      dataField="pPrice"
+                      caption={t("pPrice")}
+                      dataType="number"
+                      width={100}
+                    />
+                    <Column
+                      dataField="mrp"
+                      caption={t("mrp")}
+                      dataType="number"
+                      width={100}
+                    />
+                    <Column
+                      dataField="stock"
+                      caption={t("stock")}
+                      dataType="number"
+                      width={100}
+                    />
+                    <Column
+                      dataField="unitID"
+                      caption={t("unitID")}
+                      dataType="number"
+                      minWidth={100}
+                    />
+                    <Column
+                      dataField="unit"
+                      caption={t("unit")}
+                      dataType="string"
+                      minWidth={100}
+                    />
+                    <Column
+                      dataField="brandID"
+                      caption={t("brandID")}
+                      dataType="number"
+                      minWidth={100}
+                    />
+                    <Column
+                      dataField="brandName"
+                      caption={t("brandName")}
+                      dataType="string"
+                      minWidth={100}
+                    />
+                  </DataGrid>
+                </div>
+              )}
+            </>
+          )}
+        </>,
+        portalContainerRef.current
+      );
     };
-  }, []);
-return (
+    return (
       <>
         <div
           className="flex items-center w-full"
@@ -672,199 +918,9 @@ return (
                   rest.onBlur(e);
                 }
               }}
-              style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }} // Ensure full width
+
             />
-            {searchType === "grid" && (
-              <>
-                {showProductGrid && (
-                  <div
-                    className="absolute top-full left-0 mt-0 z-10 w-full min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white"
-                    style={{ width: "100%" }} // Ensure grid takes full column width
-                  >
-                    <DataGrid
-                      ref={dataGridRef}
-                      loadPanel={{ enabled: false }}
-                      dataSource={store}
-                      height={300}
-                      keyExpr={"productID"}
-                      showBorders={true}
-                      showRowLines={true}
-                      remoteOperations={{
-                        filtering: true,
-                        paging: true,
-                        sorting: true,
-                        grouping: false,
-                        summary: false,
-                        groupPaging: false,
-                      }}
-                      focusedRowEnabled={true}
-                      onKeyDown={handleGridKeyDown}
-                      tabIndex={0}
-                      width="100%" // Ensure DataGrid takes full width
-                    >
-                      <Selection mode="single" deferred />
-                      <Paging pageSize={30} />
-                      <Scrolling mode="virtual" />
-                      <KeyboardNavigation
-                        enabled={true}
-                        editOnKeyPress={false}
-                        enterKeyDirection="row"
-                      />
-                      <Column
-                        dataField="productName"
-                        caption={t("product_name")}
-                        dataType="string"
-                        minWidth={150}
-                      />
-                      <Column
-                        dataField="productCode"
-                        caption={t("product_code")}
-                        dataType="string"
-                        width={100}
-                      />
-                      <Column
-                        dataField="productID"
-                        caption={t("productID")}
-                        dataType="number"
-                        visible={false}
-                      />
-                      <Column
-                        dataField="arabicName"
-                        caption={t("arabic_name")}
-                        dataType="string"
-                        width={150}
-                      />
-                      <Column
-                        dataField="stock"
-                        caption={t("stock")}
-                        dataType="number"
-                        width={100}
-                      />
-                      <Column
-                        dataField="stockDetails"
-                        caption={t("stock_details")}
-                        dataType="string"
-                        minWidth={150}
-                      />
-                    </DataGrid>
-                  </div>
-                )}
-                {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
-                  <div
-                    className="absolute top-full left-0 mt-1 z-10 w-full min-w-[300px] max-w-full md:max-w-[600px] lg:max-w-[800px] min-h-[200px] max-h-[400px] shadow-lg bg-white"
-                    style={{ width: "100%" }} // Ensure batch grid takes full column width
-                  >
-                    <DataGrid
-                      ref={batchGridRef}
-                      loadPanel={{ enabled: false }}
-                      className="custom-data-grid-dark-only"
-                      dataSource={productDetailStore}
-                      height={300}
-                      keyExpr={"productBatchID"}
-                      showBorders={true}
-                      showRowLines={true}
-                      remoteOperations={{
-                        filtering: true,
-                        paging: true,
-                        sorting: true,
-                        grouping: false,
-                        summary: false,
-                        groupPaging: false,
-                      }}
-                      paging={{}}
-                      focusedRowEnabled={true}
-                      onContentReady={handleBatchContentReady}
-                      onFocusedRowChanged={handleBatchFocusedRowChanged}
-                      onKeyDown={handleBatchGridKeyDown}
-                      tabIndex={0}
-                      width="100%" // Ensure DataGrid takes full width
-                    >
-                      <Scrolling
-                        mode="virtual"
-                        showScrollbar="always"
-                        renderAsync={false}
-                        useNative={"auto"}
-                        rowRenderingMode="virtual"
-                        preloadEnabled={true}
-                      />
-                      <KeyboardNavigation
-                        enabled={true}
-                        editOnKeyPress={false}
-                        enterKeyDirection="row"
-                      />
-                      <Paging pageSize={30} />
-                      <Selection mode="single" />
-                      <Column
-                        dataField="productBatchID"
-                        caption={t("productBatchID")}
-                        dataType="number"
-                        width={150}
-                      />
-                      <Column
-                        dataField="productCode"
-                        caption={t("productCode")}
-                        dataType="string"
-                        width={150}
-                      />
-                      <Column
-                        dataField="autoBarcode"
-                        caption={t("autoBarcode")}
-                        dataType="string"
-                        width={150}
-                      />
-                      <Column
-                        dataField="sPrice"
-                        caption={t("sprice")}
-                        dataType="number"
-                        width={100}
-                      />
-                      <Column
-                        dataField="pPrice"
-                        caption={t("pPrice")}
-                        dataType="number"
-                        width={100}
-                      />
-                      <Column
-                        dataField="mrp"
-                        caption={t("mrp")}
-                        dataType="number"
-                        width={100}
-                      />
-                      <Column
-                        dataField="stock"
-                        caption={t("stock")}
-                        dataType="number"
-                        width={100}
-                      />
-                      <Column
-                        dataField="unitID"
-                        caption={t("unitID")}
-                        dataType="number"
-                        minWidth={100}
-                      />
-                      <Column
-                        dataField="unit"
-                        caption={t("unit")}
-                        dataType="string"
-                        minWidth={100}
-                      />
-                      <Column
-                        dataField="brandID"
-                        caption={t("brandID")}
-                        dataType="number"
-                        minWidth={100}
-                      />
-                      <Column
-                        dataField="brandName"
-                        caption={t("brandName")}
-                        dataType="string"
-                        minWidth={100}
-                      />
-                    </DataGrid>
-                  </div>
-                )}
-              </>
-            )}
+
           </div>
           {showCheckBox && (
             <ERPCheckbox
@@ -928,6 +984,7 @@ return (
               }
             />
           )}
+        {renderDataGridPortal()}
       </>
     );
   }

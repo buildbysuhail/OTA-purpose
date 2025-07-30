@@ -99,7 +99,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           isOpen={isModalOpen}
           closeModal={closeModal}
           width={1200}
-          height={634}  //610
+          height={650}  //610
           title={t("add_amount_or_jv")}
           content={
             <AdjustmentAmountManager

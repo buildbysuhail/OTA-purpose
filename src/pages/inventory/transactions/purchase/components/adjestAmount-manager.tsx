@@ -6,7 +6,7 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { Pencil } from "lucide-react";
+import { Pencil,Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { InvAccTransaction, TransactionFormState, VoucherElementProps } from "../transaction-types";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
@@ -57,15 +57,16 @@ export const AdjustmentAmountManager=({formState,t,handleKeyDown,closeModal,moda
         debitCredit: "debit",
         amountFc: 0, //CP
       });
-    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 400 });
       const [gridData, setGridData] = useState<InvAccTransaction[]>(formState.transaction.invAccTransactions);
        const isFcTrans = formState.transaction.master.voucherForm.toUpperCase() == "IMPORT";
+       const exchangeRate = formState.transaction.master.exchangeRate || 1;
       // Total amount of debit and credit values
-  const total_Debit = gridData.reduce((sum, item) => sum + item.debit, 0);
-  const total_Credit = gridData.reduce((sum, item) => sum + item.credit, 0);
+  const total_Debit = gridData.reduce((sum, item) => sum + Number(item.debit), 0);
+  const total_Credit = gridData.reduce((sum, item) => sum + Number(item.credit), 0);
   // Total credit value based on Is Income
   const totalCredit = gridData.reduce((sum, item) => {
-    const value = item.isIncome ? sum-item.credit : sum+item.credit;
+    const value = item.isIncome ? sum-Number(item.credit) : sum+Number(item.credit);
     return value;
   },0)
   // Total amountFc value, now it set as totalCredit value based on income
@@ -74,7 +75,7 @@ export const AdjustmentAmountManager=({formState,t,handleKeyDown,closeModal,moda
 
     useEffect(() => {
       let gridHeightMobile = modalHeight - 50;
-      let gridHeightWindows = modalHeight - 400;
+      let gridHeightWindows = modalHeight - 250;
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [isMaximized, modalHeight]);
     
@@ -116,8 +117,18 @@ const handleAmountModal = (
       debitCredit: rowData.debit > 0 ? "debit" : "credit",
       amountFc: rowData.amountFC || 0,
     });
-    closeModal();
   };
+  // Function for deleting an item
+  const handleDeleteClick = (rowData: InvAccTransaction,deleteRowIndex: number) => {
+      setGridData(prev =>
+        prev
+        .filter(item => item.slNo !== rowData.slNo)
+        .map((item,index)=>({
+          ...item,
+          slNo: index+1,
+        }))
+      );
+  }
 
       const handleAddClick = () => {
         if (
@@ -192,7 +203,7 @@ const handleAmountModal = (
         }
       };
     
-      const handleApplyClick = () => {
+    const handleApplyClick = () => {
     if (total_Debit !== total_Credit) {
       ERPAlert.show({
         icon: "warning",
@@ -308,6 +319,7 @@ const handleAmountModal = (
       cellRender: (params: any,) => {
         const rowIndex = params.rowIndex;
         return (
+          <div className="flex flex-row gap-2">
           <button
             onClick={() => handleEditClick(params.data,rowIndex)}
             className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
@@ -315,6 +327,14 @@ const handleAmountModal = (
           >
             <Pencil size={16} />
           </button>
+          <button
+          onClick={()=>handleDeleteClick(params.data,rowIndex)}
+           className="p-1 text-blue-600 hover:text-white hover:bg-red rounded-xl"
+            title={t("delete")}
+            >
+              <Trash2 size={16} />
+              </button>
+          </div>
         );
       },
     },
@@ -395,7 +415,11 @@ const handleAmountModal = (
                     type="number"
                     className="max-w-[210px]"
                     value={amountModal.amountFc}
-                    onChange={(e) => handleAmountModal("amountFc", e.target.value)}
+                    onChange={(e) => { 
+                                       const amountFcValue = Number(e.target.value);
+                                       handleAmountModal("amountFc", amountFcValue)
+                                       handleAmountModal("amount",amountFcValue*exchangeRate)
+                    }}
                     onKeyDown={(e) => {
                       handleKeyDown && handleKeyDown(e, "amountFc");
                     }}
@@ -499,19 +523,21 @@ const handleAmountModal = (
                 }}
               />
               <div className="flex flex-col items-end mt-2">
-                <div className="flex flex-row gap-8 p-2 bg-gray-100 rounded-md">
+                <div className="flex flex-row gap-8 py-2 px-3 bg-gray-100 rounded-md">
                 <div className="text-right">
                 <div className="text-sm text-gray-600">{t("total_credit")}</div>
-                <div className="text-lg font-bold text-red">
+                <div className={isFcTrans?"text-lg font-bold text-red":"text-lg font-bold text-green"}>
                   {totalCredit}
                 </div>
               </div>
+              {isFcTrans ?
               <div className="text-right">
                 <div className="text-sm text-gray-600">{t("total_fc")}</div>
                 <div className="text-lg font-bold text-green">
                   {totalFc}
                 </div>
               </div>
+              :""}
               </div>
 
                 <div className="flex items-center gap-2 px-2 py-2">

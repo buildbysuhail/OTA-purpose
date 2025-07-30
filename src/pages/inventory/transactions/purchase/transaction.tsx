@@ -90,6 +90,7 @@ import { barCodeField } from "../../../LabelDesigner/fields";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import BlurLoader from "../../../../components/ERPComponents/erp-loader";
+import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 interface BilledItem {
   id?: number;
   name: string;
@@ -651,6 +652,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
           : true;
       _formState.userRightsFormCode =
         isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
+        debugger;
+const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new APIClient()))
 
       _formState = {
         ..._formState,
@@ -665,6 +668,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 : _formState.transaction.master.hasroundOff,
           },
         },
+          gridColumns: _gridCols.columnPreferences,
         userConfig: {
           ...formState.userConfig,
         },
@@ -677,6 +681,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             ? t(title)
             : t(title) + "[" + formType + "]") ?? "",
       };
+      
       _formState.gridColumns?.forEach((x: any) => {
         if (x.dataFiled === "unitPriceFC" || x.dataFiled === "grossFC") {
           x.visible = true;
@@ -783,7 +788,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
    if(masterIds.length > 0) {
-    debugger;
+    
     dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
      if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
@@ -823,9 +828,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   totalRes.transaction.details = [];
                   totalRes.batchesUnits = PendingTransDetails.batchesUnits;
                   totalRes.loading = {isLoading: false, text: ''}
-      debugger;
+      
                   // Dispatch the state update
-                  debugger;
+                  
                   const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
@@ -932,14 +937,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setData((prev) => [...prev, newItem]);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
+    const batchSelectionData = async () => {
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
       if (data.rowIndex < 0) {
         return;
       }
       const baseDetail = { ...formState.transaction.details[data.rowIndex] };
-      loadProductDetailsByAutoBarcode(
+      await loadProductDetailsByAutoBarcode(
         {
           productCode: data.productCode,
           autoBarcode: data.autoBarcode,
@@ -954,7 +960,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         { result: {}, formStateHandleFieldChangeKeysOnly },
         true
       );
-    }
+    } 
+  };
+
+    batchSelectionData();
   }, [formState.batchSelectionData]);
   useEffect(() => {
     const fetchData = async () => {
@@ -2311,7 +2320,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     // height: `${gridHeight}px`,
                   }}
                 >
-                  {/* <ErpPurchaseGrid
+                  <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
                     onKeyDown={(
@@ -2327,7 +2336,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       });
                     }}
                     transactionType={transactionType}
-                    columns={purchaseGridCol}
+                    _columns={purchaseGridCol}
                     keyField={"productID"}
                     height={gridHeight}
                     gridId={`${gridCode}`}
@@ -2344,8 +2353,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       formState.userConfig?.gridHeaderFontColor
                     }
                     gridBorderRadius={formState.userConfig?.gridBorderRadius}
-                  /> */}
-                  Grid Under Modification
+                  />
+                  {/* Grid Under Modification */}
                 </div>
                 <div className="w-[300px]">
                   {((formState.transactionLoading &&
@@ -2473,7 +2482,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               {/* Form Section */}
               <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
                 <div className="space-y-2"></div>
-                {/* <ErpPurchaseGrid
+                <ErpPurchaseGrid
                   onChange={handleTextDataChange}
                   ref={purchaseGridRef}
                   onKeyDown={(
@@ -2488,7 +2497,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         formStateHandleFieldChangeKeysOnly,
                     })
                   }
-                  columns={purchaseGridCol}
+                  _columns={purchaseGridCol}
                   keyField={"productID"}
                   height={gridHeight}
                   gridId={`${gridCode}`}
@@ -2496,8 +2505,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   summaryConfig={
                     formState.summaryConfig as SummaryConfig<TransactionDetail>[]
                   }
-                /> */}
-                Grid Under Modification
+                />
+                {/* Grid Under Modification */}
                 <TransactionFooter
                 applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}

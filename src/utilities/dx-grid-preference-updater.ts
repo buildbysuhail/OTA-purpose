@@ -23,7 +23,8 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
         fontColor: preference.fontColor,
         fontSize: preference.fontSize,
         displayOrder: preference.displayOrder,
-        showInPdf: preference.showInPdf
+        showInPdf: preference.showInPdf,
+    allowEditing: column.allowEditing ?? false,
         // Apply other preferences as needed
       };
     }
@@ -41,7 +42,7 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
 }
 export function getDefaultColumnPreference(column: DevGridColumn, index: number): ColumnPreference {
     return {
-        dataField: column.dataField??"",
+    dataField: column.dataField??"",
     isLocked: column.isLocked??false,    
     caption: column.caption??capitalizeAndAddSpace(column.dataField??""),
     width: column.width,
@@ -53,36 +54,46 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     displayOrder: index,
     showInPdf: column.showInPdf?? false,
     readOnly: column.readOnly ?? false,
+    allowEditing: column.allowEditing ?? false,
     }
   };
 export const getInitialPreference = async(gridId: any, columns: any, api: APIClient) =>{
-  
+  if(gridId == "grd_inv_transaction_PI") {
+   debugger; 
+  }
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
     
     let updatedPreferences: GridPreference;
 
     let parsedPreferences: GridPreference;
-    if (savedPreferences) {
+    if (savedPreferences != undefined && savedPreferences != null && savedPreferences != `""` && savedPreferences != "") {
       parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
     } else {
       const res = await api.getAsync(`${Urls.grid_preference}/${gridId}`);
       localStorage.setItem(`gridPreferences_${gridId}`,JSON.stringify(res));
       parsedPreferences = res && res as GridPreference;
     }
-    if(parsedPreferences) {     
+    if(parsedPreferences) {    
+       parsedPreferences.columnPreferences = parsedPreferences.columnPreferences.map((pref, index) =>  {
+        return {
+          ...pref,
+          order: index+1 
+        }
+       })
       const mergedPreferences = new Array<ColumnPreference>();
       // Add any remaining columns that weren't in parsedPreferences.columnPreferences
+      const outIdex = 2000;
       columns?.forEach((column: any, index: any) => {
         // if (columnMap.has(column.dataField)) {
            let colPreference = parsedPreferences.columnPreferences.find(x => x.dataField == column.dataField);
-          colPreference =  colPreference == undefined ? getDefaultColumnPreference(column, index) : colPreference;
+          colPreference =  colPreference == undefined ? {...getDefaultColumnPreference(column, index) as any, order: outIdex+index} as ColumnPreference : colPreference;
           mergedPreferences.push({
             ...colPreference,
             dataField: column.dataField ?? removeSpacesAndCapitalize(column.caption ?? ""),
           });
         // }
       });
-      
+      mergedPreferences.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       updatedPreferences = {
         ...parsedPreferences,
         columnPreferences: mergedPreferences

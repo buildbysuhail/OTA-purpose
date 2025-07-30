@@ -84,6 +84,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
 
     useEffect(() => {
     const fetchPreferences = async () => {
+      
     setPreferences(await getInitialPreference(gridId, columns, new APIClient()));
   };
     fetchPreferences();

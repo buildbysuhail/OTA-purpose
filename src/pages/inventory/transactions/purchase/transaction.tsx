@@ -1285,7 +1285,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         caption: t("product"),
         dataType: "string",
         allowEditing: true,
-        minWidth: 200,
+        width: 250,
         alignment: "left",
       },
       {

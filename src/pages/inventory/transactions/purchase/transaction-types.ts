@@ -492,7 +492,7 @@ export interface TransactionFormState {
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
-  currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
+  currentCell?: CurrentCell;
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
   ShowProductBatchUnitDetails: boolean;
@@ -510,6 +510,7 @@ interface loadingResult {
   isLoading: boolean;
   text: string;
 }
+export interface CurrentCell { column: string; rowIndex: number; data: TransactionDetail }
 export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };

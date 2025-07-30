@@ -290,7 +290,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                               handleColumnPreferenceChange(
                                 column.dataField,
                                 "width",
-                                Math.max(50, parseInt(e.target.value) || 100)
+                                Math.max(0, parseInt(e.target.value) || 100)
                               )
                             }
                             disabled={column.isLocked}

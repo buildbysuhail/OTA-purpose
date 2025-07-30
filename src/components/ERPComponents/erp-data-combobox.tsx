@@ -1157,6 +1157,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<any>) => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          onKeyDown && onKeyDown(event)
+          return;
+        }
       if (!isOpen) {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           setIsOpen(true);

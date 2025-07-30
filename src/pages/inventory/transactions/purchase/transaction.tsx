@@ -650,9 +650,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
         applicationSettings.productsSettings.batchCriteria != "NB"
           ? false
           : true;
-      _formState.userRightsFormCode =
-        isInvoker && formType == "IMPORT" ? "PIIMPORT" : formCode ?? "";
-        debugger;
+      _formState.userRightsFormCode = formCode ?? "";
+      if(voucherType == "PI") {
+        if(isInvoker && formType == "IMPORT") {
+         _formState.userRightsFormCode = "PIIMPORT"
+        }
+      }
 const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new APIClient()))
 
       _formState = {
@@ -1177,61 +1180,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       );
     }
   }, [formState.quantityFactorData]);
-  useEffect(() => {
-    if (
-      formState.currentCell &&
-      formState.currentCell.column != "" &&
-      formState.currentCell.rowIndex > -1
-    ) {
-      const targetCellId = `${gridCode}_${formState.currentCell.column}_${formState.currentCell.rowIndex}`;
-      const targetCell = document.getElementById(
-        targetCellId
-      ) as HTMLElement | null;
-      if (targetCell) {
-        if (formState.currentCell.column === "product") {
-          const erpSearchInput = targetCell.querySelector(
-            `input[id="${targetCellId}"]`
-          ) as HTMLInputElement | null;
-          if (erpSearchInput) {
-            erpSearchInput.focus();
-            erpSearchInput.select();
-            return;
-          }
-        }
-        targetCell.focus();
-        const input =
-          targetCell.tagName === "INPUT"
-            ? (targetCell as HTMLInputElement)
-            : (targetCell.querySelector("input") as HTMLInputElement | null);
-        if (input) input.select();
-
-        //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
-        if (purchaseGridRef?.current && targetCell) {
-          const cellRect = targetCell?.getBoundingClientRect();
-          const gridRect =
-            purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
-          const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
-          if (
-            cellRect?.left < gridRect?.left &&
-            purchaseGridRef &&
-            purchaseGridRef.current &&
-            purchaseGridRef?.current?.gridRef
-          ) {
-            purchaseGridRef.current.gridRef.scrollLeft =
-              scrollLeft + (cellRect?.left - gridRect?.left);
-          } else if (
-            cellRect?.right > gridRect?.right &&
-            purchaseGridRef &&
-            purchaseGridRef.current &&
-            purchaseGridRef?.current?.gridRef
-          ) {
-            purchaseGridRef.current.gridRef.scrollLeft =
-              scrollLeft + (cellRect?.right - gridRect?.right);
-          }
-        }
-      }
-    }
-  }, [formState.currentCell]);
+  
 
   const purchaseGridCol: ColumnModel[] = useMemo(
     () => [

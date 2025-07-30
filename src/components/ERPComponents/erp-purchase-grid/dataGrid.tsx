@@ -32,6 +32,7 @@ import {
 } from "../../../utilities/dx-grid-preference-updater";
 import type {
   ColumnModel,
+  CurrentCell,
   FormElementState,
   SummaryItems,
   TransactionDetail,
@@ -170,6 +171,7 @@ interface RowData {
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
   currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
+  setCurrentCell: React.Dispatch<React.SetStateAction<CurrentCell | undefined>>;
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
@@ -336,6 +338,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      debugger;
       if (e.key === "Backspace" || e.key === "Delete") return;
 
       onKeyDown(e, column, rowIndex);
@@ -525,6 +528,7 @@ const VirtualRow = React.memo(({
     dir,
     columnWidths,
     gridBorderColor,
+    setCurrentCell
 }: RowData) => {
    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
       const item = details[index];
@@ -536,21 +540,7 @@ const VirtualRow = React.memo(({
       const appState = useSelector(
         (state: RootState) => state.AppState
       );
-      const setCurrentCell = (input: {column: string; rowIndex: number} | null) => {
-        if(input) {
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                currentCell: {
-                  column: input?.column,
-                  data: item,
-                  rowIndex: input?.rowIndex,
-                },
-              },
-            })
-          );
-        }
-      }
+     
       const applicationSettings = useSelector(
         (state: RootState) => state.ApplicationSettings
       );
@@ -598,6 +588,7 @@ const VirtualRow = React.memo(({
       } as inputBox;
   
   
+  
       const handleKeyDown = useCallback(
         (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
           const target = e.target as HTMLElement
@@ -610,7 +601,7 @@ const VirtualRow = React.memo(({
           if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
             onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
             return
-          }
+          }debugger;
   
           let shouldNavigate = true;
           if (target.tagName === "INPUT" || target.querySelector("input")) {
@@ -637,29 +628,38 @@ const VirtualRow = React.memo(({
           if (!shouldNavigate) return;
   
           e.preventDefault();
+          debugger;
           switch (e.key) {
             case "ArrowRight":
               if (currentColumnIndex < visibleColumns.length - 1) {
                 const res = focusCell(index, currentColumnIndex + 1)
-                setCurrentCell(res)
+                if(res != null) {
+                setCurrentCell({...res, data: details[index]})
+                }
               }
               break
             case "ArrowLeft":
               if (currentColumnIndex > 1) {
                 const res = focusCell(index, currentColumnIndex - 1)
-                setCurrentCell(res)
+               if(res != null) {
+                setCurrentCell({...res, data: details[index]})
+                }
               }
               break
             case "ArrowUp":
               {
                 const res = focusCell(index - 1, currentColumnIndex)
-                setCurrentCell(res)
+                if(res != null) {
+                setCurrentCell({...res, data: details[index]})
+                }
               }
               break
             case "ArrowDown":
               {
                 const res = focusCell(index + 1, currentColumnIndex)
-                setCurrentCell(res)
+                if(res != null) {
+                setCurrentCell({...res, data: details[index]})
+                }
               }
               break
           }
@@ -722,19 +722,13 @@ const VirtualRow = React.memo(({
           }}
           onClick={(e) => {
                             e.preventDefault();
-                            dispatch(
-                              formStateHandleFieldChange({
-                                fields: {
-                                  currentCell: {
-                                    column: column.dataField??"",
+                setCurrentCell({column: column.dataField??"",
                                     data:item,
-                                    rowIndex: index,
-                                  },
-                                },
-                              })
-                            );
+                                    rowIndex: index})
                           }}
         >
+
+          
           {formState.transactionLoading ? (
                             <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0", height: `${rowHeight}px` }}>
                               <div className="card_description loading"
@@ -773,7 +767,7 @@ const VirtualRow = React.memo(({
                               className="h-[22px] text-sm"
                               onFocus={() => handleFocus(column.dataField!)}
                               onBlur={handleBlur}
-                              onKeyDown={(value, e) => handleKeyDown(value, e, column, index)}
+                              onKeyDown={(value, e) => {debugger; handleKeyDown(value, e, column, index)}}
                               searchKey={column.dataField}
                               advancedProductSearching={advancedProductSearching}
                               useInSearch={useInSearch}
@@ -859,7 +853,7 @@ const VirtualRow = React.memo(({
                             />
                           ) : (
                             <div
-                            title= {JSON.stringify(column)}
+                            title={JSON.stringify(currentCell)}
                               style={getCellContentStyle(column)}
                               id={cellId}
                               tabIndex={0}
@@ -1267,7 +1261,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
   );
 
   const nextCellFind = useCallback(
-    (rowIndex: number, column: string) => {
+    (
+      rowIndex: number,
+      column: string,
+      excludedColumns?: (keyof TransactionDetail)[]
+    ) => {
       const visibleColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null
       );
@@ -1283,9 +1281,29 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           currentEditableIndex >= 0 &&
           currentEditableIndex < editableColumns?.length - 1
         ) {
-          const nextEditable = editableColumns![currentEditableIndex + 1];
+        const nextEditable = excludedColumns
+  ? (() => {
+      // Start from the next index after current
+      for (let i = currentEditableIndex + 1; i < editableColumns.length; i++) {
+        const column = editableColumns[i];
+        if (column.dataField && 
+            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
+          return column;
+        }
+      }
+      // If no next column found, wrap around to beginning
+      for (let i = 0; i <= currentEditableIndex; i++) {
+        const column = editableColumns[i];
+        if (column.dataField && 
+            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
+          return column;
+        }
+      }
+      return null; // or undefined, depending on your needs
+    })()
+  : editableColumns[currentEditableIndex + 1];
           targetColumnIndex = visibleColumns.findIndex(
-            (col) => col.dataField === nextEditable.dataField
+            (col) => col.dataField === nextEditable?.dataField
           );
         } else {
           targetRow += 1;
@@ -1303,6 +1321,67 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     },
     [formState.gridColumns, focusCell]
   );
+
+const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(formState.currentCell);
+  useEffect(() => {
+  setCurrentCell(formState.currentCell)
+  
+  }, [formState.currentCell])
+useEffect(() => {
+    if (
+      currentCell &&
+      currentCell.column != "" &&
+      currentCell.rowIndex > -1 
+    ) {
+      const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
+      const targetCell = document.getElementById(
+        targetCellId
+      ) as HTMLElement | null;
+      if (targetCell) {
+        if (currentCell.column === "product") {
+          const erpSearchInput = targetCell.querySelector(
+            `input[id="${targetCellId}"]`
+          ) as HTMLInputElement | null;
+          if (erpSearchInput) {
+            erpSearchInput.focus();
+            erpSearchInput.select();
+            return;
+          }
+        }
+        targetCell.focus();
+        const input =
+          targetCell.tagName === "INPUT"
+            ? (targetCell as HTMLInputElement)
+            : (targetCell.querySelector("input") as HTMLInputElement | null);
+        if (input) input.select();
+
+        //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
+        // if (purchaseGridRef?.current && targetCell) {
+        //   const cellRect = targetCell?.getBoundingClientRect();
+        //   const gridRect =
+        //     purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
+        //   const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
+        //   if (
+        //     cellRect?.left < gridRect?.left &&
+        //     purchaseGridRef &&
+        //     purchaseGridRef.current &&
+        //     purchaseGridRef?.current?.gridRef
+        //   ) {
+        //     purchaseGridRef.current.gridRef.scrollLeft =
+        //       scrollLeft + (cellRect?.left - gridRect?.left);
+        //   } else if (
+        //     cellRect?.right > gridRect?.right &&
+        //     purchaseGridRef &&
+        //     purchaseGridRef.current &&
+        //     purchaseGridRef?.current?.gridRef
+        //   ) {
+        //     purchaseGridRef.current.gridRef.scrollLeft =
+        //       scrollLeft + (cellRect?.right - gridRect?.right);
+        //   }
+        // }
+      }
+    }
+  }, [currentCell]);
  React.useImperativeHandle(ref, () => ({
     focusCell,
     nextCellFind,
@@ -1347,6 +1426,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isGridMenuOpen]);
+  
+  
   
  return (
     <div
@@ -1575,7 +1656,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
                 blockUnitOnDecimalPoint={false}
                 focusCell={focusCell}
                 nextCellFind={nextCellFind}
-                currentCell={formState.currentCell}
+                currentCell={currentCell}
+                setCurrentCell={setCurrentCell}
                 gridFontSize={gridFontSize}
                 gridIsBold={gridIsBold}
                 dir={appState.direction as "ltr" | "rtl"}

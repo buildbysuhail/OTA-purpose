@@ -20,8 +20,11 @@ import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import {
+  initialInventoryTotals,
   initialTransactionDetailData,
   TransactionFormStateInitialData,
+  transactionInitialData,
+  TransactionMasterInitialData,
 } from "./transaction-type-data";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 import moment from "moment";
@@ -40,6 +43,7 @@ const InvTransactionSlice = createSlice({
     clearState: (
       state,
       action: PayloadAction<{
+        formState: TransactionFormState;
         userSession: UserModel;
         applicationSettings: ApplicationSettingsType;
         softwareDate: string;
@@ -48,9 +52,10 @@ const InvTransactionSlice = createSlice({
         allowSalesCounter: number;
         voucherNo: number | undefined;
         rowOnly?: boolean | false;
-      }>
+      }> 
     ) => {
       const {
+        formState,
         userSession,
         applicationSettings,
         softwareDate,
@@ -64,20 +69,34 @@ const InvTransactionSlice = createSlice({
       state.formElements.btnAdd.label = "Add";
       state.isRowEdit = false;
       if (!rowOnly) {
-        (state.transaction.master.invTransactionMasterID = 0),
-          (state.transaction.attachments = []);
-        state.transaction.master.remarks = "";
-        state.transaction.master.exchangeRate = 1;
-        state.transaction.master.purchaseInvoiceNumber = "";
-        state.transaction.master.voucherNumber = voucherNo ?? 0;
+        state.transaction.master = TransactionMasterInitialData
+
+        state.transaction.master.voucherType = formState.transaction.master.voucherType ?? "",
+        state.transaction.master.voucherPrefix = formState.transaction.master.voucherPrefix ?? "",
+        state.transaction.master.voucherForm = formState.transaction.master.voucherForm ?? "",
         state.transaction.master.transactionDate = moment(
           softwareDate,
           "DD/MM/YYYY"
         )
           .local()
           .toISOString();
+        state.transaction.master.purchaseInvoiceDate = moment().local().toISOString();
+        state.transaction.master.employeeID = userSession.employeeId;
+        state.transaction.master.voucherNumber = voucherNo ?? 0;
+        state.transaction.master.inventoryLedgerID =
+        applicationSettings.inventorySettings.defaultPurchaseAcc;
+        state.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCashAcc,
+
+        state.transaction.attachments = [];
 
         state.transaction.details = [];
+        state.total =  0;
+        state.netTotal = 0;
+        state.amountInWords = "";
+        state.barcodeData = "";
+        state.barcodeTemplate = null;
+        state.isEdit = false;
+        state.summary = initialInventoryTotals;
         state.isEdit = false;
         state.printOnSave = true;
         state.transaction.master.isLocked = false;
@@ -333,9 +352,13 @@ const InvTransactionSlice = createSlice({
       );
     },
 
+    formStateClearAttachments: (state) => {
+      // Iterate over all rows in details
+      state.transaction.attachments = [];
+    },
     formStateClearDetails: (state) => {
       // Iterate over all rows in details
-      state.transaction.details = [];
+      state.transaction.details = transactionInitialData.details;
     },
     formStateSetDetails: (
       state,
@@ -672,6 +695,8 @@ const InvTransactionSlice = createSlice({
           fieldValue &&
           typeof fieldValue === "object"
         ) {
+          
+    debugger;
           const transactionValue = fieldValue as TransactionData;
 
           if (
@@ -739,6 +764,8 @@ const InvTransactionSlice = createSlice({
                   (state as any)[key] = _fieldValue;
                 }
               }
+              
+    debugger;
             }
           });
 
@@ -822,6 +849,7 @@ export const {
   formStateTransactionDetailsSetSlNo,
   loadTempRows,
   formStateClearDetails,
+  formStateClearAttachments,
   formStateTransactionAttachmentsRowAdd,
   formStateTransactionAttachmentsRowUpdate,
   formStateTransactionAttachmentsRowRemove,

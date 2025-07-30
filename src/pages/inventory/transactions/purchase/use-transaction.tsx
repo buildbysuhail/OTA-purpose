@@ -41,6 +41,8 @@ import {
   formStateMasterHandleFieldChange,
   loadTempRows,
   formStateHandleFieldChangeKeysOnly,
+  formStateClearDetails,
+  formStateClearAttachments,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -64,6 +66,7 @@ import {
   initialTransactionDetailData,
   TransactionFormStateInitialData,
   transactionInitialData,
+  TransactionMasterInitialData,
 } from "./transaction-type-data";
 import {
   isDirtyTransaction,
@@ -72,7 +75,7 @@ import {
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -94,7 +97,8 @@ export const useTransaction = (
   btnAddRef: any,
   focusToNextColumn: (
     rowIndex: number,
-    column: string, excludedColumns?: (keyof TransactionDetail)[]
+    column: string,
+    excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null,
   focusColumn: (
     rowIndex: number,
@@ -142,7 +146,7 @@ export const useTransaction = (
     clearEntryControl,
     changeGrossToUnitRate,
     calculateRowAmount,
-        applyDiscountsToItems
+    applyDiscountsToItems,
   } = useTransactionHelper(transactionType);
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -285,9 +289,13 @@ export const useTransaction = (
     setVoucherNo?: boolean | false,
     loadVType?: string
   ) => {
-    const _s_isDirty = isDirtyTransaction(formState.prev, {
-      transaction: { ...formState.transaction }
-    },"inv");
+    const _s_isDirty = isDirtyTransaction(
+      formState.prev,
+      {
+        transaction: { ...formState.transaction },
+      },
+      "inv"
+    );
     if (_s_isDirty && skipPrompt != true) {
       dispatch(
         formStateHandleFieldChange({
@@ -309,7 +317,7 @@ export const useTransaction = (
         })
       );
     }
-    
+
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -320,16 +328,17 @@ export const useTransaction = (
       transactionMasterID,
       loadVType
     );
-if(typeof(_formState) == "boolean") {
-  return
-}
+    if (typeof _formState == "boolean") {
+      return;
+    }
 
     _formState.formElements = {
       ..._formState.formElements,
       cbEmployee: {
         ..._formState.formElements.cbEmployee,
         employeeType: _formState.userConfig?.showPurchaserOnly
-           ? EmployeeType.Purchaser :_formState.formElements.cbEmployee.employeeType
+          ? EmployeeType.Purchaser
+          : _formState.formElements.cbEmployee.employeeType,
       },
       btnAdd: {
         ..._formState.formElements.btnAdd,
@@ -348,7 +357,9 @@ if(typeof(_formState) == "boolean") {
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled: _formState.transaction.master.invTransactionMasterID > 0 && !["GRN", "PO", "SO"].includes(loadVType??""),
+        disabled:
+          _formState.transaction.master.invTransactionMasterID > 0 &&
+          !["GRN", "PO", "SO"].includes(loadVType ?? ""),
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -378,7 +389,7 @@ if(typeof(_formState) == "boolean") {
     }
 
     _formState.prev = modelToBase64Unicode(
-      setTransactionForHistory(_formState,"inv")
+      setTransactionForHistory(_formState, "inv")
     );
 
     _formState.transactionLoading = false;
@@ -402,30 +413,30 @@ if(typeof(_formState) == "boolean") {
     transactionMasterID?: number,
     loadVType?: string
   ) => {
-    loadVType = loadVType?? "PI"
+    loadVType = loadVType ?? "PI";
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
         openUnsavedPrompt: false,
       })
     );
-    
-    let url  = `${Urls.inv_transaction_base}${transactionType}`
+
+    let url = `${Urls.inv_transaction_base}${transactionType}`;
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-      if(loadVType == "PO") {
-        out_voucherNumber = manualInvoiceNumber??0
-        voucherType = loadVType
-        formType = ""
-      }
-      if(loadVType == "GRN") {
-        out_voucherNumber = manualInvoiceNumber??0
-        voucherType = loadVType
-        formType = ""
-        url = url + "/ByGRN"
-      }
+    if (loadVType == "PO") {
+      out_voucherNumber = manualInvoiceNumber ?? 0;
+      voucherType = loadVType;
+      formType = "";
+    }
+    if (loadVType == "GRN") {
+      out_voucherNumber = manualInvoiceNumber ?? 0;
+      voucherType = loadVType;
+      formType = "";
+      url = url + "/ByGRN";
+    }
 
     if (_voucherNumber == undefined || _voucherNumber <= 0) {
       return voucher;
@@ -442,20 +453,17 @@ if(typeof(_formState) == "boolean") {
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
     };
     // ByGRN
-    let vch = await api.getAsync(
-      url,
-      new URLSearchParams(params).toString()
-    );
-     if(loadVType == "GRN") {
-        if(vch?.isOk == false) {
+    let vch = await api.getAsync(url, new URLSearchParams(params).toString());
+    if (loadVType == "GRN") {
+      if (vch?.isOk == false) {
         ERPAlert.show({
           title: "",
           text: `${vch?.message}`,
           icon: t("warning"),
         });
         return false;
-    }
       }
+    }
 
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
@@ -471,27 +479,32 @@ if(typeof(_formState) == "boolean") {
         },
       };
     }
-    if(usingManualInvNumber) {
-      vch.master =  {
-
-          ...vch.master,
-          voucherNumber: _voucherNumber,
-          voucherType: voucherType ?? formState.transaction.master.voucherType,
-          voucherPrefix:
-            voucherPrefix ?? formState.transaction.master.voucherPrefix,
-          formType: formType ?? formState.transaction.master.voucherForm,
-          invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType??"") ? null: vch.master.invTransactionMasterID
+    if (usingManualInvNumber) {
+      vch.master = {
+        ...vch.master,
+        voucherNumber: _voucherNumber,
+        voucherType: voucherType ?? formState.transaction.master.voucherType,
+        voucherPrefix:
+          voucherPrefix ?? formState.transaction.master.voucherPrefix,
+        formType: formType ?? formState.transaction.master.voucherForm,
+        invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType ?? "")
+          ? null
+          : vch.master.invTransactionMasterID,
+      };
     }
-  }
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
-    voucher.transaction.master.orderNumber = (loadVType == "PO" || loadVType == "GRN") ? undefined : voucher.transaction.master.orderNumber
-if(loadVType == "GRN") {
-  voucher.transaction.master.gRNMasterID = voucher.transaction.master.invTransactionMasterID
-}
+    voucher.transaction.master.orderNumber =
+      loadVType == "PO" || loadVType == "GRN"
+        ? undefined
+        : voucher.transaction.master.orderNumber;
+    if (loadVType == "GRN") {
+      voucher.transaction.master.gRNMasterID =
+        voucher.transaction.master.invTransactionMasterID;
+    }
 
     voucher.transaction = {
       ...(vch || {}),
@@ -499,7 +512,7 @@ if(loadVType == "GRN") {
         vch.details,
         "",
         { result: {} },
-        vch.master.voucherForm,
+        vch.master.voucherForm
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
@@ -536,7 +549,7 @@ if(loadVType == "GRN") {
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.costCentreID.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-        (formState.userConfig?.presetCostenterId ?? 0) > 0
+      (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -553,7 +566,11 @@ if(loadVType == "GRN") {
       voucher.transaction.master = updatedMaster;
     }
     if (vch?.details) {
-      voucher.transaction.details = refactorDetails(vch.details,"", {result:{}},formType??"",
+      voucher.transaction.details = refactorDetails(
+        vch.details,
+        "",
+        { result: {} },
+        formType ?? ""
       );
     }
     if (voucher.transaction.attachments) {
@@ -604,8 +621,10 @@ if(loadVType == "GRN") {
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${
+        voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
+        isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -963,13 +982,13 @@ if(loadVType == "GRN") {
       const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(
-            `${Urls.inv_transaction_base}${transactionType}`,
-            params
-          )
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            )
           : await api.postAsync(
-            `${Urls.inv_transaction_base}${transactionType}`,
-            params
-          );
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            );
       if (saveRes.isOk == true) {
         dispatch(
           formStateTransactionUpdate({
@@ -1016,6 +1035,7 @@ if(loadVType == "GRN") {
     await undoEditMode(isEdit, transactionMasterID);
     dispatch(
       clearState({
+        formState,
         userSession,
         applicationSettings,
         softwareDate,
@@ -1032,43 +1052,121 @@ if(loadVType == "GRN") {
     isEdit: boolean,
     transactionMasterID: number
   ) => {
-    // await undoEditMode(isEdit, transactionMasterID);
-    // const vNo = await getNextVoucherNumber(
-    //   formState.transaction.master.formType,
-    //   formState.transaction.master.voucherType,
-    //   formState.transaction.master.voucherPrefix,
-    //   false
-    // );
-
-    // dispatch(
-    //   clearState({
-    //     userSession,
-    //     applicationSettings,
-    //     softwareDate,
-    //     defaultCostCenterID:
-    //       applicationSettings.accountsSettings?.defaultCostCenterID,
-    //     counterwiseCashLedgerId: 0,
-    //     allowSalesCounter: 0,
-    //     voucherNo: vNo,
-    //   })
-    // );
-    // Reset combobox specific states
-    // dispatch(
-    //   formStateRowHandleFieldChange({
-    //     fields: {
-    //       ledgerID: null,
-    //       ledgerCode: "",
-    //       costCentreID: 2,
-    //     },
-    //   })
-    // );
-
-    // Force reload combobox data
+    await undoEditMode(isEdit, transactionMasterID);
+    const vNo = await getNextVoucherNumber(
+      formState.transaction.master.voucherForm,
+      formState.transaction.master.voucherType,
+      formState.transaction.master.voucherPrefix,
+      false
+    );
+    const master = {
+      ...TransactionMasterInitialData,
+      voucherType: formState.transaction.master.voucherType ?? "",
+      voucherPrefix: formState.transaction.master.voucherPrefix ?? "",
+      voucherForm: formState.transaction.master.voucherForm ?? "",
+      transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      purchaseInvoiceDate: moment().local().toISOString(),
+      employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
+      voucherNumber: vNo ?? 0,
+      inventoryLedgerID:
+        applicationSettings.inventorySettings.defaultPurchaseAcc,
+      ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+      isLocked: false,
+      grandTotal: 0,
+      grandTotalFc: 0,
+    };
     dispatch(
-      updateFormElement({
-        fields: {},
+      formStateHandleFieldChange({
+        fields: {
+          isRowEdit: false,
+          total: 0,
+          netTotal: 0,
+          netAmount:0,
+          amountInWords: "",
+          barcodeData: "",
+          barcodeTemplate: null,
+          isEdit: false,
+          summary: initialInventoryTotals,
+          printOnSave: true,
+
+          prev: modelToBase64Unicode(
+            setTransactionForHistory(
+              {
+                transaction: {
+                  master: master,
+                  details: [],
+                },
+              },
+              "inv"
+            )
+          ),
+        }
       })
     );
+    
+    dispatch(
+      formStateMasterHandleFieldChange({
+        fields: {...master }
+      })
+    );
+    dispatch(formStateClearDetails())
+    dispatch(formStateClearAttachments())
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
+          // Form elements
+          fields:{
+            formElements: {
+            btnAdd: {
+              label: "Add",
+            },
+            ledgerID: {
+              reload: true,
+            },
+            costCentreID: {
+              reload: true,
+              disabled: (formState.userConfig?.presetCostenterId ?? 0) > 0,
+            },
+            amount: {
+              disabled: false,
+            },
+            pnlMasters: {
+              disabled: false,
+            },
+            employee: {
+              disabled: false,
+            },
+            jvDrCr: {
+              disabled: false,
+            },
+            masterAccount: {
+              disabled: false,
+            },
+            referenceDate: {
+              disabled: false,
+            },
+            referenceNumber: {
+              disabled: false,
+            },
+            transactionDate: {
+              disabled: false,
+            },
+            linkEdit: {
+              visible: !((formState.userConfig?.presetCostenterId ?? 0) > 0),
+            },
+          },
+          },
+        updateOnlyGivenDetailsColumns: true,
+      })
+    );
+    
+    const editableColumns = formState.gridColumns?.filter(
+        (col) => col.visible != false && col.dataField != null && col.allowEditing && col.readOnly !== true
+      );
+      debugger;
+      if(editableColumns && editableColumns.length > 0) {
+    const res = focusColumn(0,editableColumns[0].dataField??"")
+    setCurrentCell(res, formState.transaction.details[0] as TransactionDetail);
+      }
   };
   const handleRemoveItem = async (index: number) => {
     dispatch(
@@ -1680,8 +1778,8 @@ if(loadVType == "GRN") {
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-              ? "increment"
-              : undefined,
+            ? "increment"
+            : undefined,
           true
         );
       }
@@ -1935,7 +2033,7 @@ if(loadVType == "GRN") {
         true
       );
     }
-  }, [formState.transaction.master.purchaseInvoiceNumber]);
+  }, [formState.transaction.master?.purchaseInvoiceNumber]);
 
   const handleRefresh = async () => {
     try {
@@ -2058,7 +2156,6 @@ if(loadVType == "GRN") {
         (x) => x.dataField == "actualSalesPrice"
       )?.visible;
       if (columnName === "unit") {
-        
         if (value > 0) {
           const unitName = formState.batchesUnits?.find(
             (xer) =>
@@ -2067,7 +2164,14 @@ if(loadVType == "GRN") {
           outDetail.unit = unitName;
           outDetail.unitID = value;
 
-          handleChangeUnit(outDetail, detail, actualPriceVisible ?? false, outState, columnName, rowIndex)
+          handleChangeUnit(
+            outDetail,
+            detail,
+            actualPriceVisible ?? false,
+            outState,
+            columnName,
+            rowIndex
+          );
         }
       }
       if (columnName === "unitPriceFC") {
@@ -2096,7 +2200,6 @@ if(loadVType == "GRN") {
           calculateSummaryAndTotal = true;
         }
       } else if (columnName === "qty" || columnName === "unitPrice") {
-
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
@@ -2234,7 +2337,8 @@ if(loadVType == "GRN") {
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${Urls.inv_transaction_base
+        `${
+          Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -2264,14 +2368,16 @@ if(loadVType == "GRN") {
           })
         );
       } else if (res?.products?.length === 1) {
-
         let product = res.products[0];
-        const _index = forImport != true ? formState.transaction.details.findIndex(
-          (x) =>
-            x.barCode == product.autoBarcode &&
-            x.productID > 0 &&
-            x.slNo != detail.slNo
-        ): -1;
+        const _index =
+          forImport != true
+            ? formState.transaction.details.findIndex(
+                (x) =>
+                  x.barCode == product.autoBarcode &&
+                  x.productID > 0 &&
+                  x.slNo != detail.slNo
+              )
+            : -1;
         if (
           product.autoBarcode != "" &&
           _index > -1 &&
@@ -2300,7 +2406,7 @@ if(loadVType == "GRN") {
             if (res) {
               pld.currentCell = {
                 ...res,
-                data:formState.transaction.details[_index],
+                data: formState.transaction.details[_index],
               };
             }
             dispatch(
@@ -2488,13 +2594,15 @@ if(loadVType == "GRN") {
             true
           );
           let currentDetails = [
-            ...formState.transaction.details.filter((x) => x.productID > 0 || x.slNo == latestData.slNo),
+            ...formState.transaction.details.filter(
+              (x) => x.productID > 0 || x.slNo == latestData.slNo
+            ),
           ];
           let final =
             _res?.transaction?.details != undefined &&
-              _res?.transaction?.details.length > 0
+            _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                ?.details[0] as DeepPartial<TransactionDetail>)
+                  ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -2521,9 +2629,6 @@ if(loadVType == "GRN") {
           };
         }
 
-
-
-
         for (const unit of product.units) {
           if (!result.batchesUnits) {
             result.batchesUnits = [];
@@ -2537,7 +2642,6 @@ if(loadVType == "GRN") {
           }
         }
 
-
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&
           dispatch(
@@ -2547,17 +2651,27 @@ if(loadVType == "GRN") {
             })
           );
         if (data.setFocusToNextColumn) {
-          const res = focusToNextColumn(data.rowIndex, data.searchColumn, ["pCode","product","barCode"]);
-          setCurrentCell(res, result.transaction!.details[0] as TransactionDetail);
+          const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+            "pCode",
+            "product",
+            "barCode",
+          ]);
+          setCurrentCell(
+            res,
+            result.transaction!.details[0] as TransactionDetail
+          );
         }
 
-
         return result;
-      } else if (res?.products?.length > 1 &&  forImport != true) {
+      } else if (res?.products?.length > 1 && forImport != true) {
         // Open BatchGrid
-      } else if(forImport != true) {
-        const res = focusToNextColumn(data.rowIndex, data.searchColumn, ["pCode","product","barCode"]);
-          setCurrentCell(res, data.detail as TransactionDetail);
+      } else if (forImport != true) {
+        const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+          "pCode",
+          "product",
+          "barCode",
+        ]);
+        setCurrentCell(res, data.detail as TransactionDetail);
       }
 
       return result;
@@ -2678,7 +2792,7 @@ if(loadVType == "GRN") {
           break;
 
         case "b":
-        case 'B':
+        case "B":
           if (isCtrlPressed) {
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
@@ -2690,7 +2804,7 @@ if(loadVType == "GRN") {
           break;
 
         case "i":
-        case 'I':
+        case "I":
           if (isCtrlPressed) {
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
@@ -2702,7 +2816,8 @@ if(loadVType == "GRN") {
           break;
         // Product Information ☝
 
-        case " ": { // Space key
+        case " ": {
+          // Space key
 
           let outState: DeepPartial<TransactionFormState> = {
             transaction: { details: [] },
@@ -2728,7 +2843,14 @@ if(loadVType == "GRN") {
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
-            handleChangeUnit(outDetail, detail, actualPriceVisible ?? false, outState, columnName, rowIndex)
+            handleChangeUnit(
+              outDetail,
+              detail,
+              actualPriceVisible ?? false,
+              outState,
+              columnName,
+              rowIndex
+            );
           }
           break;
         }
@@ -2772,7 +2894,6 @@ if(loadVType == "GRN") {
               setCurrentCell(res, data);
             }
           } else if (columnName == "barCode") {
-
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               await loadProductDetailsByAutoBarcode(
@@ -2794,7 +2915,7 @@ if(loadVType == "GRN") {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data);
             }
-          // } else if (columnName == "unitPrice") {
+            // } else if (columnName == "unitPrice") {
             // dispatch(
             //   commonParams.formStateHandleFieldChangeKeysOnly({
             //     fields: {
@@ -2851,7 +2972,7 @@ if(loadVType == "GRN") {
 
             if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-              "WARN" &&
+                "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -2880,7 +3001,7 @@ if(loadVType == "GRN") {
               }
             } else if (
               applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
-              "BLOCK" &&
+                "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -2911,15 +3032,21 @@ if(loadVType == "GRN") {
                   true,
                   formState.transaction.master.ledgerID,
                   formState.transaction.master.fromWarehouseID,
-                  false,
+                  false
                 );
                 break;
               } else {
                 break;
               }
             } else {
-              printBarcode([rowIndex], false, true, formState.transaction.master.ledgerID,
-                formState.transaction.master.fromWarehouseID, false);
+              printBarcode(
+                [rowIndex],
+                false,
+                true,
+                formState.transaction.master.ledgerID,
+                formState.transaction.master.fromWarehouseID,
+                false
+              );
             }
           }
           // else if (columnName == "btnPrintBarcodeStd")
@@ -2928,7 +3055,6 @@ if(loadVType == "GRN") {
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd") {
-
             const data: TransactionDetail =
               formState.transaction.details[rowIndex];
 
@@ -2971,10 +3097,8 @@ if(loadVType == "GRN") {
               })
             );
           } else if (columnName == "grossConvert") {
-
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-
             const rowData: TransactionDetail =
               formState.transaction.details[rowIndex];
             dispatch(
@@ -2990,7 +3114,6 @@ if(loadVType == "GRN") {
               })
             );
           } else {
-            
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data);
           }
@@ -3018,194 +3141,202 @@ if(loadVType == "GRN") {
   };
 
   interface TemplateColumn {
-  header: string;
-  key: string;
-  width: number;
-}
-// Alternative version without sample data - just headers
-const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
-  
-
-  try {
-    // Create a new workbook
-    const workbook = new ExcelJS.Workbook();
-
-    // Set workbook properties
-    workbook.creator = 'Purchase Import System';
-    workbook.created = new Date();
-
-    // Add Purchase worksheet
-    const worksheet = workbook.addWorksheet('Purchase', {
-      properties: {
-        tabColor: { argb: 'FF0070C0' }
-      }
-    });
-
-    // Define columns
-    const columns: TemplateColumn[] = [
-      { header: 'Barcode', key: 'barcode', width: 15 },
-      { header: 'Quantity', key: 'quantity', width: 12 },
-      { header: 'Disc_per', key: 'discPerc', width: 12 },
-      { header: 'Discount', key: 'discount', width: 12 },
-      { header: 'MRP', key: 'mrp', width: 12 },
-      { header: 'SalesPrice', key: 'salesPrice', width: 15 },
-      { header: 'PurchasePrice', key: 'purchasePrice', width: 15 },
-      { header: 'PartyName', key: 'partyName', width: 20 }
-    ];
-
-    // Set worksheet columns
-    worksheet.columns = columns.map(col => ({
-      header: col.header,
-      key: col.key,
-      width: col.width
-    }));
-
-    // Style the header row
-    const headerRow = worksheet.getRow(1);
-    headerRow.height = 25;
-
-    columns.forEach((col, index) => {
-      const cell = headerRow.getCell(index + 1);
-
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF4472C4' }
-      };
-
-      cell.font = {
-        name: 'Calibri',
-        size: 12,
-        bold: true,
-        color: { argb: 'FFFFFFFF' }
-      };
-
-      cell.alignment = {
-        vertical: 'middle',
-        horizontal: 'center'
-      };
-
-      cell.border = {
-        top: { style: 'thin', color: { argb: 'FF000000' } },
-        left: { style: 'thin', color: { argb: 'FF000000' } },
-        bottom: { style: 'thin', color: { argb: 'FF000000' } },
-        right: { style: 'thin', color: { argb: 'FF000000' } }
-      };
-    });
-
-    // Freeze the header row
-    worksheet.views = [{ state: 'frozen', ySplit: 1 }];
-
-    // Generate and download
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Purchase_Import_Template_${new Date().toISOString().split('T')[0]}.xlsx`;
-    link.style.display = 'none';
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-
-    // showSuccessMessage('Import template downloaded successfully!');
-
-  } catch (ex: any) {
-    console.error('Error downloading import template:', ex);
-    // showErrorMessage("Template Download Error", ex.message || ex.toString(), "Download Failed");
+    header: string;
+    key: string;
+    width: number;
   }
-};
-const importFromExcel = async (e:  React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  // Alternative version without sample data - just headers
+  const downloadImportTemplateHeadersOnly = async (): Promise<void> => {
+    try {
+      // Create a new workbook
+      const workbook = new ExcelJS.Workbook();
 
-      try {
-        // Create file input element
-        const file = e.target.files?.[0] || null;
-        if (!file) {
-          // setIsLoading(false);
-          return; // User cancelled
-        }
+      // Set workbook properties
+      workbook.creator = "Purchase Import System";
+      workbook.created = new Date();
 
-        // Read Excel file using ExcelJS
-        const workbook = new ExcelJS.Workbook();
-        const fileBuffer = await file.arrayBuffer();
-        await workbook.xlsx.load(fileBuffer);
+      // Add Purchase worksheet
+      const worksheet = workbook.addWorksheet("Purchase", {
+        properties: {
+          tabColor: { argb: "FF0070C0" },
+        },
+      });
 
-        // Get 'Purchase' worksheet
-        const purchaseWorksheet = workbook.getWorksheet('Purchase');
-        if (!purchaseWorksheet) {
-          throw new Error('Purchase worksheet not found in the Excel file');
-        }
+      // Define columns
+      const columns: TemplateColumn[] = [
+        { header: "Barcode", key: "barcode", width: 15 },
+        { header: "Quantity", key: "quantity", width: 12 },
+        { header: "Disc_per", key: "discPerc", width: 12 },
+        { header: "Discount", key: "discount", width: 12 },
+        { header: "MRP", key: "mrp", width: 12 },
+        { header: "SalesPrice", key: "salesPrice", width: 15 },
+        { header: "PurchasePrice", key: "purchasePrice", width: 15 },
+        { header: "PartyName", key: "partyName", width: 20 },
+      ];
 
-        // Get the range of used cells
-        const rowCount = purchaseWorksheet.rowCount;
+      // Set worksheet columns
+      worksheet.columns = columns.map((col) => ({
+        header: col.header,
+        key: col.key,
+        width: col.width,
+      }));
 
-        if (rowCount <= 1) {
-          throw new Error('No data rows found in the Excel file');
-        }
+      // Style the header row
+      const headerRow = worksheet.getRow(1);
+      headerRow.height = 25;
 
-        // Extract data from Excel (starting from row 2, skipping header)
-        const excelData: ExcelRowData[] = [];
+      columns.forEach((col, index) => {
+        const cell = headerRow.getCell(index + 1);
 
-        for (let rowNumber = 2; rowNumber <= rowCount; rowNumber++) {
-          const row = purchaseWorksheet.getRow(rowNumber);
-
-          // Skip empty rows
-          if (!row.hasValues) {
-            continue;
-          }
-
-          try {
-            const rowData: ExcelRowData = {
-              Barcode: getExcelCellValue(row.getCell(1)) || '',
-              Quantity: parseFloat(getExcelCellValue(row.getCell(2)) || '0') || 0,
-              Disc_per: getExcelCellValue(row.getCell(3)) ? parseFloat(getExcelCellValue(row.getCell(3))!) : 0,
-              Discount: getExcelCellValue(row.getCell(4)) ? parseFloat(getExcelCellValue(row.getCell(4))!) : 0,
-              MRP: getExcelCellValue(row.getCell(5)) ? parseFloat(getExcelCellValue(row.getCell(5))!) : 0,
-              SalesPrice: parseFloat(getExcelCellValue(row.getCell(6)) || '0') || 0,
-              PurchasePrice: parseFloat(getExcelCellValue(row.getCell(7)) || '0') || 0,
-              PartyName: getExcelCellValue(row.getCell(8)) || ''
-            };
-
-            // Only add rows with valid barcode
-            if (rowData.Barcode.trim() !== '') {
-              excelData.push(rowData);
-            }
-          } catch (err) {
-            console.warn(`Error parsing row ${rowNumber}:`, err);
-            continue; // Skip this row and continue with next
-          }
-        }
-
-        if (excelData.length === 0) {
-          throw new Error('No valid data found in the Excel file');
-        }
-
-        // Prepare state update for inventory items
-        let outState: any = {
-          transaction: { master: {}, details: [] },
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FF4472C4" },
         };
 
-        // Process each Excel row
-        for (let i = 0; i < excelData.length; i++) {
-          const rowData = excelData[i];
+        cell.font = {
+          name: "Calibri",
+          size: 12,
+          bold: true,
+          color: { argb: "FFFFFFFF" },
+        };
 
-          try {
-            let detailItem: any = {
-              slNo: generateUniqueKey(),
-              barCode: rowData.Barcode,
-              qty: rowData.Quantity,
-              discPerc: rowData.Disc_per || 0,
-              discount: rowData.Discount || 0,
-              mrp: rowData.MRP || 0,
-              salesPrice: rowData.SalesPrice,
-              unitPrice: rowData.PurchasePrice
-            };
-            const productDetails = await  loadProductDetailsByAutoBarcode(
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "center",
+        };
+
+        cell.border = {
+          top: { style: "thin", color: { argb: "FF000000" } },
+          left: { style: "thin", color: { argb: "FF000000" } },
+          bottom: { style: "thin", color: { argb: "FF000000" } },
+          right: { style: "thin", color: { argb: "FF000000" } },
+        };
+      });
+
+      // Freeze the header row
+      worksheet.views = [{ state: "frozen", ySplit: 1 }];
+
+      // Generate and download
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Purchase_Import_Template_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
+      link.style.display = "none";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      // showSuccessMessage('Import template downloaded successfully!');
+    } catch (ex: any) {
+      console.error("Error downloading import template:", ex);
+      // showErrorMessage("Template Download Error", ex.message || ex.toString(), "Download Failed");
+    }
+  };
+  const importFromExcel = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    try {
+      // Create file input element
+      const file = e.target.files?.[0] || null;
+      if (!file) {
+        // setIsLoading(false);
+        return; // User cancelled
+      }
+
+      // Read Excel file using ExcelJS
+      const workbook = new ExcelJS.Workbook();
+      const fileBuffer = await file.arrayBuffer();
+      await workbook.xlsx.load(fileBuffer);
+
+      // Get 'Purchase' worksheet
+      const purchaseWorksheet = workbook.getWorksheet("Purchase");
+      if (!purchaseWorksheet) {
+        throw new Error("Purchase worksheet not found in the Excel file");
+      }
+
+      // Get the range of used cells
+      const rowCount = purchaseWorksheet.rowCount;
+
+      if (rowCount <= 1) {
+        throw new Error("No data rows found in the Excel file");
+      }
+
+      // Extract data from Excel (starting from row 2, skipping header)
+      const excelData: ExcelRowData[] = [];
+
+      for (let rowNumber = 2; rowNumber <= rowCount; rowNumber++) {
+        const row = purchaseWorksheet.getRow(rowNumber);
+
+        // Skip empty rows
+        if (!row.hasValues) {
+          continue;
+        }
+
+        try {
+          const rowData: ExcelRowData = {
+            Barcode: getExcelCellValue(row.getCell(1)) || "",
+            Quantity: parseFloat(getExcelCellValue(row.getCell(2)) || "0") || 0,
+            Disc_per: getExcelCellValue(row.getCell(3))
+              ? parseFloat(getExcelCellValue(row.getCell(3))!)
+              : 0,
+            Discount: getExcelCellValue(row.getCell(4))
+              ? parseFloat(getExcelCellValue(row.getCell(4))!)
+              : 0,
+            MRP: getExcelCellValue(row.getCell(5))
+              ? parseFloat(getExcelCellValue(row.getCell(5))!)
+              : 0,
+            SalesPrice:
+              parseFloat(getExcelCellValue(row.getCell(6)) || "0") || 0,
+            PurchasePrice:
+              parseFloat(getExcelCellValue(row.getCell(7)) || "0") || 0,
+            PartyName: getExcelCellValue(row.getCell(8)) || "",
+          };
+
+          // Only add rows with valid barcode
+          if (rowData.Barcode.trim() !== "") {
+            excelData.push(rowData);
+          }
+        } catch (err) {
+          console.warn(`Error parsing row ${rowNumber}:`, err);
+          continue; // Skip this row and continue with next
+        }
+      }
+
+      if (excelData.length === 0) {
+        throw new Error("No valid data found in the Excel file");
+      }
+
+      // Prepare state update for inventory items
+      let outState: any = {
+        transaction: { master: {}, details: [] },
+      };
+
+      // Process each Excel row
+      for (let i = 0; i < excelData.length; i++) {
+        const rowData = excelData[i];
+
+        try {
+          let detailItem: any = {
+            slNo: generateUniqueKey(),
+            barCode: rowData.Barcode,
+            qty: rowData.Quantity,
+            discPerc: rowData.Disc_per || 0,
+            discount: rowData.Discount || 0,
+            mrp: rowData.MRP || 0,
+            salesPrice: rowData.SalesPrice,
+            unitPrice: rowData.PurchasePrice,
+          };
+          const productDetails = await loadProductDetailsByAutoBarcode(
             {
               productCode: "",
               autoBarcode: rowData.Barcode,
@@ -3218,106 +3349,128 @@ const importFromExcel = async (e:  React.ChangeEvent<HTMLInputElement>): Promise
               setFocusToNextColumn: false,
             },
             { result: {} },
-            false, true
+            false,
+            true
           );
-            // Load product details by barcode
-            if (productDetails) {
-             detailItem =  Object.assign(productDetails.transaction!.details![0] as DeepPartial<TransactionDetail>, detailItem);
-             detailItem.isValid = true
+          // Load product details by barcode
+          if (productDetails) {
+            detailItem = Object.assign(
+              productDetails.transaction!
+                .details![0] as DeepPartial<TransactionDetail>,
+              detailItem
+            );
+            detailItem.isValid = true;
             const calculatedRow = calculateRowAmount(
-                detailItem,
-                "barCode",
-                { result: { transaction: { details: [detailItem] } } },
-                true
-              );
-outState.batchesUnits = productDetails.batchesUnits;
-              outState.transaction.details.push(calculatedRow.transaction!.details![0]);
-            }
-            else {
-              detailItem.isValid = false
-              outState.transaction.details.push(detailItem);
-            }
-
-
-
-          } catch (rowError: any) {
-            console.error(`Error processing row ${i + 1}:`, rowError);
-            // Continue with next row instead of stopping entire import
+              detailItem,
+              "barCode",
+              { result: { transaction: { details: [detailItem] } } },
+              true
+            );
+            outState.batchesUnits = productDetails.batchesUnits;
+            outState.transaction.details.push(
+              calculatedRow.transaction!.details![0]
+            );
+          } else {
+            detailItem.isValid = false;
+            outState.transaction.details.push(detailItem);
           }
+        } catch (rowError: any) {
+          console.error(`Error processing row ${i + 1}:`, rowError);
+          // Continue with next row instead of stopping entire import
         }
+      }
 
-        // Handle party information if available
-        if (excelData[0]?.PartyName && excelData[0].PartyName.trim() !== '') {
-          try {
-            const partyDetails = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/partyDetails?partyName=${excelData[0].PartyName}` );
-
-            if (partyDetails) {
-              outState.transaction.master = {
-                ...outState.transaction.master,
-                partyId: partyDetails.LedgerID,
-                partyName: partyDetails.LedgerName,
-              };
-            } else {
-              throw new Error(`PartyName - ${excelData[0].PartyName} - Not Found. Please recheck PartyName`);
-            }
-          } catch (partyError: any) {
-            console.error('Error loading party details:', partyError);
-            const errorMsg = partyError.message || 'Error loading party details';
-            // setError(errorMsg);
-            // onError?.("Party Loading Error", errorMsg, "1");
-            return;
-          }
-        }
-
-        // Calculate summary and totals if functions are provided
-        const _details = outState.transaction?.details?.filter((x: any) => x.isValid == true) || [];
-        const details = [..._details, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
-        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
-          const summaryRes = calculateSummary(details, formState, {
-            result: {},
-          });
-
-          const totalRes = calculateTotal(
-            formState.transaction.master,
-            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
-            formState.formElements,
-            {
-              result: outState,
-            }
+      // Handle party information if available
+      if (excelData[0]?.PartyName && excelData[0].PartyName.trim() !== "") {
+        try {
+          const partyDetails = await api.getAsync(
+            `${Urls.inv_transaction_base}${transactionType}/partyDetails?partyName=${excelData[0].PartyName}`
           );
 
-          if (totalRes) {
-            totalRes.summary = summaryRes.summary;
-            totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = { ...totalRes.transaction.master };
-            totalRes.transaction.details = [];
-            totalRes.batchesUnits = outState.batchesUnits;
-
-            // Dispatch the state update
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: totalRes,
-                updateOnlyGivenDetailsColumns: true,
-                rowIndex:0,
-                itemsToAddToDetails: _details
-              })
+          if (partyDetails) {
+            outState.transaction.master = {
+              ...outState.transaction.master,
+              partyId: partyDetails.LedgerID,
+              partyName: partyDetails.LedgerName,
+            };
+          } else {
+            throw new Error(
+              `PartyName - ${excelData[0].PartyName} - Not Found. Please recheck PartyName`
             );
           }
+        } catch (partyError: any) {
+          console.error("Error loading party details:", partyError);
+          const errorMsg = partyError.message || "Error loading party details";
+          // setError(errorMsg);
+          // onError?.("Party Loading Error", errorMsg, "1");
+          return;
         }
-
-        // setImportedCount(excelData.length);
-        // const successMsg = `Successfully imported ${excelData.length} items from Excel`;
-        // onSuccess?.(successMsg);
-
-      } catch (ex: any) {
-        // const errorMsg = ex.message || ex.toString();
-        // console.error('Error importing from Excel:', ex);
-        // setError(errorMsg);
-        // onError?.("Import Failed", errorMsg, "Excel Import Error");
-      } finally {
-        // setIsLoading(false);
       }
-    };
+
+      // Calculate summary and totals if functions are provided
+      const _details =
+        outState.transaction?.details?.filter((x: any) => x.isValid == true) ||
+        [];
+      const details = [
+        ..._details,
+        ...(formState.transaction?.details?.filter(
+          (x: any) => x.productID > 0
+        ) || []),
+      ];
+      if (
+        details.length > 0 &&
+        calculateSummary &&
+        calculateTotal &&
+        formState &&
+        dispatch &&
+        formStateHandleFieldChangeKeysOnly
+      ) {
+        const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
+
+        const totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: outState,
+          }
+        );
+
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = { ...totalRes.transaction.master };
+          totalRes.transaction.details = [];
+          totalRes.batchesUnits = outState.batchesUnits;
+
+          // Dispatch the state update
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+              rowIndex: 0,
+              itemsToAddToDetails: _details,
+            })
+          );
+        }
+      }
+
+      // setImportedCount(excelData.length);
+      // const successMsg = `Successfully imported ${excelData.length} items from Excel`;
+      // onSuccess?.(successMsg);
+    } catch (ex: any) {
+      // const errorMsg = ex.message || ex.toString();
+      // console.error('Error importing from Excel:', ex);
+      // setError(errorMsg);
+      // onError?.("Import Failed", errorMsg, "Excel Import Error");
+    } finally {
+      // setIsLoading(false);
+    }
+  };
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -3357,6 +3510,6 @@ outState.batchesUnits = productDetails.batchesUnits;
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
-        applyDiscountsToItems
+    applyDiscountsToItems,
   };
 };

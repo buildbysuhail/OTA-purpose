@@ -238,6 +238,7 @@ const NotificationSettings = () => {
           <ERPModal
             isOpen={tooltip.isOpen || false}
             title={tooltip.channel === "sms" ? t("sms_template") : t("whatsApp_template")}
+            height={700}
             // width="w-full max-w-[600px]"
             isForm={true}
             closeModal={() => { setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: !prevTooltip.isOpen, })); }}

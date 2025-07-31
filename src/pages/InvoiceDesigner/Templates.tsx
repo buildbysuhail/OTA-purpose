@@ -23,7 +23,7 @@ import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 
 interface previewState {
   show: boolean;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
 }
 
 interface ChooseTemplateProps {
@@ -44,7 +44,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   const groupedTemplates = useMemo(() => {
     if (!tempData) return {};
     
-    return tempData.reduce((acc: any, template: TemplateState) => {
+    return tempData.reduce((acc: any, template: TemplateState<unknown>) => {
       const type = template.templateType || "standard";
       if (!acc[type]) {
         acc[type] = [];
@@ -77,10 +77,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     return groupedTemplates[activeTab] || [];
   }, [activeTab, tempData, groupedTemplates]);
 
-  const handleChooseTemplate = async (template: TemplateState) => {
+  const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempData?.length || 0;
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
-    let cc: TemplateState = customJsonParse(res.content);
+    let cc: TemplateState<unknown> = customJsonParse(res.content);
     
     const propertiesState = {
       ...cc.propertiesState,
@@ -140,7 +140,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         {/* <div className="py-2">{activeTab === "all" ? t("standard") : activeTab.toUpperCase()}</div> */}
         
         <div className="flex gap-4 flex-wrap p-5">
-          {filteredTemplates.map((template: TemplateState, index: number) => {
+          {filteredTemplates.map((template: TemplateState<unknown>, index: number) => {
             console.log('Template data:', {
               id: template?.id,
               templateName: template?.templateName,

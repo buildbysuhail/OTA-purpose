@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 
 });
 
-export  const Footer = ({ data, template,}: { data: any; template?: TemplateState;}) => {
+export  const Footer = ({ data, template,}: { data: any; template?: TemplateState<unknown>;}) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 

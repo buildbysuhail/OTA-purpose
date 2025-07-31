@@ -3,7 +3,7 @@ import { TemplateState } from "../../Designer/interfaces";
 
 interface FooterProps {
   data?: any;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
   templateGroupId?: VoucherType | string;
 }
 

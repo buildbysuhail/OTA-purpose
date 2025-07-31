@@ -5,11 +5,11 @@ import { Actions } from "../types";
 import ActionTypes from "../actions/ActionTypes";
 import VoucherType from "../../enums/voucher-types";
 
-export interface TemplateReducerState {
-  activeTemplate: TemplateState;
+export interface TemplateReducerState<T> { 
+  activeTemplate: TemplateState<T>;
   data?: {
     voucher_type: VoucherType | string;
-    content: TemplateState;
+    content: TemplateState<T>;
     is_default: boolean;
     is_primary: boolean;
     status?: string;
@@ -22,15 +22,16 @@ export interface TemplateReducerState {
     background_image_header: string | null;
     background_image_footer: string | null;
   };
-  templates: TemplateState[];
+  templates: TemplateState<T>[];
 }
 
 //
 
-export const templateInitialState: TemplateReducerState = {
+// export const templateInitialState: TemplateReducerState = {
+export const templateInitialState = <T>(): TemplateReducerState<T> => ({
   activeTemplate: DefaultSITemplates[0]?.content,
   templates: []
-};
+});
 
 // const TemplateReducer = () => {
 //   return (state = templateInitialState, action: any) => {

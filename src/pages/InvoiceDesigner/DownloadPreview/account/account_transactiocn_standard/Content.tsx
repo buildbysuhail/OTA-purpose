@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
  
   });
   
-  export const Content = ({ data, template, currentBranch, docIDKey, clientSession,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; clientSession:any;indexNO?:number }) => {
+  export const Content = ({ data, template, currentBranch, docIDKey, clientSession,indexNO = 0 }: { data: AccTransactionData; template?: TemplateState<unknown>; currentBranch: any, docIDKey?: string; clientSession:any;indexNO?:number }) => {
     const headerState = template?.headerState;
     const totalState = template?.totalState;
     const   propertiesState = template?.propertiesState;

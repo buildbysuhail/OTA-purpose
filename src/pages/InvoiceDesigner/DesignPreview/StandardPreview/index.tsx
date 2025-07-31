@@ -17,7 +17,7 @@ export interface StandardPreviewProps {
   currency?: string;
   docTitle?: string;
   docIDKey?: string;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
   templateGroupId?: VoucherType | string;
 }
 

@@ -12,23 +12,23 @@ interface TemplateImages {
   background_image_header: string | null;
   background_image_footer: string | null;
 }
-export interface AccountPreviewProps {
+export interface AccountPreviewProps<T> {
   data: any;
   currency?: string;
   docTitle?: string;
   docIDKey?: string;
-  template?: TemplateState;
+  template?: TemplateState<T>;
   templateGroupId?: VoucherType | string;
 }
 
-const AccountPreviewWrapper = ({
+const AccountPreviewWrapper = <T,>({
   data,
   template,
   templateGroupId,
   docIDKey,
   docTitle,
   currency,
-}: AccountPreviewProps) => {
+}: AccountPreviewProps<T>) => {
  
   return (
    <div className="">

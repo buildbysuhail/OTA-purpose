@@ -68,7 +68,7 @@ import {
   DesignerElementType,
   HistoryComponent,
   initialBacodeTemplateState,
-  initialTemplateState,
+  // initialTemplateState,
   LabelState,
   PlacedComponent,
   PropertiesState,
@@ -202,7 +202,7 @@ const imgContent = [{ label: "img1", value: usFlag }];
 const api = new APIClient();
 interface PDFBarcodeDesignerProps {
   forCustomRows?: boolean;
-  template?: TemplateState;
+  template?: TemplateState<{}>;
   customTemplate?: any;
   onSuccess?: () => void;
 }
@@ -261,8 +261,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [templateData, setTemplateData] = useState<TemplateState>(
-    initialBacodeTemplateState.data
+  const [templateData, setTemplateData] = useState<TemplateState<unknown>>(
+    initialBacodeTemplateState<unknown>().data || {}
   );
   const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
@@ -283,7 +283,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   ) => {
     const newWidthPt = pxToPoint(size.width); // Convert pixels to points
     const newHeightPt = pxToPoint(size.height);
-    setTemplateData((prevData: TemplateState) => {
+    setTemplateData((prevData: TemplateState<unknown>) => {
       const updated = {
         ...prevData,
         barcodeState: {
@@ -304,7 +304,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
-    setTemplateData((prevData: TemplateState) => {
+    setTemplateData((prevData: TemplateState<unknown>) => {
       const updated = {
         ...prevData,
         propertiesState: {
@@ -502,7 +502,7 @@ console.log("avilable printers",printers);
           ...(templateData?.barcodeState?.placedComponents || []),
           newComponent,
         ];
-        setTemplateData((prev: TemplateState) => ({
+        setTemplateData((prev: TemplateState<unknown>) => ({
           ...prev,
           barcodeState: {
             ...prev.barcodeState,
@@ -537,7 +537,7 @@ console.log("avilable printers",printers);
               }
             : comp
         );
-      setTemplateData((prev: TemplateState) => ({
+      setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
@@ -709,7 +709,7 @@ const handleQRCodePropertyChange = (
           : comp
     ) as PlacedComponent[];
 
-    setTemplateData((prev: TemplateState) => ({
+    setTemplateData((prev: TemplateState<unknown>) => ({
       ...prev,
       barcodeState: {
         ...prev.barcodeState,
@@ -741,7 +741,7 @@ const handleQRCodePropertyChange = (
               }
             : comp
         );
-      setTemplateData((prev: TemplateState) => ({
+      setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
@@ -778,7 +778,7 @@ const handleQRCodePropertyChange = (
             ? { ...comp, x: newX, y: newY }
             : comp
         );
-      setTemplateData((prev: TemplateState) => ({
+      setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
@@ -872,7 +872,7 @@ const handleQRCodePropertyChange = (
     property: keyof PropertiesState,
     value: any
   ) => {
-    setTemplateData((prev: TemplateState) => ({
+    setTemplateData((prev: TemplateState<unknown>) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
     }));
@@ -995,7 +995,7 @@ const handleRemoveImage =()=>{
 
   const getPDFTemplateData = async () => {
     const res = await api.getAsync(`${Urls.templates}${id}`);
-    let cc: TemplateState = customJsonParse(res.content);
+    let cc: TemplateState<unknown> = customJsonParse(res.content);
     const _template = {
       ...cc,
       id: res.id,
@@ -1038,7 +1038,7 @@ const handleRemoveImage =()=>{
       for (let i = 0; i < fields?.length; i++) {
         nestedValue = nestedValue?.[fields[i]];
       }
-      setTemplateData((prev: TemplateState) => ({
+      setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev, // Preserve existing templateData
         barcodeState: {
           ...prev.barcodeState, // Preserve other barcodeState properties
@@ -1091,7 +1091,7 @@ const handleRemoveImage =()=>{
         templateData?.barcodeState?.placedComponents?.map((comp) =>
           comp.id === (id ? id : selectedComponent.id) ? updatedComponent : comp
         );
-      setTemplateData((prev: TemplateState) => ({
+      setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
@@ -1169,7 +1169,7 @@ const handleRemoveImage =()=>{
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
 
   const handleDelete = (componentId: number) => {
-    setTemplateData((prev: TemplateState) => ({
+    setTemplateData((prev: TemplateState<unknown>) => ({
       ...prev,
       barcodeState: {
         ...prev.barcodeState,
@@ -1586,7 +1586,7 @@ const handleRemoveImage =()=>{
             <ERPButton
               title={t("clear")}
               onClick={() => {
-                setTemplateData((prev: TemplateState) => ({
+                setTemplateData((prev: TemplateState<unknown>) => ({
                   ...prev,
                   barcodeState: {
                     ...prev.barcodeState,

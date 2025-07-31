@@ -262,7 +262,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   multiFactor: 0
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
+  master: TransactionMasterInitialData, details: Array.from({ length: 300 }, (_, index) => ({
     ...initialTransactionDetailData,
     slNo: generateUniqueKey()
   })),
@@ -571,7 +571,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   dummyProducts: false,
   dataWarranty: [],
   dataBrands: [],
-  isPopupVisible: false
+  isPopupVisible: false,
+  gridColumns: []
 }
 
 export const initialProductData: BarcodeLabel = {

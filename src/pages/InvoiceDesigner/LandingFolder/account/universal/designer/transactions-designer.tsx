@@ -11,6 +11,7 @@ import { HeaderState, TotalState } from "../../../../Designer/interfaces";
 import { setTemplateHeaderState, setTemplateTotalState } from "../../../../../../redux/slices/templates/reducer";
 import { useTranslation } from "react-i18next";
 import ErpDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
+import { RootState } from "../../../../../../redux/store";
 
 
 interface HeaderDesignerProps {
@@ -23,7 +24,7 @@ const AccUniversalTransaction = ({}: HeaderDesignerProps) => {
   const templateGroup = searchParams?.get("template_group");
   const location = useLocation();
   const { templateKind } = location.state || {};
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template) 
   const headerState = templateData?.activeTemplate?.headerState;
   const totalState = templateData?.activeTemplate?.totalState;
  const { t } = useTranslation('system')

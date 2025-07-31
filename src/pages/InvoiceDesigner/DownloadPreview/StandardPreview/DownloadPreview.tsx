@@ -8,12 +8,12 @@ import { TemplateState } from "../../Designer/interfaces";
 import { TemplateReducerState } from "../../../../redux/reducers/TemplateReducer";
 import VoucherType from "../../../../enums/voucher-types";
 
-export interface DownloadPreviewProps {
+export interface DownloadPreviewProps<T> {
   data: any;
   docTitle?: any;
   docIDKey?: string;
   currencySymbol?: string;
-  template?: TemplateState;
+  template?: TemplateState<T>;
   totalAmountInwords?: string;
   templateGroupId?: VoucherType | string;
   templateImages?: any;
@@ -25,7 +25,7 @@ type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; heig
 
 // Font.register({ family: 'Roboto', src: source });
 
-const DownloadStandardPreview = ({
+const DownloadStandardPreview = <T,>({
   data,
   template,
   docIDKey,
@@ -34,7 +34,7 @@ const DownloadStandardPreview = ({
   templateGroupId,
   totalAmountInwords,
   templateImages, taxInfo
-}: DownloadPreviewProps) => {
+}: DownloadPreviewProps<T>) => {
 
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";

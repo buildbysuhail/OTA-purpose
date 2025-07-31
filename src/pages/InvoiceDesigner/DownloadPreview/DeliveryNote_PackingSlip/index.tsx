@@ -5,12 +5,12 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { TemplateState } from "../../Designer/interfaces";
 
-export interface DNSPTEmpProps {
+export interface DNSPTEmpProps<T> {
   data: any;
-  template?: TemplateState;
+  template?: TemplateState<T>;
 }
 
-const DNPSTemplate = ({ data, template }: DNSPTEmpProps) => {
+const DNPSTemplate = <T,>({ data, template }: DNSPTEmpProps<T>) => {
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";

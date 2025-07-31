@@ -2,7 +2,7 @@ import VoucherType from "../../../../enums/voucher-types";
 import { TemplateState } from "../../Designer/interfaces";
 
 interface ItemTableProps {
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
   data?: any;
   templateGroupId?: VoucherType | string;
 }

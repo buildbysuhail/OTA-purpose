@@ -125,7 +125,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   const groupedTemplates = useMemo(() => {
     if (!tempData) return {}
 
-    return tempData.reduce((acc: any, template: TemplateState) => {
+    return tempData.reduce((acc: any, template: TemplateState<unknown>) => {
       const type = template.templateType || "standard"
       if (!acc[type]) {
         acc[type] = []
@@ -155,7 +155,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     if (!searchQuery) return tempData || []
 
     return (tempData || []).filter(
-      (template: TemplateState) =>
+      (template: TemplateState<unknown>) =>
         template.templateName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.templateKind?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.templateType?.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -168,7 +168,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       return filteredBySearch
     }
     return filteredBySearch.filter(
-      (template: TemplateState) => (template.templateType || "standard").toLowerCase() === activeTab.toLowerCase(),
+      (template: TemplateState<unknown>) => (template.templateType || "standard").toLowerCase() === activeTab.toLowerCase(),
     )
   }, [activeTab, filteredBySearch])
 
@@ -176,7 +176,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   const groupedTemplatesForAll = useMemo(() => {
     if (activeTab !== "all") return {}
 
-    return filteredBySearch.reduce((acc: any, template: TemplateState) => {
+    return filteredBySearch.reduce((acc: any, template: TemplateState<unknown>) => {
       const type = template.templateType || "standard"
       if (!acc[type]) {
         acc[type] = []
@@ -186,7 +186,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }, {})
   }, [activeTab, filteredBySearch])
 
-  const handleUseTemplate = (template: TemplateState) => {
+  const handleUseTemplate = (template: TemplateState<unknown>) => {
     appDispatch(setTemplate(template))
     if (templateGroup === "barcode") {
       navigate(`/label-designer/${template.id}?template_group=${templateGroup}`)
@@ -200,10 +200,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
   }
 
-  const handleChooseTemplate = async (template: TemplateState) => {
+  const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempData?.length || 0
     const res = await api.getAsync(`${Urls.crm_templates}${template.id}`)
-    const cc: TemplateState = customJsonParse(res.content)
+    const cc: TemplateState<unknown> = customJsonParse(res.content)
 
     const propertiesState = {
       ...cc.propertiesState,
@@ -232,7 +232,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   }
 
 
-  const renderTemplateCard = (template: TemplateState, index: number) => {
+  const renderTemplateCard = (template: TemplateState<unknown>, index: number) => {
     const isDefault = template?.isCurrent 
     const isPremium = template.templateType?.toLowerCase() === "premium"
 
@@ -551,15 +551,15 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                                   {templateType}
                                 </h2>
                                 <p className={`text-xs sm:text-sm lg:text-base ${colors.text} opacity-75 mt-1`}>
-                                  {(templates as TemplateState[]).length} template
-                                  {(templates as TemplateState[]).length !== 1 ? "s" : ""} available
+                                  {(templates as TemplateState<unknown>[]).length} template
+                                  {(templates as TemplateState<unknown>[]).length !== 1 ? "s" : ""} available
                                 </p>
                               </div>
                             </div>
                             <div
                               className={`${colors.text} text-base sm:text-lg lg:text-xl font-bold px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl bg-white/90 shadow-lg backdrop-blur-sm`}
                             >
-                              {(templates as TemplateState[]).length}
+                              {(templates as TemplateState<unknown>[]).length}
                             </div>
                           </div>
                         </div>
@@ -569,13 +569,13 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       <div className="w-full mb-8 sm:mb-12">
                         {viewMode === "grid" ? (
                           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
-                            {(templates as TemplateState[]).map((template: TemplateState, index: number) =>
+                            {(templates as TemplateState<unknown>[]).map((template: TemplateState<unknown>, index: number) =>
                               renderTemplateCard(template, index),
                             )}
                           </div>
                         ) : (
                           <div className="w-full space-y-3">
-                            {(templates as TemplateState[]).map((template: TemplateState, index: number) =>
+                            {(templates as TemplateState<unknown>[]).map((template: TemplateState<unknown>, index: number) =>
                               renderTemplateCard(template, index),
                             )}
                           </div>
@@ -590,13 +590,13 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               <div className="w-full">
                 {viewMode === "grid" ? (
                   <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
-                    {filteredTemplates.map((template: TemplateState, index: number) =>
+                    {filteredTemplates.map((template: TemplateState<unknown>, index: number) =>
                       renderTemplateCard(template, index),
                     )}
                   </div>
                 ) : (
                   <div className="w-full space-y-3">
-                    {filteredTemplates.map((template: TemplateState, index: number) =>
+                    {filteredTemplates.map((template: TemplateState<unknown>, index: number) =>
                       renderTemplateCard(template, index),
                     )}
                   </div>

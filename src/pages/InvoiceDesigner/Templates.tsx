@@ -56,9 +56,8 @@ if (typeof document !== "undefined") {
 
 interface previewState {
   show: boolean
-  template?: TemplateState
+  template?: TemplateState<unknown>
 }
-
 const api = new APIClient()
 
 const Templates = () => {

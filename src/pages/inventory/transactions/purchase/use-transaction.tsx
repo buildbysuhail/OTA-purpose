@@ -1906,7 +1906,7 @@ export const useTransaction = (
         `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
         {
           transactionType: "I",
-          invTransactionMasterID:
+          transactionMasterId:
             formState.transaction.master.invTransactionMasterID ?? 0,
         }
       );

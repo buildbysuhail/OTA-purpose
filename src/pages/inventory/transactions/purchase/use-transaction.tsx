@@ -1901,8 +1901,9 @@ export const useTransaction = (
 
     try {
       // Check if transaction is in edit mode
+      
       const result = await api.postAsync(
-        `${Urls.inv_transaction_base}${transactionType}/SelectTransactionEditMode`,
+        `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
         {
           tType: "I",
           invTransactionMasterID:
@@ -1963,7 +1964,7 @@ export const useTransaction = (
           try {
             // Begin transaction and delete
             const deleteResult = await api.delete(
-              `${Urls.inv_transaction_base}${transactionType}/DeleteAccTransaction`,
+              `${Urls.inv_transaction_base}${transactionType}`,
               {
                 data: {
                   invTransactionMasterID:

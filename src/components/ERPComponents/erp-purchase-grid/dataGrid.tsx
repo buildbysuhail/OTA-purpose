@@ -1555,6 +1555,7 @@ useEffect(() => {
                   cursor: 'move',
                   transition: 'background-color 0.1s ease',
                   borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
+                  color: gridHeaderFontColor  ? `rgb(${gridHeaderFontColor})`  : "#1f2937",
                 }}
               >
             {index === 0 ? (
@@ -1686,6 +1687,7 @@ useEffect(() => {
                   maxWidth: `${columnWidths[colIndex]}px`,
                   padding: '8px 12px',
                   borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+                  borderTop: `0.1px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
                   fontSize: `${gridFontSize}px`,
                   fontWeight: gridIsBold ? "bold" : "600",
                   textAlign: column.alignment,

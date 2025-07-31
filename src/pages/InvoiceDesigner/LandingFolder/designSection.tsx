@@ -23,6 +23,7 @@ import CustomerBalanceTemplateDesigner   from "./reports/customerBalace/customer
 import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transaction_standard";
 import RetailRollSheetPrev from "../DesignPreview/RetailPreview/two-inch-preview";
 import { TransactionDetail } from "../../inventory/transactions/purchase/transaction-types";
+import AccountTransactionsTemplatePreview from "../DesignPreview/account/acc_transaction_premium";
 
 export  interface DesignSectionType {
   id: number;
@@ -32,7 +33,7 @@ export  interface DesignSectionType {
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Updated to ComponentType
 }
 export interface DesignerConfig {
-  downloadComponent:JSX.Element; 
+  downloadComponent:JSX.Element;
   PreviewComponent: JSX.Element;
   sections: {
     transactions?: ComponentType<any>; // Use specific prop types if available
@@ -80,7 +81,7 @@ export const templateConfig: DesignerConfigMap = {
         sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, total: TotalPremiumDesigner, others: () => null },
     }
     },
-   
+
     RETAIL: {
       "retail-standard": {
         downloadComponent: <AccountTransactionsTemplate />,
@@ -106,7 +107,7 @@ export const templateConfig: DesignerConfigMap = {
     PREMIUM: {
       premium: {
         downloadComponent: <AccountTransactionsTemplate />,
-        PreviewComponent: <AccountPrvTransactionsVoucher />,
+       PreviewComponent:  <AccountTransactionsTemplatePreview />,
         sections: { transactions: AccPremiumTransaction, table: () => TablePremiumDesigner<TransactionDetail>({
       tableState: [{field: "pCode", label: "Code", show: true, width: 100}]
     }),  total: TotalPremiumDesigner, others: () => null },

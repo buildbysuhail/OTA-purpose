@@ -61,25 +61,21 @@ export const useTableResizeAndReorder = (gridID: string) => {
     columnWidthsRef.current = columnWidths;
   }, [columnWidths]);
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (
-      !isResizing.current ||
-      !containerRef.current ||
-      currentColumnIndex.current === -1
-    )
-      return;
+    if (!isResizing.current || !containerRef.current || currentColumnIndex.current === -1) return;
 
-    // const diff = e.clientX - startX.current;
-    // const newWidth = Math.max(50, startWidth.current + diff);
-    // const columnIndex = currentColumnIndex.current;
-
-
-    const isRTL = appState.direction === 'rtl';
+    const isRTL = getComputedStyle(containerRef.current).direction === 'rtl';
 
     const diff = e.clientX - startX.current;
-    // Reverse the diff calculation for RTL
     const adjustedDiff = isRTL ? -diff : diff;
     const newWidth = Math.max(50, startWidth.current + adjustedDiff);
     const columnIndex = currentColumnIndex.current;
+
+    setColumnWidths((prevWidths) => {
+      const newWidths = [...prevWidths];
+      newWidths[columnIndex] = newWidth;
+      console.log(newWidths);
+      return newWidths;
+    });
 
     // Batch state update
     // Batch state update

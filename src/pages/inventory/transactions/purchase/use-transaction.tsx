@@ -42,7 +42,7 @@ import {
   loadTempRows,
   formStateHandleFieldChangeKeysOnly,
   formStateClearDetails,
-  formStateClearAttachments,
+  // formStateClearAttachments,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -1035,7 +1035,7 @@ export const useTransaction = (
     await undoEditMode(isEdit, transactionMasterID);
     dispatch(
       clearState({
-        formState,
+        // formState,
         userSession,
         applicationSettings,
         softwareDate,
@@ -1110,7 +1110,7 @@ export const useTransaction = (
       })
     );
     dispatch(formStateClearDetails())
-    dispatch(formStateClearAttachments())
+    // dispatch(formStateClearAttachments())
     dispatch(
       formStateHandleFieldChangeKeysOnly({
           // Form elements

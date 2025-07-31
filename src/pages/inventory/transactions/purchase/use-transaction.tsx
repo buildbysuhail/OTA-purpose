@@ -42,7 +42,7 @@ import {
   loadTempRows,
   formStateHandleFieldChangeKeysOnly,
   formStateClearDetails,
-  // formStateClearAttachments,
+  formStateClearAttachments,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -1110,7 +1110,7 @@ export const useTransaction = (
       })
     );
     dispatch(formStateClearDetails())
-    // dispatch(formStateClearAttachments())
+    dispatch(formStateClearAttachments())
     dispatch(
       formStateHandleFieldChangeKeysOnly({
           // Form elements
@@ -1905,7 +1905,7 @@ export const useTransaction = (
       const result = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
         {
-          tType: "I",
+          transactionType: "I",
           invTransactionMasterID:
             formState.transaction.master.invTransactionMasterID ?? 0,
         }

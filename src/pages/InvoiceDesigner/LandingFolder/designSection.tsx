@@ -24,6 +24,7 @@ import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transact
 import RetailRollSheetPrev from "../DesignPreview/RetailPreview/two-inch-preview";
 import { TransactionDetail } from "../../inventory/transactions/purchase/transaction-types";
 import AccountTransactionsTemplatePreview from "../DesignPreview/account/acc_transaction_premium";
+import AccountTransactionsUniversalPreview from "../DesignPreview/account/acc_transaction_universal";
 
 export  interface DesignSectionType {
   id: number;
@@ -116,7 +117,7 @@ export const templateConfig: DesignerConfigMap = {
     UNIVERSAL: {
       universal: {
         downloadComponent: <AccountTransactionsUniversal />,
-        PreviewComponent: <AccountTransactionsUniversal />,
+        PreviewComponent: <AccountTransactionsUniversalPreview />,
         sections: { transactions: AccUniversalTransaction, others: () => null },
       },
     },

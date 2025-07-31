@@ -24,10 +24,10 @@ const navigate = useNavigate();
 const dispatch = useDispatch();
 const templates = useAppSelector((x:RootState) =>x?.AccTransaction?.templates)
 
-const loadTemplateId = useCallback(async(template: TemplateState) => {
+const loadTemplateId = useCallback(async(template: TemplateState<unknown>) => {
     try {
     const res = await api.getAsync(`${Urls.templates}${template.id}`);
-    let cc: TemplateState = customJsonParse(res.content)
+    let cc: TemplateState<unknown> = customJsonParse(res.content)
     const _template = {
       ...cc,
       id: res.id,

@@ -146,7 +146,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const [printing, setPrinting] = useState<boolean>(false);
   const [data, setData] = useState<any>();
   const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
-  const { printBarcode, printVoucher } = usePrint();
+  const { handleDirectPrint } = usePrint();
   const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -209,7 +209,23 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
         const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
          let cc: TemplateState<unknown> = customJsonParse(res.content);
-        setTemplate(cc);
+        const _template = {
+        ...cc,
+        id: res.id,
+        background_image: res?.payload?.data?.background_image as string | undefined,
+        background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+        background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+        signature_image: res?.payload?.data?.signature_image as string | undefined,
+        branchId: res.branchId,
+        content: res.content,
+        isCurrent: res.isCurrent,
+        templateGroup: res.templateGroup,
+        templateKind: res.templateKind,
+        templateName: res.templateName,
+        templateType: res.templateType,
+        thumbImage: res.thumbImage as string | undefined,
+      }
+        setTemplate(_template);
         setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
@@ -243,16 +259,21 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     setData(sliceData);
   }, [voucherForm]);
 
-  const barcodeDescSubmit = useCallback(() => {
+  const barcodeDescSubmit = useCallback(async() => {
     setPrinting(true);
-    if(barcodeForm.data?.isFormTo){
-     setShowPrint(true);
-    }else{
+   try {
+    if (barcodeForm.data?.isFormTo) {
+      // Preview mode: Show modal
+      setShowPrint(true);
+    } else {
+      // Direct print mode: Silent print without browser dialog
       setShowPrint(false);
-      // printBarcode()
-
+       handleDirectPrint(template,data,template?.propertiesState?.printer)
     }
-    
+  } catch (error) {
+    console.error('Error in print process:', error);
+    // Handle error - maybe show a toast notification
+  } finally {
     setTimeout(() => {
       setPrinting(false);
       setBarcodeDesc((prevData: any) => ({
@@ -262,7 +283,8 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         },
       }));
     }, 1000);
-  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo]);
+  }
+  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template]);
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(

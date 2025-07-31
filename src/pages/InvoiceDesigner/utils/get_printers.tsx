@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { JSPrintManager, WSStatus ,PrintersInfoLevel,PrinterIcon } from 'jsprintmanager';
-
+import { Box } from "@mui/material";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { PropertiesState } from "../Designer/interfaces";
 interface PrinterInfo {
   name: string;
   id:any;
   isConnected: boolean;
   isNetwork: boolean;
 }
-export const usePrinters = () => {
+interface usePrinterProps{
+  templateData:any;
+  t:any;
+   handlePagePropsChange: (property: keyof PropertiesState, value: any) => void;
+}
+
+export const AccessPrinterList = ({templateData,t,handlePagePropsChange}: usePrinterProps) => {
   const [printers, setPrinters] = useState<PrinterInfo[]>([]);
   const [jspmStatus, setJspmStatus] = useState<WSStatus | null>(null);
   useEffect(() => {
@@ -57,6 +65,24 @@ const getPrinters = async () => {
 };
 
 
-  return { printers, jspmStatus };
+  // return { printers, jspmStatus };
+  return(
+    <>
+                    <Box sx={{ mb: 1 }}>
+                      <ERPDataCombobox
+                        id="printer"
+                        data={templateData?.propertiesState}
+                        label={t("Printer")}
+                        field={{
+                          id: "printer",
+                          valueKey: "value",
+                          labelKey: "value",
+                        }}
+                        options={printers.map((p) => ({ value: p.name }))}
+                        onChange={(e) => handlePagePropsChange("printer", e.value)}
+                      />
+                    </Box>
+                </>
+  )
 };
 

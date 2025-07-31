@@ -37,6 +37,15 @@ import { initialProductData } from "./transaction-type-data";
 import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { generateBarcodeDataUrl } from "../../../../utilities/barcode";
+import {
+  JSPrintManager,
+  WSStatus,
+  ClientPrintJob,
+  InstalledPrinter,
+  DefaultPrinter,
+  PrintFilePDF,
+  FileSourceType
+} from "jsprintmanager";
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation();
@@ -81,9 +90,10 @@ export const usePrint = () => {
      return images;
   };
 
-  const handleDirectPrint = async (template: any,data?:any) => {
-    
+  const handleDirectPrint = async (template: any,data?:any,DefaultPrinterName?:string) => {
+    debugger;
     let pdfDocument;
+    
     if (template.templateGroup === "barcode") {     
       const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template); 
       pdfDocument = (
@@ -99,36 +109,66 @@ export const usePrint = () => {
     }
 
     try {
+
       // Create a PDF blob
       const blob = await pdf(pdfDocument).toBlob();
-      // Create a URL for the blob
-      const pdfUrl = URL.createObjectURL(blob);
+      console.log(blob);
+      
+         // 3. Ensure JSPM agent is running and connected
+    if (JSPrintManager.websocket_status !== WSStatus.Open) {
+      await JSPrintManager.start(); // auto-reconnect if needed
+    }
+      // 4. Create a new print job
+    const cpj = new ClientPrintJob();
+       // 5. Choose the printer: user-selected or default
+    if ( DefaultPrinterName&& DefaultPrinterName.trim() !== "") {
+      cpj.clientPrinter = new InstalledPrinter(DefaultPrinterName);
+    } else {
+      cpj.clientPrinter = new DefaultPrinter();
+    }
 
-      // Open the PDF in a new tab for printing
-      const printWindow = window.open(pdfUrl);
-      if (!printWindow) {
-        console.error(
-          "Failed to open print window. Please check your browser settings."
-        );
-        alert(
-          "Failed to open print window. Please allow popups and try again."
-        );
-        return;
+       // 6. Attach the PDF blob to the print job
+    cpj.files.push(
+    new PrintFilePDF(
+      blob,                       // fileContent: your Blob
+      FileSourceType.BLOB,        // fileContentType: Blob source
+      "barcode-labels.pdf",       // fileName: must include extension
+      1                           // copies (optional, default = 1)
+    )
+  );
+ // 7. Optional: Track status updates
+    cpj.onUpdated = (status) => {
+      console.log("Print job status update:", status);
+    };
+    cpj.onFinished = (result) => {
+      console.log("Print job finished:", result);
+      if (!result.success) {
+        console.error("Print job failed:", result.error);
       }
-      // Wait for the PDF to load in the new tab
-      printWindow.onload = () => {
-        printWindow.print(); // Trigger print
-      };
+    };
 
-      // Log user action
-      logUserAction({
-        action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-        module: "Voucher Print",
-        voucherType: formState.transaction.master.voucherType,
-        voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-      });
+    // 8. Send the print job silently
+    await cpj.sendToClient();
+
     } catch (error) {
       console.error("Error printing voucher:", error);
+        // // Create a URL for the blob
+      // const pdfUrl = URL.createObjectURL(blob);
+         // // Open the PDF in a new tab for printing
+      // const printWindow = window.open(pdfUrl);
+      // if (!printWindow) {
+      //   console.error(
+      //     "Failed to open print window. Please check your browser settings."
+      //   );
+      //   alert(
+      //     "Failed to open print window. Please allow popups and try again."
+      //   );
+      //   return;
+      // }
+      // // Wait for the PDF to load in the new tab
+      // printWindow.onload = () => {
+      //   printWindow.print(); // Trigger print
+      // };
     }
   };
 
@@ -441,5 +481,6 @@ export const usePrint = () => {
   return {
     printVoucher,
     printBarcode,
+    handleDirectPrint,
   };
 };

@@ -332,7 +332,10 @@ const InvTransactionSlice = createSlice({
         JSON.stringify(state.transaction.details)
       );
     },
-
+ formStateClearAttachments: (state) => {
+      // Iterate over all rows in details
+      state.transaction.attachments = [];
+    },
     formStateClearDetails: (state) => {
       // Iterate over all rows in details
       state.transaction.details = [];
@@ -829,6 +832,7 @@ export const {
   formStateTransactionMaster3HandleFieldChange,
   formStateLoadDataUpdate,
   formStateSetDetails,
+  formStateClearAttachments,
   reOrderGridCols
 } = InvTransactionSlice.actions;
 interface FormElementsState {

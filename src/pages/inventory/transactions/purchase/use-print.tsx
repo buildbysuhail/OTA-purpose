@@ -138,7 +138,7 @@ export const usePrint = () => {
       const res = await api.getAsync(
         `${Urls.default_template}?template_group=${voucherType}`
       );
-      const cc: TemplateState = customJsonParse(res.content);
+      const cc: TemplateState<unknown> = customJsonParse(res.content);
       const _template = {
         ...cc,
         id: res.id,

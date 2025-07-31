@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, DeepPartial, PayloadAction } from "@reduxjs/toolkit";
 import {
   FooterState,
   HeaderState,
-  initialTemplateState,
+  // initialTemplateState,
   ItemTableState,
   PropertiesState,
   TotalState,
@@ -10,6 +10,8 @@ import {
   adviceTableState,
   CustomElementType,
   TemplateState,
+  ItemTableMasterState,
+  TableColumn,
 } from "../../../pages/InvoiceDesigner/Designer/interfaces";
 import { templateInitialState } from "../../reducers/TemplateReducer";
 import { getTemplates } from "./thunk";
@@ -28,7 +30,7 @@ const templateSlice = createSlice({
 
         // Filter out any existing templates with the same templateGroup
         state.templates = state.templates.filter(
-          (template) =>
+          (template: any) =>
             template.propertiesState?.template_group !== templateGroup
         );
 
@@ -95,6 +97,43 @@ const templateSlice = createSlice({
     },
     setTemplateAccTableState: (state, action: PayloadAction<accTableState>) => {
       state.activeTemplate.accTableState = action.payload;
+    },
+    // setTemplateTableState: <T,>(state, action: PayloadAction<{key: keyof T, fields: DeepPartial<TableColumn<T>>}>) => {
+    //   Object.keys in fields each _key, value
+    //   find index from state.activeTemplate.tableState using key
+    //   state.activeTemplate.tableState[index][_key] = value;
+    // },
+
+   setTemplateTableState: (
+  state: any, 
+  action: PayloadAction<{
+    key: string; // Change from keyof T to string
+    fields: any;  // Change from DeepPartial<TableColumn<T>> to any
+    templateState?: [],
+    updateAll?:boolean
+  }>
+) => {
+  const { key, fields, templateState, updateAll } = action.payload;
+  
+  if(updateAll == true) {
+    state.activeTemplate.tableState = templateState;
+    return;
+  }
+  const columnIndex = state.activeTemplate.tableState.findIndex(
+    (column: any) => column.field === key
+  );
+  
+  if (columnIndex !== -1) {
+    const existingColumn = state.activeTemplate.tableState[columnIndex];
+    
+    state.activeTemplate.tableState[columnIndex] = {
+      ...existingColumn,
+      ...fields
+    };
+  }
+},
+    setTemplateTableMasterState: (state, action: PayloadAction<ItemTableMasterState>) => {
+      state.activeTemplate.itemTableMasterState = action.payload;
     },
     setTemplateAdviceTableState: (
       state,
@@ -232,10 +271,12 @@ export const {
   setTemplateHeaderState,
   setTemplateItemTableState,
   setTemplateAccTableState,
+  setTemplateTableState,
   setTemplateAdviceTableState,
   setTemplateTotalState,
   setTemplateFooterState,
   setTemplateCustomElements,
+  setTemplateTableMasterState
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

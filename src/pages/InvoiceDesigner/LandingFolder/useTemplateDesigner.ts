@@ -42,7 +42,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const currentBranch = useCurrentBranch();
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const templateData = useSelector((state: RootState) => state.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state.Template) 
   // Add ref for preview container
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
@@ -137,7 +137,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     if (id !== "new") {
       try {
         const res = await api.getAsync(`${Urls.templates}${id || ""}`);
-        const cc: TemplateState = customJsonParse(res.content);
+        const cc: TemplateState<unknown> = customJsonParse(res.content);
         const template: TemplateDto = {
           ...cc,
           id: res.id,

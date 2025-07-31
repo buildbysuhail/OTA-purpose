@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import type { TemplateState } from "../../../Designer/interfaces";
 import type { AccTransactionRow } from "../../../../accounts/transactions/acc-transaction-types";
 
-const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
+const Table = ({ data, template }: { data: any; template?: TemplateState<unknown> }) => {
   const accTableState = template?.accTableState;
   const propertiesState = template?.propertiesState;
 

@@ -95,7 +95,7 @@ export const Content = ({
   clientSession
 }: {
   data: AccTransactionData
-  template?: TemplateState
+  template?: TemplateState<unknown>;
   currentBranch: any
   docIDKey?: string
   currency?: string

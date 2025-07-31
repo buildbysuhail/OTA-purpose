@@ -9,7 +9,7 @@ const getColumnStyle = (widthSetting: any) => {
     : { width: `${widthSetting}%`, flexGrow: 0 };
 };
 
-const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
+const Table = ({ data, template }: { data: any; template?: TemplateState<unknown> }) => {
   const adviceTableState = template?.adviceTableState;
   const propertiesState = template?.propertiesState;
 

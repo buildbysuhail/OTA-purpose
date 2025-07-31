@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 interface ItemTableDesignerProps {
   accTableState?: accTableState;
   onChange?: (state: accTableState) => void;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
 }
 
 const LabelsEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {

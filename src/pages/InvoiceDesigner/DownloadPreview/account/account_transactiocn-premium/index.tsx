@@ -10,7 +10,7 @@ import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util"
 
 export interface AccountTransactionProps {
   data?: any
-  template?: TemplateState
+  template?: TemplateState<unknown>
   currentBranch?: any
   userSession?: any
   clientSession?: any

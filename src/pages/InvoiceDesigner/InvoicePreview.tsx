@@ -74,12 +74,12 @@ const InvoicePreview = ({
   const [associatedTempInfo, setAssociatedTempInfo] = useState<any>([]);
   const [templatesInfo, setTemplatesInfo] = useState<any>({ loading: true });
   const [voucherType, setVoucherType] = useState<PDFVoucherTypes>("normal");
-  const templateWrap = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateWrap = useSelector((state: RootState) => state?.Template)
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
   const gstTreatmentList = useSelector((state: any) => state?.[gstTreatmentReducerName])?.data?.results;
   const totalAmountInwords = getAmountInWords(isNaN(+data?.total_price) ? 0 : +data?.total_price, currencySymbol || "");
   /* ########################################################################################### */
-  const getTemplateInfo = (): { content?: TemplateState } => {
+  const getTemplateInfo = (): { content?: TemplateState<unknown> } => {
     // checking  :  if  voucher wise templpate Id available
     // pathname?.includes("/invoice_designer/") ? reduxTemplateData?.activeTemplate : getTemplateInfo().content
     if (data?.template?.id) {
@@ -117,7 +117,7 @@ const InvoicePreview = ({
     }
   };
   /* ########################################################################################### */
-  const [templateData, setTemplateData] = useState<TemplateState | undefined>();
+  const [templateData, setTemplateData] = useState<TemplateState<unknown> | undefined>();
   useEffect(() => {
 
     setTemplateData(pathname?.includes("/invoice_designer/")

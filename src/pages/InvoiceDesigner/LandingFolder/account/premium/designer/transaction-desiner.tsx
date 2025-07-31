@@ -9,6 +9,7 @@ import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-in
 import ERPSlider from "../../../../../../components/ERPComponents/erp-slider";
 import { HeaderState } from "../../../../Designer/interfaces";
 import { setTemplateHeaderState } from "../../../../../../redux/slices/templates/reducer";
+import { RootState } from "../../../../../../redux/store";
 
 
 interface HeaderDesignerProps {
@@ -21,7 +22,7 @@ const AccPremiumTransaction = ({}: HeaderDesignerProps) => {
   const templateGroup = searchParams?.get("template_group");
   const location = useLocation();
   const { templateKind } = location.state || {};
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template) 
   const headerState = templateData?.activeTemplate?.headerState;
   const dispatch = useDispatch();
     const handleChange = (headerState:HeaderState) => {

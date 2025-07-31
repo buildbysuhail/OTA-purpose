@@ -359,7 +359,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     };
   }, []);
 
-  const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
+  const [loadTemplate, setLoadTemplate] = useState<TemplateState<TransactionDetail>>();
   const focusToNextColumn = (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
     return purchaseGridRef?.current?.nextCellFind(rowIndex, column, excludedColumns) ?? null;
   };

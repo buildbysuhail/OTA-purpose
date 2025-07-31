@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export  const Header = ({ data, template, currentBranch,}: { data: any; template?: TemplateState; currentBranch: any,}) => {
+export  const Header = ({ data, template, currentBranch,}: { data: any; template?: TemplateState<unknown>; currentBranch: any,}) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 

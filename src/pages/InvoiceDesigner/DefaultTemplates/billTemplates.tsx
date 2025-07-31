@@ -2,7 +2,7 @@ import VoucherType from "../../../enums/voucher-types";
 import { TemplateState } from "../Designer/interfaces";
 
 export interface DeafultTemplateProps {
-  content: TemplateState;
+  content: TemplateState<unknown>;
   is_default: boolean;
   is_primary: boolean;
   voucher_type: VoucherType | string;

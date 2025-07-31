@@ -458,7 +458,7 @@ export interface TransactionFormState {
   amountInWords: string;
   template?: any;
   templates?: [];
-  templatesData?: TemplateState[];
+  templatesData?: TemplateState<TransactionDetail>[];
   userConfig?: UserConfig;
   formElements: FormElementsState;
   openUnsavedPrompt?: boolean;

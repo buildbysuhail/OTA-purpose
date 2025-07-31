@@ -47,7 +47,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
     }, []);
 
     /* ######################################################################################### */
-    const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+    const templateData = useSelector((state: RootState) => state?.Template) 
     const headerState = templateData?.activeTemplate?.headerState || {};
     const footerState = templateData?.activeTemplate?.footerState || {};
     const dispatch = useDispatch();

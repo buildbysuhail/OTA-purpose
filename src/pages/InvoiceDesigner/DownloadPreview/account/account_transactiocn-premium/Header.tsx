@@ -66,7 +66,7 @@ export const Header = ({
   bindData
 }: {
   data: any;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
   currentBranch: any;
   docIDKey?: string;
   currency?: string;

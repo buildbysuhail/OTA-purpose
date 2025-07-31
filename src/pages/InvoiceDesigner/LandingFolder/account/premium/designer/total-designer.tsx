@@ -14,6 +14,7 @@ import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-in
 import { TotalState } from "../../../../Designer/interfaces";
 import ERPRadio from "../../../../../../components/ERPComponents/erp-radio";
 import ERPSlider from "../../../../../../components/ERPComponents/erp-slider";
+import { RootState } from "../../../../../../redux/store";
 interface TotalDesignerProps {
   totalState?: TotalState;
   onChange?: (totalState: TotalState) => void;
@@ -228,7 +229,7 @@ const TotalPremiumDesigner = ({  }: TotalDesignerProps) => {
   const [activeTab, setActiveTab] = useState(0);
  
   const { t } = useTranslation("system")
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template)
    const dispatch = useDispatch();
   const [maxHeight, setMaxHeight] = useState<number>(500);
   useEffect(() => {

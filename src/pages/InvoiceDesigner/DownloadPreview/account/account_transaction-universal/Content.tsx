@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
  
   });
   
-  export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
+  export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: AccTransactionData; template?: TemplateState<unknown>; currentBranch: any, docIDKey?: string; currency?: string; }) => {
     const headerState = template?.headerState;
     const fontFamily = template?.propertiesState?.font_family || "Roboto";
     const fontSize = template?.propertiesState?.font_size || 12;

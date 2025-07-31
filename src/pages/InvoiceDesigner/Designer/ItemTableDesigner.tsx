@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 interface ItemTableDesignerProps {
   itemTableState?: ItemTableState;
   onChange?: (state: ItemTableState) => void;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
 }
 
 const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {

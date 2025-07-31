@@ -9571,11 +9571,11 @@ input.gridjs-input {
 }
 
 .ti-btn-orange-gradient {
-  @apply bg-gradient-to-r from-orange to-[#0086ed] text-white border-0 hover:border-0;
+  @apply bg-gradient-to-r from-[#f97316] to-[#0086ed] text-white border-0 hover:border-0;
 }
 
 .ti-btn-purple-gradient {
-  @apply bg-gradient-to-r from-purple to-[#0086ed] text-white border-0 hover:border-0;
+  @apply bg-gradient-to-r from-[#a855f7] to-[#0086ed] text-white border-0 hover:border-0;
 }
 
 .ti-btn-teal-gradient {
@@ -10498,15 +10498,15 @@ body {
 }
 
 .bg-orange-gradient {
-  @apply bg-gradient-to-r from-orange to-[#0086ed] text-white !important;
+  @apply bg-gradient-to-r from-[#f97316] to-[#0086ed] text-white !important;
 }
 
 .bg-purple-gradient {
-  @apply bg-gradient-to-r from-purple to-[#0086ed] text-white !important;
+  @apply bg-gradient-to-r from-[#a855f7] to-[#0086ed] text-white !important;
 }
 
 .bg-teal-gradient {
-  @apply bg-gradient-to-r from-teal to-[#0086ed] text-white !important;
+  @apply bg-gradient-to-r from-[#14b8a6] to-[#0086ed] text-white !important;
 }
 
 .bg-light-gradient {

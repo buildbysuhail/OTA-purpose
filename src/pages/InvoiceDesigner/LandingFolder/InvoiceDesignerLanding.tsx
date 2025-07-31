@@ -11,6 +11,7 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
 import PDFBarcodeDesigner from "../../LabelDesigner/label_designer";
 import { DesignerConfigMap, templateConfig } from "./designSection";
+import { RootState } from "../../../redux/store";
 
 
 export interface TemplateImagesTypes {
@@ -29,7 +30,7 @@ const InvoiceDesigner = () => {
   const location = useLocation();
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
-  const templateData = useSelector((state: any) => state.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state.Template);
   const rootState = useRootState();
   const templateGroup = searchParams.get("template_group") || "";
   const { templateKind,templateType} = (location.state as LocationState) || {};

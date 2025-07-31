@@ -7,9 +7,9 @@ import TotalSummaryPreview from "./TotalSummaryPreview";
 import { TemplateState } from "../../Designer/interfaces";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 
-export interface DownloadPreviewProps {
+export interface DownloadPreviewProps<T> {
   data: any;
-  template?: TemplateState;
+  template?: TemplateState<T>;
   docIDKey?: string;
   docTitle?: any;
   currencySymbol?: string;
@@ -19,14 +19,14 @@ export interface DownloadPreviewProps {
 
 type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; height?: string | number };
 
-const DownloadRetailPreview = ({
+const DownloadRetailPreview = <T,>({
   template,
   data,
   docIDKey,
   docTitle,
   currencySymbol,
   totalAmountInwords,
-}: DownloadPreviewProps) => {
+}: DownloadPreviewProps<T>) => {
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";

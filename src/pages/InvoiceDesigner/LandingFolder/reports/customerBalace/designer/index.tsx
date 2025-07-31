@@ -5,7 +5,7 @@ import { Content } from "./Content";
 import { TemplateState } from "../../../../Designer/interfaces";
 import { Header } from "../../../../DownloadPreview/advice-template/Header";
 export interface ReportRenderProps {
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
   data?: any;
   currentBranch?: any;
   userSession?:any;

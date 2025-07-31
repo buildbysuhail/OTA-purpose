@@ -12,6 +12,7 @@ import ERPInput from "../../../../../../components/ERPComponents/erp-input";
 import ErpDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-input";
 import { TotalState } from "../../../../Designer/interfaces";
+import { RootState } from "../../../../../../redux/store";
 interface TotalDesignerProps {
   totalState?: TotalState;
   onChange?: (totalState: TotalState) => void;
@@ -120,7 +121,7 @@ const TotalStdDesigner = ({  }: TotalDesignerProps) => {
   const [activeTab, setActiveTab] = useState(0);
   const [currentTab, setTab] = useState<"total_section" | "taxes" | "">("total_section");
   const { t } = useTranslation("system")
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template)
    const dispatch = useDispatch();
   const [maxHeight, setMaxHeight] = useState<number>(500);
   useEffect(() => {

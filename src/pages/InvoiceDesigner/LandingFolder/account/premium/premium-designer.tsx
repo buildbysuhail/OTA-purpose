@@ -110,7 +110,7 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
      const location = useLocation();
      const { templateKind } = location.state || {};
      const [maxHeight, setMaxHeight] = useState<number>(500)
-     const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+     const templateData = useSelector((state: RootState) => state?.Template) 
       const templateGroup = searchParams?.get("template_group") || "";
       const ClientSession = useSelector((state: RootState) => (state.ClientSession));
    useEffect(() => {
@@ -179,7 +179,7 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
 
     const getPDFTemplateData = async () => {
         const res = await api.getAsync(`${Urls.templates}${id || ""}`)
-        let cc: TemplateState = customJsonParse(res.content);
+        let cc: TemplateState<unknown> = customJsonParse(res.content);
         const template = {
         ...cc,
         id: res.id,
@@ -277,9 +277,9 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
                  {currentSection.type == "transactions" &&
                   <AccPremiumTransaction/>
                  }
-                 {currentSection.type == "table" &&
+                 {/* {currentSection.type == "table" &&
                   <TablePremiumDesigner/>
-                 }
+                 } */}
                  {currentSection.type == "total" &&
                   <TotalPremiumDesigner/>
                  }

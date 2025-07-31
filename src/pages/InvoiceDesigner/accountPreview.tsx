@@ -62,7 +62,7 @@ const AssociatedCustomerPDFList = [
 const AssociatedVendorPDFList = ["purchase_invoice", "purchase_order"];
 const api = new APIClient();
 
-const AccountPreview = ({
+const AccountPreview = <T,>({
   data,
   docIDKey,
   docTitle,
@@ -90,7 +90,7 @@ const AccountPreview = ({
 
   const templateWrap = useSelector(
     (state: any) => state?.Template
-  ) as TemplateReducerState;
+  ) as TemplateReducerState<T>;
 
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
   const gstTreatmentList = useSelector(
@@ -110,7 +110,7 @@ const AccountPreview = ({
       setMaxHeight(wh);
   }, []);
   /* ########################################################################################### */
-  const getTemplateInfo = (): { content?: TemplateState } => {
+  const getTemplateInfo = (): { content?: TemplateState<T> } => {
     // checking  :  if  voucher wise templpate Id available
     // pathname?.includes("/invoice_designer/") ? reduxTemplateData?.activeTemplate : getTemplateInfo().content
     if (data?.template?.id) {
@@ -148,7 +148,7 @@ const AccountPreview = ({
     }
   };
   /* ########################################################################################### */
-  const [templateData, setTemplateData] = useState<TemplateState | undefined>();
+  const [templateData, setTemplateData] = useState<TemplateState<T> | undefined>();
   useEffect(() => {
     
     setTemplateData(pathname?.includes("/invoice_designer/")

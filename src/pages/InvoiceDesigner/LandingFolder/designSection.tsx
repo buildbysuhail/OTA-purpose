@@ -22,6 +22,7 @@ import ChequeTemplate  from "../DownloadPreview/cheque-template";
 import CustomerBalanceTemplateDesigner   from "./reports/customerBalace/customer-balance-report-designe";
 import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transaction_standard";
 import RetailRollSheetPrev from "../DesignPreview/RetailPreview/two-inch-preview";
+import { TransactionDetail } from "../../inventory/transactions/purchase/transaction-types";
 
 export  interface DesignSectionType {
   id: number;
@@ -105,8 +106,10 @@ export const templateConfig: DesignerConfigMap = {
     PREMIUM: {
       premium: {
         downloadComponent: <AccountTransactionsTemplate />,
-        PreviewComponent: <AccountTransactionsTemplate />,
-        sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, total: TotalPremiumDesigner, others: () => null },
+        PreviewComponent: <AccountPrvTransactionsVoucher />,
+        sections: { transactions: AccPremiumTransaction, table: () => TablePremiumDesigner<TransactionDetail>({
+      tableState: [{field: "pCode", label: "Code", show: true, width: 100}]
+    }),  total: TotalPremiumDesigner, others: () => null },
       },
     },
     UNIVERSAL: {

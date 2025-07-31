@@ -14,6 +14,7 @@ import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
 import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import { useTranslation } from "react-i18next";
 import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
+import { RootState } from "../../../redux/store";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -42,7 +43,7 @@ const retailPageSizes = [
 const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
 
   /* ########################################################################################### */
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template) 
   const dispatch = useDispatch();
   const { t } = useTranslation('system');
   const inputFile = useRef<HTMLInputElement>(null);

@@ -11,6 +11,7 @@ import { HeaderState } from "../../../../Designer/interfaces";
 import { setTemplateHeaderState } from "../../../../../../redux/slices/templates/reducer";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../../../redux/store";
 
 
 interface HeaderDesignerProps {
@@ -24,7 +25,7 @@ const AccStandardTransaction = ({}: HeaderDesignerProps) => {
   const templateGroup = searchParams?.get("template_group");
   const location = useLocation();
   const { templateKind } = location.state || {};
-  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const templateData = useSelector((state: RootState) => state?.Template)
   const headerState = templateData?.activeTemplate?.headerState;
   const [maxHeight, setMaxHeight] = useState<number>(500);
   const dispatch = useDispatch();

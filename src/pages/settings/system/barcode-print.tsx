@@ -142,7 +142,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const [standardBarcode, setStandardBarcode] = useState<any>(initialStandardBarcodeData);
   const [showPrint, setShowPrint] = useState<boolean>(false);
   const [loadingTemplate, setLoadingTemplate] = useState<boolean>(false);
-  const [template, setTemplate] = useState<TemplateState>();
+  const [template, setTemplate] = useState<TemplateState<unknown>>();
   const [printing, setPrinting] = useState<boolean>(false);
   const [data, setData] = useState<any>();
   const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
@@ -208,7 +208,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
         const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
-         let cc: TemplateState = customJsonParse(res.content);
+         let cc: TemplateState<unknown> = customJsonParse(res.content);
         setTemplate(cc);
         setLoadingTemplate(false);
         break;

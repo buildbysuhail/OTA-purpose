@@ -1,17 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { JSPrintManager, WSStatus, PrintersInfoLevel, PrinterIcon } from "jsprintmanager"
 import { Box, Button, Typography, Alert, CircularProgress, Card, CardContent, Chip, Stack, Link } from "@mui/material"
 import {
   Download,
   CheckCircle,
-  AlertTriangle,
-  Printer,
-  RefreshCw,
-  Info,
   AlertCircle,
-} from "lucide-react"
+  RefreshCw,
+  Printer as PrinterIconMUI,
+  Info as InfoIcon,
+} from "lucide-react";
+
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
 import type { PropertiesState } from "../Designer/interfaces"
 import ERPToast from "../../../components/ERPComponents/erp-toast"
@@ -30,7 +30,7 @@ interface usePrinterProps {
   handlePagePropsChange: (property: keyof PropertiesState, value: any) => void
 }
 
-enum InstallationStatus {
+export enum InstallationStatus {
   CHECKING = "checking",
   NOT_INSTALLED = "not_installed",
   INSTALLING = "installing",
@@ -45,11 +45,10 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    checkJSPrintManagerInstallation()
-  }, [])
+    // Helper to wait
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-  const checkJSPrintManagerInstallation = async () => {
+  const checkJSPrintManagerInstallation = useCallback(async () => {
     setInstallationStatus(InstallationStatus.CHECKING)
     setError(null)
 
@@ -61,42 +60,45 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
       // Wait a bit for initialization
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      if (JSPrintManager.WS) {
-        JSPrintManager.WS.onStatusChanged = () => {
-          setJspmStatus(JSPrintManager.websocket_status)
-          if (JSPrintManager.websocket_status === WSStatus.Open) {
-            setInstallationStatus(InstallationStatus.INSTALLED)
-            getPrinters()
-          } else if (JSPrintManager.websocket_status === WSStatus.Closed) {
-            setInstallationStatus(InstallationStatus.NOT_INSTALLED)
-          }
-        }
+      if (!JSPrintManager.WS) {
+        setInstallationStatus(InstallationStatus.NOT_INSTALLED);
+        return;
+      }
 
-        // Check current status
+        JSPrintManager.WS.onStatusChanged = () => {
+        setJspmStatus(JSPrintManager.websocket_status);
+        if (JSPrintManager.websocket_status === WSStatus.Open) {
+          setInstallationStatus(InstallationStatus.INSTALLED);
+          fetchPrinters();
+        } else {
+          setInstallationStatus(InstallationStatus.NOT_INSTALLED);
+        }
+      };
+              // Check current status
         if (JSPrintManager.websocket_status === WSStatus.Open) {
           setInstallationStatus(InstallationStatus.INSTALLED)
-          getPrinters()
+          fetchPrinters()
         } else {
           setInstallationStatus(InstallationStatus.NOT_INSTALLED)
         }
-      } else {
-        setInstallationStatus(InstallationStatus.NOT_INSTALLED)
-      }
+   
     } catch (error) {
       console.error("Error checking JSPrintManager:", error)
       setInstallationStatus(InstallationStatus.ERROR)
       setError("Failed to check printer manager status")
     }
-  }
+  },[]);
 
-  const getPrinters = async () => {
-    try {
+   const fetchPrinters = useCallback(async () => {
       setIsLoading(true)
+      setError(null);
+    try {
+
       const printersList = (await JSPrintManager.getPrintersInfo(
         PrintersInfoLevel.Extended,
         "",
         PrinterIcon.None,
-      )) as any[]
+      )) as any[];
 
       setPrinters(
         printersList.map((printer: any) => ({
@@ -113,44 +115,57 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
     } finally {
       setIsLoading(false)
     }
-  }
+  }, []);
 
-  const handleInstallJSPrintManager = async () => {
-    setInstallationStatus(InstallationStatus.INSTALLING)
-    setError(null)
+const handleInstallJSPrintManager = useCallback(async () => {
+  setInstallationStatus(InstallationStatus.INSTALLING);
+  setError(null);
 
-    try {
-      // Create a hidden iframe to trigger download
-      const downloadUrl = "https://neodynamic.com/downloads/jspm"
-      const iframe = document.createElement("iframe")
-      iframe.style.display = "none"
-      iframe.src = downloadUrl
-      document.body.appendChild(iframe)
+  try {
+    // 1. Trigger a background download
+    const downloadUrl = "https://www.neodynamic.com/downloads/jspm/";  // or .dmg/.deb
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = ""; // let browser infer filename
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-      // Show installation instructions
-      setTimeout(() => {
-        document.body.removeChild(iframe)
-        // Simulate installation process
-        setTimeout(() => {
-          // After user installs, they need to refresh or we can check again
-          setInstallationStatus(InstallationStatus.INSTALLED)
-          // Show success message
-          // if (window.showToast) {
-          //   window.showToast(
-          //     "JSPrintManager installed successfully! Please refresh if printers don't appear.",
-          //     "success",
-          //   )
-          // }
-          ERPToast.show("JSPrintManager installed successfully! Please refresh if printers don't appear.", "success");
-          checkJSPrintManagerInstallation()
-        }, 3000)
-      }, 1000)
-    } catch (error) {
-      console.error("Installation error:", error)
-      setInstallationStatus(InstallationStatus.ERROR)
-      setError("Installation failed. Please try manual installation.")
+    // 2. Prompt user to run installer
+    setError("Installer downloaded. Please run it from your downloads folder.");
+
+    // 3. Poll for installation success
+    const maxRetries = 30;
+    for (let i = 0; i < maxRetries; i++) {
+      await wait(1000);
+
+      try {
+        await JSPrintManager.start();
+        if (JSPrintManager.websocket_status === WSStatus.Open) {
+          setInstallationStatus(InstallationStatus.INSTALLED);
+          setError(null);
+          fetchPrinters();
+          return;
+        }
+      } catch {
+        // still not installed
+      }
     }
+
+    throw new Error("Installation not detected. Please run the installer.");
+
+  } catch (err: any) {
+    console.error("Installation error:", err);
+    setInstallationStatus(InstallationStatus.ERROR);
+    setError(err.message || "Installation failed. Please retry.");
   }
+  }, [fetchPrinters, t]);
+
+  // --- Mount: check on startup ---
+  useEffect(() => {
+    checkJSPrintManagerInstallation();
+  }, [checkJSPrintManagerInstallation]);
 
   const renderInstallationUI = () => {
     switch (installationStatus) {
@@ -172,7 +187,7 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
             <CardContent>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <Info color="warning" />
+                  <InfoIcon  color="warning" />
                   <Typography variant="h6" color="warning.main">
                     {t("Printer Manager Required")}
                   </Typography>
@@ -211,6 +226,7 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
                     )}
                   </Typography>
                 </Alert>
+                {error && <Alert severity="error">{error}</Alert>}
               </Stack>
             </CardContent>
           </Card>
@@ -226,55 +242,33 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
                   <Typography variant="h6">{t("Installing Printer Manager...")}</Typography>
                 </Stack>
 
-                <Typography variant="body2" color="text.secondary">
-                  {t(
-                    "Please follow the installation prompts in your browser. The installation will complete automatically.",
-                  )}
-                </Typography>
-
-                <Alert severity="info">
-                  <Typography variant="caption">
-                    {t("If the download doesn't start automatically, please check your browser's download settings.")}
-                  </Typography>
-                </Alert>
+                <Alert severity="info">{t("Download complete. Please run the installer now.")}</Alert>
+                {error && <Alert severity="error">{error}</Alert>}
               </Stack>
             </CardContent>
           </Card>
         )
 
-      case InstallationStatus.ERROR:
+
+         case InstallationStatus.ERROR:
         return (
           <Card variant="outlined" sx={{ mb: 2, borderColor: "error.main" }}>
             <CardContent>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <AlertCircle  color="error" />
+                  <AlertCircle color="red" />
                   <Typography variant="h6" color="error">
                     {t("Installation Error")}
                   </Typography>
                 </Stack>
-
-                <Typography variant="body2" color="text.secondary">
-                  {error || t("Something went wrong during installation.")}
-                </Typography>
-
-                <Stack direction="row" spacing={2}>
-                  <Button variant="outlined" startIcon={<RefreshCw   size={18}/>} onClick={checkJSPrintManagerInstallation}>
-                    {t("Retry")}
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    startIcon={<Download />}
-                    onClick={() => window.open("https://neodynamic.com/downloads/jspm", "_blank")}
-                  >
-                    {t("Manual Install")}
-                  </Button>
-                </Stack>
+                <Typography variant="body2">{error}</Typography>
+                <Button variant="outlined" startIcon={<RefreshCw size={18}/>} onClick={checkJSPrintManagerInstallation}>
+                  {t("Retry")}
+                </Button>
               </Stack>
             </CardContent>
           </Card>
-        )
+        );
 
       default:
         return null
@@ -291,22 +285,20 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
         <Stack spacing={2}>
           {/* Connection Status */}
           <Stack direction="row" spacing={1} alignItems="center">
-            <CheckCircle color="success" fontSize="small" />
-            <Typography variant="caption" color="success.main">
-              {t("Printer Manager Connected")}
-            </Typography>
+              <CheckCircle color="green" size={16} />
+            <Typography color="green">{t("Printer Manager Connected")}</Typography>
             <Chip
               label={`${printers.length} ${t("printers found")}`}
               size="small"
               variant="outlined"
-              icon={<Printer />}
+              icon={<PrinterIconMUI />}
             />
           </Stack>
 
           {/* Printer Selection */}
           {isLoading ? (
-            <Stack direction="row" spacing={2} alignItems="center">
-              <CircularProgress size={20} />
+            <Stack direction="row" spacing={1} alignItems="center">
+              <CircularProgress size={16} />
               <Typography variant="body2">{t("Loading printers...")}</Typography>
             </Stack>
           ) : printers.length > 0 ? (
@@ -330,7 +322,7 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
               <Typography variant="body2">
                 {t("No printers found. Please check your printer connections and try refreshing.")}
               </Typography>
-              <Button size="small" startIcon={<RefreshCw />} onClick={getPrinters} sx={{ mt: 1 }}>
+              <Button size="small" startIcon={<RefreshCw />} onClick={fetchPrinters} sx={{ mt: 1 }}>
                 {t("Refresh Printers")}
               </Button>
             </Alert>

@@ -110,31 +110,31 @@ else if(_formState.isInv)
   }, [_formState]);
 
   // Handle page refresh and close
-  useEffect(() => {
-    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      // const unsavedChanges = await hasUnsavedChanges();
-      hasUnsavedChanges()
-        .then((unsavedChanges) => {
-          console.log("Unsaved changes 88: ", unsavedChanges);
-          // Should hit here if executed
-          if (unsavedChanges) {
-            e.preventDefault();
-            e.returnValue = "";
-            // setIsModalOpen(true);
-            setIsLeavingPage(true);
-            console.log("1");
+  // useEffect(() => {
+  //   const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+  //     // const unsavedChanges = await hasUnsavedChanges();
+  //     hasUnsavedChanges()
+  //       .then((unsavedChanges) => {
+  //         console.log("Unsaved changes 88: ", unsavedChanges);
+  //         // Should hit here if executed
+  //         if (unsavedChanges) {
+  //           e.preventDefault();
+  //           e.returnValue = "";
+  //           // setIsModalOpen(true);
+  //           setIsLeavingPage(true);
+  //           console.log("1");
 
-            return "";
-          }
-        })
-        .catch((error) => console.error(error));
-    };
+  //           return "";
+  //         }
+  //       })
+  //       .catch((error) => console.error(error));
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [hasUnsavedChanges]);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [hasUnsavedChanges]);
 
   // Prevent navigation attempts
   useEffect(() => {
@@ -216,49 +216,49 @@ else if(_formState.isInv)
       }
     };
 
-    document.addEventListener("click", blockNavigation, true);
-    return () => document.removeEventListener("click", blockNavigation, true);
+    // document.addEventListener("click", blockNavigation, true);
+    // return () => document.removeEventListener("click", blockNavigation, true);
   }, [hasUnsavedChanges]);
 
-  useEffect(() => {
-    const unlisten = _history.listen(({ action, location: newLocation }) => {
+  // useEffect(() => {
+  //   const unlisten = _history.listen(({ action, location: newLocation }) => {
       
-      if (action === "POP" || action === "PUSH" || action === "REPLACE") {
-        const intendedPath =
-          location.pathname == newLocation.pathname
-            ? pendingLocation.current
-            : newLocation.pathname;
+  //     if (action === "POP" || action === "PUSH" || action === "REPLACE") {
+  //       const intendedPath =
+  //         location.pathname == newLocation.pathname
+  //           ? pendingLocation.current
+  //           : newLocation.pathname;
 
-        hasUnsavedChanges()
-          .then((unsavedChanges) => {
+  //       hasUnsavedChanges()
+  //         .then((unsavedChanges) => {
             
-            if (unsavedChanges) {
-              const transactionType = getTransactionType();
-              const basePath = getBasePath();
-              // Re-push the same state to prevent navigation
-              window.history.pushState(
-                null,
-                "",
-                `${basePath}/${transactionType}`
-              );
-              // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
-              setIsLeavingPage(false);
-              setIsModalOpen(true);
-              pendingLocation.current =
-                intendedPath == null ? pendingLocation.current : intendedPath;
-            } else {
-              // If no unsaved changes, allow navigation and update the previousPath ref
-              pendingLocation.current =
-                intendedPath == null ? pendingLocation.current : intendedPath;
-            }
-          })
-          .catch((error) => console.error(error));
-      }
-    });
+  //           if (unsavedChanges) {
+  //             const transactionType = getTransactionType();
+  //             const basePath = getBasePath();
+  //             // Re-push the same state to prevent navigation
+  //             window.history.pushState(
+  //               null,
+  //               "",
+  //               `${basePath}/${transactionType}`
+  //             );
+  //             // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+  //             setIsLeavingPage(false);
+  //             setIsModalOpen(true);
+  //             pendingLocation.current =
+  //               intendedPath == null ? pendingLocation.current : intendedPath;
+  //           } else {
+  //             // If no unsaved changes, allow navigation and update the previousPath ref
+  //             pendingLocation.current =
+  //               intendedPath == null ? pendingLocation.current : intendedPath;
+  //           }
+  //         })
+  //         .catch((error) => console.error(error));
+  //     }
+  //   });
 
-    // Cleanup: Stop listening when the component unmounts
-    return () => unlisten();
-  }, [hasUnsavedChanges]);
+  //   // Cleanup: Stop listening when the component unmounts
+  //   return () => unlisten();
+  // }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {
     console.log("10");

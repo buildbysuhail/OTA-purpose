@@ -1323,22 +1323,25 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
   );
 
 const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(formState.currentCell);
+const [prevCell, setPrevCell] = useState<number>(formState.currentCell?.rowIndex??-1);
   useEffect(() => {
+    debugger;
   setCurrentCell(formState.currentCell)
-
+  
   }, [formState.currentCell])
 useEffect(() => {
+  debugger;
     if (
       currentCell &&
       currentCell.column != "" &&
-      currentCell.rowIndex > -1
+      currentCell.rowIndex > -1 
     ) {
       const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
       const targetCell = document.getElementById(
         targetCellId
       ) as HTMLElement | null;
       if (targetCell) {
-        if (currentCell.column === "product") {
+        if (currentCell.column === "product" || currentCell.column === "pCode") {
           const erpSearchInput = targetCell.querySelector(
             `input[id="${targetCellId}"]`
           ) as HTMLInputElement | null;
@@ -1381,6 +1384,11 @@ useEffect(() => {
         // }
       }
     }
+    setPrevCell(currentCell?.rowIndex??-1)
+    debugger
+     if(prevCell != currentCell?.rowIndex) {
+    localStorage.setItem(`${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`, JSON.stringify(formState.transaction.details.filter(x => x.productID > 0)))
+  }
   }, [currentCell]);
  React.useImperativeHandle(ref, () => ({
     focusCell,

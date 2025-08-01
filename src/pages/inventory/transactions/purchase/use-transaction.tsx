@@ -39,10 +39,10 @@ import {
   formStateTransactionDetailsRowRemove,
   formStateTransactionDetailsRowAdd,
   formStateMasterHandleFieldChange,
-  loadTempRows,
   formStateHandleFieldChangeKeysOnly,
   formStateClearDetails,
   formStateClearAttachments,
+  formStateSetDetails,
 } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -1787,7 +1787,58 @@ export const useTransaction = (
   };
 
   const loadTemporaryRows = async () => {
-    dispatch(loadTempRows());
+    
+    let details: Array<TransactionDetail> = [];
+        const tmp = localStorage.getItem(
+        `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`
+      );
+      if (tmp != undefined && tmp != null && tmp != "") {
+        const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
+        if (tmpRows.length > 0) {
+          details = [...tmpRows,...Array.from({ length: 30 }, (_, index) => ({
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey()
+          }))];
+                  const batchIds = tmpRows.map(x => x.productBatchID).join(',');
+                  const batchUnits = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/BatchUnits`,`arrayOfBatchID=${batchIds}`)
+
+                  if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+                    const summaryRes = calculateSummary(details, formState, {
+                      result: {},
+                    });
+          
+                    const totalRes = calculateTotal(
+                      formState.transaction.master,
+                      summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+                      formState.formElements,
+                      {
+                        result: {},
+                      }
+                    );
+          
+                    if (totalRes) {
+                      totalRes.summary = summaryRes.summary;
+                      totalRes.transaction = totalRes.transaction ?? {};
+                      totalRes.transaction.master = { ...totalRes.transaction.master };
+                      totalRes.transaction.details = [];
+                      totalRes.batchesUnits = batchUnits;
+                      totalRes.loading = {isLoading: false, text: ''}
+          
+                      // Dispatch the state update
+                      debugger;
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: totalRes,
+                          updateOnlyGivenDetailsColumns: true
+                        })
+                      );
+                      dispatch(
+                        formStateSetDetails(details)
+                      );
+                    }
+                  }
+                }
+              }
   };
 
   const enableCombo = async () => {
@@ -1973,12 +2024,15 @@ export const useTransaction = (
                 },
               }
             );
-
-            ERPAlert.show({
+debugger;
+            if(deleteResult && deleteResult?.data?.isOk) {
+ERPAlert.show({
               title: t("success"),
               text: t("transaction_deleted_successfully"),
               icon: "success",
             });
+            }
+            
 
             // Update form elements state
             dispatch(

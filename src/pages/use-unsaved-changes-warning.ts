@@ -110,155 +110,155 @@ else if(_formState.isInv)
   }, [_formState]);
 
   // Handle page refresh and close
-  useEffect(() => {
-    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      // const unsavedChanges = await hasUnsavedChanges();
-      hasUnsavedChanges()
-        .then((unsavedChanges) => {
-          console.log("Unsaved changes 88: ", unsavedChanges);
-          // Should hit here if executed
-          if (unsavedChanges) {
-            e.preventDefault();
-            e.returnValue = "";
-            // setIsModalOpen(true);
-            setIsLeavingPage(true);
-            console.log("1");
+  // useEffect(() => {
+  //   const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+  //     // const unsavedChanges = await hasUnsavedChanges();
+  //     hasUnsavedChanges()
+  //       .then((unsavedChanges) => {
+  //         console.log("Unsaved changes 88: ", unsavedChanges);
+  //         // Should hit here if executed
+  //         if (unsavedChanges) {
+  //           e.preventDefault();
+  //           e.returnValue = "";
+  //           // setIsModalOpen(true);
+  //           setIsLeavingPage(true);
+  //           console.log("1");
 
-            return "";
-          }
-        })
-        .catch((error) => console.error(error));
-    };
+  //           return "";
+  //         }
+  //       })
+  //       .catch((error) => console.error(error));
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [hasUnsavedChanges]);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [hasUnsavedChanges]);
 
   // Prevent navigation attempts
-  useEffect(() => {
-    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      // const unsavedChanges = await hasUnsavedChanges();
-      hasUnsavedChanges()
-        .then((unsavedChanges) => {
-          console.log("Unsaved changes 114: ", unsavedChanges);
-          // Should hit here if executed
-          if (unsavedChanges) {
-            e.preventDefault();
-            e.returnValue = "";
-            // setIsModalOpen(true);
-            setIsLeavingPage(true);
-            console.log("1");
+  // useEffect(() => {
+  //   const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+  //     // const unsavedChanges = await hasUnsavedChanges();
+  //     hasUnsavedChanges()
+  //       .then((unsavedChanges) => {
+  //         console.log("Unsaved changes 114: ", unsavedChanges);
+  //         // Should hit here if executed
+  //         if (unsavedChanges) {
+  //           e.preventDefault();
+  //           e.returnValue = "";
+  //           // setIsModalOpen(true);
+  //           setIsLeavingPage(true);
+  //           console.log("1");
 
-            return "";
-          }
-        })
-        .catch((error) => console.error(error));
-    };
+  //           return "";
+  //         }
+  //       })
+  //       .catch((error) => console.error(error));
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [hasUnsavedChanges]);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [hasUnsavedChanges]);
 
-  useEffect(() => {
-    const blockNavigation = async (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      const closestAnchor = target?.closest("a") as HTMLElement | null;
+  // useEffect(() => {
+  //   const blockNavigation = async (e: MouseEvent) => {
+  //     const target = e.target as HTMLElement | null;
+  //     const closestAnchor = target?.closest("a") as HTMLElement | null;
 
-      let isNavigationLink = false;
+  //     let isNavigationLink = false;
 
-      if (target) {
-        const tagName = target.tagName.toLowerCase();
-        const closestTag = closestAnchor?.tagName.toLowerCase();
+  //     if (target) {
+  //       const tagName = target.tagName.toLowerCase();
+  //       const closestTag = closestAnchor?.tagName.toLowerCase();
 
-        const isDirectLink = tagName === "a";
-        const isClosestLink = !!closestAnchor && closestTag === "a";
-        const hasHref = target.hasAttribute("href");
-        const hasLinkRole = target.getAttribute("role") === "link";
-        const isPopupType = (target as any).type === "popup";
-        const isClosestPopup = (closestAnchor as any)?.type === "popup";
+  //       const isDirectLink = tagName === "a";
+  //       const isClosestLink = !!closestAnchor && closestTag === "a";
+  //       const hasHref = target.hasAttribute("href");
+  //       const hasLinkRole = target.getAttribute("role") === "link";
+  //       const isPopupType = (target as any).type === "popup";
+  //       const isClosestPopup = (closestAnchor as any)?.type === "popup";
 
-        if (
-          (isDirectLink || isClosestLink || hasHref || hasLinkRole) &&
-          ((!isClosestLink && !isPopupType) || (isClosestLink && !isClosestPopup))
-        ) {
-          isNavigationLink = true;
-        }
-      }
+  //       if (
+  //         (isDirectLink || isClosestLink || hasHref || hasLinkRole) &&
+  //         ((!isClosestLink && !isPopupType) || (isClosestLink && !isClosestPopup))
+  //       ) {
+  //         isNavigationLink = true;
+  //       }
+  //     }
   
-      if (isNavigationLink) {
-        // const unsavedChanges = await hasUnsavedChanges();
-        hasUnsavedChanges()
-          .then((unsavedChanges) => {
-            if (unsavedChanges) {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log("3");
+  //     if (isNavigationLink) {
+  //       // const unsavedChanges = await hasUnsavedChanges();
+  //       hasUnsavedChanges()
+  //         .then((unsavedChanges) => {
+  //           if (unsavedChanges) {
+  //             e.preventDefault();
+  //             e.stopPropagation();
+  //             console.log("3");
 
-              const href =
-                target?.closest("a")?.getAttribute("href") ||
-                target?.getAttribute("href");
-              if (href) {
-                console.log("4");
+  //             const href =
+  //               target?.closest("a")?.getAttribute("href") ||
+  //               target?.getAttribute("href");
+  //             if (href) {
+  //               console.log("4");
 
-                pendingLocation.current = href;
-              }
-              setIsModalOpen(true);
-              setIsLeavingPage(false);
+  //               pendingLocation.current = href;
+  //             }
+  //             setIsModalOpen(true);
+  //             setIsLeavingPage(false);
 
-              previousPath.current = window.location.pathname;
-            }
-          })
-          .catch((error) => console.error(error));
-      }
-    };
+  //             previousPath.current = window.location.pathname;
+  //           }
+  //         })
+  //         .catch((error) => console.error(error));
+  //     }
+  //   };
 
-    document.addEventListener("click", blockNavigation, true);
-    return () => document.removeEventListener("click", blockNavigation, true);
-  }, [hasUnsavedChanges]);
+  //   document.addEventListener("click", blockNavigation, true);
+  //   return () => document.removeEventListener("click", blockNavigation, true);
+  // }, [hasUnsavedChanges]);
 
-  useEffect(() => {
-    const unlisten = _history.listen(({ action, location: newLocation }) => {
+  // useEffect(() => {
+  //   const unlisten = _history.listen(({ action, location: newLocation }) => {
       
-      if (action === "POP" || action === "PUSH" || action === "REPLACE") {
-        const intendedPath =
-          location.pathname == newLocation.pathname
-            ? pendingLocation.current
-            : newLocation.pathname;
+  //     if (action === "POP" || action === "PUSH" || action === "REPLACE") {
+  //       const intendedPath =
+  //         location.pathname == newLocation.pathname
+  //           ? pendingLocation.current
+  //           : newLocation.pathname;
 
-        hasUnsavedChanges()
-          .then((unsavedChanges) => {
+  //       hasUnsavedChanges()
+  //         .then((unsavedChanges) => {
             
-            if (unsavedChanges) {
-              const transactionType = getTransactionType();
-              const basePath = getBasePath();
-              // Re-push the same state to prevent navigation
-              window.history.pushState(
-                null,
-                "",
-                `${basePath}/${transactionType}`
-              );
-              // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
-              setIsLeavingPage(false);
-              setIsModalOpen(true);
-              pendingLocation.current =
-                intendedPath == null ? pendingLocation.current : intendedPath;
-            } else {
-              // If no unsaved changes, allow navigation and update the previousPath ref
-              pendingLocation.current =
-                intendedPath == null ? pendingLocation.current : intendedPath;
-            }
-          })
-          .catch((error) => console.error(error));
-      }
-    });
+  //           if (unsavedChanges) {
+  //             const transactionType = getTransactionType();
+  //             const basePath = getBasePath();
+  //             // Re-push the same state to prevent navigation
+  //             window.history.pushState(
+  //               null,
+  //               "",
+  //               `${basePath}/${transactionType}`
+  //             );
+  //             // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+  //             setIsLeavingPage(false);
+  //             setIsModalOpen(true);
+  //             pendingLocation.current =
+  //               intendedPath == null ? pendingLocation.current : intendedPath;
+  //           } else {
+  //             // If no unsaved changes, allow navigation and update the previousPath ref
+  //             pendingLocation.current =
+  //               intendedPath == null ? pendingLocation.current : intendedPath;
+  //           }
+  //         })
+  //         .catch((error) => console.error(error));
+  //     }
+  //   });
 
-    // Cleanup: Stop listening when the component unmounts
-    return () => unlisten();
-  }, [hasUnsavedChanges]);
+  //   // Cleanup: Stop listening when the component unmounts
+  //   return () => unlisten();
+  // }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {
     console.log("10");

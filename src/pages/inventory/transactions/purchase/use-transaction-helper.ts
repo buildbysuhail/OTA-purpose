@@ -1384,7 +1384,8 @@ export const useTransactionHelper = (transactionType: string) => {
       master.transactionDate == ""
         ? moment().local().toISOString()
         : master.prevTransDate;
-    return formState.transaction.master;
+          
+    return master;
   };
   const     applyDiscountsToItems = (): void => {
     

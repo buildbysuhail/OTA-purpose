@@ -97,6 +97,7 @@ import BtnAdd from "./components/btn-add";
 import AccHeader from "./components/acc-header";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { useAppState } from "../../../utilities/hooks/useAppState";
+import { TransactionDetail } from "../../inventory/transactions/purchase/transaction-types";
 interface BilledItem {
   id?: number;
   name: string;
@@ -245,7 +246,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
 
-  const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
+  const [loadTemplate, setLoadTemplate] = useState<TemplateState<TransactionDetail>>();
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,

@@ -8,7 +8,7 @@ import { inputBox } from "../../redux/slices/app/types";
 interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   id: string;
   data?: any;
-  label?: string;
+  label?: any;
   onChangeData?: (data: any) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;

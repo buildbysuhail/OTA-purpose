@@ -10,7 +10,7 @@ import { parseAddressTemplate } from "../../pages/InvoiceDesigner/utils";
 import Urls from "../../redux/urls";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DummyInvoiceData } from "../../pages/InvoiceDesigner/constants/DummyData";
-import RetailPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/RetailPreview/PreviewWrapper";
+// import RetailPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/RetailPreview/PreviewWrapper";
 import StandardPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/StandardPreview";
 import ERPToast from "./erp-toast";
 import PSModel from "../common/polosys/ps-modal";
@@ -20,7 +20,7 @@ import VoucherType from "../../enums/voucher-types";
 
 interface previewState {
   show: boolean;
-  template?: TemplateState;
+  template?: TemplateState<unknown>;
 }
 
 interface ERPChangeTemplateSidebarProps {
@@ -210,12 +210,13 @@ const ERPChangeTemplateSidebar = ({
               className={`flex  flex-col gap-4 relative  ${paperWidth}  shadow-md print:m-0 print:w-full print:shadow-none`}
             >
               {paperSize === "3Inch" || paperSize === "4Inch" ? (
-                <RetailPreviewWrapper
-                  data={DummyInvoiceData}
-                  template={showPreview.template}
-                  currency={currencySymbol || undefined}
-                  templateGroupId={templateId}
-                />
+                <></>
+                // <RetailPreviewWrapper
+                //   data={DummyInvoiceData}
+                //   template={showPreview.template}
+                //   currency={currencySymbol || undefined}
+                //   templateGroupId={templateId}
+                // />
               ) : (
                 <StandardPreviewWrapper
                   data={DummyInvoiceData}

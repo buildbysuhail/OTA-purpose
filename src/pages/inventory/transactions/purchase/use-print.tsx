@@ -93,7 +93,7 @@ export const usePrint = () => {
   const handleDirectPrint = async (template: any,data?:any,DefaultPrinterName?:string) => {
     debugger;
     let pdfDocument;
-    
+    const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
     if (template.templateGroup === "barcode") {     
       const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template); 
       pdfDocument = (
@@ -112,17 +112,16 @@ export const usePrint = () => {
 
       // Create a PDF blob
       const blob = await pdf(pdfDocument).toBlob();
-      console.log(blob);
-      
          // 3. Ensure JSPM agent is running and connected
     if (JSPrintManager.websocket_status !== WSStatus.Open) {
-      await JSPrintManager.start(); // auto-reconnect if needed
+         JSPrintManager.auto_reconnect = true;
+         JSPrintManager.start();
     }
       // 4. Create a new print job
     const cpj = new ClientPrintJob();
        // 5. Choose the printer: user-selected or default
-    if ( DefaultPrinterName&& DefaultPrinterName.trim() !== "") {
-      cpj.clientPrinter = new InstalledPrinter(DefaultPrinterName);
+    if ( PrinterName&& PrinterName.trim() !== "") {
+      cpj.clientPrinter = new InstalledPrinter(PrinterName);
     } else {
       cpj.clientPrinter = new DefaultPrinter();
     }

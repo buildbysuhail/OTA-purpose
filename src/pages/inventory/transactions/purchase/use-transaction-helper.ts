@@ -269,6 +269,7 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction!.master!.roundAmount = 0;
       result.transaction!.master!.grandTotal = _grandTotal;
     }
+      result.transaction!.master!.totalGross = summary.gross;
 
     // Check if foreign currency calculation is needed
     if (formElements.pnlImport.visible && master.exchangeRate > 0) {

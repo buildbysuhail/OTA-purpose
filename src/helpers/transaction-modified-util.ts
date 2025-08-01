@@ -71,7 +71,8 @@ export const setTransactionForHistory = (
     return {
       transaction: {
         master: {..._formState.transaction.master,
-          tokenNumber: _formState.transaction.master.tokenNumber == null || _formState.transaction.master.tokenNumber == undefined ? "":_formState.transaction.master.tokenNumber
+          tokenNumber: _formState.transaction.master.tokenNumber == null || _formState.transaction.master.tokenNumber == undefined ? "":_formState.transaction.master.tokenNumber,
+          supplyType: _formState.transaction.master.supplyType == null || _formState.transaction.master.supplyType == undefined ? "":_formState.transaction.master.supplyType,
         },
         details: _formState.transaction?.details?.filter(
           (x: any) => x.productID > 0

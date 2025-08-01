@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../../redux/urls";
 import { Tab, Tabs } from "@mui/material";
@@ -32,20 +32,19 @@ export interface ProductSummaryFilter {
 
 export interface ProductSummaryRef { reloadData: () => void; }
 const api = new APIClient();
-const ProductSummaryMaster = (): any => {
+const ProductSummaryMaster = ({productID, productBatchID}: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
   const [reload, setReload] = useState<boolean>(true);
   const [reload2, setReload2] = useState<boolean>(true);
   const { t } = useTranslation("accountsReport");
-  const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [filter, setFilter] = useState<ProductSummaryFilter>({
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: formState.selectedRow?.productID ?? -2,
-      productBatchID: 0,
+      productID: productID ? productID : -2,
+      productBatchID: productBatchID ? productBatchID : 0,
       voucherType: "PI",
       productCode: "",
       warehouseID: 0,
@@ -56,8 +55,8 @@ const ProductSummaryMaster = (): any => {
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: -2,
-      productBatchID: 0,
+      productID: productID ? productID : -2,
+      productBatchID: productBatchID ? productBatchID : 0,
       voucherType: "PI",
       productCode: "",
       warehouseID: 0,
@@ -75,13 +74,18 @@ const ProductSummaryMaster = (): any => {
     }
     setActiveTab(newValue);
   };
+useEffect(() => {
+  if(productID > 0) {setReload(true)}
+  if(productBatchID > 0) {setReload2(true)}
+
+}, [])
 
   const popupData = useSelector((state: RootState) => state.PopupData);
   // const onKeyChange = (id: any) => {
   //   setActiveId(id);
   //   // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id} ));
   // }
-  const activeIdRef = useRef<number | null>(null);
+  const activeIdRef = useRef<number | null>(productBatchID ? productBatchID : null);
 
   const onKeyChange = (id: any) => {
     activeIdRef.current = id;

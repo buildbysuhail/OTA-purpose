@@ -1177,7 +1177,7 @@ export const useTransactionHelper = (transactionType: string) => {
         break;
       }
 
-      const outputRow: any = {};
+      const outputRow: any = {...detail};
 
       // Core transaction fields
       outputRow.bulkRowInserted = false;
@@ -1356,8 +1356,8 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Additional sales and warehouse info
       outputRow.actualSalesPrice = detail.actualSalesPrice;
-      outputRow.warehouse = detail.warehouseID;
-      outputRow.warehouse.grandTotal = outputRow.warehouse.grandTotal ?? 0;
+      // outputRow.wareHouseID = detail.warehouse;
+      outputRow.grandTotal = outputRow.grandTotal ?? 0;
 
       outputDetails.push(outputRow);
     }

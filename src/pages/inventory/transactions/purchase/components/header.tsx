@@ -126,13 +126,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       <>
         {!deviceInfo?.isMobile && (
           <div className={`!overflow-visible flex items-center ${phone ? "justify-evenly" : "justify-end"}  space-x-2 p-1 w-full overflow-x-auto ${phone ? "bg-[#f9fafb]" : ""} ${phone ? "" : ""} ${phone ? "" : ""}`}>
-            {/* formState details */}
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Form State Details">
-              <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? "p-0.5" : "p-3"} rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() => dispatch(formStateHandleFieldChange({ fields: { isFormStateDetailOpen: true }, }))}>
-                <ListPlus className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
-            </div>
+            
             {/* Load Temp Rows */}
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
               <button disabled={formState.formElements.pnlMasters?.disabled}

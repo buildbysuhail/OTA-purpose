@@ -2593,7 +2593,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 })
               )
             }
-            content={<ProductSummaryMaster />}
+            content={<ProductSummaryMaster productID = {formState.currentCell?.data.productID} productBatchID = {formState.currentCell?.data.productBatchID}/>}
           />
         )}
         {formState.userConfig?.barCodePrev && (
@@ -2634,7 +2634,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 })
               )
             }
-            content={<PartySummaryMaster />}
+            content={<PartySummaryMaster partyId={formState.transaction.master.ledgerID} />}
           />
         )}
 

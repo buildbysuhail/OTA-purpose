@@ -30,9 +30,7 @@ export interface PartySummaryRef {
 }
 // const PartySummaryMaster = () => {
 const PartySummaryMaster = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
+  partyId
 }: any) => {
   const childRef = useRef<PartySummaryRef>(null);
   const dispatch = useAppDispatch();
@@ -41,7 +39,7 @@ const PartySummaryMaster = ({
     filter: {
       dateFrom: moment().local().subtract(30, "days").toDate(),
       dateTo: new Date(),
-      ledgerID: -1,
+      ledgerID: partyId != undefined ?partyId :-1,
     },
   });
 

@@ -327,10 +327,7 @@ const InvTransactionSlice = createSlice({
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
 
-      localStorage.setItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.voucherForm}`,
-        JSON.stringify(state.transaction.details)
-      );
+      
     },
  formStateClearAttachments: (state) => {
       // Iterate over all rows in details
@@ -395,17 +392,24 @@ const InvTransactionSlice = createSlice({
     },
 
     // Remove a specific row from the transaction details by index
-    loadTempRows: (state) => {
-      const tmp = localStorage.getItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.voucherForm}`
-      );
-      if (tmp != undefined && tmp != null && tmp != "") {
-        const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
-        if (tmpRows.length > 0) {
-          state.transaction.details = tmpRows;
-        }
-      }
-    },
+  //   loadTempRows: (state,
+  //      action: PayloadAction<{
+  //       details: TransactionDetail[];
+  //     }>
+  //   ) => {
+  //     const tmp = localStorage.getItem(
+  //       `${state.transaction.master.voucherType}${state.transaction.master.voucherForm}`
+  //     );
+  //     if (tmp != undefined && tmp != null && tmp != "") {
+  //       const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
+  //       if (tmpRows.length > 0) {
+  //         state.transaction.details = [...tmpRows,...Array.from({ length: 30 }, (_, index) => ({
+  //   ...initialTransactionDetailData,
+  //   slNo: generateUniqueKey()
+  // }))];
+    //     }
+    //   }
+    // },
 
     // Handle changes for the "row" property in the state
     formStateMasterHandleFieldChange: (
@@ -792,7 +796,7 @@ const InvTransactionSlice = createSlice({
         }
         }
       });
-
+debugger;
       if (
         itemsToAddToDetails &&
         itemsToAddToDetails.length > 0 &&
@@ -823,7 +827,7 @@ export const {
   disableControls,
   updateFormElement,
   formStateTransactionDetailsSetSlNo,
-  loadTempRows,
+  // loadTempRows,
   formStateClearDetails,
   formStateTransactionAttachmentsRowAdd,
   formStateTransactionAttachmentsRowUpdate,

@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
 import type { PropertiesState } from "../Designer/interfaces"
+import ERPToast from "../../../components/ERPComponents/erp-toast"
 
 interface PrinterInfo {
   name: string
@@ -140,6 +141,7 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
           //     "success",
           //   )
           // }
+          ERPToast.show("JSPrintManager installed successfully! Please refresh if printers don't appear.", "success");
           checkJSPrintManagerInstallation()
         }, 3000)
       }, 1000)

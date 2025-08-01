@@ -1106,7 +1106,7 @@ export const useTransaction = (
         }
       })
     );
-    
+
     dispatch(
       formStateMasterHandleFieldChange({
         fields: {...master }
@@ -1161,7 +1161,7 @@ export const useTransaction = (
         updateOnlyGivenDetailsColumns: true,
       })
     );
-    
+
     const editableColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null && col.allowEditing && col.readOnly !== true
       );
@@ -1790,7 +1790,7 @@ export const useTransaction = (
   };
 
   const loadTemporaryRows = async () => {
-    
+
     let details: Array<TransactionDetail> = [];
         const tmp = localStorage.getItem(
         `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`
@@ -1809,7 +1809,7 @@ export const useTransaction = (
                     const summaryRes = calculateSummary(details, formState, {
                       result: {},
                     });
-          
+
                     const totalRes = calculateTotal(
                       formState.transaction.master,
                       summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
@@ -1818,7 +1818,7 @@ export const useTransaction = (
                         result: {},
                       }
                     );
-          
+
                     if (totalRes) {
                       totalRes.summary = summaryRes.summary;
                       totalRes.transaction = totalRes.transaction ?? {};
@@ -1826,7 +1826,7 @@ export const useTransaction = (
                       totalRes.transaction.details = [];
                       totalRes.batchesUnits = batchUnits;
                       totalRes.loading = {isLoading: false, text: ''}
-          
+
                       // Dispatch the state update
                       debugger;
                       dispatch(
@@ -1955,7 +1955,7 @@ export const useTransaction = (
 
     try {
       // Check if transaction is in edit mode
-      
+
       const result = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
         {
@@ -2035,7 +2035,7 @@ ERPAlert.show({
               icon: "success",
             });
             }
-            
+
 
             // Update form elements state
             dispatch(
@@ -2861,17 +2861,17 @@ ERPAlert.show({
           }
           break;
 
-        case "i":
-        case "I":
-          if (isCtrlPressed) {
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: { showProductInformation: true },
-              })
-            );
-            return { handled: true };
-          }
-          break;
+        // case "i":
+        // case "I":
+        //   if (isCtrlPressed) {
+        //     dispatch(
+        //       commonParams.formStateHandleFieldChangeKeysOnly({
+        //         fields: { showProductInformation: true },
+        //       })
+        //     );
+        //     return { handled: true };
+        //   }
+        //   break;
         // Product Information ☝
 
         case " ": {

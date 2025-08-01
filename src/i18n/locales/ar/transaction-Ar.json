@@ -701,5 +701,6 @@
   "pending_qty": "الكمية المعلقة",
   "process_selected": "معالجة المحدد",
   "pending_order": "طلب معلق",
-  "footer_background_color": "لون خلفية التذييل"
+  "footer_background_color": "لون خلفية التذييل",
+  "formState_summary": "ملخص حالة النموذج"
 }

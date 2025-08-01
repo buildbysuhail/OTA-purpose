@@ -12,7 +12,7 @@ import { isChooseVoucherEnabled } from "../../../../components/common/content/tr
 import TransactionForm from "./transaction";
 import VoucherSelector from "../../../transaction-base/voucher-selector";
 import { useNavigate } from "react-router-dom";
-// import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
+import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
 
 const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
@@ -72,7 +72,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
     voucherNo: number;
   }>({ voucherPrefix: "", formType: input.formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<{ready: boolean, input: any, data: any}>({ready: false, input: null, data: null});
-  // const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
+  const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
   const [prevState, setPrevState] = useState({
     voucherType: undefined as string | undefined,
@@ -88,12 +88,12 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
   });
 
   const goBack = async () => {
-    // const has = await hasUnsavedChanges();
-    // if (has) {
-    //   setIsModalOpen(true);
-    // } else {
-    //   navigate(-1);
-    // }
+    const has = await hasUnsavedChanges();
+    if (has) {
+      setIsModalOpen(true);
+    } else {
+      navigate(-1);
+    }
   };
   // const goBack = () => {
   //   navigate(-1); // Goes back to the previous page

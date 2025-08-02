@@ -17,7 +17,7 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { EllipsisVertical, FileUp, GripVertical, Settings } from "lucide-react";
+import { EllipsisVertical, FileUp, GripVertical, Info, Settings, Trash2 } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
 import type {
@@ -55,6 +55,7 @@ import { saveAs } from 'file-saver';
 import { APIClient } from "../../../helpers/api-client";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
+import { toast } from "react-toastify";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -667,6 +668,21 @@ const VirtualRow = React.memo(({
         [columns, focusCell, setCurrentCell, onKeyDown],
       )
 
+      const handleDelete = ()=>{
+        console.log("Delete clicked for row", index);
+        toast.error("There is nothing to delete");
+      }
+
+      const handleInfoClick = (index:number)=>{
+        dispatch(
+          formStateHandleFieldChange({
+            fields:{
+              showProductInformation:true
+            }
+          })
+        )
+      }
+
   const totalColumnWidth = columnWidths.reduce((sum, width) => sum + width, 0);
   return (
     <div
@@ -742,7 +758,17 @@ const VirtualRow = React.memo(({
                             <div style={getCellContentStyle(column)} id={cellId}>
                               {index + 1}
                             </div>
-                          ) : (column.dataField === "product" || column.dataField === "pCode") &&
+                          ): column.dataField === "removeCol" ? (
+                            <div className="flex items-center justify-center gap-4 p-6">
+                              <button onClick={()=> handleInfoClick(index)} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-blue-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-blue-200">
+                                <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
+                              </button>
+
+                              <button onClick={handleDelete} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-red-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-red-200">
+                                <Trash2 className="w-4 h-4 text-red-600 transition-all duration-300 group-hover:text-red-700" />
+                              </button>
+                            </div>
+                          )  : (column.dataField === "product" || column.dataField === "pCode") &&
                             !column.readOnly &&
                             currentCell?.column === column.dataField &&
                             currentCell?.rowIndex === index ? (
@@ -1327,14 +1353,14 @@ const [prevCell, setPrevCell] = useState<number>(formState.currentCell?.rowIndex
   useEffect(() => {
     debugger;
   setCurrentCell(formState.currentCell)
-  
+
   }, [formState.currentCell])
 useEffect(() => {
   debugger;
     if (
       currentCell &&
       currentCell.column != "" &&
-      currentCell.rowIndex > -1 
+      currentCell.rowIndex > -1
     ) {
       const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
       const targetCell = document.getElementById(

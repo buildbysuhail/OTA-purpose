@@ -704,5 +704,6 @@
   "pending_qty": "Pending Qty",
   "process_selected": "Process Selected",
   "pending_order": "Pending Order",
-  "footer_background_color": "Footer background color"
+  "footer_background_color": "Footer background color",
+  "formState_summary": "FormState Summary"
 }

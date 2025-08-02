@@ -1081,11 +1081,17 @@ $dark-grid-selection: #000000;
 //   }
 // }
 
+// .modal-content {
+//   overflow: auto !important;
+// }
+
 .custom-data-grid {
 
   // tr.dx-row.dx-datagrid-filter-row {
   //   display: none;
   // }
+
+  // overflow: auto !important;
 
   .dx-datagrid-rowsview td:last-child {
     padding-inline-end: 21px !important;

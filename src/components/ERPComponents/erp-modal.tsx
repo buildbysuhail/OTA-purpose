@@ -299,9 +299,19 @@ const ERPModal = React.memo(
                         e.stopPropagation();
                       }}
                       onMouseDown={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.classList.contains('dx-scrollbar') || 
+                            target.closest('.dx-scrollable-scrollbar')) {
+                          return;
+                        }
                         e.stopPropagation();
                       }}
                       onDrag={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.classList.contains('dx-scrollbar') || 
+                            target.closest('.dx-scrollable-scrollbar')) {
+                          return;
+                        }
                         e.stopPropagation();
                       }}
                       onMouseUp={(e) => {

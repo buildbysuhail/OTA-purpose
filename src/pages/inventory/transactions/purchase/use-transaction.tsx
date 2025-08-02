@@ -999,6 +999,7 @@ export const useTransaction = (
             value: undefined,
           })
         );
+        clearControls(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID )
         if (formState.printOnSave == true) {
           printVoucher();
         }

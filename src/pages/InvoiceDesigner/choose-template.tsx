@@ -4,7 +4,7 @@ import type React from "react"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { XMarkIcon, SparklesIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid"
 import type { TemplateState } from "./Designer/interfaces"
 import Urls from "../../redux/urls"
@@ -13,18 +13,7 @@ import { APIClient } from "../../helpers/api-client"
 import { useTranslation } from "react-i18next"
 import type VoucherType from "../../enums/voucher-types"
 import { customJsonParse } from "../../utilities/jsonConverter"
-import {
-  Badge,
-  FileSpreadsheet,
-  Gem,
-  LayoutList,
-  ShoppingBag,
-  Search,
-  Sparkles,
-  Zap,
-  Grid3X3,
-  List,
-} from "lucide-react"
+import { Badge, FileSpreadsheet, Gem, LayoutList, ShoppingBag, Search, Sparkles, Grid3X3, List } from "lucide-react"
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch"
 
 interface ChooseTemplateProps {
@@ -168,7 +157,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       return filteredBySearch
     }
     return filteredBySearch.filter(
-      (template: TemplateState<unknown>) => (template.templateType || "standard").toLowerCase() === activeTab.toLowerCase(),
+      (template: TemplateState<unknown>) =>
+        (template.templateType || "standard").toLowerCase() === activeTab.toLowerCase(),
     )
   }, [activeTab, filteredBySearch])
 
@@ -231,21 +221,20 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       : navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state })
   }
 
-
   const renderTemplateCard = (template: TemplateState<unknown>, index: number) => {
-    const isDefault = template?.isCurrent 
+    const isDefault = template?.isCurrent
     const isPremium = template.templateType?.toLowerCase() === "premium"
 
     if (viewMode === "list") {
       return (
         <div
           key={`ti_${template.id}_${index}`}
-          className="w-full max-w-none group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 lg:p-5 bg-white rounded-lg sm:rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
+          className="w-full group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
         >
           {/* Subtle background animation */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <div className="relative flex-shrink-0 w-full sm:w-16 h-32 sm:h-20 lg:w-20 lg:h-24 rounded-lg overflow-hidden bg-slate-50 border border-slate-200 shadow-sm">
+          <div className="relative flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-slate-50 border border-slate-200 shadow-sm">
             <img
               src={template?.thumbImage || "/placeholder.svg?height=96&width=80"}
               alt={template?.templateName}
@@ -258,13 +247,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             )}
           </div>
 
-          <div className="relative flex-1 min-w-0 w-full sm:w-auto">
+          <div className="relative flex-1 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
-              <h3
-                className="font-semibold text-slate-900 text-sm sm:text-base lg:text-lg"
-                title={template?.templateName}
-              >
-                {template?.templateName}
+              <h3 className="font-semibold text-slate-900 text-base lg:text-lg truncate" title={template?.templateKind}>
+                {template?.templateKind}
               </h3>
               {isDefault && (
                 <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 sm:px-3 py-1 rounded-full font-medium border border-blue-200 flex items-center gap-1 flex-shrink-0 w-fit">
@@ -273,33 +259,12 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 </span>
               )}
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 capitalize mb-2">
-              {template?.templateType || "Standard"} Template
-            </p>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-              {/* <span>
-                Created:{" "}
-                {new Date(template?.createdAt || Date.now()).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "2-digit",
-                })}
-              </span> */}
-              <span className="hidden sm:inline">•</span>
-              {/* <span className="hidden sm:inline">
-                Modified:{" "}
-                {new Date(template?.updatedAt || Date.now()).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "2-digit",
-                })}
-              </span> */}
-            </div>
+            <p className="text-sm text-slate-500 capitalize mb-2">{template?.templateType || "Standard"} Template</p>
           </div>
 
           <div className="relative flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-end">
             <button
-              className="bg-gradient-to-r from-slate-100 to-slate-200 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 whitespace-nowrap"
+              className="bg-gradient-to-r from-blue-100 to-indigo-200 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 whitespace-nowrap"
               onClick={() => handleChooseTemplate(template)}
             >
               {t("use_this")}
@@ -312,27 +277,29 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     return (
       <div
         key={`ti_${template.id}`}
-        className="group relative bg-white rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-xl transition-all duration-500 overflow-hidden transform hover:scale-[1.02] hover:-translate-y-1"
+        className="
+          group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[200px] 
+          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
+          aspect-[4/5] bg-white rounded-xl sm:rounded-2xl 
+          border border-slate-200 hover:border-slate-300 hover:shadow-xl 
+          transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 overflow-hidden 
+          mx-auto sm:mx-0
+        "
       >
         {/* Premium glow effect */}
         {isPremium && (
           <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-orange-400/10 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
 
-        <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="relative w-full h-[80%] bg-gradient-to-br from-slate-50 to-slate-100 rounded-t-xl overflow-hidden">
           <img
             src={template?.thumbImage || "/placeholder.svg?height=300&width=240"}
             alt={template?.templateName}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-500"
           />
 
           {/* Enhanced overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-          {/* Template type badge */}
-          <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg backdrop-blur-sm">
-            <span className="capitalize">{template?.templateType || "Standard"}</span>
-          </div>
 
           {/* Premium/Default badges */}
           <div className="absolute top-2 left-2 flex flex-col gap-1">
@@ -348,60 +315,40 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             )}
           </div>
 
-          {/* Action buttons overlay - Fixed to not interfere with bottom buttons */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-            <div className="flex items-center gap-2 pointer-events-auto">
-              <button
-                className="bg-white/90 backdrop-blur-sm text-slate-700 p-2.5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110"
-                title="Preview"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  // Add preview functionality here
-                }}
-              >
-                <SparklesIcon className="w-4 h-4" />
-              </button>
-            </div>
+          {/* Action buttons overlay at the bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                handleChooseTemplate(template)
+              }}
+            >
+              {t("use_this")}
+            </button>
           </div>
         </div>
 
-        <div className="p-3 sm:p-4 relative z-20 bg-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1 min-w-0">
+        <div className="p-4 relative z-30 bg-white rounded-b-xl min-h-[20%] overflow-hidden">
+          <div className="flex items-start justify-between mb-0">
+            <div className="flex-1 min-w-0 max-w-full">
               <h3
-                className="font-semibold text-slate-900 text-sm mb-2 line-clamp-2 min-h-[2.5rem] leading-tight"
-                title={template?.templateName}
+                className="font-semibold text-slate-900 text-sm line-clamp-2 leading-tight block overflow-hidden text-ellipsis"
+                title={template?.templateKind}
               >
-                {template?.templateName}
+                {template?.templateKind}
               </h3>
             </div>
           </div>
 
           <div className="flex items-center justify-between">
-            {isDefault ? (
+            {isDefault && (
               <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 flex items-center gap-1">
                 <StarIconSolid className="w-2.5 h-2.5" />
                 <span>Default</span>
               </span>
-            ) : (
-              <button
-                className="bg-gradient-to-r from-blue-300 to-slate-200 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 relative z-10"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  handleChooseTemplate(template)
-                }}
-              >
-                {t("use_this")}
-              </button>
             )}
-
-            {/* <div className="text-xs text-slate-400">
-              {new Date(template?.updatedAt || Date.now()).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
-            </div> */}
           </div>
         </div>
       </div>
@@ -409,10 +356,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 !w-full ">
+    <div className="flex bg-gradient-to-br from-slate-50 to-blue-50/30 w-full">
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Enhanced Header - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6">
+        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6">
           <div className="flex flex-col gap-3 sm:gap-4">
             {/* Top Row - Title and Close Button */}
             <div className="flex items-center justify-between gap-3">
@@ -426,10 +373,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       {filteredTemplates.length}
                     </span>
                   </div>
-                  <p className="text-slate-600 mt-1 flex items-center gap-2 text-xs sm:text-sm">
-                    <Zap className="w-3 h-3 flex-shrink-0" />
-                    <span className="truncate">Select a template to get started</span>
-                  </p>
                 </div>
               </div>
 
@@ -492,8 +435,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         </div>
 
         {/* Enhanced Template Type Tabs - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-3 sm:px-4 lg:px-6 py-3">
-          <div className="flex flex-wrap gap-1 sm:gap-2">
+        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {templateTypes.map((type) => {
               const colors = getTemplateTypeColor(type.key)
               return (
@@ -509,7 +452,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   <span className="relative z-10 flex items-center gap-1 sm:gap-2">
                     {type.key !== "all" && getTemplateTypeIcon(type.key)}
                     <span className="hidden xs:inline">{type.label}</span>
-                    {/* <span className="xs:hidden">{type.label.slice(0, 3)}</span>({type.count}) */}
                     <span className="xs:hidden">{type.label}</span>({type.count})
                   </span>
                   {activeTab !== type.key && (
@@ -523,7 +465,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
         {/* Enhanced Content - Fixed for full width list view */}
         <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30">
-          <div className="p-3 sm:p-4 lg:p-6 w-full">
+          <div className="p-4 sm:p-6 lg:p-8 w-full">
             {activeTab === "all" ? (
               // Render grouped templates for "All" tab
               <div className="space-y-8 sm:space-y-12 w-full">
@@ -531,35 +473,22 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   const colors = getTemplateTypeColor(templateType)
                   return (
                     <div key={templateType} className="w-full">
-                      {/* Enhanced Section Header */}
-                      <div className="mb-6 sm:mb-8 w-full">
-                        <div
-                          className={`${colors.bg} ${colors.border} border-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg relative overflow-hidden w-full`}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
-                          <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
-                            <div className="flex items-center gap-3 sm:gap-4">
-                              <div
-                                className={`${colors.text} p-3 sm:p-4 bg-white/90 rounded-xl sm:rounded-2xl shadow-lg backdrop-blur-sm`}
-                              >
+                      <div className="mb-4 w-full">
+                        <div className="border rounded-xl p-4 bg-white shadow-md">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <div className={`${colors.text} p-3 bg-gray-100 rounded-lg`}>
                                 {getTemplateTypeIcon(templateType)}
                               </div>
                               <div>
-                                <h2
-                                  className={`text-lg sm:text-xl lg:text-xl font-bold ${colors.text} uppercase tracking-wide`}
-                                >
+                                <h2 className="text-base sm:text-lg font-semibold text-gray-800 uppercase">
                                   {templateType}
                                 </h2>
-                                <p className={`text-xs sm:text-sm lg:text-base ${colors.text} opacity-75 mt-1`}>
+                                <p className="text-sm text-gray-500">
                                   {(templates as TemplateState<unknown>[]).length} template
                                   {(templates as TemplateState<unknown>[]).length !== 1 ? "s" : ""} available
                                 </p>
                               </div>
-                            </div>
-                            <div
-                              className={`${colors.text} text-base sm:text-lg lg:text-xl font-bold px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl bg-white/90 shadow-lg backdrop-blur-sm`}
-                            >
-                              {(templates as TemplateState<unknown>[]).length}
                             </div>
                           </div>
                         </div>
@@ -568,15 +497,15 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       {/* Templates Grid/List for this type - Fixed container */}
                       <div className="w-full mb-8 sm:mb-12">
                         {viewMode === "grid" ? (
-                          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
-                            {(templates as TemplateState<unknown>[]).map((template: TemplateState<unknown>, index: number) =>
-                              renderTemplateCard(template, index),
+                          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-4 sm:gap-6 lg:gap-8 w-full">
+                            {(templates as TemplateState<unknown>[]).map(
+                              (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
                             )}
                           </div>
                         ) : (
-                          <div className="w-full space-y-3">
-                            {(templates as TemplateState<unknown>[]).map((template: TemplateState<unknown>, index: number) =>
-                              renderTemplateCard(template, index),
+                          <div className="w-full space-y-4">
+                            {(templates as TemplateState<unknown>[]).map(
+                              (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
                             )}
                           </div>
                         )}
@@ -589,13 +518,13 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               // Render filtered templates for specific type tabs - Fixed container
               <div className="w-full">
                 {viewMode === "grid" ? (
-                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-6 lg:gap-8 w-full">
                     {filteredTemplates.map((template: TemplateState<unknown>, index: number) =>
                       renderTemplateCard(template, index),
                     )}
                   </div>
                 ) : (
-                  <div className="w-full space-y-3">
+                  <div className="w-full space-y-4">
                     {filteredTemplates.map((template: TemplateState<unknown>, index: number) =>
                       renderTemplateCard(template, index),
                     )}
@@ -606,7 +535,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
             {/* Enhanced Empty State */}
             {filteredTemplates.length === 0 && (
-              <div className="text-center py-12 sm:py-16 px-4 w-full">
+              <div className="text-center py-16 sm:py-20 px-4 w-full">
                 <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
                 <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">No templates found</h3>
                 <p className="text-slate-600 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">

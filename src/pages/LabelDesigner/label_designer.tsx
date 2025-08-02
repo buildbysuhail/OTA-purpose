@@ -42,6 +42,8 @@ import {
   Button,
   Popover,
   Hidden,
+  Stack,
+  Chip,
 } from "@mui/material";
 import jsPDF from "jspdf";
 import {
@@ -3506,7 +3508,7 @@ const handleRemoveImage =()=>{
                   />
                 </Box>
 
-                  <ERPCheckbox
+                  {/* <ERPCheckbox
                     id="select_printer"
                     label={t("select printer")}
                     checked={templateData?.propertiesState?.select_printer}
@@ -3525,9 +3527,65 @@ const handleRemoveImage =()=>{
            t={t}
            handlePagePropsChange={handlePagePropsChange}
            />
-              )}
+              )} */}
 
+    <Box sx={{ mb: 2 }}>
+      <Stack spacing={2}>
+        {/* Enhanced Checkbox with Icon and Description */}
+        <Box
+          sx={{
+            p: 2,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+            bgcolor: templateData?.propertiesState?.select_printer ? "action.selected" : "background.paper",
+          }}
+        >
+          <Stack direction="row" spacing={2} alignItems="flex-start">
+            <Printer color={templateData?.propertiesState?.select_printer ? "primary" : "disabled"} />
+            <Box sx={{ flex: 1 }}>
+              <ERPCheckbox
+                id="select_printer"
+                label={
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="body1" fontWeight="medium">
+                      {t("Enable Printer Selection")}
+                    </Typography>
+                    {templateData?.propertiesState?.select_printer && (
+                      <Chip label={t("Active")} size="small" color="primary" variant="outlined" />
+                    )}
+                  </Stack>
+                }
+                checked={templateData?.propertiesState?.select_printer}
+                data={templateData?.propertiesState}
+                onChange={async (e) => {
+                  const checked = e.target.checked
+                  handlePagePropsChange("select_printer", checked)
+                }}
+              />
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+                {t("Allow users to select a specific printer for this template. Requires JSPrintManager installation.")}
+              </Typography>
+            </Box>
+          </Stack>
+        </Box>
 
+        {/* Printer Selection Component */}
+        {templateData?.propertiesState?.select_printer && (
+          <Box
+            sx={{
+              pl: 2,
+              borderLeft: "3px solid",
+              borderColor: "primary.main",
+              bgcolor: "background.default",
+              borderRadius: "0 4px 4px 0",
+            }}
+          >
+            <AccessPrinterList templateData={templateData} t={t} handlePagePropsChange={handlePagePropsChange} />
+          </Box>
+        )}
+      </Stack>
+    </Box>
               </Box>
             </Box>
           </Box>

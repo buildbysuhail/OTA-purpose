@@ -5,12 +5,16 @@ import {
   modelToBase64,
   modelToBase64Unicode,
 } from "../utilities/jsonConverter";
-import { AccTransactionData, AccTransactionRow } from "./accounts/transactions/acc-transaction-types";
+import {
+  AccTransactionData,
+  AccTransactionRow,
+} from "./accounts/transactions/acc-transaction-types";
 import { useAppSelector } from "../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
 import { accFormStateHandleFieldChange } from "./accounts/transactions/reducer";
 import { history as _history } from "../history";
 import { setTransactionForHistory } from "../helpers/transaction-modified-util";
+import { formStateHandleFieldChange } from "./inventory/transactions/purchase/reducer";
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ export const useUnsavedChangesWarning = () => {
   const isInitialMount = useRef(true);
   const navigationAttempted = useRef(false);
   const lastNavigationTime = useRef(Date.now());
-    const _accFormState = useAppSelector((x) => x.AccTransaction);
+  const _accFormState = useAppSelector((x) => x.AccTransaction);
   const _invFormState = useAppSelector((x) => x.InventoryTransaction);
   const dispatch = useDispatch();
 
@@ -33,11 +37,13 @@ export const useUnsavedChangesWarning = () => {
     // First check if flags explicitly indicate which state to use
     if ((_accFormState as any)?.isAcc === true) return _accFormState as any;
     if ((_invFormState as any)?.isInv === true) return _invFormState as any;
-    
+
     // Fallback: use whichever state has data
-    if ((_accFormState as any)?.prev || (_accFormState as any)?.transaction) return _accFormState as any;
-    if ((_invFormState as any)?.prev || (_invFormState as any)?.transaction) return _invFormState as any;
-    
+    if ((_accFormState as any)?.prev || (_accFormState as any)?.transaction)
+      return _accFormState as any;
+    if ((_invFormState as any)?.prev || (_invFormState as any)?.transaction)
+      return _invFormState as any;
+
     // Last resort: return the first non-null state
     return (_accFormState as any) || (_invFormState as any) || null;
   }, [_accFormState, _invFormState]);
@@ -56,36 +62,35 @@ export const useUnsavedChangesWarning = () => {
   // Determine the base path for navigation
   const getBasePath = useCallback(() => {
     if (_accFormState?.isAcc) {
-      return '/accounts/transactions';
+      return "/accounts/transactions";
     }
     if (_invFormState?.isInv) {
-      return '/inventory/transactions'; // Adjust this path as needed
+      return "/inventory/transactions"; // Adjust this path as needed
     }
-    return '/';
+    return "/";
   }, [_accFormState, _invFormState]);
   const hasUnsavedChanges = useCallback(async () => {
-   
     try {
       if (!_formState || !_formState.prev) return false;
       let currentStateCompare: any;
-if(_formState.isAcc) {
-currentStateCompare = {
-        transaction: _formState.transaction,
-        row: _formState.row,
-      };
-}
-else if(_formState.isInv)
-      {
+      if (_formState.isAcc) {
         currentStateCompare = {
-        transaction: {
-          master: _formState.transaction.master,
-          details: _formState.transaction?.details?.filter((x: any) => x.productID > 0)
-        }
-      };
+          transaction: _formState.transaction,
+          row: _formState.row,
+        };
+      } else if (_formState.isInv) {
+        currentStateCompare = {
+          transaction: {
+            master: _formState.transaction.master,
+            details: _formState.transaction?.details?.filter(
+              (x: any) => x.productID > 0
+            ),
+          },
+        };
       }
 
       if (!_formState) return false;
-
+      debugger;
       const _prevState = await new Promise((resolve, reject) => {
         try {
           resolve(customJsonParse(atob(_formState.prev)));
@@ -94,10 +99,17 @@ else if(_formState.isInv)
         }
       });
 
-      if (!_prevState || Object.keys(_prevState).length !== (_formState.isInv ? 1 :2)) return false;
+      if (
+        !_prevState ||
+        Object.keys(_prevState).length !== (_formState.isInv ? 1 : 2)
+      )
+        return false;
 
       const base64 = await modelToBase64Unicode(
-        setTransactionForHistory(currentStateCompare, _formState.isAcc ? "acc" : "inv")
+        setTransactionForHistory(
+          currentStateCompare,
+          _formState.isAcc ? "acc" : "inv"
+        )
       );
       const isEqual = _formState.prev === base64;
       console.log(`isEqual fgfgdf: ${isEqual}`);
@@ -183,12 +195,13 @@ else if(_formState.isInv)
 
         if (
           (isDirectLink || isClosestLink || hasHref || hasLinkRole) &&
-          ((!isClosestLink && !isPopupType) || (isClosestLink && !isClosestPopup))
+          ((!isClosestLink && !isPopupType) ||
+            (isClosestLink && !isClosestPopup))
         ) {
           isNavigationLink = true;
         }
       }
-  
+
       if (isNavigationLink) {
         // const unsavedChanges = await hasUnsavedChanges();
         hasUnsavedChanges()
@@ -222,7 +235,6 @@ else if(_formState.isInv)
 
   useEffect(() => {
     const unlisten = _history.listen(({ action, location: newLocation }) => {
-      
       if (action === "POP" || action === "PUSH" || action === "REPLACE") {
         const intendedPath =
           location.pathname == newLocation.pathname
@@ -231,7 +243,6 @@ else if(_formState.isInv)
 
         hasUnsavedChanges()
           .then((unsavedChanges) => {
-            
             if (unsavedChanges) {
               const transactionType = getTransactionType();
               const basePath = getBasePath();
@@ -272,7 +283,7 @@ else if(_formState.isInv)
 
   const handleLeave = useCallback(() => {
     console.log("11");
-    
+
     if (isLeavingPage) {
       console.log("12");
       // If user is trying to refresh or close the page
@@ -287,7 +298,11 @@ else if(_formState.isInv)
     navigationAttempted.current = false;
 
     // Dispatch action to reset formState.prev before navigating
-    dispatch(accFormStateHandleFieldChange({ fields: { prev: undefined } }));
+    if (_formState.isAcc) {
+      dispatch(accFormStateHandleFieldChange({ fields: { prev: undefined } }));
+    } else {
+      dispatch(formStateHandleFieldChange({ fields: { prev: undefined } }));
+    }
 
     if (targetLocation) {
       console.log("13");

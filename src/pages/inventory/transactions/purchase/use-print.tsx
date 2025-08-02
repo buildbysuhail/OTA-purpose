@@ -48,7 +48,7 @@ import {
 } from "jsprintmanager";
 const api = new APIClient();
 export const usePrint = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('system');
   const currentBranch = useCurrentBranch();
   const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -94,8 +94,8 @@ export const usePrint = () => {
     debugger;
     let pdfDocument;
     const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
-    if (template.templateGroup === "barcode") {     
-      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template); 
+    if (template.templateGroup === "barcode") {
+      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template);
       pdfDocument = (
       <BarcodePDFDocument template={template} data={data} barcodeImages={barcodeImagesForPrint} />
       );
@@ -270,7 +270,7 @@ export const usePrint = () => {
         const confirm = await ERPAlert.show({
           icon: "info",
           title: t("warning"),
-          text: t("Unit Price Zero, Do you Want to Continue"),
+          text: t("unit_price_zero_do_you_want_to_continue"),
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,
@@ -303,7 +303,7 @@ export const usePrint = () => {
     partyLedgerId: number,
     wareHouseId: number,
     isDummyBill: boolean,
-   
+
   ): Promise<void> {
     let modifiedDetails: DeepPartial<TransactionDetail>[] = [];
     let batchCreatedList = [];
@@ -356,7 +356,7 @@ export const usePrint = () => {
           batchCreatedList = res.items;
         }
       }
-    
+
       // Process each row in the specified range
       for (let i = 0; i < rowIndexes.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};
@@ -439,7 +439,7 @@ export const usePrint = () => {
             barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
-            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true, 
+            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true,
               barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode),
               productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row.productBatchID)
              });
@@ -448,9 +448,9 @@ export const usePrint = () => {
           }
 
         }
-      };   
+      };
       if(formState.userConfig?.barCodePrev){
-        
+
         dispatch(
           formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
         );

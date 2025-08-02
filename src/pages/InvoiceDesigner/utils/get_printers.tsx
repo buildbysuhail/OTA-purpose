@@ -81,7 +81,7 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: us
         } else {
           setInstallationStatus(InstallationStatus.NOT_INSTALLED)
         }
-   
+
     } catch (error) {
       console.error("Error checking JSPrintManager:", error)
       setInstallationStatus(InstallationStatus.ERROR)
@@ -305,7 +305,7 @@ const handleInstallJSPrintManager = useCallback(async () => {
             <ERPDataCombobox
               id="printer"
               data={templateData?.propertiesState}
-              label={t("Select Printer")}
+              label={t("select_printer")}
               field={{
                 id: "printer",
                 valueKey: "value",

@@ -91,7 +91,7 @@ const MultiFOCScheme: React.FC = () => {
       ERPAlert.show({
         title: "",
         icon: "warning",
-        text: "No data to save. Please add items to the grid.",
+        text: t("no_data_to_save_please_add_items_to_the_grid"),
       });
       return;
     }
@@ -175,7 +175,7 @@ const MultiFOCScheme: React.FC = () => {
       ERPAlert.show({
         title: "",
         icon: "error",
-        text: "Failed to load MultiFOS data.",
+        text: t("failed_to_load_multifos_data"),
       });
     } finally {
       setIsDataLoading(false);
@@ -188,7 +188,7 @@ const MultiFOCScheme: React.FC = () => {
       ERPAlert.show({
         title: "",
         icon: "warning",
-        text: "Please Select Any Scheme..!",
+        text: t("please_select_any_scheme"),
       });
       return;
     }
@@ -310,7 +310,7 @@ const MultiFOCScheme: React.FC = () => {
               <div className="md:col-span-4 flex justify-end">
                 <ERPCheckbox
                   id="loadAllMultiFos"
-                  label={t("Load All Multi FOC")}
+                  label={t("load_all_multi_foc")}
                   data={focSchemeForm.data}
                   checked={focSchemeForm.data.loadAllMultiFos}
                   onChangeData={(data: any) => {
@@ -345,7 +345,6 @@ const MultiFOCScheme: React.FC = () => {
               </div>
               <div className="md:col-span-4">
                 <ERPProductSearch
-                className=""
                   value={focSchemeForm.data.nameOrCode}
                   onChange={(e) => {
                     setFocSchemeForm((prev) => ({
@@ -355,10 +354,10 @@ const MultiFOCScheme: React.FC = () => {
                   }}
                   id="test"
                   keyId="testserch"
-                  placeholder="Search Here"
+                  placeholder={t("search_here")}
                   productDataUrl={Urls.load_product_details_multi_foc}
                   onRowSelected={(data: any) => {
-                    
+
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {
@@ -371,7 +370,7 @@ const MultiFOCScheme: React.FC = () => {
                     }));
                   }}
                   onProductSelected={(data: any) => {
-                    
+
                     setFocSchemeForm((prev) => ({
                       ...prev,
                       data: {
@@ -474,7 +473,7 @@ const MultiFOCScheme: React.FC = () => {
                     }}
                     id="test"
                     keyId="testSearchFree"
-                    placeholder="Search Here"
+                    placeholder={t("search_here")}
                     productDataUrl={Urls.load_product_details_multi_foc}
                     onRowSelected={(data: any) => {
                       setFocSchemeForm((prev) => ({

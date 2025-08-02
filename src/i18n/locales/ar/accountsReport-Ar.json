@@ -881,5 +881,6 @@
   "card_type": "نوع البطاقة",
   "name_on_card": "الاسم على البطاقة",
   "inv_transaction_master_id": "معرّف معاملة المخزون الرئيسي",
-  "actual_price": "السعر الفعلي"
+  "actual_price": "السعر الفعلي",
+  "show_opening_stock": "إظهار المخزون الافتتاحي"
 }

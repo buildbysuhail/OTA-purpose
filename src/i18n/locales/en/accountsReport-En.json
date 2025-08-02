@@ -881,5 +881,6 @@
   "card_type": "Card Type",
   "name_on_card": "Name On Card",
   "inv_transaction_master_id": "Inv Transaction Master ID",
-  "actual_price": "Actual Price"
+  "actual_price": "Actual Price",
+  "show_opening_stock": "Show opening stock"
 }

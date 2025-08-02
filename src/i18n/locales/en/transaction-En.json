@@ -705,5 +705,11 @@
   "process_selected": "Process Selected",
   "pending_order": "Pending Order",
   "footer_background_color": "Footer background color",
-  "formState_summary": "FormState Summary"
+  "formState_summary": "FormState Summary",
+
+  "p_price": "P Price",
+  "item_list": "Item List",
+  "ask_start_index": "Ask start index",
+  "show_barcode_preview":"Show barcode preview",
+  "select_printer":"Select printer"
 }

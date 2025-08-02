@@ -77,7 +77,7 @@ const FOCScheme: React.FC = () => {
         ERPAlert.show({
           title: "",
           icon: "warning",
-          text: "Please Select Any Scheme..!",
+          text: t("please_select_any_scheme"),
         });
         return;
       }
@@ -158,7 +158,7 @@ const FOCScheme: React.FC = () => {
       ERPAlert.show({
         title: "",
         icon: "warning",
-        text: "Please Select Any Scheme..!",
+        text: t("please_select_any_scheme"),
       });
       return false;
     }
@@ -389,7 +389,7 @@ const FOCScheme: React.FC = () => {
                   <ERPProductSearch
                     id="test"
                     keyId="testserch"
-                    placeholder="Search Here"
+                    placeholder={t("search_here")}
                     productDataUrl={Urls.load_product_details_foc}
                     onRowSelected={(data: any) => {
                       setFocSchemeForm((prev) => ({

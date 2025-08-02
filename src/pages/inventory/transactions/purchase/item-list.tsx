@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -25,7 +25,7 @@ interface ItemListModalProps {
   t: (key: string) => string;
 }
 
-const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => {
+const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t, }) => {
   const [gridData, setGridData] = useState<itemListGrid[]>([]);
 
   const gridColumns: DevGridColumn[] = [
@@ -36,7 +36,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 60
+      width: 60,
     },
     {
       dataField: "productName",
@@ -45,7 +45,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 283
+      width: 283,
     },
     {
       dataField: "arabicName",
@@ -54,7 +54,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 284
+      width: 284,
     },
     {
       dataField: "رقم_المنتج",
@@ -63,7 +63,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "productID",
@@ -72,7 +72,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "productBatchID",
@@ -81,7 +81,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "منتج_رئيسي",
@@ -90,7 +90,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "الصنف",
@@ -99,7 +99,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "سعر_البيع",
@@ -108,7 +108,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "pPrice",
@@ -117,7 +117,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "autoBarcode",
@@ -126,7 +126,7 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
+      width: 100,
     },
     {
       dataField: "manualBarcode",
@@ -135,8 +135,8 @@ const ItemListModal: React.FC<ItemListModalProps> = ({ isOpen, onClose, t }) => 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100
-    }
+      width: 100,
+    },
   ];
 
   return (

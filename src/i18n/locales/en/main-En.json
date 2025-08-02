@@ -207,7 +207,6 @@
   "shortage_stock_less_stock": "Shortage stock less stock",
   "stock_adjuster": "Stock adjuster",
   "branch_transfer_out": "Branch transfer out",
-  "branch_transfer_in": "Branch transfer in",
   "stock_transfer_to_branch": "Stock transfer to branch",
   "stock_transfer_from_branch": "Stock transfer from branch",
   "item_load_request": "Item load request",
@@ -241,7 +240,6 @@
   "main": "Main",
   "settings": "Settings",
 
-  "tax_reports": "Tax reports",
   "accounts": "Accounts",
   "inventory": "Inventory",
   "no_data_found": "No data found",
@@ -509,7 +507,6 @@
   "export_to_excel": "Export to Excel",
   "print": "Print",
 
-  "stock": "Stock",
   "tax_reports": "Tax Reports",
   "itemwise_summary_reports": "Itemwise Summary Reports",
   "other_inventory_reports": "Other Inventory Reports",

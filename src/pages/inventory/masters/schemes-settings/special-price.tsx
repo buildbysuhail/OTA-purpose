@@ -89,7 +89,7 @@ export const SpecialPrice: React.FC = () => {
         ERPAlert.show({
           title: "",
           icon: "warning",
-          text: "Please Select Any Scheme..!",
+          text: t("please_select_any_scheme"),
         });
         return;
       }
@@ -118,7 +118,7 @@ export const SpecialPrice: React.FC = () => {
       setIsDataLoading(true);
       const url = `${Urls.select_product_by_barcode}${obj.barcode}`;
       const response = await api.get(url);
-      
+
       setSpecialPriceForm((prev) => ({
         ...prev,
         data: {
@@ -154,7 +154,7 @@ export const SpecialPrice: React.FC = () => {
       ERPAlert.show({
         title: "",
         icon: "warning",
-        text: "Please Select Any Scheme..!",
+        text: t("please_select_any_scheme"),
       });
       return false;
     }
@@ -163,7 +163,7 @@ export const SpecialPrice: React.FC = () => {
         ERPAlert.show({
           title: "",
           icon: "warning",
-          text: "Please Select Any group..!",
+          text: t("please_select_any_group"),
         });
         return false;
       }
@@ -175,7 +175,7 @@ export const SpecialPrice: React.FC = () => {
       const url = `${Urls.special_price_scheme_by_group_id}ByGroup`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
-        
+
         setGridData((prev: any) => [...prev, ...response.items]);
         // handleLoad();
       });
@@ -233,7 +233,7 @@ export const SpecialPrice: React.FC = () => {
                   }
                 /> */}
                 <ERPCheckbox
-                  label={t("isGroup")}
+                  label={t("is_group")}
                   id="isGroup"
                   data={specialPriceForm.data}
                   checked={specialPriceForm.data?.isGroup}
@@ -368,7 +368,7 @@ export const SpecialPrice: React.FC = () => {
                     type="number"
                     value={specialPriceForm.data?.salesPrice}
                     className="w-full"
-                    placeholder={t("salesPrice")}
+                    placeholder={t("sales_price")}
                     data={specialPriceForm.data}
                     onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
                   />
@@ -394,7 +394,7 @@ export const SpecialPrice: React.FC = () => {
                     noLabel
                     value={specialPriceForm.data?.unitName}
                     className="w-full"
-                    placeholder={t("unitName")}
+                    placeholder={t("unit_name")}
                     data={specialPriceForm.data}
                     onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
 
@@ -441,7 +441,7 @@ export const SpecialPrice: React.FC = () => {
                     disabled={!specialPriceForm.data.isGroup}
                     value={specialPriceForm.data?.groupPrice}
                     className="w-full"
-                    placeholder={t("groupPrice")}
+                    placeholder={t("group_price")}
                     data={specialPriceForm.data}
                     onChangeData={(data: any) => { setSpecialPriceForm((prev: any) => ({ ...prev, data: data, })); }}
                   />
@@ -532,7 +532,7 @@ export const SpecialPrice: React.FC = () => {
                 <span className="text-[#dc2626]">{specialPriceForm.data?.stdPurchasePrice}</span>
               </div>
             </div>
-            
+
             <div className="flex justify-end flex-wrap gap-2">
               <ERPButton
                 title={t("load")}

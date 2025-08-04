@@ -26,6 +26,7 @@ import { RootState } from "../../../../redux/store";
 import { TransactionFormState } from "./transaction-types";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { accFormStateTransactionMasterHandleFieldChange } from "../../../accounts/transactions/reducer";
+import { remToPx } from "../../../../utilities/Utils";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -484,12 +485,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const selectedFooter = renderSecondFooter();
+    const getInputHeight =() =>{
+      return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx (0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx (0.75): formState.userConfig?.inputBoxStyle?.inputSize == "lg" ?  remToPx (1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx (formState.userConfig?.inputBoxStyle?.inputHeight)??0) -23:0
+    }
 
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <div
-        className={`fixed top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[300px] shadow-lg p-2 z-30`}
-        style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
+        className={`fixed  ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[300px] shadow-lg p-2 z-30`}
+        style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
         {renderSecondFooter()}
       </div>
     );

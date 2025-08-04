@@ -55,6 +55,11 @@ export const LoadingAnimation = () => {
 
 function App() {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
+   const location = useLocation();
+    useEffect(() => {
+    console.log(`[App.tsx] URL changed to mj2323: ${window.location.href}`);
+  }, [location]); 
+  console.log(import.meta.env.BASE_URL);
 
 useEffect(() => {
   const handleOnline = () => setIsOnline(true);

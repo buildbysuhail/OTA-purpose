@@ -101,6 +101,7 @@ import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
 import { renderBarcode } from "../../utilities/barcode";
+import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -263,6 +264,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+ 
   const [templateData, setTemplateData] = useState<TemplateState<unknown>>(
     initialBacodeTemplateState<unknown>().data || {}
   );
@@ -278,6 +280,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     template?.propertiesState?.width,
     template?.propertiesState?.height
   );
+  
 
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
@@ -873,6 +876,7 @@ const handleQRCodePropertyChange = (
     property: keyof PropertiesState,
     value: any
   ) => {
+    debugger
     setTemplateData((prev: TemplateState<unknown>) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
@@ -1633,17 +1637,38 @@ const handleRemoveImage =()=>{
           onDragOver={(e) => e.preventDefault()}
           style={{
             width: `${
-              (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
-              (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
+              (((templateData?.barcodeState?.labelState?.labelWidth ?? 300)) *
+              (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1))+((templateData?.propertiesState?.padding
+                                ?.right ?? 0)+(templateData?.propertiesState?.padding
+                                ?.left ?? 0))+((templateData?.propertiesState?.gap?.vgap??0)* ((templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)-1))
             }pt`,
             // : templateData?.propertiesState?.pageSize !== "Custom"
             // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight
             // :"",
             maxHeight: `${
-              (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
-              (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
-            }pt`,
+              (((templateData?.barcodeState?.labelState?.labelHeight ?? 300)) *
+              (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1))+((templateData?.propertiesState?.padding
+                                ?.top ?? 0)+(templateData?.propertiesState?.padding
+                                ?.bottom ?? 0))+((templateData?.propertiesState?.gap?.hgap??0)* ((templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)-1))
 
+              // (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+              // (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
+            }pt`,
+padding: `${
+                  templateData?.propertiesState?.padding?.top ?? 0
+                }pt 
+                            ${
+                                templateData?.propertiesState?.padding
+                                ?.right ?? 0
+                            }pt 
+                            ${
+                              templateData?.propertiesState?.padding
+                                ?.bottom ?? 0
+                            }pt 
+                            ${
+                              templateData?.propertiesState?.padding
+                                ?.left ?? 0
+                            }pt`,
             // : templateData?.propertiesState?.pageSize !== "Custom"
             // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth
             // :`` ,
@@ -1675,21 +1700,7 @@ const handleRemoveImage =()=>{
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                padding: `${
-                  templateData?.barcodeState?.labelState?.padding?.top ?? 0
-                }pt 
-                            ${
-                              templateData?.barcodeState?.labelState?.padding
-                                ?.right ?? 0
-                            }pt 
-                            ${
-                              templateData?.barcodeState?.labelState?.padding
-                                ?.bottom ?? 0
-                            }pt 
-                            ${
-                              templateData?.barcodeState?.labelState?.padding
-                                ?.left ?? 0
-                            }pt`,
+                
                 backgroundImage: templateData?.barcodeState?.labelState
                   ?.background_image
                   ? `url(${templateData?.barcodeState?.labelState?.background_image})`
@@ -1721,60 +1732,13 @@ const handleRemoveImage =()=>{
             </div>
           </ResizableBox>
 
-          {/* ) : templateData?.propertiesState?.pageSize === "Custom" ? (
-            <ResizableBox
-              width={Number(templateData.propertiesState.width) || 300}
-              height={Number(templateData.propertiesState.height) || 300}
-              minConstraints={[50, 50]}
-              maxConstraints={[1400, 1000]}
-              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
-              className="box"
-              onResize={handlePageResize}
-            >
-              <div
-                ref={canvasRef}
-                id="teplate-container"
-                className="bg-white shadow-sm mx-auto overflow-hidden relative"
-                style={{
-                  transform: `scale(${zoom / 100})`,
-                  transformOrigin: "top center",
-                  border: "2px dashed #ccc",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                
-                {templateData?.barcodeState?.placedComponents?.map(
-                  renderComponent
-                )}
-              </div>
-            </ResizableBox>
-          ) : (
-            <div
-              ref={canvasRef}
-              id="teplate-container"
-              className={`bg-white shadow-sm mx-auto relative`}
-              style={{
-                transform: `scale(${zoom / 100})`,
-                transformOrigin: "top center",
-                border: "2px dashed #ccc",
-                width: "100%",
-                height: "100%",
-              }}
-            > 
-              
-              {templateData?.barcodeState?.placedComponents?.map(
-                renderComponent
-              )}
-            </div>
-          )
-          } */}
+
         </div>
       </div>
 
       {/* Right Sidebar - Properties */}
       <ResizableBox
-        width={300} // Initial width
+        width={380} // Initial width
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
         maxConstraints={[400, Infinity]} // Maximum width
@@ -1814,7 +1778,7 @@ const handleRemoveImage =()=>{
           <Box>
             <Box
               hidden={activeTab !== "element"}
-              sx={{ maxHeight: "calc(100vh)", pb: 2 }}
+              // sx={{ maxHeight: "calc(100vh)", pb: 2 }}
             >
               {selectedComponent && (
                 <Box
@@ -3078,7 +3042,15 @@ const handleRemoveImage =()=>{
             </Box>
 
             {templateGroup === "barcode" && (
-              <Box hidden={activeTab !== "label"}>
+              <Box hidden={activeTab !== "label"}
+                sx={{
+                    maxHeight: "calc(100vh - 8rem)",
+                    overflowY: "auto",
+                    py: 2,
+                    spaceY: 2,
+                  }}
+                  className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
+                >
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
                     id="ColumnsPerRow"
@@ -3089,7 +3061,7 @@ const handleRemoveImage =()=>{
                     }
                     data={templateData}
                     onChange={(e) =>
-                      handleLabelPropsChange("columnsPerRow", e.target.value)
+                      handleLabelPropsChange("columnsPerRow", parseInt(e.target.value) )
                     }
                   />
                 </Box>
@@ -3101,7 +3073,7 @@ const handleRemoveImage =()=>{
                     value={templateData?.barcodeState?.labelState?.rowsPerPage}
                     data={templateData}
                     onChange={(e) => {
-                      handleLabelPropsChange("rowsPerPage", e.target.value);
+                      handleLabelPropsChange("rowsPerPage", parseInt(e.target.value));
                     }}
                   />
                 </Box>
@@ -3109,10 +3081,11 @@ const handleRemoveImage =()=>{
                   <ERPInput
                     id="labelWidth"
                     label="Label Width"
+                    type="number"
                     value={templateData?.barcodeState?.labelState?.labelWidth}
                     data={templateData}
                     onChange={(e) => {
-                      handleLabelPropsChange("labelWidth", e.target.value);
+                      handleLabelPropsChange("labelWidth", parseFloat(e.target.value));
                     }}
                   />
                 </Box>
@@ -3122,8 +3095,9 @@ const handleRemoveImage =()=>{
                     label="Label  Height"
                     value={templateData?.barcodeState?.labelState?.labelHeight}
                     data={templateData}
+                    type="number"
                     onChange={(e) =>
-                      handleLabelPropsChange("labelHeight", e.target.value)
+                      handleLabelPropsChange("labelHeight", parseFloat(e.target.value))
                     }
                   />
                 </Box>
@@ -3229,100 +3203,18 @@ const handleRemoveImage =()=>{
                     )}
                   </div>
                 </Box>
-                <Box sx={{ mb: 1 }}>
-                  <InputLabel
-                    sx={{
-                      textTransform: "capitalize",
-                      marginBottom: "0.25rem",
-                      display: "block",
-                      fontSize: "0.75rem",
-                      color: "rgb(17, 24, 39)",
-                      textAlign: "left",
-                      direction: "rtl",
-                    }}
-                    htmlFor="margin"
-                  >
-                    Padding (pt)
-                  </InputLabel>
-                  <Box
-                    display="grid"
-                    gridTemplateColumns="repeat(2, 1fr)"
-                    gap={2}
-                  >
-                    {(
-                      ["top", "left", "right", "bottom"] as PaddingMarginSides[]
-                    ).map((side) => (
-                      <ERPInput
-                        id={side}
-                        label={side.charAt(0).toUpperCase() + side.slice(1)}
-                        key={side}
-                        type="number"
-                        placeholder={
-                          side.charAt(0).toUpperCase() + side.slice(1)
-                        }
-                        value={
-                          templateData?.barcodeState?.labelState?.padding?.[
-                            side
-                          ]
-                        }
-                        data={templateData?.barcodeState?.labelState}
-                        onChange={(e) =>
-                          handleLabelPropsChange("padding", {
-                            ...templateData?.barcodeState?.labelState?.padding,
-                            [side]: parseInt(e.target.value),
-                          })
-                        }
-                      />
-                    ))}
-                  </Box>
-                </Box>
-                <Box sx={{ mb: 1 }}>
-                  <InputLabel
-                    sx={{
-                      textTransform: "capitalize",
-                      marginBottom: "0.25rem",
-                      display: "block",
-                      fontSize: "0.75rem",
-                      color: "rgb(17, 24, 39)",
-                      textAlign: "left",
-                      direction: "rtl",
-                    }}
-                    htmlFor="margin"
-                  >
-                    Gap (pt)
-                  </InputLabel>
-                  <Box
-                    display="grid"
-                    gridTemplateColumns="repeat(2, 1fr)"
-                    gap={2}
-                  >
-                    {(["hgap", "vgap"] as GapSides[]).map((side) => (
-                      <ERPInput
-                        id={side}
-                        label={side.charAt(0).toUpperCase() + side.slice(1)}
-                        key={side}
-                        type="number"
-                        placeholder={
-                          side.charAt(0).toUpperCase() + side.slice(1)
-                        }
-                        value={
-                          templateData?.barcodeState?.labelState?.gap?.[side]
-                        }
-                        data={templateData?.barcodeState?.labelState}
-                        onChange={(e) =>
-                          handleLabelPropsChange("gap", {
-                            ...templateData?.barcodeState?.labelState?.gap,
-                            [side]: parseInt(e.target.value),
-                          })
-                        }
-                      />
-                    ))}
-                  </Box>
-                </Box>
               </Box>
             )}
 
-            <Box hidden={activeTab !== "page" || forCustomRows}>
+         <Box
+            sx={{
+                    maxHeight: "calc(100vh - 8rem)",
+                    overflowY: "auto",
+                    py: 2,
+                    spaceY: 2,
+                  }}
+                  className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
+         hidden={activeTab !== "page" || forCustomRows}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
@@ -3335,107 +3227,6 @@ const handleRemoveImage =()=>{
                     }
                   />
                 </Box>
-                <Box sx={{ mb: 1 }}>
-               <ERPCheckbox
-                    id="ask_start_index"
-                    label={t("ask_start_index")}
-                    checked={templateData?.propertiesState?.ask_start_index}
-                    data={templateData?.propertiesState}
-                    onChange={async (e) => {
-                      const checked = e.target.checked;
-                      handlePagePropsChange("ask_start_index", checked);
-                    }}
-                  />
-                </Box>
-                
-
-                {/* {templateGroup !== "barcode" && (
-                  <>
-                  <Box sx={{ mb: 1 }}>
-                    <ERPDataCombobox
-                      defaultValue={
-                        templateData?.propertiesState?.pageSize ?? "A4"
-                      }
-                      field={{
-                        id: "pageSize",
-                        required: true,
-                        valueKey: "value",
-                        labelKey: "label",
-                      }}
-                      data={templateData?.propertiesState}
-                      onChangeData={(data: any) => {
-                        handlePagePropsChange("pageSize", data.pageSize);
-                      }}
-                      id="pageSize"
-                      options={pageSizeOptions}
-                      label="Page Size"
-                    />
-                  </Box>
-
-
-                  {templateData?.propertiesState?.pageSize !== "Custom" && (
-                    <Box sx={{ mb: 1 }}>
-                    <ERPDataCombobox
-                      defaultValue={
-                        templateData?.propertiesState?.orientation ?? "landscape"
-                      }
-                      field={{
-                        id: "orientation",
-                        required: true,
-                        valueKey: "value",
-                        labelKey: "label",
-                      }}
-                      data={templateData?.propertiesState}
-                      onChangeData={(data: any) => {
-                        handlePagePropsChange("orientation", data.orientation);
-                      }}
-                      id="orientation"
-                      options={[
-                        { value: "landscape", label: "landscape" },
-                        { value: "portrait", label: "portrait" },
-                       
-                      ]}
-                      label="Orientation"
-                    />
-                    </Box>
-                  )}
-                  </>
-                  
-                )} */}
-
-                {/* {templateData?.propertiesState?.pageSize === "Custom" && (
-                  <Box sx={{ mb: 1 }}>
-                    <div className="flex justify-start items-center space-x-1">
-                      <ERPInput
-                        type="number"
-                        id="width"
-                        label="Page Width"
-                        value={templateData?.propertiesState?.width}
-                        data={templateData?.propertiesState}
-                        onChange={(e) => {
-                          handlePagePropsChange(
-                            "width",
-                             parseInt(e.target.value,10)
-                          );
-                        }}
-                      />
-                      <ERPInput
-                        id="height"
-                        type="number"
-                        label="Page  Height"
-                        value={templateData?.propertiesState?.height}
-                        data={templateData?.propertiesState}
-                        onChange={(e) =>
-                          handlePagePropsChange(
-                            "height",
-                             parseInt(e.target.value,10)
-                          )
-                        }
-                      />
-                    </div>
-                  </Box>
-                )} */}
-
                 <Box sx={{ mb: 1 }}>
                   <InputLabel
                     sx={{
@@ -3472,7 +3263,52 @@ const handleRemoveImage =()=>{
                         onChange={(e) =>
                           handlePagePropsChange("padding", {
                             ...templateData?.propertiesState?.padding,
-                            [side]: parseInt(e.target.value),
+                            [side]: parseFloat(e.target.value),
+                          })
+                        }
+                      />
+                    ))}
+                  </Box>
+                </Box>
+                
+                <Box sx={{ mb: 1 }}>
+                  <InputLabel
+                    sx={{
+                      textTransform: "capitalize",
+                      marginBottom: "0.25rem",
+                      display: "block",
+                      fontSize: "0.75rem",
+                      color: "rgb(17, 24, 39)",
+                      textAlign: "left",
+                      direction: "rtl",
+                    }}
+                    htmlFor="margin"
+                  >
+                    Gap (pt)
+                  </InputLabel>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(2, 1fr)"
+                    gap={2}
+                  >
+                    {(["hgap", "vgap"] as GapSides[]).map((side) => (
+                      <ERPInput
+                        id={side}
+                        label={side.charAt(0).toUpperCase() + side.slice(1)}
+                        key={side}
+                        type="number"
+                        placeholder={
+                          side.charAt(0).toUpperCase() + side.slice(1)
+                        }
+                        value={
+                          templateData?.propertiesState?.gap?.[side]
+                        }
+                        data={ templateData?.propertiesState}
+
+                        onChange={(e) =>
+                          handlePagePropsChange("gap", {
+                           ...templateData?.propertiesState?.gap,
+                            [side]: parseFloat(e.target.value),
                           })
                         }
                       />
@@ -3508,26 +3344,7 @@ const handleRemoveImage =()=>{
                   />
                 </Box>
 
-                  {/* <ERPCheckbox
-                    id="select_printer"
-                    label={t("select printer")}
-                    checked={templateData?.propertiesState?.select_printer}
-                    data={templateData?.propertiesState}
-                    onChange={async (e) => {
-                      const checked = e.target.checked;
-                      // Always update checkbox state first
-                      handlePagePropsChange("select_printer", checked);
 
-                    }}
-                  />
-
-              {templateData?.propertiesState?.select_printer && (
-           <AccessPrinterList 
-           templateData={templateData}
-           t={t}
-           handlePagePropsChange={handlePagePropsChange}
-           />
-              )} */}
 
     <Box sx={{ mb: 2 }}>
       <Stack spacing={2}>
@@ -3587,7 +3404,10 @@ const handleRemoveImage =()=>{
       </Stack>
     </Box>
               </Box>
-            </Box>
+          
+  
+         </Box>   
+
           </Box>
         </div>
       </ResizableBox>

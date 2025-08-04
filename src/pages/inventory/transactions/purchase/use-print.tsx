@@ -36,7 +36,7 @@ import { useTranslation } from "react-i18next";
 import { initialProductData } from "./transaction-type-data";
 import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { generateBarcodeDataUrl } from "../../../../utilities/barcode";
+import { generateBarcodeDataUrl, generateBarcodePages } from "../../../../utilities/barcode";
 import {
   JSPrintManager,
   WSStatus,
@@ -90,14 +90,16 @@ export const usePrint = () => {
      return images;
   };
 
-  const handleDirectPrint = async (template: any,data?:any,DefaultPrinterName?:string) => {
-    debugger;
+  const handleDirectPrint = async (template: any,data?:any,page?:any,DefaultPrinterName?:string) => {
     let pdfDocument;
+    const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
+    const rowsPerPage = Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
     const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
+    const TotalPage = page || generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage);
     if (template.templateGroup === "barcode") {
       const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template);
       pdfDocument = (
-      <BarcodePDFDocument template={template} data={data} barcodeImages={barcodeImagesForPrint} />
+      <BarcodePDFDocument template={template} data={TotalPage} barcodeImages={barcodeImagesForPrint} />
       );
     } else {
       pdfDocument = renderSelectedTemplate({
@@ -309,7 +311,7 @@ export const usePrint = () => {
     let batchCreatedList = [];
     try {
       let barcodeLabelAdded = false;
-
+      const template = formState?.barcodeTemplate;
       let barcodeData = [];
       if (updateBatch) {
         let data = [];
@@ -455,7 +457,7 @@ export const usePrint = () => {
           formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
         );
       }else{
-       await handleDirectPrint(formState?.barcodeTemplate,barcodeData)
+       await handleDirectPrint(template,barcodeData,)
       };
 
        dispatch(

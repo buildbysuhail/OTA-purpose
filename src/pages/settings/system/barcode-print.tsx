@@ -19,6 +19,7 @@ import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { usePrint } from "../../inventory/transactions/purchase/use-print";
+import { generateBarcodePages } from "../../../utilities/barcode";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -132,6 +133,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
+  const { handleDirectPrint } = usePrint();
   const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
@@ -144,9 +146,10 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const [loadingTemplate, setLoadingTemplate] = useState<boolean>(false);
   const [template, setTemplate] = useState<TemplateState<unknown>>();
   const [printing, setPrinting] = useState<boolean>(false);
-  const [data, setData] = useState<any>();
-  const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
-  const { handleDirectPrint } = usePrint();
+  const [data, setData] = useState<any>([]);
+
+
+
   const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -162,6 +165,17 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
   };
+
+    const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
+    
+  const rowsPerPage = Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
+
+  // 2) memoize pages
+  const pages = useMemo(
+    () => generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage),
+    [data, columnsPerRow, rowsPerPage,template]
+  );
+
 
   const handleVoucherStateChange = (e: any) => {
     const { name, value } = e.target ? e.target : e;
@@ -241,12 +255,12 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     e.preventDefault();
   };
 
+
   const barcodeFormSubmit = useCallback(async () => {
     setBarcodeFormLoading(true);
-    const response =
-      await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
+    const response = await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    let sliceData = response?.slice(0, 3);
+    let sliceData = response?.slice(0, 6);
     setData(sliceData);
   }, [barcodeForm.data]);
 
@@ -268,7 +282,8 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     } else {
       // Direct print mode: Silent print without browser dialog
       setShowPrint(false);
-       handleDirectPrint(template,data,template?.propertiesState?.printer)
+ 
+       handleDirectPrint(template,data,pages,template?.propertiesState?.printer)
     }
   } catch (error) {
     console.error('Error in print process:', error);
@@ -284,7 +299,8 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       }));
     }, 1000);
   }
-  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template]);
+  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template, handleDirectPrint,]);
+
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(
@@ -721,7 +737,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
           title={t("barcode_print")}
           isForm={true}
           closeModal={() => { setShowPrint(false); }}
-          content={<DownloadBarcodePreview template={template} data={data} />}
+          content={<DownloadBarcodePreview template={template} data={data} pages={pages}/>}
           width={1000}
           height={800}
         />

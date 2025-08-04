@@ -106,3 +106,36 @@ export function generateBarcodeDataUrl(
   renderBarcode(canvas, text, props, widthPt, heightPt, true); // Pass true for PDF rendering
   return canvas.toDataURL('image/png', 1.0);
 }
+
+// utils/barcodePaging.ts
+export function generateBarcodePages<T>(
+  items: T[],
+  columnsPerRow: number,
+  rowsPerPage: number
+): T[][][] {
+  // 1) Expand each item by its labelCount
+   if (!items.length) {
+    return [];
+  }
+  const expanded: (T & { uniqueId: string })[] = [];
+  items.forEach((item: any) => {
+    const count = item.labelCount ?? 1;
+    for (let i = 0; i < count; i++) {
+      expanded.push({ ...item, uniqueId: `${item.siNo}-${i}` });
+    }
+  });
+
+  // 2) Slice into rows of `columnsPerRow`
+  const chunked: (T & { uniqueId: string })[][] = [];
+  for (let i = 0; i < expanded.length; i += columnsPerRow) {
+    chunked.push(expanded.slice(i, i + columnsPerRow));
+  }
+
+  // 3) Group rows into pages of `rowsPerPage` rows
+  const pages: (T & { uniqueId: string })[][][] = [];
+  for (let i = 0; i < chunked.length; i += rowsPerPage) {
+    pages.push(chunked.slice(i, i + rowsPerPage));
+  }
+
+  return pages;
+}

@@ -80,7 +80,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         isDropUpOpen &&
         dropUpRef.current &&
         !dropUpRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest("button")
+        !(event.target as HTMLElement).closest("button") &&
+        !document.querySelector(".combobox-dropdown")?.contains(event.target as Node) &&
+        !document.querySelector(".combobox-dropdown-modal")?.contains(event.target as Node) &&
+        !document.querySelector(".MuiAutocomplete-popper")?.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest(".combobox-dropdown") &&
+        !(event.target as HTMLElement).closest(".MuiAutocomplete-popper")
       ) {
         toggleDropup();
       }

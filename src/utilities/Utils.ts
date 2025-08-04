@@ -991,3 +991,8 @@ export const getExcelCellValue = (cell: any): string | null => {
     return value?.toString() || null;
   };
 
+export const remToPx = (rem: number) =>
+    {
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
+      return rem * rootFontSize;
+    };

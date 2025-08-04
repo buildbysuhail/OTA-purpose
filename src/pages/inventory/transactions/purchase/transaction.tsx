@@ -42,6 +42,7 @@ import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
 import {
   generateUniqueKey,
   isNullOrUndefinedOrZero,
+  remToPx,
 } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
@@ -123,6 +124,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   transactionMasterID,
   financialYearID,
   isTeller = false,
+  // localInputBox,
 }) => {
   const Utc = localStorage.getItem("utInvc");
   const st = atob(Utc ?? "");
@@ -2120,6 +2122,17 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
     cursor: "pointer",
   };
 
+//   useEffect(() => {
+//     console.log('safvan');
+    
+//   console.log('inputHeight changed:', formState.userConfig?.inputBoxStyle?.inputHeight );
+// }, [formState.userConfig?.inputBoxStyle?.inputHeight ]);
+
+//   const dynamicMarginTop = 123 + (appState?.inputBox?.inputHeight ?? 0);
+
+//   console.log("mj23stylecheck:" , formState.userConfig?.inputBoxStyle?.inputHeight );
+  
+
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
   //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -2138,6 +2151,9 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
   // const toggleMenu = () => {
   //   setIsMenuOpen(!isMenuOpen);
   // };
+  const getInputHeight =() =>{
+    return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx (0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx (0.75): formState.userConfig?.inputBoxStyle?.inputSize == "lg" ?  remToPx (1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx (formState.userConfig?.inputBoxStyle?.inputHeight)??0) -23:0
+  }
 
   return (
     <>
@@ -2247,8 +2263,13 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
             {/* header ends here */}
 
             <div
-              className="mt-[123px]"
+              // className="mt-[123px]"
+              // className={`mj23stylecheck mt-[${123 + (appState?.inputBox?.inputHeight ?? 0)}px]`}
+              // className={`mt-[${dynamicMarginTop}px]`}
+              className="mj23stylecheck"
               style={{
+                // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
+                marginTop: `${123 + (getInputHeight())}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",

@@ -471,7 +471,7 @@ export interface AccTransactionFormState {
   amountInWords: string,
   template?: any,
   templates?: [],
-  templatesData?: TemplateState[]
+  templatesData?: TemplateState<AccTransactionRow>[]
   userConfig?: AccUserConfig;
   formElements: FormElementsState
   openUnsavedPrompt?: boolean

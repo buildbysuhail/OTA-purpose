@@ -943,11 +943,11 @@ export interface LoadTemplateParams {
   templateId: any;
 }
 
-export const loadTemplateById = async (templateId:LoadTemplateParams) => {
+export const loadTemplateById = async <T>(templateId: LoadTemplateParams) => {
   
   try {
     const res = await api.getAsync(`${Urls.templates}${templateId}`);
-        let cc: TemplateState = customJsonParse(res.content);
+        let cc: TemplateState<T> = customJsonParse(res.content);
         const _template = {
           ...cc,
           id: res.id,
@@ -991,3 +991,8 @@ export const getExcelCellValue = (cell: any): string | null => {
     return value?.toString() || null;
   };
 
+export const remToPx = (rem: number) =>
+    {
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
+      return rem * rootFontSize;
+    };

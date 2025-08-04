@@ -141,11 +141,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         isDropDownOpen &&
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest("button")
+        !(event.target as HTMLElement).closest("button") &&
+        !document.querySelector(".combobox-dropdown")?.contains(event.target as Node) &&
+        !document.querySelector(".combobox-dropdown-modal")?.contains(event.target as Node) &&
+        !document.querySelector(".MuiAutocomplete-popper")?.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest(".combobox-dropdown") &&
+        !(event.target as HTMLElement).closest(".MuiAutocomplete-popper")
       ) {
         toggleDropdown();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);

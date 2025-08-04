@@ -206,7 +206,7 @@ const accTransactionSlice = createSlice({
       });
     },
     // Inside the createSlice, update the reducer
-    acctemplatesData: (state, action: PayloadAction<TemplateState>) => {
+    acctemplatesData: (state, action: PayloadAction<TemplateState<AccTransactionRow>>) => {
       if (!state.templatesData) {
         state.templatesData = [];
       }
@@ -214,7 +214,7 @@ const accTransactionSlice = createSlice({
       // Only add the template if it doesn't already exist
       if (
         !state.templatesData.some(
-          (template) => template.templateGroup === action.payload.templateGroup
+          (template: any) => template.templateGroup === action.payload.templateGroup
         )
       ) {
         state.templatesData.push(action.payload);

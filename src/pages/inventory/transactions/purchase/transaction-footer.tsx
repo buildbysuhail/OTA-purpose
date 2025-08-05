@@ -126,7 +126,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   useEffect(() => {
     
     calculateTotal(formState.transaction.master, formState.summary, formState.formElements, {result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})
-  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff]);
+  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount]);
   const taxData = [
     { label: "SGST", value: 0 },
     { label: "CGST", value: 0 },

@@ -38,6 +38,7 @@ import type {
   TransactionDetail,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
+  formStateDeleteDetails,
   formStateHandleFieldChange,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import { useSelector } from "react-redux";
@@ -668,9 +669,9 @@ const VirtualRow = React.memo(({
         [columns, focusCell, setCurrentCell, onKeyDown],
       )
 
-      const handleDelete = ()=>{
-        console.log("Delete clicked for row", index);
-        toast.error("There is nothing to delete");
+      const handleDelete = (slNo: string)=>{
+        dispatch(formStateDeleteDetails({slNo:slNo})) 
+        // focu       
       }
 
       const handleInfoClick = (index:number)=>{
@@ -776,7 +777,7 @@ const VirtualRow = React.memo(({
                                 <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
                               </button>
 
-                              <button onClick={handleDelete} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-red-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-red-200">
+                              <button onClick={() => handleDelete(item.slNo)} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-red-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-red-200">
                                 <Trash2 className="w-4 h-4 text-red-600 transition-all duration-300 group-hover:text-red-700" />
                               </button>
                             </div>

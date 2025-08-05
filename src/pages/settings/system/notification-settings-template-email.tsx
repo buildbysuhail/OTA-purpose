@@ -7,7 +7,8 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { NotificationsChannel } from "../../../enums/notification-chanal";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import HtmlEditor, { Toolbar, MediaResizing, ImageUpload, Item, } from "devextreme-react/html-editor";
+import HtmlEditor from "../../../components/ERPComponents/erp-html-editor";
+// import HtmlEditor, { Toolbar, MediaResizing, ImageUpload, Item, } from "devextreme-react/html-editor";
 
 interface NotificationContent {
   Subject: string;
@@ -127,7 +128,21 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         loadNotification();
       }
     }, [isOpen]);
-
+const processHtmlFromBackend = (html: string) => {
+  
+  // Fix escaped quotes
+  html = html.replace(/\\"/g, '"');
+  
+  // Remove wrapper quotes if present
+  if (html.startsWith('"<') && html.endsWith('"<')) {
+    html = html.slice(1, -1);
+  }
+  if (html.startsWith('"<') && html.endsWith('>"')) {
+    html = html.slice(1, -1);
+  }
+  
+  return html;
+};
     const loadNotification = async () => {
       setLoading(true);
       try {
@@ -136,11 +151,13 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         );
 
         const parsedContent = JSON.parse(response.content);
+        debugger;
+        const ht = processHtmlFromBackend(parsedContent.Body);
         setFormState({
           ...response,
           content: {
             Subject: parsedContent.Subject || "",
-            Body: parsedContent.Body || "",
+            Body: ht,
           },
         });
       } catch (error) {
@@ -166,7 +183,10 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               onChange={(e) => handleFieldChange("Subject", e.target?.value)}
             />
             <div className="">
-              <HtmlEditor
+              <HtmlEditor >
+
+              </HtmlEditor>
+              {/* <HtmlEditor
                 height={Height.windows}
                 value={formState.content?.Body}
                 onValueChanged={valueChanged}>
@@ -205,7 +225,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
                   <Item name="blockquote" />
                   <Item name="separator" />
                 </Toolbar>
-              </HtmlEditor>
+              </HtmlEditor> */}
             </div>
             <ERPCheckbox
               id="isAttachFile"

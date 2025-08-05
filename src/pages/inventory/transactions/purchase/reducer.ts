@@ -338,6 +338,10 @@ const InvTransactionSlice = createSlice({
       // Iterate over all rows in details
       state.transaction.details = transactionInitialData.details;
     },
+    formStateDeleteDetails: (state,action: PayloadAction<{slNo: string}>) => {
+      // Iterate over all rows in details
+      state.transaction.details = state.transaction.details.filter(x => x.slNo != action.payload.slNo);
+    },
     formStateSetDetails: (
       state,
       action: PayloadAction<TransactionDetail[]>
@@ -838,7 +842,8 @@ export const {
   formStateLoadDataUpdate,
   formStateSetDetails,
   formStateClearAttachments,
-  reOrderGridCols
+  reOrderGridCols,
+  formStateDeleteDetails
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

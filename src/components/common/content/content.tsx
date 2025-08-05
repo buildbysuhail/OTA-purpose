@@ -106,6 +106,7 @@ import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
 import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-india/tax-category-india";
 import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
 import GeneralMaster from "../../../pages/inventory/masters/general-master";
+import TwilioPdfDownloader from "../../../pages/inventory/masters/pdf-download";
 import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
 import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
 
@@ -222,6 +223,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
+
+        <Route path="/pdf" element={<TwilioPdfDownloader  />} />
 
         {/* Accounts Transaction */}
         {/* <Route

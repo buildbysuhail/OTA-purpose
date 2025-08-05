@@ -2332,6 +2332,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                     (!formState.transactionLoading &&
                       formState.userConfig?.footerPosition === "right")) && (
                     <TransactionFooter
+                    calculateTotal ={calculateTotal}
                     applyDiscountsToItems={applyDiscountsToItems}
                       formState={formState}
                       dispatch={dispatch}
@@ -2478,6 +2479,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 />
                 {/* Grid Under Modification */}
                 <TransactionFooter
+                    calculateTotal ={calculateTotal}
                 applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
                   dispatch={dispatch}
@@ -2527,6 +2529,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           (!formState.transactionLoading &&
             formState.userConfig?.footerPosition !== "right" && (
               <TransactionFooter
+                    calculateTotal ={calculateTotal}
                 formState={formState}
                 dispatch={dispatch}
                 t={t}

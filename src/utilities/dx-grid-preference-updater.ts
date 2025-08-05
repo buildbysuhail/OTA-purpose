@@ -60,14 +60,15 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
   };
 export const getInitialPreference = async(gridId: any, columns: any, api: APIClient) =>{
   if(gridId == "grd_inv_transaction_PI") {
-   debugger; 
+    
   }
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
     
     let updatedPreferences: GridPreference;
 
     let parsedPreferences: GridPreference;
-    if (savedPreferences != undefined && savedPreferences != null && savedPreferences != `""` && savedPreferences != "") {
+    if (savedPreferences != "undefined" && savedPreferences != undefined && savedPreferences != null && savedPreferences != `""` && savedPreferences != "") {
+      
       parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
     } else {
       const res = await api.getAsync(`${Urls.grid_preference}/${gridId}`);

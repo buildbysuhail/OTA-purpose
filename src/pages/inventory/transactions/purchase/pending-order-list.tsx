@@ -232,7 +232,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   // Process selected orders
   const handleProcessSelected = useCallback(() => {
     // if (selectedRows.length === 0) return;
-    debugger;
+    
     const _masterIDs = gridRef.current
       ?.instance()
       ?.getSelectedRowsData("all")

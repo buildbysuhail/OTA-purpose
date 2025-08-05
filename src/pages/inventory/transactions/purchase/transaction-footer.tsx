@@ -11,7 +11,7 @@ import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
 import RoundOffInput from "./components/RoundOffInput";
 import NetAmountInput from "./components/NetAmountInput";
 import BillDiscountInput from "./components/BillDiscountInput";
-import GrandTotalLabel from "./components/GrandTotalLabel";
+import BillDiscountLabel from "./components/bill-discount-label";
 import NetTotalLabel from "./components/NetTotalLabel";
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronUp, X, EllipsisVertical } from "lucide-react";
@@ -19,7 +19,7 @@ import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPTextarea from "../../../../components/ERPComponents/erp-textarea";
-import { formStateHandleFieldChange } from "./reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -43,6 +43,7 @@ interface TransactionFooterProps {
   toggleDropup: () => void;
   footerLayout: "horizontal" | "vertical";
   applyDiscountsToItems: any;
+  calculateTotal: any
 }
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
@@ -59,6 +60,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   isDropUpOpen,
   toggleDropup,
   footerLayout,
+  calculateTotal,
   applyDiscountsToItems,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -121,6 +123,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    calculateTotal(formState.transaction.master, formState.summary, formState.formElements, {result:{}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly})
+  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff]);
   const taxData = [
     { label: "SGST", value: 0 },
     { label: "CGST", value: 0 },
@@ -341,7 +346,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 t={t}
                 taxData={taxData}
               />
-              <GrandTotalLabel
+              <BillDiscountLabel
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
@@ -575,7 +580,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     t={t}
                     taxData={taxData}
                   />
-                  <GrandTotalLabel
+                  <BillDiscountLabel
                     formState={formState}
                     dispatch={dispatch}
                     t={t}

@@ -796,7 +796,7 @@ const InvTransactionSlice = createSlice({
         }
         }
       });
-debugger;
+
       if (
         itemsToAddToDetails &&
         itemsToAddToDetails.length > 0 &&

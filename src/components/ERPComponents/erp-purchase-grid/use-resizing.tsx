@@ -106,7 +106,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
   }, []);
 
   const stopResize = useCallback(() => {
-    debugger;
+    
     const column = formState.gridColumns?.filter((x) => x.visible != false)![
       currentColumnIndex.current
     ];
@@ -213,7 +213,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
       setDragOverIndex(-1);
       return;
     }
-    debugger;
+    
     const startIndex = dragStartIndex.current;
 
     const fromColumn = formState.gridColumns?.filter(
@@ -252,7 +252,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
     }
     setColumnOrder((prevOrder) => {
-      debugger;
+      
       const newOrder = [...prevOrder];
       const [movedItem] = newOrder.splice(startIndex, 1);
       newOrder.splice(dropIndex, 0, movedItem);

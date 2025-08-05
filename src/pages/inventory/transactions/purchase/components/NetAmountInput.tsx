@@ -41,7 +41,7 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     // />
     <div className="flex justify-between items-center">
       <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.netAmount.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">{" "}: {formState.netAmount}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">{" "}: {formState.summary.netValue}</span>
     </div>
   );
 };

@@ -339,7 +339,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      debugger;
+      
       if (e.key === "Backspace" || e.key === "Delete") return;
 
       onKeyDown(e, column, rowIndex);
@@ -593,7 +593,7 @@ const VirtualRow = React.memo(({
       const handleKeyDown = useCallback(
         (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
           const target = e.target as HTMLElement
-          debugger;
+          
           if (!target.id) return
 
           const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
@@ -602,7 +602,7 @@ const VirtualRow = React.memo(({
           if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
             onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
             return
-          }debugger;
+          }
 
           let shouldNavigate = true;
           if (target.tagName === "INPUT" || target.querySelector("input")) {
@@ -629,7 +629,7 @@ const VirtualRow = React.memo(({
           if (!shouldNavigate) return;
 
           e.preventDefault();
-          debugger;
+          
           switch (e.key) {
             case "ArrowRight":
               if (currentColumnIndex < visibleColumns.length - 1) {
@@ -793,7 +793,7 @@ const VirtualRow = React.memo(({
                               className="h-[22px] text-sm"
                               onFocus={() => handleFocus(column.dataField!)}
                               onBlur={handleBlur}
-                              onKeyDown={(value, e) => {debugger; handleKeyDown(value, e, column, index)}}
+                              onKeyDown={(value, e) => {handleKeyDown(value, e, column, index)}}
                               searchKey={column.dataField}
                               advancedProductSearching={advancedProductSearching}
                               useInSearch={useInSearch}
@@ -1351,12 +1351,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
 const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(formState.currentCell);
 const [prevCell, setPrevCell] = useState<number>(formState.currentCell?.rowIndex??-1);
   useEffect(() => {
-    debugger;
   setCurrentCell(formState.currentCell)
 
   }, [formState.currentCell])
 useEffect(() => {
-  debugger;
     if (
       currentCell &&
       currentCell.column != "" &&
@@ -1411,7 +1409,6 @@ useEffect(() => {
       }
     }
     setPrevCell(currentCell?.rowIndex??-1)
-    debugger
      if(prevCell != currentCell?.rowIndex) {
     localStorage.setItem(`${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`, JSON.stringify(formState.transaction.details.filter(x => x.productID > 0)))
   }
@@ -1677,7 +1674,7 @@ useEffect(() => {
                 itemCount={formState.transaction.details.length}
                 gridRef={containerRef as any}
                 onKeyDown={(value, e, column, rowIndex) => {
-                  debugger;
+                  
                   onKeyDown(value, e, column, rowIndex);
                 }}
                 onChange={(value, column, rowIndex) => {

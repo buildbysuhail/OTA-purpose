@@ -296,7 +296,7 @@ export const useTransactionHelper = (transactionType: string) => {
     rowIndex = rowIndex ?? -1;
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
     let { result } = commonParams;
-
+debugger;
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];

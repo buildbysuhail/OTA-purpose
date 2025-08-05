@@ -101,7 +101,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
         [field]: value,
       },
     };
-    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    // dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
   useEffect(() => { }, []);

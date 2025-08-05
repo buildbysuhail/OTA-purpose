@@ -289,7 +289,7 @@ export const useTransaction = (
     setVoucherNo?: boolean | false,
     loadVType?: string
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -911,7 +911,7 @@ export const useTransaction = (
   };
 
   const preSave = async () => {
-    debugger;
+    
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
@@ -1166,7 +1166,7 @@ export const useTransaction = (
     const editableColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null && col.allowEditing && col.readOnly !== true
       );
-      debugger;
+      
       if(editableColumns && editableColumns.length > 0) {
     const res = focusColumn(0,editableColumns[0].dataField??"")
     setCurrentCell(res, formState.transaction.details[0] as TransactionDetail);
@@ -1829,7 +1829,7 @@ export const useTransaction = (
                       totalRes.loading = {isLoading: false, text: ''}
 
                       // Dispatch the state update
-                      debugger;
+                      
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
                           fields: totalRes,
@@ -2028,7 +2028,7 @@ export const useTransaction = (
                 },
               }
             );
-debugger;
+
             if(deleteResult && deleteResult?.data?.isOk) {
 ERPAlert.show({
               title: t("success"),
@@ -2258,7 +2258,9 @@ ERPAlert.show({
           );
           calculateSummaryAndTotal = true;
         }
-      } else if (columnName === "qty" || columnName === "unitPrice") {
+      } else if (columnName === "qty" || columnName === "unitPrice"
+         || columnName === "discPerc" || columnName === "discount"
+      ) {
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(

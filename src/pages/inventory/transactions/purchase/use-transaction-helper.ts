@@ -297,7 +297,7 @@ export const useTransactionHelper = (transactionType: string) => {
     rowIndex = rowIndex ?? -1;
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
     let { result } = commonParams;
-debugger;
+
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
@@ -1390,7 +1390,7 @@ debugger;
     return master;
   };
   const     applyDiscountsToItems = (): void => {
-    
+    debugger;
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
@@ -1411,7 +1411,7 @@ debugger;
       totalGross = formState.summary.gross;
       // Apply discount to each item with productID > 0
       if(details.length > 0) {
-      details.forEach((item, i) => {
+      details = details.map((item, i) => {
         itemGross = item.gross ?? 0;
         grossPerc = (itemGross / totalGross) * 100;
         itemDisc = (billDisc * grossPerc) / 100;
@@ -1424,11 +1424,13 @@ debugger;
           { result: {transaction:{details:[detail]}} },
           true
         );
-        if(updatedRow?.transaction?.details?.length??0 > 0) {
-        outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
-        item = {...item, ...updatedRow.transaction!.details![0]}
+       if(updatedRow?.transaction?.details?.length??0 > 0) {
+          outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
+          return {...item, ...updatedRow.transaction!.details![0]};
         }
+        return item;
       });
+      
       const summaryRes = calculateSummary(details, formState, {
           result: {},
         });

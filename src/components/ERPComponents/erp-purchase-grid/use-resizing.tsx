@@ -97,16 +97,15 @@ export const useTableResizeAndReorder = (gridID: string) => {
       .table-body > div > div:nth-child(${columnIndex + 1})
     `);
 
-    headerCells.forEach((cell) => {
-      const element = cell as HTMLElement;
-      element.style.width = newWidth + "px";
-      element.style.minWidth = newWidth + "px";
-      element.style.maxWidth = newWidth + "px";
-    });
+    // headerCells.forEach((cell) => {
+    //   const element = cell as HTMLElement;
+    //   element.style.width = newWidth + "px";
+    //   element.style.minWidth = newWidth + "px";
+    //   element.style.maxWidth = newWidth + "px";
+    // });
   }, []);
 
   const stopResize = useCallback(() => {
-    
     const column = formState.gridColumns?.filter((x) => x.visible != false)![
       currentColumnIndex.current
     ];
@@ -171,7 +170,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
 
   // Drag and drop functionality
   const handleDragStart = (e: React.DragEvent, index: number) => {
-    if (isResizing.current) {
+    if (isResizing.current || index == 0 || index == columnWidths.length-1) {
       e.preventDefault();
       return;
     }
@@ -186,6 +185,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
+    debugger;
     isDragging.current = false;
     dragStartIndex.current = -1;
     setDragOverIndex(-1);
@@ -204,7 +204,11 @@ export const useTableResizeAndReorder = (gridID: string) => {
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-
+    debugger;
+    if(dragOverIndex == 0 || dragOverIndex == columnWidths.length-1) {
+      return;
+    }
+    debugger;
     if (
       !isDragging.current ||
       dragStartIndex.current === -1 ||

@@ -741,6 +741,7 @@ const VirtualRow = React.memo(({
             whiteSpace: 'nowrap',
             display: 'flex',
             alignItems: 'center',
+            backgroundColor: isFixed ? '#e3f2fd' : '#f8f9fa',
             position: isFixed ? 'sticky' : 'relative',
                           left: isFirstColumn ? '0px' : 'auto',
                           right: isLastColumn ? '0px' : 'auto',
@@ -1064,9 +1065,22 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
 
   // Ultra-fast scroll handler with immediate updates to prevent white areas
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const scrollTop = e.currentTarget.scrollTop;
-    updateScroll(scrollTop);
+    const target = e.currentTarget;
+    const verticalScrollTop = target.scrollTop; // Only track vertical scroll for virtual rows
+    const horizontalScrollLeft = target.scrollLeft; // Track horizontal for debugging
+    
+    // Update virtual scrolling based on VERTICAL position only
+    updateScroll(verticalScrollTop);
+    
+    // Close menu when scrolling (either direction)
+    // if (openMenuRow !== null) {
+    //   closeMenu();
+    // }
+    
+    // Optional: Log scroll positions for debugging
+    // console.log(`V-Scroll: ${verticalScrollTop}px | H-Scroll: ${horizontalScrollLeft}px | Visible: ${visibleItems.length} rows`);
   }, [updateScroll]);
+
 
   // Attach resize handlers
   useEffect(() => {
@@ -1557,8 +1571,12 @@ useEffect(() => {
         className="border border-gray-300 rounded"
         style={{ 
           height: `${height + 80}px`, // Extra space for header/footer
-          overflow: 'auto', // SINGLE scroll for both X and Y
-          position: 'relative'
+          overflowY: 'scroll', // Force vertical scrollbar to always show
+          overflowX: 'auto', // Horizontal scrollbar only when needed
+          position: 'relative',
+          // Ensure scrollbar is visible for different browsers
+          scrollbarWidth: 'auto', // Firefox - use default width for visibility
+          scrollbarColor: '#888 #f1f1f1' // Firefox thumb and track colors
         }}
         onScroll={handleScroll} // Move scroll handler here!
       >
@@ -1593,7 +1611,7 @@ useEffect(() => {
               return (
               <div
                 key={`${column.dataField}-${index}`}
-                draggable
+                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnd={handleDragEnd}
                 onDragOver={(e) => handleDragOver(e, index)}

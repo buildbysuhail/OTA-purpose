@@ -9,9 +9,14 @@ import {
   ZoomIn, ZoomOut, Save, Clock, FileText, Sparkles
 } from 'lucide-react';
 
-const HtmlEditor = () => {
+type HtmlEditorProps = {
+  value: string;
+};
+
+const HtmlEditor: React.FC<HtmlEditorProps> = ({ value }) => {
+
   const [mode, setMode] = useState('design'); // 'design', 'code', or 'split'
-  const [htmlContent, setHtmlContent] = useState('<h1>Welcome to Advanced HTML Editor</h1><p>Start creating amazing content with our feature-rich editor!</p>');
+  const [htmlContent, setHtmlContent] = useState(value);
   const [selectedText, setSelectedText] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);

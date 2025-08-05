@@ -183,7 +183,7 @@ const processHtmlFromBackend = (html: string) => {
               onChange={(e) => handleFieldChange("Subject", e.target?.value)}
             />
             <div className="">
-              <HtmlEditor >
+              <HtmlEditor value={formState.content?.Body}>
 
               </HtmlEditor>
               {/* <HtmlEditor

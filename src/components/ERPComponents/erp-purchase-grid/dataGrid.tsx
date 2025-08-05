@@ -1513,34 +1513,34 @@ useEffect(() => {
                 </nav>
               </div>
             )}
-        {isExcelMenuOpen && (
-          <ERPModal
-            isOpen={isExcelMenuOpen}
-            title={t("export_options")}
-            width={400}
-            height={200}
-            closeModal={closeExcelMenu}
-            content={
-              <>
-                <ERPCheckbox
-                  id="exportVisibleColumns"
-                  label={t("export_only_visible_column")}
-                  checked={exportVisibleColumns}
-                  onChange={() => setExportVisibleColumns(!exportVisibleColumns)}
-                />
-              </>
-            }
-            footer={
-              <div className="flex items-center justify-end p-1 border-t border-gray-200">
-                <ERPButton
-                  variant="primary"
-                  title={t("export")}
-                  onClick={exportToExcel}
-                />
-              </div>
-            }
-          />
-        )}
+            {isExcelMenuOpen && (
+              <ERPModal
+                isOpen={isExcelMenuOpen}
+                title={t("export_options")}
+                width={400}
+                height={200}
+                closeModal={closeExcelMenu}
+                content={
+                  <>
+                    <ERPCheckbox
+                      id="exportVisibleColumns"
+                      label={t("export_only_visible_column")}
+                      checked={exportVisibleColumns}
+                      onChange={() => setExportVisibleColumns(!exportVisibleColumns)}
+                    />
+                  </>
+                }
+                footer={
+                  <div className="flex items-center justify-end p-1 border-t border-gray-200">
+                    <ERPButton
+                      variant="primary"
+                      title={t("export")}
+                      onClick={exportToExcel}
+                    />
+                  </div>
+                }
+              />
+            )}
         <div
         ref={containerRef}
         style={{ width: `${totalGridWidth + 2}px`, minWidth: `${totalGridWidth + 2}px` ,borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}

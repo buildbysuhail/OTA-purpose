@@ -352,7 +352,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 dispatch={dispatch}
                 t={t}
               />
-              <NetTotalLabel formState={formState} dispatch={dispatch} t={t} />
+              {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
               {formState.formElements.grandTotalFc.visible && (
                 <div>
                   <div className="flex items-center justify-between dark:text-dark-text">
@@ -590,11 +590,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               <div className="flex items-end gap-4">
                 <div className="grid grid-cols-1 gap-1">
-                  <NetTotalLabel
+                  {/* <NetTotalLabel
                     formState={formState}
                     dispatch={dispatch}
                     t={t}
-                  />
+                  /> */}
                   <div>
                     <div className="flex items-center justify-between dark:text-dark-text">
                       <span>

@@ -277,12 +277,13 @@ export const useTransactionHelper = (transactionType: string) => {
       if (exchangeRate > 0) {
         result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
       }
+      }
       commonParams.formStateHandleFieldChangeKeysOnly &&
         dispatch &&
         dispatch(
           commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
         );
-    }
+    
     return result;
   };
   

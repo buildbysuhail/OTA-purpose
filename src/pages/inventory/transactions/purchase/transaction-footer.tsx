@@ -19,7 +19,7 @@ import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPTextarea from "../../../../components/ERPComponents/erp-textarea";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionMasterHandleFieldChange } from "./reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -318,7 +318,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   value={formState.transaction.master.remarks}
                   onChange={(e) =>
                     dispatch(
-                      accFormStateTransactionMasterHandleFieldChange({
+                      formStateTransactionMasterHandleFieldChange({
                         fields: { remarks: e.target?.value },
                       })
                     )

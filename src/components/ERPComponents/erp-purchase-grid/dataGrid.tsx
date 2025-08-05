@@ -1541,7 +1541,7 @@ useEffect(() => {
                 }
               />
             )}
-        <div
+        <divF
         ref={containerRef}
         style={{ width: `${totalGridWidth + 2}px`, minWidth: `${totalGridWidth + 2}px` ,borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}
         className="overflow-x-auto"
@@ -1552,7 +1552,7 @@ useEffect(() => {
           style={{
             display: 'flex',
             background: gridHeaderBg
-              ? `rgb(${gridHeaderBg})`
+              ? `rgb(${gridHeaderBg})F`
               : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
             borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
             position: 'sticky',

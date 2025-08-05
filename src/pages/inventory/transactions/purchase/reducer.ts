@@ -22,6 +22,7 @@ import { ApplicationSettingsType } from "../../../settings/system/application-se
 import {
   initialTransactionDetailData,
   TransactionFormStateInitialData,
+  transactionInitialData,
 } from "./transaction-type-data";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 import moment from "moment";
@@ -335,7 +336,7 @@ const InvTransactionSlice = createSlice({
     },
     formStateClearDetails: (state) => {
       // Iterate over all rows in details
-      state.transaction.details = [];
+      state.transaction.details = transactionInitialData.details;
     },
     formStateSetDetails: (
       state,

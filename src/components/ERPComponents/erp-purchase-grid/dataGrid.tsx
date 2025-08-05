@@ -688,18 +688,20 @@ const VirtualRow = React.memo(({
     <div
       className={`py-0 ${index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
       style={{
-        position: 'absolute',
-        transform: `translateY(${top}px)`, // Use transform for better performance
-        left: 0,
-        height: `${rowHeight}px`,
-        width: `${totalColumnWidth}px`, // Add this line
-        minWidth: `${totalColumnWidth}px`, // Add this line
-        display: 'flex',
-          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
-        // backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
-        willChange: 'transform', // Optimize for animations
+        // transform: `translateY(${top}px)`, // Use transform for better performance
+        // minWidth: `${totalColumnWidth}px`, // Add this line
+        // // backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
+        // willChange: 'transform', // Optimize for animations
          fontSize: `${gridFontSize}px`,
-        fontWeight: gridIsBold ? 'bold' : '600'
+        fontWeight: gridIsBold ? 'bold' : '600',
+         position: 'absolute',
+                    top: `${top}px`,
+                    left: 0,
+                    height: `${rowHeight}px`,
+                    width: '100%',
+                    display: 'flex',
+          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
+                    backgroundColor: currentCell?.rowIndex === index ? '#e3f2fd' : index % 2 === 0 ? '#fff' : '#f9f9f9'
       }}
     >
       {columns.map((column, colIndex) => {
@@ -708,6 +710,9 @@ const VirtualRow = React.memo(({
             const productId = item.productID;
             const cellValue = item[fieldKey];
             const idValue = item[idField]; // for cb
+             const isFirstColumn = colIndex === 0;
+                    const isLastColumn = colIndex === columns.length - 1;
+                    const isFixed = isFirstColumn || isLastColumn;
             let options: any[] = []
             if(fieldKey == "unit") {
               options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
@@ -727,14 +732,20 @@ const VirtualRow = React.memo(({
             width: `${columnWidths[colIndex]}px`,
             minWidth: `${columnWidths[colIndex]}px`,
             maxWidth: `${columnWidths[colIndex]}px`,
-            borderRight: colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderRight: isFirstColumn ? '2px solid #007bff' :colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
             fontSize: `${gridFontSize}px`,
             textAlign: column.dataField === 'slNo'  ? 'center'  : ['qty'].includes(column.dataField ?? '')    ? 'right'    : 'left',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            position: isFixed ? 'sticky' : 'relative',
+                          left: isFirstColumn ? '0px' : 'auto',
+                          right: isLastColumn ? '0px' : 'auto',
+                          zIndex: isFixed ? 50 : 1,
+                          gap: isLastColumn ? '8px' : '0'
           }}
           onClick={(e) => {
                             e.preventDefault();
@@ -1541,14 +1552,27 @@ useEffect(() => {
                 }
               />
             )}
-        <divF
+            <div 
         ref={containerRef}
-        style={{ width: `${totalGridWidth + 2}px`, minWidth: `${totalGridWidth + 2}px` ,borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}
-        className="overflow-x-auto"
+        className="border border-gray-300 rounded"
+        style={{ 
+          height: `${height + 80}px`, // Extra space for header/footer
+          overflow: 'auto', // SINGLE scroll for both X and Y
+          position: 'relative'
+        }}
+        onScroll={handleScroll} // Move scroll handler here!
       >
-        {/* Header */}
-        <div className="table-header">
         <div
+          style={{ 
+            width: `${totalGridWidth}px`, 
+          minWidth: `${totalGridWidth}px`,
+          height: `${totalHeight + 80}px`,
+          borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}
+          // className="overflow-x-auto"
+        >
+        {/* Header */}
+        <div
+        className="table-header"
           style={{
             display: 'flex',
             background: gridHeaderBg
@@ -1557,10 +1581,16 @@ useEffect(() => {
             borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
             position: 'sticky',
             top: 0,
-            zIndex: 10,
+            zIndex: 100,
+            height: `${formState.userConfig?.gridRowHeight??40}px`
           }}
         >
-            {columns?.map((column, index) => (
+            {columns?.map((column, index) => {
+              
+              const isFirstColumn = index === 0;
+              const isLastColumn = index === columns.length - 1;
+              const isFixed = isFirstColumn || isLastColumn;
+              return (
               <div
                 key={`${column.dataField}-${index}`}
                 draggable
@@ -1573,18 +1603,23 @@ useEffect(() => {
                   minWidth: `${columnWidths[index]}px`,
                   maxWidth: `${columnWidths[index]}px`,
                   padding: '8px 12px',
-                  borderRight: index === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderRight: isFirstColumn ? '2px solid #007bff' :index === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
                   fontWeight: gridIsBold ? 700 : 500,
                   fontSize: gridFontSize ?? 14,
-                  position: 'relative',
                   background: dragOverIndex === index ? '#e3f2fd' : gridHeaderBg ? `rgb(${gridHeaderBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
                   userSelect: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   cursor: 'move',
                   transition: 'background-color 0.1s ease',
-                  borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
+                  // borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
                   color: gridHeaderFontColor  ? `rgb(${gridHeaderFontColor})`  : "#1f2937",
+                  position: isFixed ? 'sticky' : 'relative',
+                    left: isFirstColumn ? '0px' : 'auto',
+                    right: isLastColumn ? '0px' : 'auto',
+                    backgroundColor: isFixed ? '#e3f2fd' : '#f8f9fa',
+                    zIndex: isFixed ? 110 : 100,
                 }}
               >
             {index === 0 ? (
@@ -1629,33 +1664,14 @@ useEffect(() => {
                   />
                 )}
               </div>
-            ))}
+            )})}
           </div>
-        </div>
         {/* Ultra-Fast Virtual Body */}
-        <div
-          ref={virtualContainerRef}
-          style={{
-            height: `${height}px`,
-            width: `${totalGridWidth + 2}px`,
-            minWidth: `${totalGridWidth + 2}px`,
-            overflowX: 'auto',
-            overflowY: 'auto',
-            position: 'relative',
-            willChange: 'scroll-position',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-          }}
-          onScroll={handleScroll}
-        >
-          <div
-            style={{
-              height: `${totalHeight}px`,
-              width: `${totalGridWidth}px`,
-              minWidth: `${totalGridWidth}px`,
+        
+             <div 
+            style={{ 
               position: 'relative',
-              contain: 'layout style paint',
-              isolation: 'isolate',
+              height: `${totalHeight}px`
             }}
           >
             {visibleItems.map(({ index, top }) => (
@@ -1694,20 +1710,26 @@ useEffect(() => {
                 gridBorderColor={gridBorderColor}
               />
             ))}
-          </div>
         </div>
         {/* Footer */}
-        <div className="table-footer">
-          <div
+          <div className="table-footer"
             style={{
               display: 'flex',
               width: `${totalGridWidth}px`,
               minWidth: `${totalGridWidth}px`,
               backgroundColor: '#f8f9fa',
               borderTop: `0.1px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.3)`,
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 100,
+            height: '40px'
             }}
           >
-            {columns?.map((column, colIndex) => (
+            {columns?.map((column, colIndex) => {
+               const isFirstColumn = colIndex === 0;
+              const isLastColumn = colIndex === columns.length - 1;
+              const isFixed = isFirstColumn || isLastColumn;
+            return (
               <div
                 key={`footer-${column.dataField}`}
                 style={{
@@ -1715,7 +1737,8 @@ useEffect(() => {
                   minWidth: `${columnWidths[colIndex]}px`,
                   maxWidth: `${columnWidths[colIndex]}px`,
                   padding: '8px 12px',
-                  borderRight: colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderRight: isFirstColumn ? '2px solid #007bff' :colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
                   fontSize: `${gridFontSize}px`,
                   fontWeight: gridIsBold ? "bold" : "600",
                   textAlign: column.alignment,
@@ -1723,16 +1746,25 @@ useEffect(() => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  display: 'flex',
                   alignItems: 'center',
+
+                    position: isFixed ? 'sticky' : 'relative',
+                    left: isFirstColumn ? '0px' : 'auto',
+                    right: isLastColumn ? '0px' : 'auto',
+                    // borderLeft: isFixed ? '2px solid #007bff' : 'none',
+                    display: 'flex',
+                    justifyContent: isFirstColumn || isLastColumn ? 'center' : 
+                                   column.alignment === 'center' ? 'center' : 
+                                   column.alignment === 'right' ? 'flex-end' : 'flex-start',
+                    zIndex: isFixed ? 110 : 100
                 }}
               >
                 {formState.summary?.[column.dataField as keyof SummaryItems] ?? ""}
               </div>
-            ))}
+            )})}
           </div>
-        </div>
       </div>
+    </div>
     </div>
   </div>
 );

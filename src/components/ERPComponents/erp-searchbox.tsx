@@ -350,7 +350,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         searchValue: value,
       }));
       setShowBatchGrid(false);
-      if (value.length >= 3) {
+      if (value.length >= 1) {
         if (searchType !== "modal") {
           await debouncedFetch(value, inputValue.searchByCode);
         }

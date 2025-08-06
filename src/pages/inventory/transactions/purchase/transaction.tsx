@@ -667,6 +667,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
+            costCentreID: applicationSettings.accountsSettings.defaultCostCenterID,
             hasroundOff:
               formType == "Import"
                 ? true
@@ -1271,7 +1272,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "qty",
         caption: t("qty"),
-        dataType: "number",
+        dataType: "btn",
         allowEditing: true,
         width: 100,
         alignment: "right",
@@ -1961,7 +1962,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataField: "removeCol",
         caption: "",
         dataType: "boolean",
-        width: 80,
+        width: 55,
         readOnly: true,
         isLocked: true,
         alignment: "center",

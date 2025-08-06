@@ -11,7 +11,11 @@ interface WarehouseIDProps extends VoucherElementProps {
 const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
   ({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
     return (
-      <ERPDataCombobox
+      <>
+      {
+        formState.formElements.cbWarehouse.visible == true && 
+        (
+          <ERPDataCombobox
         localInputBox={formState?.userConfig?.inputBoxStyle}
         fetching={formState.transactionLoading}
         enableClearOption={false}
@@ -45,6 +49,9 @@ const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
           handleKeyDown?.(e, "warehouse");
         }}
       />
+        )
+      }
+      </>
     );
   }
 );

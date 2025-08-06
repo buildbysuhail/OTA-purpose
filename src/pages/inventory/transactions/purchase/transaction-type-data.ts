@@ -262,7 +262,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   multiFactor: 0
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData, details: Array.from({ length: 300 }, (_, index) => ({
+  master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
     ...initialTransactionDetailData,
     slNo: generateUniqueKey()
   })),

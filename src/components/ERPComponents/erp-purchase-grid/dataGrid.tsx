@@ -773,8 +773,10 @@ const VirtualRow = React.memo(({
                               {index + 1}
                             </div>
                           ):
-                          column.dataType == "btn" ? (
-          <button onClick={() => handleKeyDown(cellValue,({key:"Enter"} as any),column.dataField??"slNo" as any,index)}/>
+                          column.dataType == "btn"  ? (
+          <button onClick={() => handleKeyDown(cellValue,({key:"Enter"} as any),column.dataField??"slNo" as any,index)}>
+            <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
+          </button>
         )
                           : column.dataField === "removeCol" ? (
                             <div className="flex items-center justify-center">

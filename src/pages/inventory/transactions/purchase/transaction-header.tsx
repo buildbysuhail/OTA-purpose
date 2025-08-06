@@ -521,7 +521,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         valueKey: "id",
                         labelKey: "name",
                         nameKey: "alias",
-                        getListUrl: Urls.data_currencies,
+                        getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/Currency`,
                       }}
                       disabled={
                         formState.formElements.cbCurrency.disabled ||

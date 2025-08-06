@@ -1279,7 +1279,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "brandID",
         field: { valueKey: "id", labelKey: "name" },
-        caption: t("brand"),
+        caption: t("brandID"),
         dataType: "number",
         width: 100,
         readOnly: false,

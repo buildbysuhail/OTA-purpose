@@ -9,12 +9,32 @@ import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { AccountLedgerManage } from "./account-ledger-manage";
 import { useTranslation } from "react-i18next";
+import { useDynamicModalSize } from "../../../../utilities/hooks/useDynamicModalSize";
+import { ContentMeasurementWrapper } from "../../../../utilities/hooks/ContentMeasurementWrapper";
 
 const AccountLedgerType = () => {
   const MemoizedAccountLedgerManage = useMemo(() => React.memo(AccountLedgerManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation("masters");
   const rootState = useRootState();
+const { contentRef, dimensions, measureContent } = useDynamicModalSize(400, 250); // Reduced min height
+
+  useEffect(() => {
+    if (rootState.PopupData.accountLedger.isOpen) {
+      // Multiple measurements to catch dynamic content
+      setTimeout(measureContent, 100);
+      setTimeout(measureContent, 300);
+      setTimeout(measureContent, 600);
+    }
+  }, [rootState.PopupData.accountLedger.isOpen, measureContent]);
+
+  // Re-measure when any form state might change
+  useEffect(() => {
+    if (rootState.PopupData.accountLedger.isOpen) {
+      setTimeout(measureContent, 100);
+    }
+  }, [rootState.PopupData.accountLedger.key, measureContent]);
+
   const columns: DevGridColumn[] = useMemo(() =>
     [
       {
@@ -259,11 +279,27 @@ const AccountLedgerType = () => {
       <ERPModal
         isOpen={rootState.PopupData.accountLedger.isOpen || false}
         title={t("acc_ledger")}
-        width={700}
-        height={450}
+         width={dimensions.width}
+        height={dimensions.height}
+        minWidth={500}
+        minHeight={450}
+        maxWidth={900}
+        maxHeight={1200}
         isForm={true}
         closeModal={() => { dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: false })); }}
-        content={<MemoizedAccountLedgerManage />}
+        content={
+           <div 
+            ref={contentRef} 
+            className="modal-content-wrapper"
+            style={{ 
+              minHeight: 'fit-content',
+              width: '100%',
+              overflow: 'visible'
+            }}
+          >
+            <MemoizedAccountLedgerManage />
+          </div>
+        }
       />
     </Fragment>
   );

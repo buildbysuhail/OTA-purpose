@@ -17,6 +17,7 @@ import { ERPScrollArea } from "./erp-scrollbar";
 import { Minimize2, Maximize2, X } from "lucide-react";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
+import { useDynamicModalSize } from "../../utilities/hooks/useDynamicModalSize";
 
 type ModalPosition = "center" | "left" | "right" | "top" | "bottom" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -43,10 +44,13 @@ type ERPModalProps = {
   className?: string;
   isFullHeight?: boolean;
   isRemoveSomething?: boolean;
-  width?: number;
-  height?: number;
+  width?: number | "auto" | "fit-content";
+  height?: number | "auto" | "fit-content";
   minHeight?: number;
   minWidth?: number;
+  autoSize?: boolean;
+  maxWidth?: number;
+  maxHeight?: number;
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
   disableOutsideClickClose?: boolean;
@@ -85,6 +89,9 @@ const ERPModal = React.memo(
     height = 600,
     minHeight = 200,
     minWidth = 200,
+    autoSize = false,
+    maxWidth,
+    maxHeight,
     closeOnSubmit = true,
     disableOutsideClickClose = true,
     disableParentInteraction = true,
@@ -152,44 +159,60 @@ const ERPModal = React.memo(
       return { x, y };
     };
 
-    const calculateDimensionsAndPosition = () => {
-      if (!isOpen) return;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      let newWidth, newHeight, newX, newY;
-      
-      if (isMaximized) {
-        newWidth = windowWidth - 50;
-        newHeight = windowHeight - 50;
-        newX = (windowWidth - newWidth) / 2;
-        newY = (windowHeight - newHeight) / 2;
-        
-        const originalWidth = Math.min(windowWidth - 40, width);
-        const originalHeight = Math.min(windowHeight - 40, height);
-        const originalPos = calculateInitialPosition(windowWidth, windowHeight, originalWidth, originalHeight);
-        setInitPosition(originalPos);
-      } else {
-        newWidth = Math.min(windowWidth - 40, width);
-        newHeight = Math.min(windowHeight - 40, height);
-        const calculatedPos = calculateInitialPosition(windowWidth, windowHeight, newWidth, newHeight);
-        newX = calculatedPos.x;
-        newY = calculatedPos.y;
-      }
-      
-      setModalWidth(newWidth);
-      setModalHeight(newHeight);
-      setPosition({ x: newX, y: newY });
-      setIsPositionCalculated(true);
-    };
+  const calculateDimensionsAndPosition = () => {
+    if (!isOpen) return;
+    
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    let newWidth, newHeight, newX, newY;
 
+    if (isMaximized) {
+      newWidth = windowWidth - 50;
+      newHeight = windowHeight - 50;
+      newX = (windowWidth - newWidth) / 2;
+      newY = (windowHeight - newHeight) / 2;
+
+      const originalWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
+      const originalHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
+      const originalPos = calculateInitialPosition(windowWidth, windowHeight, originalWidth, originalHeight);
+      setInitPosition(originalPos);
+    } else {
+       newWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
+        newHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
+    
+      const calculatedPos = calculateInitialPosition(windowWidth, windowHeight, newWidth, newHeight);
+      newX = calculatedPos.x;
+      newY = calculatedPos.y;
+    }
+
+    setModalWidth(newWidth);
+    setModalHeight(newHeight);
+    setPosition({ x: newX, y: newY });
+    setIsPositionCalculated(true);
+  };
+
+
+
+
+const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as number, height as number); // Reduced min height
+
+
+ useEffect(() => {
+    if (isOpen) {
+      // Multiple measurements to catch dynamic content
+      // setTimeout(measureContent, 100);
+      // setTimeout(measureContent, 300);
+      setTimeout(measureContent, 600);
+    }
+  }, [isOpen]);
     // Reset state when modal closes
     useEffect(() => {
       if (!isOpen) {
         setIsMaximized(initialMaximize);
         setPosition({ x: 0, y: 0 });
         setInitPosition({ x: 0, y: 0 });
-        setModalWidth(width);
-        setModalHeight(height);
+        // setModalWidth(typeof width === 'number' ? width : 600);
+        // setModalHeight(typeof height === 'number' ? height : 600);
         setIsPositionCalculated(false);
       }
     }, [isOpen]);
@@ -198,7 +221,7 @@ const ERPModal = React.memo(
       if (isOpen) {
         calculateDimensionsAndPosition();
       }
-    }, [isOpen, isMaximized, width, height, initialPosition]);
+    }, [isOpen, isMaximized, dimensions.width, dimensions.height, initialPosition]);
 
     const handleClose = () => {
       closeModal(false);
@@ -252,7 +275,13 @@ const ERPModal = React.memo(
     }, [isOpen]);
 
     return (
-      <>
+      <div ref={contentRef} 
+            className="modal-content-wrapper"
+            style={{ 
+              minHeight: 'fit-content',
+              width: '100%',
+              overflow: 'visible' 
+            }}>
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             static={!disableParentInteraction}
@@ -420,9 +449,7 @@ const ERPModal = React.memo(
                           </div>
                         </DialogTitle>
 
-                        <div
-                          className={`bg-inherit flex flex-col justify-between flex-grow  w-full`}
-                        >
+                        <div  className={`bg-inherit flex flex-col justify-between flex-grow  w-full`}>
                           <ERPScrollArea
                             maxHeight={`${modalHeight - (footer ? 90 : 0)}px`}
                             className="overflow-y-auto overflow-x-hidden"
@@ -497,7 +524,7 @@ const ERPModal = React.memo(
             </div>
           </Dialog>
         </Transition>
-      </>
+      </div>
     );
   },
   (prevProps, nextProps) => {

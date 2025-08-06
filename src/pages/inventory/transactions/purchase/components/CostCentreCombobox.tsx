@@ -14,13 +14,15 @@ const CostCentreCombobox = React.forwardRef<
   CostCentreComboboxProps
 >(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
   return (
+    <>
+    {formState.formElements.cbCostCentre.visible == true &&
     <ERPDataCombobox
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
       enableClearOption={false}
       id="costCentreID"
       className="min-w-[180px] !m-0"
-      label={t(formState.formElements.costCentreID.label)}
+      label={t(formState.formElements.cbCostCentre.label)}
       data={formState.transaction.master}
       onSelectItem={(e) => {
         dispatch(
@@ -40,7 +42,7 @@ const CostCentreCombobox = React.forwardRef<
         getListUrl: Urls.data_costcentres,
       }}
       disabled={
-        formState.formElements.costCentreID.disabled ||
+        formState.formElements.cbCostCentre.disabled ||
         formState.formElements.pnlMasters?.disabled
       }
       disableEnterNavigation
@@ -48,6 +50,8 @@ const CostCentreCombobox = React.forwardRef<
         handleKeyDown?.(e, "costCentreID");
       }}
     />
+    }
+    </>
   );
 });
 

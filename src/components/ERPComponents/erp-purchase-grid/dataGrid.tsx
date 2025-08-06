@@ -36,6 +36,7 @@ import type {
   FormElementState,
   SummaryItems,
   TransactionDetail,
+  TransactionFormState,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
   formStateDeleteDetails,
@@ -46,7 +47,7 @@ import useDebounce from "../../../pages/inventory/transactions/purchase/use-debo
 import { generateUniqueKey } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
 import { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
-import { inputBox } from "../../../redux/slices/app/types";
+import { AppState, inputBox } from "../../../redux/slices/app/types";
 import { useTranslation } from "react-i18next";
 import ERPModal from "../erp-modal";
 import ERPCheckbox from "../erp-checkbox";
@@ -57,6 +58,7 @@ import { APIClient } from "../../../helpers/api-client";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { toast } from "react-toastify";
+import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -123,7 +125,7 @@ interface EditableCellProps {
   productId: number;
   gridFontSize: number;
   gridIsBold: boolean;
-  type: "any" | "cb"
+  type: "any" | "cb"| "btn"
   rowHeight: number
   formState: any
   appState: any
@@ -179,7 +181,10 @@ interface RowData {
   rowHeight: number;
   dir: "ltr" | "rtl";
    columnWidths: number[];
-   gridBorderColor?: string;
+   gridBorderColor?: string;   
+    formState: TransactionFormState;
+    appState: AppState;
+    applicationSettings: ApplicationSettingsType;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -362,7 +367,8 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
 
     return (
       <>
-        {type == "cb" ? (
+        {
+        type == "cb" ? (
 
 
           <ERPDataCombobox
@@ -530,22 +536,16 @@ const VirtualRow = React.memo(({
     dir,
     columnWidths,
     gridBorderColor,
-    setCurrentCell
+    setCurrentCell,
+    formState,
+    appState,
+    applicationSettings
 }: RowData) => {
    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
       const item = details[index];
       const rowRef = useRef<HTMLTableRowElement>(null);
       const dispatch = useAppDispatch();
-      const formState = useSelector(
-        (state: RootState) => state.InventoryTransaction
-      );
-      const appState = useSelector(
-        (state: RootState) => state.AppState
-      );
-
-      const applicationSettings = useSelector(
-        (state: RootState) => state.ApplicationSettings
-      );
+     
 
       const handleFocus = useCallback((columnKey: string) => {
         setFocusedColumn(columnKey);
@@ -705,7 +705,7 @@ const VirtualRow = React.memo(({
                     backgroundColor: currentCell?.rowIndex === index ? '#e3f2fd' : index % 2 === 0 ? '#fff' : '#f9f9f9'
       }}
     >
-      {columns.map((column, colIndex) => {
+      { (columns).map((column, colIndex) => {
          const fieldKey = column.dataField as keyof TransactionDetail;
             const idField = column.idField as keyof TransactionDetail; // for cb
             const productId = item.productID;
@@ -731,6 +731,7 @@ const VirtualRow = React.memo(({
           key={`${column.dataField}`}
           style={{
             width: `${columnWidths[colIndex]}px`,
+            background: `${currentCell?.rowIndex === index?"rgb(219 219 219)":""}`,
             minWidth: `${columnWidths[colIndex]}px`,
             maxWidth: `${columnWidths[colIndex]}px`,
                   borderRight: isFirstColumn ? '2px solid #007bff' :colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
@@ -771,8 +772,14 @@ const VirtualRow = React.memo(({
                             <div style={getCellContentStyle(column)} id={cellId}>
                               {index + 1}
                             </div>
-                          ): column.dataField === "removeCol" ? (
-                            <div className="flex items-center justify-center gap-4 p-6">
+                          ):
+                          column.dataType == "btn"  ? (
+          <button onClick={() => handleKeyDown(cellValue,({key:"Enter"} as any),column.dataField??"slNo" as any,index)}>
+            <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
+          </button>
+        )
+                          : column.dataField === "removeCol" ? (
+                            <div className="flex items-center justify-center">
                               <button onClick={()=> handleInfoClick(index)} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-blue-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-blue-200">
                                 <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
                               </button>
@@ -787,7 +794,7 @@ const VirtualRow = React.memo(({
                             currentCell?.rowIndex === index ? (
                             <ERPProductSearch
                               customStyle={customStyle}
-                              appState={appState.appState}
+                              appState={appState}
                               textAlign={column.alignment === "right" ? "right" : "left"}
                               rowIndex={index}
                               id={cellId}
@@ -871,7 +878,7 @@ const VirtualRow = React.memo(({
                             &&  currentCell?.column === column.dataField &&
                             currentCell?.rowIndex === index ? (
                             <EditableCell
-                              appState={appState.appState}
+                              appState={appState}
                               type={column.dataType == "cb" ? "cb": "any"}
                               productId={productId}
                               onChange={onChange}
@@ -944,6 +951,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     handleDrop,
     dragOverIndex
   } = useTableResizeAndReorder(gridId);
+  const [__columns, setColumns] = useState(_columns);
   const appState = useAppSelector(
     (state: RootState) => state.AppState?.appState
   );
@@ -989,6 +997,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
           (formState.gridColumns || _columns) as DevGridColumn[],
           pref
         );
+        setColumns(updated as any)
         dispatch(
           formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
         );
@@ -1693,12 +1702,25 @@ useEffect(() => {
               height: `${totalHeight}px`
             }}
           >
-            {visibleItems.map(({ index, top }) => (
+            {/* {JSON.stringify(columns)}
+            {columns.length}
+            {JSON.stringify((columns.length == 0 ? _columns: columns))}
+            {JSON.stringify(visibleItems)} */}
+            { formState.transactionLoading 
+            || !columns 
+            || columns.length == 0 
+            || !formState.transaction.details 
+            ||formState.transaction.details.length == 0 ? <>
+
+            </> : visibleItems.map(({ index, top }) => (
               <VirtualRow
+              appState={appState}
+              applicationSettings={applicationState}
+              formState={formState}
                 key={index}
                 index={index}
                 top={top}
-                columns={columns ?? []}
+                columns={columns}
                 columnWidths={columnWidths}
                 details={formState.transaction.details}
                 rowHeight={ITEM_HEIGHT}
@@ -1744,7 +1766,7 @@ useEffect(() => {
             height: '40px'
             }}
           >
-            {columns?.map((column, colIndex) => {
+            {columns ?.map((column, colIndex) => {
                const isFirstColumn = colIndex === 0;
               const isLastColumn = colIndex === columns.length - 1;
               const isFixed = isFirstColumn || isLastColumn;

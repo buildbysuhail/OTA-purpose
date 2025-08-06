@@ -548,7 +548,7 @@ export const useTransaction = (
 
     // Handle master data
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
-    voucher.formElements.costCentreID.disabled =
+    voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
       (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
@@ -1063,7 +1063,7 @@ export const useTransaction = (
       formState.transaction.master.voucherPrefix,
       false
     );
-    const master = {
+    const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
       voucherPrefix: formState.transaction.master.voucherPrefix ?? "",
@@ -1078,6 +1078,13 @@ export const useTransaction = (
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
+      fromWarehouseID: 
+      formState.userConfig?.presetWarehouseId??0 > 0 ? formState.userConfig?.presetWarehouseId??0 
+      : applicationSettings.inventorySettings.defaultWareHouse,
+      costCentreID: 
+      formState.userConfig?.presetCostenterId??0 > 0 ? formState.userConfig?.presetCostenterId??0 
+      : applicationSettings.accountsSettings.defaultCostCenterID
+
     };
     dispatch(
       formStateHandleFieldChange({
@@ -1126,9 +1133,15 @@ export const useTransaction = (
             ledgerID: {
               reload: true,
             },
-            costCentreID: {
+            cbCostCentre: {
               reload: true,
+              visible: applicationSettings?.accountsSettings?.maintainCostCenter,
               disabled: (formState.userConfig?.presetCostenterId ?? 0) > 0,
+            },
+            cbWarehouse: {
+              reload: true,
+              visible: applicationSettings?.inventorySettings.maintainWarehouse,
+              disabled: (formState.userConfig?.presetWarehouseId ?? 0) > 0,
             },
             amount: {
               disabled: false,
@@ -1155,7 +1168,7 @@ export const useTransaction = (
               disabled: false,
             },
             linkEdit: {
-              visible: !((formState.userConfig?.presetCostenterId ?? 0) > 0),
+              // visible: !((formState.userConfig?.presetCostenterId ?? 0) > 0),
             },
           },
           },
@@ -1315,7 +1328,7 @@ export const useTransaction = (
     // }
     // if (
     //   isNullOrUndefinedOrZero(formState.row.costCentreID) &&
-    //   formState.formElements.costCentreID.visible == true
+    //   formState.formElements.cbCostCentre.visible == true
     // ) {
     //   ERPAlert.show({
     //     icon: "info",
@@ -1325,7 +1338,7 @@ export const useTransaction = (
     //   return false;
     // }
     // if (
-    //   formState.formElements.costCentreID.visible == false &&
+    //   formState.formElements.cbCostCentre.visible == false &&
     //   (applicationSettings.accountsSettings.maintainBillwiseAccount == true ||
     //     applicationSettings.accountsSettings.billwiseMandatory == true)
     // ) {
@@ -1687,7 +1700,7 @@ export const useTransaction = (
   //   ) {
   //     const voucherType = formState.transaction.master.voucherType;
 
-  //     if (formState.formElements.costCentreID.visible == true) {
+  //     if (formState.formElements.cbCostCentre.visible == true) {
   //       focusCostCenterRef();
   //     } else {
   //       focusBtnAdd();
@@ -1742,7 +1755,7 @@ export const useTransaction = (
   //       } else {
   //         if (
   //           applicationSettings.accountsSettings?.maintainCostCenter &&
-  //           formState.formElements.costCentreID.visible == true &&
+  //           formState.formElements.cbCostCentre.visible == true &&
   //           (formState.userConfig?.presetCostenterId ?? 0) <= 0
   //         ) {
   //           focusCostCenterRef();

@@ -262,7 +262,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   multiFactor: 0
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData, details: Array.from({ length: 300 }, (_, index) => ({
+  master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
     ...initialTransactionDetailData,
     slNo: generateUniqueKey()
   })),
@@ -287,7 +287,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
     label: "reference_number",
   }, employee: { visible: true, disabled: false, label: "purchaser" },
   pnlMasters: { visible: true, disabled: false, label: "" },
-  costCentreID: { visible: false, disabled: false, label: "cost_centre" },
   partyCode: { visible: true, disabled: false, label: "code" },
   ledgerID: { visible: true, disabled: false, label: "party" },
   invoiceValue: { visible: true, disabled: false, label: "invoice_value" },

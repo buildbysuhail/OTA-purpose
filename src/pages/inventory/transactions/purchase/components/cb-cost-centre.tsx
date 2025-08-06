@@ -18,7 +18,7 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
 
   return (
     <>
-      {formState.formElements.costCentreID.visible && (
+      {formState.formElements.cbCostCentre.visible && (
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           enableClearOption={false}
@@ -26,7 +26,7 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
           id="costCentreID"
           // nameField="costCentreName"
           className="min-w-[180px]"
-          label={t(formState.formElements.costCentreID.label)}
+          label={t(formState.formElements.cbCostCentre.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {
             dispatch(
@@ -47,7 +47,7 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
           }}
           disabled={
             (formState.userConfig?.presetCostenterId ?? 0) > 0 ||
-            formState.formElements.costCentreID.disabled ||
+            formState.formElements.cbCostCentre.disabled ||
             formState.formElements.pnlMasters?.disabled
           }
           disableEnterNavigation

@@ -667,6 +667,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
+            costCentreID: applicationSettings.accountsSettings.defaultCostCenterID,
             hasroundOff:
               formType == "Import"
                 ? true
@@ -710,6 +711,12 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               ? true
               : _formState.formElements.grandTotalFc.visible,
         },
+        cbCostCentre: {
+          ...initialFormElements.cbCostCentre,
+          visible:
+                    applicationSettings?.accountsSettings?.maintainCostCenter,
+          disabled: _formState.userConfig?.presetCostenterId ?? 0 > 0 ? true : initialFormElements.cbCostCentre.disabled
+        },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings.maintainWarehouse,
@@ -737,6 +744,16 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
+      _formState.transaction.master.costCentreID =
+        applicationSettings.accountsSettings.defaultCostCenterID;
+      if (applicationSettings.accountsSettings.maintainCostCenter) {
+
+
+        if (_formState.userConfig?.presetCostenterId ?? 0 > 0) {
+          _formState.transaction.master.costCentreID =
+            _formState.userConfig?.presetCostenterId ?? 0;
+        }
+      }
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {
@@ -1248,20 +1265,22 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         alignment: "right",
         visible: false,
       },
-      // {
-      //   dataField: "brand",
-      //   caption: t("brand"),
-      //   dataType: "cb",
-      //   width: 150,
-      //   alignment: "left",
-      //   visible: false,
-      //   allowEditing: true,
-      // },
+      {
+        dataField: "brand",
+        caption: t("brand"),
+        idField: "brandID",
+        dataType: "cb",
+        field: { valueKey: "id", labelKey: "name" },
+        width: 150,
+        alignment: "left",
+        visible: false,
+        allowEditing: true,
+      },
       {
         dataField: "brandID",
         field: { valueKey: "id", labelKey: "name" },
         caption: t("brand"),
-        dataType: "cb",
+        dataType: "number",
         width: 100,
         readOnly: false,
         allowEditing: true,
@@ -1614,6 +1633,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         alignment: "left",
         visible: false,
       },
+      
       {
         dataField: "warranty",
         caption: t("warranty"),
@@ -1961,7 +1981,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataField: "removeCol",
         caption: "",
         dataType: "boolean",
-        width: 80,
+        width: 55,
         readOnly: true,
         isLocked: true,
         alignment: "center",

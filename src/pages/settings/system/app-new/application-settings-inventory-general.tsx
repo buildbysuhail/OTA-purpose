@@ -324,6 +324,35 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       ),
     },
     {
+      condition: filterComponent([t("default_opening_stock_ledger")], filterText),
+      element: (
+         <ERPDataCombobox
+                        id="defaultWareHouse"
+                        disabled={settings?.inventorySettings?.maintainWarehouse !== true}
+                        field={{
+                          id: "defaultWareHouse",
+                          getListUrl: Urls.data_warehouse,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        data={settings?.inventorySettings}
+
+                        onChangeData={(data) =>
+            handleFieldChange(
+              "inventorySettings",
+              "defaultWareHouse",
+              data.defaultWareHouse
+            )
+          }
+                        // onChangeData={(data: any) =>
+                        //   handleFieldChange("defaultWareHouse", data.defaultWareHouse)
+                        // }
+                      />
+       
+      ),
+    },
+
+    {
       condition: filterComponent([t("maintain_warehouse")], filterText),
       element: (
         <ERPCheckbox

@@ -89,7 +89,7 @@ const InvTransactionSlice = createSlice({
           userSession.employeeId > 0 ? userSession.employeeId : 0;
 
         state.formElements.ledgerID.reload = true;
-        state.formElements.costCentreID.reload = true;
+        state.formElements.cbCostCentre.reload = true;
         state.formElements.amount.disabled = false;
         state.formElements.pnlMasters.disabled = false;
         state.formElements.employee.disabled = false;
@@ -101,7 +101,7 @@ const InvTransactionSlice = createSlice({
         state.formElements.linkEdit.visible = false;
 
         if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
-          state.formElements.costCentreID.disabled = true;
+          state.formElements.cbCostCentre.disabled = true;
           state.formElements.linkEdit.visible = false;
         }
         state.prev = modelToBase64Unicode(

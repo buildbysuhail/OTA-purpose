@@ -519,7 +519,7 @@ export interface ColumnModel {
   formStateOptionKey?: string;
   cssClass?: string;
   caption?: string;
-  dataType?: "string" | "number" | "cb" | "date" | "boolean";
+  dataType?: "string" | "number" | "cb" | "date" | "boolean" | any;
   allowEditing?: boolean;
   alignment?: "center" | "left" | "right";
   format?: string;

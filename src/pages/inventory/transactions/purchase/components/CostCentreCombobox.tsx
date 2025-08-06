@@ -14,6 +14,8 @@ const CostCentreCombobox = React.forwardRef<
   CostCentreComboboxProps
 >(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
   return (
+    <>
+    {formState.formElements.cbCostCentre.visible == true &&
     <ERPDataCombobox
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
@@ -48,6 +50,8 @@ const CostCentreCombobox = React.forwardRef<
         handleKeyDown?.(e, "costCentreID");
       }}
     />
+    }
+    </>
   );
 });
 

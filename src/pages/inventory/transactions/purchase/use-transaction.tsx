@@ -480,6 +480,7 @@ export const useTransaction = (
         },
       };
     }
+    debugger;
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
@@ -511,9 +512,9 @@ export const useTransaction = (
       ...(vch || {}),
       details: refactorDetails(
         vch.details,
-        "",
+        formType??vch.master.voucherForm,
         { result: {} },
-        vch.master.voucherForm
+        loadVType
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };

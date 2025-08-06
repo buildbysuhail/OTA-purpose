@@ -282,6 +282,7 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
               width: '100%',
               overflow: 'visible' 
             }}>
+             
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             static={!disableParentInteraction}
@@ -385,7 +386,8 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
                           style={{ flex: "0 0 auto" }}
                         >
                           <div className=" drag-handle flex items-center dark:text-dark-text flex-1">
-                            {title}
+                            {title}  {modalHeight}wewewe
+              {modalWidth}
                           </div>
                           {closeButton === "Button" && (
                             <div className="max-w-[200px] inline-block ">

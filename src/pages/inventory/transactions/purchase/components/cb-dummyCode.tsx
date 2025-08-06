@@ -18,7 +18,7 @@ const DummyCode = React.forwardRef<HTMLInputElement, CostCentreProps>(({
 
   return (
     <>
-      {formState.formElements.costCentreID.visible && (
+      {formState.formElements.cbCostCentre.visible && (
          <ERPDataCombobox
          localInputBox={formState?.userConfig?.inputBoxStyle}
          enableClearOption={false}

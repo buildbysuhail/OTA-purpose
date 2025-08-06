@@ -711,6 +711,12 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               ? true
               : _formState.formElements.grandTotalFc.visible,
         },
+        cbCostCentre: {
+          ...initialFormElements.cbCostCentre,
+          visible:
+                    applicationSettings?.accountsSettings?.maintainCostCenter,
+          disabled: _formState.userConfig?.presetCostenterId ?? 0 > 0 ? true : initialFormElements.cbCostCentre.disabled
+        },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings.maintainWarehouse,
@@ -738,6 +744,16 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
       } as any;
+      _formState.transaction.master.costCentreID =
+        applicationSettings.accountsSettings.defaultCostCenterID;
+      if (applicationSettings.accountsSettings.maintainCostCenter) {
+
+
+        if (_formState.userConfig?.presetCostenterId ?? 0 > 0) {
+          _formState.transaction.master.costCentreID =
+            _formState.userConfig?.presetCostenterId ?? 0;
+        }
+      }
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.defaultWareHouse;
       if (applicationSettings.inventorySettings.maintainWarehouse) {

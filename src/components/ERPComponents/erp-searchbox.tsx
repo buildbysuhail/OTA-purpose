@@ -334,7 +334,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             }
 
             const store = await createStore(value, payload, productDataUrl);
-
             setStore(store);
             setShowProductGrid(true);
           }
@@ -342,6 +341,39 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       [productDataUrl, searchType]
     );
 
+useEffect(() => {
+  if (store && dataGridRef.current?.instance) {
+    const gridInstance = dataGridRef.current.instance();
+    
+    // Wait for the grid to load data
+    const selectFirstRow = () => {
+      const visibleRows = gridInstance.getVisibleRows();
+      
+      if (visibleRows && visibleRows.length > 0) {
+        const firstRowData = visibleRows[0].data;
+        
+        if (firstRowData && firstRowData.productID) {
+          // Method 1: Select by key (productID is your keyExpr)
+          gridInstance.selectRows([firstRowData.productID], false);
+          
+          // Method 2: Also set focused row for better keyboard navigation
+          gridInstance.option("focusedRowIndex", 0);
+          
+          // Method 3: Navigate to the row to ensure it's visible
+          gridInstance.navigateToRow(firstRowData.productID);
+        }
+      }
+    };
+    
+    // Option A: Use onContentReady event (recommended)
+    gridInstance.on("contentReady", selectFirstRow);
+    
+    // Cleanup
+    return () => {
+      gridInstance.off("contentReady", selectFirstRow);
+    };
+  }
+}, [store]);
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
       const value = e.target.value;
@@ -389,7 +421,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
           const gridInstance = dataGridRef.current.instance();
           const focusedRowIndex = gridInstance.option("focusedRowIndex");
-          const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          const rowData = e.data ?  e.data : gridInstance.getVisibleRows()[focusedRowIndex]?.data;
           if (rowData?.productID > 0) {
             if (onProductSelected) {
               onProductSelected(rowData);
@@ -515,7 +547,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           }
           else if (e.key === "Enter") {
             if (searchType !== "modal") {
+              const gridInstance = dataGridRef.current?.instance?.();
+              if (gridInstance) {
+                const gridInstance = dataGridRef.current.instance();
+                const focusedRowIndex = gridInstance.option("focusedRowIndex");
+                const rowData = gridInstance.getVisibleRows()[focusedRowIndex]?.data;
+              handleGridKeyDown({event:{key:"Enter"}, data: rowData});
+              return
+              }
               rest?.onKeyDown && rest?.onKeyDown(value, e);
+              
             }
             else {
               if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
@@ -643,16 +684,25 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const [productGridReady, setProductGridReady] = useState<any>();
     const handleProductGridContentReady = useCallback((e: any) => {
       const gridInstance = e.component;
-      const visibleRows = gridInstance.getVisibleRows();
-      const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
-
-      setProductGridReady(hasValidData);
-
-      if (hasValidData) {
-        // Set initial focus
-        gridInstance.option("focusedRowIndex", 0);
-        gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
-      }
+  const visibleRows = gridInstance.getVisibleRows();
+  
+  // Only select first row if there's data and no row is already selected
+  if (visibleRows.length > 0 && visibleRows[0].data?.productID) {
+    const selectedKeys = gridInstance.getSelectedRowKeys();
+    
+    if (selectedKeys.length === 0) {
+      const firstRowKey = visibleRows[0].data.productID;
+      
+      // Select the first row
+      gridInstance.selectRows([firstRowKey], false);
+      
+      // Set focused row
+      gridInstance.option("focusedRowIndex", 0);
+      
+      // Navigate to ensure visibility
+      gridInstance.navigateToRow(firstRowKey);
+    }
+  }
     }, []);
 
     useEffect(() => {
@@ -704,6 +754,7 @@ const direction = appStater?.dir || "ltr";
                     keyExpr={"productID"}
                     showBorders={true}
                     showRowLines={true}
+                    onContentReady={handleProductGridContentReady}
                     remoteOperations={{
                       filtering: true,
                       paging: true,

@@ -11,7 +11,7 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
     return columns;
   }
   const updatedColumns = columns.map(column => {
-    const preference = preferences?.columnPreferences.find(p => p.dataField === column.dataField);
+    const preference = preferences?.columnPreferences?.find(p => p.dataField === column.dataField);
     if (preference) {
       return {
         ...column,
@@ -33,8 +33,8 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
 
   // Sort columns based on displayOrder
   updatedColumns.sort((a, b) => {
-    const orderA = preferences?.columnPreferences.findIndex(p => p.dataField === a.dataField) || 0;
-    const orderB = preferences?.columnPreferences.findIndex(p => p.dataField === b.dataField) || 0;
+    const orderA = preferences?.columnPreferences?.findIndex(p => p.dataField === a.dataField) || 0;
+    const orderB = preferences?.columnPreferences?.findIndex(p => p.dataField === b.dataField) || 0;
     return orderA - orderB;
   });
 

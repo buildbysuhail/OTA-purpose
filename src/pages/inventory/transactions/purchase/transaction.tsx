@@ -1536,38 +1536,29 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "bd",
         caption: t("bd"),
-        dataType: "string",
+        dataType: "btn",
         allowEditing: true,
         visible: false,
         width: 150,
-        alignment: "left",
-        cellRender: (cellData: any) => {
-          return (
-            <div className="flex items-center justify-center p-2 cursor-pointer">
-              <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold">
-                <X className="w-4 h-4" />
-              </a>
-            </div>
-          );
-        },
+        alignment: "left"
       },
       {
         dataField: "btnPrintBarcode",
         caption: t("pb"),
-        dataType: "string",
+        dataType: "btn",
         visible: false,
         allowEditing: true,
         width: 250,
-        alignment: "left",
+        alignment: "center",
       },
       {
         dataField: "barcodePrinted",
         caption: t("barcode_printed"),
-        dataType: "boolean",
+        dataType: "chk",
         visible: true,
         readOnly: true,
-        width: 250,
-        alignment: "left",
+        width: 50,
+        alignment: "center",
       },
       {
         dataField: "batchCreated",
@@ -1590,7 +1581,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "serial",
         caption: t("sl"),
-        dataType: "boolean",
+        dataType: "btn",
         visible: false,
         width: 150,
         readOnly: true,
@@ -1666,7 +1657,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "grossConvert",
         caption: t("gross_convert"),
-        dataType: "boolean",
+        dataType: "btn",
         allowEditing: true,
         width: 140,
         readOnly: true,
@@ -1928,7 +1919,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "memoEditor",
         caption: t("me"),
-        dataType: "string",
+        dataType: "btn",
         visible: false,
         width: 150,
         readOnly: true,

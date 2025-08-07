@@ -14,7 +14,7 @@ import {
 } from "../../types/dev-grid-column";
 
 // Enhanced resize and reorder hook
-export const useTableResizeAndReorder = (gridID: string) => {
+export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any) => {
   const isResizing = useRef(false);
   const isDragging = useRef(false);
   const currentColumnIndex = useRef<number>(-1);
@@ -235,7 +235,7 @@ export const useTableResizeAndReorder = (gridID: string) => {
       })
     );
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
-
+debugger;
     let parsedPreferences: GridPreference;
     if (
       savedPreferences != undefined &&
@@ -254,6 +254,15 @@ export const useTableResizeAndReorder = (gridID: string) => {
       parsedPreferences.columnPreferences = moveArrayElement(parsedPreferences.columnPreferences, _fromColumn, _toColumn)
       const preference = JSON.stringify(parsedPreferences);
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
+      onApplyPreferences && onApplyPreferences(preference);
+      setColumnWidths((prev:any) => {
+        return [
+          ...moveArrayElement(columnWidths, _fromColumn, _toColumn)
+        ]   
+        
+      })
+      console.log(moveArrayElement(columnWidths, _fromColumn, _toColumn));
+      
     }
     setColumnOrder((prevOrder) => {
       

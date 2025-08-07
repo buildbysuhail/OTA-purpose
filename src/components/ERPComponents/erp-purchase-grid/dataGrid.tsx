@@ -125,7 +125,7 @@ interface EditableCellProps {
   productId: number;
   gridFontSize: number;
   gridIsBold: boolean;
-  type: "any" | "cb"| "btn"
+  type: "any" | "cb"| "btn"| "chk"
   rowHeight: number
   formState: any
   appState: any
@@ -594,8 +594,6 @@ const VirtualRow = React.memo(({
       const handleKeyDown = useCallback(
         (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
           const target = e.target as HTMLElement
-          
-          if (!target.id) return
 
           const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
           const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
@@ -604,6 +602,7 @@ const VirtualRow = React.memo(({
             onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
             return
           }
+          if (!target.id) return
 
           let shouldNavigate = true;
           if (target.tagName === "INPUT" || target.querySelector("input")) {
@@ -773,10 +772,25 @@ const VirtualRow = React.memo(({
                               {index + 1}
                             </div>
                           ):
-                          column.dataType == "btn"  ? (
-          <button onClick={() => handleKeyDown(cellValue,({key:"Enter"} as any),column.dataField??"slNo" as any,index)}>
-            <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
-          </button>
+                        column.dataType == "chk"  ? (
+                            
+            <input
+    type="checkbox"
+    checked={cellValue === "Yes" || cellValue === "Y"|| cellValue === "y"}
+    onChange={(e) => {debugger; onChange(e.target.checked ? "Y" : "N", column.dataField as keyof TransactionDetail, index)}}
+  />
+        )
+                          :   column.dataType == "btn"  ? (
+                            
+           <button
+                      onClick={() =>  handleKeyDown(cellValue,({key:"Enter"} as any),column as any,index)}
+                      className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm hover:shadow text-xs text-gray-600 hover:bg-gray-50 transition-all"
+                      aria-label="Action button"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 12 12">
+                        <rect x="1" y="3" width="10" height="6" rx="1" strokeWidth="1.5"/>
+                      </svg>
+                    </button>
         )
                           : column.dataField === "removeCol" ? (
                             <div className="flex items-center justify-center">
@@ -939,6 +953,23 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
   }: DataGridProps<T>,
   ref: Ref<any>
 ) {
+  const dispatch = useAppDispatch();
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
+  const onApplyPreferences = useCallback(
+      (pref: GridPreference) => {
+        const updated = applyGridColumnPreferences(
+          (formState.gridColumns || _columns) as DevGridColumn[],
+          pref
+        );
+        setColumns(updated as any)
+        dispatch(
+          formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
+        );
+      },
+      [_columns, dispatch, formState.gridColumns]
+    );
   const {
     startResize,
     columnWidths,
@@ -950,13 +981,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     handleDragOver,
     handleDrop,
     dragOverIndex
-  } = useTableResizeAndReorder(gridId);
+  } = useTableResizeAndReorder(gridId,onApplyPreferences);
   const [__columns, setColumns] = useState(_columns);
   const appState = useAppSelector(
     (state: RootState) => state.AppState?.appState
-  );
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
   );
   const applicationState = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -966,7 +994,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
     handleDropping: (eFromDataGrid?: boolean) => void;
   }>(null);
-  const dispatch = useAppDispatch();
   const { t } = useTranslation('transaction')
   const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
   const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
@@ -991,19 +1018,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
     }
   }, [gridId, _columns]);
 
-    const onApplyPreferences = useCallback(
-      (pref: GridPreference) => {
-        const updated = applyGridColumnPreferences(
-          (formState.gridColumns || _columns) as DevGridColumn[],
-          pref
-        );
-        setColumns(updated as any)
-        dispatch(
-          formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
-        );
-      },
-      [_columns, dispatch, formState.gridColumns]
-    );
+    
 
 
   // Memoized ordered columns
@@ -1020,7 +1035,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid
   if (columnOrder.length > 0 && visibleColumns?.length > 0) {
     return columnOrder.map(index => visibleColumns[index]).filter(col => col !== undefined);
   }
-
+  console.log(columnWidths);
+  console.log(visibleColumns);
+  
+  
   return visibleColumns;
 }, [columnOrder, formState.gridColumns]);
 //   const columns = useMemo(() =>{

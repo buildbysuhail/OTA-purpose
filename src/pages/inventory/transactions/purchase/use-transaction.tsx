@@ -2274,6 +2274,7 @@ ERPAlert.show({
         }
       } else if (columnName === "qty" || columnName === "unitPrice"
          || columnName === "discPerc" || columnName === "discount"
+         || columnName === "barcodePrinted"
       ) {
         outDetail[columnName] = value;
         // Calculate row amount
@@ -2763,6 +2764,7 @@ ERPAlert.show({
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
+    debugger;
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${detail.unitID}/${actualPriceVisible}`
     );
@@ -3085,6 +3087,7 @@ ERPAlert.show({
               }
             }
           } else if (columnName == "btnPrintBarcode") {
+            debugger;
             const isReprint =
               formState.transaction.details[rowIndex].barcodePrinted;
             if (isReprint) {

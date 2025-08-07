@@ -32,6 +32,11 @@ import { TransactionDetail } from "../../pages/inventory/transactions/purchase/t
 import { inputBox } from "../../redux/slices/app/types";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import CustomStore from "devextreme/data/custom_store";
+import GridPreferenceChooser from "../ERPComponents/erp-gridpreference";
+import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
+    import { DataType } from "devextreme/common";
+import { applyGridColumnPreferences, getInitialPreference } from "../../utilities/dx-grid-preference-updater";
+import usePreferenceData from "../../utilities/hooks/usePreference";
 
 interface InputProps {
   id?: string,
@@ -142,6 +147,120 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       (state: RootState) => state?.AppState?.appState
     );
 
+
+// Add this after the other hooks, before the event handlers
+const productGridColumns = useMemo(() => [
+  {
+    dataField: "productName",
+    caption: t("product_name"),
+    dataType: "string" as DataType,
+    minWidth: 150
+  },
+  {
+    dataField: "productCode",
+    caption: t("product_code"),
+    dataType: "string" as DataType,
+    width: 100
+  },
+  {
+    dataField: "productID",
+    caption: t("productID"),
+    dataType: "number" as DataType,
+    visible: false
+  },
+  {
+    dataField: "arabicName",
+    caption: t("arabic_name"),
+    dataType: "string" as DataType,
+    width: 150
+  },
+  {
+    dataField: "stock",
+    caption: t("stock"),
+    dataType: "number" as DataType,
+    width: 100
+  },
+  {
+    dataField: "stockDetails",
+    caption: t("stock_details"),
+    dataType: "string" as DataType,
+    minWidth: 150
+  }
+], [t]);
+
+const batchGridColumns = useMemo(() => [
+  {
+    dataField: "productBatchID",
+    caption: t("productBatchID"),
+    dataType: "number" as DataType,
+    width: 150
+  },
+  {
+    dataField: "productCode",
+    caption: t("productCode"),
+    dataType: "string" as DataType,
+    width: 150
+  },
+  {
+    dataField: "autoBarcode",
+    caption: t("autoBarcode"),
+    dataType: "string" as DataType,
+    width: 150
+  },
+  {
+    dataField: "sPrice",
+    caption: t("sprice"),
+    dataType: "number" as DataType,
+    width: 100
+  },
+  {
+    dataField: "pPrice",
+    caption: t("pPrice"),
+    dataType: "number" as DataType,
+    width: 100
+  },
+  {
+    dataField: "mrp",
+    caption: t("mrp"),
+    dataType: "number" as DataType,
+    width: 100
+  },
+  {
+    dataField: "stock",
+    caption: t("stock"),
+    dataType: "number" as DataType,
+    width: 100
+  },
+  {
+    dataField: "unitID",
+    caption: t("unitID"),
+    dataType: "number" as DataType,
+    minWidth: 100
+  },
+  {
+    dataField: "unit",
+    caption: t("unit"),
+    dataType: "string" as DataType,
+    minWidth: 100
+  },
+  {
+    dataField: "brandID",
+    caption: t("brandID"),
+    dataType: "number" as DataType,
+    minWidth: 100
+  },
+  {
+    dataField: "brandName",
+    caption: t("brandName"),
+    dataType: "string" as DataType,
+    minWidth: 100
+  }
+], [t]);
+const gridId = showProductGrid == true ? `${formState.transactionType}-productSearch`
+            : showBatchGrid == true ?`${formState.transactionType}-productSearch`: "";
+        const columns = (showProductGrid == true ? productGridColumns
+            : showBatchGrid == true ? batchGridColumns: [] as any)
+            const{gridCols,onApplyPreferences, preferences}= usePreferenceData(columns,gridId)
     // Initialize portal container
     useEffect(() => {
       portalContainerRef.current = document.getElementById("portal-root");
@@ -837,6 +956,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           ? { right: `${right}px`, left: undefined }
           : { left: `${left}px`, right: undefined }),
       };
+    
       
       return createPortal(
         <>
@@ -847,6 +967,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   className="absolute mt-0 !z-[100] bg-white shadow-lg"
                   style={positionStyle}
                 >
+                 <GridPreferenceChooser
+                                        ref={dataGridRef}
+                                        gridId={`${formState.transactionType}-productSearch`}
+                                        columns={
+                                          (formState.gridColumns ?? []) as DevGridColumn[]
+                                        }
+                                        onApplyPreferences={onApplyPreferences}
+                                        showChooserName={true}
+                                        eclipseClass="m-0 p-0 font-medium"
+                                      />
                   <DataGrid
                     ref={dataGridRef}
                     loadPanel={{ enabled: false }}
@@ -910,42 +1040,21 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       editOnKeyPress={false}
                       enterKeyDirection="row"
                     />
-                    <Column
-                      dataField="productName"
-                      caption={t("product_name")}
-                      dataType="string"
-                      minWidth={150}
-                    />
-                    <Column
-                      dataField="productCode"
-                      caption={t("product_code")}
-                      dataType="string"
-                      width={100}
-                    />
-                    <Column
-                      dataField="productID"
-                      caption={t("productID")}
-                      dataType="number"
-                      visible={false}
-                    />
-                    <Column
-                      dataField="arabicName"
-                      caption={t("arabic_name")}
-                      dataType="string"
-                      width={150}
-                    />
-                    <Column
-                      dataField="stock"
-                      caption={t("stock")}
-                      dataType="number"
-                      width={100}
-                    />
-                    <Column
-                      dataField="stockDetails"
-                      caption={t("stock_details")}
-                      dataType="string"
-                      minWidth={150}
-                    />
+                   {gridCols?.map((column, index) => (
+                                 <Column
+                                   key={column.dataField}
+                                   allowResizing={true}
+                                   dataField={column.dataField}
+                                   caption={column.caption }
+                                   format={column.format}
+                                   dataType={column.dataType ?? "string"}
+                                   allowSorting={column.allowSorting}
+                                   minWidth={column.minWidth}
+                                   visible={column.visible || false }
+                                   sortOrder={column.sortOrder}
+                                   sortIndex={column.sortIndex}
+                                 />
+                               ))}
                   </DataGrid>
                 </div>
               )}
@@ -987,72 +1096,21 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                     />
                     <Paging pageSize={30} />
                     <Selection mode="single" />
-                    <Column
-                      dataField="productBatchID"
-                      caption={t("productBatchID")}
-                      dataType="number"
-                      width={150}
-                    />
-                    <Column
-                      dataField="productCode"
-                      caption={t("productCode")}
-                      dataType="string"
-                      width={150}
-                    />
-                    <Column
-                      dataField="autoBarcode"
-                      caption={t("autoBarcode")}
-                      dataType="string"
-                      width={150}
-                    />
-                    <Column
-                      dataField="sPrice"
-                      caption={t("sprice")}
-                      dataType="number"
-                      width={100}
-                    />
-                    <Column
-                      dataField="pPrice"
-                      caption={t("pPrice")}
-                      dataType="number"
-                      width={100}
-                    />
-                    <Column
-                      dataField="mrp"
-                      caption={t("mrp")}
-                      dataType="number"
-                      width={100}
-                    />
-                    <Column
-                      dataField="stock"
-                      caption={t("stock")}
-                      dataType="number"
-                      width={100}
-                    />
-                    <Column
-                      dataField="unitID"
-                      caption={t("unitID")}
-                      dataType="number"
-                      minWidth={100}
-                    />
-                    <Column
-                      dataField="unit"
-                      caption={t("unit")}
-                      dataType="string"
-                      minWidth={100}
-                    />
-                    <Column
-                      dataField="brandID"
-                      caption={t("brandID")}
-                      dataType="number"
-                      minWidth={100}
-                    />
-                    <Column
-                      dataField="brandName"
-                      caption={t("brandName")}
-                      dataType="string"
-                      minWidth={100}
-                    />
+                       {gridCols?.map((column, index) => (
+                                 <Column
+                                   key={column.dataField}
+                                   allowResizing={true}
+                                   dataField={column.dataField}
+                                   caption={column.caption }
+                                   format={column.format}
+                                   dataType={column.dataType ?? "string"}
+                                   allowSorting={column.allowSorting}
+                                   minWidth={column.minWidth}
+                                   visible={column.visible || false }
+                                   sortOrder={column.sortOrder}
+                                   sortIndex={column.sortIndex}
+                                 />
+                               ))}
                   </DataGrid>
                 </div>
               )}

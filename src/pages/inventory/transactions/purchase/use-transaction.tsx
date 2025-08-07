@@ -2767,7 +2767,7 @@ ERPAlert.show({
   ) => {
     debugger;
     const res = await api.getAsync(
-      `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${detail.unitID}/${actualPriceVisible}`
+      `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
     );
     if (res) {
       outDetail.unitPrice = res.stdPurchasePrice;
@@ -2921,6 +2921,7 @@ ERPAlert.show({
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
+            debugger;
             handleChangeUnit(
               outDetail,
               detail,

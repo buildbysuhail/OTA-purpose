@@ -617,7 +617,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                applicationSettings.inventorySettings.defaultPurchaseAcc,
+                applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
@@ -719,7 +719,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
-          visible: applicationSettings.inventorySettings.maintainWarehouse,
+          visible: applicationSettings.inventorySettings?.maintainWarehouse,
         disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
         },
         cbEmployee: {
@@ -755,8 +755,8 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         }
       }
       _formState.transaction.master.fromWarehouseID =
-        applicationSettings.inventorySettings.defaultWareHouse;
-      if (applicationSettings.inventorySettings.maintainWarehouse) {
+        applicationSettings.inventorySettings?.defaultWareHouse;
+      if (applicationSettings.inventorySettings?.maintainWarehouse) {
 
 
         if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
@@ -772,7 +772,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               _formState.userConfig?.counterWiseWarehouseId ?? 0;
           } else {
             _formState.transaction.master.fromWarehouseID =
-              applicationSettings.inventorySettings.defaultWareHouse;
+              applicationSettings.inventorySettings?.defaultWareHouse;
           }
         }
       }

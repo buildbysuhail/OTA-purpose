@@ -203,6 +203,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
       productBatchID: showCurrentBatch ? data?.productBatchID ?? 0 : 0,
       unitID: showCurrentUnit ? data?.unitID ?? 0 : 0,
       ledgerID: showCurrentCustomer ? formState.transaction.master.ledgerID : 0,
+      unitName: data?.unit,
     };
       if ((payload?.productID ?? 0) >= 0 ) {
         const queryParams = new URLSearchParams(payload as any).toString();

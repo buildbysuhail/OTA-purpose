@@ -800,7 +800,7 @@ export const useTransaction = (
     // }
 
     // // Purchase cost change warning
-    // if (Settings.InventorySettings.ShowPurchaseCostChangeWarning && !isEdit) {
+    // if (Settings.inventorySettings?.ShowPurchaseCostChangeWarning && !isEdit) {
     //   let priceChangeItems = "";
     //   for (const item of details) {
     //     if (item.unitPrice !== item.unitPriceOriginal) {
@@ -1075,14 +1075,14 @@ export const useTransaction = (
       employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        applicationSettings.inventorySettings.defaultPurchaseAcc,
+        applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
       fromWarehouseID: 
       formState.userConfig?.presetWarehouseId??0 > 0 ? formState.userConfig?.presetWarehouseId??0 
-      : applicationSettings.inventorySettings.defaultWareHouse,
+      : applicationSettings.inventorySettings?.defaultWareHouse,
       costCentreID: 
       formState.userConfig?.presetCostenterId??0 > 0 ? formState.userConfig?.presetCostenterId??0 
       : applicationSettings.accountsSettings.defaultCostCenterID
@@ -1142,7 +1142,7 @@ export const useTransaction = (
             },
             cbWarehouse: {
               reload: true,
-              visible: applicationSettings?.inventorySettings.maintainWarehouse,
+              visible: applicationSettings?.inventorySettings?.maintainWarehouse,
               disabled: (formState.userConfig?.presetWarehouseId ?? 0) > 0,
             },
             amount: {
@@ -3049,7 +3049,7 @@ ERPAlert.show({
             });
 
             if (
-              applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
+              applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
                 "WARN" &&
               data.salesPrice > 0
             ) {
@@ -3078,7 +3078,7 @@ ERPAlert.show({
                 }
               }
             } else if (
-              applicationSettings.inventorySettings.showRateWarning.toUpperCase() ==
+              applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
                 "BLOCK" &&
               data.salesPrice > 0
             ) {

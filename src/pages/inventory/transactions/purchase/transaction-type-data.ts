@@ -127,7 +127,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   orderCardNo: 0,
   isInvoiced: true,
   mannualInvoiceNumber: "",
-  inout: "IN",
+  inout: "",
   cashAmt: 0.0,
   bankAmt: 0.0,
   creditAmt: 0.0,

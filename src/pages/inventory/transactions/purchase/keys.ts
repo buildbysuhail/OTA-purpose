@@ -5,3 +5,4 @@
 // warning
 // success
 // error
+//net_value

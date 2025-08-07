@@ -1113,7 +1113,7 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Additional flags
-      detail.barcodePrinted = false;
+      detail.barcodePrinted = "N";
       detail.batchCreated = true;
 
       // Store original cost for restoration after calculation

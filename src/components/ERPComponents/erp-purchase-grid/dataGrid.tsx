@@ -17,7 +17,14 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
-import { EllipsisVertical, FileUp, GripVertical, Info, Settings, Trash2 } from "lucide-react";
+import {
+  EllipsisVertical,
+  FileUp,
+  GripVertical,
+  Info,
+  Settings,
+  Trash2,
+} from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
 import type {
@@ -46,14 +53,14 @@ import { useSelector } from "react-redux";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { generateUniqueKey } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
-import { ERPSimpleComboboxRef } from '../../ERPComponents/erp-simple-combobox';
+import { ERPSimpleComboboxRef } from "../../ERPComponents/erp-simple-combobox";
 import { AppState, inputBox } from "../../../redux/slices/app/types";
 import { useTranslation } from "react-i18next";
 import ERPModal from "../erp-modal";
 import ERPCheckbox from "../erp-checkbox";
 import ERPButton from "../erp-button";
-import * as ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import * as ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import { APIClient } from "../../../helpers/api-client";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
@@ -125,10 +132,10 @@ interface EditableCellProps {
   productId: number;
   gridFontSize: number;
   gridIsBold: boolean;
-  type: "any" | "cb"| "btn"| "chk"
-  rowHeight: number
-  formState: any
-  appState: any
+  type: "any" | "cb" | "btn" | "chk";
+  rowHeight: number;
+  formState: any;
+  appState: any;
 }
 
 interface DragState {
@@ -139,7 +146,6 @@ interface DragState {
   startX: number;
   startY: number;
 }
-
 
 interface RowData {
   details: TransactionDetail[];
@@ -166,25 +172,28 @@ interface RowData {
   advancedProductSearching?: boolean;
   transactionType?: string;
   blockUnitOnDecimalPoint: boolean;
-    index: number;
-    top: number
-  focusCell: (targetRow: number, targetColumnIndex: number) => { column: string; rowIndex: number } | null;
- nextCellFind: (
+  index: number;
+  top: number;
+  focusCell: (
+    targetRow: number,
+    targetColumnIndex: number
+  ) => { column: string; rowIndex: number } | null;
+  nextCellFind: (
     rowIndex: number,
     column: string,
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
-  currentCell?: { column: string; rowIndex: number, data: TransactionDetail };
+  currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
   setCurrentCell: React.Dispatch<React.SetStateAction<CurrentCell | undefined>>;
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
   dir: "ltr" | "rtl";
-   columnWidths: number[];
-   gridBorderColor?: string;   
-    formState: TransactionFormState;
-    appState: AppState;
-    applicationSettings: ApplicationSettingsType;
+  columnWidths: number[];
+  gridBorderColor?: string;
+  formState: TransactionFormState;
+  appState: AppState;
+  applicationSettings: ApplicationSettingsType;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -208,13 +217,12 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     type,
     rowHeight,
   }) => {
-
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     console.log(appState);
 
-    const editCellComboBox: inputBox = formState?.userConfig?.inputBoxStyle
-    const gridBorderCol = formState?.userConfig?.gridBorderCol
+    const editCellComboBox: inputBox = formState?.userConfig?.inputBoxStyle;
+    const gridBorderCol = formState?.userConfig?.gridBorderCol;
     const mergedInputBox: inputBox = {
       inputStyle: "normal",
       inputSize: "customize",
@@ -263,11 +271,13 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     );
 
     useEffect(() => {
-      setBgColor(appState.mode == "dark"
-        ? document.activeElement === inputRef.current
-          ? "#ffffff"
-          : "#ffffff1a"
-        : `rgb(${mergedInputBox?.focusBgColor})`);
+      setBgColor(
+        appState.mode == "dark"
+          ? document.activeElement === inputRef.current
+            ? "#ffffff"
+            : "#ffffff1a"
+          : `rgb(${mergedInputBox?.focusBgColor})`
+      );
       setForeColor(
         appState.mode === "dark"
           ? document.activeElement === inputRef.current
@@ -275,13 +285,15 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             : "#ffffff"
           : `rgb(${mergedInputBox?.focusForeColor || "0,0,0"})`
       );
-    }, [document.activeElement,
-    inputRef.current,
-    appState.mode,
-    mergedInputBox?.focusBgColor,
-    mergedInputBox?.defaultBgColor,
-    mergedInputBox?.focusForeColor,
-    mergedInputBox?.fontColor,]);
+    }, [
+      document.activeElement,
+      inputRef.current,
+      appState.mode,
+      mergedInputBox?.focusBgColor,
+      mergedInputBox?.defaultBgColor,
+      mergedInputBox?.focusForeColor,
+      mergedInputBox?.fontColor,
+    ]);
 
     useEffect(() => {
       setLocalValue(value?.toString());
@@ -301,7 +313,8 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const debounceCellChange = useDebounce(
       (value: string, key: keyof TransactionDetail, index: number) => {
         onChange && onChange(value, key, rowIndex);
-      }, 300
+      },
+      300
     );
 
     const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -345,7 +358,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      
       if (e.key === "Backspace" || e.key === "Delete") return;
 
       onKeyDown(e, column, rowIndex);
@@ -363,18 +375,20 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       textAlign: column.alignment || "center",
       paddingLeft: "4px",
       paddingRight: "4px",
-    } as React.CSSProperties
+    } as React.CSSProperties;
 
     return (
       <>
-        {
-        type == "cb" ? (
-
-
+        {type == "cb" ? (
           <ERPDataCombobox
-
             options={options ?? []}
-            onChange={(e) => { onChange(e.value, column.dataField as keyof TransactionDetail, rowIndex) }}
+            onChange={(e) => {
+              onChange(
+                e.value,
+                column.dataField as keyof TransactionDetail,
+                rowIndex
+              );
+            }}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
             noLabel
             enableClearOption={false}
@@ -384,15 +398,19 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
             label={column.dataField}
             field={{
               id: `${gridId}_${column.dataField}_${rowIndex}-cb`,
-              valueKey: column?.field && column?.field.valueKey ? column?.field.valueKey : "value",
-              labelKey: column?.field && column?.field.labelKey ? column?.field.labelKey : "label",
+              valueKey:
+                column?.field && column?.field.valueKey
+                  ? column?.field.valueKey
+                  : "value",
+              labelKey:
+                column?.field && column?.field.labelKey
+                  ? column?.field.labelKey
+                  : "label",
             }}
             noBorder
             onKeyDown={handleKeyDown}
             localInputBox={mergedInputBox}
           />
-
-
         ) : (
           <>
             <input
@@ -408,7 +426,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
                 backgroundColor: bgColor,
                 color: foreColor,
                 border: "none",
-                width: "100%"
+                width: "100%",
               }}
               value={localValue}
               readOnly={column.readOnly}
@@ -417,16 +435,13 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
               onBlur={onBlur}
               onKeyDown={handleKeyDown}
               tabIndex={0}
-
             />
           </>
         )}
       </>
-
     );
   }
 );
-
 
 const SummaryRow: React.FC<{
   columns: ColumnModel[];
@@ -447,70 +462,75 @@ const SummaryRow: React.FC<{
   rowHeight,
   gridBorderColor,
 }) => {
-    const formState = useAppSelector(
-      (state: RootState) => state.InventoryTransaction
-    );
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
 
-    return (
-      <tr
-        className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
-        style={{
-          width: `${tableWidth}px`,
-          height: `${rowHeight}px`,
-          minHeight: `${rowHeight}px`,
-          maxHeight: `${rowHeight}px`,
-          boxSizing: "border-box",
-          borderBottom: `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
-          // the above border is the border of the footer
-        }}
-      >
-        {columns
-          .filter((col) => col.visible != false && col.dataField != null)
-          .map((column, columnIndex) => {
-            const summary = summaryConfig.find(
-              (s) =>
-                s.showInColumn === column.dataField ||
-                s.column === column.dataField
-            );
-            const value = summary
-              ? summaryValues[summary.column as string]
-              : null;
-            const formattedValue = summary?.customizeText
-              ? summary.customizeText({ value })
-              : value;
+  return (
+    <tr
+      className="flex bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
+      style={{
+        width: `${tableWidth}px`,
+        height: `${rowHeight}px`,
+        minHeight: `${rowHeight}px`,
+        maxHeight: `${rowHeight}px`,
+        boxSizing: "border-box",
+        borderBottom: `0.5px solid rgba(${
+          formState.userConfig?.gridBorderColor || "203,213,225"
+        }, 0.3)`,
+        // the above border is the border of the footer
+      }}
+    >
+      {columns
+        .filter((col) => col.visible != false && col.dataField != null)
+        .map((column, columnIndex) => {
+          const summary = summaryConfig.find(
+            (s) =>
+              s.showInColumn === column.dataField ||
+              s.column === column.dataField
+          );
+          const value = summary
+            ? summaryValues[summary.column as string]
+            : null;
+          const formattedValue = summary?.customizeText
+            ? summary.customizeText({ value })
+            : value;
 
-              const isFocused = false;
+          const isFocused = false;
 
-            return (
-              <td
-                key={`summary_${column.dataField}`}
-                className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 "
-                style={{
-                  fontSize: `${gridFontSize}px`,
-                  fontWeight: gridIsBold ? "bold" : "600",
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign:
-                    summary?.alignment ||
-                    column.alignment ||
-                    (column.dataType === "number" ? "right" : "left"),
-                  boxSizing: "border-box",
-                  borderRight: `0.2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.8)`,
+          return (
+            <td
+              key={`summary_${column.dataField}`}
+              className="flex items-center justify-end px-1 py-1 font-semibold bg-slate-200 text-gray-700 "
+              style={{
+                fontSize: `${gridFontSize}px`,
+                fontWeight: gridIsBold ? "bold" : "600",
+                width: column.width ? `${column.width}px` : "150px",
+                minWidth: column.width ? `${column.width}px` : "150px",
+                textAlign:
+                  summary?.alignment ||
+                  column.alignment ||
+                  (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "border-box",
+                borderRight: `0.2px solid rgba(${
+                  gridBorderColor ? gridBorderColor : "226,232,240"
+                }, 0.8)`,
               }}
-              >
-                {summary ? formattedValue : ""}
-              </td>
-              // footer td
-            );
-          })}
-      </tr>
-    );
-  };
+            >
+              {summary ? formattedValue : ""}
+            </td>
+            // footer td
+          );
+        })}
+    </tr>
+  );
+};
 
 // Ultra-fast memoized row component
 
-const VirtualRow = React.memo(({
-  details,
+const VirtualRow = React.memo(
+  ({
+    details,
     columns,
     tableWidth,
     txtData,
@@ -539,1294 +559,1505 @@ const VirtualRow = React.memo(({
     setCurrentCell,
     formState,
     appState,
-    applicationSettings
-}: RowData) => {
-   const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
-      const item = details[index];
-      const rowRef = useRef<HTMLTableRowElement>(null);
-      const dispatch = useAppDispatch();
-     
+    applicationSettings,
+  }: RowData) => {
+    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
+    const item = details[index];
+    const rowRef = useRef<HTMLTableRowElement>(null);
+    const dispatch = useAppDispatch();
 
-      const handleFocus = useCallback((columnKey: string) => {
+    const handleFocus = useCallback(
+      (columnKey: string) => {
         setFocusedColumn(columnKey);
-      }, [index]);
+      },
+      [index]
+    );
 
-      const handleBlur = useCallback(() => {
-        if (document.activeElement?.closest(".dx-datagrid")) return;
-        setFocusedColumn(null);
-      }, []);
-      // Common cell content style for consistent height
-      const getCellContentStyle = (column: ColumnModel) => ({
-        fontSize: `${gridFontSize}px`,
-        fontWeight: gridIsBold ? "bold" : "normal",
-        height: `${rowHeight}px`,
-        minHeight: `${rowHeight}px`,
-        maxHeight: `${rowHeight}px`,
-        lineHeight: "normal",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
-        textAlign: column.alignment || "center",
-        whiteSpace: "nowrap" as const,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        width: "100%",
-        WebkitUserSelect: "none" as const,
-        MozUserSelect: "none" as const,
-        msUserSelect: "none" as const,
-        caretColor: "transparent",
-        outline: "none",
-        paddingLeft: "4px",
-        paddingRight: "4px",
-        boxSizing: "border-box" as const,
-      })
+    const handleBlur = useCallback(() => {
+      if (document.activeElement?.closest(".dx-datagrid")) return;
+      setFocusedColumn(null);
+    }, []);
+    // Common cell content style for consistent height
+    const getCellContentStyle = (column: ColumnModel) => ({
+      fontSize: `${gridFontSize}px`,
+      fontWeight: gridIsBold ? "bold" : "normal",
+      height: `${rowHeight}px`,
+      minHeight: `${rowHeight}px`,
+      maxHeight: `${rowHeight}px`,
+      lineHeight: "normal",
+      display: "flex",
+      alignItems: "center",
+      justifyContent:
+        column.alignment === "left"
+          ? "flex-start"
+          : column.alignment === "right"
+          ? "flex-end"
+          : "center",
+      textAlign: column.alignment || "center",
+      whiteSpace: "nowrap" as const,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      width: "100%",
+      WebkitUserSelect: "none" as const,
+      MozUserSelect: "none" as const,
+      msUserSelect: "none" as const,
+      caretColor: "transparent",
+      outline: "none",
+      paddingLeft: "4px",
+      paddingRight: "4px",
+      boxSizing: "border-box" as const,
+    });
 
-      const customStyle = {
-        ...formState.userConfig?.inputBoxStyle,
-        inputSize: 'customize',
-        inputHeight: (rowHeight - 0.6) / 16,
-        fontSize: gridFontSize ?? 13,
-        fontWeight: gridIsBold ?700:400,
-      } as inputBox;
+    const customStyle = {
+      ...formState.userConfig?.inputBoxStyle,
+      inputSize: "customize",
+      inputHeight: (rowHeight - 0.6) / 16,
+      fontSize: gridFontSize ?? 13,
+      fontWeight: gridIsBold ? 700 : 400,
+    } as inputBox;
 
+    const handleKeyDown = useCallback(
+      (
+        value: any,
+        e: React.KeyboardEvent<HTMLElement>,
+        column: ColumnModel,
+        rowIndex: number
+      ) => {
+        const target = e.target as HTMLElement;
 
+        const visibleColumns = columns.filter(
+          (col) => col.visible != false && col.dataField != null
+        );
+        const currentColumnIndex = visibleColumns.findIndex(
+          (col) => col.dataField === column.dataField
+        );
 
-      const handleKeyDown = useCallback(
-        (value: any, e: React.KeyboardEvent<HTMLElement>, column: ColumnModel, rowIndex: number) => {
-          const target = e.target as HTMLElement
+        if (
+          !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)
+        ) {
+          onKeyDown(
+            value,
+            e,
+            column.dataField as keyof TransactionDetail,
+            rowIndex
+          );
+          return;
+        }
+        if (!target.id) return;
 
-          const visibleColumns = columns.filter((col) => col.visible != false && col.dataField != null)
-          const currentColumnIndex = visibleColumns.findIndex((col) => col.dataField === column.dataField)
-
-          if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-            onKeyDown(value, e, column.dataField as keyof TransactionDetail, rowIndex)
-            return
-          }
-          if (!target.id) return
-
-          let shouldNavigate = true;
-          if (target.tagName === "INPUT" || target.querySelector("input")) {
-            const input =
-              target.tagName === "INPUT"
-                ? (target as HTMLInputElement)
-                : (target.querySelector("input") as HTMLInputElement | null);
-            if (input && input.type !== "number") {
-              const { selectionStart, selectionEnd, value } = input;
-              const effectiveValue = value || "";
-              const effectiveStart = selectionStart ?? 0;
-              const effectiveEnd = selectionEnd ?? 0;
-              if (
-                e.key === "ArrowRight" &&
-                (effectiveStart !== effectiveValue.length || effectiveEnd !== effectiveValue.length)
-              ) {
-                shouldNavigate = false
-              } else if (e.key === "ArrowLeft" && (effectiveStart !== 0 || effectiveEnd !== 0)) {
-                shouldNavigate = false
-              }
+        let shouldNavigate = true;
+        if (target.tagName === "INPUT" || target.querySelector("input")) {
+          const input =
+            target.tagName === "INPUT"
+              ? (target as HTMLInputElement)
+              : (target.querySelector("input") as HTMLInputElement | null);
+          if (input && input.type !== "number") {
+            const { selectionStart, selectionEnd, value } = input;
+            const effectiveValue = value || "";
+            const effectiveStart = selectionStart ?? 0;
+            const effectiveEnd = selectionEnd ?? 0;
+            if (
+              e.key === "ArrowRight" &&
+              (effectiveStart !== effectiveValue.length ||
+                effectiveEnd !== effectiveValue.length)
+            ) {
+              shouldNavigate = false;
+            } else if (
+              e.key === "ArrowLeft" &&
+              (effectiveStart !== 0 || effectiveEnd !== 0)
+            ) {
+              shouldNavigate = false;
             }
           }
+        }
 
-          if (!shouldNavigate) return;
+        if (!shouldNavigate) return;
 
-          e.preventDefault();
-          
-          switch (e.key) {
-            case "ArrowRight":
-              if (currentColumnIndex < visibleColumns.length - 1) {
-                const res = focusCell(index, currentColumnIndex + 1)
-                if(res != null) {
-                setCurrentCell({...res, data: details[index]})
-                }
-              }
-              break
-            case "ArrowLeft":
-              if (currentColumnIndex > 1) {
-                const res = focusCell(index, currentColumnIndex - 1)
-               if(res != null) {
-                setCurrentCell({...res, data: details[index]})
-                }
-              }
-              break
-            case "ArrowUp":
-              {
-                const res = focusCell(index - 1, currentColumnIndex)
-                if(res != null) {
-                setCurrentCell({...res, data: details[index]})
-                }
-              }
-              break
-            case "ArrowDown":
-              {
-                const res = focusCell(index + 1, currentColumnIndex)
-                if(res != null) {
-                setCurrentCell({...res, data: details[index]})
-                }
-              }
-              break
-          }
-        },
-        [columns, focusCell, setCurrentCell, onKeyDown],
-      )
+        e.preventDefault();
 
-      const handleDelete = (slNo: string)=>{
-        dispatch(formStateDeleteDetails({slNo:slNo})) 
-        // focu       
-      }
-
-      const handleInfoClick = (index:number)=>{
-        dispatch(
-          formStateHandleFieldChange({
-            fields:{
-              showProductInformation:true
+        switch (e.key) {
+          case "ArrowRight":
+            if (currentColumnIndex < visibleColumns.length - 1) {
+              const res = focusCell(index, currentColumnIndex + 1);
+              if (res != null) {
+                setCurrentCell({ ...res, data: details[index] });
+              }
             }
-          })
-        )
-      }
+            break;
+          case "ArrowLeft":
+            if (currentColumnIndex > 1) {
+              const res = focusCell(index, currentColumnIndex - 1);
+              if (res != null) {
+                setCurrentCell({ ...res, data: details[index] });
+              }
+            }
+            break;
+          case "ArrowUp":
+            {
+              const res = focusCell(index - 1, currentColumnIndex);
+              if (res != null) {
+                setCurrentCell({ ...res, data: details[index] });
+              }
+            }
+            break;
+          case "ArrowDown":
+            {
+              const res = focusCell(index + 1, currentColumnIndex);
+              if (res != null) {
+                setCurrentCell({ ...res, data: details[index] });
+              }
+            }
+            break;
+        }
+      },
+      [columns, focusCell, setCurrentCell, onKeyDown]
+    );
 
-  const totalColumnWidth = columnWidths.reduce((sum, width) => sum + width, 0);
-  return (
-    <div
-      className={`py-0 ${index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'} hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
-      style={{
-        // transform: `translateY(${top}px)`, // Use transform for better performance
-        // minWidth: `${totalColumnWidth}px`, // Add this line
-        // // backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
-        // willChange: 'transform', // Optimize for animations
-         fontSize: `${gridFontSize}px`,
-        fontWeight: gridIsBold ? 'bold' : '600',
-         position: 'absolute',
-                    top: `${top}px`,
-                    left: 0,
+    const handleDelete = (slNo: string) => {
+      dispatch(formStateDeleteDetails({ slNo: slNo }));
+      // focu
+    };
+
+    const handleInfoClick = (index: number) => {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            showProductInformation: {show: true, index: index},
+          },
+        })
+      );
+    };
+
+    const totalColumnWidth = columnWidths.reduce(
+      (sum, width) => sum + width,
+      0
+    );
+    return (
+      <div
+        className={`py-0 ${
+          index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"
+        } hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d] transition-all duration-300 ease-in-out group`}
+        style={{
+          // transform: `translateY(${top}px)`, // Use transform for better performance
+          // minWidth: `${totalColumnWidth}px`, // Add this line
+          // // backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9',
+          // willChange: 'transform', // Optimize for animations
+          fontSize: `${gridFontSize}px`,
+          fontWeight: gridIsBold ? "bold" : "600",
+          position: "absolute",
+          top: `${top}px`,
+          left: 0,
+          height: `${rowHeight}px`,
+          width: "100%",
+          display: "flex",
+          borderBottom: `0.5px solid rgba(${
+            formState.userConfig?.gridBorderColor || "203,213,225"
+          }, 0.3)`,
+          backgroundColor:
+            currentCell?.rowIndex === index
+              ? "#e3f2fd"
+              : index % 2 === 0
+              ? "#fff"
+              : "#f9f9f9",
+        }}
+      >
+        {columns.map((column, colIndex) => {
+          const fieldKey = column.dataField as keyof TransactionDetail;
+          const idField = column.idField as keyof TransactionDetail; // for cb
+          const productId = item.productID;
+          const cellValue = item[fieldKey];
+          const idValue = item[idField]; // for cb
+          const isFirstColumn = colIndex === 0;
+          const isLastColumn = colIndex === columns.length - 1;
+          const isFixed = isFirstColumn || isLastColumn;
+          let options: any[] = [];
+          if (fieldKey == "unit") {
+            options =
+              formState.batchesUnits?.filter(
+                (x) => x.productBatchID == item.productBatchID
+              ) ?? ([] as any[]);
+          }
+          if (fieldKey == "warranty") {
+            options = formState.dataWarranty ?? ([] as any[]);
+          }
+          if (fieldKey == "brandID") {
+            options = formState.dataBrands ?? ([] as any[]);
+          }
+          const isFocused = false;
+          const cellId = `${gridId}_${column.dataField}_${index}`;
+
+          return (
+            <div
+              key={`${column.dataField}`}
+              style={{
+                width: `${columnWidths[colIndex]}px`,
+                background: `${
+                  currentCell?.rowIndex === index ? "rgb(219 219 219)" : ""
+                }`,
+                minWidth: `${columnWidths[colIndex]}px`,
+                maxWidth: `${columnWidths[colIndex]}px`,
+                borderRight: isFirstColumn
+                  ? "2px solid #007bff"
+                  : colIndex === columnWidths.length - 1
+                  ? "none"
+                  : `0.2px solid rgba(${
+                      gridBorderColor ?? "226,232,240"
+                    }, 0.8)`,
+                borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                fontSize: `${gridFontSize}px`,
+                textAlign:
+                  column.dataField === "slNo"
+                    ? "center"
+                    : ["qty"].includes(column.dataField ?? "")
+                    ? "right"
+                    : "left",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: isFixed ? "#e3f2fd" : "#f8f9fa",
+                position: isFixed ? "sticky" : "relative",
+                left: isFirstColumn ? "0px" : "auto",
+                right: isLastColumn ? "0px" : "auto",
+                zIndex: isFixed ? 50 : 1,
+                gap: isLastColumn ? "8px" : "0",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentCell({
+                  column: column.dataField ?? "",
+                  data: item,
+                  rowIndex: index,
+                });
+              }}
+            >
+              {formState.transactionLoading ? (
+                <div
+                  className="parent-selector-loading"
+                  style={{
+                    width: "100%",
+                    margin: "3px 0",
                     height: `${rowHeight}px`,
-                    width: '100%',
-                    display: 'flex',
-          borderBottom:  `0.5px solid rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`,
-                    backgroundColor: currentCell?.rowIndex === index ? '#e3f2fd' : index % 2 === 0 ? '#fff' : '#f9f9f9'
-      }}
-    >
-      { (columns).map((column, colIndex) => {
-         const fieldKey = column.dataField as keyof TransactionDetail;
-            const idField = column.idField as keyof TransactionDetail; // for cb
-            const productId = item.productID;
-            const cellValue = item[fieldKey];
-            const idValue = item[idField]; // for cb
-             const isFirstColumn = colIndex === 0;
-                    const isLastColumn = colIndex === columns.length - 1;
-                    const isFixed = isFirstColumn || isLastColumn;
-            let options: any[] = []
-            if(fieldKey == "unit") {
-              options = formState.batchesUnits?.filter(x => x.productBatchID == item.productBatchID) ??[] as any [];
-            }  if(fieldKey == "warranty") {
-              options = formState.dataWarranty ??[] as any [];
-            }
-            if(fieldKey == "brandID") {
-              options = formState.dataBrands ??[] as any [];
-            }
-            const isFocused = false;
-            const cellId = `${gridId}_${column.dataField}_${index}`;
+                  }}
+                >
+                  <div
+                    className="card_description loading"
+                    style={{
+                      width: `${Math.floor(Math.random() * 50) + 40}%`,
+                      height: `${Math.min(rowHeight - 6, 16)}px`,
+                    }}
+                  ></div>
+                </div>
+              ) : column.dataField === "slNo" ? (
+                <div style={getCellContentStyle(column)} id={cellId}>
+                  {index + 1}
+                </div>
+              ) : column.dataType == "chk" ? (
+                <input
+                  disabled={formState.formElements.pnlMasters?.disabled}
+                  type="checkbox"
+                  checked={
+                    cellValue === "Yes" ||
+                    cellValue === "Y" ||
+                    cellValue === "y"
+                  }
+                  onChange={(e) => {
+                    debugger;
+                    onChange(
+                      e.target.checked ? "Y" : "N",
+                      column.dataField as keyof TransactionDetail,
+                      index
+                    );
+                  }}
+                />
+              ) : column.dataType == "btn" ? (
+                <button
+                  disabled={formState.formElements.pnlMasters?.disabled}
+                  onClick={() =>
+                    handleKeyDown(
+                      cellValue,
+                      { key: "Enter" } as any,
+                      column as any,
+                      index
+                    )
+                  }
+                  className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm hover:shadow text-xs text-gray-600 hover:bg-gray-50 transition-all"
+                  aria-label="Action button"
+                >
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 12 12"
+                  >
+                    <rect
+                      x="1"
+                      y="3"
+                      width="10"
+                      height="6"
+                      rx="1"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </button>
+              ) : column.dataField === "removeCol" ? (
+                <div className="flex items-center justify-center">
+                  <button
+                    onClick={() => handleInfoClick(index)}
+                    className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-blue-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-blue-200"
+                  >
+                    <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
+                  </button>
 
-        return (
-          <div
-          key={`${column.dataField}`}
-          style={{
-            width: `${columnWidths[colIndex]}px`,
-            background: `${currentCell?.rowIndex === index?"rgb(219 219 219)":""}`,
-            minWidth: `${columnWidths[colIndex]}px`,
-            maxWidth: `${columnWidths[colIndex]}px`,
-                  borderRight: isFirstColumn ? '2px solid #007bff' :colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
-                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
-            fontSize: `${gridFontSize}px`,
-            textAlign: column.dataField === 'slNo'  ? 'center'  : ['qty'].includes(column.dataField ?? '')    ? 'right'    : 'left',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: isFixed ? '#e3f2fd' : '#f8f9fa',
-            position: isFixed ? 'sticky' : 'relative',
-                          left: isFirstColumn ? '0px' : 'auto',
-                          right: isLastColumn ? '0px' : 'auto',
-                          zIndex: isFixed ? 50 : 1,
-                          gap: isLastColumn ? '8px' : '0'
-          }}
-          onClick={(e) => {
-                            e.preventDefault();
-                setCurrentCell({column: column.dataField??"",
-                                    data:item,
-                                    rowIndex: index})
-                          }}
-        >
+                  <button
+                  disabled={ formState.formElements.pnlMasters?.disabled}
+                    onClick={() => handleDelete(item.slNo)}
+                    className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-red-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-red-200"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-600 transition-all duration-300 group-hover:text-red-700" />
+                  </button>
+                </div>
+              ) : (column.dataField === "product" ||
+                  column.dataField === "pCode") &&
+                !column.readOnly &&
+                formState.formElements.pnlMasters?.disabled != true &&
+                currentCell?.column === column.dataField &&
+                currentCell?.rowIndex === index ? (
+                <ERPProductSearch
+                  customStyle={customStyle}
+                  appState={appState}
+                  textAlign={column.alignment === "right" ? "right" : "left"}
+                  rowIndex={index}
+                  id={cellId}
+                  inputId={`${gridId}_${column.dataField}_${index}`}
+                  searchType={
+                    applicationSettings?.productsSettings
+                      ?.usePopupWindowForItemSearch
+                      ? "modal"
+                      : "grid"
+                  }
+                  noLabel={true}
+                  showCheckBox={false}
+                  contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
+                  value={(cellValue as string) || ""}
+                  productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
+                  batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
+                  className="h-[22px] text-sm"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(value, e) => {
+                    handleKeyDown(value, e, column, index);
+                  }}
+                  searchKey={column.dataField}
+                  advancedProductSearching={advancedProductSearching}
+                  useInSearch={useInSearch}
+                  searchByCodeAndName={searchByCodeAndName}
+                  onNextCellFind={nextCellFind}
+                  onRowSelected={(data: any, rowValue?: string) => {
+                    const res = {
+                      slNo: item.slNo,
+                      rowIndex: index,
+                      productBatchID: data.productBatchID,
+                      autoBarcode: data.autoBarcode,
+                      productCode: data.productCode,
+                      useProductCode: column.dataField === "pCode",
+                      searchText: rowValue,
+                      key: generateUniqueKey(),
+                    };
+                    dispatch(
+                      formStateHandleFieldChange({
+                        fields: { batchSelectionData: JSON.stringify(res) },
+                      })
+                    );
+                  }}
+                />
+              ) : column.dataField === "product" && !column.readOnly ? (
+                <div
+                  style={getCellContentStyle(column)}
+                  id={cellId}
+                  tabIndex={0}
+                  // className="w-full h-full flex items-center px-1 cursor-default"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                >
+                  {productId > 0 ? cellValue ?? "" : ""}
+                </div>
+              ) : column.dataField === "status" ? (
+                <div
+                  style={{
+                    ...getCellContentStyle(column),
+                    justifyContent: "center",
+                  }}
+                  id={cellId}
+                  tabIndex={0}
+                  className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${
+                    cellValue === "Active" ? "bg-[#dcfce7] text-[#166534]" : ""
+                  } ${
+                    cellValue === "Inactive"
+                      ? "bg-[#fee2e2] text-[#991b1b]"
+                      : ""
+                  } ${
+                    cellValue === "Pending" ? "bg-[#fef9c3] text-[#854d0e]" : ""
+                  }`}
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                >
+                  {productId > 0 ? cellValue ?? "" : ""}
+                </div>
+              ) : column.allowEditing &&
+                !column.readOnly &&
+                formState.formElements.pnlMasters?.disabled != true &&
+                txtData.visible == true &&
+                currentCell?.column === column.dataField &&
+                currentCell?.rowIndex === index ? (
+                <EditableCell
+                  appState={appState}
+                  type={column.dataType == "cb" ? "cb" : "any"}
+                  productId={productId}
+                  onChange={onChange}
+                  blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
+                  decimalLimit={2}
+                  rowIndex={index}
+                  column={column}
+                  value={
+                    column.dataType == "cb"
+                      ? (idValue as string | number)
+                      : (cellValue as string | number)
+                  }
+                  options={options}
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  gridId={gridId}
+                  onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                  gridFontSize={gridFontSize}
+                  gridIsBold={gridIsBold}
+                  formState={formState}
+                  rowHeight={rowHeight}
+                />
+              ) : (
+                <div
+                  title={JSON.stringify(currentCell)}
+                  style={getCellContentStyle(column)}
+                  id={cellId}
+                  tabIndex={0}
+                  // className="w-full h-full flex items-center px-1 cursor-default"
+                  className="px-1 cursor-default"
+                  onFocus={() => handleFocus(column.dataField!)}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) =>
+                    handleKeyDown(cellValue ?? "", e, column, index)
+                  }
+                >
+                  {productId > 0 ? cellValue ?? "" : ""}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+);
 
-
-          {formState.transactionLoading ? (
-                            <div className="parent-selector-loading" style={{ width: "100%", margin: "3px 0", height: `${rowHeight}px` }}>
-                              <div className="card_description loading"
-                                style={{
-                                  width: `${Math.floor(Math.random() * 50) + 40}%`,
-                                  height: `${Math.min(rowHeight - 6, 16)}px`,
-                                }}
-                              ></div>
-                            </div>
-                          ) : column.dataField === "slNo" ? (
-                            <div style={getCellContentStyle(column)} id={cellId}>
-                              {index + 1}
-                            </div>
-                          ):
-                        column.dataType == "chk"  ? (
-                            
-            <input
-    type="checkbox"
-    checked={cellValue === "Yes" || cellValue === "Y"|| cellValue === "y"}
-    onChange={(e) => {debugger; onChange(e.target.checked ? "Y" : "N", column.dataField as keyof TransactionDetail, index)}}
-  />
-        )
-                          :   column.dataType == "btn"  ? (
-                            
-           <button
-                      onClick={() =>  handleKeyDown(cellValue,({key:"Enter"} as any),column as any,index)}
-                      className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm hover:shadow text-xs text-gray-600 hover:bg-gray-50 transition-all"
-                      aria-label="Action button"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 12 12">
-                        <rect x="1" y="3" width="10" height="6" rx="1" strokeWidth="1.5"/>
-                      </svg>
-                    </button>
-        )
-                          : column.dataField === "removeCol" ? (
-                            <div className="flex items-center justify-center">
-                              <button onClick={()=> handleInfoClick(index)} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-blue-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-blue-200">
-                                <Info className="w-4 h-4 text-blue-600 transition-all duration-300 group-hover:text-blue-700" />
-                              </button>
-
-                              <button onClick={() => handleDelete(item.slNo)} className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-red-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-red-200">
-                                <Trash2 className="w-4 h-4 text-red-600 transition-all duration-300 group-hover:text-red-700" />
-                              </button>
-                            </div>
-                          )  : (column.dataField === "product" || column.dataField === "pCode") &&
-                            !column.readOnly &&
-                            currentCell?.column === column.dataField &&
-                            currentCell?.rowIndex === index ? (
-                            <ERPProductSearch
-                              customStyle={customStyle}
-                              appState={appState}
-                              textAlign={column.alignment === "right" ? "right" : "left"}
-                              rowIndex={index}
-                              id={cellId}
-                              inputId={`${gridId}_${column.dataField}_${index}`}
-                              searchType={
-                                applicationSettings?.productsSettings?.usePopupWindowForItemSearch
-                                  ? "modal"
-                                  : "grid"
-                              }
-                              noLabel={true}
-                              showCheckBox={false}
-                              contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
-                              value={(cellValue as string) || ""}
-                              productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
-                              batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
-                              className="h-[22px] text-sm"
-                              onFocus={() => handleFocus(column.dataField!)}
-                              onBlur={handleBlur}
-                              onKeyDown={(value, e) => {handleKeyDown(value, e, column, index)}}
-                              searchKey={column.dataField}
-                              advancedProductSearching={advancedProductSearching}
-                              useInSearch={useInSearch}
-
-                              searchByCodeAndName={searchByCodeAndName}
-                              onNextCellFind={nextCellFind}
-                              onRowSelected={(data: any, rowValue?: string) => {
-                                const res = {
-                                  slNo: item.slNo,
-                                  rowIndex: index,
-                                  productBatchID: data.productBatchID,
-                                  autoBarcode: data.autoBarcode,
-                                  productCode: data.productCode,
-                                  useProductCode: column.dataField === "pCode",
-                                  searchText: rowValue,
-                                  key: generateUniqueKey(),
-                                };
-                                dispatch(
-                                  formStateHandleFieldChange({
-                                    fields: { batchSelectionData: JSON.stringify(res) },
-                                  })
-                                );
-                              }}
-                            />
-                          ) : column.dataField === "product" && !column.readOnly ? (
-                            <div
-                              style={getCellContentStyle(column)}
-                              id={cellId}
-                              tabIndex={0}
-                              // className="w-full h-full flex items-center px-1 cursor-default"
-                              onFocus={() => handleFocus(column.dataField!)}
-                              onBlur={handleBlur}
-                              onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                            >
-                              {productId > 0 ? cellValue??"" : ""}
-                            </div>
-                          ) : column.dataField === "status" ? (
-                            <div
-                              style={{
-                                ...getCellContentStyle(column),
-                                justifyContent: "center",
-                              }}
-                              id={cellId}
-                              tabIndex={0}
-                              className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active"
-                                  ? "bg-[#dcfce7] text-[#166534]"
-                                  : ""
-                                } ${cellValue === "Inactive"
-                                  ? "bg-[#fee2e2] text-[#991b1b]"
-                                  : ""
-                                } ${cellValue === "Pending"
-                                  ? "bg-[#fef9c3] text-[#854d0e]"
-                                  : ""
-                              }`}
-                              onFocus={() => handleFocus(column.dataField!)}
-                              onBlur={handleBlur}
-                              onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                            >
-                              {productId > 0 ? cellValue??"" : ""}
-                            </div>
-                          ) : column.allowEditing && !column.readOnly && txtData.visible == true
-                            &&  currentCell?.column === column.dataField &&
-                            currentCell?.rowIndex === index ? (
-                            <EditableCell
-                              appState={appState}
-                              type={column.dataType == "cb" ? "cb": "any"}
-                              productId={productId}
-                              onChange={onChange}
-                              blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
-                              decimalLimit={2}
-                              rowIndex={index}
-                              column={column}
-                              value={column.dataType == "cb" ? (idValue as string | number): (cellValue as string | number)}
-                              options={options}
-                              onFocus={() => handleFocus(column.dataField!)}
-                              onBlur={handleBlur}
-                              gridId={gridId}
-                              onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                              gridFontSize={gridFontSize}
-                              gridIsBold={gridIsBold}
-                              formState={formState}
-                              rowHeight={rowHeight}
-                            />
-                          ) : (
-                            <div
-                            title={JSON.stringify(currentCell)}
-                              style={getCellContentStyle(column)}
-                              id={cellId}
-                              tabIndex={0}
-                              // className="w-full h-full flex items-center px-1 cursor-default"
-                              className="px-1 cursor-default"
-                              onFocus={() => handleFocus(column.dataField!)}
-                              onBlur={handleBlur}
-                              onKeyDown={(e) => handleKeyDown(cellValue??"", e, column, index)}
-                            >
-                               {productId > 0 ? cellValue??"" : ""}
-                            </div>
-                          )}
-        </div>
-        )
-      })}
-    </div>
-  );
-});
-
-const UltraFastReorderableVirtualTableGrid = forwardRef(function ErpPurchaseGrid<T extends DataItem>(
-  {
-    _columns = [],
-    keyField,
-    transactionType,
-    onKeyDown,
-    onChange,
-    gridId, rowHeight = 33,
-    className = "",
-    height = 800,
-    allowColumnReordering = true,
-    summaryConfig = [],
-    gridFontSize = 14,
-    gridIsBold = false,
-    gridBorderColor,
-    gridHeaderBg,
-    gridHeaderFontColor,
-  }: DataGridProps<T>,
-  ref: Ref<any>
-) {
-  const dispatch = useAppDispatch();
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
-  const onApplyPreferences = useCallback(
+const UltraFastReorderableVirtualTableGrid = forwardRef(
+  function ErpPurchaseGrid<T extends DataItem>(
+    {
+      _columns = [],
+      keyField,
+      transactionType,
+      onKeyDown,
+      onChange,
+      gridId,
+      rowHeight = 33,
+      className = "",
+      height = 800,
+      allowColumnReordering = true,
+      summaryConfig = [],
+      gridFontSize = 14,
+      gridIsBold = false,
+      gridBorderColor,
+      gridHeaderBg,
+      gridHeaderFontColor,
+    }: DataGridProps<T>,
+    ref: Ref<any>
+  ) {
+    const dispatch = useAppDispatch();
+    const formState = useAppSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
+    const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
         const updated = applyGridColumnPreferences(
           (formState.gridColumns || _columns) as DevGridColumn[],
           pref
         );
-        setColumns(updated as any)
+        setColumns(updated as any);
         dispatch(
-          formStateHandleFieldChange({ fields: { gridColumns: updated as ColumnModel[] } })
+          formStateHandleFieldChange({
+            fields: { gridColumns: updated as ColumnModel[] },
+          })
         );
       },
       [_columns, dispatch, formState.gridColumns]
     );
-  const {
-    startResize,
-    columnWidths,
-    setColumnWidths,
-    columnOrder,
-    setColumnOrder,
-    handleDragStart,
-    handleDragEnd,
-    handleDragOver,
-    handleDrop,
-    dragOverIndex
-  } = useTableResizeAndReorder(gridId,onApplyPreferences);
-  const [__columns, setColumns] = useState(_columns);
-  const appState = useAppSelector(
-    (state: RootState) => state.AppState?.appState
-  );
-  const applicationState = useAppSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
-   const preferenceChooserRef = useRef<{
-    handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
-    handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
-    handleDropping: (eFromDataGrid?: boolean) => void;
-  }>(null);
-  const { t } = useTranslation('transaction')
-  const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
-  const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
-  const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const popupRef = useRef<HTMLDivElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const virtualContainerRef = useRef<HTMLDivElement>(null);
+    const {
+      startResize,
+      columnWidths,
+      setColumnWidths,
+      columnOrder,
+      setColumnOrder,
+      handleDragStart,
+      handleDragEnd,
+      handleDragOver,
+      handleDrop,
+      dragOverIndex,
+    } = useTableResizeAndReorder(gridId, onApplyPreferences);
+    const [__columns, setColumns] = useState(_columns);
+    const appState = useAppSelector(
+      (state: RootState) => state.AppState?.appState
+    );
+    const applicationState = useAppSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
+    const preferenceChooserRef = useRef<{
+      handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
+      handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
+      handleDropping: (eFromDataGrid?: boolean) => void;
+    }>(null);
+    const { t } = useTranslation("transaction");
+    const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
+    const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
+    const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const popupRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const virtualContainerRef = useRef<HTMLDivElement>(null);
 
-
-   const totalGridWidth = useMemo(() => {
-    return columnWidths.reduce((sum, width) => sum + width, 0);
-  }, [columnWidths]);
+    const totalGridWidth = useMemo(() => {
+      return columnWidths.reduce((sum, width) => sum + width, 0);
+    }, [columnWidths]);
 
     useEffect(() => {
-    const fetchPreferences = async () => {
-      // onApplyPreferences(await getInitialPreference(gridId, _columns, new APIClient()));
-    };
-
-    if (gridId && _columns) {
-      fetchPreferences();
-    }
-  }, [gridId, _columns]);
-
-    
-
-
-  // Memoized ordered columns
-//   const columns = useMemo(() =>
-//     columnOrder.length > 0 && formState.gridColumns
-//       ? columnOrder.map(index => formState.gridColumns![index])
-//       : formState.gridColumns,
-//     [columnOrder, formState.gridColumns]
-// );
- const columns = useMemo(() => {
-
-  const visibleColumns = formState.gridColumns?.filter(x => x.visible !== false) ?? [];
-
-  if (columnOrder.length > 0 && visibleColumns?.length > 0) {
-    return columnOrder.map(index => visibleColumns[index]).filter(col => col !== undefined);
-  }
-  console.log(columnWidths);
-  console.log(visibleColumns);
-  
-  
-  return visibleColumns;
-}, [columnOrder, formState.gridColumns]);
-//   const columns = useMemo(() =>{
-//     if(formState.gridColumns) {
-//       return []
-//     } else {
-// return columnOrder.length > 0 && (formState.gridColumns as ColumnModel[]).length > 0
-//       ? columnOrder.map(index => formState.gridColumns![index])
-//       : formState.gridColumns
-//     }
-
-// },
-//     [columnOrder, formState.gridColumns]
-// );
-
-
-
-  // Virtual scrolling configuration
-  const ITEM_HEIGHT =formState.userConfig?.gridRowHeight??32;
-
-  const { scrollTop, updateScroll, visibleItems, totalHeight } = useUltraFastVirtualScrolling(
-    formState.transaction.details.length,
-    ITEM_HEIGHT,
-    height
-  );
-
-  // Initialize column order and widths
-  // useEffect(() => {
-  //   if (columnOrder.length === 0 && formState.gridColumns) {
-  //     setColumnOrder(formState.gridColumns.map((_, index) => index));
-  //   }
-  //   if (columnWidths.length === 0 && formState.gridColumns) {
-  //     setColumnWidths(formState.gridColumns.map(col => col.width??0));
-  //   }
-  // }, [formState.gridColumns, columnOrder.length, columnWidths.length, setColumnOrder, setColumnWidths]);
-
-  useEffect(() => {
-  const visibleColumns = formState.gridColumns?.filter(col => col.visible !== false) ?? [];
-
-  if (columnOrder.length === 0) {
-    setColumnOrder(visibleColumns.map((_, index) => index));
-  }
-
-  if (columnWidths.length === 0) {
-    setColumnWidths(visibleColumns.map(col => col.width ?? 0));
-  }
-}, [formState.gridColumns, columnOrder.length, columnWidths.length, setColumnOrder, setColumnWidths]);
-
-
-  // Memoized footer data
-
-
-  // Ultra-fast scroll handler with immediate updates to prevent white areas
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const verticalScrollTop = target.scrollTop; // Only track vertical scroll for virtual rows
-    const horizontalScrollLeft = target.scrollLeft; // Track horizontal for debugging
-    
-    // Update virtual scrolling based on VERTICAL position only
-    updateScroll(verticalScrollTop);
-    
-    // Close menu when scrolling (either direction)
-    // if (openMenuRow !== null) {
-    //   closeMenu();
-    // }
-    
-    // Optional: Log scroll positions for debugging
-    // console.log(`V-Scroll: ${verticalScrollTop}px | H-Scroll: ${horizontalScrollLeft}px | Visible: ${visibleItems.length} rows`);
-  }, [updateScroll]);
-
-
-  // Attach resize handlers
-  useEffect(() => {
-    if (!containerRef.current || columnWidths.length === 0) return;
-
-    const handles = containerRef.current.querySelectorAll('[data-resize-handle]');
-    const cleanupFunctions: (() => void)[] = [];
-     const isRTL =appState.direction==='rtl';
-    handles.forEach((handle, index) => {
-      const handleMouseDown = (e: Event) => {
-        const mouseEvent = e as MouseEvent;
-        if (containerRef.current) {
-          //Arabic resize
-          startResize(mouseEvent,isRTL? index-1:index, containerRef.current, columnWidths);
-        }
+      const fetchPreferences = async () => {
+        // onApplyPreferences(await getInitialPreference(gridId, _columns, new APIClient()));
       };
 
-      handle.addEventListener('mousedown', handleMouseDown);
-      cleanupFunctions.push(() => {
-        handle.removeEventListener('mousedown', handleMouseDown);
-      });
-    });
+      if (gridId && _columns) {
+        fetchPreferences();
+      }
+    }, [gridId, _columns]);
 
-    return () => {
-      cleanupFunctions.forEach(cleanup => cleanup());
-    };
-  }, [startResize, columns, columnWidths]);
+    // Memoized ordered columns
+    //   const columns = useMemo(() =>
+    //     columnOrder.length > 0 && formState.gridColumns
+    //       ? columnOrder.map(index => formState.gridColumns![index])
+    //       : formState.gridColumns,
+    //     [columnOrder, formState.gridColumns]
+    // );
+    const columns = useMemo(() => {
+      const visibleColumns =
+        formState.gridColumns?.filter((x) => x.visible !== false) ?? [];
 
-  if (columnWidths.length === 0 || columnOrder.length === 0) {
-    // return <div>Loading...</div>;
-  }
+      if (columnOrder.length > 0 && visibleColumns?.length > 0) {
+        return columnOrder
+          .map((index) => visibleColumns[index])
+          .filter((col) => col !== undefined);
+      }
+      console.log(columnWidths);
+      console.log(visibleColumns);
 
+      return visibleColumns;
+    }, [columnOrder, formState.gridColumns]);
+    //   const columns = useMemo(() =>{
+    //     if(formState.gridColumns) {
+    //       return []
+    //     } else {
+    // return columnOrder.length > 0 && (formState.gridColumns as ColumnModel[]).length > 0
+    //       ? columnOrder.map(index => formState.gridColumns![index])
+    //       : formState.gridColumns
+    //     }
 
- const openExcelMenu = () => {
-    setIsExcelMenuOpen(true);
-  };
+    // },
+    //     [columnOrder, formState.gridColumns]
+    // );
 
-  const closeExcelMenu = () => {
-    setIsExcelMenuOpen(false);
-  };
-  const exportToExcel = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Grid Data');
+    // Virtual scrolling configuration
+    const ITEM_HEIGHT = formState.userConfig?.gridRowHeight ?? 32;
 
-    const excelColumns = exportVisibleColumns
-      ? formState.gridColumns?.filter((col) => col.visible != false && col.dataField != null)
-      : formState.gridColumns;
+    const { scrollTop, updateScroll, visibleItems, totalHeight } =
+      useUltraFastVirtualScrolling(
+        formState.transaction.details.length,
+        ITEM_HEIGHT,
+        height
+      );
 
-    worksheet.columns = (excelColumns ?? []).map((col) => ({
-      header: col.caption,
-      key: col.dataField,
-      width: col.width ? col.width / 7 : 20,
-    }));
+    // Initialize column order and widths
+    // useEffect(() => {
+    //   if (columnOrder.length === 0 && formState.gridColumns) {
+    //     setColumnOrder(formState.gridColumns.map((_, index) => index));
+    //   }
+    //   if (columnWidths.length === 0 && formState.gridColumns) {
+    //     setColumnWidths(formState.gridColumns.map(col => col.width??0));
+    //   }
+    // }, [formState.gridColumns, columnOrder.length, columnWidths.length, setColumnOrder, setColumnWidths]);
 
-    formState.transaction?.details.forEach((item, index) => {
-      const row: { [key: string]: any } = {};
-      excelColumns?.forEach((col) => {
-        const fieldKey = col.dataField as keyof TransactionDetail;
-        if (fieldKey === 'slNo') {
-          row[fieldKey] = index + 1;
-        } else {
-          row[fieldKey] = item[fieldKey] ?? '';
-        }
-      });
-      worksheet.addRow(row);
-    });
+    useEffect(() => {
+      const visibleColumns =
+        formState.gridColumns?.filter((col) => col.visible !== false) ?? [];
 
-    if (summaryConfig.length > 0) {
-      const summaryRow: { [key: string]: any } = {};
-      excelColumns?.forEach((col) => {
-        const summary = summaryConfig.find(
-          (s) => s.showInColumn === col.dataField || s.column === col.dataField
-        );
-        if (summary && col.dataField !== undefined) {
-          const value = formState.summary[summary.column as keyof typeof formState.summary];
-          summaryRow[col.dataField] = summary.customizeText
-            ? summary.customizeText({ value })
-            : value ?? '';
-        } else {
-          if (col.dataField !== undefined) {
-            summaryRow[col.dataField] = '';
+      if (columnOrder.length === 0) {
+        setColumnOrder(visibleColumns.map((_, index) => index));
+      }
+
+      if (columnWidths.length === 0) {
+        setColumnWidths(visibleColumns.map((col) => col.width ?? 0));
+      }
+    }, [
+      formState.gridColumns,
+      columnOrder.length,
+      columnWidths.length,
+      setColumnOrder,
+      setColumnWidths,
+    ]);
+
+    // Memoized footer data
+
+    // Ultra-fast scroll handler with immediate updates to prevent white areas
+    const handleScroll = useCallback(
+      (e: React.UIEvent<HTMLDivElement>) => {
+        const target = e.currentTarget;
+        const verticalScrollTop = target.scrollTop; // Only track vertical scroll for virtual rows
+        const horizontalScrollLeft = target.scrollLeft; // Track horizontal for debugging
+
+        // Update virtual scrolling based on VERTICAL position only
+        updateScroll(verticalScrollTop);
+
+        // Close menu when scrolling (either direction)
+        // if (openMenuRow !== null) {
+        //   closeMenu();
+        // }
+
+        // Optional: Log scroll positions for debugging
+        // console.log(`V-Scroll: ${verticalScrollTop}px | H-Scroll: ${horizontalScrollLeft}px | Visible: ${visibleItems.length} rows`);
+      },
+      [updateScroll]
+    );
+
+    // Attach resize handlers
+    useEffect(() => {
+      if (!containerRef.current || columnWidths.length === 0) return;
+
+      const handles = containerRef.current.querySelectorAll(
+        "[data-resize-handle]"
+      );
+      const cleanupFunctions: (() => void)[] = [];
+      const isRTL = appState.direction === "rtl";
+      handles.forEach((handle, index) => {
+        const handleMouseDown = (e: Event) => {
+          const mouseEvent = e as MouseEvent;
+          if (containerRef.current) {
+            //Arabic resize
+            startResize(
+              mouseEvent,
+              isRTL ? index - 1 : index,
+              containerRef.current,
+              columnWidths
+            );
           }
-        }
+        };
+
+        handle.addEventListener("mousedown", handleMouseDown);
+        cleanupFunctions.push(() => {
+          handle.removeEventListener("mousedown", handleMouseDown);
+        });
       });
-      worksheet.addRow(summaryRow);
+
+      return () => {
+        cleanupFunctions.forEach((cleanup) => cleanup());
+      };
+    }, [startResize, columns, columnWidths]);
+
+    if (columnWidths.length === 0 || columnOrder.length === 0) {
+      // return <div>Loading...</div>;
     }
 
-    worksheet.getRow(1).font = { bold: true };
-    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } };
-    worksheet.getRow(1).eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-        right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+    const openExcelMenu = () => {
+      setIsExcelMenuOpen(true);
+    };
+
+    const closeExcelMenu = () => {
+      setIsExcelMenuOpen(false);
+    };
+    const exportToExcel = async () => {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Grid Data");
+
+      const excelColumns = exportVisibleColumns
+        ? formState.gridColumns?.filter(
+            (col) => col.visible != false && col.dataField != null
+          )
+        : formState.gridColumns;
+
+      worksheet.columns = (excelColumns ?? []).map((col) => ({
+        header: col.caption,
+        key: col.dataField,
+        width: col.width ? col.width / 7 : 20,
+      }));
+
+      formState.transaction?.details.forEach((item, index) => {
+        const row: { [key: string]: any } = {};
+        excelColumns?.forEach((col) => {
+          const fieldKey = col.dataField as keyof TransactionDetail;
+          if (fieldKey === "slNo") {
+            row[fieldKey] = index + 1;
+          } else {
+            row[fieldKey] = item[fieldKey] ?? "";
+          }
+        });
+        worksheet.addRow(row);
+      });
+
+      if (summaryConfig.length > 0) {
+        const summaryRow: { [key: string]: any } = {};
+        excelColumns?.forEach((col) => {
+          const summary = summaryConfig.find(
+            (s) =>
+              s.showInColumn === col.dataField || s.column === col.dataField
+          );
+          if (summary && col.dataField !== undefined) {
+            const value =
+              formState.summary[
+                summary.column as keyof typeof formState.summary
+              ];
+            summaryRow[col.dataField] = summary.customizeText
+              ? summary.customizeText({ value })
+              : value ?? "";
+          } else {
+            if (col.dataField !== undefined) {
+              summaryRow[col.dataField] = "";
+            }
+          }
+        });
+        worksheet.addRow(summaryRow);
+      }
+
+      worksheet.getRow(1).font = { bold: true };
+      worksheet.getRow(1).alignment = {
+        vertical: "middle",
+        horizontal: "center",
       };
-    });
-    if (summaryConfig.length > 0) {
-      const lastRowIndex = worksheet.rowCount;
-      const summaryRow = worksheet.getRow(lastRowIndex);
-      summaryRow.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFF8FAFC' },
+      worksheet.getRow(1).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFF3F4F6" },
       };
-      summaryRow.eachCell((cell) => {
+      worksheet.getRow(1).eachCell((cell) => {
         cell.border = {
-          top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-          left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-          bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
-          right: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+          top: { style: "thin", color: { argb: "FFD1D5DB" } },
+          left: { style: "thin", color: { argb: "FFD1D5DB" } },
+          bottom: { style: "thin", color: { argb: "FFD1D5DB" } },
+          right: { style: "thin", color: { argb: "FFD1D5DB" } },
         };
       });
-    }
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, `${gridId}_export.xlsx`);
-  };
- const focusCell = useCallback(
-    (targetRow: number, targetColumnIndex: number) => {
-      const visibleColumns =
-        formState.gridColumns?.filter(
-          (col) => col.visible != false && col.dataField != null
-        ) ?? [];
-      const itemCount = formState.transaction?.details.length || 0;
-      if (
-        targetRow < 0 ||
-        targetRow >= itemCount ||
-        targetColumnIndex < 0 ||
-        targetColumnIndex >= visibleColumns.length
-      )
-        return null;
-
-      const targetColumn = visibleColumns[targetColumnIndex];
-
-      // if (listRef.current) listRef.current.scrollToItem(targetRow, "smart");
-
-      const attemptFocus = () => {
-        return {column: targetColumn.dataField??"", rowIndex: targetRow};
-      };
-
-      return attemptFocus();
-    },
-    [
-      formState.gridColumns,
-      formState.transaction?.details.length,
-      gridId,
-      // listRef,
-      // gridRef,
-    ]
-  );
-
-  const focusCurrentColumn = useCallback(
-    (rowIndex: number, column: string) => {
-      const visibleColumns = formState.gridColumns?.filter(
-        (col) => col.visible != false && col.dataField != null
-      );
-
-      const editableColumns = visibleColumns?.filter(
-        (col) => col.allowEditing && col.readOnly !== true
-      );
-      const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
-      const editable = editableColumns
-        ? editableColumns[currentEditableIndex]
-        : undefined;
-      const targetColumnIndex = visibleColumns?.findIndex(
-        (col) => col.dataField === editable?.dataField
-      );
-      if (rowIndex >= 0 && (targetColumnIndex ?? -1) >= 0) {
-        return focusCell(rowIndex, targetColumnIndex ?? -1);
-
-      }
-      return null
-    },
-    [formState.gridColumns, focusCell]
-  );
-  const findCurrentEditableIndex = useCallback(
-    (rowIndex: number, column: string) => {
-      const visibleColumns = formState.gridColumns?.filter(
-        (col) => col.visible != false && col.dataField != null
-      );
-
-      const editableColumns = visibleColumns?.filter(
-        (col) => col.allowEditing && col.readOnly !== true
-      );
-
-      if (editableColumns?.length === 0) {
-        return -1;
+      if (summaryConfig.length > 0) {
+        const lastRowIndex = worksheet.rowCount;
+        const summaryRow = worksheet.getRow(lastRowIndex);
+        summaryRow.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FFF8FAFC" },
+        };
+        summaryRow.eachCell((cell) => {
+          cell.border = {
+            top: { style: "thin", color: { argb: "FFD1D5DB" } },
+            left: { style: "thin", color: { argb: "FFD1D5DB" } },
+            bottom: { style: "thin", color: { argb: "FFD1D5DB" } },
+            right: { style: "thin", color: { argb: "FFD1D5DB" } },
+          };
+        });
       }
 
-      return !editableColumns
-        ? -1
-        : editableColumns?.findIndex((col) => col.dataField === column);
-    },
-    [formState.gridColumns, focusCell]
-  );
-  const focusColumn = useCallback(
-    (rowIndex: number, column: string) => {
-
-      const visibleColumns = formState.gridColumns?.filter(
-        (col) => col.visible != false && col.dataField != null
-      );
-
-      const editableColumns = visibleColumns?.filter(
-        (col) => col.allowEditing && col.readOnly !== true
-      );
-
-      if (editableColumns?.length === 0) {
-        return -1;
-      }
-
-      const currentEditableIndex = !editableColumns
-        ? -1
-        : editableColumns?.findIndex((col) => col.dataField === column);
-
-      const currentEditable = editableColumns![currentEditableIndex];
-      const targetColumnIndex = visibleColumns?.findIndex(
-        (col) => col.dataField === currentEditable.dataField
-      );
-
-      if (targetColumnIndex??-1 >= 0) {
-        return focusCell(rowIndex, targetColumnIndex!);
-      }
-      return null;
-    },
-    [formState.gridColumns, focusCell]
-  );
-
-  const nextCellFind = useCallback(
-    (
-      rowIndex: number,
-      column: string,
-      excludedColumns?: (keyof TransactionDetail)[]
-    ) => {
-      const visibleColumns = formState.gridColumns?.filter(
-        (col) => col.visible != false && col.dataField != null
-      );
-
-      const editableColumns = visibleColumns?.filter(
-        (col) => col.allowEditing && col.readOnly !== true
-      );
-      const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
-      let targetRow = rowIndex;
-      let targetColumnIndex = -1;
-      if (visibleColumns && editableColumns) {
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blob, `${gridId}_export.xlsx`);
+    };
+    const focusCell = useCallback(
+      (targetRow: number, targetColumnIndex: number) => {
+        const visibleColumns =
+          formState.gridColumns?.filter(
+            (col) => col.visible != false && col.dataField != null
+          ) ?? [];
+        const itemCount = formState.transaction?.details.length || 0;
         if (
-          currentEditableIndex >= 0 &&
-          currentEditableIndex < editableColumns?.length - 1
-        ) {
-        const nextEditable = excludedColumns
-  ? (() => {
-      // Start from the next index after current
-      for (let i = currentEditableIndex + 1; i < editableColumns.length; i++) {
-        const column = editableColumns[i];
-        if (column.dataField &&
-            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
-          return column;
-        }
-      }
-      // If no next column found, wrap around to beginning
-      for (let i = 0; i <= currentEditableIndex; i++) {
-        const column = editableColumns[i];
-        if (column.dataField &&
-            !excludedColumns.includes(column.dataField as keyof TransactionDetail)) {
-          return column;
-        }
-      }
-      return null; // or undefined, depending on your needs
-    })()
-  : editableColumns[currentEditableIndex + 1];
-          targetColumnIndex = visibleColumns.findIndex(
-            (col) => col.dataField === nextEditable?.dataField
-          );
-        } else {
-          targetRow += 1;
-          const firstEditable = editableColumns[0];
-          targetColumnIndex = visibleColumns.findIndex(
-            (col) => col.dataField === firstEditable.dataField
-          );
-        }
-      }
+          targetRow < 0 ||
+          targetRow >= itemCount ||
+          targetColumnIndex < 0 ||
+          targetColumnIndex >= visibleColumns.length
+        )
+          return null;
 
-      if (targetColumnIndex >= 0) {
-        return focusCell(targetRow, targetColumnIndex);
-      }
-      return null;
-    },
-    [formState.gridColumns, focusCell]
-  );
+        const targetColumn = visibleColumns[targetColumnIndex];
 
-const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(formState.currentCell);
-const [prevCell, setPrevCell] = useState<number>(formState.currentCell?.rowIndex??-1);
-  useEffect(() => {
-  setCurrentCell(formState.currentCell)
+        // if (listRef.current) listRef.current.scrollToItem(targetRow, "smart");
 
-  }, [formState.currentCell])
-useEffect(() => {
-    if (
-      currentCell &&
-      currentCell.column != "" &&
-      currentCell.rowIndex > -1
-    ) {
-      const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
-      const targetCell = document.getElementById(
-        targetCellId
-      ) as HTMLElement | null;
-      if (targetCell) {
-        if (currentCell.column === "product" || currentCell.column === "pCode") {
-          const erpSearchInput = targetCell.querySelector(
-            `input[id="${targetCellId}"]`
-          ) as HTMLInputElement | null;
-          if (erpSearchInput) {
-            erpSearchInput.focus();
-            erpSearchInput.select();
-            return;
+        const attemptFocus = () => {
+          return { column: targetColumn.dataField ?? "", rowIndex: targetRow };
+        };
+
+        return attemptFocus();
+      },
+      [
+        formState.gridColumns,
+        formState.transaction?.details.length,
+        gridId,
+        // listRef,
+        // gridRef,
+      ]
+    );
+
+    const focusCurrentColumn = useCallback(
+      (rowIndex: number, column: string) => {
+        const visibleColumns = formState.gridColumns?.filter(
+          (col) => col.visible != false && col.dataField != null
+        );
+
+        const editableColumns = visibleColumns?.filter(
+          (col) => col.allowEditing && col.readOnly !== true
+        );
+        const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
+        const editable = editableColumns
+          ? editableColumns[currentEditableIndex]
+          : undefined;
+        const targetColumnIndex = visibleColumns?.findIndex(
+          (col) => col.dataField === editable?.dataField
+        );
+        if (rowIndex >= 0 && (targetColumnIndex ?? -1) >= 0) {
+          return focusCell(rowIndex, targetColumnIndex ?? -1);
+        }
+        return null;
+      },
+      [formState.gridColumns, focusCell]
+    );
+    const findCurrentEditableIndex = useCallback(
+      (rowIndex: number, column: string) => {
+        const visibleColumns = formState.gridColumns?.filter(
+          (col) => col.visible != false && col.dataField != null
+        );
+
+        const editableColumns = visibleColumns?.filter(
+          (col) => col.allowEditing && col.readOnly !== true
+        );
+
+        if (editableColumns?.length === 0) {
+          return -1;
+        }
+
+        return !editableColumns
+          ? -1
+          : editableColumns?.findIndex((col) => col.dataField === column);
+      },
+      [formState.gridColumns, focusCell]
+    );
+    const focusColumn = useCallback(
+      (rowIndex: number, column: string) => {
+        const visibleColumns = formState.gridColumns?.filter(
+          (col) => col.visible != false && col.dataField != null
+        );
+
+        const editableColumns = visibleColumns?.filter(
+          (col) => col.allowEditing && col.readOnly !== true
+        );
+
+        if (editableColumns?.length === 0) {
+          return -1;
+        }
+
+        const currentEditableIndex = !editableColumns
+          ? -1
+          : editableColumns?.findIndex((col) => col.dataField === column);
+
+        const currentEditable = editableColumns![currentEditableIndex];
+        const targetColumnIndex = visibleColumns?.findIndex(
+          (col) => col.dataField === currentEditable.dataField
+        );
+
+        if (targetColumnIndex ?? -1 >= 0) {
+          return focusCell(rowIndex, targetColumnIndex!);
+        }
+        return null;
+      },
+      [formState.gridColumns, focusCell]
+    );
+
+    const nextCellFind = useCallback(
+      (
+        rowIndex: number,
+        column: string,
+        excludedColumns?: (keyof TransactionDetail)[]
+      ) => {
+        const visibleColumns = formState.gridColumns?.filter(
+          (col) => col.visible != false && col.dataField != null
+        );
+
+        const editableColumns = visibleColumns?.filter(
+          (col) => col.allowEditing && col.readOnly !== true
+        );
+        const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
+        let targetRow = rowIndex;
+        let targetColumnIndex = -1;
+        if (visibleColumns && editableColumns) {
+          if (
+            currentEditableIndex >= 0 &&
+            currentEditableIndex < editableColumns?.length - 1
+          ) {
+            const nextEditable = excludedColumns
+              ? (() => {
+                  // Start from the next index after current
+                  for (
+                    let i = currentEditableIndex + 1;
+                    i < editableColumns.length;
+                    i++
+                  ) {
+                    const column = editableColumns[i];
+                    if (
+                      column.dataField &&
+                      !excludedColumns.includes(
+                        column.dataField as keyof TransactionDetail
+                      )
+                    ) {
+                      return column;
+                    }
+                  }
+                  // If no next column found, wrap around to beginning
+                  for (let i = 0; i <= currentEditableIndex; i++) {
+                    const column = editableColumns[i];
+                    if (
+                      column.dataField &&
+                      !excludedColumns.includes(
+                        column.dataField as keyof TransactionDetail
+                      )
+                    ) {
+                      return column;
+                    }
+                  }
+                  return null; // or undefined, depending on your needs
+                })()
+              : editableColumns[currentEditableIndex + 1];
+            targetColumnIndex = visibleColumns.findIndex(
+              (col) => col.dataField === nextEditable?.dataField
+            );
+          } else {
+            targetRow += 1;
+            const firstEditable = editableColumns[0];
+            targetColumnIndex = visibleColumns.findIndex(
+              (col) => col.dataField === firstEditable.dataField
+            );
           }
         }
-        targetCell.focus();
-        const input =
-          targetCell.tagName === "INPUT"
-            ? (targetCell as HTMLInputElement)
-            : (targetCell.querySelector("input") as HTMLInputElement | null);
-        if (input) input.select();
 
-        //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
-        // if (purchaseGridRef?.current && targetCell) {
-        //   const cellRect = targetCell?.getBoundingClientRect();
-        //   const gridRect =
-        //     purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
-        //   const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
-        //   if (
-        //     cellRect?.left < gridRect?.left &&
-        //     purchaseGridRef &&
-        //     purchaseGridRef.current &&
-        //     purchaseGridRef?.current?.gridRef
-        //   ) {
-        //     purchaseGridRef.current.gridRef.scrollLeft =
-        //       scrollLeft + (cellRect?.left - gridRect?.left);
-        //   } else if (
-        //     cellRect?.right > gridRect?.right &&
-        //     purchaseGridRef &&
-        //     purchaseGridRef.current &&
-        //     purchaseGridRef?.current?.gridRef
-        //   ) {
-        //     purchaseGridRef.current.gridRef.scrollLeft =
-        //       scrollLeft + (cellRect?.right - gridRect?.right);
-        //   }
-        // }
+        if (targetColumnIndex >= 0) {
+          return focusCell(targetRow, targetColumnIndex);
+        }
+        return null;
+      },
+      [formState.gridColumns, focusCell]
+    );
+
+    const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(
+      formState.currentCell
+    );
+    const [prevCell, setPrevCell] = useState<number>(
+      formState.currentCell?.rowIndex ?? -1
+    );
+    useEffect(() => {
+      setCurrentCell(formState.currentCell);
+    }, [formState.currentCell]);
+    useEffect(() => {
+      if (
+        currentCell &&
+        currentCell.column != "" &&
+        currentCell.rowIndex > -1
+      ) {
+        const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
+        const targetCell = document.getElementById(
+          targetCellId
+        ) as HTMLElement | null;
+        if (targetCell) {
+          if (
+            currentCell.column === "product" ||
+            currentCell.column === "pCode"
+          ) {
+            const erpSearchInput = targetCell.querySelector(
+              `input[id="${targetCellId}"]`
+            ) as HTMLInputElement | null;
+            if (erpSearchInput) {
+              erpSearchInput.focus();
+              erpSearchInput.select();
+              return;
+            }
+          }
+          targetCell.focus();
+          const input =
+            targetCell.tagName === "INPUT"
+              ? (targetCell as HTMLInputElement)
+              : (targetCell.querySelector("input") as HTMLInputElement | null);
+          if (input) input.select();
+
+          //  const targetCell = document.getElementById(targetCellId) as HTMLElement;
+          // if (purchaseGridRef?.current && targetCell) {
+          //   const cellRect = targetCell?.getBoundingClientRect();
+          //   const gridRect =
+          //     purchaseGridRef?.current?.gridRef?.getBoundingClientRect();
+          //   const scrollLeft = purchaseGridRef?.current?.gridRef?.scrollLeft;
+          //   if (
+          //     cellRect?.left < gridRect?.left &&
+          //     purchaseGridRef &&
+          //     purchaseGridRef.current &&
+          //     purchaseGridRef?.current?.gridRef
+          //   ) {
+          //     purchaseGridRef.current.gridRef.scrollLeft =
+          //       scrollLeft + (cellRect?.left - gridRect?.left);
+          //   } else if (
+          //     cellRect?.right > gridRect?.right &&
+          //     purchaseGridRef &&
+          //     purchaseGridRef.current &&
+          //     purchaseGridRef?.current?.gridRef
+          //   ) {
+          //     purchaseGridRef.current.gridRef.scrollLeft =
+          //       scrollLeft + (cellRect?.right - gridRect?.right);
+          //   }
+          // }
+        }
       }
-    }
-    setPrevCell(currentCell?.rowIndex??-1)
-     if(prevCell != currentCell?.rowIndex) {
-    localStorage.setItem(`${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`, JSON.stringify(formState.transaction.details.filter(x => x.productID > 0)))
-  }
-  }, [currentCell]);
- React.useImperativeHandle(ref, () => ({
-    focusCell,
-    nextCellFind,
-    focusColumn,
-    focusCurrentColumn,
-  }));
+      setPrevCell(currentCell?.rowIndex ?? -1);
+      if (prevCell != currentCell?.rowIndex) {
+        localStorage.setItem(
+          `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+          JSON.stringify(
+            formState.transaction.details.filter((x) => x.productID > 0)
+          )
+        );
+      }
+    }, [currentCell]);
+    React.useImperativeHandle(ref, () => ({
+      focusCell,
+      nextCellFind,
+      focusColumn,
+      focusCurrentColumn,
+    }));
 
-  const isMinimized = appState.toggled && appState.toggled.includes("close");
-  const sidebarWidth = isMinimized ? "0" : "0";
-  const isLargeScreen = window.innerWidth >= 1000;
-  const headerLeft = isLargeScreen ? sidebarWidth : "0";
-  const isRtl = appState.locale.rtl;
+    const isMinimized = appState.toggled && appState.toggled.includes("close");
+    const sidebarWidth = isMinimized ? "0" : "0";
+    const isLargeScreen = window.innerWidth >= 1000;
+    const headerLeft = isLargeScreen ? sidebarWidth : "0";
+    const isRtl = appState.locale.rtl;
 
-  const headerStyle = {
-    left: isRtl ? "0" : headerLeft,
-    right: isRtl ? headerLeft : "0"
-  };
+    const headerStyle = {
+      left: isRtl ? "0" : headerLeft,
+      right: isRtl ? headerLeft : "0",
+    };
 
     const closeGridMenu = () => {
-    setIsGridMenuOpen(false);
-  };
+      setIsGridMenuOpen(false);
+    };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        closeGridMenu();
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          popupRef.current &&
+          !popupRef.current.contains(event.target as Node) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(event.target as Node)
+        ) {
+          closeGridMenu();
+        }
+      };
+
+      if (isGridMenuOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+      } else {
+        document.removeEventListener("mousedown", handleClickOutside);
       }
-    };
 
-    if (isGridMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [isGridMenuOpen]);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isGridMenuOpen]);
-
-
-
- return (    
-    <div
-      style={{
-        maxWidth: "100%",
-        width: "100%",
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        boxSizing: "border-box",
-        border: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
-        borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",
-        boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
-      }}
-      className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl backdrop-blur-sm"
-    >
-          <div className={`relative ${className} w-full`}>
-            {isGridMenuOpen && (
-              <div
-                ref={popupRef}
-                className="fixed top-[49px] w-[251px] rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
-                style={headerStyle}
-              >
-                <nav className="w-full">
-                  <ul className="space-y-1">
-                    <li>
-                      <div className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer">
-                        <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
-                          <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
-                        </div>
-                        <GridPreferenceChooser
-                          ref={preferenceChooserRef}
-                          gridId={gridId}
-                          columns={(formState.gridColumns ?? []) as DevGridColumn[]}
-                          onApplyPreferences={onApplyPreferences}
-                          showChooserName={true}
-                          eclipseClass="m-0 p-0 font-medium"
-                        />
-                      </div>
-                    </li>
-                    <li>
-                      <button
-                        onClick={openExcelMenu}
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff8e1] hover:text-[#ff8f00] dark:hover:bg-[#3e2f004d] dark:hover:text-[#ffe082] transition-all duration-200 rounded-md group text-left"
-                      >
-                        <div className="w-8 h-8 bg-[#ffecb3] dark:bg-[#3e2f004d] rounded-full flex items-center justify-center group-hover:bg-[#ffe082] dark:group-hover:bg-[#3e2f0099] group-hover:scale-110 transition-all duration-200">
-                          <FileUp className="h-4 w-4 text-[#ff8f00] dark:text-[#ffe082]" />
-                        </div>
-                        <span className="font-medium">{t('export_to_excel')}</span>
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            )}
-            {isExcelMenuOpen && (
-              <ERPModal
-                isOpen={isExcelMenuOpen}
-                title={t("export_options")}
-                width={400}
-                height={200}
-                closeModal={closeExcelMenu}
-                content={
-                  <>
-                    <ERPCheckbox
-                      id="exportVisibleColumns"
-                      label={t("export_only_visible_column")}
-                      checked={exportVisibleColumns}
-                      onChange={() => setExportVisibleColumns(!exportVisibleColumns)}
-                    />
-                  </>
-                }
-                footer={
-                  <div className="flex items-center justify-end p-1 border-t border-gray-200">
-                    <ERPButton
-                      variant="primary"
-                      title={t("export")}
-                      onClick={exportToExcel}
-                    />
-                  </div>
-                }
-              />
-            )}
-            <div 
-        ref={containerRef}
-        className="border border-gray-300 rounded"
-        style={{ 
-          height: `${height + 80}px`, // Extra space for header/footer
-          overflowY: 'scroll', // Force vertical scrollbar to always show
-          overflowX: 'auto', // Horizontal scrollbar only when needed
-          position: 'relative',
-          // Ensure scrollbar is visible for different browsers
-          scrollbarWidth: 'auto', // Firefox - use default width for visibility
-          scrollbarColor: '#888 #f1f1f1' // Firefox thumb and track colors
+    return (
+      <div
+        style={{
+          maxWidth: "100%",
+          width: "100%",
+          overflowX: "auto",
+          overflowY: "hidden",
+          boxSizing: "border-box",
+          border: `0.5px solid rgba(${
+            gridBorderColor ? gridBorderColor : "203,213,225"
+          }, 0.4)`,
+          borderRadius: formState.userConfig?.gridBorderRadius
+            ? `${formState.userConfig.gridBorderRadius}px`
+            : "0px",
+          boxShadow:
+            "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
         }}
-        onScroll={handleScroll} // Move scroll handler here!
+        className="bg-gradient-to-br from-slate-50/80 via-white to-[#eff6ff4d] rounded-2xl shadow-xl backdrop-blur-sm"
       >
-        <div
-          style={{ 
-            width: `${totalGridWidth}px`, 
-          minWidth: `${totalGridWidth}px`,
-          height: `${totalHeight + 80}px`,
-          borderRadius: formState.userConfig?.gridBorderRadius  ? `${formState.userConfig.gridBorderRadius}px`  : "0px",}}
-          // className="overflow-x-auto"
-        >
-        {/* Header */}
-        <div
-        className="table-header"
-          style={{
-            display: 'flex',
-            background: gridHeaderBg
-              ? `rgb(${gridHeaderBg})F`
-              : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-            borderBottom: `0.5px solid rgba(${gridBorderColor ? gridBorderColor : "203,213,225"}, 0.4)`,
-            position: 'sticky',
-            top: 0,
-            zIndex: 100,
-            height: `${formState.userConfig?.gridRowHeight??40}px`
-          }}
-        >
-            {columns?.map((column, index) => {
-              
-              const isFirstColumn = index === 0;
-              const isLastColumn = index === columns.length - 1;
-              const isFixed = isFirstColumn || isLastColumn;
-              return (
+        <div className={`relative ${className} w-full`}>
+          {isGridMenuOpen && (
+            <div
+              ref={popupRef}
+              className="fixed top-[49px] w-[251px] rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+              style={headerStyle}
+            >
+              <nav className="w-full">
+                <ul className="space-y-1">
+                  <li>
+                    <div className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer">
+                      <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
+                        <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
+                      </div>
+                      <GridPreferenceChooser
+                        ref={preferenceChooserRef}
+                        gridId={gridId}
+                        columns={
+                          (formState.gridColumns ?? []) as DevGridColumn[]
+                        }
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserName={true}
+                        eclipseClass="m-0 p-0 font-medium"
+                      />
+                    </div>
+                  </li>
+                  <li>
+                    <button
+                      onClick={openExcelMenu}
+                      className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff8e1] hover:text-[#ff8f00] dark:hover:bg-[#3e2f004d] dark:hover:text-[#ffe082] transition-all duration-200 rounded-md group text-left"
+                    >
+                      <div className="w-8 h-8 bg-[#ffecb3] dark:bg-[#3e2f004d] rounded-full flex items-center justify-center group-hover:bg-[#ffe082] dark:group-hover:bg-[#3e2f0099] group-hover:scale-110 transition-all duration-200">
+                        <FileUp className="h-4 w-4 text-[#ff8f00] dark:text-[#ffe082]" />
+                      </div>
+                      <span className="font-medium">
+                        {t("export_to_excel")}
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
+          {isExcelMenuOpen && (
+            <ERPModal
+              isOpen={isExcelMenuOpen}
+              title={t("export_options")}
+              width={400}
+              height={200}
+              closeModal={closeExcelMenu}
+              content={
+                <>
+                  <ERPCheckbox
+                    id="exportVisibleColumns"
+                    label={t("export_only_visible_column")}
+                    checked={exportVisibleColumns}
+                    onChange={() =>
+                      setExportVisibleColumns(!exportVisibleColumns)
+                    }
+                  />
+                </>
+              }
+              footer={
+                <div className="flex items-center justify-end p-1 border-t border-gray-200">
+                  <ERPButton
+                    variant="primary"
+                    title={t("export")}
+                    onClick={exportToExcel}
+                  />
+                </div>
+              }
+            />
+          )}
+          <div
+            ref={containerRef}
+            className="border border-gray-300 rounded"
+            style={{
+              height: `${height + 80}px`, // Extra space for header/footer
+              overflowY: "scroll", // Force vertical scrollbar to always show
+              overflowX: "auto", // Horizontal scrollbar only when needed
+              position: "relative",
+              // Ensure scrollbar is visible for different browsers
+              scrollbarWidth: "auto", // Firefox - use default width for visibility
+              scrollbarColor: "#888 #f1f1f1", // Firefox thumb and track colors
+            }}
+            onScroll={handleScroll} // Move scroll handler here!
+          >
+            <div
+              style={{
+                width: `${totalGridWidth}px`,
+                minWidth: `${totalGridWidth}px`,
+                height: `${totalHeight + 80}px`,
+                borderRadius: formState.userConfig?.gridBorderRadius
+                  ? `${formState.userConfig.gridBorderRadius}px`
+                  : "0px",
+              }}
+              // className="overflow-x-auto"
+            >
+              {/* Header */}
               <div
-                key={`${column.dataField}-${index}`}
-                 draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDrop={(e) => handleDrop(e, index)}
+                className="table-header"
                 style={{
-                  width: `${columnWidths[index]}px`,
-                  minWidth: `${columnWidths[index]}px`,
-                  maxWidth: `${columnWidths[index]}px`,
-                  padding: '8px 12px',
-                  borderRight: isFirstColumn ? '2px solid #007bff' :index === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
-                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
-                  fontWeight: gridIsBold ? 700 : 500,
-                  fontSize: gridFontSize ?? 14,
-                  background: dragOverIndex === index ? '#e3f2fd' : gridHeaderBg ? `rgb(${gridHeaderBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-                  userSelect: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'move',
-                  transition: 'background-color 0.1s ease',
-                  // borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
-                  color: gridHeaderFontColor  ? `rgb(${gridHeaderFontColor})`  : "#1f2937",
-                  position: isFixed ? 'sticky' : 'relative',
-                    left: isFirstColumn ? '0px' : 'auto',
-                    right: isLastColumn ? '0px' : 'auto',
-                    backgroundColor: isFixed ? '#e3f2fd' : '#f8f9fa',
-                    zIndex: isFixed ? 110 : 100,
+                  display: "flex",
+                  background: gridHeaderBg
+                    ? `rgb(${gridHeaderBg})F`
+                    : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                  borderBottom: `0.5px solid rgba(${
+                    gridBorderColor ? gridBorderColor : "203,213,225"
+                  }, 0.4)`,
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 100,
+                  height: `${formState.userConfig?.gridRowHeight ?? 40}px`,
                 }}
               >
-            {index === 0 ? (
-              <>
-                <button
-                  ref={buttonRef}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsGridMenuOpen((prev) => !prev);
-                  }}
-                  className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2 mr-2`}
-                >
-                  <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                </button>
-                {column.caption}
-              </>
-            ) : (
-              <>
-                <span style={{ marginRight: '8px', opacity: 0.6 }}>⋮⋮</span>
-                {column.caption}
-              </>
-            )}
-                {index < columns.length - 1 && (
-                  <div
-                    data-resize-handle
-                    style={{
-                      position: 'absolute',
-                      right: '-2px',
-                      top: 0,
-                      bottom: 0,
-                      width: '4px',
-                      cursor: 'col-resize',
-                      backgroundColor: 'transparent',
-                      zIndex: 10,
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor = '#007bff';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
-                    }}
-                  />
-                )}
+                {columns?.map((column, index) => {
+                  const isFirstColumn = index === 0;
+                  const isLastColumn = index === columns.length - 1;
+                  const isFixed = isFirstColumn || isLastColumn;
+                  return (
+                    <div
+                      key={`${column.dataField}-${index}`}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, index)}
+                      onDragEnd={handleDragEnd}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDrop={(e) => handleDrop(e, index)}
+                      style={{
+                        width: `${columnWidths[index]}px`,
+                        minWidth: `${columnWidths[index]}px`,
+                        maxWidth: `${columnWidths[index]}px`,
+                        padding: "8px 12px",
+                        borderRight: isFirstColumn
+                          ? "2px solid #007bff"
+                          : index === columnWidths.length - 1
+                          ? "none"
+                          : `0.2px solid rgba(${
+                              gridBorderColor ?? "226,232,240"
+                            }, 0.8)`,
+                        borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                        fontWeight: gridIsBold ? 700 : 500,
+                        fontSize: gridFontSize ?? 14,
+                        background:
+                          dragOverIndex === index
+                            ? "#e3f2fd"
+                            : gridHeaderBg
+                            ? `rgb(${gridHeaderBg})`
+                            : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                        userSelect: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "move",
+                        transition: "background-color 0.1s ease",
+                        // borderLeft: dragOverIndex === index ? '2px solid #2196f3' : 'none',
+                        color: gridHeaderFontColor
+                          ? `rgb(${gridHeaderFontColor})`
+                          : "#1f2937",
+                        position: isFixed ? "sticky" : "relative",
+                        left: isFirstColumn ? "0px" : "auto",
+                        right: isLastColumn ? "0px" : "auto",
+                        backgroundColor: isFixed ? "#e3f2fd" : "#f8f9fa",
+                        zIndex: isFixed ? 110 : 100,
+                      }}
+                    >
+                      {index === 0 ? (
+                        <>
+                          <button
+                            ref={buttonRef}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsGridMenuOpen((prev) => !prev);
+                            }}
+                            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 hover:bg-gray-200 transition-colors rounded-full p-2 mr-2`}
+                          >
+                            <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                          </button>
+                          {column.caption}
+                        </>
+                      ) : (
+                        <>
+                          <span style={{ marginRight: "8px", opacity: 0.6 }}>
+                            ⋮⋮
+                          </span>
+                          {column.caption}
+                        </>
+                      )}
+                      {index < columns.length - 1 && (
+                        <div
+                          data-resize-handle
+                          style={{
+                            position: "absolute",
+                            right: "-2px",
+                            top: 0,
+                            bottom: 0,
+                            width: "4px",
+                            cursor: "col-resize",
+                            backgroundColor: "transparent",
+                            zIndex: 10,
+                          }}
+                          onMouseEnter={(e) => {
+                            (e.target as HTMLElement).style.backgroundColor =
+                              "#007bff";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.target as HTMLElement).style.backgroundColor =
+                              "transparent";
+                          }}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            )})}
-          </div>
-        {/* Ultra-Fast Virtual Body */}
-        
-             <div 
-            style={{ 
-              position: 'relative',
-              height: `${totalHeight}px`
-            }}
-          >
-            {/* {JSON.stringify(columns)}
+              {/* Ultra-Fast Virtual Body */}
+
+              <div
+                style={{
+                  position: "relative",
+                  height: `${totalHeight}px`,
+                }}
+              >
+                {/* {JSON.stringify(columns)}
             {columns.length}
             {JSON.stringify((columns.length == 0 ? _columns: columns))}
             {JSON.stringify(visibleItems)} */}
-            { formState.transactionLoading 
-            || !columns 
-            || columns.length == 0 
-            || !formState.transaction.details 
-            ||formState.transaction.details.length == 0 ? <>
-
-            </> : visibleItems.map(({ index, top }) => (
-              <VirtualRow
-              appState={appState}
-              applicationSettings={applicationState}
-              formState={formState}
-                key={index}
-                index={index}
-                top={top}
-                columns={columns}
-                columnWidths={columnWidths}
-                details={formState.transaction.details}
-                rowHeight={ITEM_HEIGHT}
-                tableWidth={totalGridWidth}
-                txtData={formState.formElements.txtData}
-                gridId={gridId}
-                listRef={containerRef as any}
-                itemCount={formState.transaction.details.length}
-                gridRef={containerRef as any}
-                onKeyDown={(value, e, column, rowIndex) => {
-                  
-                  onKeyDown(value, e, column, rowIndex);
-                }}
-                onChange={(value, column, rowIndex) => {
-                  onChange(value, column, rowIndex);
-                }}
-                searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
-                advancedProductSearching={false}
-                transactionType={transactionType ?? formState.transactionType}
-                blockUnitOnDecimalPoint={false}
-                focusCell={focusCell}
-                nextCellFind={nextCellFind}
-                currentCell={currentCell}
-                setCurrentCell={setCurrentCell}
-                gridFontSize={gridFontSize}
-                gridIsBold={gridIsBold}
-                dir={appState.direction as "ltr" | "rtl"}
-                gridBorderColor={gridBorderColor}
-              />
-            ))}
-        </div>
-        {/* Footer */}
-          <div className="table-footer"
-            style={{
-              display: 'flex',
-              width: `${totalGridWidth}px`,
-              minWidth: `${totalGridWidth}px`,
-              backgroundColor: '#f8f9fa',
-              borderTop: `0.1px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"}, 0.3)`,
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 100,
-            height: '40px'
-            }}
-          >
-            {columns ?.map((column, colIndex) => {
-               const isFirstColumn = colIndex === 0;
-              const isLastColumn = colIndex === columns.length - 1;
-              const isFixed = isFirstColumn || isLastColumn;
-            return (
+                {formState.transactionLoading ||
+                !columns ||
+                columns.length == 0 ||
+                !formState.transaction.details ||
+                formState.transaction.details.length == 0 ? (
+                  <></>
+                ) : (
+                  visibleItems.map(({ index, top }) => (
+                    <VirtualRow
+                      appState={appState}
+                      applicationSettings={applicationState}
+                      formState={formState}
+                      key={index}
+                      index={index}
+                      top={top}
+                      columns={columns}
+                      columnWidths={columnWidths}
+                      details={formState.transaction.details}
+                      rowHeight={ITEM_HEIGHT}
+                      tableWidth={totalGridWidth}
+                      txtData={formState.formElements.txtData}
+                      gridId={gridId}
+                      listRef={containerRef as any}
+                      itemCount={formState.transaction.details.length}
+                      gridRef={containerRef as any}
+                      onKeyDown={(value, e, column, rowIndex) => {
+                        onKeyDown(value, e, column, rowIndex);
+                      }}
+                      onChange={(value, column, rowIndex) => {
+                        onChange(value, column, rowIndex);
+                      }}
+                      searchByCodeAndName={
+                        formState.userConfig?.enableItemCodeSearchInNameColumn
+                      }
+                      advancedProductSearching={false}
+                      transactionType={
+                        transactionType ?? formState.transactionType
+                      }
+                      blockUnitOnDecimalPoint={false}
+                      focusCell={focusCell}
+                      nextCellFind={nextCellFind}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      dir={appState.direction as "ltr" | "rtl"}
+                      gridBorderColor={gridBorderColor}
+                    />
+                  ))
+                )}
+              </div>
+              {/* Footer */}
               <div
-                key={`footer-${column.dataField}`}
+                className="table-footer"
                 style={{
-                  width: `${columnWidths[colIndex]}px`,
-                  minWidth: `${columnWidths[colIndex]}px`,
-                  maxWidth: `${columnWidths[colIndex]}px`,
-                  padding: '8px 12px',
-                  borderRight: isFirstColumn ? '2px solid #007bff' :colIndex === columnWidths.length - 1  ? 'none'  : `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
-                  borderLeft: isLastColumn ? '2px solid #007bff' :'none',
-                  fontSize: `${gridFontSize}px`,
-                  fontWeight: gridIsBold ? "bold" : "600",
-                  textAlign: column.alignment,
-                  backgroundColor: '#f8f9fa',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  alignItems: 'center',
-
-                    position: isFixed ? 'sticky' : 'relative',
-                    left: isFirstColumn ? '0px' : 'auto',
-                    right: isLastColumn ? '0px' : 'auto',
-                    // borderLeft: isFixed ? '2px solid #007bff' : 'none',
-                    display: 'flex',
-                    justifyContent: isFirstColumn || isLastColumn ? 'center' : 
-                                   column.alignment === 'center' ? 'center' : 
-                                   column.alignment === 'right' ? 'flex-end' : 'flex-start',
-                    zIndex: isFixed ? 110 : 100
+                  display: "flex",
+                  width: `${totalGridWidth}px`,
+                  minWidth: `${totalGridWidth}px`,
+                  backgroundColor: "#f8f9fa",
+                  borderTop: `0.1px solid rgba(${
+                    gridBorderColor ? gridBorderColor : "226,232,240"
+                  }, 0.3)`,
+                  position: "sticky",
+                  bottom: 0,
+                  zIndex: 100,
+                  height: "40px",
                 }}
               >
-                {formState.summary?.[column.dataField as keyof SummaryItems] ?? ""}
-              </div>
-            )})}
-          </div>
-      </div>
-    </div>
-    </div>
-  </div>
-);
-})
-export default UltraFastReorderableVirtualTableGrid;
+                {columns?.map((column, colIndex) => {
+                  const isFirstColumn = colIndex === 0;
+                  const isLastColumn = colIndex === columns.length - 1;
+                  const isFixed = isFirstColumn || isLastColumn;
+                  return (
+                    <div
+                      key={`footer-${column.dataField}`}
+                      style={{
+                        width: `${columnWidths[colIndex]}px`,
+                        minWidth: `${columnWidths[colIndex]}px`,
+                        maxWidth: `${columnWidths[colIndex]}px`,
+                        padding: "8px 12px",
+                        borderRight: isFirstColumn
+                          ? "2px solid #007bff"
+                          : colIndex === columnWidths.length - 1
+                          ? "none"
+                          : `0.2px solid rgba(${
+                              gridBorderColor ?? "226,232,240"
+                            }, 0.8)`,
+                        borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                        fontSize: `${gridFontSize}px`,
+                        fontWeight: gridIsBold ? "bold" : "600",
+                        textAlign: column.alignment,
+                        backgroundColor: "#f8f9fa",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        alignItems: "center",
 
+                        position: isFixed ? "sticky" : "relative",
+                        left: isFirstColumn ? "0px" : "auto",
+                        right: isLastColumn ? "0px" : "auto",
+                        // borderLeft: isFixed ? '2px solid #007bff' : 'none',
+                        display: "flex",
+                        justifyContent:
+                          isFirstColumn || isLastColumn
+                            ? "center"
+                            : column.alignment === "center"
+                            ? "center"
+                            : column.alignment === "right"
+                            ? "flex-end"
+                            : "flex-start",
+                        zIndex: isFixed ? 110 : 100,
+                      }}
+                    >
+                      {formState.summary?.[
+                        column.dataField as keyof SummaryItems
+                      ] ?? ""}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+export default UltraFastReorderableVirtualTableGrid;

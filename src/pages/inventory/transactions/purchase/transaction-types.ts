@@ -496,7 +496,7 @@ export interface TransactionFormState {
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
   ShowProductBatchUnitDetails: boolean;
-  showProductInformation?: boolean;
+  showProductInformation?: {show: boolean; index: number};
   barcodeTemplate?: any;
   barcodeData?: any;
   barcodePrevOpen?: boolean;

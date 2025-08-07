@@ -29,7 +29,8 @@ import { accFormStateTransactionMasterHandleFieldChange } from "../../../account
 import { remToPx } from "../../../../utilities/Utils";
 
 interface TransactionFooterProps {
-  formState: TransactionFormState;
+  formState: TransactionFormState;  
+  transactionType: string;
   dispatch: any;
   t: any;
   handleKeyDown: any;
@@ -48,6 +49,7 @@ interface TransactionFooterProps {
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
   formState,
+  transactionType,
   dispatch,
   t,
   handleKeyDown,
@@ -266,6 +268,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               <div className="w-full">
                 <AdjustmentAmountInput
+                transactionType={transactionType}
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
@@ -447,6 +450,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </div>
         <div className="w-full">
           <AdjustmentAmountInput
+          transactionType={transactionType}
             formState={formState}
             dispatch={dispatch}
             t={t}

@@ -452,6 +452,7 @@ export const useTransaction = (
         formType ?? (formState.transaction?.master?.voucherForm || ""),
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
+      isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible??false
     };
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());

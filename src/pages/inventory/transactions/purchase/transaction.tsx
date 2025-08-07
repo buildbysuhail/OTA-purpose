@@ -2344,6 +2344,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                     (!formState.transactionLoading &&
                       formState.userConfig?.footerPosition === "right")) && (
                     <TransactionFooter
+                    transactionType={transactionType??""}
                     calculateTotal ={calculateTotal}
                     applyDiscountsToItems={applyDiscountsToItems}
                       formState={formState}
@@ -2491,6 +2492,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 />
                 {/* Grid Under Modification */}
                 <TransactionFooter
+                transactionType={transactionType??""}
                     calculateTotal ={calculateTotal}
                 applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
@@ -2541,6 +2543,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
           (!formState.transactionLoading &&
             formState.userConfig?.footerPosition !== "right" && (
               <TransactionFooter
+              transactionType={transactionType??""}
                     calculateTotal ={calculateTotal}
                 formState={formState}
                 dispatch={dispatch}
@@ -2860,15 +2863,16 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
             t={t}
           />
         )}
-        {formState.showProductInformation && (
+        {formState.showProductInformation?.show && (
           <ProductInformation
+          index={formState.showProductInformation.index}
             formState={formState}
-            isOpen={formState.showProductInformation}
+            isOpen={formState.showProductInformation.show}
             transactionType={transactionType ?? formState.transactionType ?? ""}
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
-                  fields: { showProductInformation: false },
+                  fields: { showProductInformation: {show: false, index: 0} },
                 })
               )
             }

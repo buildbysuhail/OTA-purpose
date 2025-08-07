@@ -14,6 +14,7 @@ import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../.
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../reducer";
+import { LedgerType } from "../../../../../enums/ledger-types";
 // Memoize ErpDevGrid to prevent unnecessary re-renders
 const MemoizedErpDevGrid = React.memo(ErpDevGrid, (prevProps, nextProps) => {
   // Only re-render if the 'data' prop changes
@@ -29,6 +30,7 @@ interface AdjustmentAmountInputProps  {
     closeModal: () => void;
      isMaximized?: boolean;
     modalHeight?: any
+    ,transactionType: string;
 }
 
 export interface AmountModalTransaction {
@@ -43,7 +45,7 @@ export interface AmountModalTransaction {
   debitCredit: string;
   amountFc: number;
 }
-export const AdjustmentAmountManager=({formState,t,handleKeyDown,closeModal,modalHeight, isMaximized}:AdjustmentAmountInputProps)=>{
+export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown,closeModal,modalHeight, isMaximized}:AdjustmentAmountInputProps)=>{
       const dispatch = useAppDispatch();
       const [editingIndex, setEditingIndex] = useState<number | null>(null);
       const [amountModal, setAmountModal] = useState<AmountModalTransaction>({
@@ -391,7 +393,7 @@ const handleAmountModal = (
                       id: "ledgerID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: Urls.data_acc_ledgers,
+                                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`,
                     }}
                     noLabel={true}
                     enableClearOption={false}

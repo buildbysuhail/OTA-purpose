@@ -21,6 +21,7 @@ interface AdjustmentAmountInputProps extends VoucherElementProps {
     e: React.KeyboardEvent<HTMLInputElement>,
     field: string
   ) => void;
+  transactionType: string
 }
 
 
@@ -29,6 +30,7 @@ interface AdjustmentAmountInputProps extends VoucherElementProps {
 const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
   formState,
   t,
+  transactionType,
   handleKeyDown,
 }) => {
   const dispatch = useAppDispatch();
@@ -103,6 +105,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           title={t("add_amount_or_jv")}
           content={
             <AdjustmentAmountManager
+            transactionType={transactionType}
               formState={formState}
               t={t}
               handleKeyDown={handleKeyDown}

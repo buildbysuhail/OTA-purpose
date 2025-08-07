@@ -19,6 +19,7 @@ interface ProductInformationSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   transactionType: string;
+  index: number;
   formState: TransactionFormState;
 }
 
@@ -148,7 +149,7 @@ const PurchaseOrderTab: React.FC<{ parm: any; transactionType: string; columns: 
   );
 };
 
-const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ isOpen, onClose, transactionType }) => {
+const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ isOpen, onClose, transactionType, index }) => {
   const { t } = useTranslation("transaction");
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [t("item_details"), t("transactions")];
@@ -193,14 +194,25 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   }, [isMenuOpen]);
 
   useEffect(() => {
-    const data = formState.currentCell?.data;
+    debugger;
+   
+    const fetch = async () => {
+       const data = formState.transaction.details[index];
     const payload = {
       productID: data?.productID,
       productBatchID: showCurrentBatch ? data?.productBatchID ?? 0 : 0,
       unitID: showCurrentUnit ? data?.unitID ?? 0 : 0,
       ledgerID: showCurrentCustomer ? formState.transaction.master.ledgerID : 0,
     };
-    setParm(payload);
+      if ((payload?.productID ?? 0) >= 0 ) {
+        const queryParams = new URLSearchParams(payload as any).toString();
+        const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams);
+        setProductInfo(info);
+        setLoading(false);
+      }
+    };
+    fetch();
+    // setParm(payload);
   }, [
     showCurrentBatch,
     showCurrentCustomer,
@@ -255,22 +267,22 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
 
   useEffect(() => {
     setLoading(true);
-    const fetch = async () => {
-      if ((formState.currentCell?.rowIndex ?? 0) >= 0 && (formState.currentCell?.data?.productBatchID ?? 0) > 0) {
-        const data = formState.transaction.details[formState.currentCell?.rowIndex ?? 0];
-        const payload = {
-          productBatchID: formState.currentCell?.data?.productBatchID,
-          unitID: data?.unitID,
-          unitName: data?.unit,
-          priceCategoryID: formState.transaction.master.priceCategoryID ?? 0,
-        };
-        const queryParams = new URLSearchParams(payload as any).toString();
-        const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams);
-        setProductInfo(info);
-        setLoading(false);
-      }
-    };
-    fetch();
+    // const fetch = async () => {
+    //   if ((formState.currentCell?.rowIndex ?? 0) >= 0 && (formState.currentCell?.data?.productBatchID ?? 0) > 0) {
+    //     const data = formState.transaction.details[formState.currentCell?.rowIndex ?? 0];
+    //     const payload = {
+    //       productBatchID: formState.currentCell?.data?.productBatchID,
+    //       unitID: data?.unitID,
+    //       unitName: data?.unit,
+    //       priceCategoryID: formState.transaction.master.priceCategoryID ?? 0,
+    //     };
+    //     const queryParams = new URLSearchParams(payload as any).toString();
+    //     const info = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/productInfo`, queryParams);
+    //     setProductInfo(info);
+    //     setLoading(false);
+    //   }
+    // };
+    // fetch();
   }, []);
 
   const handleTabClick = (index: number) => {

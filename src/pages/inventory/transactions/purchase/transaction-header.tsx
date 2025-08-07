@@ -200,6 +200,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
           <AdjustmentAmountInput
+          transactionType={transactionType}
             formState={formState}
             dispatch={dispatch}
             t={t}

@@ -796,14 +796,9 @@ const VirtualRow = React.memo(
                 }`,
                 minWidth: `${columnWidths[colIndex]}px`,
                 maxWidth: `${columnWidths[colIndex]}px`,
-                borderRight: isFirstColumn
-                  ? "2px solid #007bff"
-                  : colIndex === columnWidths.length - 1
-                  ? "none"
-                  : `0.2px solid rgba(${
-                      gridBorderColor ?? "226,232,240"
-                    }, 0.8)`,
-                borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                borderRight: isFirstColumn? `2px solid rgba(${gridBorderColor ?? "226,232,240"})`: index === columnWidths.length - 1? "none": `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+
+                borderLeft: isLastColumn ?`2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"})`:'none',
                 fontSize: `${gridFontSize}px`,
                 textAlign:
                   column.dataField === "slNo"
@@ -816,7 +811,13 @@ const VirtualRow = React.memo(
                 whiteSpace: "nowrap",
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: isFixed ? "#e3f2fd" : "#f8f9fa",
+                justifyContent:'center',
+                backgroundColor:
+                  currentCell?.rowIndex === index
+                    ? "#e3f2fd"
+                    : index % 2 === 0
+                    ? "#fff"
+                    : "#f9f9f9",
                 position: isFixed ? "sticky" : "relative",
                 left: isFirstColumn ? "0px" : "auto",
                 right: isLastColumn ? "0px" : "auto",
@@ -902,7 +903,7 @@ const VirtualRow = React.memo(
                   </svg>
                 </button>
               ) : column.dataField === "removeCol" ? (
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center gap-2">
                   <button
                     onClick={() => handleInfoClick(index)}
                     className="group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:bg-blue-50 hover:rounded-full hover:scale-105 hover:shadow-lg hover:border hover:border-blue-200"
@@ -1712,14 +1713,14 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           {isGridMenuOpen && (
             <div
               ref={popupRef}
-              className="fixed top-[49px] w-[251px] rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+              className="fixed top-[40px] w-[251px] rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-[51] backdrop-blur-sm"
               style={headerStyle}
             >
               <nav className="w-full">
                 <ul className="space-y-1">
                   <li>
-                    <div className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer">
-                      <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
+                    <button className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f3e8ff] hover:text-[#7c3aed] dark:hover:bg-[#4c1d954d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left cursor-pointer">
+                      <div className="w-full h-full p-[9px] bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#6b21a899] group-hover:scale-110 transition-all duration-200">
                         <Settings className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
                       </div>
                       <GridPreferenceChooser
@@ -1730,9 +1731,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         }
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
-                        eclipseClass="m-0 p-0 font-medium"
+                        // eclipseClass="m-0 p-0 font-medium"
                       />
-                    </div>
+                    </button>
                   </li>
                   <li>
                     <button
@@ -1791,7 +1792,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               position: "relative",
               // Ensure scrollbar is visible for different browsers
               scrollbarWidth: "auto", // Firefox - use default width for visibility
-              scrollbarColor: "#888 #f1f1f1", // Firefox thumb and track colors
+              scrollbarColor: "#ddd #f1f1f1", // Firefox thumb and track colors
             }}
             onScroll={handleScroll} // Move scroll handler here!
           >
@@ -1840,14 +1841,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         minWidth: `${columnWidths[index]}px`,
                         maxWidth: `${columnWidths[index]}px`,
                         padding: "8px 12px",
-                        borderRight: isFirstColumn
-                          ? "2px solid #007bff"
-                          : index === columnWidths.length - 1
-                          ? "none"
-                          : `0.2px solid rgba(${
-                              gridBorderColor ?? "226,232,240"
-                            }, 0.8)`,
-                        borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                        borderRight: isFirstColumn? `2px solid rgba(${gridBorderColor ?? "226,232,240"})`: index === columnWidths.length - 1? "none": `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                        borderLeft: isLastColumn ?`2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"})`:'none',
                         fontWeight: gridIsBold ? 700 : 500,
                         fontSize: gridFontSize ?? 14,
                         background:
@@ -1868,7 +1863,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         position: isFixed ? "sticky" : "relative",
                         left: isFirstColumn ? "0px" : "auto",
                         right: isLastColumn ? "0px" : "auto",
-                        backgroundColor: isFixed ? "#e3f2fd" : "#f8f9fa",
+                        backgroundColor: "#f8f9fa",
                         zIndex: isFixed ? 110 : 100,
                       }}
                     >
@@ -2013,14 +2008,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         minWidth: `${columnWidths[colIndex]}px`,
                         maxWidth: `${columnWidths[colIndex]}px`,
                         padding: "8px 12px",
-                        borderRight: isFirstColumn
-                          ? "2px solid #007bff"
-                          : colIndex === columnWidths.length - 1
-                          ? "none"
-                          : `0.2px solid rgba(${
-                              gridBorderColor ?? "226,232,240"
-                            }, 0.8)`,
-                        borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                        borderRight: isFirstColumn? `2px solid rgba(${gridBorderColor ?? "226,232,240"})`: colIndex === columnWidths.length - 1? "none": `0.2px solid rgba(${gridBorderColor ?? "226,232,240"}, 0.8)`,
+                        // borderLeft: isLastColumn ? "2px solid #007bff" : "none",
+                        borderLeft: isLastColumn ?`2px solid rgba(${gridBorderColor ? gridBorderColor : "226,232,240"})`:'none',
                         fontSize: `${gridFontSize}px`,
                         fontWeight: gridIsBold ? "bold" : "600",
                         textAlign: column.alignment,
@@ -2029,7 +2019,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
                         alignItems: "center",
-
                         position: isFixed ? "sticky" : "relative",
                         left: isFirstColumn ? "0px" : "auto",
                         right: isLastColumn ? "0px" : "auto",
@@ -2044,6 +2033,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                             ? "flex-end"
                             : "flex-start",
                         zIndex: isFixed ? 110 : 100,
+                        // backgroundColor: isFixed ? '#e3f2fd' : '#f8f9fa',
                       }}
                     >
                       {formState.summary?.[

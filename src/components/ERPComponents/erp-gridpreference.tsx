@@ -82,11 +82,11 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
 
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchPreferences = async () => {
-      
-    setPreferences(await getInitialPreference(gridId, columns, new APIClient()));
-  };
+
+      setPreferences(await getInitialPreference(gridId, columns, new APIClient()));
+    };
     fetchPreferences();
   }, [gridId, columns, onApplyPreferences]);
 
@@ -105,7 +105,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     displayOrder: index,
     showInPdf: column.showInPdf || false,
     groupIndex: undefined,
-  allowEditing: column.allowEditing ?? true,
+    allowEditing: column.allowEditing ?? true,
   });
 
   const handlePreferenceChange = (key: string, value: any) => {
@@ -198,7 +198,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
             setIsOpen(true);
           }}
           onTouchEnd={() => setIsOpen(true)}
-          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out"
+          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out whitespace-nowrap"
         >
           Grid Preference Chooser
         </button>

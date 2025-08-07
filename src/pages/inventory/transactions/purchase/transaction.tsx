@@ -449,16 +449,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
     (!formState.transactionLoading &&
       formState.userConfig?.footerPosition === "right")
   ) {
-    height = window.innerHeight - 330;
+    height = window.innerHeight - 300;
   } else {
-    height = window.innerHeight - 550;
+    height = window.innerHeight - 510;
   }
-  
+
   console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
   console.log('Max value:', Number.MAX_VALUE);
   console.log('Positive infinity:', Number.POSITIVE_INFINITY);
   console.log('Current grid height:', height);
-  
+
   return height;
 }, [formState.transactionLoading, formState.userConfig?.footerPosition, _st.footerPosition]);
 
@@ -687,7 +687,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
             ? t(title)
             : t(title) + "[" + formType + "]") ?? "",
       };
-      
+
       _formState.gridColumns?.forEach((x: any) => {
         if (x.dataFiled === "unitPriceFC" || x.dataFiled === "grossFC") {
           x.visible = true;
@@ -810,7 +810,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
    if(masterIds.length > 0) {
-    
+
     dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
      if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
@@ -827,13 +827,13 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               );
         calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
       }
-      
+
               const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
               if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
                 const summaryRes = calculateSummary(details, formState, {
                   result: {},
                 });
-      
+
                 const totalRes = calculateTotal(
                   formState.transaction.master,
                   summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
@@ -842,7 +842,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                     result: {},
                   }
                 );
-      
+
                 if (totalRes) {
                   totalRes.summary = summaryRes.summary;
                   totalRes.transaction = totalRes.transaction ?? {};
@@ -850,9 +850,9 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                   totalRes.transaction.details = [];
                   totalRes.batchesUnits = PendingTransDetails.batchesUnits;
                   totalRes.loading = {isLoading: false, text: ''}
-      
+
                   // Dispatch the state update
-                  
+
                   const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
@@ -866,7 +866,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               }
 
      } else {
-      
+
       dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
      }
    }
@@ -959,7 +959,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
     setData((prev) => [...prev, newItem]);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     const batchSelectionData = async () => {
     if (formState.batchSelectionData != "") {
       const data = JSON.parse(formState.batchSelectionData);
@@ -982,7 +982,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         { result: {}, formStateHandleFieldChangeKeysOnly },
         true
       );
-    } 
+    }
   };
 
     batchSelectionData();
@@ -1199,7 +1199,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       );
     }
   }, [formState.quantityFactorData]);
-  
+
 
   const purchaseGridCol: ColumnModel[] = useMemo(
     () => [
@@ -1624,7 +1624,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         alignment: "left",
         visible: false,
       },
-      
+
       {
         dataField: "warranty",
         caption: t("warranty"),
@@ -2136,14 +2136,14 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
 
 //   useEffect(() => {
 //     console.log('safvan');
-    
+
 //   console.log('inputHeight changed:', formState.userConfig?.inputBoxStyle?.inputHeight );
 // }, [formState.userConfig?.inputBoxStyle?.inputHeight ]);
 
 //   const dynamicMarginTop = 123 + (appState?.inputBox?.inputHeight ?? 0);
 
 //   console.log("mj23stylecheck:" , formState.userConfig?.inputBoxStyle?.inputHeight );
-  
+
 
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {

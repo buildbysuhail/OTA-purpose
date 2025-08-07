@@ -705,5 +705,8 @@
   "formState_summary": "ملخص حالة النموذج",
 
   "p_price": "سعر الشراء",
-  "item_list": "قائمة الأصناف"
+  "item_list": "قائمة الأصناف",
+  "ask_start_index": "اطلب فهرس البدء",
+  "show_barcode_preview": "عرض معاينة الباركود",
+  "select_printer": "اختر الطابعة"
 }

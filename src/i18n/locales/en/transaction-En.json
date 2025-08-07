@@ -710,6 +710,6 @@
   "p_price": "P Price",
   "item_list": "Item List",
   "ask_start_index": "Ask start index",
-  "show_barcode_preview":"Show barcode preview",
-  "select_printer":"Select printer"
+  "show_barcode_preview": "Show barcode preview",
+  "select_printer": "Select printer"
 }

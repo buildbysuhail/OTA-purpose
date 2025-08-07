@@ -156,7 +156,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   const [productInfo, setProductInfo] = useState<ProductDisplayDto>(initialProductDisplayData);
   const [loading, setLoading] = useState({});
   const [showCurrentCustomer, setShowCurrentCustomer] = useState(false);
-  const [showCurrentBatch, setShowCurrentBatch] = useState(false);
+  const [showCurrentBatch, setShowCurrentBatch] = useState(true);
   const [showCurrentUnit, setShowCurrentUnit] = useState(false);
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [parm, setParm] = useState<{

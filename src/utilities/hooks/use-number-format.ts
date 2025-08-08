@@ -228,11 +228,12 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   }
   function round(value: number, decimalPoints: number | undefined = undefined,taxFormatted?: boolean): number {
 
+    const decimals = decimalPoints != undefined ? decimalPoints : applicationSettings.mainSettings?.decimalPoints;
     taxFormatted = taxFormatted?? false;
     if(taxFormatted && applicationSettings.branchSettings.countryName == Countries.Saudi) {
       return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : 2));  
     } 
-    return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : applicationSettings.mainSettings?.decimalPoints));
+     return  Math.round((value + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals)
   }
   function getAmountInWords(amount: number): string {
     

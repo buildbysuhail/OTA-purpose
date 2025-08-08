@@ -371,6 +371,8 @@ export interface UserConfig {
   gridBorderRadius?: number;
   barCodePrev?: boolean;
   footerBg?: string;
+  showColumnBorder?: boolean;
+  activeRowBg?: string;
 }
 
 export type FormElementsState = {
@@ -504,7 +506,8 @@ export interface TransactionFormState {
   loading?: loadingResult;
   dataWarranty: [];
   dataBrands: [];
-  isPopupVisible:boolean
+  isPopupVisible:boolean;
+  showGridTheme:boolean;
 }
 interface loadingResult {
   isLoading: boolean;

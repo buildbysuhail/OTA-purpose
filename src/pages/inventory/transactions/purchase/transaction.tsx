@@ -88,10 +88,11 @@ import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
 import { barCodeField } from "../../../LabelDesigner/fields";
-import { customJsonParse } from "../../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../../utilities/jsonConverter";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
+import GridTheme from "./grid-theme";
 interface BilledItem {
   id?: number;
   name: string;
@@ -191,6 +192,53 @@ const TransactionForm: React.FC<TransactionProps> = ({
     left: isRtl ? "0" : headerLeft,
     right: isRtl ? headerLeft : "0",
   };
+
+const [tempTheme, setTempTheme] = useState<any>(null);
+const handleSelectTheme = (theme: any) => {
+  setTempTheme(theme);
+};
+
+const handleResetTheme = () => {
+  setTempTheme(null);
+};
+
+const handleSaveTheme = (theme: any) => {
+  dispatch(
+    formStateHandleFieldChange({
+      fields: {
+        userConfig: {
+          ...formState.userConfig,
+          gridFontSize: theme.fontSize,
+          gridIsBold: theme.bold,
+          gridBorderColor: theme.borderColor,
+          gridHeaderBg: theme.headerBG,
+          gridHeaderFontColor: theme.headerFontColor,
+          gridBorderRadius: theme.borderRadius,
+          showColumnBorder: theme.isColumnBorder,
+          activeRowBg: theme.activeRowBG,
+          gridRowHeight: theme.rowHeight,
+        },
+      },
+    })
+  );
+  setTempTheme(null);
+  api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, {
+    ...formState.userConfig,
+    gridFontSize: theme.fontSize,
+    gridIsBold: theme.bold,
+    gridBorderColor: theme.borderColor,
+    gridHeaderBg: theme.headerBG,
+    gridHeaderFontColor: theme.headerFontColor,
+    gridBorderRadius: theme.borderRadius,
+    showColumnBorder: theme.isColumnBorder,
+    activeRowBg: theme.activeRowBG,
+    gridRowHeight: theme.rowHeight,
+  }).then((response) => {
+    const base64 = modelToBase64(response.data);
+    localStorage.setItem("utInvc", base64);
+  });
+};
+
   const purchaseGridRef = useRef<{
     focusCell: (
       targetRow: number,
@@ -2335,6 +2383,8 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                       formState.userConfig?.gridHeaderFontColor
                     }
                     gridBorderRadius={formState.userConfig?.gridBorderRadius}
+                    showColumnBorder={formState.userConfig?.showColumnBorder ?? true}
+                    activeRowBg={formState.userConfig?.activeRowBg}
                   />
                   {/* Grid Under Modification */}
                 </div>
@@ -2876,6 +2926,22 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 })
               )
             }
+          />
+        )}
+        {formState.showGridTheme && (
+          <GridTheme
+            t={t}
+            isOpen={formState.showGridTheme}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { showGridTheme: false },
+                })
+              )
+            }
+            onSelectTheme={handleSelectTheme}
+            onResetTheme={handleResetTheme}
+            onSave={handleSaveTheme}
           />
         )}
         {isDocumentModalOpen && (

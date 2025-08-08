@@ -34,7 +34,7 @@ import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import CustomStore from "devextreme/data/custom_store";
 import GridPreferenceChooser from "../ERPComponents/erp-gridpreference";
 import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
-    import { DataType } from "devextreme/common";
+import { DataType } from "devextreme/common";
 import { applyGridColumnPreferences, getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 import usePreferenceData from "../../utilities/hooks/usePreference";
 
@@ -124,7 +124,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     });
     const [hasSelectedFirstRow, setHasSelectedFirstRow] = useState(false);
     const [batchInitialized, setBatchInitialized] = useState(false);
-    
+
     const dataGridRef = useRef<any>(null);
     const batchGridRef = useRef<any>(null);
     const gridContainerRef = useRef<HTMLDivElement>(null);
@@ -134,7 +134,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const debouncedFetchRef = useRef<any>(null);
     const isMounted = useRef<boolean>(true);
     const searchTracker = useRef<Map<string, 'pending' | 'completed'>>(new Map());
-    
+
     const { t } = useTranslation("inventory");
     const dispatch = useDispatch();
     const formState = useSelector(
@@ -148,119 +148,119 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
 
-// Add this after the other hooks, before the event handlers
-const productGridColumns = useMemo(() => [
-  {
-    dataField: "productName",
-    caption: t("product_name"),
-    dataType: "string" as DataType,
-    minWidth: 150
-  },
-  {
-    dataField: "productCode",
-    caption: t("product_code"),
-    dataType: "string" as DataType,
-    width: 100
-  },
-  {
-    dataField: "productID",
-    caption: t("productID"),
-    dataType: "number" as DataType,
-    visible: false
-  },
-  {
-    dataField: "arabicName",
-    caption: t("arabic_name"),
-    dataType: "string" as DataType,
-    width: 150
-  },
-  {
-    dataField: "stock",
-    caption: t("stock"),
-    dataType: "number" as DataType,
-    width: 100
-  },
-  {
-    dataField: "stockDetails",
-    caption: t("stock_details"),
-    dataType: "string" as DataType,
-    minWidth: 150
-  }
-], [t]);
+    // Add this after the other hooks, before the event handlers
+    const productGridColumns = useMemo(() => [
+      {
+        dataField: "productName",
+        caption: t("product_name"),
+        dataType: "string" as DataType,
+        minWidth: 150
+      },
+      {
+        dataField: "productCode",
+        caption: t("product_code"),
+        dataType: "string" as DataType,
+        width: 100
+      },
+      {
+        dataField: "productID",
+        caption: t("productID"),
+        dataType: "number" as DataType,
+        visible: false
+      },
+      {
+        dataField: "arabicName",
+        caption: t("arabic_name"),
+        dataType: "string" as DataType,
+        width: 150
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number" as DataType,
+        width: 100
+      },
+      {
+        dataField: "stockDetails",
+        caption: t("stock_details"),
+        dataType: "string" as DataType,
+        minWidth: 150
+      }
+    ], [t]);
 
-const batchGridColumns = useMemo(() => [
-  {
-    dataField: "productBatchID",
-    caption: t("productBatchID"),
-    dataType: "number" as DataType,
-    width: 150
-  },
-  {
-    dataField: "productCode",
-    caption: t("productCode"),
-    dataType: "string" as DataType,
-    width: 150
-  },
-  {
-    dataField: "autoBarcode",
-    caption: t("autoBarcode"),
-    dataType: "string" as DataType,
-    width: 150
-  },
-  {
-    dataField: "sPrice",
-    caption: t("sprice"),
-    dataType: "number" as DataType,
-    width: 100
-  },
-  {
-    dataField: "pPrice",
-    caption: t("pPrice"),
-    dataType: "number" as DataType,
-    width: 100
-  },
-  {
-    dataField: "mrp",
-    caption: t("mrp"),
-    dataType: "number" as DataType,
-    width: 100
-  },
-  {
-    dataField: "stock",
-    caption: t("stock"),
-    dataType: "number" as DataType,
-    width: 100
-  },
-  {
-    dataField: "unitID",
-    caption: t("unitID"),
-    dataType: "number" as DataType,
-    minWidth: 100
-  },
-  {
-    dataField: "unit",
-    caption: t("unit"),
-    dataType: "string" as DataType,
-    minWidth: 100
-  },
-  {
-    dataField: "brandID",
-    caption: t("brandID"),
-    dataType: "number" as DataType,
-    minWidth: 100
-  },
-  {
-    dataField: "brandName",
-    caption: t("brandName"),
-    dataType: "string" as DataType,
-    minWidth: 100
-  }
-], [t]);
-const gridId = showProductGrid == true ? `${formState.transactionType}-productSearch`
-            : showBatchGrid == true ?`${formState.transactionType}-productSearch`: "";
-        const columns = (showProductGrid == true ? productGridColumns
-            : showBatchGrid == true ? batchGridColumns: [] as any)
-            const{gridCols,onApplyPreferences, preferences}= usePreferenceData(columns,gridId)
+    const batchGridColumns = useMemo(() => [
+      {
+        dataField: "productBatchID",
+        caption: t("productBatchID"),
+        dataType: "number" as DataType,
+        width: 150
+      },
+      {
+        dataField: "productCode",
+        caption: t("productCode"),
+        dataType: "string" as DataType,
+        width: 150
+      },
+      {
+        dataField: "autoBarcode",
+        caption: t("autoBarcode"),
+        dataType: "string" as DataType,
+        width: 150
+      },
+      {
+        dataField: "sPrice",
+        caption: t("sprice"),
+        dataType: "number" as DataType,
+        width: 100
+      },
+      {
+        dataField: "pPrice",
+        caption: t("pPrice"),
+        dataType: "number" as DataType,
+        width: 100
+      },
+      {
+        dataField: "mrp",
+        caption: t("mrp"),
+        dataType: "number" as DataType,
+        width: 100
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number" as DataType,
+        width: 100
+      },
+      {
+        dataField: "unitID",
+        caption: t("unitID"),
+        dataType: "number" as DataType,
+        minWidth: 100
+      },
+      {
+        dataField: "unit",
+        caption: t("unit"),
+        dataType: "string" as DataType,
+        minWidth: 100
+      },
+      {
+        dataField: "brandID",
+        caption: t("brandID"),
+        dataType: "number" as DataType,
+        minWidth: 100
+      },
+      {
+        dataField: "brandName",
+        caption: t("brandName"),
+        dataType: "string" as DataType,
+        minWidth: 100
+      }
+    ], [t]);
+    const gridId = showProductGrid == true ? `${formState.transactionType}-productSearch`
+      : showBatchGrid == true ? `${formState.transactionType}-productSearch` : "";
+    const columns = (showProductGrid == true ? productGridColumns
+      : showBatchGrid == true ? batchGridColumns : [] as any)
+    const { gridCols, onApplyPreferences, preferences } = usePreferenceData(columns, gridId)
     // Initialize portal container
     useEffect(() => {
       portalContainerRef.current = document.getElementById("portal-root");
@@ -292,20 +292,20 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
               if (firstRowData && firstRowData.productID) {
                 // Clear selection first
                 gridInstance.clearSelection();
-                
+
                 // Select first row
                 gridInstance.selectRows([firstRowData.productID], false);
-                
+
                 // Set focused row
                 gridInstance.option("focusedRowIndex", 0);
                 gridInstance.option("focusedRowEnabled", true);
-                
+
                 // Navigate to row
                 gridInstance.navigateToRow(firstRowData.productID);
-                
+
                 // Clear the flag
                 setNeedsFirstRowSelection(false);
-                
+
                 console.log('✅ Auto-selected first row via effect:', firstRowData.productID);
               }
             }
@@ -313,7 +313,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             console.error('Error in auto-select effect:', error);
           }
         }, 200);
-        
+
         return () => clearTimeout(timer);
       }
     }, [gridData, showProductGrid, needsFirstRowSelection]);
@@ -322,7 +322,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     const apiCacheRef = useRef<Map<string, any>>(new Map());
     const lastSearchValue = useRef("");
     const pendingRequestsRef = useRef<Map<string, Promise<any>>>(new Map());
-    
+
     // Create store function with caching to prevent duplicate API calls
     const createStore = useCallback(async (
       value: string,
@@ -333,9 +333,9 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
       // Clear cache when search value changes
       apiCacheRef.current.clear();
       pendingRequestsRef.current.clear();
-      
+
       let apiCallMade = false;
-      
+
       return new CustomStore({
         key: "productID",
         async load(loadOptions: any) {
@@ -344,7 +344,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             console.log('Skipping outdated request for:', value);
             return { data: [], totalCount: 0 };
           }
-          
+
           const paramNames = [
             "skip",
             "take",
@@ -366,19 +366,19 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             .join("&");
 
           const cacheKey = `${value}-${queryString}`;
-          
+
           // Check if we have cached data
           if (apiCacheRef.current.has(cacheKey)) {
             console.log('Returning cached data for:', value);
             return apiCacheRef.current.get(cacheKey);
           }
-          
+
           // Check if request is already pending
           if (pendingRequestsRef.current.has(cacheKey)) {
             console.log('Request already pending for:', value);
             return pendingRequestsRef.current.get(cacheKey);
           }
-          
+
           // Prevent multiple API calls for the same search
           if (apiCallMade && loadOptions.skip === 0) {
             console.log('API call already made for:', value);
@@ -388,7 +388,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
           try {
             const url = productDataUrl || "";
             console.log('Making API call for:', value, 'skip:', loadOptions.skip);
-            
+
             const requestPromise = api.postAsync(
               queryString && queryString !== ""
                 ? `${url}?${queryString}`
@@ -397,33 +397,33 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             ).then(response => {
               const result = response !== undefined && response !== null
                 ? {
-                    data: response.data,
-                    totalCount: response.totalCount,
-                  }
+                  data: response.data,
+                  totalCount: response.totalCount,
+                }
                 : {
-                    data: [],
-                    totalCount: 0,
-                    summary: {},
-                    groupCount: 0,
-                  };
-              
+                  data: [],
+                  totalCount: 0,
+                  summary: {},
+                  groupCount: 0,
+                };
+
               // Cache the result
               apiCacheRef.current.set(cacheKey, result);
               pendingRequestsRef.current.delete(cacheKey);
-              
+
               if (loadOptions.skip === 0) {
                 apiCallMade = true;
               }
-              
+
               return result;
             }).catch(err => {
               pendingRequestsRef.current.delete(cacheKey);
               throw new Error("Data Loading Error");
             });
-            
+
             // Store pending request
             pendingRequestsRef.current.set(cacheKey, requestPromise);
-            
+
             return requestPromise;
           } catch (err) {
             throw new Error("Data Loading Error");
@@ -437,9 +437,9 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
       try {
         const url = `${batchDataUrl}${productID}`;
         console.log('Fetching batch data for productID:', productID);
-        
+
         const response = await api.getAsync(`${url}?skip=0&take=30&requireTotalCount=true`);
-        
+
         if (response && response.data) {
           return response.data;
         }
@@ -458,7 +458,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     const fetchInProgress = useRef(false);
     const activeSearchTerm = useRef<string>("");
     const pendingSearch = useRef<string>("");
-    
+
     // Create a simple non-debounced fetch function
     const performSearch = useCallback(async (
       searchValue: string,
@@ -470,7 +470,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
         console.log(`⏳ Search already pending for: "${searchValue}"`);
         return;
       }
-      
+
       if (!searchValue || searchValue.trim() === "" || searchValue.trim() === "%") {
         activeSearchTerm.current = "";
         pendingSearch.current = "";
@@ -481,13 +481,13 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
         setNeedsFirstRowSelection(false);
         return;
       }
-      
+
       // Clear previous searches and mark this as pending
       searchTracker.current.clear(); // Clear old searches
       searchTracker.current.set(searchValue, 'pending');
-      
+
       let payload: any = {};
-      
+
       if (searchType === "modal") {
         searchTracker.current.delete(searchValue);
         return;
@@ -495,7 +495,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
         if (searchKey === "pCode") {
           payload.searchByCode = true;
           payload.searchByCodeAndName = false;
-          
+
           let searchText = "";
           if (useInSearch && searchValue.length > 2) {
             searchText = "%" + searchValue;
@@ -506,7 +506,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
         } else if (searchKey === "product") {
           payload.searchByCodeAndName = searchByCodeAndName;
           payload.searchByCode = false;
-          
+
           let searchText = "";
           if (useInSearch && searchValue.length > 2) {
             searchText = "%" + searchValue;
@@ -526,20 +526,20 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
 
         try {
           activeSearchTerm.current = searchValue;
-          
+
           const url = productDataUrl || "";
           console.log(`✅ API call START for: "${searchValue}"`);
-          
+
           const response = await api.postAsync(
             `${url}?skip=0&take=100&requireTotalCount=true`,
             payload
           );
-          
+
           console.log(`✅ API call END for: "${searchValue}", got ${response?.data?.length || 0} items`);
-          
+
           // Mark as completed
           searchTracker.current.set(searchValue, 'completed');
-          
+
           // Only update if this search is still relevant
           if (activeSearchTerm.current === searchValue && isMounted.current && response) {
             // Update grid data
@@ -547,7 +547,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             setShowProductGrid(true);
             setNeedsFirstRowSelection(true); // Flag that we need to select first row
             setHasSelectedFirstRow(false); // Reset flag for new data
-            
+
             console.log('✅ Grid data updated, flagged for first row selection');
           }
         } catch (error) {
@@ -562,15 +562,15 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
         }
       }
     }, [productDataUrl, searchType, searchKey, searchByCodeAndName, advancedProductSearching, useInSearch]);
-    
+
     // Create debounced version only once
     useEffect(() => {
       const debouncedSearch = debounce((searchValue: string, byCode: boolean) => {
         performSearch(searchValue, byCode);
       }, 200); // Increased delay to 800ms to ensure single call
-      
+
       debouncedFetchRef.current = debouncedSearch;
-      
+
       return () => {
         debouncedSearch.cancel();
         activeSearchTerm.current = "";
@@ -582,22 +582,22 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     // Handle input change
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      
+
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
-      
+
       setShowBatchGrid(false);
       setBatchInitialized(false);
-      
+
       // Cancel any pending debounced calls
       if (debouncedFetchRef.current) {
         debouncedFetchRef.current.cancel();
         // Clear the tracker when cancelling to allow new search
         searchTracker.current.clear();
       }
-      
+
       // Reset when input is cleared
       if (!value || value.trim() === "") {
         activeSearchTerm.current = "";
@@ -614,7 +614,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
           debouncedFetchRef.current(value, inputValue.searchByCode);
         }
       }
-      
+
       if (onChange) onChange(e);
     };
 
@@ -645,7 +645,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     // Handle product grid content ready - Auto-select first row
     const handleProductGridContentReady = useCallback((e: any) => {
       const gridInstance = e.component;
-      
+
       // Select first row when grid is ready and we need selection
       if (needsFirstRowSelection) {
         const selectFirstRow = () => {
@@ -662,10 +662,10 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             }
           }
         };
-        
+
         // Try immediately
         selectFirstRow();
-        
+
         // Also try with a small delay if immediate didn't work
         if (needsFirstRowSelection) {
           setTimeout(selectFirstRow, 100);
@@ -681,12 +681,12 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
           const gridInstance = dataGridRef.current.instance();
           const focusedRowIndex = gridInstance.option("focusedRowIndex");
           const rowData = e.data ? e.data : gridInstance.getVisibleRows()[focusedRowIndex]?.data;
-          
+
           if (rowData?.productID > 0) {
             if (onProductSelected) {
               onProductSelected(rowData);
             }
-            
+
             try {
               if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
                 const batchData = await createBatchStore(
@@ -748,14 +748,14 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
           const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
           const selected = allSelected[0];
-          
+
           if (onRowSelected) {
             onRowSelected(selected, inputValue.searchValue);
           }
-          
+
           setShowBatchGrid(false);
           setBatchInitialized(false);
-          
+
           if (clearAfterSelection) {
             setInputValue((prev) => ({
               ...prev,
@@ -763,7 +763,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             }));
             lastSearchValue.current = "";
           }
-          
+
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
           }
@@ -784,8 +784,8 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         debugger;
-        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) 
-            && ((showProductGrid && dataGridRef.current && searchType === "grid") || searchType !== "grid")) {
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key)
+          && ((showProductGrid && dataGridRef.current && searchType === "grid") || searchType !== "grid")) {
           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
@@ -853,13 +853,13 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
             const input = e.target as HTMLInputElement;
             const { selectionStart, selectionEnd, value } = input;
             let shouldNavigate = true;
-            
+
             if (e.key === "ArrowRight" && (selectionStart !== value.length || selectionEnd !== value.length)) {
               shouldNavigate = false;
             } else if (e.key === "ArrowLeft" && (selectionStart !== 0 || selectionEnd !== 0)) {
               shouldNavigate = false;
             }
-            
+
             if (shouldNavigate && rest.onKeyDown) {
               rest?.onKeyDown(value, e);
               e.preventDefault();
@@ -878,7 +878,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     useEffect(() => {
       const handleFocusTrap = (e: KeyboardEvent) => {
         if (!gridContainerRef.current || !showProductGrid) return;
-        
+
         const focusableElements = gridContainerRef.current.querySelectorAll(
           'input, button, [tabindex]:not([tabindex="-1"])'
         );
@@ -931,7 +931,7 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     // Cleanup on unmount
     useEffect(() => {
       isMounted.current = true;
-      
+
       return () => {
         isMounted.current = false;
         if (debouncedFetchRef.current) {
@@ -944,10 +944,10 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
     // Render DataGrid portal
     const renderDataGridPortal = () => {
       if (!portalContainerRef.current) return null;
-      
+
       const direction = appStater?.dir || "ltr";
       const { top, left, right, width } = getGridPosition();
-      
+
       const positionStyle: React.CSSProperties = {
         top: `${top}px`,
         width: "100%",
@@ -959,27 +959,22 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
           ? { right: `${right}px`, left: undefined }
           : { left: `${left}px`, right: undefined }),
       };
-    
-      
+
+
       return createPortal(
         <>
           {searchType === "grid" && (
             <>
               {showProductGrid && gridData.length > 0 && (
-                <div
-                  className="absolute mt-0 !z-[100] bg-white shadow-lg"
-                  style={positionStyle}
-                >
-                 <GridPreferenceChooser
-                                        ref={dataGridRef}
-                                        gridId={`${formState.transactionType}-productSearch`}
-                                        columns={
-                                          (formState.gridColumns ?? []) as DevGridColumn[]
-                                        }
-                                        onApplyPreferences={onApplyPreferences}
-                                        showChooserName={true}
-                                        eclipseClass="m-0 p-0 font-medium"
-                                      />
+                <div className="absolute mt-0 z-50 bg-white shadow-lg" style={positionStyle}>
+                  {/* <GridPreferenceChooser
+                    ref={dataGridRef}
+                    gridId={`${formState.transactionType}-productSearch`}
+                    columns={  (formState.gridColumns ?? []) as DevGridColumn[]}
+                    onApplyPreferences={onApplyPreferences}
+                    showChooserOnGridHead={true}
+                    eclipseClass="m-0 p-0 font-medium"
+                  /> */}
                   <DataGrid
                     ref={dataGridRef}
                     loadPanel={{ enabled: false }}
@@ -1030,8 +1025,8 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
                     tabIndex={0}
                     width="100%"
                   >
-                    <Selection 
-                      mode="single" 
+                    <Selection
+                      mode="single"
                       showCheckBoxesMode="none"
                       allowSelectAll={false}
                       selectAllMode="page"
@@ -1043,21 +1038,35 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
                       editOnKeyPress={false}
                       enterKeyDirection="row"
                     />
-                   {gridCols?.map((column, index) => (
-                                 <Column
-                                   key={column.dataField}
-                                   allowResizing={true}
-                                   dataField={column.dataField}
-                                   caption={column.caption }
-                                   format={column.format}
-                                   dataType={column.dataType ?? "string"}
-                                   allowSorting={column.allowSorting}
-                                   minWidth={column.minWidth}
-                                   visible={column.visible || false }
-                                   sortOrder={column.sortOrder}
-                                   sortIndex={column.sortIndex}
-                                 />
-                               ))}
+                    {gridCols?.map((column, index) => (
+                      <Column
+                        key={column.dataField}
+                        allowResizing={true}
+                        dataField={column.dataField}
+                        caption={column.caption}
+                        headerCellRender={index === 0 ? (() => (
+                          <div className="relative">
+                            <div className="absolute top-[-10px] left-[-3px]">
+                              <GridPreferenceChooser
+                                gridId={`${formState.transactionType}-productSearch`}
+                                columns={(formState.gridColumns ?? []) as DevGridColumn[]}
+                                onApplyPreferences={onApplyPreferences}
+                                showChooserOnGridHead={true}
+                                eclipseClass="m-0 p-0 font-medium"
+                              />
+                            </div>
+                            <span>{column.caption}</span>
+                          </div>
+                        )) : undefined}
+                        format={column.format}
+                        dataType={column.dataType ?? "string"}
+                        allowSorting={column.allowSorting}
+                        minWidth={column.minWidth}
+                        visible={column.visible || false}
+                        sortOrder={column.sortOrder}
+                        sortIndex={column.sortIndex}
+                      />
+                    ))}
                   </DataGrid>
                 </div>
               )}
@@ -1099,21 +1108,21 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
                     />
                     <Paging pageSize={30} />
                     <Selection mode="single" />
-                       {gridCols?.map((column, index) => (
-                                 <Column
-                                   key={column.dataField}
-                                   allowResizing={true}
-                                   dataField={column.dataField}
-                                   caption={column.caption }
-                                   format={column.format}
-                                   dataType={column.dataType ?? "string"}
-                                   allowSorting={column.allowSorting}
-                                   minWidth={column.minWidth}
-                                   visible={column.visible || false }
-                                   sortOrder={column.sortOrder}
-                                   sortIndex={column.sortIndex}
-                                 />
-                               ))}
+                    {gridCols?.map((column, index) => (
+                      <Column
+                        key={column.dataField}
+                        allowResizing={true}
+                        dataField={column.dataField}
+                        caption={column.caption}
+                        format={column.format}
+                        dataType={column.dataType ?? "string"}
+                        allowSorting={column.allowSorting}
+                        minWidth={column.minWidth}
+                        visible={column.visible || false}
+                        sortOrder={column.sortOrder}
+                        sortIndex={column.sortIndex}
+                      />
+                    ))}
                   </DataGrid>
                 </div>
               )}

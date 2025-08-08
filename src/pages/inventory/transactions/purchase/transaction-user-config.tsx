@@ -727,6 +727,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     value={formState.userConfig?.gridBorderRadius ?? 0}
                     onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
                   />
+                  <ERPCheckbox
+                    id="showColumnBorder"
+                    label={t("show_column_border")}
+                    data={formState.userConfig}
+                    checked={formState.userConfig?.showColumnBorder ?? true}
+                    onChangeData={(e: { showColumnBorder: boolean }) => handleFieldChange("showColumnBorder", e.showColumnBorder)}
+                  />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
@@ -816,6 +823,37 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         </label>
                         <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
                           rgb({formState.userConfig?.gridHeaderFontColor || "31,41,55"})
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Compact activeRowBg field */}
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                        style={{ backgroundColor: formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd" }}
+                      >
+                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                        <input
+                          type="color"
+                          value={formState.userConfig?.activeRowBg ? rgbToHex(formState.userConfig.activeRowBg) : "#e3f2fd"}
+                          onChange={(e) => {
+                            const rgb = hexToRgb(e.target?.value);
+                            if (rgb) {
+                              debouncedHandleFieldChange("activeRowBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                            }
+                          }}
+                          className="opacity-0 w-full h-full cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                          {t("active_row_background_color")}
+                        </label>
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                          rgb({formState.userConfig?.activeRowBg || "227,242,253"})
                         </div>
                       </div>
                     </div>

@@ -354,7 +354,7 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.unitPrice = rate;
       } else {
         const dval = vatPerc / 100 + 1;
-        detail.ratePlusTax = round(unitPrice * dval, 2);
+        detail.ratePlusTax = round(unitPrice * dval, 4);
       }
 
       // Fallback for rate if still 0

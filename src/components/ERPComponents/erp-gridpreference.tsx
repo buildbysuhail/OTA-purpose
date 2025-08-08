@@ -21,17 +21,7 @@ interface GridPreferenceChooserProps {
 }
 
 const api = new APIClient();
-const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
-  {
-    gridId,
-    columns,
-    onApplyPreferences,
-    showChooserOnGridHead,
-    eclipseClass,
-    showChooserName,
-  }: GridPreferenceChooserProps,
-  ref: Ref<any>
-) {
+const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId, columns, onApplyPreferences, showChooserOnGridHead, eclipseClass, showChooserName, }: GridPreferenceChooserProps, ref: Ref<any>) {
   const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
   const [searchCols, setSearchCols] = useState<string>("");
@@ -83,10 +73,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    const fetchPreferences = async () => {
-
-      setPreferences(await getInitialPreference(gridId, columns, new APIClient()));
-    };
+    const fetchPreferences = async () => { setPreferences(await getInitialPreference(gridId, columns, new APIClient())); };
     fetchPreferences();
   }, [gridId, columns, onApplyPreferences]);
 
@@ -164,6 +151,23 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     }
   };
 
+  const handleResetGrid = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      await api.postAsync(Urls.grid_preference_reset, gridId);
+      const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
+      setPreferences(initialPreferences);
+      setIsOpen(false);
+      onChange(initialPreferences);
+    } catch (error) {
+      console.error("Error resetting preferences:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+
   const onClose = () => { };
   // Expose drag-and-drop functions via ref
   React.useImperativeHandle(ref, () => ({
@@ -181,26 +185,18 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
     <Fragment>
       {showChooserOnGridHead ? (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpen(true);
-          }}
+          onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
           onTouchEnd={() => setIsOpen(true)}
           className={`${eclipseClass !== "" ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0 z-10 pointer-events-auto"}`}
-          style={{ zIndex: 10 }}
-        >
+          style={{ zIndex: 10 }}>
           <Ellipsis className="text-[#0ea5e9] mjtestnow" />
         </button>
       ) : showChooserName ? (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpen(true);
-          }}
+          onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
           onTouchEnd={() => setIsOpen(true)}
-          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out whitespace-nowrap"
-        >
-          Grid Preference Chooser
+          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out whitespace-nowrap">
+          {t('grid_preference_chooser')}
         </button>
       ) : (
         <button onClick={() => setIsOpen(true)} className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]">
@@ -251,8 +247,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                         draggable
                         onDragStart={handleDragStart}
                         onDragEnter={handleDragEnd}
-                        onDragEnd={() => handleDropping(false)}
-                      >
+                        onDragEnd={() => handleDropping(false)}>
                         <div className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4">
                           <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                             ⋮⋮
@@ -269,13 +264,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                                   type="checkbox"
                                   className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer ml-[.6rem]"
                                   disabled={column?.isLocked}
-                                  onChange={(e) =>
-                                    handleColumnPreferenceChange(
-                                      column.dataField,
-                                      "visible",
-                                      e.target.checked
-                                    )
-                                  }
+                                  onChange={(e) => handleColumnPreferenceChange(column.dataField, "visible", e.target.checked)}
                                   checked={column?.visible}
                                 />
                                 <span className="cursor-pointer pl-2">{column?.caption}</span>
@@ -286,13 +275,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                           <input
                             type="number"
                             value={column.width || ""}
-                            onChange={(e) =>
-                              handleColumnPreferenceChange(
-                                column.dataField,
-                                "width",
-                                Math.max(0, parseInt(e.target.value) || 100)
-                              )
-                            }
+                            onChange={(e) => handleColumnPreferenceChange(column.dataField, "width", Math.max(0, parseInt(e.target.value) || 100))}
                             disabled={column.isLocked}
                             className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                           />
@@ -301,25 +284,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                             className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer mh-[27px] ms-[10px]"
                             disabled={column.isLocked}
                             checked={column.readOnly}
-                            onChange={(e) =>
-                              handleColumnPreferenceChange(
-                                column.dataField,
-                                "readOnly",
-                                e.target.checked
-                              )
-                            }
+                            onChange={(e) => handleColumnPreferenceChange(column.dataField, "readOnly", e.target.checked)}
                           />
                           <input
                             className="dark:bg-dark-bg-card border dark:border-dark-border mh-[27px]"
                             type="checkbox"
                             checked={column.showInPdf}
-                            onChange={(e) =>
-                              handleColumnPreferenceChange(
-                                column.dataField,
-                                "showInPdf",
-                                e.target.checked
-                              )
-                            }
+                            onChange={(e) => handleColumnPreferenceChange(column.dataField, "showInPdf", e.target.checked)}
                             disabled={column.isLocked}
                           />
                         </div>
@@ -337,17 +308,9 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                     className="ti-form-radio"
                     id="portrait"
                     checked={preferences.orientation === "portrait"}
-                    onChange={(e) =>
-                      setPreferences((previous) => ({
-                        ...previous,
-                        orientation: "portrait",
-                      }))
-                    }
+                    onChange={(e) => setPreferences((previous) => ({ ...previous, orientation: "portrait", }))}
                   />
-                  <label
-                    htmlFor="portrait"
-                    className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-                  >
+                  <label htmlFor="portrait" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                     {t("portrait")}
                   </label>
                 </div>
@@ -358,17 +321,9 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
                     className="ti-form-radio"
                     id="landscape"
                     checked={preferences.orientation === "landscape"}
-                    onChange={(e) =>
-                      setPreferences((previous) => ({
-                        ...previous,
-                        orientation: "landscape",
-                      }))
-                    }
+                    onChange={(e) => setPreferences((previous) => ({ ...previous, orientation: "landscape", }))}
                   />
-                  <label
-                    htmlFor="landscape"
-                    className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-                  >
+                  <label htmlFor="landscape" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                     {t("landscape")}
                   </label>
                 </div>
@@ -381,17 +336,25 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser(
             <ERPSubmitButton
               type="reset"
               onClick={() => setIsOpen(false)}
-              className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
-            >
+              className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]">
               {t("cancel")}
             </ERPSubmitButton>
+
+            <ERPSubmitButton
+              type="button"
+              className="max-w-[115px]"
+              variant="secondary"
+              onClick={handleResetGrid}
+              disabled={isSaving}>
+              {t("reset")}
+            </ERPSubmitButton>
+
             <ERPSubmitButton
               type="button"
               className="max-w-[115px]"
               variant="primary"
               onClick={handleApplyPreferences}
-              disabled={isSaving}
-            >
+              disabled={isSaving} >
               {t("save")}
             </ERPSubmitButton>
           </div>

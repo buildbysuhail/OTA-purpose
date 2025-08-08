@@ -68,25 +68,48 @@ export const usePrint = () => {
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
     // Function to generate barcode images
 
-  const generateBarcodeImagesForPrint = async (data: any[], template: any) => {
-
+  const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
+debugger;
       const images: { [key: string]: string } = {};
-     if (template?.barcodeState?.placedComponents) {
-       data?.forEach((item: any) => {
-         template.barcodeState?.placedComponents?.forEach((comp: any) => {
-           if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
-         const key = `${item.siNo}-${comp.id}`;
-         images[key] = generateBarcodeDataUrl(
-           item.autoBarcode ,
-           comp.barcodeProps,
-           comp.width,
-           comp.height
-         );
-           }
-         });
-       });
-     }
-     setBarcodeImages(images);
+      if (template?.barcodeState?.placedComponents && pages) {
+    // Iterate over the pages structure instead of data
+    pages.forEach((page: any) => {
+      page.forEach((row: any) => {
+        row.forEach((item: any) => {
+          template.barcodeState?.placedComponents?.forEach((comp: any) => {
+            if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
+              const key = `${item.siNo}-${comp.id}`;
+              if (!images[key]) {
+                images[key] = generateBarcodeDataUrl(
+                  item.autoBarcode || '',
+                  comp.barcodeProps,
+                  comp.width,
+                  comp.height
+                );
+              }
+            }
+          });
+        });
+      });
+    });
+  }
+  setBarcodeImages(images);
+    //  if (template?.barcodeState?.placedComponents) {
+    //    data?.forEach((item: any) => {
+    //      template.barcodeState?.placedComponents?.forEach((comp: any) => {
+    //        if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
+    //      const key = `${item.siNo}-${comp.id}`;
+    //      images[key] = generateBarcodeDataUrl(
+    //        item.autoBarcode ,
+    //        comp.barcodeProps,
+    //        comp.width,
+    //        comp.height
+    //      );
+    //        }
+    //      });
+    //    });
+    //  }
+    //  setBarcodeImages(images);
      return images;
   };
 
@@ -97,7 +120,7 @@ export const usePrint = () => {
     const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
     const TotalPage = page || generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage);
     if (template.templateGroup === "barcode") {
-      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(data, template);
+      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(TotalPage, template);
       pdfDocument = (
       <BarcodePDFDocument template={template} data={TotalPage} barcodeImages={barcodeImagesForPrint} />
       );
@@ -441,7 +464,7 @@ export const usePrint = () => {
             barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
-            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true,
+            modifiedDetails.push({slNo: row.slNo, barcodePrinted: "y",
               barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode),
               productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row.productBatchID)
              });

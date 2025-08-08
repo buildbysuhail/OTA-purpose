@@ -784,7 +784,8 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         debugger;
-        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) && showProductGrid && dataGridRef.current) {
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) 
+            && ((showProductGrid && dataGridRef.current && searchType === "grid") || searchType !== "grid")) {
           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
@@ -812,8 +813,9 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
               }
               rest?.onKeyDown && rest?.onKeyDown(value, e);
             } else {
+              debugger;
               if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
-                if (searchKey === "product") {
+                if (searchKey === "product" || searchKey === "pCode") {
                   dispatch(
                     formStateHandleFieldChangeKeysOnly({
                       fields: {
@@ -1009,8 +1011,6 @@ const gridId = showProductGrid == true ? `${formState.transactionType}-productSe
                     }}
                     onFocusedRowChanged={(e) => {
                       // Keep selection in sync with focused row
-                      console.log('onFocusedRowChanged');
-                      
                       if (e.row && e.row.data && e.row.data.productID) {
                         e.component.selectRows([e.row.data.productID], false);
                       }

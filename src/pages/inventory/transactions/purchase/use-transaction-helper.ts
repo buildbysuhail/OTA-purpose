@@ -1192,7 +1192,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Pricing and transaction details
       outputRow.unitPrice = detail.unitPrice;
-      outputRow.transDate = new Date(transDate);
+      outputRow.transDate = transDate;
       outputRow.unitID = detail.unitID;
 
       // Discounts

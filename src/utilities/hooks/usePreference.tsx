@@ -1,27 +1,43 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "./useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
+import { GridPreference, DevGridColumn } from "../../components/types/dev-grid-column";
+import { APIClient } from "../../helpers/api-client";
+import { applyGridColumnPreferences, getInitialPreference } from "../dx-grid-preference-updater";
 
-export type PreferenceType =
-  | "GeneralPreference"
-  | "InvoicePreference"
-  | "SalesOrderPreference"
-  | "ItemPreference"
-  | "ExpensePreference"
-  | "DeliveryNotePreference"
-  | "PackingSlipPreference"
-  | "SalesOrderPreference"
-  | "PreferencesCreditNote";
 
-const usePreferenceData = (preferenceType: PreferenceType, endPointUrl?: string) => {
+const usePreferenceData = (columns: DevGridColumn[], gridId?: string) => {
   const appDispatch = useAppDispatch();
 
-  useEffect(() => {
-    endPointUrl && appDispatch(getAction({apiUrl: endPointUrl}));
-  }, [endPointUrl]);
+const [preferences, setPreferences] = useState<GridPreference>();
+        const [gridCols, setGridCols] = useState<DevGridColumn[]>([]);
+ const onApplyPreferences = useCallback(
+      (pref: GridPreference) => {
+        setPreferences(pref);
+        const updatedColumns = applyGridColumnPreferences(columns, pref);
+        setGridCols(updatedColumns);
+      },
+      [columns]
+    );
+useEffect(() => {
+        
+      const fetchPreferences = async () => {
+        onApplyPreferences(await getInitialPreference(
+          gridId
+            , columns
+          , new APIClient()));
+      };
+      
+      if (gridId != "" && columns != undefined && columns != null) {
+        fetchPreferences();
+      }
+    }, [columns]);
+  
 
-  return useSelector((state: any) => (preferenceType ? state[`Get${preferenceType}`]?.data?.results[0] : null));
+    return {
+      onApplyPreferences, preferences, gridCols
+    }
 };
 
 export default usePreferenceData;

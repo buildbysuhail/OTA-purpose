@@ -996,3 +996,93 @@ export const remToPx = (rem: number) =>
       const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
       return rem * rootFontSize;
     };
+    export const sanitizeData = (data: any, initialState: any): any => {
+      const sanitized: any = { ...data };
+    
+      for (const key in sanitized) {
+        if (
+          sanitized[key] === "" &&
+          typeof initialState?.[key] === "number"
+        ) {
+          sanitized[key] = 0;
+        }
+      }
+    
+      return sanitized;
+    };
+    export const sanitizeDataAdvanced = (
+  data: any,
+  initialState: any,
+  options?: {
+    convertEmptyStrings?: boolean;
+    defaultNumber?: number;
+    preserveNull?: boolean;
+    customConverter?: (value: any, initial: any) => any;
+  }
+): any => {
+  const opts = {
+    convertEmptyStrings: true,
+    defaultNumber: 0,
+    preserveNull: true,
+    customConverter: undefined,
+    ...options
+  };
+
+  // Handle null/undefined cases
+  if (data === null && opts.preserveNull) {
+    return data;
+  }
+  if (data === undefined) {
+    return data;
+  }
+
+  // Apply custom converter if provided
+  if (opts.customConverter) {
+    const converted = opts.customConverter(data, initialState);
+    if (converted !== undefined) {
+      return converted;
+    }
+  }
+
+  // Handle primitive types
+  if (typeof data !== 'object') {
+    if (opts.convertEmptyStrings && data === "" && typeof initialState === "number") {
+      return opts.defaultNumber;
+    }
+    return data;
+  }
+
+  // Handle arrays
+  if (Array.isArray(data)) {
+    return data.map((item, index) => {
+      const initialItem = Array.isArray(initialState) ? initialState[index] : undefined;
+      return sanitizeDataAdvanced(item, initialItem, opts);
+    });
+  }
+
+  // Handle objects
+  const sanitized: any = {};
+  
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const value = data[key];
+      const initialValue = initialState?.[key];
+if(key == "cashReceived") {
+}
+      // Handle empty string to number conversion
+      if (opts.convertEmptyStrings && value === "" && typeof initialValue === "number") {
+        sanitized[key] = opts.defaultNumber;
+      }
+      // Recursively sanitize nested structures
+      else if (typeof value === 'object' && value !== null) {
+        sanitized[key] = sanitizeDataAdvanced(value, initialValue, opts);
+      }
+      // Handle primitive values
+      else {
+        sanitized[key] = value;
+      }
+    }
+  }
+
+  return sanitized;
+};

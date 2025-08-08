@@ -76,6 +76,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
+import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -973,7 +974,7 @@ export const useTransaction = (
         });
         return false;
       }
-      const params = {
+      let params = {
         master: {
           ...master,
           transactionDate:
@@ -983,7 +984,8 @@ export const useTransaction = (
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
       };
-
+      debugger;
+params = sanitizeDataAdvanced(params, transactionInitialData)
       const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(

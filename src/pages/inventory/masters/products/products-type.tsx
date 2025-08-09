@@ -48,7 +48,7 @@ export interface productDto {
   nutrients: ProductNutrientsInputDto[];
   supplierProducts: SupplierProductsInputDto[];
   config: ProductLocalConfig;
-  productImageDto: ProductImageDto;
+  productImage: ProductImageDto;
   // multiUnits: ProductUnitDto[]; // newly created
   barcode: string;  
   sectionID:number;

@@ -18,11 +18,11 @@ const ImageCommon: React.FC<Props> = ({ getFieldProps, handleFieldChange, t }) =
 
   useEffect(() => {
     // Get the ProductImageDto from form props
-    const productImageDto = getFieldProps("productImageDto").value;
+    const productImageDto = getFieldProps("productImage").value;
     if (productImageDto) {
       setImageDto(productImageDto);
     }
-  }, [getFieldProps("productImageDto").value]);
+  }, [getFieldProps("productImage").value]);
 
   const captureImage = async () => {
     try {
@@ -40,7 +40,7 @@ const ImageCommon: React.FC<Props> = ({ getFieldProps, handleFieldChange, t }) =
         };
         
         setImageDto(newImageDto);
-        handleFieldChange('productImageDto', newImageDto);
+        handleFieldChange('productImage', newImageDto);
       }
     } catch (error) {
       console.error('Error capturing image:', error);
@@ -76,7 +76,7 @@ const ImageCommon: React.FC<Props> = ({ getFieldProps, handleFieldChange, t }) =
             };
             
             setImageDto(newImageDto);
-            handleFieldChange('productImageDto', newImageDto);
+            handleFieldChange('productImage', newImageDto);
           };
           
           reader.onerror = (error) => {
@@ -97,7 +97,7 @@ const ImageCommon: React.FC<Props> = ({ getFieldProps, handleFieldChange, t }) =
 
   const removeImage = () => {
     setImageDto({});
-    handleFieldChange('productImageDto', null);
+    handleFieldChange('productImage', null);
   };
 
   return (

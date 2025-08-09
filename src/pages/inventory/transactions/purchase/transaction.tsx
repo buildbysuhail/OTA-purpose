@@ -538,18 +538,14 @@ const handleSaveTheme = (theme: any) => {
       );
 
       try {
-        const _drcr = getDrCr(formState.transaction.master.voucherType);
         const ledgerID = formState.transaction.master.ledgerID;
-        const { billwiseMandatory } =
-          applicationSettings.accountsSettings ?? {};
-        const isRowEdit = formState.isRowEdit;
         let formElmns = {
           ...formState.formElements,
         };
         if (!isNullOrUndefinedOrZero(ledgerID)) {
           const [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
-              ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
+              ? `${Urls.inv_transaction_base}${transactionType}/LedgerBalance?LedgerId=${ledgerID}`
               : 0,
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
@@ -571,9 +567,9 @@ const handleSaveTheme = (theme: any) => {
           dispatch(
             formStateHandleFieldChange({
               fields: {
-                ledgerBalance,
+                ledgerBalance: (ledgerBalance??0) as number,
                 groupName: ledgerData?.accGroupName,
-                ledgerData,
+                ledgerData: ledgerData,
                 ledgerDataLoading: false,
               },
             })

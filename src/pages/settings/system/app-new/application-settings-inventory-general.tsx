@@ -324,7 +324,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       ),
     },
     {
-      condition: filterComponent([t("default_opening_stock_ledger")], filterText),
+      condition: filterComponent([t("defaultWareHouse")], filterText),
       element: (
          <ERPDataCombobox
                         id="defaultWareHouse"

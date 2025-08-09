@@ -1387,6 +1387,7 @@ export const useTransactionHelper = (transactionType: string) => {
       master.transactionDate == ""
         ? moment().local().toISOString()
         : master.prevTransDate;
+    master.cashAmt = master.cashReceived;
           
     return master;
   };

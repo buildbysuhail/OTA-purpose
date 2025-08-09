@@ -32,6 +32,11 @@ export type PathValue<
   : P extends keyof T
   ? T[P]
   : never;
+  
+  export interface ProductImageDto {
+    base64String?: string;
+    fileName?: string;
+  }
 export type ProductFieldPath = DotNestedKeys<productDto>;
 export interface productDto {
   product: DetailsDto;
@@ -43,7 +48,7 @@ export interface productDto {
   nutrients: ProductNutrientsInputDto[];
   supplierProducts: SupplierProductsInputDto[];
   config: ProductLocalConfig;
-  productImageString: string;
+  productImageDto: ProductImageDto;
   // multiUnits: ProductUnitDto[]; // newly created
   barcode: string;  
   sectionID:number;

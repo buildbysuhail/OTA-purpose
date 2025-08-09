@@ -208,7 +208,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   expDays: 0,
   bd: '',
   btnPrintBarcode: '',
-  barcodePrinted: 'N',
+  barcodePrinted: false,
   batchCreated: false,
   removeCol: false,
   productDescription: '',
@@ -571,7 +571,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   dataWarranty: [],
   dataBrands: [],
   isPopupVisible: false,
-  gridColumns: []
+  gridColumns: [],
+  showGridTheme: false
 }
 
 export const initialProductData: BarcodeLabel = {

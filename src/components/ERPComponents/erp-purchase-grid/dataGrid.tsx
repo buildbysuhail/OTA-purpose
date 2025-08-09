@@ -791,9 +791,7 @@ const VirtualRow = React.memo(
                   disabled={formState.formElements.pnlMasters?.disabled}
                   type="checkbox"
                   checked={
-                    cellValue === "Yes" ||
-                    cellValue === "Y" ||
-                    cellValue === "y"
+                    cellValue == true? true: false
                   }
                   onChange={(e) => {
                     onChange(

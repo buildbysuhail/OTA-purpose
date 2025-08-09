@@ -10,7 +10,6 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { AccountLedgerManage } from "./account-ledger-manage";
 import { useTranslation } from "react-i18next";
 import { useDynamicModalSize } from "../../../../utilities/hooks/useDynamicModalSize";
-import { ContentMeasurementWrapper } from "../../../../utilities/hooks/ContentMeasurementWrapper";
 
 const AccountLedgerType = () => {
   const MemoizedAccountLedgerManage = useMemo(() => React.memo(AccountLedgerManage), []);

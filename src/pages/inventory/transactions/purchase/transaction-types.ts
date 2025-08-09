@@ -262,7 +262,7 @@ export interface TransactionDetail {
   expDays: number;
   bd: string;
   btnPrintBarcode: string;
-  barcodePrinted: string;
+  barcodePrinted: boolean;
   batchCreated: boolean;
   removeCol: boolean;
   productDescription: string;

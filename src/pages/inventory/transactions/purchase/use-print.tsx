@@ -464,7 +464,7 @@ debugger;
             barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
-            modifiedDetails.push({slNo: row.slNo, barcodePrinted: "y",
+            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true,
               barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode),
               productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row.productBatchID)
              });

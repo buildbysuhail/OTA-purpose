@@ -1154,12 +1154,18 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               result: {},
             });
 
-            const totalRes = calculateTotal(
+             const totalRes = calculateTotal(
               formState.transaction.master,
               summaryRes.summary as SummaryItems,
               formState.formElements,
               { result: {} }
             );
+            const resw = focusToNextColumn(data.rowIndex, data.searchColumn, [
+              "pCode",
+              "product",
+              "barCode",
+            ]);
+            debugger;
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -1170,12 +1176,19 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                     ...totalRes.transaction,
                     details: res.transaction?.details,
                   },
+                  currentCell: {
+                    column: resw?.column,
+                    data: addDetails.length == 0 ? rowIndex : addDetails[addDetails.length-1],
+                    rowIndex: rowIndex+addDetails.length,
+                  },
                 },
                 updateOnlyGivenDetailsColumns: true,
                 rowIndex: rowIndex,
                 itemsToAddToDetails: addDetails,
               })
             );
+            debugger;
+            
           }
         }
       } catch (error) {

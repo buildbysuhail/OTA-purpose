@@ -200,7 +200,8 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
           const res = {
             items: selectedRowsData,
             key: generateUniqueKey(),
-            rowIndex
+            rowIndex,
+            searchColumn: searchCriteria
           };
 
           dispatch(

@@ -53,6 +53,7 @@ const AccTransactionMobile = lazy(() => import("../../../pages/accounts/transact
 //integration
 const SmsIntegration = lazy(() => import("../../../pages/settings/Integration/sms-integration"));
 const EmailIntegration = lazy(() => import("../../../pages/settings/Integration/email-integration"));
+const FileUploadIntegration = lazy(() => import("../../../pages/settings/Integration/file-upload-integration"));
 const WhatsappIntegration = lazy(() => import("../../../pages/settings/Integration/whatsapp-integration"));
 const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
@@ -171,6 +172,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/sms" element={<SmsIntegration />} />
         <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
+        <Route path="/integration/file-upload" element={<FileUploadIntegration />} />
         <Route path="/integration/test" element={<Test />} />
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />

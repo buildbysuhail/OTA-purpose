@@ -4,7 +4,7 @@ import {
   toggleDayClosePopup, toggleDeleteInactiveTransactionPopup, toggleExchangeRatesPopup, toggleHeaderFooterPopup, toggleHideAccLedger, toggleImportExportPopup, toggleRefreshAllBranches,
   toggleResetBranchDataForSync, toggleResetDataBasePopup, toggleTestPopup, toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
-import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
+import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FileUp, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
   {
@@ -163,6 +163,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration', icon: ChatBubbleLeftEllipsisIcon },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration', icon: FaWhatsapp },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration', icon: Mail },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/file-upload`, type: 'link', active: false, selected: false, title: 'file_upload', icon: FileUp },
       // { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
       // { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
       // { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },

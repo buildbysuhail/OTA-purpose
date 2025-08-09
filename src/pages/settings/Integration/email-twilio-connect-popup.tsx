@@ -103,9 +103,9 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 gap-3 p-4">
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-3">
+        <div>
+          <div className="grid grid-cols-2 gap-2">
             <ERPInput
               id="from"
               value={information.from || ""}
@@ -153,21 +153,20 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
               onChangeData={(data) => handleFieldChange("password", data.password)}
             />
           </div>
-
-          <div className="flex items-center gap-4">
-            <ERPButton
-              title={id ? t("update") : t("connect_email")}
-              variant="primary"
-              disabled={isSaving}
-              loading={isSaving}
-              onClick={() => handleSubmit()}
-            />
-            <ERPButton
-              title={t("send_test_email")}
-              variant="secondary"
-              onClick={() => setIsPopupOpen(true)}
-            />
-          </div>
+        </div>
+        <div className="flex items-center justify-end gap-2 mt-4">
+          <ERPButton
+            title={id ? t("update") : t("connect_email")}
+            variant="primary"
+            disabled={isSaving}
+            loading={isSaving}
+            onClick={() => handleSubmit()}
+          />
+          <ERPButton
+            title={t("send_test_email")}
+            variant="secondary"
+            onClick={() => setIsPopupOpen(true)}
+          />
         </div>
 
         {isPopupOpen && (

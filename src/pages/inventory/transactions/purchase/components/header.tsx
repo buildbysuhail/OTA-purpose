@@ -5,10 +5,9 @@ import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { TransactionUserConfig } from "../../purchase/transaction-user-config";
-import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, ListPlus, DollarSign, Download, Layers, Package, ShoppingCart, Upload, } from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, ListPlus, DollarSign, Download, Package, ShoppingCart, Upload, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { LoadMulti, LoadMultiFooter } from "../load-multi";
 import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
 
@@ -126,7 +125,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       <>
         {!deviceInfo?.isMobile && (
           <div className={`!overflow-visible flex items-center ${phone ? "justify-evenly" : "justify-end"}  space-x-2 p-1 w-full overflow-x-auto ${phone ? "bg-[#f9fafb]" : ""} ${phone ? "" : ""} ${phone ? "" : ""}`}>
-            
+
             {/* Load Temp Rows */}
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
               <button disabled={formState.formElements.pnlMasters?.disabled}
@@ -403,6 +402,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           </div>
                         </div>
                       </li>
+
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
+                          // onClick={handlePrint}
+                          disabled={formState.transactionLoading}
+                        >
+                          <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
+                          </div>
+                          <span className="font-medium">{t("grn_print")}</span>
+                        </button>
+                      </li>
+
                     </ul>
                   </nav>
 

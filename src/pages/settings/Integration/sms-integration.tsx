@@ -219,7 +219,7 @@ const SMSIntegration: React.FC = () => {
               : t(provider.providerName?.toLowerCase() || "twilio")
           }
           width={provider.provider === NotificationsProvider.SmsGateway ? 500 : 600}
-          height={provider.provider === NotificationsProvider.SmsGateway ? 200 : 620}
+          height={provider.provider === NotificationsProvider.SmsGateway ? 200 : 490}
           isForm={true}
           closeModal={() => {
             setProvider({ isOpen: false, information: undefined, provider: undefined });

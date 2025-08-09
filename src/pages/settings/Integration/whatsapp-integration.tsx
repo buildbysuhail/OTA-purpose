@@ -223,7 +223,7 @@ const WhatsappIntegration: React.FC = () => {
             provider.provider === NotificationsProvider.TwillioWhatsapp ? t(provider.providerName?.toLowerCase() || "twilio") : ""
           }
           width={600}
-          height={620}
+          height={490}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={

@@ -692,11 +692,12 @@ const direction = appStater?.dir || "ltr";
             <>
               {showProductGrid && (
                 <div
-                  className="absolute mt-0 !z-[100] bg-white shadow-lg"
+                  className="absolute mt-0 z-50 bg-white dark:bg-dark-bg shadow-lg"
                    style={positionStyle}
                 >
                   <DataGrid
                     ref={dataGridRef}
+                    className="custom-data-grid-dark-only"
                     loadPanel={{ enabled: false }}
                     rtlEnabled={appStater?.dir === "rtl"}
                     dataSource={store}
@@ -767,7 +768,7 @@ const direction = appStater?.dir || "ltr";
               )}
               {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
                 <div
-                  className="absolute mt-1 !z-[100] bg-white shadow-lg"
+                  className="absolute mt-1 !z-[100] bg-white dark:bg-dark-bg shadow-lg"
                 style={positionStyle}
                 >
                   <DataGrid

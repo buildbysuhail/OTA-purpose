@@ -75,23 +75,23 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
   const { t } = useTranslation('integration')
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 gap-3 p-4">
-        <h2 className="text-lg font-semibold mb-3">{t("don't_have_an_account?")}</h2>
-        <p className="mb-2">{t("create_an_account")}</p>
-        <a href="https://www.twilio.com/try-twilio" className="text-[#2589BD] hover:underline block mb-4" target="_blank" rel="noopener noreferrer">
+      <div className="grid grid-cols-1 gap-3">
+        <h2 className="text-lg font-semibold">{t("don't_have_an_account?")}</h2>
+        <p>{t("create_an_account")}</p>
+        <a href="https://www.twilio.com/try-twilio" className="text-[#2589BD] hover:underline block" target="_blank" rel="noopener noreferrer">
           {t("go_to_twilio")}
         </a>
 
-        <div className="flex items-center my-4">
+        <div className="flex items-center">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="px-4 text-center">{t("or")}</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
 
-        <h2 className="text-lg font-semibold mb-3">{t("have_an_account_already?")}</h2>
-        <p className="mb-4">{t("enter_the_following_details")}</p>
+        <h2 className="text-lg font-semibold">{t("have_an_account_already?")}</h2>
+        <p>{t("enter_the_following_details")}</p>
 
-        <div className="space-y-6">
+        <div className="flex flex-col gap-2">
           <ERPInput
             id="accountSid"
             value={information.accountSid || ""}
@@ -119,7 +119,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
             onChangeData={(data) => handleFieldChange("fromPhone", data.fromPhone)}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-end gap-2 mt-4">
             <ERPButton
               title={id ? t("update") : t("new")}
               variant="primary"

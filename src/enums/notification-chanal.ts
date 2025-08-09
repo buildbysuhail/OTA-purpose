@@ -2,7 +2,8 @@ export enum NotificationsChannel {
   Sms = 1,
   Whatsapp = 2,
   Email = 3,
-  InAppNotification = 4
+  InAppNotification = 4,
+  FileUpload = 5,
 }
 
 export enum NotificationsProvider {
@@ -10,5 +11,7 @@ export enum NotificationsProvider {
   TwillioWhatsapp = 2,
   Smtp = 3,
   SmsGateway,
-  LinkWhatsapp
+  LinkWhatsapp,
+  Cloudinary = 5,
+  FireBase = 6,
 }

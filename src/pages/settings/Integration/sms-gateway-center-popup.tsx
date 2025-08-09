@@ -18,7 +18,7 @@ interface SMSGatewayCenterPopupProps {
 }
 
 const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id, onSuccess }) => {
-  
+
   const [information, setInformation] = useState(data?.configJson);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -81,8 +81,8 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
 
   return (
     <div className="w-full h-full">
-      <div className="grid grid-cols-1 gap-3 p-4">
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3">
+        <div className="flex flex-col">
           <ERPInput
             id="configJson"
             value={information || ""}
@@ -91,7 +91,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
             onChange={(e) => handleFieldChange("configJson", e.target.value)}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-end gap-2 mt-4">
             <ERPButton
               title={id ? t("connect") : t("save")}
               variant="primary"

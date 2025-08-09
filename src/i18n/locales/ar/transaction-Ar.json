@@ -708,5 +708,13 @@
   "item_list": "قائمة الأصناف",
   "ask_start_index": "اطلب فهرس البدء",
   "show_barcode_preview": "عرض معاينة الباركود",
-  "select_printer": "اختر الطابعة"
+  "select_printer": "اختر الطابعة",
+
+  "change_grid_theme": "تغيير سمة الجدول",
+  "show_column_border": "إظهار حدود الأعمدة",
+  "active_row_background_color": "لون خلفية الصف النشط",
+  "grid_themes": "سمات الجدول",
+  "choose_your_perfect_grid_style": "اختر نمط الجدول المثالي لك",
+  "previewing": "معاينة:",
+  "auto_reset_in": "إعادة الضبط التلقائي خلال:"
 }

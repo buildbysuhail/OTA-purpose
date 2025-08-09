@@ -53,5 +53,15 @@
   "smtp_email": "بريد SMTP",
   "update": "تحديث",
   "new": "جديد",
-  "save": "حفظ"
+  "save": "حفظ",
+
+  "cloudinary": "كلاوديناري",
+  "file_upload_integration": "دمج تحميل الملفات",
+  "api_key": "مفتاح API",
+  "enter_api_key": "أدخل مفتاح API",
+  "test_upload": "اختبار التحميل",
+  "test_file_upload": "اختبار تحميل الملف",
+  "select_file": "اختر ملف",
+  "selected_file": "الملف المحدد",
+  "size": "الحجم"
 }

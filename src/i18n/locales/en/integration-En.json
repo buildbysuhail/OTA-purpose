@@ -53,5 +53,15 @@
   "smtp_email": "SMTP Email",
   "update": "Update",
   "new": "New",
-  "save": "Save"
+  "save": "Save",
+
+  "cloudinary":"Cloudinary",
+  "file_upload_integration":"File Upload Integration",
+  "api_key":"API Key",
+  "enter_api_key":"Enter API Key",
+  "test_upload":"Test Upload",
+  "test_file_upload":"Test File Upload",
+  "select_file":"Select File",
+  "selected_file":"Selected File",
+  "size":"Size"
 }

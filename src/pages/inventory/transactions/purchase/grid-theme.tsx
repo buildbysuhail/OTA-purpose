@@ -102,25 +102,33 @@ const gridThemes = [
     activeRowBG: "255,228,230",
     rowHeight: 36,
     colors: ["#e5176d", "#ffe4e6", "#f194a7"]
-  }
+  },
+  {
+    name: "Bold Vibrant",
+    preview: "Energetic & Creative",
+    image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTAwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIGZpbGw9IiMxZTFiNGIiIHJ4PSI4Ii8+PHJlY3QgeT0iMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZhY2MxNSIgcng9IjgiLz48bGluZSB4MT0iMjAiIHkxPSIwIiB4Mj0iMjAiIHkyPSI4MCIgc3Ryb2tlPSIjNGMxZDk1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjxsaW5lIHgxPSI0MCIgeTE9IjAiIHgyPSI0MCIgeTI9IjgwIiBzdHJva2U9IiM0YzFkOTUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iODAiIHN0cm9rZT0iIzRjMWQ5NSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48bGluZSB4MT0iODAiIHkxPSIwIiB4Mj0iODAiIHkyPSI4MCIgc3Ryb2tlPSIjNGMxZDk1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjxsaW5lIHgxPSIwIiB5MT0iMjAiIHgyPSIxMDAiIHkyPSIyMCIgc3Ryb2tlPSIjNGMxZDk1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjxsaW5lIHgxPSIwIiB5MT0iNDAiIHgyPSIxMDAiIHkyPSI0MCIgc3Ryb2tlPSIjNGMxZDk1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjxsaW5lIHgxPSIwIiB5MT0iNjAiIHgyPSIxMDAiIHkyPSI2MCIgc3Ryb2tlPSIjNGMxZDk1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==",
+    fontSize: 13,
+    bold: true,
+    borderColor: "76,29,149",
+    headerBG: "30,27,75",
+    headerFontColor: "250,204,21",
+    borderRadius: 6,
+    isColumnBorder: true,
+    activeRowBG: "244,114,182",
+    rowHeight: 36,
+    colors: ["#1E1B4B", "#FACC15", "#F472B6"]
+  },
 ];
 
-const GridTheme: React.FC<GridThemeProps> = ({
-  isOpen,
-  onClose,
-  t,
-  onSelectTheme,
-  onResetTheme,
-  onSave,
-}) => {
+const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, onSelectTheme, onResetTheme, onSave, }) => {
   const [selectedTheme, setSelectedTheme] = useState<any>(null);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(8);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (selectedTheme) {
       onSelectTheme(selectedTheme);
-      setCountdown(5);
+      setCountdown(8);
       timerRef.current = setInterval(() => {
         setCountdown((prev) => {
           if (prev > 0) {
@@ -172,7 +180,7 @@ const GridTheme: React.FC<GridThemeProps> = ({
                 {t("grid_themes")}
               </h6>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Choose your perfect grid style
+                {t('choose_your_perfect_grid_style')}
               </p>
             </div>
           </div>
@@ -198,11 +206,10 @@ const GridTheme: React.FC<GridThemeProps> = ({
               <div
                 key={theme.name}
                 onClick={() => handleSelectTheme(theme)}
-                className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
-                  selectedTheme?.name === theme.name
-                    ? "ring-2 ring-blue-500 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30"
-                    : "ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-gray-300 dark:hover:ring-gray-600 shadow-md hover:shadow-lg bg-white dark:bg-gray-800"
-                }`}
+                className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${selectedTheme?.name === theme.name
+                  ? "ring-2 ring-blue-500 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30"
+                  : "ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-gray-300 dark:hover:ring-gray-600 shadow-md hover:shadow-lg bg-white dark:bg-gray-800"
+                  }`}
               >
                 {/* Theme Preview Image */}
                 <div className="relative h-24 overflow-hidden">
@@ -270,11 +277,11 @@ const GridTheme: React.FC<GridThemeProps> = ({
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    Previewing: <span className="text-blue-600 dark:text-blue-400">{selectedTheme.name}</span>
+                    {t('previewing')}: <span className="text-blue-600 dark:text-blue-400">{selectedTheme.name}</span>
                   </p>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                     <div className={`w-2 h-2 rounded-full animate-pulse ${countdown > 2 ? 'bg-green-500' : countdown > 0 ? 'bg-yellow-500' : 'bg-red-500'}`} />
-                    Auto-reset in {countdown}s
+                    {t('auto_reset_in')}: {countdown}s
                   </div>
                 </div>
               </div>

@@ -545,8 +545,8 @@ const handleSaveTheme = (theme: any) => {
         if (!isNullOrUndefinedOrZero(ledgerID)) {
           const [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
-              ? `${Urls.inv_transaction_base}${transactionType}/LedgerBalance?LedgerId=${ledgerID}`
-              : 0,
+              ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance?LedgerId=${ledgerID}`)
+              : 0, 
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
             ),

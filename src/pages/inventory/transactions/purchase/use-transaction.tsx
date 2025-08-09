@@ -2823,6 +2823,52 @@ ERPAlert.show({
     }
   };
 
+  const handlePrintBarcode = async (
+  ) => {
+    try {
+      const rowIndexes = [];
+      const hasReprint = formState.transaction.details.filter(x => x.barcodePrinted == true).length > 0
+      if (hasReprint) {
+              const confirm = await ERPAlert.show({
+                icon: "info",
+                title: t("reprint_barcode"),
+                text: t("do_you_want_to_print_barcode_again"),
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: true,
+                onCancel: () => {
+                  return false;
+                },
+              });
+              if (confirm) {
+                
+      const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted).map(x => x.slNo);
+                printBarcode(
+                  slNos,
+                  true,
+                  true,
+                  formState.transaction.master.ledgerID,
+                  formState.transaction.master.fromWarehouseID,
+                  false
+                );
+            }
+           } else {
+              const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted).map(x => x.slNo);
+              printBarcode(
+                slNos,
+                false,
+                true,
+                formState.transaction.master.ledgerID,
+                formState.transaction.master.fromWarehouseID,
+                false
+              );
+            }
+
+            
+    } catch (error) {
+      
+    }
+  }
   const handleTextDataKeyDown = async (
     value: any,
     event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
@@ -3109,7 +3155,7 @@ ERPAlert.show({
               });
               if (confirm) {
                 printBarcode(
-                  [rowIndex],
+                  [data.slNo],
                   true,
                   true,
                   formState.transaction.master.ledgerID,
@@ -3122,7 +3168,7 @@ ERPAlert.show({
               }
             } else {
               printBarcode(
-                [rowIndex],
+                [data.slNo],
                 false,
                 true,
                 formState.transaction.master.ledgerID,
@@ -3593,5 +3639,6 @@ ERPAlert.show({
     calculateSummary,
     calculateTotal,
     applyDiscountsToItems,
+    handlePrintBarcode
   };
 };

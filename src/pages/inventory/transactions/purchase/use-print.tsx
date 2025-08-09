@@ -322,7 +322,7 @@ debugger;
     }
   };
   async function printBarcode(
-    rowIndexes: number[],
+    slNos: string[],
     isReprint: boolean,
     updateBatch: boolean,
     partyLedgerId: number,
@@ -338,32 +338,32 @@ debugger;
       let barcodeData = [];
       if (updateBatch) {
         let data = [];
-        for (let i = 0; i < rowIndexes.length; i++) {
-          const row = formState.transaction.details[rowIndexes[i]];
+        for (let i = 0; i < slNos.length; i++) {
+          const row = formState.transaction.details.find( x => x.slNo == slNos[i]);
 
           let p = {
-            productID: row.productID,
-            stdPurchasePrice: row.cost,
-            stdSalesPrice: row.salesPrice,
-            minSalePrice: row.minSalePrice,
-            unitID: row.unitID,
-            selectedUnit: row.unitID,
-            prevProductBatchID: row.productBatchID,
-            productBatchID: row.productBatchID,
-            mrp: row.mrp,
+            productID: row?.productID,
+            stdPurchasePrice: row?.cost,
+            stdSalesPrice: row?.salesPrice,
+            minSalePrice: row?.minSalePrice,
+            unitID: row?.unitID,
+            selectedUnit: row?.unitID,
+            prevProductBatchID: row?.productBatchID,
+            productBatchID: row?.productBatchID,
+            mrp: row?.mrp,
             shelfID: 1,
-            brandID: row.brandID,
-            mfgDate: isNullOrUndefinedOrEmpty(row.mfdDate)?new Date():row.mfdDate,
-            expiryDate:  isNullOrUndefinedOrEmpty(row.expDate)?new Date():row.expDate,
-            batchNo: row.batchNo,
-            mannualBarcode: row.manualBarcode,
+            brandID: row?.brandID,
+            mfgDate: isNullOrUndefinedOrEmpty(row?.mfdDate)?new Date():row?.mfdDate,
+            expiryDate:  isNullOrUndefinedOrEmpty(row?.expDate)?new Date():row?.expDate,
+            batchNo: row?.batchNo,
+            mannualBarcode: row?.manualBarcode,
             openingDate: new Date(),
-            warrantyPeriod: row.warranty,
-            partNumber: row.colour,
-            location: row.location,
+            warrantyPeriod: row?.warranty,
+            partNumber: row?.colour,
+            location: row?.location,
             isActive: true,
-            specification: row.size,
-            slNo: row.slNo,
+            specification: row?.size,
+            slNo: row?.slNo,
           };
 
           data.push(p);
@@ -383,47 +383,47 @@ debugger;
       }
 
       // Process each row in the specified range
-      for (let i = 0; i < rowIndexes.length; i++) {
+      for (let i = 0; i < slNos.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};
         // barcode.showPreview = false;
-        const row = formState.transaction.details[rowIndexes[i]];
-        const batch = batchCreatedList.find((x: any) => x.slNo == row.slNo);
+        const row = formState.transaction.details.find( x => x.slNo == slNos[i]);
+        const batch = batchCreatedList.find((x: any) => x.slNo == row?.slNo);
 
         // Skip empty product rows
-        if (!row.productID || row.productID === 0) break;
+        if (!row?.productID || row?.productID === 0) break;
 
         // Process if not printed or if reprint is requested
-        if (!row.barcodePrinted || isReprint === true) {
+        if (!row?.barcodePrinted || isReprint === true) {
           // Get sticker quantity
           let stickerQty = 0;
 
-          if ( row.stickerQty === 0) continue;
+          if ( row?.stickerQty === 0) continue;
 
-          stickerQty = row.stickerQty;
+          stickerQty = row?.stickerQty;
 
-          barcode.invQty = row.qty;
+          barcode.invQty = row?.qty;
 
           // If sticker quantity is 0, use the main quantity
           if (stickerQty === 0) {
-            stickerQty = row.qty;
+            stickerQty = row?.qty;
           }
 
           // Process only if there are stickers to print
           if (stickerQty > 0) {
             // Set barcode properties
-            barcode.autoBarcode = updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode;
-            barcode.manualBarcode = row.manualBarcode;
-            barcode.productCode = row.pCode;
-            barcode.productName = row.product;
-            barcode.productId = row.productID;
-            barcode.productDescription = row.productDescription;
-            barcode.size = row.size;
-            barcode.pPrice = parseFloat("0" + row.unitPrice.toString());
+            barcode.autoBarcode = updateBatch && batch.batchCreated? batch.autoBarcode:  row?.barCode;
+            barcode.manualBarcode = row?.manualBarcode;
+            barcode.productCode = row?.pCode;
+            barcode.productName = row?.product;
+            barcode.productId = row?.productID;
+            barcode.productDescription = row?.productDescription;
+            barcode.size = row?.size;
+            barcode.pPrice = parseFloat("0" + row?.unitPrice.toString());
 
             // Calculate cost with additional expenses
-            const baseCost = parseFloat("0" + row.cost.toString());
+            const baseCost = parseFloat("0" + row?.cost.toString());
             const additionalExpense = parseFloat(
-              "0" + row.additionalExpense.toString()
+              "0" + row?.additionalExpense.toString()
             );
             const totalCost = baseCost + additionalExpense;
 
@@ -434,9 +434,9 @@ debugger;
             );
 
             barcode.salesPrice = parseFloat(
-              "0" + row.salesPrice.toString()
+              "0" + row?.salesPrice.toString()
             ).toString();
-            barcode.vatPerc = parseFloat("0" + row.vatPerc.toString());
+            barcode.vatPerc = parseFloat("0" + row?.vatPerc.toString());
 
             // Calculate sales price with VAT
             const salesPriceNum = parseFloat("0" + barcode.salesPrice);
@@ -444,19 +444,19 @@ debugger;
               salesPriceNum + (salesPriceNum * barcode.vatPerc) / 100;
             barcode.salesPriceWithVAT = salesPriceWithVAT.toFixed(3);
 
-            barcode.mrp = parseFloat("0" + row.mrp.toString());
-            barcode.msp = parseFloat("0" + row.minSalePrice.toString());
+            barcode.mrp = parseFloat("0" + row?.mrp.toString());
+            barcode.msp = parseFloat("0" + row?.minSalePrice.toString());
 
             barcode.siNo = (i + 1).toString();
             barcode.qty = stickerQty.toString();
             barcode.labelCount = stickerQty;
 
             barcode.partyCode = formState.ledgerData?.partyCode;
-            barcode.unit = row.unit;
-            barcode.batchNo = row.batchNo;
-            barcode.expiryDate = row.expDate;
-            barcode.expiryDays = row.expDays.toString();
-            barcode.mfdDate = row.mfdDate;
+            barcode.unit = row?.unit;
+            barcode.batchNo = row?.batchNo;
+            barcode.expiryDate = row?.expDate;
+            barcode.expiryDays = row?.expDays.toString();
+            barcode.mfdDate = row?.mfdDate;
 
             const rawVoucher = formState.transaction.master?.voucherNumber;
             barcode.voucherNo = rawVoucher != null? rawVoucher.toString(): "";
@@ -464,9 +464,9 @@ debugger;
             barcode.transDate = formState.transaction.master?.transactionDate;
 
             // Mark as printed and show report
-            modifiedDetails.push({slNo: row.slNo, barcodePrinted: true,
-              barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row.barCode),
-              productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row.productBatchID)
+            modifiedDetails.push({slNo: row?.slNo, barcodePrinted: true,
+              barCode: (updateBatch && batch.batchCreated? batch.autoBarcode:  row?.barCode),
+              productBatchID: (updateBatch && batch.batchCreated? batch.productBatchID:  row?.productBatchID)
              });
             barcodeData.push(barcode);
             barcodeLabelAdded = true;

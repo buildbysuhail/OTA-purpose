@@ -1146,99 +1146,238 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       setIsExcelMenuOpen(false);
     };
     const exportToExcel = async () => {
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Grid Data");
+      try {
+        const workbook = new ExcelJS.Workbook();
+        workbook.created = new Date();
+        workbook.modified = new Date();
+        workbook.lastPrinted = new Date();
 
-      const excelColumns = exportVisibleColumns
-        ? formState.gridColumns?.filter(
-          (col) => col.visible !== false && col.dataField != null
-        )
-        : formState.gridColumns;
-
-      worksheet.columns = (excelColumns ?? []).map((col) => ({
-        header: col.caption,
-        key: col.dataField,
-        width: col.width ? col.width / 7 : 20,
-      }));
-
-      formState.transaction?.details.forEach((item, index) => {
-        const row: { [key: string]: any } = {};
-        excelColumns?.forEach((col) => {
-          const fieldKey = col.dataField as keyof TransactionDetail;
-          if (fieldKey === "slNo") {
-            row[fieldKey] = index + 1;
-          } else {
-            row[fieldKey] = item[fieldKey] ?? "";
-          }
-        });
-        worksheet.addRow(row);
-      });
-
-      if (summaryConfig.length > 0) {
-        const summaryRow: { [key: string]: any } = {};
-        excelColumns?.forEach((col) => {
-          const summary = summaryConfig.find(
-            (s) =>
-              s.showInColumn === col.dataField || s.column === col.dataField
-          );
-          if (summary && col.dataField !== undefined) {
-            const value =
-              formState.summary[
-              summary.column as keyof typeof formState.summary
-              ];
-            summaryRow[col.dataField] = summary.customizeText
-              ? summary.customizeText({ value })
-              : value ?? "";
-          } else {
-            if (col.dataField !== undefined) {
-              summaryRow[col.dataField] = "";
+        const worksheet = workbook.addWorksheet("Grid Data", {
+          pageSetup: {
+            paperSize: 9,
+            orientation: 'landscape',
+            fitToPage: true,
+            fitToHeight: 1,
+            fitToWidth: 1,
+            margins: {
+              left: 0.7,
+              right: 0.7,
+              top: 0.75,
+              bottom: 0.75,
+              header: 0.3,
+              footer: 0.3
             }
           }
         });
-        worksheet.addRow(summaryRow);
-      }
 
-      worksheet.getRow(1).font = { bold: true };
-      worksheet.getRow(1).alignment = {
-        vertical: "middle",
-        horizontal: "center",
-      };
-      worksheet.getRow(1).fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "FFF3F4F6" },
-      };
-      worksheet.getRow(1).eachCell((cell) => {
-        cell.border = {
-          top: { style: "thin", color: { argb: "FFD1D5DB" } },
-          left: { style: "thin", color: { argb: "FFD1D5DB" } },
-          bottom: { style: "thin", color: { argb: "FFD1D5DB" } },
-          right: { style: "thin", color: { argb: "FFD1D5DB" } },
+        const excelColumns = exportVisibleColumns
+          ? formState.gridColumns?.filter(
+            (col) => col.visible !== false && col.dataField != null
+          )
+          : formState.gridColumns;
+
+        const colors = {
+          headerBg: 'FFF8F9FA',
+          headerText: 'FF495057',
+          background: 'FFFFFFFF',
+          alternateRow: 'FFF8F9FA',
+          border: 'FFDEE2E6',
+          text: 'FF212529',
+          summaryBg: 'FFF1F3F4',
+          summaryBorder: 'FFADB5BD'
         };
-      });
-      if (summaryConfig.length > 0) {
-        const lastRowIndex = worksheet.rowCount;
-        const summaryRow = worksheet.getRow(lastRowIndex);
-        summaryRow.fill = {
-          type: "pattern",
-          pattern: "solid",
-          fgColor: { argb: "FFF8FAFC" },
+
+        worksheet.columns = (excelColumns ?? []).map((col) => ({
+          header: col.caption || col.dataField,
+          key: col.dataField,
+          width: Math.max(col.width ? col.width / 7 : 15, 12),
+        }));
+
+        const titleRow = worksheet.insertRow(1, [`${gridId} Export Report`]);
+        worksheet.mergeCells(1, 1, 1, excelColumns?.length || 1);
+
+        titleRow.getCell(1).font = {
+          name: 'Segoe UI',
+          size: 16,
+          bold: true,
+          color: { argb: colors.text }
         };
-        summaryRow.eachCell((cell) => {
-          cell.border = {
-            top: { style: "thin", color: { argb: "FFD1D5DB" } },
-            left: { style: "thin", color: { argb: "FFD1D5DB" } },
-            bottom: { style: "thin", color: { argb: "FFD1D5DB" } },
-            right: { style: "thin", color: { argb: "FFD1D5DB" } },
+        titleRow.getCell(1).alignment = {
+          vertical: 'middle',
+          horizontal: 'center'
+        };
+        titleRow.height = 35;
+
+        const dateRow = worksheet.insertRow(2, [`Generated on: ${new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}`]);
+        worksheet.mergeCells(2, 1, 2, excelColumns?.length || 1);
+
+        dateRow.getCell(1).font = {
+          name: 'Segoe UI',
+          size: 10,
+          color: { argb: colors.headerText }
+        };
+        dateRow.getCell(1).alignment = {
+          vertical: 'middle',
+          horizontal: 'center'
+        };
+        dateRow.height = 25;
+
+        const headerRow = worksheet.getRow(3);
+        headerRow.height = 30;
+        headerRow.font = {
+          name: 'Segoe UI',
+          size: 11,
+          bold: true,
+          color: { argb: colors.headerText }
+        };
+        headerRow.alignment = {
+          vertical: 'middle',
+          horizontal: 'center',
+          wrapText: true
+        };
+        headerRow.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: colors.headerBg }
+        };
+
+        formState.transaction?.details.forEach((item, index) => {
+          const row: { [key: string]: any } = {};
+          excelColumns?.forEach((col) => {
+            const fieldKey = col.dataField as keyof TransactionDetail;
+            if (fieldKey === "slNo") {
+              row[fieldKey] = index + 1;
+            } else {
+              row[fieldKey] = item[fieldKey] ?? "";
+            }
+          });
+
+          const addedRow = worksheet.addRow(row);
+          addedRow.height = 25;
+
+          if (index % 2 === 1) {
+            addedRow.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: colors.alternateRow }
+            };
+          }
+
+          addedRow.font = {
+            name: 'Segoe UI',
+            size: 10,
+            color: { argb: colors.text }
+          };
+          addedRow.alignment = {
+            vertical: 'middle',
+            horizontal: 'left'
           };
         });
-      }
 
-      const buffer = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(blob, `${gridId}_export.xlsx`);
+        if (summaryConfig.length > 0) {
+          const summaryRow: { [key: string]: any } = {};
+          excelColumns?.forEach((col) => {
+            const summary = summaryConfig.find(
+              (s) =>
+                s.showInColumn === col.dataField || s.column === col.dataField
+            );
+            if (summary && col.dataField !== undefined) {
+              const value =
+                formState.summary[
+                summary.column as keyof typeof formState.summary
+                ];
+              summaryRow[col.dataField] = summary.customizeText
+                ? summary.customizeText({ value })
+                : value ?? "";
+            } else {
+              if (col.dataField !== undefined) {
+                summaryRow[col.dataField] = "";
+              }
+            }
+          });
+
+          const addedSummaryRow = worksheet.addRow(summaryRow);
+          addedSummaryRow.height = 25;
+          addedSummaryRow.font = {
+            name: 'Segoe UI',
+            size: 10,
+            bold: true,
+            color: { argb: colors.text }
+          };
+          addedSummaryRow.alignment = {
+            vertical: 'middle',
+            horizontal: 'left'
+          };
+          addedSummaryRow.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: colors.summaryBg }
+          };
+        }
+
+        const dataStartRow = 3;
+        const dataEndRow = worksheet.rowCount;
+        const dataEndCol = excelColumns?.length || 1;
+
+        for (let row = dataStartRow; row <= dataEndRow; row++) {
+          for (let col = 1; col <= dataEndCol; col++) {
+            const cell = worksheet.getCell(row, col);
+            cell.border = {
+              top: { style: 'thin', color: { argb: colors.border } },
+              left: { style: 'thin', color: { argb: colors.border } },
+              bottom: { style: 'thin', color: { argb: colors.border } },
+              right: { style: 'thin', color: { argb: colors.border } }
+            };
+          }
+        }
+
+        worksheet.columns.forEach((column, index) => {
+          let maxLength = 0;
+          const columnLetter = String.fromCharCode(65 + index);
+
+          worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber >= dataStartRow) {
+              const cell = row.getCell(index + 1);
+              const cellValue = cell.value ? cell.value.toString() : '';
+              maxLength = Math.max(maxLength, cellValue.length);
+            }
+          });
+
+          const calculatedWidth = Math.min(Math.max(maxLength + 2, 12), 50);
+          if (column.width) {
+            column.width = Math.max(column.width as number, calculatedWidth);
+          }
+        });
+
+        worksheet.views = [{
+          state: 'frozen',
+          xSplit: 0,
+          ySplit: 3,
+          topLeftCell: 'A4',
+          activeCell: 'A4'
+        }];
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `${gridId}_export_${timestamp}.xlsx`;
+
+        saveAs(blob, filename);
+
+        console.log('Excel export completed successfully!');
+
+      } catch (error) {
+        console.error('Error exporting to Excel:', error);
+      }
     };
     const focusCell = useCallback(
       (targetRow: number, targetColumnIndex: number) => {

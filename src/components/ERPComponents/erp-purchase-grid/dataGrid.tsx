@@ -689,11 +689,22 @@ const VirtualRow = React.memo(
         })
       );
     };
+const rowBg =
+  `${appState.mode === "dark"
+    ? index % 2 === 0
+      ? "bg-[#333333]"
+      : "bg-[#444444]"
+    : index % 2 === 0
+      ? "bg-white"
+      : "bg-[#f9f9f9]"
+  } ${appState.mode === "dark"
+    ? "hover:bg-[#555555]"
+    : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"
+  }`;
 
     return (
       <div
-        className={`py-0 ${appState.mode === "dark" ? index % 2 === 0 ? "bg-[#333333]" : "bg-[#444444]" : index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"}
-         ${appState.mode === "dark" ? "hover:bg-[#555555]" : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"} transition-all duration-300 ease-in-out group`}
+        className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
         style={{
           position: "absolute",
           top: `${top}px`,
@@ -733,10 +744,10 @@ const VirtualRow = React.memo(
           const borderColor = `${(column.readOnly || column.allowEditing == false ||
                 formState.formElements.pnlMasters?.disabled !== true) &&
                 currentCell?.column === column.dataField &&
-                currentCell?.rowIndex === index ? appState.mode === "dark" 
-                  ? "#444444" 
-                  : formState.userConfig?.inputBoxStyle?.focusBgColor 
-                    ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` 
+                currentCell?.rowIndex === index ? appState.mode === "dark"
+                  ? "#444444"
+                  : formState.userConfig?.inputBoxStyle?.focusBgColor
+                    ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
                     : "#e3f2fd"
                 :undefined
                   }`;
@@ -911,7 +922,7 @@ const VirtualRow = React.memo(
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                 1 {borderColor}
+                 {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               ) : column.dataField === "status" ? (
                 <div
@@ -928,7 +939,7 @@ const VirtualRow = React.memo(
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                 3 {borderColor}
+                 {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               ) : column.allowEditing == true &&
                 !column.readOnly &&
@@ -958,14 +969,14 @@ const VirtualRow = React.memo(
                 />
               ) : (
                 <div
-                  style={{...getCellContentStyle(column),  border: `solid 1px ${ borderColor}`}}
+                  style={{...getCellContentStyle(column),  border: `solid 3px ${ borderColor}`}}
                   id={cellId}
                   tabIndex={0}
                   className="px-1 cursor-default"
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                4  {borderColor}
+                {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               )}
             </div>

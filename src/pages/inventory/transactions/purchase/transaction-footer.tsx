@@ -249,7 +249,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {showAdjustmentOutside && adjustmentComponent}
           </div>
           <div className="flex flex-col items-start gap-1">
-            {checkboxesComponent}
             {showAttachmentOutside && attachmentComponent}
           </div>
         </>
@@ -439,7 +438,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       formState.formElements.remarks?.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
-                    className="dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                    className="dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text h-[42px]"
                   />
                 </div>
               </div>
@@ -540,10 +539,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
         </div>
+        <div className="flex items-end gap-2">
+          <AutoCalculationCheckbox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+          />
+          <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
+        </div>
         {!showWarehouseOutside && warehouseComponent}
         {!showCostCentreOutside && costCentreComponent}
         {!showAdjustmentOutside && adjustmentComponent}
-        {!showCheckboxesOutside && checkboxesComponent}
         {!showAttachmentOutside && attachmentComponent}
         <div className="flex items-center justify-between w-full">
           {formState.formElements.printOnSave.visible && (

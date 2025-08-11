@@ -431,6 +431,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     value={formState?.userConfig?.gridHeight}
                     onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
                   />
+                  <ERPCheckbox
+                      id="useNewFooter"
+                      label={t("use_new_footer")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.useNewFooter ?? false}
+                      onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
+                    />
                 </div>
 
                 <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">

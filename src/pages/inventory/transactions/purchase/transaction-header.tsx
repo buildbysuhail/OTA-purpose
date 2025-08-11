@@ -200,7 +200,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
           <AdjustmentAmountInput
-          transactionType={transactionType}
+            transactionType={transactionType}
             formState={formState}
             dispatch={dispatch}
             t={t}
@@ -491,6 +491,59 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
+
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="partyName"
+                  label={t("name")}
+                  value={formState.transaction.master.partyName}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { partyName: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
+
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="address1"
+                  label={t("address_1")}
+                  value={formState.transaction.master.address1}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address1: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="address2"
+                  label={('address_2')}
+                  value={formState.transaction.master.address2}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address2: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
               </div>
 
               {conditionalFooterComponents}

@@ -719,5 +719,7 @@
   "grid_themes":"Grid themes",
   "choose_your_perfect_grid_style":"Choose your perfect grid style",
   "previewing":"Previewing :",
-  "auto_reset_in":"Auto-reset in :"
+  "auto_reset_in":"Auto-reset in :",
+  "address_1":"Address 1",
+  "address_2":"Address 2"
 }

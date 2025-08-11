@@ -374,6 +374,7 @@ export interface UserConfig {
   footerBg?: string;
   showColumnBorder?: boolean;
   activeRowBg?: string;
+  useNewFooter?: boolean;
 }
 
 export type FormElementsState = {

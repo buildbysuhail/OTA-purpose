@@ -716,5 +716,7 @@
   "grid_themes": "سمات الجدول",
   "choose_your_perfect_grid_style": "اختر نمط الجدول المثالي لك",
   "previewing": "معاينة:",
-  "auto_reset_in": "إعادة الضبط التلقائي خلال:"
+  "auto_reset_in": "إعادة الضبط التلقائي خلال:",
+  "address_1": "العنوان 1",
+  "address_2": "العنوان 2"
 }

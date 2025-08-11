@@ -689,18 +689,8 @@ const VirtualRow = React.memo(
         })
       );
     };
-const rowBg =
-  `${appState.mode === "dark"
-    ? index % 2 === 0
-      ? "bg-[#333333]"
-      : "bg-[#444444]"
-    : index % 2 === 0
-      ? "bg-white"
-      : "bg-[#f9f9f9]"
-  } ${appState.mode === "dark"
-    ? "hover:bg-[#555555]"
-    : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"
-  }`;
+
+    const rowBg = `${appState.mode === "dark" ? index % 2 === 0 ? "bg-[#333333]" : "bg-[#444444]" : index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"} ${appState.mode === "dark" ? "hover:bg-[#555555]" : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"}`;
 
     return (
       <div
@@ -742,15 +732,15 @@ const rowBg =
           }
           const cellId = `${gridId}_${column.dataField}_${index}`;
           const borderColor = `${(column.readOnly || column.allowEditing == false ||
-                formState.formElements.pnlMasters?.disabled !== true) &&
-                currentCell?.column === column.dataField &&
-                currentCell?.rowIndex === index ? appState.mode === "dark"
-                  ? "#444444"
-                  : formState.userConfig?.inputBoxStyle?.focusBgColor
-                    ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
-                    : "#e3f2fd"
-                :undefined
-                  }`;
+            formState.formElements.pnlMasters?.disabled !== true) &&
+            currentCell?.column === column.dataField &&
+            currentCell?.rowIndex === index ? appState.mode === "dark"
+            ? "#444444"
+            : formState.userConfig?.inputBoxStyle?.focusBgColor
+              ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
+              : "#e3f2fd"
+            : undefined
+            }`;
 
           return (
             <div
@@ -813,7 +803,7 @@ const rowBg =
                   disabled={formState.formElements.pnlMasters?.disabled}
                   type="checkbox"
                   checked={
-                    cellValue == true? true: false
+                    cellValue == true ? true : false
                   }
                   onChange={(e) => {
                     onChange(
@@ -855,9 +845,9 @@ const rowBg =
                 </button>
               ) : column.dataField === "removeCol" ? (
                 <div className="flex items-center justify-center gap-1"
-                style={{
-                  border: `solid 1px ${ borderColor}`
-                }}
+                  style={{
+                    border: `solid 1px ${borderColor}`
+                  }}
                 >
                   <button
                     onClick={() => handleInfoClick(index)}
@@ -916,20 +906,20 @@ const rowBg =
                 />
               ) : column.dataField === "product" && !column.readOnly ? (
                 <div
-                  style={{...getCellContentStyle(column),  border: `solid 1px ${ borderColor}`}}
+                  style={{ ...getCellContentStyle(column), border: `solid 1px ${borderColor}` }}
                   id={cellId}
                   tabIndex={0}
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                 {productId > 0 ? cellValue ?? "" : ""}
+                  {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               ) : column.dataField === "status" ? (
                 <div
                   style={{
                     ...getCellContentStyle(column),
                     justifyContent: "center",
-                     border: `solid 1px ${ borderColor}`
+                    border: `solid 1px ${borderColor}`
                   }}
                   id={cellId}
                   tabIndex={0}
@@ -939,7 +929,7 @@ const rowBg =
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                 {productId > 0 ? cellValue ?? "" : ""}
+                  {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               ) : column.allowEditing == true &&
                 !column.readOnly &&
@@ -969,14 +959,15 @@ const rowBg =
                 />
               ) : (
                 <div
-                  style={{...getCellContentStyle(column),  border: `solid 3px ${ borderColor}`}}
+                  style={currentCell?.column === column.dataField &&
+            currentCell?.rowIndex === index?{...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background:'#fff' }: { ...getCellContentStyle(column)}}
                   id={cellId}
                   tabIndex={0}
                   className="px-1 cursor-default"
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                {productId > 0 ? cellValue ?? "" : ""}
+                  {productId > 0 ? cellValue ?? "" : ""}
                 </div>
               )}
             </div>

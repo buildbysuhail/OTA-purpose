@@ -734,13 +734,7 @@ const VirtualRow = React.memo(
           const borderColor = `${(column.readOnly || column.allowEditing == false ||
             formState.formElements.pnlMasters?.disabled !== true) &&
             currentCell?.column === column.dataField &&
-            currentCell?.rowIndex === index ? appState.mode === "dark"
-            ? "#444444"
-            : formState.userConfig?.inputBoxStyle?.focusBgColor
-              ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
-              : "#e3f2fd"
-            : undefined
-            }`;
+            currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` : "#e3f2fd" : undefined}`;
 
           return (
             <div
@@ -792,7 +786,7 @@ const VirtualRow = React.memo(
                       width: `${Math.floor(Math.random() * 50) + 40}%`,
                       height: `${Math.min(rowHeight - 6, 16)}px`,
                     }}
-                  ></div>
+                  />
                 </div>
               ) : column.dataField === "slNo" ? (
                 <div style={getCellContentStyle(column)} id={cellId}>
@@ -960,7 +954,7 @@ const VirtualRow = React.memo(
               ) : (
                 <div
                   style={currentCell?.column === column.dataField &&
-            currentCell?.rowIndex === index?{...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background:'#fff' }: { ...getCellContentStyle(column)}}
+                    currentCell?.rowIndex === index ? { ...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background: '#fff' } : { ...getCellContentStyle(column) }}
                   id={cellId}
                   tabIndex={0}
                   className="px-1 cursor-default"
@@ -1680,9 +1674,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               style={headerStyle}>
               <nav className="w-full">
                 <ul className="space-y-1">
+                  {/* Grid Preferences */}
                   <li>
                     <button className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left cursor-pointer transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#4c1d954d] hover:text-[#d8b4fe]" : "hover:bg-[#f3e8ff] hover:text-[#7c3aed]"}`}>
-                      <div className={`w-full h-full p-[9px] rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#4c1d954d] group-hover:bg-[#6b21a899]" : "bg-[#ede9fe] group-hover:bg-[#e9d5ff]"}`}>
+                      <div className={`p-[9px] rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#4c1d954d] group-hover:bg-[#6b21a899]" : "bg-[#ede9fe] group-hover:bg-[#e9d5ff]"}`}>
                         <Settings className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#d8b4fe]" : "text-[#7c3aed]"}`} />
                       </div>
                       <GridPreferenceChooser
@@ -1691,27 +1686,32 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         columns={(formState.gridColumns ?? []) as DevGridColumn[]}
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
+                        // buttonClassName="font-medium flex-1 text-left"
                       />
                     </button>
                   </li>
+
+                  {/* Export to Excel */}
                   <li>
                     <button
                       onClick={openExcelMenu}
-                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#3e2f004d] hover:text-[#ffe082]" : "hover:bg-[#fff8e1] hover:text-[#ff8f00]"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#3e2f004d] group-hover:bg-[#3e2f0099]" : "bg-[#ffecb3] group-hover:bg-[#ffe082]"}`}>
-                        <FileUp className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#ffe082]" : "text-[#ff8f00]"}`} />
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#14532d4d] hover:text-[#86efac]" : "hover:bg-[#f0fdf4] hover:text-[#15803d]"}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#14532d4d] group-hover:bg-[#16653499]" : "bg-[#bbf7d0] group-hover:bg-[#86efac]"}`}>
+                        <FileUp className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#86efac]" : "text-[#166534]"}`} />
                       </div>
                       <span className="font-medium">
                         {t("export_to_excel")}
                       </span>
                     </button>
                   </li>
+
+                  {/* Change Grid Theme */}
                   <li>
                     <button
                       onClick={handleShowGridTheme}
-                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#2e3b4e4d] hover:text-[#80d8ff]" : "hover:bg-[#e3f2fd] hover:text-[#0277bd]"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#2e3b4e4d] group-hover:bg-[#2e3b4e99]" : "bg-[#bbdefb] group-hover:bg-[#90caf9]"}`} >
-                        <Paintbrush className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#80d8ff]" : "text-[#0277bd]"}`} />
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#1e3a8a4d] hover:text-[#93c5fd]" : "hover:bg-[#eff6ff] hover:text-[#1d4ed8]"}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#1e3a8a4d] group-hover:bg-[#1e3a8a99]" : "bg-[#dbeafe] group-hover:bg-[#bfdbfe]"}`} >
+                        <Paintbrush className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#93c5fd]" : "text-[#1e40af]"}`} />
                       </div>
                       <span className="font-medium">{t("change_grid_theme")}</span>
                     </button>
@@ -1819,7 +1819,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     >
                       {index === 0 ? (
                         <>
-                          <div className="absolute top-0 left-[3px]">
+                          <div className="absolute top-[3px] left-[3px]">
                             <button
                               ref={buttonRef}
                               onClick={(e) => {

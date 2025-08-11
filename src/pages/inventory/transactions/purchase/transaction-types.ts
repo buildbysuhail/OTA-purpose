@@ -375,6 +375,7 @@ export interface UserConfig {
   showColumnBorder?: boolean;
   activeRowBg?: string;
   useNewFooter?: boolean;
+  themeName?: string;
 }
 
 export type FormElementsState = {

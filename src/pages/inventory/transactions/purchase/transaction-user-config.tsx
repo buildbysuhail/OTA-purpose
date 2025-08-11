@@ -5,7 +5,7 @@ import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange } from "./reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { UserConfig } from "./transaction-types";
@@ -113,11 +113,21 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
 
   const postUserConfig = async () => {
     try {
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, formState.userConfig);
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utInvc", base64);
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              userConfig: {
+                themeName: 'Custom',
+              },
+            },
+          })
+        );
       });
+
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {
@@ -432,12 +442,12 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
                   />
                   <ERPCheckbox
-                      id="useNewFooter"
-                      label={t("use_new_footer")}
-                      data={formState.userConfig}
-                      checked={formState?.userConfig?.useNewFooter ?? false}
-                      onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
-                    />
+                    id="useNewFooter"
+                    label={t("use_new_footer")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.useNewFooter ?? false}
+                    onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
+                  />
                 </div>
 
                 <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">

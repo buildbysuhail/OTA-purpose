@@ -1152,7 +1152,7 @@ export const useTransactionHelper = (transactionType: string) => {
       for (let i = detailsLength; i < detailsLength + emptyRowsNeeded; i++) {
         details[i] = {
           ...initialTransactionDetailData,
-          slNo: i + 1,
+          slNo: generateUniqueKey(),
         };
       }
     }

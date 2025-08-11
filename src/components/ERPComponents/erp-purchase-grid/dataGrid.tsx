@@ -730,13 +730,13 @@ const VirtualRow = React.memo(
             options = formState.dataBrands ?? [];
           }
           const cellId = `${gridId}_${column.dataField}_${index}`;
-          const borderColor = `${!column.readOnly &&
-                formState.formElements.pnlMasters?.disabled !== true &&
+          const borderColor = `${(column.readOnly || column.allowEditing == false ||
+                formState.formElements.pnlMasters?.disabled !== true) &&
                 currentCell?.column === column.dataField &&
                 currentCell?.rowIndex === index ? appState.mode === "dark" 
                   ? "#444444" 
-                  : formState.userConfig?.activeRowBg 
-                    ? `rgb(${formState.userConfig.activeRowBg})` 
+                  : formState.userConfig?.inputBoxStyle?.focusBgColor 
+                    ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` 
                     : "#e3f2fd"
                 :undefined
                   }`;
@@ -911,7 +911,7 @@ const VirtualRow = React.memo(
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                  {productId > 0 ? cellValue ?? "" : ""}
+                 1 {borderColor}
                 </div>
               ) : column.dataField === "status" ? (
                 <div
@@ -928,7 +928,7 @@ const VirtualRow = React.memo(
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                  {productId > 0 ? cellValue ?? "" : ""}
+                 3 {borderColor}
                 </div>
               ) : column.allowEditing == true &&
                 !column.readOnly &&
@@ -965,7 +965,7 @@ const VirtualRow = React.memo(
                   onFocus={() => handleFocus(column.dataField!)}
                   onBlur={handleBlur}
                   onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                  {productId > 0 ? cellValue ?? "" : ""}
+                4  {borderColor}
                 </div>
               )}
             </div>

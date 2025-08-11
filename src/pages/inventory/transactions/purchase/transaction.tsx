@@ -365,7 +365,7 @@ const handleSaveTheme = (theme: any) => {
               (col) => col.visible !== false && col.dataField != null
             ) || [];
           const firstEditableColumn = visibleColumns.find(
-            (col) => col.allowEditing && !col.readOnly
+            (col) => col.allowEditing == true && !col.readOnly
           );
           if (firstEditableColumn) {
             const columnIndex = visibleColumns.indexOf(firstEditableColumn);
@@ -545,7 +545,7 @@ const handleSaveTheme = (theme: any) => {
         if (!isNullOrUndefinedOrZero(ledgerID)) {
           const [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
-              ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance?LedgerId=${ledgerID}`)
+              ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
               : 0, 
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
@@ -578,6 +578,8 @@ const handleSaveTheme = (theme: any) => {
             formStateMasterHandleFieldChange({
               fields: {
                 tokenNumber: ledgerData?.taxNumber,
+                 ledgerID: ledgerID,
+                  partyName: ledgerData?.partyName ?? "",
               },
             })
           );
@@ -1594,7 +1596,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataField: "bd",
         caption: t("bd"),
         dataType: "btn",
-        allowEditing: true,
+        allowEditing: false,
         visible: false,
         width: 150,
         alignment: "left"
@@ -1604,7 +1606,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         caption: t("pb"),
         dataType: "btn",
         visible: false,
-        allowEditing: true,
+        allowEditing: false,
         width: 250,
         alignment: "center",
       },
@@ -1643,7 +1645,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         width: 150,
         readOnly: true,
         alignment: "left",
-        allowEditing: true,
+        allowEditing: false,
       },
       {
         dataField: "minSalePrice",
@@ -1715,7 +1717,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         dataField: "grossConvert",
         caption: t("gross_convert"),
         dataType: "btn",
-        allowEditing: true,
+        allowEditing: false,
         width: 140,
         readOnly: true,
         alignment: "right",

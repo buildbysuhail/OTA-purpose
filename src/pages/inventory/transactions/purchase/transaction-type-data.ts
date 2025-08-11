@@ -63,6 +63,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   inventoryLedgerID: 0,
   ledgerID: 0,
   partyName: "",
+  displayName:"",
   referalAgentID: 0,
   tableId: 0,
   seatNumber: "",

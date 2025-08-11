@@ -119,7 +119,7 @@ debugger;
     const rowsPerPage = Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
     const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
     const TotalPage = page || generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage);
-    if (template.templateGroup === "barcode") {
+    if (template?.templateGroup === "barcode") {
       const barcodeImagesForPrint = await generateBarcodeImagesForPrint(TotalPage, template);
       pdfDocument = (
       <BarcodePDFDocument template={template} data={TotalPage} barcodeImages={barcodeImagesForPrint} />
@@ -381,7 +381,7 @@ debugger;
           batchCreatedList = res.items;
         }
       }
-
+debugger;
       // Process each row in the specified range
       for (let i = 0; i < slNos.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};
@@ -397,7 +397,7 @@ debugger;
           // Get sticker quantity
           let stickerQty = 0;
 
-          if ( row?.stickerQty === 0) continue;
+          // if ( row?.stickerQty === 0) continue;
 
           stickerQty = row?.stickerQty;
 

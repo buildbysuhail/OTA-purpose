@@ -1,5 +1,6 @@
 import React from "react";
 import { VoucherElementProps } from "../../purchase/transaction-types";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface NetAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (
@@ -15,6 +16,8 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
   t,
   handleKeyDown,
 }) => {
+  
+    const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPInput
     //   localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -41,7 +44,7 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     // />
     <div className="flex justify-between items-center">
       <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.netAmount.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">{" "}: {formState.summary.netValue}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">{" "}: {getFormattedValue(formState.summary.netValue??0)}</span>
     </div>
   );
 };

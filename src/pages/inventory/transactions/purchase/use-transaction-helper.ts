@@ -18,6 +18,7 @@ import { DeepPartial } from "redux";
 import {
   generateUniqueKey,
   getExcelCellValue,
+  isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
 } from "../../../../utilities/Utils";
 import {
@@ -1379,6 +1380,7 @@ export const useTransactionHelper = (transactionType: string) => {
       address3: "",
       address4: "",
     };
+    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName) ? master.displayName : master.partyName 
     master.invTransactionMasterID = formState.isEdit
       ? master.invTransactionMasterID
       : 0;

@@ -586,6 +586,7 @@ const VirtualRow = React.memo(
         column: ColumnModel,
         rowIndex: number
       ) => {
+        debugger;
         const target = e.target as HTMLElement;
         const visibleColumns = columns.filter(
           (col) => col.visible !== false && col.dataField != null
@@ -729,6 +730,16 @@ const VirtualRow = React.memo(
             options = formState.dataBrands ?? [];
           }
           const cellId = `${gridId}_${column.dataField}_${index}`;
+          const borderColor = `${!column.readOnly &&
+                formState.formElements.pnlMasters?.disabled !== true &&
+                currentCell?.column === column.dataField &&
+                currentCell?.rowIndex === index ? appState.mode === "dark" 
+                  ? "#444444" 
+                  : formState.userConfig?.activeRowBg 
+                    ? `rgb(${formState.userConfig.activeRowBg})` 
+                    : "#e3f2fd"
+                :undefined
+                  }`;
 
           return (
             <div
@@ -832,7 +843,11 @@ const VirtualRow = React.memo(
                   </svg>
                 </button>
               ) : column.dataField === "removeCol" ? (
-                <div className="flex items-center justify-center gap-1">
+                <div className="flex items-center justify-center gap-1"
+                style={{
+                  border: `solid 1px ${ borderColor}`
+                }}
+                >
                   <button
                     onClick={() => handleInfoClick(index)}
                     className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"}`}>
@@ -890,7 +905,7 @@ const VirtualRow = React.memo(
                 />
               ) : column.dataField === "product" && !column.readOnly ? (
                 <div
-                  style={getCellContentStyle(column)}
+                  style={{...getCellContentStyle(column),  border: `solid 1px ${ borderColor}`}}
                   id={cellId}
                   tabIndex={0}
                   onFocus={() => handleFocus(column.dataField!)}
@@ -903,6 +918,7 @@ const VirtualRow = React.memo(
                   style={{
                     ...getCellContentStyle(column),
                     justifyContent: "center",
+                     border: `solid 1px ${ borderColor}`
                   }}
                   id={cellId}
                   tabIndex={0}
@@ -914,7 +930,7 @@ const VirtualRow = React.memo(
                   onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
                   {productId > 0 ? cellValue ?? "" : ""}
                 </div>
-              ) : column.allowEditing &&
+              ) : column.allowEditing == true &&
                 !column.readOnly &&
                 formState.formElements.pnlMasters?.disabled !== true &&
                 txtData.visible === true &&
@@ -942,7 +958,7 @@ const VirtualRow = React.memo(
                 />
               ) : (
                 <div
-                  style={getCellContentStyle(column)}
+                  style={{...getCellContentStyle(column),  border: `solid 1px ${ borderColor}`}}
                   id={cellId}
                   tabIndex={0}
                   className="px-1 cursor-default"
@@ -1405,7 +1421,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         );
 
         const editableColumns = visibleColumns?.filter(
-          (col) => col.allowEditing && col.readOnly !== true
+          (col) => col.allowEditing == true && col.readOnly !== true
         );
         const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
         const editable = editableColumns
@@ -1428,7 +1444,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         );
 
         const editableColumns = visibleColumns?.filter(
-          (col) => col.allowEditing && col.readOnly !== true
+          (col) => col.allowEditing == true && col.readOnly !== true
         );
 
         if (editableColumns?.length === 0) {
@@ -1448,7 +1464,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         );
 
         const editableColumns = visibleColumns?.filter(
-          (col) => col.allowEditing && col.readOnly !== true
+          (col) => col.allowEditing == true && col.readOnly !== true
         );
 
         if (editableColumns?.length === 0) {
@@ -1483,7 +1499,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         );
 
         const editableColumns = visibleColumns?.filter(
-          (col) => col.allowEditing && col.readOnly !== true
+          (col) => col.allowEditing == true && col.readOnly !== true
         );
         const currentEditableIndex = findCurrentEditableIndex(rowIndex, column);
         let targetRow = rowIndex;

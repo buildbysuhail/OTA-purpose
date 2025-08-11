@@ -86,6 +86,7 @@ export interface TransactionMaster {
   inventoryLedgerID: number; // cbDebitLedger
   ledgerID: number;
   partyName: string;
+  displayName: string;
   referalAgentID: number;
   tableId: number;
   seatNumber: string;

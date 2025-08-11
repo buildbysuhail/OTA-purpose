@@ -1,5 +1,6 @@
 import React from "react";
 import { VoucherElementProps } from "../../purchase/transaction-types";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface VatAmountLabelProps extends VoucherElementProps {
   taxData: any[];
@@ -10,6 +11,8 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
   t,
   taxData,
 }) => {
+  
+      const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel
     //   id="vatAmount"
@@ -22,7 +25,7 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     // />
     <div className="flex justify-between items-center">
       <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.totTax.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {formState.transaction.master.vatAmount}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {getFormattedValue(formState.transaction.master.vatAmount??0)}</span>
     </div>
   );
 };

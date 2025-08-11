@@ -703,6 +703,7 @@ const direction = appStater?.dir || "ltr";
                     dataSource={store}
                     height={300}
                     keyExpr={"productID"}
+                    allowColumnResizing
                     showBorders={true}
                     showRowLines={true}
                     remoteOperations={{

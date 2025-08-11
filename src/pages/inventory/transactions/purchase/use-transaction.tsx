@@ -1181,7 +1181,7 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
     );
 
     const editableColumns = formState.gridColumns?.filter(
-        (col) => col.visible != false && col.dataField != null && col.allowEditing && col.readOnly !== true
+        (col) => col.visible != false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
       
       if(editableColumns && editableColumns.length > 0) {
@@ -2842,7 +2842,7 @@ ERPAlert.show({
               });
               if (confirm) {
                 
-      const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted).map(x => x.slNo);
+      const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty+ x.qty) > 0).map(x => x.slNo);
                 printBarcode(
                   slNos,
                   true,
@@ -2853,7 +2853,7 @@ ERPAlert.show({
                 );
             }
            } else {
-              const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted).map(x => x.slNo);
+              const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty+ x.qty) > 0).map(x => x.slNo);
               printBarcode(
                 slNos,
                 false,
@@ -3138,6 +3138,9 @@ ERPAlert.show({
             }
           } else if (columnName == "btnPrintBarcode") {
             debugger;
+            if((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
+              break
+            }
             const isReprint =
               formState.transaction.details[rowIndex].barcodePrinted;
             if (isReprint) {

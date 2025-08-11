@@ -1,6 +1,7 @@
 import React, { Dispatch } from "react";
 import { TransactionFormState } from "../../purchase/transaction-types";
 import { AnyAction } from "redux";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 export interface GrandTotalProps {
   formState: TransactionFormState;
@@ -10,6 +11,8 @@ export interface GrandTotalProps {
 }
 
 const BillDiscountLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
+  
+      const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel
     //   id="grandTotal"
@@ -22,7 +25,7 @@ const BillDiscountLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
     // />
     <div className="flex justify-between items-center">
       <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.billDiscount.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {formState.transaction.master.billDiscount}</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {getFormattedValue(formState.transaction.master.billDiscount??0)}</span>
     </div>
   );
 };

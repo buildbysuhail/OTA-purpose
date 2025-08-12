@@ -1077,7 +1077,8 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
       employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        applicationSettings.inventorySettings?.defaultPurchaseAcc,
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc 
+              :  applicationSettings.inventorySettings?.defaultPurchaseAcc,,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,

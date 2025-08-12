@@ -656,7 +656,8 @@ const handleSaveTheme = (theme: any) => {
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                applicationSettings.inventorySettings?.defaultPurchaseAcc,
+              voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc 
+              :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },

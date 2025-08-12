@@ -185,7 +185,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
-    debugger;
+    
     isDragging.current = false;
     dragStartIndex.current = -1;
     setDragOverIndex(-1);
@@ -204,11 +204,11 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    debugger;
+    
     if(dragOverIndex == 0 || dragOverIndex == columnWidths.length-1) {
       return;
     }
-    debugger;
+    
     if (
       !isDragging.current ||
       dragStartIndex.current === -1 ||
@@ -235,7 +235,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
       })
     );
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
-debugger;
+
     let parsedPreferences: GridPreference;
     if (
       savedPreferences != undefined &&

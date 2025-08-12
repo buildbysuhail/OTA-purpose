@@ -1395,7 +1395,7 @@ debugger;
     return master;
   };
   const     applyDiscountsToItems = (): void => {
-    debugger;
+    
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },

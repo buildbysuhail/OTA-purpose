@@ -482,7 +482,7 @@ export const useTransaction = (
         },
       };
     }
-    debugger;
+    
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
@@ -984,7 +984,7 @@ export const useTransaction = (
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
       };
-      debugger;
+      
 params = sanitizeDataAdvanced(params, transactionInitialData)
       const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
@@ -2807,7 +2807,7 @@ ERPAlert.show({
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
-    debugger;
+    
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
     );
@@ -3009,7 +3009,7 @@ debugger;
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
-            debugger;
+            
             handleChangeUnit(
               outDetail,
               detail,
@@ -3186,7 +3186,7 @@ debugger;
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            debugger;
+            
             if((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
               break
             }

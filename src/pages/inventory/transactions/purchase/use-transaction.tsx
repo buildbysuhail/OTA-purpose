@@ -569,14 +569,14 @@ export const useTransaction = (
       };
       voucher.transaction.master = updatedMaster;
     }
-    if (vch?.details) {
-      voucher.transaction.details = refactorDetails(
-        vch.details,
-        "",
-        { result: {} },
-        formType ?? ""
-      );
-    }
+    // if (vch?.details) {
+    //   voucher.transaction.details = refactorDetails(
+    //     vch.details,
+    //     "",
+    //     { result: {} },
+    //     formType ?? ""
+    //   );
+    // }
     if (voucher.transaction.attachments) {
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction

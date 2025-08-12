@@ -511,6 +511,7 @@ export interface TransactionFormState {
   dataBrands: [];
   isPopupVisible:boolean;
   showGridTheme:boolean;
+  stockUpdate:boolean;
 }
 interface loadingResult {
   isLoading: boolean;

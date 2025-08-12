@@ -88,6 +88,7 @@ import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
 import { useReportPrint } from "./reports/use-reports-print";
 import { KeyUpEvent } from "devextreme/ui/text_box";
+import usePreferenceData from "../../utilities/hooks/usePreference";
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -659,7 +660,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   ) => {
     const totalRowCountDisplayRef = useRef<HTMLSpanElement>(null);
     const totalRowCountRef = useRef<number>(0);
-    const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    const { onApplyPreferences, gridCols,preferences } = usePreferenceData(columns, gridId);
     const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
@@ -733,7 +734,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
 
     const rootState = useAppSelector((x) => x);
-    const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(
       () => filterInitialData || {},
       [filterInitialData]
@@ -758,9 +758,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     useEffect(() => {
       set_reload(reload);
     }, [reload]);
-    useEffect(() => {
-      setGridCols(columns);
-    }, []);
+
     useEffect(() => {
       if (filterInitialData && Object.keys(filter).length === 0) {
         setFilter(filterInitialData);
@@ -771,26 +769,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilter(filterData.data);
       }
     }, [filterData]);
-     useEffect(() => {
-      const fetchPreferences = async () => {
-        onApplyPreferences(await getInitialPreference(gridId, columns, new APIClient()));
-      };
-      
-      if (gridId != "" && columns != undefined && columns != null) {
-        fetchPreferences();
-      }
-    }, [gridId]);
+
     useEffect(() => {
       set_reload(true)
     }, [_location.pathname]);
-    const onApplyPreferences = useCallback(
-      (pref: GridPreference) => {
-        setPreferences(pref);
-        const updatedColumns = applyGridColumnPreferences(columns, pref);
-        setGridCols(updatedColumns);
-      },
-      [columns]
-    ); // Add any other dependencies here
+
     const onApplyFilter = useCallback((_filter: any) => {
       const dss = { ..._filter };
       if (filterShowCount == 0) {
@@ -800,16 +783,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onFilterChanged != undefined && onFilterChanged(dss);
     }, []);
 
-    // Add any other dependencies here
-    // const onCloseFilter = useCallback(() => {
-    //   console.log(`filterShowCountww: ${filterShowCount}`);
-    //   if (filterShowCount == 0) {
-    //     setFilter({});
-    //     setFilterShowCount((prev) => prev + 1);
-    //     console.log(`filterShowCount333: ${filterShowCount}`);
-    //   }
-    //   setShowFilter(false);
-    // }, []);
 
     const [currentStore, setCurrentStore] = useState<CustomStore<
       any,
@@ -886,17 +859,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
     const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
     const memoizedStore = useMemo(() => store, [store]);
-    const switchToPdf = useCallback(() => {
-      setGridCols((prev: any) => {
-        if (preferences) {
-          const cols = preferences.columnPreferences.filter(
-            (x) => x.visible == false && x.showInPdf == true
-          );
-          return cols;
-        }
-        return prev;
-      });
-    }, [preferences, gridInstance]);
+
     const onGridReady = (e: any) => {
       setGridInst(e.component);
     };

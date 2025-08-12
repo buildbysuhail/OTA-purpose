@@ -1394,7 +1394,7 @@ export const useTransactionHelper = (transactionType: string) => {
     return master;
   };
   const     applyDiscountsToItems = (): void => {
-    debugger;
+    
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },

@@ -73,7 +73,12 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    const fetchPreferences = async () => { setPreferences(await getInitialPreference(gridId, columns, new APIClient())); };
+    debugger;
+    const fetchPreferences = async () => {       
+    const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
+    // onApplyPreferences && onApplyPreferences(initialGridPreference)
+    setPreferences(initialPreferences); 
+  };
     fetchPreferences();
   }, [gridId, columns, onApplyPreferences]);
 
@@ -152,11 +157,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   };
 
   const handleResetGrid = async () => {
+      localStorage.removeItem(`gridPreferences_${gridId}`)
     if (isSaving) return;
     setIsSaving(true);
     try {
       await api.postAsync(Urls.grid_preference_reset, gridId);
       const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
+      onApplyPreferences && onApplyPreferences(initialPreferences)
       setPreferences(initialPreferences);
       setIsOpen(false);
       onChange(initialPreferences);

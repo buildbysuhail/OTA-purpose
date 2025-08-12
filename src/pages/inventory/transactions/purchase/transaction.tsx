@@ -2153,153 +2153,154 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         isLocked: true,
         alignment: "center",
       },
-    ] as ColumnModel[]).filter((gc: ColumnModel) => 
-    (
-      userSession.countryId == Countries.India &&
-      (
-        ((voucherType??formState.transaction.master.voucherType) == VoucherType.PurchaseInvoice 
-        && (formType??formState.transaction.master.voucherForm) == "VAT"
-        && !["itemType"].includes(gc.dataField??""))
-      ) 
-     || userSession.countryId != Countries.India
-&& (
-    ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseInvoice
-    && (formType ?? formState.transaction.master.voucherForm) == "VAT"
-    && ![
-        "hsnCode",
-        "cgst",
-        "cgstPerc",
-        "sgstPerc",
-        "sgst",
-        "igstPerc",
-        "igst",
-        "cessPerc",
-        "cessAmt",
-        "additionalCessPerc",
-        "additionalCess",
-        "mR",
-        "netRate",
-        "itemType"
-    ].includes(gc.dataField ?? ""))
-) ||userSession.countryId != Countries.India
-&& (
-    ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseReturn
-    // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
-    && ![
-       "hsnCode",
-        "cgst",
-        "cgstPerc",
-        "sgstPerc",
-        "sgst",
-        "igstPerc",
-        "igst",
-        "cessPerc",
-        "cessAmt",
-        "additionalCessPerc",
-        "additionalCess",
-        "mR",
-        "netRate",
-        "free",
-        "manualBarcode",
-        "stockDetails",
-        "lpr",
-        "lpc",
-        "btnPrintBarcode",
-        "expDate",
-        "expDays",
-        "minSalePrice",
-        "additionalExpense",
-        "totalAddExpense",
-        "grossConvert",
-        "unitID2",
-        "unit2Qty",
-        "unit2SalesRate",
-        "unit2MRP",
-        "unit2MBarcode",
-        "unit2StickerQty",
-        "unitID3",
-        "unit3Qty",
-        "unit3SalesRate",
-        "unit3MRP",
-        "unit3MBarcode",
-        "unit3StickerQty",
-        "tagQty",
-        "barcodeTagPrinted",
-        "barcodeUnit2Printed",
-        "barcodeUnit3Printed",
-        "location",
-        "grTransDetailsID",
-        "poTransDetailsID",
-        "ratePlusTax",
-        "sortOrder",
-        "profitPercentage",
-        "schemeDiscount",
-        "memo",
-        "memoEditor",
-        "rowNumber",
-        "actualSalesPrice",
-        "unit2",
-        "unit3",
-        "btnPrintBarcodeStd"
-    ].includes(gc.dataField ?? ""))
-)||userSession.countryId == Countries.India
-&& (
-    ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseReturn
-    // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
-    && ![
-        "mR",
-        "netRate",
-        "manualBarcode",
-        "stockDetails",
-        "lpr",
-        "lpc",
-        "btnPrintBarcode",
-        "expDate",
-        "expDays",
-        "minSalePrice",
-        "additionalExpense",
-        "totalAddExpense",
-        "grossConvert",
-        "unitID2",
-        "unit2Qty",
-        "unit2SalesRate",
-        "unit2MRP",
-        "unit2MBarcode",
-        "unit2StickerQty",
-        "unitID3",
-        "unit3Qty",
-        "unit3SalesRate",
-        "unit3MRP",
-        "unit3MBarcode",
-        "unit3StickerQty",
-        "tagQty",
-        "barcodeTagPrinted",
-        "barcodeUnit2Printed",
-        "barcodeUnit3Printed",
-        "location",
-        "grTransDetailsID",
-        "poTransDetailsID",
-        "ratePlusTax",
-        "sortOrder",
-        "profitPercentage",
-        "schemeDiscount",
-        "memo",
-        "memoEditor",
-        "rowNumber",
-        "actualSalesPrice",
-        "unit2",
-        "unit3",
-        "btnPrintBarcodeStd",
-        // "mfdDate",
-        // "warranty"
-    ].includes(gc.dataField ?? ""))
-)
-    )
+    ] as ColumnModel[])
+//     .filter((gc: ColumnModel) => 
+//     (
+//       userSession.countryId == Countries.India &&
+//       (
+//         ((voucherType??formState.transaction.master.voucherType) == VoucherType.PurchaseInvoice 
+//         && (formType??formState.transaction.master.voucherForm) == "VAT"
+//         && !["itemType"].includes(gc.dataField??""))
+//       ) 
+//      || userSession.countryId != Countries.India
+// && (
+//     ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseInvoice
+//     && (formType ?? formState.transaction.master.voucherForm) == "VAT"
+//     && ![
+//         "hsnCode",
+//         "cgst",
+//         "cgstPerc",
+//         "sgstPerc",
+//         "sgst",
+//         "igstPerc",
+//         "igst",
+//         "cessPerc",
+//         "cessAmt",
+//         "additionalCessPerc",
+//         "additionalCess",
+//         "mR",
+//         "netRate",
+//         "itemType"
+//     ].includes(gc.dataField ?? ""))
+// ) ||userSession.countryId != Countries.India
+// && (
+//     ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseReturn
+//     // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
+//     && ![
+//        "hsnCode",
+//         "cgst",
+//         "cgstPerc",
+//         "sgstPerc",
+//         "sgst",
+//         "igstPerc",
+//         "igst",
+//         "cessPerc",
+//         "cessAmt",
+//         "additionalCessPerc",
+//         "additionalCess",
+//         "mR",
+//         "netRate",
+//         "free",
+//         "manualBarcode",
+//         "stockDetails",
+//         "lpr",
+//         "lpc",
+//         "btnPrintBarcode",
+//         "expDate",
+//         "expDays",
+//         "minSalePrice",
+//         "additionalExpense",
+//         "totalAddExpense",
+//         "grossConvert",
+//         "unitID2",
+//         "unit2Qty",
+//         "unit2SalesRate",
+//         "unit2MRP",
+//         "unit2MBarcode",
+//         "unit2StickerQty",
+//         "unitID3",
+//         "unit3Qty",
+//         "unit3SalesRate",
+//         "unit3MRP",
+//         "unit3MBarcode",
+//         "unit3StickerQty",
+//         "tagQty",
+//         "barcodeTagPrinted",
+//         "barcodeUnit2Printed",
+//         "barcodeUnit3Printed",
+//         "location",
+//         "grTransDetailsID",
+//         "poTransDetailsID",
+//         "ratePlusTax",
+//         "sortOrder",
+//         "profitPercentage",
+//         "schemeDiscount",
+//         "memo",
+//         "memoEditor",
+//         "rowNumber",
+//         "actualSalesPrice",
+//         "unit2",
+//         "unit3",
+//         "btnPrintBarcodeStd"
+//     ].includes(gc.dataField ?? ""))
+// )||userSession.countryId == Countries.India
+// && (
+//     ((voucherType ?? formState.transaction.master.voucherType) == VoucherType.PurchaseReturn
+//     // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
+//     && ![
+//         "mR",
+//         "netRate",
+//         "manualBarcode",
+//         "stockDetails",
+//         "lpr",
+//         "lpc",
+//         "btnPrintBarcode",
+//         "expDate",
+//         "expDays",
+//         "minSalePrice",
+//         "additionalExpense",
+//         "totalAddExpense",
+//         "grossConvert",
+//         "unitID2",
+//         "unit2Qty",
+//         "unit2SalesRate",
+//         "unit2MRP",
+//         "unit2MBarcode",
+//         "unit2StickerQty",
+//         "unitID3",
+//         "unit3Qty",
+//         "unit3SalesRate",
+//         "unit3MRP",
+//         "unit3MBarcode",
+//         "unit3StickerQty",
+//         "tagQty",
+//         "barcodeTagPrinted",
+//         "barcodeUnit2Printed",
+//         "barcodeUnit3Printed",
+//         "location",
+//         "grTransDetailsID",
+//         "poTransDetailsID",
+//         "ratePlusTax",
+//         "sortOrder",
+//         "profitPercentage",
+//         "schemeDiscount",
+//         "memo",
+//         "memoEditor",
+//         "rowNumber",
+//         "actualSalesPrice",
+//         "unit2",
+//         "unit3",
+//         "btnPrintBarcodeStd",
+//         // "mfdDate",
+//         // "warranty"
+//     ].includes(gc.dataField ?? ""))
+// )
+//     )
 
 
 
     
-    ),
+    ,
     [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]
   );
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.

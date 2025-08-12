@@ -37,6 +37,7 @@ import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
 import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
 import { applyGridColumnPreferences, getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 import usePreferenceData from "../../utilities/hooks/usePreference";
+import { SortDescriptor } from "devextreme/data";
 interface InputProps {
   id?: string;
   inputId?: string;
@@ -85,17 +86,50 @@ interface LoadResult {
   summary?: any;
   groupCount?: number;
 }
-
+type FilterOperation =
+  | "="
+  | "<>"
+  | ">"
+  | ">="
+  | "<"
+  | "<="
+  | "startswith"
+  | "endswith"
+  | "contains"
+  | "notcontains"
+  | "between";
 const api = new APIClient();
 
 const createStore = async (
   value: string,
   payload: any,
-  productDataUrl?: string
+  productDataUrl?: string,
+   initialSort: SortDescriptor<any>[] = [],
+  initialFilters?: Array<{
+    field: string;
+    value: any;
+    operation: FilterOperation;
+  }>,
 ) => {
+  let isInitialLoad = true; // Track initial load
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
+      debugger;
+     if (
+        !loadOptions.sort ||
+        (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
+      ) {
+        loadOptions.sort = initialSort;
+      }
+    // if (
+    //     initialFilters &&
+    //     initialFilters.length > 0 &&
+    //     isInitialLoad &&
+    //     !loadOptions.filter
+    //   ) {
+
+    //   }
       const paramNames = [
         "skip",
         "take",
@@ -524,7 +558,13 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.productName = value;
             }
 
-            const store = await createStore(value, payload, productDataUrl);
+            const store = await createStore(value, payload, productDataUrl,
+              [
+                {
+                  selector:  formState.formElements.productSearchPopupWindow.data.searchCriteria == "product" ? "productCode" : "productCode",
+                  desc: true
+                }
+              ]);
 
             setStore(store);
             setShowProductGrid(true);
@@ -1043,6 +1083,7 @@ const handleGridKeyDown = useCallback(
         portalContainerRef.current
       );
     };
+
     return (
       <>
         <div

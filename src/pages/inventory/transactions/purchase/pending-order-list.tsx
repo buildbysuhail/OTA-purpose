@@ -313,6 +313,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           hideGridAddButton={true}
           enableScrollButton={false}
           selectionMode="multiple"
+          initialSort={[{ selector: "voucherNumber", desc: true }]}
           // gridHeader={t("pending_goods_receipt")}
           onRowClick={handleMainGridRowClick}
           // onSelectionChanged={handleSelectionChange}
@@ -335,6 +336,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
             height={300}
             hideGridAddButton={true}
             enableScrollButton={false}
+            
             selectionMode="none"
             showPrintButton={false}
             allowExport={false}

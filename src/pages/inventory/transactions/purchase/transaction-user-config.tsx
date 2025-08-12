@@ -83,6 +83,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { appState, updateAppState } = useAppState();
+  const [stockUpdate, setStockUpdate] = useState<boolean>(false);
   const handleToggle = () => {
     const newValue = !isExpanded;
     setIsExpanded(newValue);
@@ -91,6 +92,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
       isExpanded: newValue,
     };
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
+
+  const handleStockUpdateChange = (value: boolean) => {
+    setStockUpdate(value);
   };
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
@@ -378,6 +383,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     data={formState.userConfig}
                     checked={formState?.userConfig?.barCodePrev}
                     onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
+                  />
+                  <ERPCheckbox
+                    id="stockUpdate"
+                    label={t("stock_update")}
+                    data={formState.stockUpdate}
+                    checked={formState.stockUpdate}
+                    onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
                   />
                 </div>
               </div>

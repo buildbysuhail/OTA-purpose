@@ -501,7 +501,7 @@ export interface TransactionFormState {
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
   ShowProductBatchUnitDetails: boolean;
-  showProductInformation?: {show: boolean; index: number};
+  showProductInformation?: { show: boolean; index: number };
   barcodeTemplate?: any;
   barcodeData?: any;
   barcodePrevOpen?: boolean;
@@ -509,15 +509,19 @@ export interface TransactionFormState {
   loading?: loadingResult;
   dataWarranty: [];
   dataBrands: [];
-  isPopupVisible:boolean;
-  showGridTheme:boolean;
-  stockUpdate:boolean;
+  isPopupVisible: boolean;
+  showGridTheme: boolean;
+  stockUpdate: boolean;
 }
 interface loadingResult {
   isLoading: boolean;
   text: string;
 }
-export interface CurrentCell { column: string; rowIndex: number; data: TransactionDetail }
+export interface CurrentCell {
+  column: string;
+  rowIndex: number;
+  data: TransactionDetail;
+}
 export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };

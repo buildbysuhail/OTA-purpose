@@ -530,7 +530,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="address2"
-                  label={('address_2')}
+                  label={t('address_2')}
                   value={formState.transaction.master.address2}
                   className="max-w-full"
                   onChange={(e) =>

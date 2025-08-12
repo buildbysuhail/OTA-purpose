@@ -713,13 +713,14 @@
   "show_barcode_preview": "Show barcode preview",
   "select_printer": "Select printer",
 
-  "change_grid_theme":"Change grid theme",
-  "show_column_border":"Show column border",
-  "active_row_background_color":"Active row background color",
-  "grid_themes":"Grid themes",
-  "choose_your_perfect_grid_style":"Choose your perfect grid style",
-  "previewing":"Previewing :",
-  "auto_reset_in":"Auto-reset in :",
-  "address_1":"Address 1",
-  "address_2":"Address 2"
+  "change_grid_theme": "Change grid theme",
+  "show_column_border": "Show column border",
+  "active_row_background_color": "Active row background color",
+  "grid_themes": "Grid themes",
+  "choose_your_perfect_grid_style": "Choose your perfect grid style",
+  "previewing": "Previewing :",
+  "auto_reset_in": "Auto-reset in :",
+  "address_1": "Address 1",
+  "address_2": "Address 2",
+  "stock_update": "Stock update"
 }

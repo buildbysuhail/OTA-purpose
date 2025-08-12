@@ -22,7 +22,7 @@ interface ERPDateInputProps {
   disabled?: boolean;
   required?: boolean;
   readonly?: boolean;
-  noLabel?:boolean;
+  noLabel?: boolean;
   minDate?: string;
   maxDate?: string;
   minDateKey?: string;
@@ -49,6 +49,7 @@ interface ERPDateInputProps {
   jumpTarget?: string;
   localInputBox?: inputBox;
   fetching?: boolean;
+  labelDirection?: "horizontal" | "vertical";
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
@@ -88,6 +89,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       jumpTarget,
       localInputBox,
       fetching = false,
+      labelDirection = "vertical",
       ...props
     },
     ref
@@ -154,11 +156,11 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       if (!text) return null;
       return text?.includes("/n")
         ? text?.split("/n")?.map((line, index) => (
-            <React.Fragment key={index}>
-              {line}
-              <br />
-            </React.Fragment>
-          ))
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))
         : text;
     }
 
@@ -205,22 +207,22 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
                   : inputBoxState?.labelColor
-                  ? `rgb(${inputBoxState?.labelColor})`
-                  : "rgb(84,84,84)",
+                    ? `rgb(${inputBoxState?.labelColor})`
+                    : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(8px, 14px) scale(1)"
                   : _variant === "standard"
-                  ? "translate(0, 10px) scale(1)"
-                  : "translate(8px, 10px) scale(1)",
+                    ? "translate(0, 10px) scale(1)"
+                    : "translate(8px, 10px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                  ? "translate(0, -6px) scale(0.90)"
-                  : "translate(13px, -6px) scale(0.80)",
+                    ? "translate(0, -6px) scale(0.90)"
+                    : "translate(13px, -6px) scale(0.80)",
             },
           };
         case "md":
@@ -236,22 +238,22 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
                   : inputBoxState?.labelColor
-                  ? `rgb(${inputBoxState?.labelColor})`
-                  : "rgb(84,84,84)",
+                    ? `rgb(${inputBoxState?.labelColor})`
+                    : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(10px, 18px) scale(1)"
                   : _variant === "standard"
-                  ? "translate(0, 13px) scale(1)"
-                  : "translate(10px, 13px) scale(1)",
+                    ? "translate(0, 13px) scale(1)"
+                    : "translate(10px, 13px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                  ? "translate(0, -6px) scale(0.90)"
-                  : "translate(12px, -8px) scale(0.90)",
+                    ? "translate(0, -6px) scale(0.90)"
+                    : "translate(12px, -8px) scale(0.90)",
             },
           };
         case "lg":
@@ -267,22 +269,22 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
                   : inputBoxState?.labelColor
-                  ? `rgb(${inputBoxState?.labelColor})`
-                  : "rgb(84,84,84)",
+                    ? `rgb(${inputBoxState?.labelColor})`
+                    : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(10px, 21px) scale(1)"
                   : _variant === "standard"
-                  ? "translate(0, 15px) scale(1)"
-                  : "translate(10px, 15px) scale(1)",
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 15px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                  ? "translate(1px,-6px) scale(0.90)"
-                  : "translate(15px, -9px) scale(0.90)",
+                    ? "translate(1px,-6px) scale(0.90)"
+                    : "translate(15px, -9px) scale(0.90)",
             },
           };
         case "customize":
@@ -299,22 +301,22 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
                   : inputBoxState?.labelColor
-                  ? `rgb(${inputBoxState?.labelColor})`
-                  : "rgb(84,84,84)",
+                    ? `rgb(${inputBoxState?.labelColor})`
+                    : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 20}px) scale(1)`
                   : _variant === "standard"
-                  ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 15}px) scale(1)`
-                  : `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 12}px) scale(1)`,
+                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 15}px) scale(1)`
+                    : `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 12}px) scale(1)`,
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? `translate(${inputBoxState?.adjustC ?? 8}px, ${inputBoxState?.adjustD ?? -1}px) scale(0.88)`
                   : _variant === "standard"
-                  ? `translate(${inputBoxState?.adjustC ?? 1}px, ${inputBoxState?.adjustD ?? -6}px) scale(0.88)`
-                  : `translate(${inputBoxState?.adjustC ?? 15}px, ${inputBoxState?.adjustD ?? -9}px) scale(0.88)`,
+                    ? `translate(${inputBoxState?.adjustC ?? 1}px, ${inputBoxState?.adjustD ?? -6}px) scale(0.88)`
+                    : `translate(${inputBoxState?.adjustC ?? 15}px, ${inputBoxState?.adjustD ?? -9}px) scale(0.88)`,
             },
           };
       }
@@ -390,23 +392,23 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 fetching
                   ? null
                   : value
-                  ? moment(value).local()
-                  : null
+                    ? moment(value).local()
+                    : null
               }
               onChange={handleChange}
               minDate={
                 minDate
                   ? moment(minDate).local()
                   : minDateKey
-                  ? moment(data?.[minDateKey]).local()
-                  : undefined
+                    ? moment(data?.[minDateKey]).local()
+                    : undefined
               }
               maxDate={
                 maxDate
                   ? moment(maxDate).local()
                   : maxDateKey
-                  ? moment(data?.[maxDateKey]).local()
-                  : undefined
+                    ? moment(data?.[maxDateKey]).local()
+                    : undefined
               }
               closeOnSelect={true}
               format="DD/MM/YYYY"
@@ -465,7 +467,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 ? customSize
                 : inputBoxState?.inputSize
             }
-            disableEnterNavigation= {disableEnterNavigation}
+            disableEnterNavigation={disableEnterNavigation}
             noLabel={noLabel}
             localInputBox={inputBoxState}
             fetching={fetching}
@@ -508,15 +510,15 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               minDate
                 ? dateTrimmer(minDate)
                 : minDateKey
-                ? formatDate(data?.[minDateKey])
-                : undefined
+                  ? formatDate(data?.[minDateKey])
+                  : undefined
             }
             max={
               maxDate
                 ? dateTrimmer(maxDate)
                 : maxDateKey
-                ? formatDate(data?.[maxDateKey])
-                : undefined
+                  ? formatDate(data?.[maxDateKey])
+                  : undefined
             }
             value={displayValue}
             labelClassName={labelClassName}
@@ -524,6 +526,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             data-skip={skip}
             data-jump-to={jumpTo}
             data-jump-target={jumpTarget}
+            labelDirection={labelDirection}
             {...props}
           />
           <ERPElementValidationMessage validation={validation} />

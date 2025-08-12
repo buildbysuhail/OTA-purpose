@@ -801,7 +801,7 @@ const VirtualRow = React.memo(
                   }
                   onChange={(e) => {
                     onChange(
-                      e.target.checked ? "Y" : "N",
+                      e.target.checked,
                       column.dataField as keyof TransactionDetail,
                       index
                     );

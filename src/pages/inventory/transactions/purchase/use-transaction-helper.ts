@@ -961,7 +961,7 @@ export const useTransactionHelper = (transactionType: string) => {
       detail.productID = row.productID;
       detail.brandID = row.brandID;
       detail.brand = row.brandName;
-      detail.arabicName = row.itemNameInSecondLanguage;
+      detail.arabicName = row.arabicName;
 
       // Quantity and pricing
       detail.free = round(Number(row.free || 0), 4);
@@ -1084,14 +1084,14 @@ debugger;
       detail.productDescription = row.productDescription;
 
       // Unit 2 information
-      detail.unitID2 = row.unitID2;
+      detail.unitID2 = row.unit2ID;
       detail.unit2Qty = row.unit2Qty;
       detail.unit2MBarcode = row.unit2Barcode;
       detail.unit2SalesRate = row.unit2SalesPrice;
       detail.unit2MRP = row.unit2MRP;
 
       // Unit 3 information
-      detail.unitID3 = row.unitID3;
+      detail.unitID3 = row.unit3ID;
       detail.unit3Qty = row.unit3Qty;
       detail.unit3MBarcode = row.unit3Barcode;
       detail.unit3SalesRate = row.unit3SalesPrice;

@@ -496,7 +496,27 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         </div>
 
-        <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-end items-center gap-4"}`}>
+        <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-between items-center gap-4"}`}>
+          <div>
+            {/* {formState.formElements.printOnSave.visible && ( */}
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="printOnSave"
+              label={t(formState.formElements.printOnSave.label)}
+              checked={formState.printOnSave}
+              onChange={(e) =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { printOnSave: e.target.checked },
+                  })
+                )
+              }
+              disabled={formState.formElements.printOnSave?.disabled}
+              className="dark:text-dark-text"
+            />
+            {/* )} */}
+          </div>
+
           <div className="flex justify-end gap-2">
             <ERPButton
               variant="primary"

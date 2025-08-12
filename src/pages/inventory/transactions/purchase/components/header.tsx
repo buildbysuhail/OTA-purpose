@@ -356,7 +356,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
                           onClick={(e) => setIsPendingOrderOpen({ open: true, type: "PO" })}>
                           <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
-                            <ShoppingCart className="h-4 w-4 text-[#be123c]" />
+                            <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
                           </div>
                           <span className="font-medium">{t('pending_purchase_order_list')}</span>
                         </button>
@@ -368,7 +368,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
                           onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
                           <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                            <Package className="h-4 w-4 text-[#a16207]" />
+                            <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                           </div>
                           <span className="font-medium">{t('pending_goods_receipt_list')}</span>
                         </button>
@@ -391,7 +391,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <div className="px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
                             <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
-                              <Upload className="h-4 w-4 text-[#065f46]" />
+                              <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                             </div>
                             <ERPFileUploadButton
                               buttonText={t("import_from_excel")}
@@ -403,14 +403,31 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
 
+                      {/* Print Barcode */}
+                      <li>
+                        <div className="px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group">
+                          <div className="w-full flex items-center gap-3">
+                            <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
+                              <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
+                            </div>
+                            <button
+                              className="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1"
+                            >
+                              {t("print_barcode")}
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+
+                      {/* GRN Print */}
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
                           // onClick={handlePrint}
                           disabled={formState.transactionLoading}
                         >
-                          <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
-                            <Printer className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
+                          <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                           </div>
                           <span className="font-medium">{t("grn_print")}</span>
                         </button>

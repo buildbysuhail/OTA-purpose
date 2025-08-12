@@ -2961,7 +2961,8 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
               )
             }
             onSelectTheme={handleSelectTheme}
-            onResetTheme={handleResetTheme}
+            // onResetTheme={handleResetTheme}
+            formState={formState}
             onSave={handleSaveTheme}
           />
         )}

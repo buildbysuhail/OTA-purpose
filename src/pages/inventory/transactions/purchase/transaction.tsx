@@ -74,6 +74,7 @@ import ErpPurchaseGrid, {
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
+import  VoucherType  from "../../../../enums/voucher-types";
 import ObjectViewer from "./components/fomstate-view";
 import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
 import QtyFactorsModal from "./qty-factors";
@@ -460,7 +461,7 @@ const handleSaveTheme = (theme: any) => {
     calculateTotal,
         applyDiscountsToItems,
         downloadImportTemplateHeadersOnly,
-    importFromExcel,
+    importFromExcel
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -551,38 +552,30 @@ const handleSaveTheme = (theme: any) => {
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
             ),
           ]);
-          dispatch(
-            updateFormElement({
-              fields: {
-                ...formElmns,
-                costCentreID: {
+          debugger;
+          dispatch(formStateHandleFieldChangeKeysOnly({
+            fields:{
+              formElements:{
+                 costCentreID: {
                   visible:
                     applicationSettings?.accountsSettings?.maintainCostCenter ||
                     ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
                 },
               },
-            })
-          );
-
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                ledgerBalance: (ledgerBalance??0) as number,
+              ledgerBalance: (ledgerBalance??0) as number,
                 groupName: ledgerData?.accGroupName,
                 ledgerData: ledgerData,
                 ledgerDataLoading: false,
-              },
-            })
-          );
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: {
-                tokenNumber: ledgerData?.taxNumber,
+                transaction:{
+                  master: {
+                    tokenNumber: ledgerData?.taxNumber,
                  ledgerID: ledgerID,
                   partyName: ledgerData?.partyName ?? "",
-              },
-            })
-          );
+                  }
+                }
+            }
+          }))
+         
         } else {
           dispatch(
             formStateHandleFieldChange({
@@ -663,7 +656,8 @@ const handleSaveTheme = (theme: any) => {
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                applicationSettings.inventorySettings?.defaultPurchaseAcc,
+              voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc 
+              :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
@@ -1261,7 +1255,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
 
 
   const purchaseGridCol: ColumnModel[] = useMemo(
-    () => [
+    () => ([
       {
         dataField: "slNo",
         caption: "",
@@ -1574,6 +1568,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         visible: false,
         width: 100,
         format: "dd-MMM-yyyy",
+        alignment: "left",
       },
       {
         dataField: "expDate",
@@ -1583,6 +1578,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         width: 100,
         readOnly: true,
         format: "dd-MMM-yyyy",
+        alignment: "left",
       },
       {
         dataField: "expDays",
@@ -1622,7 +1618,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "batchCreated",
         caption: t("batch_created"),
-        dataType: "boolean",
+        dataType: "chk",
         visible: false,
         width: 150,
         readOnly: true,
@@ -2036,8 +2032,8 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         isLocked: true,
         alignment: "center",
       },
-    ],
-    []
+    ] ),
+    [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]
   );
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date

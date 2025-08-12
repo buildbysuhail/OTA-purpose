@@ -353,7 +353,7 @@ const InvTransactionSlice = createSlice({
     formStateTransactionDetailsRowRemove: (
       state,
       action: PayloadAction<{
-        index: number;
+        slNo: string;
         applicationSettings?: ApplicationSettingsType;
         clearEntryControl: (
           state: TransactionFormState,
@@ -361,14 +361,14 @@ const InvTransactionSlice = createSlice({
         ) => TransactionFormState;
       }>
     ) => {
-      const index = action.payload.index;
-      if (index >= 0 && index < state.transaction.details.length) {
+      const slNo = action.payload.slNo;
+      if (slNo != "" ) {
         state = action.payload.clearEntryControl(
           state,
           action.payload.applicationSettings?.accountsSettings
             ?.defaultCostCenterID ?? 0
         );
-
+        const index = state.transaction.details.findIndex(x => x.slNo == slNo);
         state.transaction.details.splice(index, 1);
 
         state.transaction.details = state.transaction.details.map(

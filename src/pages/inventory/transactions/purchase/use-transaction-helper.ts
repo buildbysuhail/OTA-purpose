@@ -1063,7 +1063,7 @@ export const useTransactionHelper = (transactionType: string) => {
       detail.schemeDiscount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.schemeDiscAmt || 0)
       );
-
+debugger;
       // VAT handling based on form type
       if (formType === "VAT") {
         detail.vatPerc = row.vatPercentage;
@@ -1120,7 +1120,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Store original cost for restoration after calculation
       const originalCost = detail.cost;
-
+debugger;
       // Calculate row amounts
       const res = calculateRowAmount(
         detail,
@@ -1390,6 +1390,7 @@ export const useTransactionHelper = (transactionType: string) => {
         ? moment().local().toISOString()
         : master.prevTransDate;
     master.cashAmt = master.cashReceived;
+    master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
           
     return master;
   };

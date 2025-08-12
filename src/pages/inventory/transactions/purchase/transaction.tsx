@@ -2032,22 +2032,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         isLocked: true,
         alignment: "center",
       },
-    ] as ColumnModel[]).filter((gc: ColumnModel) => 
-    (
-      userSession.countryId == Countries.India &&
-      (
-        ((voucherType??formState.transaction.master.voucherType) == VoucherType.PurchaseInvoice 
-        && (formType??formState.transaction.master.voucherForm) == "VAT"
-        && ["cgst", "sgst"].includes(gc.dataField??""))
-      ) 
-      // ||
-      
-      // userSession.countryId != Countries.India &&
-      // (
-        
-      // )
-    )
-    ),
+    ] ),
     [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]
   );
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.

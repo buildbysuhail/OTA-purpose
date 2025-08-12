@@ -1189,14 +1189,58 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
     setCurrentCell(res, formState.transaction.details[0] as TransactionDetail);
       }
   };
-  const handleRemoveItem = async (index: number) => {
+  const handleRemoveItem = async (slNo: string) => {
+    debugger
     dispatch(
       formStateTransactionDetailsRowRemove({
-        index: index,
+        slNo: slNo,
         applicationSettings: applicationSettings,
         clearEntryControl,
       })
     );
+    const details = formState.transaction.details.filter(x => x.productID > 0 && x.slNo != slNo)
+    const data = formState.transaction.details.find((x: TransactionDetail) =>  isNullOrUndefinedOrZero(x.productID) || x.productID <= 0)
+    const rowIndex = formState.transaction.details.findIndex(x => x.slNo == data?.slNo)
+    const editableColumn = formState.gridColumns?.find(
+          (col) => col.visible !== false && col.dataField != null &&  col.allowEditing == true && col.readOnly !== true
+        );
+    if ( calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+                    const summaryRes = calculateSummary(details, formState, {
+                      result: {},
+                    });
+
+                    const totalRes = calculateTotal(
+                      formState.transaction.master,
+                      summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+                      formState.formElements,
+                      {
+                        result: {},
+                      }
+                    );
+
+                    if (totalRes) {
+                      debugger;
+                      totalRes.summary = summaryRes.summary;
+                      totalRes.transaction = totalRes.transaction ?? {};
+                      totalRes.transaction.master = { ...totalRes.transaction.master };
+                      totalRes.transaction.details = [];
+                      totalRes.loading = {isLoading: false, text: ''}
+                       totalRes.currentCell ={
+                          column: editableColumn?.dataField??"",
+                          data: data ?? initialTransactionDetailData,
+                          rowIndex: rowIndex??0,
+                        },
+
+                      // Dispatch the state update
+                      
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: totalRes,
+                          updateOnlyGivenDetailsColumns: true
+                        })
+                      );
+                    }
+                  }
   };
   const addOrEditRow = async (
     billwiseDetails?: string,
@@ -1626,13 +1670,8 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
         onConfirm: () => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
-          dispatch(
-            formStateTransactionDetailsRowRemove({
-              applicationSettings: applicationSettings,
-              index: focusedRowIndex,
-              clearEntryControl,
-            })
-          );
+          const rowData = dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          handleRemoveItem(rowData.slNo)
         },
       });
     }
@@ -2883,7 +2922,7 @@ ERPAlert.show({
     showDialog?: boolean;
   }> => {
     let { result } = commonParams;
-
+debugger;
     try {
       const key = event.key;
       const isShiftPressed = event.shiftKey;
@@ -2998,6 +3037,15 @@ ERPAlert.show({
 
         case "Enter":
           let data = { ...formState.transaction.details[rowIndex] };
+          if (columnName == "removeCol") {
+            if (!isNullOrUndefinedOrEmpty(value)) {
+              handleRemoveItem(value)
+            } else {
+              // const res = focusToNextColumn(rowIndex, columnName);
+              // setCurrentCell(res, data);
+            }
+            break
+          }
           if (columnName == "pCode") {
             data.pCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {

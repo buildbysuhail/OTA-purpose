@@ -26,7 +26,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const [showContactPersons, setShowContactPersons] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const ledgerData = useAppSelector(
-    (state: RootState) => state.AccTransaction.ledgerData
+    (state: RootState) => state.InventoryTransaction.ledgerData
   );
    const { getFormattedValue } = useNumberFormat()
 

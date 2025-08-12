@@ -856,7 +856,7 @@ const VirtualRow = React.memo(
                   </button>
                   <button
                     disabled={formState.formElements.pnlMasters?.disabled}
-                    onClick={() => handleDelete(item.slNo)}
+                    onClick={() => onKeyDown(item.slNo,{key:"Enter"} as any,"removeCol", index )}
                     className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
                     <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
                   </button>

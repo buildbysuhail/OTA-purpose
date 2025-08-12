@@ -69,7 +69,7 @@ export const usePrint = () => {
     // Function to generate barcode images
 
   const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
-debugger;
+
       const images: { [key: string]: string } = {};
       if (template?.barcodeState?.placedComponents && pages) {
     // Iterate over the pages structure instead of data
@@ -381,7 +381,7 @@ debugger;
           batchCreatedList = res.items;
         }
       }
-debugger;
+
       // Process each row in the specified range
       for (let i = 0; i < slNos.length; i++) {
         let barcode: BarcodeLabel = {...initialProductData};

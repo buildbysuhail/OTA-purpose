@@ -194,7 +194,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
   }, [isMenuOpen]);
 
   useEffect(() => {
-    debugger;
+    
    
     const fetch = async () => {
        const data = formState.transaction.details[index];

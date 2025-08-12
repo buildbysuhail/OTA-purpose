@@ -1390,7 +1390,7 @@ debugger;
         ? moment().local().toISOString()
         : master.prevTransDate;
     master.cashAmt = master.cashReceived;
-    master.stockUpdate = formState.stockUpdate != true ? master.stockUpdate;
+    master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
           
     return master;
   };

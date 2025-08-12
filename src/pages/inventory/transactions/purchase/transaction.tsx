@@ -1618,7 +1618,7 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       {
         dataField: "batchCreated",
         caption: t("batch_created"),
-        dataType: "boolean",
+        dataType: "chk",
         visible: false,
         width: 150,
         readOnly: true,

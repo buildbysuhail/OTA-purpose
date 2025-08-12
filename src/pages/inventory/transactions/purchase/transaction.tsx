@@ -571,6 +571,8 @@ const handleSaveTheme = (theme: any) => {
                     tokenNumber: ledgerData?.taxNumber,
                  ledgerID: ledgerID,
                   partyName: ledgerData?.partyName ?? "",
+                  displayName: ledgerData?.displayName ?? "",
+                  address1: ledgerData?.address1 ?? "",
                   }
                 }
             }

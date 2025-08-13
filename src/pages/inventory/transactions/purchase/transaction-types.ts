@@ -528,6 +528,7 @@ export type PartialTransactionFormFields = {
 };
 export interface ColumnModel {
   dataField?: string;
+  decimalPoint?:number;
   formStateOptionKey?: string;
   cssClass?: string;
   caption?: string;

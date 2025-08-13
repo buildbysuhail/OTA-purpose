@@ -31,6 +31,7 @@ import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { useCallback } from "react";
+import VoucherType from "../../../../enums/voucher-types";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -1390,6 +1391,8 @@ debugger;
         ? moment().local().toISOString()
         : master.prevTransDate;
     master.cashAmt = master.cashReceived;
+    master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID : 
+     master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
     master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
           
     return master;

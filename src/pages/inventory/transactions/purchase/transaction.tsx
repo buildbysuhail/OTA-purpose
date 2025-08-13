@@ -574,7 +574,8 @@ const handleSaveTheme = (theme: any) => {
                  ledgerID: ledgerID,
                   partyName: ledgerData?.partyName ?? "",
                   displayName: ledgerData?.displayName ?? "",
-                  address1: ledgerData?.address1 ?? "",
+                  address1: ledgerData?.address1 ?? "",address4: ledgerData?.mobileNumber ?? "",
+                  address3: ledgerData?.address3 ?? "",
                   }
                 }
             }
@@ -600,6 +601,8 @@ const handleSaveTheme = (theme: any) => {
                   partyName:  "",
                   displayName:  "",
                   address1:  "",
+                  address4: "",
+                  address3: "",
               },
             })
           );
@@ -784,6 +787,10 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
         ledgerID: {
           ...initialFormElements.ledgerID,
           accLedgerType:
+          voucherType == VoucherType.PurchaseReturn 
+          ?
+           LedgerType.Cash_Bank_Suppliers_Customers
+          :
             formType == "BT"
               ? LedgerType.Branch_Recv_Payable
               : !applicationSettings.inventorySettings

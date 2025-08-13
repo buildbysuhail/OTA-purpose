@@ -75,7 +75,7 @@ import ErpPurchaseGrid, {
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
-import  VoucherType  from "../../../../enums/voucher-types";
+import VoucherType from "../../../../enums/voucher-types";
 import ObjectViewer from "./components/fomstate-view";
 import ERPPreviousUrlButton from "../../../../components/ERPComponents/erp-previous-uirl-button";
 import QtyFactorsModal from "./qty-factors";
@@ -196,51 +196,54 @@ const TransactionForm: React.FC<TransactionProps> = ({
     right: isRtl ? headerLeft : "0",
   };
 
-const [tempTheme, setTempTheme] = useState<any>(null);
-const handleSelectTheme = (theme: any) => {
-  setTempTheme(theme);
-};
+  const [tempTheme, setTempTheme] = useState<any>(null);
+  const handleSelectTheme = (theme: any) => {
+    setTempTheme(theme);
+  };
 
-const handleResetTheme = () => {
-  setTempTheme(null);
-};
+  const handleResetTheme = () => {
+    setTempTheme(null);
+  };
 
-const handleSaveTheme = (theme: any) => {
-  dispatch(
-    formStateHandleFieldChange({
-      fields: {
-        userConfig: {
-          ...formState.userConfig,
-          gridFontSize: theme.fontSize,
-          gridIsBold: theme.bold,
-          gridBorderColor: theme.borderColor,
-          gridHeaderBg: theme.headerBG,
-          gridHeaderFontColor: theme.headerFontColor,
-          gridBorderRadius: theme.borderRadius,
-          showColumnBorder: theme.isColumnBorder,
-          activeRowBg: theme.activeRowBG,
-          gridRowHeight: theme.rowHeight,
+  const handleSaveTheme = (theme: any) => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          userConfig: {
+            ...formState.userConfig,
+            gridFontSize: theme.fontSize,
+            gridIsBold: theme.bold,
+            gridBorderColor: theme.borderColor,
+            gridHeaderBg: theme.headerBG,
+            gridHeaderFontColor: theme.headerFontColor,
+            gridBorderRadius: theme.borderRadius,
+            showColumnBorder: theme.isColumnBorder,
+            activeRowBg: theme.activeRowBG,
+            gridRowHeight: theme.rowHeight,
+            gridHeaderRowHeight: theme.gridHeaderRowHeight,
+            gridFooterBg: theme.gridFooterBg,
+            gridFooterFontColor: theme.gridFooterFontColor,
+          },
         },
-      },
-    })
-  );
-  setTempTheme(null);
-  api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, {
-    ...formState.userConfig,
-    gridFontSize: theme.fontSize,
-    gridIsBold: theme.bold,
-    gridBorderColor: theme.borderColor,
-    gridHeaderBg: theme.headerBG,
-    gridHeaderFontColor: theme.headerFontColor,
-    gridBorderRadius: theme.borderRadius,
-    showColumnBorder: theme.isColumnBorder,
-    activeRowBg: theme.activeRowBG,
-    gridRowHeight: theme.rowHeight,
-  }).then((response) => {
-    const base64 = modelToBase64(response.data);
-    localStorage.setItem("utInvc", base64);
-  });
-};
+      })
+    );
+    setTempTheme(null);
+    api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, {
+      ...formState.userConfig,
+      gridFontSize: theme.fontSize,
+      gridIsBold: theme.bold,
+      gridBorderColor: theme.borderColor,
+      gridHeaderBg: theme.headerBG,
+      gridHeaderFontColor: theme.headerFontColor,
+      gridBorderRadius: theme.borderRadius,
+      showColumnBorder: theme.isColumnBorder,
+      activeRowBg: theme.activeRowBG,
+      gridRowHeight: theme.rowHeight,
+    }).then((response) => {
+      const base64 = modelToBase64(response.data);
+      localStorage.setItem("utInvc", base64);
+    });
+  };
 
   const purchaseGridRef = useRef<{
     focusCell: (
@@ -462,8 +465,8 @@ const handleSaveTheme = (theme: any) => {
     calculateRowAmount,
     calculateSummary,
     calculateTotal,
-        applyDiscountsToItems,
-        downloadImportTemplateHeadersOnly,
+    applyDiscountsToItems,
+    downloadImportTemplateHeadersOnly,
     importFromExcel
   } = useTransaction(
     transactionType ?? "",
@@ -494,25 +497,25 @@ const handleSaveTheme = (theme: any) => {
     (state: RootState) => state.ApplicationSettings
   );
   const { hasRight } = useUserRights();
- const gridHeight = useMemo(() => {
-  let height;
-  if (
-    (formState.transactionLoading && _st.footerPosition === "right") ||
-    (!formState.transactionLoading &&
-      formState.userConfig?.footerPosition === "right")
-  ) {
-    height = window.innerHeight - 300;
-  } else {
-    height = window.innerHeight - 510;
-  }
+  const gridHeight = useMemo(() => {
+    let height;
+    if (
+      (formState.transactionLoading && _st.footerPosition === "right") ||
+      (!formState.transactionLoading &&
+        formState.userConfig?.footerPosition === "right")
+    ) {
+      height = window.innerHeight - 260;
+    } else {
+      height = window.innerHeight - 460;
+    }
 
-  console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
-  console.log('Max value:', Number.MAX_VALUE);
-  console.log('Positive infinity:', Number.POSITIVE_INFINITY);
-  console.log('Current grid height:', height);
+    console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
+    console.log('Max value:', Number.MAX_VALUE);
+    console.log('Positive infinity:', Number.POSITIVE_INFINITY);
+    console.log('Current grid height:', height);
 
-  return height;
-}, [formState.transactionLoading, formState.userConfig?.footerPosition, _st.footerPosition]);
+    return height;
+  }, [formState.transactionLoading, formState.userConfig?.footerPosition, _st.footerPosition]);
 
 
   useEffect(() => {
@@ -550,7 +553,7 @@ const handleSaveTheme = (theme: any) => {
           const [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
               ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
-              : 0, 
+              : 0,
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
             ),
@@ -559,29 +562,29 @@ const handleSaveTheme = (theme: any) => {
           dispatch(formStateHandleFieldChangeKeysOnly({
             fields:{
               formElements:{
-                 costCentreID: {
+                costCentreID: {
                   visible:
                     applicationSettings?.accountsSettings?.maintainCostCenter ||
                     ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
                 },
               },
               ledgerBalance: (ledgerBalance??0) as number,
-                groupName: ledgerData?.accGroupName,
-                ledgerData: ledgerData,
-                ledgerDataLoading: false,
-                transaction:{
-                  master: {
-                    tokenNumber: ledgerData?.taxNumber,
-                 ledgerID: ledgerID,
+              groupName: ledgerData?.accGroupName,
+              ledgerData: ledgerData,
+              ledgerDataLoading: false,
+              transaction:{
+                master: {
+                  tokenNumber: ledgerData?.taxNumber,
+                  ledgerID: ledgerID,
                   partyName: ledgerData?.partyName ?? "",
                   displayName: ledgerData?.displayName ?? "",
                   address1: ledgerData?.address1 ?? "",address4: ledgerData?.mobileNumber ?? "",
                   address3: ledgerData?.address3 ?? "",
-                  }
                 }
+              }
             }
           }))
-         
+
         } else {
           dispatch(
             formStateHandleFieldChange({
@@ -596,14 +599,14 @@ const handleSaveTheme = (theme: any) => {
           dispatch(
             formStateMasterHandleFieldChange({
               fields: {
-                
-                    tokenNumber: "",
-                 ledgerID: null,
-                  partyName:  "",
-                  displayName:  "",
-                  address1:  "",
-                  address4: "",
-                  address3: "",
+
+                tokenNumber: "",
+                ledgerID: null,
+                partyName:  "",
+                displayName:  "",
+                address1:  "",
+                address4: "",
+                address3: "",
               },
             })
           );
@@ -672,8 +675,8 @@ const handleSaveTheme = (theme: any) => {
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-              voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc 
-              :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
+                voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
+                  :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
@@ -711,10 +714,10 @@ const handleSaveTheme = (theme: any) => {
       _formState.userRightsFormCode = formCode ?? "";
       if(voucherType == "PI") {
         if(isInvoker && formType == "IMPORT") {
-         _formState.userRightsFormCode = "PIIMPORT"
+          _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
+      const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
 
       _formState = {
         ..._formState,
@@ -730,7 +733,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                 : _formState.transaction.master.hasroundOff,
           },
         },
-          gridColumns: _gridCols.columnPreferences,
+        gridColumns: _gridCols.columnPreferences,
         userConfig: {
           ...formState.userConfig,
         },
@@ -770,34 +773,34 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
         cbCostCentre: {
           ...initialFormElements.cbCostCentre,
           visible:
-                    applicationSettings?.accountsSettings?.maintainCostCenter,
+            applicationSettings?.accountsSettings?.maintainCostCenter,
           disabled: _formState.userConfig?.presetCostenterId ?? 0 > 0 ? true : initialFormElements.cbCostCentre.disabled
         },
         cbWarehouse: {
           ...initialFormElements.cbWarehouse,
           visible: applicationSettings.inventorySettings?.maintainWarehouse,
-        disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
+          disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
         },
         cbEmployee: {
           ...initialFormElements.cbEmployee,
           employeeType:  _formState.userConfig
-        ?.showPurchaserOnly
-        ? EmployeeType.Purchaser
-        : _formState.formElements.cbEmployee.employeeType
+            ?.showPurchaserOnly
+            ? EmployeeType.Purchaser
+            : _formState.formElements.cbEmployee.employeeType
         },
         ledgerID: {
           ...initialFormElements.ledgerID,
           accLedgerType:
-          voucherType == VoucherType.PurchaseReturn 
-          ?
-           LedgerType.Cash_Bank_Suppliers_Customers
-          :
-            formType == "BT"
-              ? LedgerType.Branch_Recv_Payable
-              : !applicationSettings.inventorySettings
+            voucherType == VoucherType.PurchaseReturn
+              ?
+              LedgerType.Cash_Bank_Suppliers_Customers
+              :
+              formType == "BT"
+                ? LedgerType.Branch_Recv_Payable
+                : !applicationSettings.inventorySettings
                   .showAccountReceivableInPurchase
-              ? LedgerType.Cash_Bank_Suppliers
-              : LedgerType.Cash_Bank_Suppliers_Customers,
+                  ? LedgerType.Cash_Bank_Suppliers
+                  : LedgerType.Cash_Bank_Suppliers_Customers,
         },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
@@ -846,15 +849,15 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
       } else {
         _formState.template = null;
       }
-       const editableColumn = _formState.gridColumns?.find(
-          (col) => col.visible !== false && col.dataField != null &&  col.allowEditing == true && col.readOnly !== true
-        );
-        _formState.currentCell ={
-                                  column: editableColumn?.dataField??"",
-                                  data: formState.transaction.details[0],
-                                  rowIndex: 0,
-                                },
-      setTransVoucher(_formState, true);
+      const editableColumn = _formState.gridColumns?.find(
+        (col) => col.visible !== false && col.dataField != null &&  col.allowEditing == true && col.readOnly !== true
+      );
+      _formState.currentCell ={
+        column: editableColumn?.dataField??"",
+        data: formState.transaction.details[0],
+        rowIndex: 0,
+      },
+        setTransVoucher(_formState, true);
       // if (voucherNo != undefined && voucherNo > 0) {
       //   dispatch(
       //     setUserRight({ userSession: userSession, hasRight: hasRight })
@@ -877,67 +880,67 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
     }
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
-   if(masterIds.length > 0) {
+    if(masterIds.length > 0) {
 
-    dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
-     const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
-     if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
+      dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
+      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
+      if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
 
-      const calculatedDetails: TransactionDetail[] = [];
+        const calculatedDetails: TransactionDetail[] = [];
       const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType,{result:{}}, formState.transaction.master.voucherForm);
-      for (let index = 0; index < refactoredDetails.length; index++) {
-        const element = refactoredDetails[index];
-        const calculated = calculateRowAmount(
-                element,
-                "barCode",
-                { result: { transaction: { details: [element] } } },
-                true
-              );
-        calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
-      }
+        for (let index = 0; index < refactoredDetails.length; index++) {
+          const element = refactoredDetails[index];
+          const calculated = calculateRowAmount(
+            element,
+            "barCode",
+            { result: { transaction: { details: [element] } } },
+            true
+          );
+          calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
+        }
 
               const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
-              if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
-                const summaryRes = calculateSummary(details, formState, {
-                  result: {},
-                });
+        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+          const summaryRes = calculateSummary(details, formState, {
+            result: {},
+          });
 
-                const totalRes = calculateTotal(
-                  formState.transaction.master,
-                  summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
-                  formState.formElements,
-                  {
-                    result: {},
-                  }
-                );
+          const totalRes = calculateTotal(
+            formState.transaction.master,
+            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+            formState.formElements,
+            {
+              result: {},
+            }
+          );
 
-                if (totalRes) {
-                  totalRes.summary = summaryRes.summary;
-                  totalRes.transaction = totalRes.transaction ?? {};
-                  totalRes.transaction.master = { ...totalRes.transaction.master };
-                  totalRes.transaction.details = [];
-                  totalRes.batchesUnits = PendingTransDetails.batchesUnits;
+          if (totalRes) {
+            totalRes.summary = summaryRes.summary;
+            totalRes.transaction = totalRes.transaction ?? {};
+            totalRes.transaction.master = { ...totalRes.transaction.master };
+            totalRes.transaction.details = [];
+            totalRes.batchesUnits = PendingTransDetails.batchesUnits;
                   totalRes.loading = {isLoading: false, text: ''}
 
-                  // Dispatch the state update
+            // Dispatch the state update
 
-                  const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
-                  dispatch(
-                    formStateHandleFieldChangeKeysOnly({
-                      fields: totalRes,
-                      updateOnlyGivenDetailsColumns: true,
+            const lastIndex = formState.transaction.details.findLastIndex(x => x.productID > 0);
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: totalRes,
+                updateOnlyGivenDetailsColumns: true,
                       rowIndex:lastIndex+1,
-                      itemsToAddToDetails: calculatedDetails
-                    })
-                  );
-                }
-              }
+                itemsToAddToDetails: calculatedDetails
+              })
+            );
+          }
+        }
 
-     } else {
+      } else {
 
       dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
-     }
-   }
+      }
+    }
   }, [formState.transaction.details, formState.transaction.master]);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
@@ -1029,29 +1032,29 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
 
   useEffect(() => {
     const batchSelectionData = async () => {
-    if (formState.batchSelectionData != "") {
-      const data = JSON.parse(formState.batchSelectionData);
-      if (data.rowIndex < 0) {
-        return;
+      if (formState.batchSelectionData != "") {
+        const data = JSON.parse(formState.batchSelectionData);
+        if (data.rowIndex < 0) {
+          return;
+        }
+        const baseDetail = { ...formState.transaction.details[data.rowIndex] };
+        await loadProductDetailsByAutoBarcode(
+          {
+            productCode: data.productCode,
+            autoBarcode: data.autoBarcode,
+            productBatchID: data.productBatchID,
+            searchText: data.searchText,
+            detail: baseDetail,
+            useProductCode: data.useProductCode,
+            rowIndex: data.rowIndex,
+            searchColumn: data.useProductCode ? "pCode" : "product",
+            setFocusToNextColumn: true,
+          },
+          { result: {}, formStateHandleFieldChangeKeysOnly },
+          true
+        );
       }
-      const baseDetail = { ...formState.transaction.details[data.rowIndex] };
-      await loadProductDetailsByAutoBarcode(
-        {
-          productCode: data.productCode,
-          autoBarcode: data.autoBarcode,
-          productBatchID: data.productBatchID,
-          searchText: data.searchText,
-          detail: baseDetail,
-          useProductCode: data.useProductCode,
-          rowIndex: data.rowIndex,
-          searchColumn: data.useProductCode ? "pCode" : "product",
-          setFocusToNextColumn: true,
-        },
-        { result: {}, formStateHandleFieldChangeKeysOnly },
-        true
-      );
-    }
-  };
+    };
 
     batchSelectionData();
   }, [formState.batchSelectionData]);
@@ -1174,7 +1177,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
               result: {},
             });
 
-             const totalRes = calculateTotal(
+            const totalRes = calculateTotal(
               formState.transaction.master,
               summaryRes.summary as SummaryItems,
               formState.formElements,
@@ -1208,7 +1211,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
               })
             );
             debugger;
-            
+
           }
         }
       } catch (error) {
@@ -1282,7 +1285,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
   }, [formState.quantityFactorData]);
 
 
- 
+
  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings,userSession
     ,voucherType ?? formState.transaction.master.voucherType
     ,formType ?? formState.transaction.master.voucherForm,t,formState)??[]
@@ -1440,15 +1443,15 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
     cursor: "pointer",
   };
 
-//   useEffect(() => {
-//     console.log('safvan');
+  //   useEffect(() => {
+  //     console.log('safvan');
 
-//   console.log('inputHeight changed:', formState.userConfig?.inputBoxStyle?.inputHeight );
-// }, [formState.userConfig?.inputBoxStyle?.inputHeight ]);
+  //   console.log('inputHeight changed:', formState.userConfig?.inputBoxStyle?.inputHeight );
+  // }, [formState.userConfig?.inputBoxStyle?.inputHeight ]);
 
-//   const dynamicMarginTop = 123 + (appState?.inputBox?.inputHeight ?? 0);
+  //   const dynamicMarginTop = 123 + (appState?.inputBox?.inputHeight ?? 0);
 
-//   console.log("mj23stylecheck:" , formState.userConfig?.inputBoxStyle?.inputHeight );
+  //   console.log("mj23stylecheck:" , formState.userConfig?.inputBoxStyle?.inputHeight );
 
 
   // useEffect(() => {
@@ -1480,7 +1483,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
         {/* <h1>SAFVAN{transactionType}</h1> */}
         {!deviceInfo?.isMobile && (
           <div
-            className={`dark:!bg-dark-bg p-4`}
+            className={`dark:!bg-dark-bg px-[4px] py-4`}
             style={{
               backgroundColor: formState.userConfig?.outerPageBg
                 ? `rgb(${formState.userConfig?.outerPageBg})`
@@ -1587,7 +1590,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: `${123 + (getInputHeight())}px`,
+                marginTop: `${97 + (getInputHeight())}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",
@@ -1597,7 +1600,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                 className={
                   (formState.transactionLoading &&
                     _st.footerPosition === "right") ||
-                  formState.userConfig?.footerPosition === "right"
+                    formState.userConfig?.footerPosition === "right"
                     ? "flex flex-row items-center gap-2"
                     : "flex flex-col"
                 }
@@ -1635,6 +1638,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                     rowHeight={
                       formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
                     }
+                    headerRowHeight={formState.userConfig?.gridHeaderRowHeight ?? _st.gridHeaderRowHeight}
                     gridBorderColor={formState.userConfig?.gridBorderColor}
                     gridHeaderBg={formState.userConfig?.gridHeaderBg}
                     gridHeaderFontColor={
@@ -1643,6 +1647,8 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                     gridBorderRadius={formState.userConfig?.gridBorderRadius}
                     showColumnBorder={formState.userConfig?.showColumnBorder ?? true}
                     activeRowBg={formState.userConfig?.activeRowBg}
+                    gridFooterBg={formState.userConfig?.gridFooterBg}
+                    gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
                   />
                   {/* Grid Under Modification */}
                 </div>
@@ -1651,25 +1657,25 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                     _st.footerPosition === "right") ||
                     (!formState.transactionLoading &&
                       formState.userConfig?.footerPosition === "right")) && (
-                    <TransactionFooter
-                    transactionType={transactionType??""}
-                    calculateTotal ={calculateTotal}
-                    applyDiscountsToItems={applyDiscountsToItems}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                      focusDiscount={focusDiscount}
-                      focusAmount={focusAmount}
-                      goToPreviousPage={goToPreviousPage}
-                      save={save}
-                      selectAttachment={selectAttachment}
-                      isDropUpOpen={isDropUpOpen}
-                      toggleDropup={toggleFooterDropup}
-                      footerLayout={"vertical"}
-                    />
-                  )}
+                      <TransactionFooter
+                        transactionType={transactionType ?? ""}
+                        calculateTotal={calculateTotal}
+                        applyDiscountsToItems={applyDiscountsToItems}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                        handleKeyDown={handleKeyDown}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                        focusDiscount={focusDiscount}
+                        focusAmount={focusAmount}
+                        goToPreviousPage={goToPreviousPage}
+                        save={save}
+                        selectAttachment={selectAttachment}
+                        isDropUpOpen={isDropUpOpen}
+                        toggleDropup={toggleFooterDropup}
+                        footerLayout={"vertical"}
+                      />
+                    )}
                 </div>
               </div>
             </div>
@@ -1802,7 +1808,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                 <TransactionFooter
                 transactionType={transactionType??""}
                     calculateTotal ={calculateTotal}
-                applyDiscountsToItems={applyDiscountsToItems}
+                  applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
@@ -1819,7 +1825,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
                     ((formState.transactionLoading
                       ? _st.footerPosition
                       : formState.userConfig?.footerPosition) || "bottom") ===
-                    "right"
+                      "right"
                       ? "vertical"
                       : "horizontal"
                   }
@@ -2173,7 +2179,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
         )}
         {formState.showProductInformation?.show && (
           <ProductInformation
-          index={formState.showProductInformation.index}
+            index={formState.showProductInformation.index}
             formState={formState}
             isOpen={formState.showProductInformation.show}
             transactionType={transactionType ?? formState.transactionType ?? ""}
@@ -2215,7 +2221,7 @@ const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new AP
           />
         )}
       </div>
-     {/* {formState.loading && formState.loading.isLoading == true &&
+      {/* {formState.loading && formState.loading.isLoading == true &&
      <BlurLoader text={formState.loading.text}></BlurLoader>
      } */}
     </>

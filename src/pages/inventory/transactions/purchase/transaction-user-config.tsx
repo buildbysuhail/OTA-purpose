@@ -722,14 +722,44 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
               <div className="space-y-4">
                 {/* Existing grid settings fields */}
-                <div className="flex items-end gap-3">
+                <div className="flex items-end gap-2">
                   <ERPInput
                     id="gridFontSize"
                     label={t("font_size")}
                     type="number"
+                    className="w-32"
                     data={formState.userConfig}
                     value={formState.userConfig?.gridFontSize || 0}
                     onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
+                  />
+                  <ERPInput
+                    id="gridRowHeight"
+                    type="number"
+                    className="w-32"
+                    label={t("row_height")}
+                    data={formState.userConfig}
+                    value={formState.userConfig?.gridRowHeight || 0}
+                    onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
+                  />
+                  <ERPInput
+                    type="number"
+                    className="w-32"
+                    id="gridHeaderRowHeight"
+                    label={t("header_row_height")}
+                    data={formState.userConfig}
+                    value={formState.userConfig?.gridHeaderRowHeight || 0}
+                    onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
+                  />
+                  <ERPInput
+                    min={0}
+                    step={1}
+                    type="number"
+                    className="w-32"
+                    id="gridBorderRadius"
+                    label={t("grid_border_radius_px")}
+                    data={formState.userConfig}
+                    value={formState.userConfig?.gridBorderRadius ?? 0}
+                    onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
                   />
                   <ERPCheckbox
                     id="gridIsBold"
@@ -737,24 +767,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     data={formState.userConfig}
                     checked={formState.userConfig?.gridIsBold || false}
                     onChangeData={(e: { gridIsBold: boolean }) => handleFieldChange("gridIsBold", e.gridIsBold)}
-                  />
-                  <ERPInput
-                    id="gridRowHeight"
-                    label={t("row_height")}
-                    type="number"
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridRowHeight || 0}
-                    onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
-                  />
-                  <ERPInput
-                    id="gridBorderRadius"
-                    label={t("grid_border_radius_px")}
-                    type="number"
-                    min={0}
-                    step={1}
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridBorderRadius ?? 0}
-                    onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
                   />
                   <ERPCheckbox
                     id="showColumnBorder"
@@ -883,6 +895,65 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                         </label>
                         <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
                           rgb({formState.userConfig?.activeRowBg || "227,242,253"})
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                        style={{ backgroundColor: formState.userConfig?.gridFooterBg ? `rgb(${formState.userConfig.gridFooterBg})` : "#f8f9fa" }}
+                      >
+                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                        <input
+                          type="color"
+                          value={formState.userConfig?.gridFooterBg ? rgbToHex(formState.userConfig.gridFooterBg) : "#f8f9fa"}
+                          onChange={(e) => {
+                            const rgb = hexToRgb(e.target?.value);
+                            if (rgb) {
+                              debouncedHandleFieldChange("gridFooterBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                            }
+                          }}
+                          className="opacity-0 w-full h-full cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                          {t("grid_footer_background_color")}
+                        </label>
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                          rgb({formState.userConfig?.gridFooterBg || "248,249,250"})
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                        style={{ backgroundColor: formState.userConfig?.gridFooterFontColor ? `rgb(${formState.userConfig.gridFooterFontColor})` : "#000000" }}
+                      >
+                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                        <input
+                          type="color"
+                          value={formState.userConfig?.gridFooterFontColor ? rgbToHex(formState.userConfig.gridFooterFontColor) : "#000000"}
+                          onChange={(e) => {
+                            const rgb = hexToRgb(e.target?.value);
+                            if (rgb) {
+                              debouncedHandleFieldChange("gridFooterFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                            }
+                          }}
+                          className="opacity-0 w-full h-full cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                          {t("grid_footer_font_color")}
+                        </label>
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                          rgb({formState.userConfig?.gridFooterFontColor || "0,0,0"})
                         </div>
                       </div>
                     </div>

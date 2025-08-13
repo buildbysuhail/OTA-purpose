@@ -14,7 +14,7 @@ import BillDiscountInput from "./components/BillDiscountInput";
 import BillDiscountLabel from "./components/bill-discount-label";
 import NetTotalLabel from "./components/NetTotalLabel";
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronUp, X, EllipsisVertical } from "lucide-react";
+import { Check, ChevronUp, X, EllipsisVertical, PanelBottom, PanelRight } from "lucide-react";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -270,13 +270,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       )}
     </div>
   ) : null;
-
+  const toggleFooterPosition = () => {
+    const newPosition: "bottom" | "right" = formState.userConfig?.footerPosition === "bottom" ? "right" : "bottom";
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      footerPosition: newPosition,
+    };
+    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
   const renderSecondFooter = () => (
     <div
       className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
       style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
       <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300">
+            <PanelBottom className="text-gray-800 dark:text-dark-text w-4 h-4" />
+          </button>
           <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
             <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
@@ -396,6 +406,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
         <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
           <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
+            <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
+              <div className="absolute top-4 left-2">
+                <button
+                  onClick={toggleFooterPosition}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
+                >
+                  <PanelRight className="text-gray-800 dark:text-dark-text w-4 h-4" />
+                </button>
+              </div>
+            </div>
             {footerLayout !== "vertical" && outsideComponents}
             <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-end w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>

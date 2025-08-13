@@ -714,7 +714,7 @@ const handleSaveTheme = (theme: any) => {
          _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new APIClient()))
+const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
 
       _formState = {
         ..._formState,

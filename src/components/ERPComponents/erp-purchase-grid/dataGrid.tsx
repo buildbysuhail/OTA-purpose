@@ -104,6 +104,9 @@ interface DataGridProps<T extends DataItem> {
   gridBorderRadius?: number;
   showColumnBorder?: boolean;
   activeRowBg?: string;
+  headerRowHeight?: number;
+  gridFooterBg?: string;
+  gridFooterFontColor?: string;
 }
 
 // export gridThemes = [
@@ -850,7 +853,7 @@ const VirtualRow = React.memo(
                   </button>
                   <button
                     disabled={formState.formElements.pnlMasters?.disabled}
-                    onClick={() => onKeyDown(item.slNo,{key:"Enter"} as any,"removeCol", index )}
+                    onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "removeCol", index)}
                     className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
                     <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
                   </button>
@@ -992,6 +995,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       gridBorderColor,
       gridHeaderBg,
       gridHeaderFontColor,
+      headerRowHeight = 40,
+      gridFooterBg,
+      gridFooterFontColor,
     }: DataGridProps<T>,
     ref: Ref<any>
   ) {
@@ -1687,7 +1693,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         columns={(formState.gridColumns ?? []) as DevGridColumn[]}
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
-                        // buttonClassName="font-medium flex-1 text-left"
+                      // buttonClassName="font-medium flex-1 text-left"
                       />
                     </button>
                   </li>
@@ -1779,7 +1785,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   position: "sticky",
                   top: 0,
                   zIndex: 100,
-                  height: `${formState.userConfig?.gridRowHeight ?? 40}px`,
+                  height: `${headerRowHeight}px`,
                 }}
               >
                 {columns?.map((column, index) => {
@@ -1922,7 +1928,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   display: "flex",
                   width: `${totalGridWidth}px`,
                   minWidth: `${totalGridWidth}px`,
-                  backgroundColor: appState.mode === "dark" ? "#222222" : "#f8f9fa",
+                  backgroundColor: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridFooterBg ? `rgb(${gridFooterBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
                   borderTop: `0.1px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.3)`}`,
                   position: "sticky",
                   bottom: 0,
@@ -1949,8 +1955,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         fontSize: `${gridFontSize}px`,
                         fontWeight: gridIsBold ? "bold" : "600",
                         textAlign: column.alignment,
-                        backgroundColor: appState.mode === "dark" ? "#222222" : "#f8f9fa",
-                        color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
+                        background: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridFooterBg ? `rgb(${gridFooterBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                        color: appState.mode === "dark" ? "#e0e0e0" : gridFooterFontColor ? `rgb(${gridFooterFontColor})` : "#1f2937",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",

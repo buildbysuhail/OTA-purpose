@@ -15,7 +15,7 @@ interface GridThemeProps {
   onClose: () => void;
   t: (key: string) => string;
   formState: TransactionFormState;
-  transactionType:any
+  transactionType: any
 }
 
 interface Theme {
@@ -26,6 +26,9 @@ interface Theme {
   gridBorderColor: string;
   gridHeaderBg: string;
   gridHeaderFontColor: string;
+  gridHeaderRowHeight: number;
+  gridFooterBg: string;
+  gridFooterFontColor: string;
   gridBorderRadius: number;
   showColumnBorder: boolean;
   activeRowBg: string;
@@ -37,6 +40,8 @@ const api = new APIClient();
 const TablePreview = ({ theme }: { theme: Theme }) => {
   const headerBgColor = `rgb(${theme.gridHeaderBg})`;
   const headerTextColor = `rgb(${theme.gridHeaderFontColor})`;
+  const footerBgColor = `rgb(${theme.gridFooterBg})`;
+  const footerTextColor = `rgb(${theme.gridFooterFontColor})`;
   const borderColor = `rgb(${theme.gridBorderColor})`;
   const activeRowBg = `rgb(${theme.activeRowBg})`;
 
@@ -97,24 +102,26 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
               Pending
             </td>
           </tr>
-          <tr className="bg-white">
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
-              003
+        </tbody>
+        {/* Footer */}
+        <tfoot>
+          <tr style={{ backgroundColor: footerBgColor, color: footerTextColor }}>
+            <td className="px-1 py-1 text-left font-medium"
+              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+              Total
             </td>
             <td
-              className="px-1 py-1"
+              className="px-1 py-1 text-left"
               style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
-              Headphones
+              2 Items
             </td>
             <td
-              className="px-1 py-1"
+              className="px-1 py-1 text-left"
               style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
-              Cancelled
+              Summary
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </table>
     </div>
   );
@@ -126,130 +133,225 @@ const gridThemes = [
     preview: "Clean & Professional",
     gridFontSize: 12,
     gridIsBold: true,
-    gridBorderColor: "186,186,186",
-    gridHeaderBg: "242,242,242",
-    gridHeaderFontColor: "31,41,55",
-    gridBorderRadius: 0,
-    showColumnBorder: true,
-    activeRowBg: "227,242,253",
-    gridRowHeight: 33,
-    colors: ["#f2f2f2", "#e3f2fd", "#bababa"]
-  },
-  {
-    themeName: "Blue",
-    preview: "Modern Blue",
-    gridFontSize: 12,
-    gridIsBold: true,
-    gridBorderColor: "225,225,225",
-    gridHeaderBg: "41,61,163",
-    gridHeaderFontColor: "255,255,255",
-    gridBorderRadius: 10,
-    showColumnBorder: true,
-    activeRowBg: "173,197,245",
-    gridRowHeight: 40,
-    colors: ["#293da3", "#adc5f5", "#3b82f6"]
-  },
-  {
-    themeName: "Forest Green",
-    preview: "Nature Inspired",
-    gridFontSize: 14,
-    gridIsBold: false,
-    gridBorderColor: "48,161,103",
-    gridHeaderBg: "42,146,101",
-    gridHeaderFontColor: "255,255,255",
-    gridBorderRadius: 15,
-    showColumnBorder: false,
-    activeRowBg: "220,252,231",
-    gridRowHeight: 40,
-    colors: ["#2a9265", "#dcfce7", "#30a167"]
-  },
-  {
-    themeName: "Ocean Blue",
-    preview: "Deep & Calming",
-    gridFontSize: 13,
-    gridIsBold: true,
-    gridBorderColor: "15,114,141",
-    gridHeaderBg: "9,126,153",
-    gridHeaderFontColor: "255,255,255",
+    gridBorderColor: "226,232,240",
+    gridHeaderBg: "248,250,252",
+    gridHeaderFontColor: "15,23,42",
+    gridHeaderRowHeight: 40,
+    gridFooterBg: "241,245,249",
+    gridFooterFontColor: "51,65,85",
     gridBorderRadius: 8,
     showColumnBorder: true,
-    activeRowBg: "186,230,253",
-    gridRowHeight: 36,
-    colors: ["#097e99", "#bae6fd", "#0f728d"]
+    activeRowBg: "240,249,255",
+    gridRowHeight: 33,
+    colors: ["#f8fafc", "#e2e8f0", "#cbd5e1"]
   },
   {
-    themeName: "Sunset Orange",
-    preview: "Warm & Energetic",
+    themeName: "Modern Blue",
+    preview: "Professional & Trust",
+    gridFontSize: 12,
+    gridIsBold: true,
+    gridBorderColor: "191,219,254",
+    gridHeaderBg: "37,99,235",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 45,
+    gridFooterBg: "59,130,246",
+    gridFooterFontColor: "239,246,255",
+    gridBorderRadius: 10,
+    showColumnBorder: true,
+    activeRowBg: "219,234,254",
+    gridRowHeight: 40,
+    colors: ["#2563eb", "#3b82f6", "#dbeafe"]
+  },
+  {
+    themeName: "Emerald Green",
+    preview: "Fresh & Natural",
+    gridFontSize: 14,
+    gridIsBold: false,
+    gridBorderColor: "167,243,208",
+    gridHeaderBg: "5,150,105",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 45,
+    gridFooterBg: "16,185,129",
+    gridFooterFontColor: "236,253,245",
+    gridBorderRadius: 12,
+    showColumnBorder: false,
+    activeRowBg: "209,250,229",
+    gridRowHeight: 40,
+    colors: ["#059669", "#10b981", "#d1fae5"]
+  },
+  {
+    themeName: "Teal Ocean",
+    preview: "Calm & Sophisticated",
+    gridFontSize: 13,
+    gridIsBold: true,
+    gridBorderColor: "153,246,228",
+    gridHeaderBg: "13,148,136",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 40,
+    gridFooterBg: "20,184,166",
+    gridFooterFontColor: "240,253,250",
+    gridBorderRadius: 8,
+    showColumnBorder: true,
+    activeRowBg: "204,251,241",
+    gridRowHeight: 36,
+    colors: ["#0d9488", "#14b8a6", "#ccfbf1"]
+  },
+  {
+    themeName: "Warm Amber",
+    preview: "Energy & Optimism",
     gridFontSize: 13,
     gridIsBold: false,
-    gridBorderColor: "249,115,22",
-    gridHeaderBg: "234,85,6",
+    gridBorderColor: "253,230,138",
+    gridHeaderBg: "217,119,6",
     gridHeaderFontColor: "255,255,255",
-    gridBorderRadius: 6,
+    gridHeaderRowHeight: 42,
+    gridFooterBg: "245,158,11",
+    gridFooterFontColor: "255,251,235",
+    gridBorderRadius: 10,
     showColumnBorder: true,
-    activeRowBg: "255,237,213",
+    activeRowBg: "254,243,199",
     gridRowHeight: 38,
-    colors: ["#ea5506", "#ffedd5", "#f97316"]
+    colors: ["#d97706", "#f59e0b", "#fef3c7"]
   },
   {
-    themeName: "Purple Elegance",
-    preview: "Luxurious & Modern",
+    themeName: "Purple Luxury",
+    preview: "Premium & Creative",
     gridFontSize: 14,
     gridIsBold: true,
-    gridBorderColor: "139,92,246",
-    gridHeaderBg: "124,58,237",
+    gridBorderColor: "196,181,253",
+    gridHeaderBg: "109,40,217",
     gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 46,
+    gridFooterBg: "124,58,237",
+    gridFooterFontColor: "245,243,255",
     gridBorderRadius: 12,
     showColumnBorder: false,
     activeRowBg: "237,233,254",
     gridRowHeight: 42,
-    colors: ["#7c3aed", "#ede9fe", "#8b5cf6"]
+    colors: ["#6d28d9", "#7c3aed", "#ede9fe"]
   },
   {
-    themeName: "Rose Gold",
-    preview: "Sophisticated & Elegant",
+    themeName: "Rose Elegance",
+    preview: "Sophisticated & Warm",
     gridFontSize: 13,
     gridIsBold: false,
-    gridBorderColor: "241,148,167",
-    gridHeaderBg: "229,23,109",
+    gridBorderColor: "253,164,175",
+    gridHeaderBg: "190,18,60",
     gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 40,
+    gridFooterBg: "225,29,72",
+    gridFooterFontColor: "255,241,242",
     gridBorderRadius: 8,
     showColumnBorder: true,
     activeRowBg: "255,228,230",
     gridRowHeight: 36,
-    colors: ["#e5176d", "#ffe4e6", "#f194a7"]
+    colors: ["#be123c", "#e11d48", "#ffe4e6"]
   },
   {
-    themeName: "Bold Vibrant",
-    preview: "Energetic & Creative",
+    themeName: "Indigo Tech",
+    preview: "Modern & Tech-Forward",
     gridFontSize: 13,
     gridIsBold: true,
-    gridBorderColor: "76,29,149",
-    gridHeaderBg: "30,27,75",
-    gridHeaderFontColor: "250,204,21",
+    gridBorderColor: "165,180,252",
+    gridHeaderBg: "67,56,202",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 44,
+    gridFooterBg: "99,102,241",
+    gridFooterFontColor: "238,242,255",
+    gridBorderRadius: 10,
+    showColumnBorder: true,
+    activeRowBg: "224,231,255",
+    gridRowHeight: 38,
+    colors: ["#4338ca", "#6366f1", "#e0e7ff"]
+  },
+  {
+    themeName: "Slate Professional",
+    preview: "Minimal & Executive",
+    gridFontSize: 13,
+    gridIsBold: true,
+    gridBorderColor: "203,213,225",
+    gridHeaderBg: "51,65,85",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 42,
+    gridFooterBg: "71,85,105",
+    gridFooterFontColor: "248,250,252",
     gridBorderRadius: 6,
     showColumnBorder: true,
-    activeRowBg: "244,114,182",
+    activeRowBg: "226,232,240",
     gridRowHeight: 36,
-    colors: ["#1E1B4B", "#FACC15", "#F472B6"]
+    colors: ["#334155", "#475569", "#e2e8f0"]
+  },
+  {
+    themeName: "Cyber Lime",
+    preview: "Bold & Futuristic",
+    gridFontSize: 13,
+    gridIsBold: true,
+    gridBorderColor: "190,242,100",
+    gridHeaderBg: "77,124,15",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 44,
+    gridFooterBg: "101,163,13",
+    gridFooterFontColor: "247,254,231",
+    gridBorderRadius: 8,
+    showColumnBorder: false,
+    activeRowBg: "236,252,203",
+    gridRowHeight: 38,
+    colors: ["#4d7c0f", "#65a30d", "#ecfccb"]
+  },
+  {
+    themeName: "Sunset Gradient",
+    preview: "Warm Multi-Tone",
+    gridFontSize: 13,
+    gridIsBold: false,
+    gridBorderColor: "254,215,170",
+    gridHeaderBg: "194,65,12",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 42,
+    gridFooterBg: "234,88,12",
+    gridFooterFontColor: "255,247,237",
+    gridBorderRadius: 12,
+    showColumnBorder: true,
+    activeRowBg: "255,237,213",
+    gridRowHeight: 38,
+    colors: ["#c2410c", "#ea580c", "#fed7aa"]
+  },
+  {
+    themeName: "Monochrome Pro",
+    preview: "Timeless Black & White",
+    gridFontSize: 12,
+    gridIsBold: true,
+    gridBorderColor: "229,231,235",
+    gridHeaderBg: "17,24,39",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 40,
+    gridFooterBg: "55,65,81",
+    gridFooterFontColor: "249,250,251",
+    gridBorderRadius: 4,
+    showColumnBorder: true,
+    activeRowBg: "243,244,246",
+    gridRowHeight: 36,
+    colors: ["#111827", "#374151", "#f3f4f6"]
   },
   {
     themeName: "Custom",
-    preview: "Energetic & Creative",
+    preview: "Customizable Theme",
     gridFontSize: 13,
     gridIsBold: true,
-    gridBorderColor: "76,29,149",
-    gridHeaderBg: "30,27,75",
-    gridHeaderFontColor: "250,204,21",
+    gridBorderColor: "203,213,225",
+    gridHeaderBg: "100,116,139",
+    gridHeaderFontColor: "255,255,255",
+    gridHeaderRowHeight: 40,
+    gridFooterBg: "148,163,184",
+    gridFooterFontColor: "248,250,252",
     gridBorderRadius: 6,
     showColumnBorder: true,
-    activeRowBg: "244,114,182",
+    activeRowBg: "226,232,240",
     gridRowHeight: 36,
-    colors: ["#1E1B4B", "#FACC15", "#F472B6"]
-  },
+    colors: ["#64748b", "#94a3b8", "#e2e8f0"]
+  }
 ];
 
-const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState,transactionType }) => {
+const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, transactionType }) => {
   const [selectedTheme, setSelectedTheme] = useState<any>(null);
   const [currentTheme, setCurrentTheme] = useState<any>(null);
   const [countdown, setCountdown] = useState(8);
@@ -275,6 +377,9 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState,tra
       gridBorderColor: formState?.userConfig?.gridBorderColor,
       gridHeaderBg: formState?.userConfig?.gridHeaderBg,
       gridHeaderFontColor: formState?.userConfig?.gridHeaderFontColor,
+      gridHeaderRowHeight: formState?.userConfig?.gridHeaderRowHeight,
+      gridFooterBg: formState?.userConfig?.gridFooterBg,
+      gridFooterFontColor: formState?.userConfig?.gridFooterFontColor,
       gridBorderRadius: formState?.userConfig?.gridBorderRadius,
       showColumnBorder: formState?.userConfig?.showColumnBorder,
       activeRowBg: formState?.userConfig?.activeRowBg,
@@ -284,7 +389,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState,tra
     setCurrentTheme(ct)
     setSelectedTheme(ct)
   }, [formState?.userConfig]);
-  
+
 
   useEffect(() => {
     if (selectedTheme && selectedTheme.isInitial !== true) {
@@ -325,28 +430,28 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState,tra
     }
   };
 
- 
-const handleSave = async () => {
+
+  const handleSave = async () => {
     try {
       debugger;
-      if(!selectedTheme) return;
-      console.log("fulluserconfig",{...formState?.userConfig,...selectedTheme});
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`,{...formState?.userConfig,...selectedTheme});
+      if (!selectedTheme) return;
+      console.log("fulluserconfig", { ...formState?.userConfig, ...selectedTheme });
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...selectedTheme });
       handleResponse(response, () => {
-        const base64 = modelToBase64({...formState?.userConfig,...selectedTheme});
+        const base64 = modelToBase64({ ...formState?.userConfig, ...selectedTheme });
         localStorage.setItem("utInvc", base64);
-      setSelectedTheme(null);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      onClose();
+        setSelectedTheme(null);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        onClose();
       });
-     
-    } catch (error) {
-     console.log("error in save table theme",error
 
- );
- 
+    } catch (error) {
+      console.log("error in save table theme", error
+
+      );
+
     } finally {
 
     }

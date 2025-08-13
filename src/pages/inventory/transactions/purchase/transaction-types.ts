@@ -376,6 +376,9 @@ export interface UserConfig {
   activeRowBg?: string;
   useNewFooter?: boolean;
   themeName?: string;
+  gridHeaderRowHeight?: number;
+  gridFooterBg?: string;
+  gridFooterFontColor?: string;
 }
 
 export type FormElementsState = {
@@ -528,7 +531,7 @@ export type PartialTransactionFormFields = {
 };
 export interface ColumnModel {
   dataField?: string;
-  decimalPoint?:number;
+  decimalPoint?: number;
   formStateOptionKey?: string;
   cssClass?: string;
   caption?: string;

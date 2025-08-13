@@ -5,14 +5,17 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { TransactionFormState } from "./transaction-types";
 import { useDispatch } from "react-redux";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import { modelToBase64 } from "../../../../utilities/jsonConverter";
+import Urls from "../../../../redux/urls";
+import { APIClient } from "../../../../helpers/api-client";
 
 interface GridThemeProps {
   isOpen: boolean;
   onClose: () => void;
   t: (key: string) => string;
-  onSelectTheme: (theme: any) => void;
-  onSave: (theme: any) => void;
   formState: TransactionFormState;
+  transactionType:any
 }
 
 interface Theme {
@@ -29,7 +32,7 @@ interface Theme {
   gridRowHeight: number;
   colors: string[];
 }
-
+const api = new APIClient();
 // TablePreview Component
 const TablePreview = ({ theme }: { theme: Theme }) => {
   const headerBgColor = `rgb(${theme.gridHeaderBg})`;
@@ -246,12 +249,12 @@ const gridThemes = [
   },
 ];
 
-const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, onSelectTheme, onSave, formState }) => {
+const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState,transactionType }) => {
   const [selectedTheme, setSelectedTheme] = useState<any>(null);
   const [currentTheme, setCurrentTheme] = useState<any>(null);
   const [countdown, setCountdown] = useState(8);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
+  const dispatch = useDispatch();
   const onResetTheme = () => {
     dispatch(formStateHandleFieldChangeKeysOnly(
       {
@@ -281,7 +284,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, onSelectTheme
     setCurrentTheme(ct)
     setSelectedTheme(ct)
   }, [formState?.userConfig]);
-  const dispatch = useDispatch();
+  
 
   useEffect(() => {
     if (selectedTheme && selectedTheme.isInitial !== true) {
@@ -322,25 +325,32 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, onSelectTheme
     }
   };
 
-  const handleSave = () => {
-    if (selectedTheme) {
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            userConfig: {
-              ...selectedTheme,
-            },
-          },
-        })
-      );
+ 
+const handleSave = async () => {
+    try {
+      debugger;
+      if(!selectedTheme) return;
+      console.log("fulluserconfig",{...formState?.userConfig,...selectedTheme});
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`,{...formState?.userConfig,...selectedTheme});
+      handleResponse(response, () => {
+        const base64 = modelToBase64({...formState?.userConfig,...selectedTheme});
+        localStorage.setItem("utInvc", base64);
       setSelectedTheme(null);
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
       onClose();
+      });
+     
+    } catch (error) {
+     console.log("error in save table theme",error
+
+ );
+ 
+    } finally {
+
     }
   };
-
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450}>
       <div className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">

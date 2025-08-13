@@ -3232,10 +3232,9 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
                 })
               )
             }
-            onSelectTheme={handleSelectTheme}
-            // onResetTheme={handleResetTheme}
+            transactionType={transactionType}
             formState={formState}
-            onSave={handleSaveTheme}
+
           />
         )}
         {isDocumentModalOpen && (

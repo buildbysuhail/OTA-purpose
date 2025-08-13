@@ -893,6 +893,14 @@ export const purchaseGridCol = (
         alignment: "center",
       },
       {
+        dataField: "refBranchID",
+        caption: "ref_branch_id",
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
         dataField: "btnPrintBarcodeStd",
         caption: t("pbs"),
         dataType: "string",
@@ -936,6 +944,7 @@ export const purchaseGridCol = (
             "mR",
             "netRate",
             "itemType",
+            "refBranchID"
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseInvoice &&
@@ -955,6 +964,7 @@ export const purchaseGridCol = (
             "mR",
             "netRate",
             "itemType",
+            "refBranchID"
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
@@ -972,6 +982,8 @@ export const purchaseGridCol = (
             "additionalCess",
             "mR",
             "netRate",
+            "refBranchID",
+            //
             "free",
             "manualBarcode",
             "stockDetails",
@@ -1018,6 +1030,8 @@ export const purchaseGridCol = (
         (userSession.countryId == Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
           ![
+            "refBranchID",
+            //
             "mR",
             "netRate",
             "manualBarcode",
@@ -1063,21 +1077,180 @@ export const purchaseGridCol = (
             "btnPrintBarcodeStd",
             // "mfdDate",
             // "warranty"
+          ].includes(gc.dataField ?? "")) ||
+        (userSession.countryId != Countries.India &&
+          voucherType == VoucherType.PurchaseEstimate &&
+          ![
+            "hsnCode",
+            "cgst",
+            "cgstPerc",
+            "sgstPerc",
+            "sgst",
+            "igstPerc",
+            "igst",
+            "cessPerc",
+            "cessAmt",
+            "additionalCessPerc",
+            "additionalCess",
+            "mR",
+            "netRate",
+            "itemType",
+            "refBranchID",
+            //
+            "free",
+            "stock",
+            "stockDetails",
+            "lpr",
+            "lpc",
+            "productDescription",
+            "serial",
+            "minSalePrice",
+            "additionalExpense",
+            "unitPriceFC",
+            "colour",
+            "warranty",
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "unitID2",
+            "unit2Qty",
+            "unit2SalesRate",
+            "unit2MRP",
+            "unit2MBarcode",
+            "unit2StickerQty",
+            "unitID3",
+            "unit3Qty",
+            "unit3SalesRate",
+            "unit3MRP",
+            "unit3MBarcode",
+            "unit3StickerQty",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "location",
+            "grTransDetailsID",
+            "arabicName",
+            "supplierReferenceProductCode",
+            "poTransDetailsID",
+            "ratePlusTax",
+            "warehouseID",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "unit2",
+            "unit3",
+            "btnPrintBarcodeStd",
+          ].includes(gc.dataField ?? ""))
+          ||
+        (userSession.countryId != Countries.India &&
+          voucherType == VoucherType.PurchaseOrder &&
+          ![
+            "hsnCode",
+            "cgst",
+            "cgstPerc",
+            "sgstPerc",
+            "sgst",
+            "igstPerc",
+            "igst",
+            "cessPerc",
+            "cessAmt",
+            "additionalCessPerc",
+            "additionalCess",
+            "mR",
+            "netRate",
+            "itemType",
+            //
+            "lpr",
+            "lpc",
+            "bd",
+
+            "free",
+            "stock",
+            "stockDetails",
+          
+            "productDescription",
+            "serial",
+            "minSalePrice",
+            "additionalExpense",
+            "unitPriceFC",
+            "colour",
+            "warranty",
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "unitID2",
+            "unit2Qty",
+            "unit2SalesRate",
+            "unit2MRP",
+            "unit2MBarcode",
+            "unit2StickerQty",
+            "unitID3",
+            "unit3Qty",
+            "unit3SalesRate",
+            "unit3MRP",
+            "unit3MBarcode",
+            "unit3StickerQty",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "location",
+            "grTransDetailsID",
+            "arabicName",
+            "supplierReferenceProductCode",
+            "poTransDetailsID",
+            "ratePlusTax",
+            "warehouseID",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "unit2",
+            "unit3",
+            "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? ""))
     )
     .map((mi) => {
-     if (
-  userSession.countryId != Countries.India &&
-  voucherType == VoucherType.PurchaseInvoice &&
-  formType == "Import" &&
-  (mi.dataField?.includes("unitPriceFC") || mi.dataField?.includes("grossFC"))
-) {      return {
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice &&
+        formType == "Import" &&
+        (mi.dataField?.includes("unitPriceFC") ||
+          mi.dataField?.includes("grossFC"))
+      ) {
+        return {
           ...mi,
           visible: true,
         };
-      } else {
-        return mi;
       }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseReturn &&
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+          mi.dataField?.includes("stock") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit") ||
+          mi.dataField?.includes("barcodePrinted"))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+
+      return mi;
     });
 
 // [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]

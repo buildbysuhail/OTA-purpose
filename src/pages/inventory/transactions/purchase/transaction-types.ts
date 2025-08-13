@@ -512,6 +512,7 @@ export interface TransactionFormState {
   isPopupVisible: boolean;
   showGridTheme: boolean;
   stockUpdate: boolean;
+  batchGridShowKey?: number;
 }
 interface loadingResult {
   isLoading: boolean;
@@ -668,6 +669,7 @@ interface ProductBatchDetailsForAutoBarcodeData {
 
 export interface DataAutoBarcode {
   products: ProductBatchDetailsForAutoBarcodeData[];
+  productId: number;
   units: UnitByBatchDetailsDto[];
   isShowItemPopUp: boolean;
 }

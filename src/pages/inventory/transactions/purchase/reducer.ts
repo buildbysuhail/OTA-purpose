@@ -810,6 +810,7 @@ const InvTransactionSlice = createSlice({
         state.transaction.details.splice(rowIndex, 0, ...itemsToAddToDetails);
       }
     },
+    resetState: () => TransactionFormStateInitialData,
   },
 });
 
@@ -843,7 +844,8 @@ export const {
   formStateSetDetails,
   formStateClearAttachments,
   reOrderGridCols,
-  formStateDeleteDetails
+  formStateDeleteDetails,
+  resetState
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

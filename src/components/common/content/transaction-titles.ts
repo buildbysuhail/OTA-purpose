@@ -70,7 +70,7 @@ export enum TransactionListTitles {
   PurchaseInvoices = "purchase_invoices",
   PurchaseInvoicesVAT = "vat_purchase_invoices",
   PurchaseEstimates = "purchase_estimates",
-  PurchaseImports = "purchase_imports",
+  PurchaseImports = "purchase_invoice",
   PurchaseReturns = "purchase_returns",
   PurchaseReturnsVAT = "purchase_returns_vat",
   PurchaseOrders = "purchase_orders",

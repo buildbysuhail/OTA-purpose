@@ -1946,6 +1946,7 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
         text: validateTransactionDateRes.message,
         icon: "warning",
       });
+      return;
     }
     if (formState.transaction.master.isLocked) {
       ERPAlert.show({
@@ -2782,8 +2783,13 @@ ERPAlert.show({
         }
 
         return result;
-      } else if (res?.products?.length > 1 && forImport != true) {
-        // Open BatchGrid
+      } else if (res?.productId > 0 && forImport != true) {
+        debugger;
+        dispatch(formStateHandleFieldChangeKeysOnly(
+            {
+              fields:{
+              batchGridShowKey: res?.productId}}
+          ));
       } else if (forImport != true) {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
           "pCode",
@@ -3091,7 +3097,8 @@ debugger;
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data);
             }
-            // } else if (columnName == "unitPrice") {
+            } 
+            // else if (columnName == "unitPrice") {
             // dispatch(
             //   commonParams.formStateHandleFieldChangeKeysOnly({
             //     fields: {
@@ -3100,7 +3107,8 @@ debugger;
             //   })
             // );
             // return { handled: true };
-          } else if (columnName == "unitPriceFC") {
+          // } 
+          else if (columnName == "unitPriceFC") {
             if (
               (() => {
                 try {

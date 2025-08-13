@@ -614,7 +614,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       disabled,
       ...props,
     };
-
+    useEffect(() => {
+      const input = document.getElementById(commonProps.id);
+      if (input) {
+        input.setAttribute('autocomplete', 'off');
+        // Force Chrome to respect it
+        input.setAttribute('autocomplete', `new-password-${Math.random()}`);
+      }
+    }, [commonProps.id]);
     const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
       if (e.key === "Enter") {
         handleNavigation(e);
@@ -915,7 +922,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 placeholder={fetching
                 ? "" : iPlaceholder}
                 ref={ref}
-                autoComplete="new-password"
+                autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck="false"
+      data-form-type="other"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {

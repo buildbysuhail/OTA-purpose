@@ -154,7 +154,7 @@ const initialProductData: productDto = {
     showFlavourOnSave:false,
     capitalizationForProductName:false
   },
-  productImageString: "",
+  productImage: {base64String:"", fileName:""},
   barcode: "",
   sectionID: 0,
   upcBarcode: false,

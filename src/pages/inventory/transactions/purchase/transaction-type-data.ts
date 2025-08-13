@@ -573,7 +573,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   dataBrands: [],
   isPopupVisible: false,
   gridColumns: [],
-  showGridTheme: false
+  showGridTheme: false,
+  stockUpdate: false
 }
 
 export const initialProductData: BarcodeLabel = {

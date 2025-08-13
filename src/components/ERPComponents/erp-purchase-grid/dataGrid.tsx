@@ -856,7 +856,8 @@ const VirtualRow = React.memo(
                   </button>
                 </div>
               ) : (column.dataField === "product" ||
-                column.dataField === "pCode") &&
+                column.dataField === "pCode" ||
+                column.dataField === "barCode") &&
                 !column.readOnly &&
                 formState.formElements.pnlMasters?.disabled !== true &&
                 currentCell?.column === column.dataField &&

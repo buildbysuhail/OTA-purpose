@@ -309,7 +309,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.PurchaseInvoice,
     transactionType: "PurchaseInvoiceVAT",
     formType: "VAT",
-    title: TransactionTitles.PurchaseInvoiceVAT,
+    title: TransactionTitles.PurchaseInvoice,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseInvoicesVAT,
     visibleFn: (userSession: UserModel) =>
@@ -335,7 +335,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.PurchaseInvoice,
     transactionType: "PurchaseImport",
     formType: "Import",
-    title: TransactionTitles.PurchaseImport,
+    title: TransactionTitles.PurchaseInvoice,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseImports,
     icon: HandCoins,
@@ -359,7 +359,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.PurchaseReturn,
     transactionType: "PurchaseReturnVAT",
     formType: "VAT",
-    title: TransactionTitles.PurchaseReturnVAT,
+    title: TransactionTitles.PurchaseReturn,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseReturnsVAT,
     visibleFn: (userSession: UserModel) =>

@@ -442,6 +442,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const dataGridRef = useRef<any>(null);
     const batchGridRef = useRef<any>(null);
+    const productIDRef = useRef<number|undefined>(undefined);
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
@@ -480,6 +481,34 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       }
     }, []);
 
+    useEffect(() => {
+      debugger;
+       
+      if (showBatchGrid == false) {
+        productIDRef.current = undefined;
+      }
+    }, [showBatchGrid]);
+
+    useEffect(() => {
+      debugger;
+        const loadLedgerData = async () => {
+          if ((formState.batchGridShowKey??0) > 0) {
+        productIDRef.current = formState.batchGridShowKey;
+        setShowBatchGrid(true);
+        dispatch(formStateHandleFieldChangeKeysOnly(
+            {
+              fields:{
+              batchGridShowKey: 0,
+            }
+            }
+          ));
+           const batchStore = await createBatchStore((formState.batchGridShowKey??0).toString(), batchDataUrl);
+            setProductDetailStore(batchStore);
+      }
+        }
+        loadLedgerData();
+      
+    }, [formState.batchGridShowKey]);
     useEffect(() => {
       setInputValue((prev) => ({
         ...prev,
@@ -574,11 +603,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      
       const value = e.target.value;
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
+      if(searchKey == "barCode") {
+        return;
+      }
       setShowBatchGrid(false);
       if (value.length >= 1) {
         if (searchType !== "modal") {
@@ -612,6 +645,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
 const handleGridKeyDown = useCallback(
   async (e: any) => {
+        debugger;
     const key = e.event?.key;
     if (!key) return;
 
@@ -651,7 +685,7 @@ const handleGridKeyDown = useCallback(
           }
         }
 
-        if (rowData?.productID > 0) {
+        if (rowData.productID > 0) {
           if (onProductSelected) onProductSelected(rowData);
 
           if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
@@ -741,6 +775,9 @@ const handleGridKeyDown = useCallback(
 
     const handleBatchFocusedRowChanged = useCallback((e: any) => {
       // whenever focus moves (via arrow keys), select that row
+      if(!e.row) {
+        return
+      }
       e.component.selectRows([e.row.key], false);
     }, []);
 

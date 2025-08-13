@@ -26,6 +26,7 @@ import {
   formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
   formStateSetDetails,
+  resetState,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -275,6 +276,7 @@ const handleSaveTheme = (theme: any) => {
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
+    dispatch(resetState());
     const timer = setTimeout(() => {
       setHasAnimated(true);
     }, 2000);
@@ -585,12 +587,20 @@ const handleSaveTheme = (theme: any) => {
                 ledgerBalance: 0,
                 groupName: "",
                 ledgerData: undefined,
+                partyId: ""
               },
             })
           );
           dispatch(
-            formStateHandleFieldChange({
-              fields: { partyId: "" },
+            formStateMasterHandleFieldChange({
+              fields: {
+                
+                    tokenNumber: "",
+                 ledgerID: null,
+                  partyName:  "",
+                  displayName:  "",
+                  address1:  "",
+              },
             })
           );
         }
@@ -828,6 +838,14 @@ const _gridCols = (await getInitialPreference(gridCode, purchaseGridCol, new API
       } else {
         _formState.template = null;
       }
+       const editableColumn = _formState.gridColumns?.find(
+          (col) => col.visible !== false && col.dataField != null &&  col.allowEditing == true && col.readOnly !== true
+        );
+        _formState.currentCell ={
+                                  column: editableColumn?.dataField??"",
+                                  data: formState.transaction.details[0],
+                                  rowIndex: 0,
+                                },
       setTransVoucher(_formState, true);
       // if (voucherNo != undefined && voucherNo > 0) {
       //   dispatch(

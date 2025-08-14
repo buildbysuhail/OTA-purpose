@@ -229,7 +229,7 @@ export const purchaseGridCol = (
         readOnly: true,
       },
       {
-        dataField: "lpr",
+        dataField: "lastPurchaseRate",
         caption: t("lpr"),
         dataType: "number",
         readOnly: true,
@@ -237,7 +237,7 @@ export const purchaseGridCol = (
         alignment: "right",
       },
       {
-        dataField: "lpc",
+        dataField: "lastPurchaseCost",
         caption: t("lpc"),
         dataType: "number",
         readOnly: true,
@@ -412,15 +412,6 @@ export const purchaseGridCol = (
       {
         dataField: "netRate",
         caption: t("net_rate"),
-        dataType: "number",
-        width: 100,
-        visible: false,
-        allowEditing: true,
-        alignment: "right",
-      },
-      {
-        dataField: "additionalCess",
-        caption: t("additional_cess"),
         dataType: "number",
         width: 100,
         visible: false,
@@ -901,6 +892,38 @@ export const purchaseGridCol = (
         alignment: "center",
       },
       {
+        dataField: "employeeCode",
+        caption: "sm_code",
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "employeeName",
+        caption: "sales_man",
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "stdPurchasePrice",
+        caption: "purchase_price",
+        dataType: "number",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "refTransDtailId",
+        caption: "refTransDtailId",
+        dataType: "number",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
         dataField: "btnPrintBarcodeStd",
         caption: t("pbs"),
         dataType: "string",
@@ -926,8 +949,7 @@ export const purchaseGridCol = (
           // && (formType??formState.transaction.master.voucherForm) == "VAT"
           !["itemType"].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
-          (voucherType ?? formState.transaction.master.voucherType) ==
-            VoucherType.PurchaseInvoice &&
+          voucherType == VoucherType.PurchaseInvoice &&
           // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
           ![
             "hsnCode",
@@ -944,28 +966,34 @@ export const purchaseGridCol = (
             "mR",
             "netRate",
             "itemType",
-            "refBranchID"
+            "refBranchID",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
           ].includes(gc.dataField ?? "")) ||
-        (userSession.countryId != Countries.India &&
-          voucherType == VoucherType.PurchaseInvoice &&
-          formType == "VAT" &&
-          ![
-            "hsnCode",
-            "cgst",
-            "cgstPerc",
-            "sgstPerc",
-            "sgst",
-            "igstPerc",
-            "igst",
-            "cessPerc",
-            "cessAmt",
-            "additionalCessPerc",
-            "additionalCess",
-            "mR",
-            "netRate",
-            "itemType",
-            "refBranchID"
-          ].includes(gc.dataField ?? "")) ||
+        //   ||
+        // (userSession.countryId != Countries.India &&
+        //   voucherType == VoucherType.PurchaseInvoice &&
+        //   formType == "VAT" &&
+        //   ![
+        //     "hsnCode",
+        //     "cgst",
+        //     "cgstPerc",
+        //     "sgstPerc",
+        //     "sgst",
+        //     "igstPerc",
+        //     "igst",
+        //     "cessPerc",
+        //     "cessAmt",
+        //     "additionalCessPerc",
+        //     "additionalCess",
+        //     "mR",
+        //     "netRate",
+        //     "itemType",
+        //     "refBranchID",
+        //     "employeeCode"
+        //   ].includes(gc.dataField ?? ""))
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
           ![
@@ -983,12 +1011,16 @@ export const purchaseGridCol = (
             "mR",
             "netRate",
             "refBranchID",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
             //
             "free",
             "manualBarcode",
             "stockDetails",
-            "lpr",
-            "lpc",
+            "lastPurchaseRate",
+            "lastPurchaseCost",
             "btnPrintBarcode",
             "expDate",
             "expDays",
@@ -1031,13 +1063,17 @@ export const purchaseGridCol = (
           voucherType == VoucherType.PurchaseReturn &&
           ![
             "refBranchID",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
             //
             "mR",
             "netRate",
             "manualBarcode",
             "stockDetails",
-            "lpr",
-            "lpc",
+            "lastPurchaseRate",
+            "lastPurchaseCost",
             "btnPrintBarcode",
             "expDate",
             "expDays",
@@ -1096,12 +1132,16 @@ export const purchaseGridCol = (
             "netRate",
             "itemType",
             "refBranchID",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
             //
             "free",
             "stock",
             "stockDetails",
-            "lpr",
-            "lpc",
+            "lastPurchaseRate",
+            "lastPurchaseCost",
             "productDescription",
             "serial",
             "minSalePrice",
@@ -1145,10 +1185,10 @@ export const purchaseGridCol = (
             "unit2",
             "unit3",
             "btnPrintBarcodeStd",
-          ].includes(gc.dataField ?? ""))
-          ||
+          ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
-          voucherType == VoucherType.PurchaseOrder &&
+          (voucherType == VoucherType.PurchaseOrder ||
+            voucherType == VoucherType.PurchaseQuotation) &&
           ![
             "hsnCode",
             "cgst",
@@ -1164,18 +1204,137 @@ export const purchaseGridCol = (
             "mR",
             "netRate",
             "itemType",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
             //
-            "lpr",
-            "lpc",
+            "lastPurchaseRate",
+            "lastPurchaseCost",
             "bd",
-
-            "free",
-            "stock",
-            "stockDetails",
-          
-            "productDescription",
-            "serial",
+            "btnPrintBarcode",
+            "mfdDate",
+            "expDate",
+            "expDays",
             "minSalePrice",
+            "additionalExpense",
+            "unitPriceFC",
+            "warranty",
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "unitID2",
+            "unit2Qty",
+            "unit2SalesRate",
+            "unit2MRP",
+            "unit2MBarcode",
+            "unit2StickerQty",
+            "unitID3",
+            "unit3Qty",
+            "unit3SalesRate",
+            "unit3MRP",
+            "unit3MBarcode",
+            "unit3StickerQty",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "location",
+            "grTransDetailsID",
+            "ratePlusTax",
+            "warehouseID",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "unit2",
+            "unit3",
+            "btnPrintBarcodeStd",
+            "serial",
+          ].includes(gc.dataField ?? "")) ||
+        (userSession.countryId != Countries.India &&
+          voucherType == VoucherType.GoodsReceiptNote &&
+          ![
+            "hsnCode",
+            "cgst",
+            "cgstPerc",
+            "sgstPerc",
+            "sgst",
+            "igstPerc",
+            "igst",
+            "cessPerc",
+            "cessAmt",
+            "additionalCessPerc",
+            "additionalCess",
+            "mR",
+            "netRate",
+            "itemType",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
+            //
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "unitID2",
+            "unit2Qty",
+            "unit2SalesRate",
+            "unit2MRP",
+            "unit2MBarcode",
+            "unit2StickerQty",
+            "unitID3",
+            "unit3Qty",
+            "unit3SalesRate",
+            "unit3MRP",
+            "unit3MBarcode",
+            "unit3StickerQty",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "grTransDetailsID",
+            "ratePlusTax",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "unit2",
+            "unit3",
+            "btnPrintBarcodeStd",
+          ].includes(gc.dataField ?? "")) ||
+        (userSession.countryId != Countries.India &&
+          voucherType == VoucherType.GoodsReceiptReturn &&
+          ![
+            "hsnCode",
+            "cgst",
+            "cgstPerc",
+            "sgstPerc",
+            "sgst",
+            "igstPerc",
+            "igst",
+            "cessPerc",
+            "cessAmt",
+            "additionalCessPerc",
+            "additionalCess",
+            "mR",
+            "netRate",
+            "itemType",
+            "refBranchID",
+            //
+            "lastPurchaseRate",
+            "lastPurchaseCost",
+            "bd",
+            "btnPrintBarcode",
+            "mfdDate",
+            "expDate",
+            "expDays",
             "additionalExpense",
             "unitPriceFC",
             "colour",
@@ -1202,16 +1361,14 @@ export const purchaseGridCol = (
             "barcodeUnit3Printed",
             "location",
             "grTransDetailsID",
-            "arabicName",
-            "supplierReferenceProductCode",
             "poTransDetailsID",
             "ratePlusTax",
-            "warehouseID",
             "sortOrder",
             "profitPercentage",
             "schemeDiscount",
             "memo",
             "memoEditor",
+            "rowNumber",
             "actualSalesPrice",
             "unit2",
             "unit3",
@@ -1243,6 +1400,66 @@ export const purchaseGridCol = (
           mi.dataField?.includes("cost") ||
           mi.dataField?.includes("profit") ||
           mi.dataField?.includes("barcodePrinted"))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+
+        if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate &&
+        (mi.dataField?.includes("netValue") ||
+        mi.dataField?.includes("vatPerc")||
+        mi.dataField?.includes("vatAmount")||
+        mi.dataField?.includes("margin")||
+        mi.dataField?.includes("size")||
+        mi.dataField?.includes("stickerQty")
+)
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+        if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseOrder &&
+        (mi.dataField?.includes("gross") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+           mi.dataField?.includes("salesPrice") ||
+                   mi.dataField?.includes("cost") ||
+                           mi.dataField?.includes("profit")
+)
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+         if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseOrder &&
+        (mi.dataField?.includes("stockDetails")
+)
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+       if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptReturn &&
+        (mi.dataField?.includes("pCode")||
+        mi.dataField?.includes("manualBarcode")||
+          mi.dataField?.includes("salesPrice") ||
+  mi.dataField?.includes("cost") ||
+     mi.dataField?.includes("stock") 
+        //check rate field present in GRR
+)
       ) {
         return {
           ...mi,

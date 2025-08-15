@@ -247,8 +247,8 @@ export interface TransactionDetail {
   stockDetails: string;
   margin: number;
   salesPrice: number;
-  lpr: number;
-  lpc: number;
+  lpr: number;//LastPurchaseRate
+  lpc: number;//lastPurchaseCost
   stickerQty: number;
   profit: number;
   size: string;

@@ -229,7 +229,7 @@ export const purchaseGridCol = (
         readOnly: true,
       },
       {
-        dataField: "lastPurchaseRate",
+        dataField: "lpr",
         caption: t("lpr"),
         dataType: "number",
         readOnly: true,
@@ -237,7 +237,7 @@ export const purchaseGridCol = (
         alignment: "right",
       },
       {
-        dataField: "lastPurchaseCost",
+        dataField: "lpc",
         caption: t("lpc"),
         dataType: "number",
         readOnly: true,
@@ -944,13 +944,8 @@ export const purchaseGridCol = (
   )
     .filter(
       (gc: ColumnModel) =>
-        (userSession.countryId == Countries.India &&
-          voucherType == VoucherType.PurchaseInvoice &&
-          // && (formType??formState.transaction.master.voucherForm) == "VAT"
-          !["itemType"].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseInvoice &&
-          // && (formType ?? formState.transaction.master.voucherForm) == "VAT"
           ![
             "hsnCode",
             "cgst",
@@ -972,28 +967,15 @@ export const purchaseGridCol = (
             "stdPurchasePrice",
             "refTransDtailId",
           ].includes(gc.dataField ?? "")) ||
-        //   ||
-        // (userSession.countryId != Countries.India &&
-        //   voucherType == VoucherType.PurchaseInvoice &&
-        //   formType == "VAT" &&
-        //   ![
-        //     "hsnCode",
-        //     "cgst",
-        //     "cgstPerc",
-        //     "sgstPerc",
-        //     "sgst",
-        //     "igstPerc",
-        //     "igst",
-        //     "cessPerc",
-        //     "cessAmt",
-        //     "additionalCessPerc",
-        //     "additionalCess",
-        //     "mR",
-        //     "netRate",
-        //     "itemType",
-        //     "refBranchID",
-        //     "employeeCode"
-        //   ].includes(gc.dataField ?? ""))
+        (userSession.countryId == Countries.India &&
+          voucherType == VoucherType.PurchaseInvoice &&
+          ![
+            "itemType",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
+          ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
           ![
@@ -1058,6 +1040,8 @@ export const purchaseGridCol = (
             "unit2",
             "unit3",
             "btnPrintBarcodeStd",
+            "mfdDate",
+            "warranty",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId == Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
@@ -1111,8 +1095,11 @@ export const purchaseGridCol = (
             "unit2",
             "unit3",
             "btnPrintBarcodeStd",
-            // "mfdDate",
-            // "warranty"
+            "serial",
+            "unitPriceFC",
+            "grossFC",
+            "mfdDate",
+            "warranty",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseEstimate &&
@@ -1186,6 +1173,49 @@ export const purchaseGridCol = (
             "unit3",
             "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? "")) ||
+           (userSession.countryId == Countries.India &&
+          voucherType == VoucherType.PurchaseEstimate &&
+          ![
+            "hsnCode",
+            "itemType",
+            "refBranchID",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
+            //
+            "stock",
+            "stockDetails",
+            "lastPurchaseRate",
+            "lastPurchaseCost",
+            "serial",
+            "additionalExpense",
+            "unitPriceFC",
+            "colour",
+            "warranty",
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "location",
+            "grTransDetailsID",
+            "arabicName",
+            "supplierReferenceProductCode",
+            "poTransDetailsID",
+            "ratePlusTax",
+            "warehouseID",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "btnPrintBarcodeStd",
+          ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           (voucherType == VoucherType.PurchaseOrder ||
             voucherType == VoucherType.PurchaseQuotation) &&
@@ -1201,6 +1231,64 @@ export const purchaseGridCol = (
             "cessAmt",
             "additionalCessPerc",
             "additionalCess",
+            "mR",
+            "netRate",
+            "itemType",
+            "employeeCode",
+            "employeeName",
+            "stdPurchasePrice",
+            "refTransDtailId",
+            //
+            "lastPurchaseRate",
+            "lastPurchaseCost",
+            "bd",
+            "btnPrintBarcode",
+            "mfdDate",
+            "expDate",
+            "expDays",
+            "minSalePrice",
+            "additionalExpense",
+            "unitPriceFC",
+            "warranty",
+            "nosQty",
+            "totalAddExpense",
+            "grossConvert",
+            "grossFC",
+            "unitID2",
+            "unit2Qty",
+            "unit2SalesRate",
+            "unit2MRP",
+            "unit2MBarcode",
+            "unit2StickerQty",
+            "unitID3",
+            "unit3Qty",
+            "unit3SalesRate",
+            "unit3MRP",
+            "unit3MBarcode",
+            "unit3StickerQty",
+            "tagQty",
+            "barcodeTagPrinted",
+            "barcodeUnit2Printed",
+            "barcodeUnit3Printed",
+            "location",
+            "grTransDetailsID",
+            "ratePlusTax",
+            "warehouseID",
+            "sortOrder",
+            "profitPercentage",
+            "schemeDiscount",
+            "memo",
+            "memoEditor",
+            "actualSalesPrice",
+            "unit2",
+            "unit3",
+            "btnPrintBarcodeStd",
+            "serial",
+          ].includes(gc.dataField ?? "")) ||
+             (userSession.countryId == Countries.India &&
+          (voucherType == VoucherType.PurchaseOrder ||
+            voucherType == VoucherType.PurchaseQuotation) &&
+          ![
             "mR",
             "netRate",
             "itemType",
@@ -1376,6 +1464,7 @@ export const purchaseGridCol = (
           ].includes(gc.dataField ?? ""))
     )
     .map((mi) => {
+      // if(userSession.countryId!=Countries.India)
       if (
         userSession.countryId != Countries.India &&
         voucherType == VoucherType.PurchaseInvoice &&
@@ -1407,59 +1496,75 @@ export const purchaseGridCol = (
         };
       }
 
-        if (
+      if (
         userSession.countryId != Countries.India &&
         voucherType == VoucherType.PurchaseEstimate &&
         (mi.dataField?.includes("netValue") ||
-        mi.dataField?.includes("vatPerc")||
-        mi.dataField?.includes("vatAmount")||
-        mi.dataField?.includes("margin")||
-        mi.dataField?.includes("size")||
-        mi.dataField?.includes("stickerQty")
-)
+          mi.dataField?.includes("vatPerc") ||
+          mi.dataField?.includes("vatAmount") ||
+          mi.dataField?.includes("margin") ||
+          mi.dataField?.includes("size") ||
+          mi.dataField?.includes("stickerQty"))
       ) {
         return {
           ...mi,
           visible: true,
         };
       }
-        if (
+      if (
+        userSession.countryId == Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder || VoucherType.PurchaseQuotation)&&
+        (mi.dataField?.includes("hsnCode") ||
+          mi.dataField?.includes("cgst") ||
+          mi.dataField?.includes("cgstPerc") ||
+          mi.dataField?.includes("sgstPerc") ||
+          mi.dataField?.includes("sgst") ||
+          mi.dataField?.includes("igstPerc")||
+          mi.dataField?.includes("igst")||
+          mi.dataField?.includes("cessPerc")||
+          mi.dataField?.includes("cessAmt")||
+          mi.dataField?.includes("additionalCessPerc")||
+          mi.dataField?.includes("additionalCess")
+        )
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
         userSession.countryId != Countries.India &&
-        voucherType == VoucherType.PurchaseOrder &&
-        (mi.dataField?.includes("gross") ||
+        voucherType == VoucherType.PurchaseOrder
+      ) {
+        if (
+          mi.dataField?.includes("gross") ||
           mi.dataField?.includes("discPerc") ||
           mi.dataField?.includes("discount") ||
-           mi.dataField?.includes("salesPrice") ||
-                   mi.dataField?.includes("cost") ||
-                           mi.dataField?.includes("profit")
-)
-      ) {
-        return {
-          ...mi,
-          visible: false,
-        };
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit")
+        ) {
+          return {
+            ...mi,
+            visible: false,
+          };
+        } else if (mi.dataField?.includes("stockDetails")) {
+          return {
+            ...mi,
+            visible: true,
+          };
+        }
       }
-         if (
-        userSession.countryId != Countries.India &&
-        voucherType == VoucherType.PurchaseOrder &&
-        (mi.dataField?.includes("stockDetails")
-)
-      ) {
-        return {
-          ...mi,
-          visible: true,
-        };
-      }
-       if (
+
+      if (
         userSession.countryId != Countries.India &&
         voucherType == VoucherType.GoodsReceiptReturn &&
-        (mi.dataField?.includes("pCode")||
-        mi.dataField?.includes("manualBarcode")||
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("manualBarcode") ||
           mi.dataField?.includes("salesPrice") ||
-  mi.dataField?.includes("cost") ||
-     mi.dataField?.includes("stock") 
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("stock"))
         //check rate field present in GRR
-)
       ) {
         return {
           ...mi,

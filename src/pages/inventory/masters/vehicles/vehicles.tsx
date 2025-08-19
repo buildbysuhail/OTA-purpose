@@ -254,7 +254,7 @@ const Vehicles = () => {
         title={t("vehicles")}
         isForm={true}
         width={600}
-        height={480}
+        height={380}
         closeModal={() => { dispatch(toggleVehicles({ isOpen: false })); }}
         content={<MemoizedVehiclesManage />}
       />

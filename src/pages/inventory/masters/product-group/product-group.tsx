@@ -254,7 +254,7 @@ const ProductGroup = () => {
         isOpen={rootState.PopupData.productGroup.isOpen || false}
         title={t("product_group")}
         width={600}
-        height={350}
+        height={250}
         isForm={true}
         closeModal={() => { dispatch(toggleProductGroup({ isOpen: false })); }}
         content={<MemoizedProductGroupManage />}

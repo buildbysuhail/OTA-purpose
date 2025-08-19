@@ -214,18 +214,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     debugger;
     if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
-      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.selectedTheme }, themeChangeCountdown: 8 } }));
+      
       let countdown = 8;
+      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.selectedTheme }, themeChangeCountdown: countdown } }));
       timerRef.current = setInterval(() => {
         countdown -= 1;
 
+      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { themeChangeCountdown: countdown } }));
         // Dispatch the tick to update the state
-        dispatch(themeChangeCountdownTick(countdown));
 
         // Stop timer and take action if countdown reaches 0 or less
         if (countdown <= 0) {
           clearInterval(timerRef.current);
-          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.currentTheme }, selectedTheme: formState.currentTheme } }))
+          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.currentTheme }, selectedTheme: formState.currentTheme, themeChangeCountdown: countdown } }))
         }
       }, 1000);
     }

@@ -127,7 +127,7 @@ export const SettingsMenuItems = [
       // { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings-new?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings_new' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings', icon: FolderCog },
       { action: toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
-      { action: toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },
+      { action: toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_dataBase' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'counters', icon: Calculator },
       { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'financial_year', icon: CalendarDays },
       { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'vouchers', icon: Ticket },

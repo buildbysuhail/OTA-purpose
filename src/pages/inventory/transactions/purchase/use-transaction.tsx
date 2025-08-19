@@ -386,8 +386,26 @@ export const useTransaction = (
     } else {
       userConfig = await fetchUserConfig();
     }
+   const ct = {
+      themeName: userConfig?.themeName ?? "Custom",
+      gridFontSize: userConfig?.gridFontSize,
+      gridIsBold: userConfig?.gridIsBold,
+      gridBorderColor: userConfig?.gridBorderColor,
+      gridHeaderBg: userConfig?.gridHeaderBg,
+      gridHeaderFontColor: userConfig?.gridHeaderFontColor,
+      gridHeaderRowHeight: userConfig?.gridHeaderRowHeight,
+      gridFooterBg: userConfig?.gridFooterBg,
+      gridFooterFontColor: userConfig?.gridFooterFontColor,
+      gridBorderRadius: userConfig?.gridBorderRadius,
+      showColumnBorder: userConfig?.showColumnBorder,
+      activeRowBg: userConfig?.activeRowBg,
+      gridRowHeight: userConfig?.gridRowHeight,
+      isInitial: true
+    }
     if (userConfig) {
       _formState.userConfig = userConfig;
+      _formState.currentTheme = ct
+      _formState.selectedTheme = ct
     }
 
     _formState.prev = modelToBase64Unicode(

@@ -369,26 +369,6 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
       }
     ))
   }
-  useEffect(() => {
-    debugger;
-    const ct = {
-      themeName: formState?.userConfig?.themeName ?? "Custom",
-      gridFontSize: formState?.userConfig?.gridFontSize,
-      gridIsBold: formState?.userConfig?.gridIsBold,
-      gridBorderColor: formState?.userConfig?.gridBorderColor,
-      gridHeaderBg: formState?.userConfig?.gridHeaderBg,
-      gridHeaderFontColor: formState?.userConfig?.gridHeaderFontColor,
-      gridHeaderRowHeight: formState?.userConfig?.gridHeaderRowHeight,
-      gridFooterBg: formState?.userConfig?.gridFooterBg,
-      gridFooterFontColor: formState?.userConfig?.gridFooterFontColor,
-      gridBorderRadius: formState?.userConfig?.gridBorderRadius,
-      showColumnBorder: formState?.userConfig?.showColumnBorder,
-      activeRowBg: formState?.userConfig?.activeRowBg,
-      gridRowHeight: formState?.userConfig?.gridRowHeight,
-      isInitial: true
-    }
-    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: ct, currentTheme: ct } }))
-  }, [formState?.userConfig]);
 
 
   // useEffect(() => {

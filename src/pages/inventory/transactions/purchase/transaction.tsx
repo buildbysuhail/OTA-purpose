@@ -211,27 +211,71 @@ const TransactionForm: React.FC<TransactionProps> = ({
     clearInterval(timerRef.current);
   }
 
-  useEffect(() => {
-    debugger;
-    if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
+// javascript// Add a new state to track when countdown should start
+const [startCountdown, setStartCountdown] = useState(false);
+
+useEffect(() => {
+  if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
+    console.log('Theme selected, triggering countdown');
+    setStartCountdown(true);
+    
+    // Apply the preview theme
+    dispatch(formStateHandleFieldChangeKeysOnly({ 
+      fields: { 
+        userConfig: { ...formState.selectedTheme }, 
+        themeChangeCountdown: 8
+      } 
+    }));
+  }
+}, [formState.selectedTheme]);
+
+
+// Separate effect for countdown - not dependent on selectedTheme
+useEffect(() => {
+
+  
+
+  if (!startCountdown) return;
+  
+  console.log('⏰ Starting countdown timer');
+  let countdown = 8;
+  
+  const interval = setInterval(() => {
+    countdown -= 1;
+    console.log('⏱️ Tick - countdown:', countdown);
+    
+    dispatch(formStateHandleFieldChangeKeysOnly({ 
+      fields: { themeChangeCountdown: countdown } 
+    }));
+    debugger
+    if (countdown <= 0) {
+      dispatch(formStateHandleFieldChangeKeysOnly({ 
+        fields: { 
+          userConfig: { ...formState.currentTheme }, 
+          selectedTheme: formState.currentTheme, 
+          themeChangeCountdown: 0
+        } 
+      }));
+      console.log('🛑 Countdown complete');
+      clearInterval(interval);
+      setStartCountdown(false);
       
-      let countdown = 8;
-      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.selectedTheme }, themeChangeCountdown: countdown } }));
-      timerRef.current = setInterval(() => {
-        countdown -= 1;
-
-      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { themeChangeCountdown: countdown } }));
-        // Dispatch the tick to update the state
-
-        // Stop timer and take action if countdown reaches 0 or less
-        if (countdown <= 0) {
-          clearInterval(timerRef.current);
-          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.currentTheme }, selectedTheme: formState.currentTheme, themeChangeCountdown: countdown } }))
-        }
-      }, 1000);
+      // Revert to original theme
+      
     }
-  }, [formState.selectedTheme]);
+  }, 1000);
+  
+  return () => {
+    console.log('Cleanup countdown timer');
+    clearInterval(interval);
+  };
+}, [startCountdown, formState.currentTheme, formState.userConfig?.themeName]);
 
+// Add this to monitor when selectedTheme changes
+useEffect(() => {
+  console.log('🔄 selectedTheme changed:', formState.selectedTheme);
+  console.log('  - isInitial flag:', formState.selectedTheme?.isInitial);
+}, [formState.selectedTheme]);
   const purchaseGridRef = useRef<{
     focusCell: (
       targetRow: number,

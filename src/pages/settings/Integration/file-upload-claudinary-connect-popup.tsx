@@ -7,6 +7,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 const api = new APIClient();
 
@@ -101,7 +102,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                     />
                 </div>
 
-                <div className="flex items-center justify-end gap-2 mt-4">
+                {/* <div className="flex items-center justify-end gap-2 mt-4">
                     <ERPButton
                         title={id ? t("update") : t("save")}
                         variant="primary"
@@ -114,7 +115,28 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                         variant="secondary"
                         onClick={() => setIsPopupOpen(true)}
                     />
-                </div>
+                </div> */}
+                <ERPFormButtons
+                isLoading={isSaving}
+                customButtons={[
+                    
+                    {
+                    title: t("test_upload"),
+                    variant: "secondary",
+                    onClick: () => setIsPopupOpen(true),
+                    },{
+                    title: id ? t("update") : t("save"),
+                    variant: "primary",
+                    disabled: isSaving,
+                    loading: isSaving,
+                    onClick: () => handleSubmit(),
+                    }
+                ]}
+                customButtonsPosition="right"
+                skipSubmit={true}
+                skipCancel={true}
+                skipClear={true}
+                />                
 
                 {isPopupOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-md backdrop-blur-sm z-50 p-4">

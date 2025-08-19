@@ -212,7 +212,7 @@ const CashBookSummary = () => {
                   columns={columns}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterWidth={400}
-                  filterHeight={200}
+                  filterHeight={100}
                   filterText="as of {asonDate}"
                   gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}

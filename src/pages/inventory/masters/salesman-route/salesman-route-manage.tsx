@@ -11,6 +11,7 @@ import { initialSalesManRouteData, SalesManRouteData } from "./salesman-route-ma
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../../helpers/api-client";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import ERPFormButtons from "../../../../components/ERPComponents/erp-form-buttons";
 
 type Day =
   | "Sunday"
@@ -201,7 +202,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           )}
       </div>
 
-      <div className="flex gap-4 justify-end items-center mt-3">
+      {/* <div className="flex gap-4 justify-end items-center mt-3">
         <ERPButton
           title={t("close")}
           variant="secondary"
@@ -224,7 +225,38 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           type="button"
           onClick={handleSubmit}
         />
-      </div>
+      </div> */}
+        <ERPFormButtons
+          isLoading={isSaving}
+          customButtons={[
+          
+            {
+              title: t("close"),
+              variant: "secondary",
+              disabled: isSaving,
+              loading: isSaving,
+              onClick: () => onClose(),
+            },  
+            {
+              title: t("clear"),
+              variant: "secondary",
+              disabled: isSaving,
+              loading: isSaving,
+              onClick: () => handleClear(),
+            },  
+            {
+              title: isEdit ? t("edit") : t("add"),
+              variant: "primary",
+              disabled: isSaving,
+              loading: isSaving,
+              onClick: () => handleSubmit(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />      
     </div>
   );
 });

@@ -453,7 +453,7 @@ const VatReturnForm = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={400}
-                  filterHeight={200}
+                  filterHeight={100}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}

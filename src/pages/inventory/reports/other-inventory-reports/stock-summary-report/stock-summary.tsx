@@ -538,7 +538,7 @@ const StockSummary = () => {
                 method={ActionType.POST}
                 filterContent={<StockSummaryFilter />}
                 filterWidth={790}
-                filterHeight={630}
+                filterHeight={430}
                 onFilterChanged={(filter: any) => {
                   setFilter(filter);
                 }}

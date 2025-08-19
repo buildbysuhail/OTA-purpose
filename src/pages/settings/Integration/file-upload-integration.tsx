@@ -166,7 +166,7 @@ const FileUploadIntegration: React.FC = () => {
           isOpen={provider.isOpen}
           title={t(provider.providerName?.toLowerCase() || "cloudinary")}
           width={600}
-          height={200}
+          height={150}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={

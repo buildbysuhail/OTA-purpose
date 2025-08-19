@@ -94,7 +94,7 @@ export const BranchLedgerManage = () => {
         />
       </div>
 
-      <div className="w-full p-2 flex justify-center space-x-2 mt-5">
+      <div className="w-full  flex justify-center space-x-2 ">
         <ERPFormButtons
           onClear={handleClear}
           isEdit={isEdit}

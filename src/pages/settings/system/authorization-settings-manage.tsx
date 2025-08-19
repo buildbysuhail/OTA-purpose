@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Urls from "../../../redux/urls";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
@@ -15,10 +15,12 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
+
 interface AuthorizationSettingsProps {
   isMaximized?: boolean;
-  modalHeight?: any
+  modalHeight?: any;
 }
+
 const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettingsProps) => {
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
@@ -29,11 +31,6 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
     confirmPassword: "",
     validations: { employeeID: "", password: "", confirmPassword: "" },
   };
-
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
 
   const [postData, setPostData] = useState<{
     employeeID: number;
@@ -48,6 +45,49 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
 
   const [store, setStore] = useState<any>([]);
   const [postDataLoading, setPostDataLoading] = useState(false);
+  const [gridHeight, setGridHeight] = useState<number>(500);
+
+  // Refs for measuring sibling elements
+  const formRef = useRef<HTMLDivElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+
+  // Function to calculate DataGrid height
+  const calculateGridHeight = useCallback(() => {
+    if (!modalHeight || !formRef.current || !buttonsRef.current) return 500;
+
+    // Get heights of sibling elements
+    const formHeight = formRef.current.getBoundingClientRect().height;
+    const buttonsHeight = buttonsRef.current.getBoundingClientRect().height;
+
+    // Estimate additional margins/paddings and modal borders
+    const extraPadding = 40; // Adjust based on CSS (e.g., gap, padding, borders)
+    const modalHeaderFooter = isMaximized ? 80 : 100; // Adjust for header/footer
+
+    // Calculate available height
+    const calculatedHeight = modalHeight - formHeight - buttonsHeight - extraPadding - modalHeaderFooter;
+
+    // Ensure a minimum height and prevent negative values
+    const minHeight = 200;
+    return Math.max(minHeight, calculatedHeight);
+  }, [modalHeight, isMaximized]);
+
+  // Update grid height on mount and when modalHeight or isMaximized changes
+  useEffect(() => {
+    const updateHeight = () => {
+      const newHeight = calculateGridHeight();
+      setGridHeight(newHeight);
+    };
+
+    updateHeight();
+
+    // Handle window resize
+    const handleResize = () => {
+      updateHeight();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [calculateGridHeight]);
 
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
@@ -75,15 +115,16 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
         setPostData((previous: any) => ({
           ...previous, // Use the spread operator with three dots
           validations: result.validations,
-        }))
+        }));
       });
-  }
+    setPostDataLoading(false);
+  };
 
   const onSelectionChanged = useCallback((e: any) => {
     const data = e.data;
     if (data != undefined && data != null) {
       setPostData((previous: any) => ({
-        ...previous, // Use the spread operator with three dots
+        ...previous,
         employeeID: data.employeeID,
         password: data.password,
         confirmPassword: data.confirmPassword,
@@ -105,12 +146,6 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
       setStore([]);
     }
   }, []);
-
-  useEffect(() => {
-    let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = isMaximized ? modalHeight - 280 : modalHeight - 350;
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized, modalHeight]);
 
   const columns: DevGridColumn[] = [
     {
@@ -164,7 +199,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
+          <div ref={formRef} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <ERPDataCombobox
               data={postData}
               id="employeeID"
@@ -202,7 +237,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
             />
           </div>
 
-          <div className="grid grid-cols-2 my-2 gap-3 ">
+          <div ref={buttonsRef} className="grid grid-cols-2 my-2 gap-3">
             <ERPButton
               loading={postDataLoading}
               onClick={handleSubmit}
@@ -220,7 +255,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
               columns={columns}
               dataSource={store}
               onRowClick={(e) => onSelectionChanged(e)}
-              height={gridHeight.windows}
+              height={gridHeight}
               key="authorizationID"
               showBorders={true}
             />

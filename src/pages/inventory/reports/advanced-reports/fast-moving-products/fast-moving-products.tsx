@@ -240,7 +240,7 @@ const FastMovingProductsReport = () => {
                 method={ActionType.POST}
                 filterContent={<FastMovingReportFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={100}
                 filterInitialData={{...FastMovingReportFilterInitialState ,
                   fromDate:userSession.finFrom,
                   branchId:userSession.currentBranchId,

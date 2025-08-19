@@ -640,7 +640,7 @@ const PendingOrderReport = () => {
                 method={ActionType.POST}
                 filterContent={<PendingOrderReportFilter />}
                 filterWidth={350}
-                filterHeight={270}
+                filterHeight={170}
                 filterInitialData={PendingOrderReportFilterInitialState}
                 reload={true}
                 gridId="grd_pending_order_report"

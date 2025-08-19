@@ -124,8 +124,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}
         width={1000}
-        height={600}
-        isForm={true}
+        height={300}
+        isForm={false}
         closeModal={() => {
           dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
         }}
@@ -146,7 +146,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.companyProfile.isOpen || false}
         title={t("company_profile")}
         width={800}
-        height={470}
+        height={370}
         isForm
         closeModal={() => {
           dispatch(toggleCompanyProfilePopup({ isOpen: false }));
@@ -157,7 +157,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.companyProfileIndia.isOpen || false}
         title={t("company_profile")}
         width={800}
-        height={780}
+        height={370}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false }));
@@ -168,7 +168,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.bankPos.isOpen || false}
         title={t("bank_pos_settings")}
         width={600}
-        height={320}
+        height={220}
         isForm={true}
         closeModal={() => {
           dispatch(toggleBankPosPopup({ isOpen: false }));
@@ -179,7 +179,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.branch.isOpen || false}
         title={t("branch_info")}
         width={800}
-        height={640}
+        height={440}
         isForm={false}
         isButton={false}
         closeModal={() => {
@@ -191,8 +191,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={t("day_close")}
         width={800}
-        height={300}
-        minHeight={300}
+        height={200}
+        // minHeight={300}
         isForm
         closeModal={() => {
           dispatch(toggleDayClosePopup({ isOpen: false }));
@@ -214,7 +214,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.importExport.isOpen || false}
         title={t("export_import")}
         width={800}
-        height={300}
+        height={200}
         isForm={true}
         closeModal={() => {
           dispatch(toggleImportExportPopup({ isOpen: false }));
@@ -225,7 +225,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
         width={900}
-        height={620}
+        height={520}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
@@ -237,8 +237,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.commands.isOpen || false}
         title={t("sql_commands")}
         width={800}
-        height={700}
-        isForm={true}
+        height={500}
+        isForm={false}
         closeModal={() => {
           dispatch(toggleCommandsPopup({ isOpen: false }));
         }}
@@ -248,8 +248,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
         title={t("authorization_settings")}
         width={900}
-        height={600}
-        isForm={true}
+        height={500}
+        isForm={false}
         closeModal={() => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
         }}
@@ -281,7 +281,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
         title={t("reset_branch_data_for_sync")}
         width={800}
-        height={300}
+        height={200}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetBranchDataForSync({ isOpen: false }));
@@ -303,7 +303,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
         title={t("headers_footers")}
         width={800}
-        height={500}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleHeaderFooterPopup({ isOpen: false }));

@@ -220,7 +220,7 @@ const Users = () => {
         isOpen={rootState.PopupData.user.isOpen || false}
         title={t("users")}
         width={600}
-        height={450}
+        height={350}
         isForm={true}
         closeModal={() => { dispatch(toggleUserPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedUsersManage />}

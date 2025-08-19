@@ -178,7 +178,7 @@ const Section = () => {
         title={t("section")}
         isForm={true}
         width={600}
-        height={240}
+        height={140}
         closeModal={() => { dispatch(toggleSection({ isOpen: false })); }}
         content={<MemoizedSectionManage />}
       />

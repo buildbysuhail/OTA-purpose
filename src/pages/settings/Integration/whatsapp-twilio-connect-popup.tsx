@@ -8,6 +8,7 @@ import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
 import { information } from "./whatsapp-integration-type";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 const api = new APIClient();
 
@@ -119,7 +120,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
             onChangeData={(data) => handleFieldChange("fromPhone", data.fromPhone)}
           />
 
-          <div className="flex items-center justify-end gap-2 mt-4">
+          {/* <div className="flex items-center justify-end gap-2 mt-4">
             <ERPButton
               title={id ? t("update") : t("new")}
               variant="primary"
@@ -132,8 +133,29 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
               variant="secondary"
               onClick={() => setIsPopupOpen(true)}
             />
-          </div>
+          </div> */}
         </div>
+        <ERPFormButtons
+          isLoading={isSaving}
+          customButtons={[
+            {
+              title: id ? t("update") : t("new"),
+              variant: "primary",
+              disabled: isSaving,
+              loading: isSaving,
+              onClick: () => handleSubmit(),
+            },
+            {
+              title: t("send_test_message"),
+              variant: "secondary",
+              onClick: () => setIsPopupOpen(true),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />        
 
         {isPopupOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-md backdrop-blur-sm z-50 p-4">

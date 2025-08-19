@@ -106,7 +106,7 @@ const CostCentre = () => {
         isOpen={rootState.PopupData.costCentre.isOpen || false}
         title={t("cost_centre")}
         width={600}
-        height={315}
+        height={215}
         isForm={true}
         closeModal={() => { dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedCostCentreManage />}

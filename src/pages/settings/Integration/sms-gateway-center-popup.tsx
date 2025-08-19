@@ -8,6 +8,7 @@ import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { information } from "./sms-integration-type";
 import { useTranslation } from "react-i18next";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 const api = new APIClient();
 
@@ -91,7 +92,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
             onChange={(e) => handleFieldChange("configJson", e.target.value)}
           />
 
-          <div className="flex items-center justify-end gap-2 mt-4">
+          {/* <div className="flex items-center justify-end gap-2 mt-4">
             <ERPButton
               title={id ? t("connect") : t("save")}
               variant="primary"
@@ -104,9 +105,29 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
               variant="secondary"
               onClick={() => setIsPopupOpen(true)}
             />
-          </div>
+          </div> */}
         </div>
-
+        <ERPFormButtons
+          isLoading={isSaving}
+          customButtons={[
+            {
+              title: id ? t("connect") : t("save"),
+              variant: "primary",
+              disabled: isSaving,
+              loading: isSaving,
+              onClick: () => handleSubmit(),
+            },
+            {
+              title: t("send_test_message"),
+              variant: "secondary",
+              onClick: () => setIsPopupOpen(true),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />
         {isPopupOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-md backdrop-blur-sm z-50 p-4">
             <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">

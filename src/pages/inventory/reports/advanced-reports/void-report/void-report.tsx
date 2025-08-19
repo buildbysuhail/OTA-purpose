@@ -266,7 +266,7 @@ const VoidReport = () => {
                 method={ActionType.POST}
                 filterContent={<VoidReportFilter />}
                 filterWidth={600}
-                filterHeight={340}
+                filterHeight={140}
                 filterInitialData={VoidReportFilterInitialState}
                 reload={true}
                 gridId="grd_void_report"

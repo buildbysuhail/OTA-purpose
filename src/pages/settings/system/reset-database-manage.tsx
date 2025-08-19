@@ -14,6 +14,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import TransactionFormsCheckboxes from "./reset-database-transaction-forms-checkboxes";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -431,7 +432,7 @@ const ResetDbManage: React.FC = React.memo(() => {
           </div>
         </div>
       </div>
-      <div className="flex justify-end items-center gap-3 m-2 mt-4">
+      {/* <div className="flex justify-end items-center gap-3 m-2 mt-4">
         <ERPButton
           title={t("reset")}
           variant="primary"
@@ -445,7 +446,30 @@ const ResetDbManage: React.FC = React.memo(() => {
           disabled={postDataLoading}
           onClick={onClose}
         />
-      </div>
+      </div> */}
+        <ERPFormButtons
+          isLoading={postDataLoading}
+          customButtons={[
+            {
+              title: t("reset"),
+              variant: "primary",
+              disabled: postDataLoading,
+              loading: postDataLoading,
+              onClick: () => handleSubmit(),
+            },
+            {
+              title: t("close"),
+              variant: "secondary",
+              disabled: postDataLoading,
+              loading: postDataLoading,
+              onClick: () => onClose(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />
     </div>
   );
 });

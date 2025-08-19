@@ -223,7 +223,7 @@ const UnitOfMeasure = () => {
         title={t("unit_of_measure")}
         isForm={true}
         width={600}
-        height={320}
+        height={220}
         closeModal={() => { dispatch(toggleUnitOfMeasure({ isOpen: false })); }}
         content={<MemoizedUnitOfMeasureManage />}
       />

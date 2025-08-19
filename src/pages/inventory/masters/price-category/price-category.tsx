@@ -184,7 +184,7 @@ const PriceCategory = () => {
         title={t("price_category")}
         isForm={true}
         width={600}
-        height={320}
+        height={220}
         closeModal={() => { dispatch(togglePriceCategory({ isOpen: false })); }}
         content={<MemoizedPriceCategoryManage />}
       />

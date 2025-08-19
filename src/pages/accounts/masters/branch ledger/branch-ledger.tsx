@@ -149,7 +149,7 @@ const BranchLedger = () => {
         isOpen={rootState.PopupData.branchLedger.isOpen || false}
         title={t("branch_ledger")}
         width={600}
-        height={250}
+        height={150}
         isForm={true}
         closeModal={() => { dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedBranchLedgerManage />}

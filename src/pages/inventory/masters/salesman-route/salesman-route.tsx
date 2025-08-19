@@ -180,7 +180,7 @@ const SalesManRoute = () => {
         isOpen={rootState.PopupData.salesManRoute.isOpen || false}
         title={t("sales_man_route")}
         width={600}
-        height={410}
+        height={210}
         isForm={true}
         closeModal={() => { dispatch(toggleSalesManRoute({ isOpen: false })); }}
         content={<SalesmanRoute />}

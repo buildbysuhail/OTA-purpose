@@ -265,7 +265,7 @@ const AccountGroupType = () => {
         isOpen={rootState.PopupData.accountGroup.isOpen || false}
         title={t("acc_group")}
         width={600}
-        height={350}
+        height={250}
         isForm={true}
         closeModal={() => { dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedAccountGroupManage />}

@@ -327,7 +327,7 @@ const LPOReport = () => {
                 method={ActionType.POST}
                 filterContent={<LPOReportFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={200}
                 filterInitialData={LPOReportFilterInitialState}
                 reload={true}
                 gridId={GridId.lpo_report}

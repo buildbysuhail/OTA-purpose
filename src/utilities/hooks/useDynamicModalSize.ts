@@ -1,11 +1,31 @@
 // useDynamicModalSize.ts
 import { useRef, useState, useEffect, useCallback } from 'react';
 
-export const useDynamicModalSize = (minWidth = 400, minHeight = 200, padding = 40) => {
+export const useDynamicModalSize = (
+  minWidth = 400, 
+  minHeight = 200, 
+  padding = 40,
+  initialWidth?: number,
+  initialHeight?: number,
+  isForm = false
+) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: minWidth, height: minHeight + 80 });
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Use initial dimensions if provided, otherwise use minimums
+  const [dimensions, setDimensions] = useState({ 
+    width: initialWidth || minWidth, 
+    height: (initialHeight || minHeight) + 80 
+  });
+  
   const lastSizeRef = useRef({ width: 0, height: 0 });
+
+  const resetDimensions = useCallback(() => {
+    setDimensions({
+      width: initialWidth || minWidth,
+      height: (initialHeight || minHeight) + 80
+    });
+    lastSizeRef.current = { width: 0, height: 0 }; // Optional: reset last size to force re-measure
+  }, [initialWidth, minWidth, initialHeight, minHeight]);
 
   const measureContent = useCallback(() => {
     if (contentRef.current) {
@@ -27,16 +47,20 @@ export const useDynamicModalSize = (minWidth = 400, minHeight = 200, padding = 4
         const windowHeight = window.innerHeight;
         
         // Increased maximum constraints for larger content
-        const maxModalWidth = Math.min(windowWidth - 60, 1200); // Increased from 800
-        const maxModalHeight = Math.min(windowHeight - 60, 800); // Increased from 600
+        const maxModalWidth = Math.min(windowWidth - 60, 1200);
+        const maxModalHeight = Math.min(windowHeight - 60, 800);
+        
+        // Use the larger of: content size + padding, minimum size, or initial preferred size
+        const preferredWidth = initialWidth || minWidth;
+        const preferredHeight = initialHeight || minHeight;
         
         const calculatedWidth = Math.min(
-          Math.max(contentWidth + padding, minWidth),
+          Math.max(contentWidth + padding, minWidth, preferredWidth),
           maxModalWidth
         );
         
         const calculatedHeight = Math.min(
-          Math.max(contentHeight + 120, minHeight), // Increased padding for header/footer
+          Math.max(contentHeight + (isForm ? 120 : 60), minHeight, preferredHeight), // Increased padding for header/footer
           maxModalHeight
         );
         
@@ -46,7 +70,7 @@ export const useDynamicModalSize = (minWidth = 400, minHeight = 200, padding = 4
         });
       }
     }
-  }, [minWidth, minHeight, padding]);
+  }, [minWidth, minHeight, padding, initialWidth, initialHeight,isForm]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -86,5 +110,5 @@ export const useDynamicModalSize = (minWidth = 400, minHeight = 200, padding = 4
     }
   }, [measureContent]);
 
-  return { contentRef, dimensions, measureContent };
+  return { contentRef, dimensions, measureContent, resetDimensions };
 };

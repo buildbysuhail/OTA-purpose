@@ -686,7 +686,7 @@ const BalanceSheet = () => {
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width={500}
-                height={300}
+                height={200}
                 gridId="gridBalanceSheet"
                 initialData={BalanceSheetFilterInitialState}
                 content={
@@ -827,7 +827,7 @@ const BalanceSheet = () => {
             <button className="w-full flex items-center dark:bg-dark-bg bg-gray-100 p-2 rounded-md">
               <ErpGridGlobalFilter
                 width={500}
-                height={300}
+                height={200}
                 gridId="gridBalanceSheet"
                 initialData={BalanceSheetFilterInitialState}
                 content={

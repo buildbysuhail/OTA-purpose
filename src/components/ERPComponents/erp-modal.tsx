@@ -463,7 +463,10 @@ const ERPModal = React.memo(
                           </button>
                         </div>
                       </DialogTitle>
-                      <div className={`bg-inherit flex flex-col justify-between flex-grow w-full p-4`}>
+                      <div
+                        className={`bg-inherit flex flex-col flex-grow w-full p-1 overflow-hidden`}
+                        style={{ flex: "1 1 auto" }}
+                      >
                         <ERPScrollArea
                           className="overflow-y-auto overflow-x-hidden"
                           maxHeight={isMobile ? `calc(${window.innerHeight - 200}px)` : `${modalHeight - (footer ? 90 : 40)}px`}
@@ -505,7 +508,12 @@ const ERPModal = React.memo(
                         </ERPScrollArea>
                       </div>
                       {footer && (
-                        <div className="border-t border-gray-300 dark:border-dark-border px-4 py-2">{footer}</div>
+                        <div
+                          className="border-t border-gray-300 dark:border-dark-border px-4 py-2 flex-shrink-0"
+                          // style={{ minHeight: "50px" }}
+                        >
+                          {footer || <div className="text-gray-500">No footer content provided</div>}
+                        </div>
                       )}
                       {!isForm && isButton && (
                         <div

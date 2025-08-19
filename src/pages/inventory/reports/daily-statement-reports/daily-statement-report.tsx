@@ -266,7 +266,7 @@ interface DailyStatementReportProps {
                   enablefilter={true}
                   showFilterInitially={false}
                   filterWidth={360}
-                  filterHeight={250}
+                  filterHeight={100}
                   filterContent={<DailyStatementReportFilter />}
                   filterInitialData={DailyStatementReportInitialState}
                   hideGridAddButton={true}

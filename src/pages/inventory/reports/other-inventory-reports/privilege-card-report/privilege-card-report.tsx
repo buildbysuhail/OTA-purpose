@@ -225,7 +225,7 @@ const PrivilegeCardReport = () => {
                 method={ActionType.POST}
                 filterContent={<PrivilegeCardReportFilter />}
                 filterWidth={600}
-                filterHeight={250}
+                filterHeight={150}
                 filterInitialData={{
                   ...PrivilegeCardReportFilterInitialState,
                   dateFrom: moment(userSession.finFrom).local().startOf("day"),

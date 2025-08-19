@@ -206,7 +206,7 @@ const SystemVoucher = () => {
         title={t("voucher")}
         isForm={true}
         width={800}
-        height={350}
+        height={250}
         closeModal={() => { dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedVoucherManage />}
       />

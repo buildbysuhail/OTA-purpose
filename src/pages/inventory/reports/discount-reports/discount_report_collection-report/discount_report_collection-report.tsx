@@ -191,7 +191,7 @@ const DiscountReportCollection = () => {
                 method={ActionType.POST}
                 filterContent={<DiscountReportCollectionFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={100}
                 filterInitialData={DiscountReportCollectionFilterInitialState}
                 reload={true}
                 gridId={GridId.discount_report_collection}

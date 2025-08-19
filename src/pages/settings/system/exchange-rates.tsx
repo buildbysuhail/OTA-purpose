@@ -14,6 +14,7 @@ import "./exchange-rates.css";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
 import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
@@ -271,7 +272,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
               />
             </DataGrid>
           </div>
-          <div className="grid grid-cols-1 gap-3 pt-4">
+          {/* <div className="grid grid-cols-1 gap-3 pt-4">
             <ERPButton
               className="justify-self-end"
               type="button"
@@ -281,7 +282,23 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
               loading={postDataLoading}
               title={t("save")}
             />
-          </div>
+          </div> */}
+        <ERPFormButtons
+          isLoading={postDataLoading}
+          customButtons={[
+            {
+              title: t("save"),
+              variant: "primary",
+              disabled: postDataLoading,
+              loading: postDataLoading,
+              onClick: () => handleSubmit(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />          
         </div>
       </div>
 
@@ -289,7 +306,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}
         width={700}
-        height={300}
+        height={200}
         isForm={true}
         closeModal={() => { dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedCurrencyMasterManage />}

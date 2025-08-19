@@ -168,7 +168,7 @@ const UnsoldProductReport = () => {
                 method={ActionType.POST}
                 filterContent={<UnsoldProductReportFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={200}
                 filterInitialData={{
                   ...UnsoldProductReportFilterInitialState,
                   branchid: userSession.currentBranchId,

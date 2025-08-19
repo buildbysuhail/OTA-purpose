@@ -112,7 +112,7 @@ const CustomerVisitTotalVisit = () => {
                 method={ActionType.POST}
                 filterContent={<CustomerVisitTotalVisitFilter />}
                 filterWidth={700}
-                filterHeight={250}
+                filterHeight={150}
                 filterInitialData={CustomerVisitTotalVisitFilterInitialState}
                 reload={true}
                 gridId={GridId.customer_visit_total_visit}

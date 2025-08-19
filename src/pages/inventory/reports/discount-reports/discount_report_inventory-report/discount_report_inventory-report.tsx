@@ -358,7 +358,7 @@ const DiscountReportInventory = () => {
                 method={ActionType.POST}
                 filterContent={<DiscountReportInventoryFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={100}
                 filterInitialData={DiscountReportInventoryFilterInitialState}
                 reload={true}
                 gridId={GridId.discount_report_inventory}

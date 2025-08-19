@@ -203,7 +203,7 @@ const SalesRoute = () => {
         title={t("sales_route")}
         isForm={true}
         width={600}
-        height={425}
+        height={325}
         closeModal={() => { dispatch(toggleSalesRoute({ isOpen: false })); }}
         content={<MemoizedSalesRouteManage />}
       />

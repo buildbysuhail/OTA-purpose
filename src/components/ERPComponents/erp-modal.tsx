@@ -57,7 +57,11 @@ type ERPModalProps = {
   disableParentInteraction?: boolean;
   customPosition?: boolean;
   customStyle?: React.CSSProperties;
-  initialPosition?: ModalPosition; 
+  initialPosition?: ModalPosition;
+  enableDynamicSize?: boolean;
+  dynamicMinWidth?: number;
+  dynamicMinHeight?: number;
+  dynamicPadding?: number;
 };
 
 const ERPModal = React.memo(
@@ -86,8 +90,8 @@ const ERPModal = React.memo(
     isFullHeight = false,
     isRemoveSomething = false,
     width = 600,
-    height = 600,
-    minHeight = 200,
+    height = 150,
+    minHeight = 150,
     minWidth = 200,
     autoSize = false,
     maxWidth,
@@ -97,136 +101,162 @@ const ERPModal = React.memo(
     disableParentInteraction = true,
     customPosition = false,
     customStyle = {},
-    initialPosition = "center", 
+    initialPosition = "center",
+    enableDynamicSize = true,
+    dynamicMinWidth = 400,
+    dynamicMinHeight = 150,
+    dynamicPadding = 40,
   }: ERPModalProps) => {
+    // Detect mobile device
+    const isMobile = window.innerWidth <= 768;
+
+    // Use content-fitted size on mobile, with a max width
+    const effectiveDynamicMinWidth = isMobile ? 300 : dynamicMinWidth; // Minimum 300px, adjustable
+    const effectiveDynamicMinHeight = isMobile ? 200 : dynamicMinHeight;
+    const effectiveDynamicPadding = isMobile ? 10 : dynamicPadding;
+
+    // Initialize with content-based dimensions, capped at a reasonable max
+    const initialWidth = isMobile ? 500 : (enableDynamicSize && typeof width === 'number' ? width : effectiveDynamicMinWidth);
+    const initialHeight = enableDynamicSize && typeof height === 'number' ? height : effectiveDynamicMinHeight;
+
+    const { contentRef, dimensions, measureContent, resetDimensions } = useDynamicModalSize(
+      effectiveDynamicMinWidth,
+      effectiveDynamicMinHeight,
+      effectiveDynamicPadding,
+      initialWidth,
+      initialHeight,
+      isForm
+    );
+
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
     const [modalWidth, setModalWidth] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [initPosition, setInitPosition] = useState({ x: 0, y: 0 });
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Dynamic sizing effects
+    useEffect(() => {
+      if (enableDynamicSize && isOpen) {
+        setIsLoading(true);
+        setTimeout(measureContent, 100);
+        setTimeout(() => setIsLoading(false), 300);
+      }
+    }, [isOpen, measureContent, enableDynamicSize]);
+
+    useEffect(() => {
+      if (enableDynamicSize && isOpen) {
+        setTimeout(measureContent, 100);
+        setTimeout(() => setIsLoading(false), 300);
+      }
+    }, [contentProps, measureContent, enableDynamicSize]);
 
     const calculateInitialPosition = (windowWidth: number, windowHeight: number, modalW: number, modalH: number) => {
-      const padding = 20; // Padding from edges
-      let x = 0, y = 0;
+      const padding = isMobile ? 10 : 20;
+      let x = (windowWidth - modalW) / 2;
+      let y = (windowHeight - modalH) / 2;
 
-      switch (initialPosition) {
-        case "center":
-          x = (windowWidth - modalW) / 2;
-          y = (windowHeight - modalH) / 2;
-          break;
-        case "left":
-          x = padding;
-          y = (windowHeight - modalH) / 2;
-          break;
-        case "right":
-          x = windowWidth - modalW - padding;
-          y = (windowHeight - modalH) / 2;
-          break;
-        case "top":
-          x = (windowWidth - modalW) / 2;
-          y = padding;
-          break;
-        case "bottom":
-          x = (windowWidth - modalW) / 2;
-          y = windowHeight - modalH - padding;
-          break;
-        case "top-left":
-          x = padding;
-          y = padding;
-          break;
-        case "top-right":
-          x = windowWidth - modalW - padding;
-          y = padding;
-          break;
-        case "bottom-left":
-          x = padding;
-          y = windowHeight - modalH - padding;
-          break;
-        case "bottom-right":
-          x = windowWidth - modalW - padding;
-          y = windowHeight - modalH - padding;
-          break;
-        default:
-          x = (windowWidth - modalW) / 2;
-          y = (windowHeight - modalH) / 2;
-      }
-
-      // Ensure the modal stays within bounds
-      x = Math.max(0, Math.min(x, windowWidth - modalW));
-      y = Math.max(0, Math.min(y, windowHeight - modalH));
+      x = Math.max(padding, Math.min(x, windowWidth - modalW - padding));
+      y = Math.max(padding, Math.min(y, windowHeight - modalH - padding));
 
       return { x, y };
     };
 
-  const calculateDimensionsAndPosition = () => {
-    if (!isOpen) return;
-    
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    let newWidth, newHeight, newX, newY;
+    const calculateDimensionsAndPosition = () => {
+      if (!isOpen) return;
 
-    if (isMaximized) {
-      newWidth = windowWidth - 50;
-      newHeight = windowHeight - 50;
-      newX = (windowWidth - newWidth) / 2;
-      newY = (windowHeight - newHeight) / 2;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      let newWidth, newHeight, newX, newY;
 
-      const originalWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
-      const originalHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
-      const originalPos = calculateInitialPosition(windowWidth, windowHeight, originalWidth, originalHeight);
-      setInitPosition(originalPos);
-    } else {
-       newWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
-        newHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
-    
-      const calculatedPos = calculateInitialPosition(windowWidth, windowHeight, newWidth, newHeight);
-      newX = calculatedPos.x;
-      newY = calculatedPos.y;
-    }
+      if (isMaximized) {
+        newWidth = isMobile ? windowWidth * 0.9 : windowWidth - 50;
+        newHeight = isMobile ? windowHeight * 0.9 : windowHeight - 50;
+        newX = (windowWidth - newWidth) / 2;
+        newY = (windowHeight - newHeight) / 2;
 
-    setModalWidth(newWidth);
-    setModalHeight(newHeight);
-    setPosition({ x: newX, y: newY });
-    setIsPositionCalculated(true);
-  };
+        let originalWidth, originalHeight;
+        if (enableDynamicSize) {
+          originalWidth = dimensions.width;
+          originalHeight = dimensions.height;
+        } else {
+          originalWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
+          originalHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
+        }
+        const originalPos = calculateInitialPosition(windowWidth, windowHeight, originalWidth, originalHeight);
+        setInitPosition(originalPos);
+      } else {
+        if (enableDynamicSize) {
+          newWidth = Math.min(dimensions.width, isMobile ? 500 : windowWidth - 40);
+          newHeight = Math.min(dimensions.height, isMobile ? 600 : windowHeight - 40);
+        } else if (autoSize || width === "auto" || height === "auto") {
+          const contentEl = document.querySelector('.modal-content-wrapper');
+          if (contentEl) {
+            const contentRect = contentEl.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(contentEl);
+            const marginTop = parseInt(computedStyle.marginTop) || 0;
+            const marginBottom = parseInt(computedStyle.marginBottom) || 0;
+            const marginLeft = parseInt(computedStyle.marginLeft) || 0;
+            const marginRight = parseInt(computedStyle.marginRight) || 0;
 
+            newWidth = Math.min(
+              Math.max(contentRect.width + marginLeft + marginRight + 40, minWidth),
+              maxWidth || (isMobile ? 500 : Math.min(windowWidth - 60, 1200)),
+              windowWidth - 60
+            );
 
+            newHeight = Math.min(
+              Math.max(contentRect.height + marginTop + marginBottom + 120, minHeight),
+              maxHeight || (isMobile ? 600 : Math.min(windowHeight - 60, 800)),
+              windowHeight - 60
+            );
+          } else {
+            newWidth = Math.min(maxWidth || (isMobile ? 500 : 800), windowWidth - 60);
+            newHeight = Math.min(maxHeight || (isMobile ? 600 : 600), windowHeight - 60);
+          }
+        } else {
+          newWidth = typeof width === 'number' ? Math.min(windowWidth - 40, width) : windowWidth - 40;
+          newHeight = typeof height === 'number' ? Math.min(windowHeight - 40, height) : windowHeight - 40;
+        }
 
+        const calculatedPos = calculateInitialPosition(windowWidth, windowHeight, newWidth, newHeight);
+        newX = calculatedPos.x;
+        newY = calculatedPos.y;
+      }
 
-const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as number, height as number); // Reduced min height
+      setModalWidth(newWidth);
+      setModalHeight(newHeight);
+      setPosition({ x: newX, y: newY });
+      setIsPositionCalculated(true);
+    };
 
-
- useEffect(() => {
-    if (isOpen) {
-      // Multiple measurements to catch dynamic content
-      // setTimeout(measureContent, 100);
-      // setTimeout(measureContent, 300);
-      setTimeout(measureContent, 600);
-    }
-  }, [isOpen]);
-    // Reset state when modal closes
     useEffect(() => {
       if (!isOpen) {
         setIsMaximized(initialMaximize);
         setPosition({ x: 0, y: 0 });
         setInitPosition({ x: 0, y: 0 });
-        // setModalWidth(typeof width === 'number' ? width : 600);
-        // setModalHeight(typeof height === 'number' ? height : 600);
         setIsPositionCalculated(false);
+        const initW = isMobile ? 500 : (enableDynamicSize && typeof width === 'number' ? width : effectiveDynamicMinWidth);
+        const initH = isMobile ? 200 : (enableDynamicSize && typeof height === 'number' ? height : effectiveDynamicMinHeight);
+        setModalWidth(initW);
+        setModalHeight(initH);
+        if (enableDynamicSize) {
+          resetDimensions();
+        }
       }
-    }, [isOpen]);
+    }, [isOpen, initialMaximize, enableDynamicSize, width, height, effectiveDynamicMinWidth, effectiveDynamicMinHeight, resetDimensions]);
 
     useEffect(() => {
       if (isOpen) {
         calculateDimensionsAndPosition();
       }
-    }, [isOpen, isMaximized, dimensions.width, dimensions.height, initialPosition]);
+    }, [isOpen, isMaximized, width, height, initialPosition, dimensions, enableDynamicSize]);
 
     const handleClose = () => {
       closeModal(false);
     };
-    
+
     const handleSubmit = () => {
       if (onSubmitModel) {
         onSubmitModel();
@@ -274,22 +304,16 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
       };
     }, [isOpen]);
 
+    const effectiveMinWidth = enableDynamicSize ? effectiveDynamicMinWidth : minWidth;
+    const effectiveMinHeight = enableDynamicSize ? effectiveDynamicMinHeight : minHeight;
+
     return (
-      <div ref={contentRef} 
-            className="modal-content-wrapper"
-            style={{ 
-              minHeight: 'fit-content',
-              width: '100%',
-              overflow: 'visible' 
-            }}>
-             
+      <>
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             static={!disableParentInteraction}
             as="div"
-            className={` erp-modal  fixed inset-0 ${
-              !disableParentInteraction ? "pointer-events-none" : ""
-            }`}
+            className={`erp-modal fixed inset-0 ${!disableParentInteraction ? "pointer-events-none" : ""}`}
             onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
@@ -303,160 +327,152 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="fixed inset-0 bg-black/30 " />
+                <div className="fixed inset-0 bg-black bg-opacity-25" />
               </TransitionChild>
             )}
 
-            <div className={`fixed inset-0`}>
-              <TransitionChild
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="h-full w-full">
-                  {isPositionCalculated && (
-                    <Rnd
-                      position={position}
-                      size={{
-                        width: modalWidth,
-                        height: modalHeight,
-                      }}
-                      onDragStart={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onMouseDown={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.classList.contains('dx-scrollbar') || 
-                            target.closest('.dx-scrollable-scrollbar')) {
-                          return;
-                        }
-                        e.stopPropagation();
-                      }}
-                      onDrag={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.classList.contains('dx-scrollbar') || 
-                            target.closest('.dx-scrollable-scrollbar')) {
-                          return;
-                        }
-                        e.stopPropagation();
-                      }}
-                      onMouseUp={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onResizeStart={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onDragStop={(_, d) => {
-                        if (!isMaximized) {
-                          setPosition({ x: d.x, y: d.y });
-                        }
-                      }}
-                      onResizeStop={(_, __, ref, ___, pos) => {
-                        setModalHeight(ref.offsetHeight);
-                        setModalWidth(ref.offsetWidth);
-                        setPosition(pos);
-                      }}
-                      onResize={(_, __, ref, ___, pos) => {
-                        setPosition({ x: pos.x, y: pos.y });
-                        setModalHeight(ref.offsetHeight);
-                        setModalWidth(ref.offsetWidth);
-                      }}
-                      disableDragging={isMaximized}
-                      enableResizing={!isMaximized}
-                      bounds="parent"
-                      minWidth={minWidth}
-                      minHeight={minHeight}
-                      dragGrid={[10, 10]}
-                      resizeGrid={[10, 10]}
-                      dragHandleClassName="drag-handle"
-                      className="pointer-events-auto bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
+            {isPositionCalculated && (
+              <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div
+                  className="flex min-h-full items-center justify-center p-4"
+                  style={{
+                    visibility: !enableDynamicSize ? undefined : isLoading ? 'hidden' : 'visible',
+                  }}
+                >
+                  <Rnd
+                    size={{ width: modalWidth, height: modalHeight }}
+                    position={position}
+                    onMouseDown={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (
+                        target.classList.contains('dx-scrollbar') ||
+                        target.closest('.dx-scrollable-scrollbar')
+                      ) {
+                        return;
+                      }
+                      e.stopPropagation();
+                    }}
+                    onDrag={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (
+                        target.classList.contains('dx-scrollbar') ||
+                        target.closest('.dx-scrollable-scrollbar')
+                      ) {
+                        return;
+                      }
+                      e.stopPropagation();
+                    }}
+                    onMouseUp={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onResizeStart={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onDragStop={(_, d) => {
+                      if (!isMaximized && !isMobile) {
+                        setPosition({ x: d.x, y: d.y });
+                      }
+                    }}
+                    onResizeStop={(_, __, ref, ___, pos) => {
+                      setModalHeight(ref.offsetHeight);
+                      setModalWidth(ref.offsetWidth);
+                      setPosition(pos);
+                    }}
+                    onResize={(_, __, ref, ___, pos) => {
+                      setPosition({ x: pos.x, y: pos.y });
+                      setModalHeight(ref.offsetHeight);
+                      setModalWidth(ref.offsetWidth);
+                    }}
+                    disableDragging={isMaximized || isMobile}
+                    enableResizing={!isMaximized && !isMobile}
+                    bounds="parent"
+                    minWidth={effectiveMinWidth}
+                    minHeight={effectiveMinHeight}
+                    dragGrid={[10, 10]}
+                    resizeGrid={[10, 10]}
+                    dragHandleClassName="drag-handle"
+                    className="pointer-events-auto bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
+                  >
+                    <DialogPanel
+                      className={`erp-modal w-full h-full flex flex-col overflow-hidden`}
                     >
-                      <DialogPanel
-                        className={`erp-modal w-full h-full flex flex-col overflow-hidden`}
+                      <DialogTitle
+                        as="h3"
+                        className={`${
+                          isMaximized || isMobile ? "cursor-pointer" : "cursor-move"
+                        } place-items-center px-2 rounded-t-md bg-[#f6f6f6] h-[40px] top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 border-gray-200 items-center drag-handle cursor-move`}
+                        style={{ flex: "0 0 auto" }}
                       >
-                        <DialogTitle
-                          as="h3"
-                          className={` ${
-                            isMaximized ? "cursor-pointer" : "cursor-move"
-                          }  place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900`}
-                          style={{ flex: "0 0 auto" }}
-                        >
-                          <div className=" drag-handle flex items-center dark:text-dark-text flex-1">
-                            {title}  {modalHeight}wewewe
-              {modalWidth}
-                          </div>
+                        <div>{title}</div>
+                        <div className="flex items-center space-x-2">
                           {closeButton === "Button" && (
-                            <div className="max-w-[200px] inline-block ">
-                              <ERPButton
-                                className="w-full"
-                                type="button"
-                                title={closeTitle}
-                                onTouchEnd={(e) => {
-                                  e.stopPropagation();
-                                  handleClose();
-                                }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleClose();
-                                }}
-                                tabIndex={-1}
-                              />
-                            </div>
-                          )}
-                          <div className="flex items-center space-x-2 ">
-                            {isMaximize && (
-                              <button
-                                className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
-                                onClick={() => {
-                                  if (isMaximized) {
-                                    setPosition(initPosition);
-                                  }
-                                  setIsMaximized(!isMaximized);
-                                }}
-                                onTouchEnd={() => {
-                                  if (isMaximized) {
-                                    setPosition(initPosition);
-                                  }
-                                  setIsMaximized(!isMaximized);
-                                }}
-                                aria-label={
-                                  isMaximized ? "Restore" : "Maximize"
-                                }
-                              >
-                                {isMaximized ? (
-                                  <Minimize2 size={15} />
-                                ) : (
-                                  <Maximize2 size={15} />
-                                )}
-                              </button>
-                            )}
-                            <button
-                              className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleClose();
-                              }}
+                            <ERPButton
+                              type="button"
+                              title={closeTitle}
+                              className="text-xs px-2 py-1"
                               onTouchEnd={(e) => {
                                 e.stopPropagation();
                                 handleClose();
                               }}
-                              aria-label="Close"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleClose();
+                              }}
+                              tabIndex={-1}
+                            />
+                          )}
+                          {isMaximize && (
+                            <button
+                              type="button"
+                              className="dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full p-1"
+                              onClick={() => {
+                                if (isMaximized) {
+                                  setPosition(initPosition);
+                                }
+                                setIsMaximized(!isMaximized);
+                              }}
+                              onTouchEnd={() => {
+                                if (isMaximized) {
+                                  setPosition(initPosition);
+                                }
+                                setIsMaximized(!isMaximized);
+                              }}
+                              aria-label={isMaximized ? "Restore" : "Maximize"}
                             >
-                              <X size={15} />
+                              {isMaximized ? (
+                                <Minimize2 className="h-4 w-4" />
+                              ) : (
+                                <Maximize2 className="h-4 w-4" />
+                              )}
                             </button>
-                          </div>
-                        </DialogTitle>
-
-                        <div  className={`bg-inherit flex flex-col justify-between flex-grow  w-full`}>
-                          <ERPScrollArea
-                            maxHeight={`${modalHeight - (footer ? 90 : 0)}px`}
-                            className="overflow-y-auto overflow-x-hidden"
+                          )}
+                          <button
+                            type="button"
+                            className="dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full p-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClose();
+                            }}
+                            onTouchEnd={(e) => {
+                              e.stopPropagation();
+                              handleClose();
+                            }}
+                            aria-label="Close"
                           >
-                            <div className={`px-4 pt-4`}>
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </DialogTitle>
+                      <div className={`bg-inherit flex flex-col justify-between flex-grow w-full p-4`}>
+                        <ERPScrollArea
+                          className="overflow-y-auto overflow-x-hidden"
+                          maxHeight={isMobile ? `calc(${window.innerHeight - 200}px)` : `${modalHeight - (footer ? 90 : 40)}px`}
+                        >
+                          <div
+                            ref={enableDynamicSize ? contentRef : null}
+                            className="modal-content-wrapper"
+                          >
+                            <div className={`px-2 pt-2`}>
                               {content &&
                                 cloneElement(
                                   content,
@@ -467,66 +483,67 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
                                         modalHeight: modalHeight,
                                         rowData: rowData,
                                         origin: origin,
-                                        postData:
-                                          mergeObjectsRemovingIdenticalKeys(
-                                            content.postData,
-                                            postData
-                                          ),
+                                        postData: mergeObjectsRemovingIdenticalKeys(
+                                          content.postData,
+                                          postData
+                                        ),
                                       }
                                     : {
-                                        contentProps: contentProps
-                                          ? contentProps
-                                          : {},
+                                        contentProps: contentProps ? contentProps : {},
                                         isMaximized: isMaximized,
                                         modalHeight: modalHeight,
                                         rowData: rowData,
                                         origin: origin,
-                                        postData:
-                                          mergeObjectsRemovingIdenticalKeys(
-                                            content.postData,
-                                            postData
-                                          ),
+                                        postData: mergeObjectsRemovingIdenticalKeys(
+                                          content.postData,
+                                          postData
+                                        ),
                                       }
                                 )}
                             </div>
-                          </ERPScrollArea>
-                        </div>
-
-                        {footer && <div>{footer}</div>}
-
-                        {!isForm && isButton && (
-                          <div
-                            className="border-t py-2 flex gap-2 justify-end"
-                            style={{ flex: "0 0 auto" }}
-                          >
-                            <div className="max-w-[200px]">
-                              <ERPButton
-                                className="w-full"
-                                type="button"
-                                title={closeTitle}
-                                onClick={handleClose}
-                                tabIndex={-1}
-                              />
-                            </div>
-                            {hasSubmit && (
-                              <ERPSubmitButton
-                                onClick={handleSubmit}
-                                className="uppercase"
-                              >
-                                {submitTitle || "Submit"}
-                              </ERPSubmitButton>
-                            )}
                           </div>
-                        )}
-                      </DialogPanel>
-                    </Rnd>
-                  )}
+                        </ERPScrollArea>
+                      </div>
+                      {footer && (
+                        <div className="border-t border-gray-300 dark:border-dark-border px-4 py-2">{footer}</div>
+                      )}
+                      {!isForm && isButton && (
+                        <div
+                          className="border-t py-2 flex gap-2 justify-end px-4"
+                          style={{ flex: "0 0 auto" }}
+                        >
+                          <div className="max-w-[200px]">
+                            <ERPButton
+                              className="w-full"
+                              type="button"
+                              title={closeTitle}
+                              onClick={handleClose}
+                              tabIndex={-1}
+                            />
+                          </div>
+                          {hasSubmit && (
+                            <ERPSubmitButton
+                              onClick={handleSubmit}
+                              className="uppercase"
+                            >
+                              {submitTitle || "Submit"}
+                            </ERPSubmitButton>
+                          )}
+                        </div>
+                      )}
+                    </DialogPanel>
+                  </Rnd>
                 </div>
-              </TransitionChild>
-            </div>
+                {enableDynamicSize && isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                )}
+              </div>
+            )}
           </Dialog>
         </Transition>
-      </div>
+      </>
     );
   },
   (prevProps, nextProps) => {
@@ -539,7 +556,10 @@ const { contentRef, dimensions, measureContent } = useDynamicModalSize(width as 
       prevProps.submitTitle === nextProps.submitTitle &&
       prevProps.contentProps === nextProps.contentProps &&
       prevProps.footer === nextProps.footer &&
-      prevProps.initialPosition === nextProps.initialPosition
+      prevProps.initialPosition === nextProps.initialPosition &&
+      prevProps.enableDynamicSize === nextProps.enableDynamicSize &&
+      prevProps.width === nextProps.width &&
+      prevProps.height === nextProps.height
     );
   }
 );

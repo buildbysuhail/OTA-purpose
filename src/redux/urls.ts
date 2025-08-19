@@ -558,6 +558,8 @@ const Urls = {
   purchase_return_gst_detailed: "/Inventory/RptGSTReport/PurchaseReturnTaxGSTDetailedReport",
   purchase_return_gst_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxRegisterFormatReport",
   purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxAdvRegisterFormatReport",
+  data_order_status:'/Inventory/PurchaseOrder/Status/',
+  update_order_status:'/Inventory/PurchaseOrder/UpdateInvoiceStatus/',
 
   sales_gst_sales_and_return:"/Inventory/RptGSTReport/SalesTaxSalesAndSalesReturn",
 
@@ -587,7 +589,7 @@ const Urls = {
   diagnosis_report_sales_price_greater_than_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceGreaterthanMRP/",
   diagnosis_report_sales_price_category_greater_than_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceCategoryGreaterthanMRP/",
   diagnosis_report_sales_price_equal_to_mrp: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceEqualToMRP/",
-  diagnosis_report_zero_price_category_1: "/Inventory/RptAdvancedReport/DiagnosisReportZeroPriceCategory1/", 
+  diagnosis_report_zero_price_category_1: "/Inventory/RptAdvancedReport/DiagnosisReportZeroPriceCategory1/",
   diagnosis_report_zero_price_category_2: "/Inventory/RptAdvancedReport/DiagnosisReportZeroPriceCategory2/",
   diagnosis_report_sales_price_less_than_price_category_1: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessthanPriceCategory1/",
   diagnosis_report_sales_price_less_than_price_category_2: "/Inventory/RptAdvancedReport/DiagnosisReportSalesPriceLessthanPriceCategory2/",
@@ -733,7 +735,7 @@ const Urls = {
   insert_gift_on_billing: "/Inventory/GiftOnBilling/", // POST
   select_gift_product_by_product_id: "/Inventory/GiftOnBilling/", // GET (append {productId})
   delete_gift_on_billing: "/Inventory/GiftOnBilling/", // DELETE (pass body as List<GiftSchemeDto>)
-  select_all_gift_on_billing: "/Inventory/GiftOnBilling/", // 
+  select_all_gift_on_billing: "/Inventory/GiftOnBilling/", //
   gift_on_billing: "/Inventory/GiftOnBilling/",
   // URLs for QuantityLimitController (Inventory Module)
 

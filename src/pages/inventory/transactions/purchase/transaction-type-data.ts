@@ -374,7 +374,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   cbVatAccount: { visible: true, disabled: false, label: "" },
   inSearch: { visible: true, disabled: false, label: "in_search" },
   cbLabelDesign: { visible: true, disabled: false, label: "label_design" },
-  orderStatus: { visible: false, disabled: false, label: "" },
+  orderStatus: { visible: false, disabled: false, label: "order_status" },
+  orderApprovalStatus: { visible: false, disabled: false, label: "" },
 
 };
 export const TransactionFormStateInitialData: TransactionFormState = {

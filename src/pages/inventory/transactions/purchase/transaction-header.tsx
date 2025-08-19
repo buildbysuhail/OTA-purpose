@@ -12,6 +12,7 @@ import ReferenceNumber from "./components/reference-number";
 import ReferenceDate from "./components/reference-Date";
 import TransactionDate from "./components/transaction-Date";
 import LedgerCode from "./components/ledger-code";
+import VatTokenInput from "./components/cb-vat-tocken";
 import Employee from "./components/cb-employee";
 import DebitAccount from "./components/cb-debit-account";
 import Project from "./components/cb-project";
@@ -32,6 +33,8 @@ import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import SupplyTypeCombobox from "./components/SupplyTypeCombobox";
 import LedgerDetails from "./ledger-details";
 import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
+import VoucherType from "../../../../enums/voucher-types";
+import axios from "axios";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -54,6 +57,7 @@ interface TransactionHeaderProps {
   isDropDownOpen: boolean;
   toggleDropdown: () => void;
   footerLayout: "horizontal" | "vertical";
+  userSession: any;
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -73,7 +77,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   isDropDownOpen,
   toggleDropdown,
   footerLayout,
-  focusToNextColumn
+  focusToNextColumn,
+  userSession,
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -164,6 +169,33 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+const [updateTriggered, setUpdateTriggered] = useState(false);
+
+  useEffect(() => {
+    if (updateTriggered) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(Urls.update_order_status, {
+            params: {
+              vocherNumber: formState.transaction.master.voucherNumber,
+              vocherForm: formState.transaction.master.voucherForm,
+              voucherType: formState.transaction.master.voucherType,
+              vocherPrefix: formState.transaction.master.voucherPrefix,
+              status: formState.orderStatus,
+            },
+          });
+          console.log('API Response:', response.data);
+        } catch (error) {
+          console.error('Error updating order status:', error);
+        } finally {
+          setUpdateTriggered(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [updateTriggered]);
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
@@ -267,7 +299,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               formState={formState}
               handleKeyDown={(e) => {
                 if (isEnterKey(e.key)) {
-
                   if (formState.currentCell && formState.currentCell.rowIndex > 0 && formState.currentCell.column != "") {
                     focusToNextColumn(formState.currentCell.rowIndex, formState.currentCell.column);
                   } else {
@@ -358,58 +389,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   t={t}
                 />
 
-                <div>
-                  {formState.formElements.chkVat?.visible && (
-                    <ERPCheckbox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="enableTaxNumber"
-                      className="text-left dark:text-dark-text"
-                      label={t(formState.formElements.chkVat.label)}
-                      checked={formState.enableTaxNumber}
-                      onChange={(e) => {
-                        dispatch(
-                          formStateHandleFieldChange({
-                            fields: { enableTaxNumber: e.target.checked },
-                          })
-                        );
-                      }}
-                      disabled={formState.formElements.pnlMasters?.disabled}
-                    />
-                  )}
-
-                  {formState.formElements.cbVatAccount?.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="tokenNumber"
-                      label={t(formState.formElements.chkVat.label)}
-                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                      noLabel={true}
-                      fetching={formState.transactionLoading}
-                      data={formState.transaction.master}
-                      onChange={(e) => {
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: {
-                              tokenNumber: e.target.value,
-                            },
-                          })
-                        );
-                        handleFieldKeyDown &&
-                          handleFieldKeyDown("tokenNumber", "Enter");
-                      }}
-                      value={formState.transaction.master.tokenNumber}
-                      disabled={
-                        formState.formElements.cbVatAccount.disabled ||
-                        formState.enableTaxNumber === false ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e: any) => {
-                        handleKeyDown && handleKeyDown(e, "tokenNumber");
-                      }}
-                    />
-                  )}
-                </div>
+                <VatTokenInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
 
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -544,6 +530,53 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && userSession.dbIdValue === "572054329920" &&
+                  <ERPDataCombobox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    enableClearOption={false}
+                    fetching={formState.transactionLoading}
+                    id="orderStatus"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                    label={t(formState.formElements.orderStatus.label)}
+                    data={formState.transaction.master}
+                    // onSelectItem={async (e) => {
+                    //   let barcodeTem = await loadTemplateById<TransactionDetail>(e.value);
+                    //   dispatch(formStateHandleFieldChange({ fields: { barcodeTemplate: barcodeTem } }));
+                    //   dispatch(formStateMasterHandleFieldChange({ fields: { labelDesignID: e.value, }, }));
+                    //   handleFieldKeyDown("labelDesignID", "Enter");
+                    // }}
+                    // value={formState.transaction.master.labelDesignID}
+                    field={{
+                      // params: `TemplateType=barcode`,
+                      // id: "labelDesignID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_order_status,
+                    }}
+                    disabled={
+                      formState.formElements.cbLabelDesign.disabled ||
+                      formState.formElements.pnlMasters?.disabled
+                    }
+                    disableEnterNavigation
+                    onKeyDown={(e: any) => {
+                      handleKeyDown && handleKeyDown(e, "labelDesign");
+                    }}
+                  />
+                }
+
+                {formState.formElements.orderApprovalStatus.visible && (
+                  formState.formElements.orderApprovalStatus.label
+                )}
+
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
+                  <div>
+                    <ERPButton
+                        title={t('order_status_update')}
+                        variant="secondary"
+                        onClick={() => setUpdateTriggered(true)}
+                      />
+                  </div>
+                }
               </div>
 
               {conditionalFooterComponents}
@@ -770,67 +803,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   t={t}
                 />
 
-                <div>
-                  {formState.formElements.chkVat?.visible && (
-                    <ERPCheckbox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="enableTaxNumber"
-                      className="text-left dark:text-dark-text"
-                      label={t(formState.formElements.chkVat.label)}
-                      checked={formState.enableTaxNumber}
-                      onChange={(e) => {
-                        dispatch(
-                          formStateHandleFieldChange({
-                            fields: { enableTaxNumber: e.target.checked },
-                          })
-                        );
-                      }}
-                      disabled={formState.formElements.pnlMasters?.disabled}
-                    />
-                  )}
-
-                  {formState.formElements.cbVatAccount?.visible && (
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      enableClearOption={false}
-                      id="tokenNumber"
-                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                      noLabel={true}
-                      fetching={formState.transactionLoading}
-                      data={formState.transaction.master}
-                      onSelectItem={(e) => {
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: {
-                              tokenNumber: e.value,
-                            },
-                          })
-                        );
-                        handleFieldKeyDown &&
-                          handleFieldKeyDown("tokenNumber", "Enter");
-                      }}
-                      value={formState.transaction.master.tokenNumber}
-                      field={{
-                        id: "tokenNumber",
-                        valueKey: "id",
-                        labelKey: "name",
-                        getListUrl: Urls.data_employees,
-                        params: `ledgerType=${formState.formElements?.cbVatAccount?.accLedgerType ||
-                          LedgerType.All
-                          }`,
-                      }}
-                      disabled={
-                        formState.formElements.cbVatAccount.disabled ||
-                        formState.enableTaxNumber === false ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e: any) => {
-                        handleKeyDown && handleKeyDown(e, "tokenNumber");
-                      }}
-                    />
-                  )}
-                </div>
+                <VatTokenInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
 
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox

@@ -27,6 +27,7 @@ import {
   formStateMasterHandleFieldChange,
   formStateSetDetails,
   resetState,
+  themeChangeCountdownTick,
   updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -204,46 +205,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleResetTheme = () => {
     setTempTheme(null);
   };
+  const [countdown, setCountdown] = useState(8);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const onClearThemeChangeInterval = () => {
+    clearInterval(timerRef.current);
+  }
 
-  const handleSaveTheme = (theme: any) => {
-    dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          userConfig: {
-            ...formState.userConfig,
-            gridFontSize: theme.fontSize,
-            gridIsBold: theme.bold,
-            gridBorderColor: theme.borderColor,
-            gridHeaderBg: theme.headerBG,
-            gridHeaderFontColor: theme.headerFontColor,
-            gridBorderRadius: theme.borderRadius,
-            showColumnBorder: theme.isColumnBorder,
-            activeRowBg: theme.activeRowBG,
-            gridRowHeight: theme.rowHeight,
-            gridHeaderRowHeight: theme.gridHeaderRowHeight,
-            gridFooterBg: theme.gridFooterBg,
-            gridFooterFontColor: theme.gridFooterFontColor,
-          },
-        },
-      })
-    );
-    setTempTheme(null);
-    api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, {
-      ...formState.userConfig,
-      gridFontSize: theme.fontSize,
-      gridIsBold: theme.bold,
-      gridBorderColor: theme.borderColor,
-      gridHeaderBg: theme.headerBG,
-      gridHeaderFontColor: theme.headerFontColor,
-      gridBorderRadius: theme.borderRadius,
-      showColumnBorder: theme.isColumnBorder,
-      activeRowBg: theme.activeRowBG,
-      gridRowHeight: theme.rowHeight,
-    }).then((response) => {
-      const base64 = modelToBase64(response.data);
-      localStorage.setItem("utInvc", base64);
-    });
-  };
+  useEffect(() => {
+    debugger;
+    if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
+      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.selectedTheme }, themeChangeCountdown: 8 } }));
+      let countdown = 8;
+      timerRef.current = setInterval(() => {
+        countdown -= 1;
+
+        // Dispatch the tick to update the state
+        dispatch(themeChangeCountdownTick(countdown));
+
+        // Stop timer and take action if countdown reaches 0 or less
+        if (countdown <= 0) {
+          clearInterval(timerRef.current);
+          dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: { ...formState.currentTheme }, selectedTheme: formState.currentTheme } }))
+        }
+      }, 1000);
+    }
+  }, [formState.selectedTheme]);
 
   const purchaseGridRef = useRef<{
     focusCell: (
@@ -675,11 +661,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                voucherType == VoucherType.PurchaseReturn 
-                ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-                : voucherType == "DNS"
-                  ? applicationSettings.inventorySettings?.defaultSalesAcc
-                  : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+                voucherType == VoucherType.PurchaseReturn
+                  ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
+                  : voucherType == "DNS"
+                    ? applicationSettings.inventorySettings?.defaultSalesAcc
+                    : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
@@ -809,14 +795,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
-        orderStatus:{          
-          ...initialFormElements.orderStatus,
+        orderApprovalStatus: {
+          ...initialFormElements.orderApprovalStatus,
           visible: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder,
           label: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo == "Approved"
-          ? "PO Approved"
-          : _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo != "Approved"
-          ?"PO Not Approved"
-          :""
+            ? "PO Approved"
+            : _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo != "Approved"
+              ? "PO Not Approved"
+              : ""
         }
       } as any;
       _formState.transaction.master.costCentreID =
@@ -899,7 +885,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
 
         const calculatedDetails: TransactionDetail[] = [];
-      const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType,{result:{}}, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType,{result:{}}, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const element = refactoredDetails[index];
           const calculated = calculateRowAmount(
@@ -911,7 +897,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
         }
 
-              const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
+        const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
         if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
           const summaryRes = calculateSummary(details, formState, {
             result: {},
@@ -932,7 +918,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = PendingTransDetails.batchesUnits;
-                  totalRes.loading = {isLoading: false, text: ''}
+            totalRes.loading = {isLoading: false, text: ''}
 
             // Dispatch the state update
 
@@ -941,7 +927,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               formStateHandleFieldChangeKeysOnly({
                 fields: totalRes,
                 updateOnlyGivenDetailsColumns: true,
-                      rowIndex:lastIndex+1,
+                rowIndex:lastIndex+1,
                 itemsToAddToDetails: calculatedDetails
               })
             );
@@ -950,7 +936,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       } else {
 
-      dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
+        dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
       }
     }
   }, [formState.transaction.details, formState.transaction.master]);
@@ -1298,7 +1284,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
 
- const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings,userSession
+  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings,userSession
     ,voucherType ?? formState.transaction.master.voucherType
     ,formType ?? formState.transaction.master.voucherForm,t,formState)??[]
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
@@ -1592,6 +1578,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               isDropDownOpen={isDropDownOpen}
               toggleDropdown={toggleHeaderDropdown}
               footerLayout="vertical"
+              userSession={userSession}
             />
             {/* header ends here */}
 
@@ -1759,7 +1746,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 setIsPrintModalOpen={setIsPrintModalOpen}
                 onProcessSelected={onProcessSelected}
                 downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
-                    importFromExcel= {importFromExcel}
+                importFromExcel= {importFromExcel}
               />
 
               {/* Voucher Info */}
@@ -1785,41 +1772,58 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     isDropDownOpen={isDropDownOpen}
                     toggleDropdown={toggleHeaderDropdown}
                     footerLayout="vertical"
+                    userSession={userSession}
                   />
                 </div>
               </div>
 
               {/* Form Section */}
-              <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-[25px] mt-[10px]">
+              <div className="flex-1 bg-white text-zinc-800 overflow-y-auto">
                 <div className="space-y-2"></div>
                 <ErpPurchaseGrid
-                  onChange={handleTextDataChange}
+                  isMobile={true}
                   ref={purchaseGridRef}
+                  onChange={handleTextDataChange}
                   onKeyDown={(
                     value: any,
                     e: React.KeyboardEvent<any>,
                     column: keyof TransactionDetail,
                     rowIndex: number
-                  ) =>
+                  ) => {
                     handleTextDataKeyDown(value, e, column, rowIndex, {
                       result: {},
                       formStateHandleFieldChangeKeysOnly:
                         formStateHandleFieldChangeKeysOnly,
-                    })
-                  }
+                    });
+                  }}
+                  transactionType={transactionType}
                   _columns={_purchaseGridCol}
                   keyField={"productID"}
                   height={gridHeight}
                   gridId={`${gridCode}`}
                   onAddData={handleAddData}
-                  summaryConfig={
-                    formState.summaryConfig as SummaryConfig<TransactionDetail>[]
+                  summaryConfig={formState.summaryConfig}
+                  gridFontSize={formState.userConfig?.gridFontSize}
+                  gridIsBold={formState.userConfig?.gridIsBold}
+                  rowHeight={
+                    formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
                   }
+                  headerRowHeight={formState.userConfig?.gridHeaderRowHeight ?? _st.gridHeaderRowHeight}
+                  gridBorderColor={formState.userConfig?.gridBorderColor}
+                  gridHeaderBg={formState.userConfig?.gridHeaderBg}
+                  gridHeaderFontColor={
+                    formState.userConfig?.gridHeaderFontColor
+                  }
+                  gridBorderRadius={formState.userConfig?.gridBorderRadius}
+                  showColumnBorder={formState.userConfig?.showColumnBorder ?? true}
+                  activeRowBg={formState.userConfig?.activeRowBg}
+                  gridFooterBg={formState.userConfig?.gridFooterBg}
+                  gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
                 />
                 {/* Grid Under Modification */}
                 <TransactionFooter
-                transactionType={transactionType??""}
-                    calculateTotal ={calculateTotal}
+                  transactionType={transactionType ?? ""}
+                  calculateTotal={calculateTotal}
                   applyDiscountsToItems={applyDiscountsToItems}
                   formState={formState}
                   dispatch={dispatch}
@@ -1869,8 +1873,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
           (!formState.transactionLoading &&
             formState.userConfig?.footerPosition !== "right" && (
               <TransactionFooter
-              transactionType={transactionType??""}
-                    calculateTotal ={calculateTotal}
+                transactionType={transactionType??""}
+                calculateTotal ={calculateTotal}
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
@@ -2217,7 +2221,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }
             transactionType={transactionType}
             formState={formState}
-
+            onClearThemeChangeInterval={onClearThemeChangeInterval}
           />
         )}
         {isDocumentModalOpen && (

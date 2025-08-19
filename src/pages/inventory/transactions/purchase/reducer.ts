@@ -157,6 +157,11 @@ const InvTransactionSlice = createSlice({
         state.templatesData.push(action.payload);
       }
     },
+    themeChangeCountdownTick: (
+      state, action: PayloadAction<number>
+    ) => {
+      state.themeChangeCountdown = state.themeChangeCountdown??0-1;
+    },
     // Update a specific field in the transaction object
     formStateTransactionUpdate: (
       state,
@@ -328,7 +333,7 @@ const InvTransactionSlice = createSlice({
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
 
-      
+
     },
  formStateClearAttachments: (state) => {
       // Iterate over all rows in details
@@ -562,26 +567,26 @@ const InvTransactionSlice = createSlice({
       action: PayloadAction<{ column: string, toBefore: string}>
     ) => {
       const { column, toBefore } = action.payload;
-      
+
       // Find the index of the column to move
       const fromIndex = state.gridColumns.findIndex(x => x.dataField === column);
-      
+
       // Find the index of the target position (before which to insert)
       const toIndex = state.gridColumns.findIndex(x => x.dataField === toBefore);
-      
+
       // Check if both columns exist
       if (fromIndex === -1 || toIndex === -1) {
         return; // Column not found, no changes
       }
-      
+
       // Remove the column from its current position
       const columnToMove = state.gridColumns[fromIndex];
       state.gridColumns.splice(fromIndex, 1);
-      
+
       // Calculate the new insertion index
       // If we removed an item before the target, adjust the index
       const adjustedToIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
-      
+
       // Insert the column at the new position
       state.gridColumns.splice(adjustedToIndex, 0, columnToMove);
     },
@@ -594,7 +599,7 @@ const InvTransactionSlice = createSlice({
         itemsToAddToDetails?: TransactionDetail[];
       }>
     ) => {
-      
+
       const {
         fields,
         updateOnlyGivenDetailsColumns = false,
@@ -651,7 +656,7 @@ const InvTransactionSlice = createSlice({
         // Special handling for transaction.details array
         if (
           key === "gridColumns" &&
-          fieldValue 
+          fieldValue
         ) {
           let ddf = typeof fieldValue
           const gridColumns = fieldValue as ColumnModel[];
@@ -677,7 +682,7 @@ const InvTransactionSlice = createSlice({
                 }
               }
             );
-            
+
         } else
         if (
           key === "transaction" &&
@@ -769,7 +774,7 @@ const InvTransactionSlice = createSlice({
             fieldValue as Record<string, any>
           );
         } else {
-          
+
           // Primitive, array, or other object type
           if (Array.isArray(fieldValue)) {
             if (key == "batchesUnits") {
@@ -845,7 +850,8 @@ export const {
   formStateClearAttachments,
   reOrderGridCols,
   formStateDeleteDetails,
-  resetState
+  resetState,
+  themeChangeCountdownTick
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

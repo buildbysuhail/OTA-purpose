@@ -3,16 +3,18 @@ import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resiza
 import { X, Check, Palette } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { TransactionFormState } from "./transaction-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { modelToBase64 } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
+import { RootState } from "../../../../redux/store";
 
 interface GridThemeProps {
   isOpen: boolean;
   onClose: () => void;
+  onClearThemeChangeInterval: () => void;
   t: (key: string) => string;
   formState: TransactionFormState;
   transactionType: any
@@ -351,18 +353,17 @@ const gridThemes = [
   }
 ];
 
-const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, transactionType }) => {
-  const [selectedTheme, setSelectedTheme] = useState<any>(null);
-  const [currentTheme, setCurrentTheme] = useState<any>(null);
-  const [countdown, setCountdown] = useState(8);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionType, onClearThemeChangeInterval }) => {
   const dispatch = useDispatch();
+  const formState = useSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   const onResetTheme = () => {
     dispatch(formStateHandleFieldChangeKeysOnly(
       {
         fields: {
           userConfig: {
-            ...currentTheme
+            ...formState.currentTheme
           }
         }
       }
@@ -386,64 +387,41 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
       gridRowHeight: formState?.userConfig?.gridRowHeight,
       isInitial: true
     }
-    setCurrentTheme(ct)
-    setSelectedTheme(ct)
+    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: ct, currentTheme: ct } }))
   }, [formState?.userConfig]);
 
 
-  useEffect(() => {
-    if (selectedTheme && selectedTheme.isInitial !== true) {
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            userConfig: {
-              ...selectedTheme,
-            },
-          },
-        })
-      );
-
-      setCountdown(8);
-      timerRef.current = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current!);
-            onResetTheme();
-            setSelectedTheme(currentTheme);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [selectedTheme]);
+  // useEffect(() => {
+  //   if (formState.selectedTheme && formState.selectedTheme?.isInitial !== true) {
+  //     dispatch(
+  //       formStateHandleFieldChangeKeysOnly({
+  //         fields: {
+  //           userConfig: {
+  //             ...formState.selectedTheme,
+  //           },
+  //         },
+  //       })
+  //     );
+  //   }
+  // }, [formState.selectedTheme]);
 
   const handleSelectTheme = (theme: any) => {
-    if (selectedTheme?.themeName !== theme.themeName) {
-      setSelectedTheme(theme);
+    if (formState.selectedTheme?.themeName !== theme.themeName) {
+      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: { ...theme, isInitial: false } } }));
     }
   };
-
 
   const handleSave = async () => {
     try {
       debugger;
-      if (!selectedTheme) return;
-      console.log("fulluserconfig", { ...formState?.userConfig, ...selectedTheme });
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...selectedTheme });
+      if (!formState.selectedTheme) return;
+      console.log("fulluserconfig", { ...formState?.userConfig, ...formState.selectedTheme });
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
       handleResponse(response, () => {
-        const base64 = modelToBase64({ ...formState?.userConfig, ...selectedTheme });
+        const base64 = modelToBase64({ ...formState?.userConfig, ...formState.selectedTheme });
         localStorage.setItem("utInvc", base64);
-        setSelectedTheme(null);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null } }))
+        onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();
       });
 
@@ -470,7 +448,9 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
                 {t("grid_themes")}
               </h6>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {t('choose_your_perfect_grid_style')}
+                {/* {t('choose_your_perfect_grid_style')} */}
+                {/* {formState.selectedTheme?.themeName} */}
+                {JSON.stringify(formState.selectedTheme)}
               </p>
             </div>
           </div>
@@ -486,19 +466,19 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
         </div>
 
         {/* Theme Grid - Scrollable */}
-        <div className={`flex-1 px-4 overflow-y-auto ${selectedTheme ? 'pb-32' : 'pb-4'}`}>
+        <div className={`flex-1 px-4 overflow-y-auto ${formState.selectedTheme ? 'pb-32' : 'pb-4'}`}>
           <div className="grid grid-cols-2 gap-4">
             {gridThemes.map((theme) => (
               <div
                 key={theme.themeName}
                 onClick={() => handleSelectTheme(theme)}
-                className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${selectedTheme?.themeName === theme.themeName
+                className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${formState.selectedTheme?.themeName === theme.themeName
                   ? "ring-2 ring-blue-500 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30"
                   : "ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-gray-300 dark:hover:ring-gray-600 shadow-md hover:shadow-lg bg-white dark:bg-gray-800"}`}>
                 {/* Theme Preview Table */}
                 <div className="relative h-24 overflow-hidden">
                   <TablePreview theme={theme} />
-                  {selectedTheme?.themeName === theme.themeName && (
+                  {formState.selectedTheme?.themeName === theme.themeName && (
                     <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                       <div className="bg-white rounded-full p-1.5 shadow-lg">
                         <Check className="w-4 h-4 text-blue-600" />
@@ -538,7 +518,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
         </div>
 
         {/* Countdown and Actions - Sticky Bottom */}
-        {selectedTheme && (
+        {formState.selectedTheme && (
           <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 border-t border-blue-200 dark:border-blue-700 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
             <div className="max-w-md mx-auto">
               <div className="flex items-center gap-3 mb-3">
@@ -547,11 +527,11 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    {t('previewing')}<span className="text-blue-600 dark:text-blue-400">{selectedTheme.themeName}</span>
+                    {t('previewing')}<span className="text-blue-600 dark:text-blue-400">{formState.selectedTheme.themeName}</span>
                   </p>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                    <div className={`w-2 h-2 rounded-full animate-pulse ${countdown > 2 ? 'bg-green-500' : countdown > 0 ? 'bg-yellow-500' : 'bg-red-500'}`} />
-                    {t('auto_reset_in')}{countdown}s
+                    <div className={`w-2 h-2 rounded-full animate-pulse ${formState.themeChangeCountdown ?? 0 > 2 ? 'bg-green-500' : formState.themeChangeCountdown ?? 0 > 0 ? 'bg-yellow-500' : 'bg-red-500'}`} />
+                    {t('auto_reset_in')}{formState.themeChangeCountdown ?? 0}s
                   </div>
                 </div>
               </div>
@@ -560,7 +540,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, formState, tr
                 title={t("save_changes")}
                 onClick={handleSave}
                 variant="primary"
-                disabled={countdown === 0}
+                disabled={formState.themeChangeCountdown === 0}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] font-medium py-2.5"
               />
             </div>

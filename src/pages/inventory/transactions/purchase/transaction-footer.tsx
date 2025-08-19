@@ -284,8 +284,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
       <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
         <div className="flex justify-between">
-          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300">
-            <PanelBottom className="text-gray-800 dark:text-dark-text w-4 h-4" />
+          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
+            title="Display the footer at the bottom">
+            <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
           </button>
           <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
             <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -411,8 +412,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <button
                   onClick={toggleFooterPosition}
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
+                  title="Display the footer on the right"
                 >
-                  <PanelRight className="text-gray-800 dark:text-dark-text w-4 h-4" />
+                  <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -757,7 +759,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         )}
         {deviceInfo?.isMobile && (
-          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2 me-[14px] mb-[39px]"
+          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2 mb-[39px]"
             style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
             <div className="relative w-full">
               <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">

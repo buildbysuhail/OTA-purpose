@@ -13,12 +13,19 @@ const UnsoldProductReportFilter = ({
 }: any) => {
   const { t } = useTranslation("accountsReport");
   const userSession = useSelector((state: RootState) => state.UserSession);
+  const fromDate = getFieldProps("fromDate").value;
+  const toDate = getFieldProps("toDate").value;
 
   return (
-    <div className="grid grid-cols-1 gap-4 overflow-hidden">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <h4>Purchase Period</h4>
-        <div className="col-span-1">
+  <div className="grid grid-cols-1 gap-6">
+    {/* Top Row: Purchase & Sales Period */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Purchase Period */}
+      <div className="relative border border-gray-300 dark:border-gray-700 rounded-xl p-4 pt-6 bg-white dark:bg-dark-bg shadow-sm transition-shadow">
+        <h5 className="absolute -top-3 left-4 bg-white dark:bg-dark-bg px-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          {t("purchase_period")}
+        </h5>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
           <ERPDateInput
             label={t("from_date")}
             {...getFieldProps("fromDate")}
@@ -27,8 +34,6 @@ const UnsoldProductReportFilter = ({
               handleFieldChange("fromDate", data.fromDate)
             }
           />
-        </div>
-        <div className="col-span-1">
           <ERPDateInput
             label={t("to_date")}
             {...getFieldProps("toDate")}
@@ -38,10 +43,28 @@ const UnsoldProductReportFilter = ({
             }
           />
         </div>
+        {fromDate && toDate && (
+          <div className="mt-4 p-3 bg-white dark:bg-dark-bg-card rounded-lg border border-blue-200 dark:border-blue-800">
+            <p className="text-sm text-slate-600 dark:text-gray-300">
+              {t("selected_range")}:{" "}
+              <span className="font-semibold text-blue-700 dark:text-blue-400">
+                {Math.ceil(
+                  (new Date(toDate).getTime() - new Date(fromDate).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+                {t("days")}
+              </span>
+            </p>
+          </div>
+        )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <h4>Sales Period</h4>
-        <div className="col-span-1">
+
+      {/* Sales Period */}
+      <div className="relative border border-gray-300 dark:border-gray-700 rounded-xl p-4 pt-6 bg-white dark:bg-dark-bg shadow-sm transition-shadow">
+        <h5 className="absolute -top-3 left-4 bg-white dark:bg-dark-bg px-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          {t("sales_period")}
+        </h5>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
           <ERPDateInput
             label={t("from_date")}
             {...getFieldProps("fromDateSales")}
@@ -50,8 +73,6 @@ const UnsoldProductReportFilter = ({
               handleFieldChange("fromDateSales", data.fromDateSales)
             }
           />
-        </div>
-        <div className="col-span-1">
           <ERPDateInput
             label={t("to_date")}
             {...getFieldProps("toDateSales")}
@@ -61,31 +82,51 @@ const UnsoldProductReportFilter = ({
             }
           />
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 items-end gap-4">
-        {userSession.currentBranchId > 0 && (
-          <div className="col-span-1">
-            <ERPDataCombobox
-              label={t("sales_route")}
-              {...getFieldProps("routeID")}
-              field={{
-                id: "routeID",
-                getListUrl: Urls.data_salesRoute,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onSelectItem={(data) => {
-                handleFieldChange({
-                  routeID: data.value,
-                  route: data.label,
-                });
-              }}
-            />
+        {fromDate && toDate && (
+          <div className="mt-4 p-3 bg-white dark:bg-dark-bg-card rounded-lg border border-blue-200 dark:border-blue-800">
+            <p className="text-sm text-slate-600 dark:text-gray-300">
+              {t("selected_range")}:{" "}
+              <span className="font-semibold text-blue-700 dark:text-blue-400">
+                {Math.ceil(
+                  (new Date(toDate).getTime() - new Date(fromDate).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+                {t("days")}
+              </span>
+            </p>
           </div>
         )}
       </div>
     </div>
+
+    {/* Bottom Row: Sales Route */}
+    {userSession.currentBranchId > 0 && (
+      <div className="relative border border-gray-300 dark:border-gray-700 rounded-xl p-4 pt-6 bg-white dark:bg-dark-bg shadow-sm transition-shadow">
+        <h5 className="absolute -top-3 left-4 bg-white dark:bg-dark-bg px-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          {t("sales_route")}
+        </h5>
+        <ERPDataCombobox
+          label={t("sales_route")}
+          {...getFieldProps("routeID")}
+          field={{
+            id: "routeID",
+            getListUrl: Urls.data_salesRoute,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              routeID: data.value,
+              route: data.label,
+            });
+          }}
+        />
+      </div>
+    )}
+  </div>
+
+
+
   );
 };
 

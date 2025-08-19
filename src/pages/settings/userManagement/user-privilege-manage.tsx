@@ -14,6 +14,7 @@ import { UserRight, userRights } from "./data";
 import dxTreeList from "devextreme/ui/tree_list";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { RootState } from "../../../redux/store";
+import ERPFormButtons, { CustomButtonProps } from "../../../components/ERPComponents/erp-form-buttons";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -52,16 +53,28 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [recursive, setRecursive] = useState(false);
   const [selectionMode, setSelectionMode] = useState("all");
-  const [treeHeight, setTreeHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const [treeHeight, setTreeHeight] = useState<number>(500);
 
   useEffect(() => {
-    let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 180;
-    setTreeHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized, modalHeight]);
+    const calcHeight = () => {
+      // Choose offset dynamically depending on screen size or maximized state
+      const isMobile = window.innerWidth < 768;
+      const offset = isMobile ? 50 : (isMaximized ? 180 : 180);
+      setTreeHeight((modalHeight ?? window.innerHeight) - offset + 79);
+      // console.log("mj223333-offset:", offset);
+    };
+
+  calcHeight(); // Initial
+  window.addEventListener("resize", calcHeight);
+  return () => window.removeEventListener("resize", calcHeight);
+}, [isMaximized, modalHeight]);
+
+// console.log("mj223333-treeHeight:", treeHeight);
+// console.log("mj223333-modalHeight:", modalHeight);
+// console.log("mj223333-window.innerHeight:", window.innerHeight);
+// console.log("mj223333-isMaximized:", isMaximized);
+
+
 
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
@@ -444,10 +457,10 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     setUserRightsData(updated);
   }, [userRights]);
   return (
-    <div className="w-full flex flex-col md:flex-row">
+    <div className="w-full flex flex-col md:flex-row mb-[65px]">
       <div className="w-full md:basis-1/2 dark:bg-dark-bg dark:border-dark-border bg-slate-50 md:border-r border-slate-400 overflow-x-auto">
         <TreeList
-          height={treeHeight.windows}
+          height={treeHeight}
           ref={gridRef}
           id="userRights"
           dataSource={userRightsData}
@@ -580,7 +593,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
                 validation={postData.validations.userType2}
                 data={{ userTypeForClone: userTypeForClone }}
               />
-              <ERPButton
+              {/* <ERPButton
                 title={t("load_rights")}
                 variant="secondary"
                 disabled={
@@ -594,12 +607,12 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
                 }
                 loading={postDataLoading}
                 onClick={handleClone}
-              />
+              /> */}
             </div>
           )
         }
         {/* Form Buttons */}
-        <div className="flex justify-end mt-6 space-x-2">
+        {/* <div className="flex justify-end mt-6 space-x-2">
           <ERPButton
             title={t("save")}
             variant="primary"
@@ -618,7 +631,50 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
             disabled={postDataLoading}
             onClick={onClose}
           />
-        </div>
+        </div> */}
+
+        <ERPFormButtons
+          isLoading={postDataLoading}
+          customButtons={
+            [
+              ...(inherit_rights_from_usertype
+                ? [{
+                    title: t("load_rights"),
+                    variant: "secondary" as const,
+                    disabled: postDataLoading ||
+                      postData.data.userType == undefined ||
+                      postData.data.userType == null ||
+                      postData.data.userType == "" ||
+                      userTypeForClone == undefined ||
+                      userTypeForClone == null ||
+                      userTypeForClone == "",
+                    loading: postDataLoading,
+                    onClick: handleClone,
+                  }]
+                : []),
+              {
+                title: t("save"),
+                variant: "primary" as const,
+                disabled: postDataLoading ||
+                  postData.data.userType == undefined ||
+                  postData.data.userType == null ||
+                  postData.data.userType == "",
+                loading: postDataLoading,
+                onClick: handleSubmit,
+              },
+              {
+                title: t("close"),
+                variant: "secondary" as const,
+                disabled: postDataLoading,
+                onClick: onClose,
+              },
+            ] as CustomButtonProps[]
+          }
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />
       </div>
     </div>
   );

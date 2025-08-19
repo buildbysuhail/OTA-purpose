@@ -449,7 +449,7 @@ input, textarea {
 }
 
 /* Add to your global CSS or styled-components */
-.modal-content-wrapper {
+/* .modal-content-wrapper {
   box-sizing: border-box;
   min-height: fit-content !important;
   height: auto !important;
@@ -458,12 +458,12 @@ input, textarea {
 
 .modal-content-wrapper * {
   box-sizing: border-box;
-}
+} */
 
 /* Ensure react-rnd container respects content size */
-.react-rnd {
+/* .react-rnd {
   position: relative !important;
-}
+} */
 
 
 

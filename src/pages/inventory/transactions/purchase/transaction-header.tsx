@@ -18,7 +18,6 @@ import DebitAccount from "./components/cb-debit-account";
 import Project from "./components/cb-project";
 import InvoiceValue from "./components/invoice-value";
 import GrnNumber from "./components/grn-Number";
-import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "./reducer";
 import MoreOptionsModalContent from "./transaction-more";
@@ -87,13 +86,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const ledgerIdRef = useRef<any>(null);
-
   const isMinimized = appState.toggled && appState.toggled.includes("close");
   const sidebarWidth = isMinimized ? "80px" : "240px";
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
   const isRtl = appState.locale.rtl;
-
   const headerStyle = {
     left: isRtl ? "0" : headerLeft,
     right: isRtl ? headerLeft : "0"
@@ -170,7 +167,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-const [updateTriggered, setUpdateTriggered] = useState(false);
+  const [updateTriggered, setUpdateTriggered] = useState(false);
 
   useEffect(() => {
     if (updateTriggered) {
@@ -319,7 +316,7 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
           {/* Dropdown content */}
           <div ref={dropdownRef} className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"}`}>
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
-              <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
+              <div className="flex flex-wrap items-end gap-1">
                 <Employee
                   dispatch={dispatch}
                   formState={formState}
@@ -337,13 +334,15 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
 
-                <Project
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
+                <div className="ml-3">
+                  <Project
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
 
                 <InvoiceValue
                   dispatch={dispatch}
@@ -351,35 +350,6 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                   t={t}
                   handleKeyDown={handleKeyDown}
                 />
-
-                <div>
-                  <ERPButton
-                    title={t("grn_number")}
-                    onClick={handleButtonClick}
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    disabled={formState.transactionLoading}
-                  />
-                </div>
-
-                {isModalOpen && (
-                  <ERPModal
-                    isOpen={isModalOpen}
-                    title={t("grn_number")}
-                    width={600}
-                    height={280}
-                    closeModal={closeModal}
-                    content={
-                      <GrnNumber
-                        dispatch={dispatch}
-                        formState={formState}
-                        closeModal={closeModal}
-                        t={t}
-                        loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      />
-                    }
-                  />
-                )}
 
                 <LedgerCode
                   ref={ledgerCodeRef}
@@ -396,24 +366,6 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                   handleFieldKeyDown={handleFieldKeyDown}
                   handleKeyDown={handleKeyDown}
                 />
-
-                {formState.formElements.inSearch?.visible && (
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="inSearch"
-                    className="text-left !m-0 dark:text-dark-text"
-                    label={t(formState.formElements.inSearch.label)}
-                    checked={formState.inSearch}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { inSearch: e.target.checked },
-                        })
-                      );
-                    }}
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
 
                 {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
@@ -446,35 +398,6 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                     onKeyDown={(e: any) => {
                       handleKeyDown && handleKeyDown(e, "labelDesign");
                     }}
-                  />
-                )}
-
-                <div>
-                  <ERPButton
-                    title={t("more")}
-                    variant="secondary"
-                    onClick={handleMoreButtonClick}
-                    disabled={formState.transactionLoading}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                  />
-                </div>
-
-                {isMoreModalOpen && (
-                  <ERPModal
-                    isOpen={isMoreModalOpen}
-                    title={t("more_options")}
-                    width={650}
-                    height={580}
-                    closeModal={closeMoreModal}
-                    content={
-                      <MoreOptionsModalContent
-                        loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleFieldChange={handleFieldChange}
-                        t={t}
-                      />
-                    }
                   />
                 )}
 
@@ -513,6 +436,7 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
+
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="address2"
@@ -530,6 +454,7 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
+
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && userSession.dbIdValue === "572054329920" &&
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -571,12 +496,88 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
                   <div>
                     <ERPButton
-                        title={t('order_status_update')}
-                        variant="secondary"
-                        onClick={() => setUpdateTriggered(true)}
-                      />
+                      title={t('order_status_update')}
+                      variant="secondary"
+                      onClick={() => setUpdateTriggered(true)}
+                    />
                   </div>
                 }
+
+                {formState.formElements.inSearch?.visible && (
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="inSearch"
+                    className="text-left !m-0 dark:text-dark-text"
+                    label={t(formState.formElements.inSearch.label)}
+                    checked={formState.inSearch}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateHandleFieldChange({
+                          fields: { inSearch: e.target.checked },
+                        })
+                      );
+                    }}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                )}
+
+                <div>
+                  <ERPButton
+                    title={t("grn_number")}
+                    onClick={handleButtonClick}
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    disabled={formState.transactionLoading}
+                  />
+                </div>
+
+                {isModalOpen && (
+                  <ERPModal
+                    isOpen={isModalOpen}
+                    title={t("grn_number")}
+                    width={600}
+                    height={280}
+                    closeModal={closeModal}
+                    content={
+                      <GrnNumber
+                        dispatch={dispatch}
+                        formState={formState}
+                        closeModal={closeModal}
+                        t={t}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      />
+                    }
+                  />
+                )}
+
+                <div>
+                  <ERPButton
+                    title={t("more")}
+                    variant="secondary"
+                    onClick={handleMoreButtonClick}
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  />
+                </div>
+
+                {isMoreModalOpen && (
+                  <ERPModal
+                    isOpen={isMoreModalOpen}
+                    title={t("more_options")}
+                    width={650}
+                    height={580}
+                    closeModal={closeMoreModal}
+                    content={
+                      <MoreOptionsModalContent
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleFieldChange={handleFieldChange}
+                        t={t}
+                      />
+                    }
+                  />
+                )}
               </div>
 
               {conditionalFooterComponents}
@@ -700,8 +701,7 @@ const [updateTriggered, setUpdateTriggered] = useState(false);
           <div
             ref={dropdownRef}
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
-            style={{ width: "100%", boxSizing: "border-box", }}
-          >
+            style={{ width: "100%", boxSizing: "border-box", }}>
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
                 <Employee

@@ -1,27 +1,21 @@
-import React, { useRef } from "react";
+import React from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface LedgerCodeProps extends VoucherElementProps { }
 
-const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
-  formState,
-  dispatch,
-  t,
-  handleKeyDown
-}, ref) => {
+const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({ formState, dispatch, t, handleKeyDown }, ref) => {
   const { value, onChange } = useDebouncedInput(
     formState.ledgerData?.ledgerCode || '',
     (debouncedValue) => {
       dispatch(
         formStateHandleFieldChangeKeysOnly({
-          fields: {  },
+          fields: {},
         })
       );
-    },
-    300
+    }, 300
   );
 
   return (
@@ -30,21 +24,16 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
         <ERPInput
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="partyId"
-          className="!m-0"
+          className="!m-0 w-[120px]"
           required={true}
           fetching={formState.transactionLoading}
           label={t(formState.formElements.partyCode.label)}
           value={value}
           ref={ref}
           disableEnterNavigation={true}
-          onKeyDown={(e) => {
-            handleKeyDown && handleKeyDown(e, "partyId");
-          }}
+          onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "partyId"); }}
           onChange={(e) => onChange(e.target.value)}
-          disabled={
-            formState.formElements.partyCode?.disabled ||
-            formState.formElements.pnlMasters?.disabled
-          }
+          disabled={formState.formElements.partyCode?.disabled || formState.formElements.pnlMasters?.disabled}
         />
       )}
     </>

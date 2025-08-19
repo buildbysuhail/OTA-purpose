@@ -6,26 +6,18 @@ import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 
 interface InvoiceValueProps extends VoucherElementProps { }
 
-const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({
-  formState,
-  dispatch,
-  t,
-  handleKeyDown
-}, ref) => {
+const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({ formState, dispatch, t, handleKeyDown }, ref) => {
   const { value, onChange } = useDebouncedInput(
     formState.transaction.master.address4 || '',
     (debouncedValue) => {
       dispatch(
         formStateMasterHandleFieldChange({
           fields: {
-            address4: debouncedValue !== "" && !debouncedValue.endsWith(".")
-              ? debouncedValue
-              : debouncedValue,
+            address4: debouncedValue !== "" && !debouncedValue.endsWith(".") ? debouncedValue : debouncedValue,
           },
         })
       );
-    },
-    300
+    }, 300
   );
 
   return (
@@ -43,14 +35,11 @@ const InvoiceValue = React.forwardRef<HTMLInputElement, InvoiceValueProps>(({
           required={true}
           min={0}
           value={value}
-          className="!m-0"
+          className="!m-0 w-[120px]"
           disableEnterNavigation={true}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => handleKeyDown && handleKeyDown(e, "address4")}
-          disabled={
-            formState.formElements.invoiceValue?.disabled ||
-            formState.formElements.pnlMasters?.disabled
-          }
+          disabled={formState.formElements.invoiceValue?.disabled || formState.formElements.pnlMasters?.disabled}
         />
       )}
     </>

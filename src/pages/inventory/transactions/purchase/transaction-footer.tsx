@@ -285,7 +285,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
         <div className="flex justify-between">
           <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
-            title="Display the footer at the bottom">
+            title={t("display_the_footer_at_the_bottom")}>
             <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
           </button>
           <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
@@ -412,7 +412,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <button
                   onClick={toggleFooterPosition}
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
-                  title="Display the footer on the right"
+                  title={t("display_the_footer_on_the_right")}
                 >
                   <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
                 </button>

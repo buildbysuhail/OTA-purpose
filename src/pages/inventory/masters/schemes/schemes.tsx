@@ -230,7 +230,7 @@ const Schemes = () => {
         title={t("schemes")}
         isForm={true}
         width={600}
-        height={450}
+        height={350}
         closeModal={() => { dispatch(toggleSchemes({ isOpen: false })); }}
         content={<MemoizedSchemesManage />}
       />

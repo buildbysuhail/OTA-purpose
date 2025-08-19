@@ -342,7 +342,7 @@ const ServiceReport = () => {
                 method={ActionType.POST}
                 filterContent={<ServiceReportFilter />}
                 filterWidth={600}
-                filterHeight={320}
+                filterHeight={220}
                 filterInitialData={ServiceReportFilterInitialState}
                 reload={true}
                 gridId="grd_service_report"

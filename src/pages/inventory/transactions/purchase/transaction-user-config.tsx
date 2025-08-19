@@ -205,6 +205,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
         height={850}
         isForm={true}
         closeModal={() => setIsOpen(false)}
+        enableDynamicSize={false}
         content={
           <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2">
             {/* View Toggle Section */}

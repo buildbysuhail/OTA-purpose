@@ -515,7 +515,8 @@ export interface TransactionFormState {
   isPopupVisible: boolean;
   showGridTheme: boolean;
   stockUpdate: boolean;
-  batchGridShowKey?: number;
+  batchGridShowKey?: number; 
+  orderStatus?: string;  
 }
 interface loadingResult {
   isLoading: boolean;

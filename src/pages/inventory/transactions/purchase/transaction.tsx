@@ -636,7 +636,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         `${Urls.inv_transaction_base}${transactionType}/data/brands`
       );
       let _formState: TransactionFormState;
-      const isInvoker = voucherNo && voucherNo > 0;
+      const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
       const softwareDate = moment(
         clientSession.softwareDate,
@@ -675,8 +675,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
               employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-                  :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
+                voucherType == VoucherType.PurchaseReturn 
+                ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
+                : voucherType == "DNS"
+                  ? applicationSettings.inventorySettings?.defaultSalesAcc
+                  : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
             },
           },
@@ -806,6 +809,15 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
+        orderStatus:{          
+          ...initialFormElements.orderStatus,
+          visible: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder,
+          label: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo == "Approved"
+          ? "PO Approved"
+          : _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo != "Approved"
+          ?"PO Not Approved"
+          :""
+        }
       } as any;
       _formState.transaction.master.costCentreID =
         applicationSettings.accountsSettings.defaultCostCenterID;

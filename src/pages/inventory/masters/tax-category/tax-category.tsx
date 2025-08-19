@@ -184,7 +184,7 @@ const TaxCategory = () => {
         title={t("tax_category")}
         isForm={true}
         width={600}
-        height={320}
+        height={220}
         closeModal={() => { dispatch(toggleTaxCategory({ isOpen: false })); }}
         content={<MemoizedTaxCategoryManage />}
       />

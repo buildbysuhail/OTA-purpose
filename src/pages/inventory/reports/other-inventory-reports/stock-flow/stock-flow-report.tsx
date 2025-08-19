@@ -1026,7 +1026,7 @@ const StockFlowReport = () => {
                 method={ActionType.POST}
                 filterContent={<StockFlowReportFilter />}
                 filterWidth={790}
-                filterHeight={340}
+                filterHeight={240}
                   onFilterChanged={(filter: any) => {
                   setFilter(filter);
                 }}

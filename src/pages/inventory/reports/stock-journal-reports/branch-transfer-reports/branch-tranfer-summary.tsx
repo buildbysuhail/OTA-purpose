@@ -237,7 +237,7 @@ const BranchTransferSummary: FC<BranchTransferSummaryProps> = ({
                 method={ActionType.POST}
                 filterContent={<BranchTransferFilter />}
                 filterWidth={380}
-                filterHeight={260}
+                filterHeight={100}
                 filterInitialData={{
                   ...BranchTransferFilterInitialState,
                   fromDate: moment().startOf("month").toDate(),

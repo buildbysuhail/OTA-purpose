@@ -207,7 +207,7 @@ const InventorySummaryReport = () => {
                 method={ActionType.POST}
                 filterContent={<InventorySummaryReportFilter />}
                 filterWidth={350}
-                filterHeight={250}
+                filterHeight={150}
                 filterInitialData={{
                   ...InventorySummaryReportFilterInitialState,
                   branchID:

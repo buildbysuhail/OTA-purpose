@@ -121,7 +121,7 @@ const Remainders = () => {
         isOpen={rootState.PopupData.reminder.isOpen || false}
         title={t("remainders")}
         width={800}
-        height={300}
+        height={200}
         isForm={true}
         closeModal={() => { dispatch(toggleRemainderPopup({ isOpen: false })); }}
         content={<MemoizedRemainderManage />}

@@ -240,7 +240,7 @@ const EmailIntegration: React.FC = () => {
           isOpen={provider.isOpen}
           title={t("smtp_email")}
           width={600}
-          height={290}
+          height={190}
           isForm={true}
           closeModal={handleCloseModal}
           content={

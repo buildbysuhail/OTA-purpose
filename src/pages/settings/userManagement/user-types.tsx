@@ -100,7 +100,7 @@ const UserTypes = () => {
         isOpen={rootState.PopupData.userType.isOpen || false}
         title={t("usertype")}
         width={600}
-        height={350}
+        height={250}
         isForm={true}
         closeModal={() => { dispatch(toggleUserTypePopup({ isOpen: false })); }}
         content={<MemoizedUserTypeManage />}

@@ -76,7 +76,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   };
 
   return (
-    <div className="absolute bottom-0 left-0 w-full h-[42px] flex justify-end border-t border-gray-300 dark:border-dark-border dark:bg-dark-bg bg-white z-10 px-[10px] rounded-b-md">
+    <div className="absolute bottom-0 left-0 w-full h-[44px] flex justify-end border-t border-gray-300 dark:border-dark-border dark:bg-dark-bg bg-white z-10 px-[10px] rounded-b-md">
       <div className="flex items-center space-x-2 py-[4px]">
         {customButtons.map((button, index) => (
           <ERPButton

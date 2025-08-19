@@ -203,7 +203,7 @@ const WareHouse = () => {
         title={t("warehouse")}
         isForm={true}
         width={600}
-        height={320}
+        height={220}
         closeModal={() => { dispatch(toggleWarehouse({ isOpen: false })); }}
         content={<MemoizedWarehouseManage />}
       />

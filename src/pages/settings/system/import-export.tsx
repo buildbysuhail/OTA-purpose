@@ -7,6 +7,7 @@ import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 interface ImportExportForm {
   filePath: string;
@@ -110,7 +111,7 @@ const ImportExportManage: React.FC = React.memo(() => {
         </div>
       </div>
 
-      <div className="w-full p-2 flex gap-4 justify-end">
+      {/* <div className="w-full p-2 flex gap-4 justify-end">
         <ERPButton
           type="reset"
           title={t("cancel")}
@@ -125,7 +126,30 @@ const ImportExportManage: React.FC = React.memo(() => {
           loading={loading}
           title={t("import")}
         />
-      </div>
+      </div> */}
+        <ERPFormButtons
+          isLoading={loading}
+          customButtons={[
+            {
+              title: t("cancel"),
+              variant: "secondary",
+              disabled: loading,
+              loading: loading,
+              onClick: () => onClose(),
+            },
+            {
+              title: t("import"),
+              variant: "primary",
+              disabled: loading,
+              loading: loading,
+              onClick: () => onSubmit(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />      
     </div>
   );
 });

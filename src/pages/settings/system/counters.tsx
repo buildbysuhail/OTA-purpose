@@ -183,7 +183,7 @@ const Counters = () => {
         isOpen={rootState.PopupData.counter.isOpen || false}
         title={t("counter")}
         width={800}
-        height={350}
+        height={250}
         isForm={true}
         closeModal={() => { dispatch(toggleCounterPopup({ isOpen: false })); }}
         content={<MemoizedCounterManage />}

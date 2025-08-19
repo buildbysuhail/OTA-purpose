@@ -224,7 +224,7 @@ const PrivilegeCard = () => {
         isOpen={rootState.PopupData.privilegeCard.isOpen || false}
         title={t("privilege_card")}
         width={800}
-        height={380}
+        height={280}
         isForm={true}
         closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
         content={<MemoizedPrivilegeCardrManage />}

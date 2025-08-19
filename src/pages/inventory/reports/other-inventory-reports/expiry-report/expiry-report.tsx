@@ -406,7 +406,7 @@ const ExpiryReport = () => {
                 method={ActionType.POST}
                 filterContent={<ExpiryReportFilter />}
                 filterWidth={790}
-                filterHeight={400}
+                filterHeight={300}
                 filterInitialData={ExpiryReportFilterInitialState}
                 reload={true}
                 gridId="grd_expiry_report"

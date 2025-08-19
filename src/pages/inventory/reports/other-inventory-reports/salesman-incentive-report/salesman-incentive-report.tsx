@@ -147,7 +147,7 @@ const customizeTotal = (itemInfo: any) => `TOTAL`;
                                 method={ActionType.POST}
                                 filterContent={<SalesmanIncentiveReportFilter />}
                                 filterWidth={600}
-                                filterHeight={250}
+                                filterHeight={150}
                                 filterInitialData={{...SalesmanIncentiveReportFilterInitialState,
                                     fromDate:moment(userSession.finFrom).local().startOf("day"),
                                 }}

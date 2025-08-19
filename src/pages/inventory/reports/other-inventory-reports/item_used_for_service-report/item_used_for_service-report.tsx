@@ -280,7 +280,7 @@ const ItemUsedForService = () => {
                 method={ActionType.POST}
                 filterContent={<ItemUsedForServiceFilter />}
                 filterWidth={700}
-                filterHeight={400}
+                filterHeight={200}
                 filterInitialData={ItemUsedForServiceFilterInitialState}
                 reload={true}
                 gridId={GridId.item_used_for_service}

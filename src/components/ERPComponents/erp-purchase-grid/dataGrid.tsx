@@ -714,9 +714,14 @@ const VirtualRow = React.memo(
               <div
                 className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
                 style={{
+                  minHeight:`${rowHeight+5}px`,
+                  height: `${rowHeight+10}px`,
                   borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
                   backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
                     : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
+                    willChange:'background-color',
+                    transform: "translateZ(0)", // triggers GPU layer for smoother repaints
+                    boxSizing: "border-box",
                 }}
               >
                 <div className="px-2 xs:px-3 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8">
@@ -724,14 +729,16 @@ const VirtualRow = React.memo(
 
                     <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
                       <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
-                        <span className="text-gray-400 text-xs xs:text-sm font-medium whitespace-nowrap">
-                          #{item.productBatchID}
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-gray-400 text-xs xs:text-sm font-medium whitespace-nowrap">
+                          #{item.productBatchID  || 'Product ID'}
                         </span>
                         <span className="text-gray-900 font-medium text-sm xs:text-base truncate" title={item.product}>
-                          {item.product}
+                          {item.product || 'Product'}
                         </span>
+                        </div>
                         <span className="text-gray-900 font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto">
-                          ₹ {item.unitPrice}
+                          ₹ {item.unitPrice || 'Price'}
                         </span>
                       </div>
                     </div>
@@ -742,25 +749,25 @@ const VirtualRow = React.memo(
                           Item Subtotal
                         </span>
                         <span className="text-gray-600 text-xs xs:text-sm text-right">
-                          1 X ₹ 0 = ₹ {item.total}
+                          1 X ₹ 0 = ₹ {item.total || 'Sub Total'}
                         </span>
                       </div>
 
                       <div className="flex items-start xs:items-center justify-between gap-2">
                         <span className="text-orange-400 text-xs xs:text-sm whitespace-nowrap">
-                          Discount (%): {item.discPerc}%
+                          Discount (%): {item.discPerc || 'Discount'}%
                         </span>
                         <span className="text-orange-400 text-xs xs:text-sm text-right whitespace-nowrap">
-                          ₹ {item.discount}
+                          ₹ {item.discount || 'Discount'}
                         </span>
                       </div>
 
                       <div className="flex items-start xs:items-center justify-between gap-2">
                         <span className="text-gray-600 text-xs xs:text-sm whitespace-nowrap">
-                          Tax: {item.vatPerc}%
+                          Tax: {item.vatPerc || 'Tax'}%
                         </span>
                         <span className="text-gray-600 text-xs xs:text-sm text-right whitespace-nowrap">
-                          ₹ {item.totalAddExpense}
+                          ₹ {item.totalAddExpense || 'Tax'}
                         </span>
                       </div>
                     </div>
@@ -1164,7 +1171,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT = formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT =isMobile? 193 : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -1868,7 +1875,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             ref={containerRef}
             className="border border-gray-300 rounded"
             style={{
-              height: `${height + 80}px`,
+              height: isMobile? `${height + 10}px` : `${height + 80}px`,
               overflowY: "scroll",
               overflowX: "auto",
               position: "relative",

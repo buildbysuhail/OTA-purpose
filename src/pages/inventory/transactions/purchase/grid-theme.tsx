@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import { X, Check, Palette } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -52,18 +52,13 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
       <table className="w-full h-full border-collapse">
         <thead>
           <tr style={{ backgroundColor: headerBgColor, color: headerTextColor }}>
-            <th className="px-1 py-1 text-left"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }} >
+            <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }} >
               ID
             </th>
-            <th
-              className="px-1 py-1 text-left"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
+            <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
               Item
             </th>
-            <th
-              className="px-1 py-1 text-left"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
+            <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
               Status
             </th>
           </tr>
@@ -71,36 +66,24 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
         {/* Body */}
         <tbody className="bg-white">
           <tr style={{ backgroundColor: activeRowBg }}>
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
               001
             </td>
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Laptop
             </td>
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Delivered
             </td>
           </tr>
           <tr className="bg-white">
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
               002
             </td>
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Phone
             </td>
-            <td
-              className="px-1 py-1"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }} >
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }} >
               Pending
             </td>
           </tr>
@@ -108,18 +91,13 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
         {/* Footer */}
         <tfoot>
           <tr style={{ backgroundColor: footerBgColor, color: footerTextColor }}>
-            <td className="px-1 py-1 text-left font-medium"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1 text-left font-medium" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Total
             </td>
-            <td
-              className="px-1 py-1 text-left"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               2 Items
             </td>
-            <td
-              className="px-1 py-1 text-left"
-              style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
+            <td className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Summary
             </td>
           </tr>
@@ -404,16 +382,12 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
         onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();
       });
-
     } catch (error) {
       console.log("error in save table theme", error
-
       );
-
-    } finally {
-
-    }
+    } finally { }
   };
+
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450}>
       <div className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">
@@ -428,9 +402,9 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
                 {t("grid_themes")}
               </h6>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {/* {t('choose_your_perfect_grid_style')} */}
+                {t('choose_your_perfect_grid_style')}
                 {/* {formState.selectedTheme?.themeName} */}
-                {JSON.stringify(formState.selectedTheme)}
+                {/* {JSON.stringify(formState.selectedTheme)} */}
               </p>
             </div>
           </div>
@@ -486,9 +460,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
                   {/* Theme Properties */}
                   <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
                     <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">{theme.gridFontSize}px</span>
-                    {theme.gridIsBold && (
-                      <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">Bold</span>
-                    )}
+                    {theme.gridIsBold && (<span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">Bold</span>)}
                     <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">{theme.gridRowHeight}px</span>
                   </div>
                 </div>

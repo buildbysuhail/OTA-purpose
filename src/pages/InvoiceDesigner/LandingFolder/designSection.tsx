@@ -108,9 +108,9 @@ export const templateConfig: DesignerConfigMap = {
     PREMIUM: {
       premium: {
         downloadComponent: <AccountTransactionsTemplate />,
-       PreviewComponent:  <AccountTransactionsTemplatePreview />,
+        PreviewComponent:  <AccountTransactionsTemplatePreview />,
         sections: { transactions: AccPremiumTransaction, table: () => TablePremiumDesigner<TransactionDetail>({
-      tableState: [{field: "pCode", label: "Code", show: true, width: 100}]
+        tableState: [{field: "pCode", label: "Code", show: true, width: 100}]
     }),  total: TotalPremiumDesigner, others: () => null },
       },
     },

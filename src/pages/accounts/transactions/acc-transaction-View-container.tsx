@@ -61,6 +61,10 @@ import { PDFViewer } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { useSearch } from "./search-context.tsx";
+import { useAccPrint } from "./use-print";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { useAccTransaction } from "./use-acc-transaction";
+import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
 
 const invoices = [
   {
@@ -90,6 +94,7 @@ const invoices = [
 ];
 
 const api = new APIClient();
+
 const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
   props
 ) => {
@@ -97,7 +102,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
-
+const { printVoucher, getTemplate } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { searchQuery } = useSearch();
   const getParamOrProp = <T extends string | number>(
@@ -159,6 +164,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
     });
   }, [searchParams, props]); // Runs when query params or props change
 
+  const [template,setTemplate]= useState<any>(null)
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -190,6 +196,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
     transactionMasterID: undefined as number | undefined,
     financialYearID: undefined as number | undefined,
   });
+ 
 
   const goBack = async () => {
     const has = await hasUnsavedChanges();
@@ -527,9 +534,26 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
     };
   }, []);
 
-  // console.log("searchQuery acc v t" );
-  // console.log({ searchQuery });
+  const {loadAccTransVoucher} = useAccTransaction(input.transactionType??"",
+    undefined,
+    undefined)
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      const result = await getTemplate(input?.voucherType, formState);
+      setTemplate(result);
 
+      const vchr = loadAccTransVoucher(false,input?.voucherNo,input?.voucherPrefix,input?.voucherType,input?.formType)
+    };
+
+    fetchTemplate();
+  }, [input?.voucherType, formState]); 
+
+    const groupKey =input?.voucherType || "";
+    const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
+    const kindKey = template?.templateKind ;
+    const config = useMemo(() => {
+      return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
+    }, [groupKey, typeKey, kindKey]);
   return (
     <>
       {/* <InvoiceView/> */}
@@ -773,6 +797,8 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
           </Box>
           <Divider sx={{ my: 2 }} />
           <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
+
+{/*          
             <Grid container spacing={2}>
               <Grid item xs={12} md={8}>
                 <Typography variant="subtitle2" gutterBottom>
@@ -829,22 +855,9 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
             </Typography>
             <Typography variant="body2" sx={{ mt: 1 }}>
               <strong>Notes:</strong> Thanks for your business.
-            </Typography>
+            </Typography> */}
           </Paper>
-          {/* <StandardPreviewWrapper data={{}} /> */}
-          {/* <PDFViewer
-                           className="pdf-viewer"
-                           width="100%"
-                           height={700}
-                           style={{ padding: "10px" }}
-                         >
-                           {renderSelectedTemplate({
-                             template: formState.template,
-                             data: formState.transaction,
-                             currentBranch: currentBranch,
-                             userSession: userSession,
-                           })}
-                         </PDFViewer> */}
+
         </Box>
       </Box>
     </>

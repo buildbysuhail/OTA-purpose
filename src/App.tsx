@@ -29,7 +29,7 @@ import MobileFooter from "./pages/dashboards/crm/mobile-footer";
 import RPosLayout from "./components/common/layout/rpos-layout";
 import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
 import ERPAlert from "./components/ERPComponents/erp-sweet-alert";
-import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
+import { onCloseWithUnsavedChange, toggleSelectPrinterPopup } from "./redux/slices/popup-reducer";
 import { appInitialState } from "./redux/slices/app/reducer";
 import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
@@ -42,6 +42,10 @@ import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesMod
 import { useAppState } from "./utilities/hooks/useAppState";
 import AcceptInvitation from "./pages/auth/accept-invitation";
 import { getUserSessionData } from "./session-data";
+import { useRootState } from "./utilities/hooks/useRootState";
+import ERPModal from "./components/ERPComponents/erp-modal";
+import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
+// import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -118,6 +122,8 @@ useEffect(() => {
   const [isAppReady, setIsAppReady] = useState(false);
   let api = new APIClient();
   const dispatch = useAppDispatch();
+  const rootState = useRootState();
+  const popupData = useSelector((state: RootState) => state.PopupData);
   const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
   const [MyclassName, setMyClass] = useState("");
   const navigate = useNavigate();
@@ -230,6 +236,7 @@ useEffect(() => {
    if (isLoading || isOnline != true) {
     return <><Loader isOnline = {isOnline}/></>;
   }
+
   return (
     <Fragment>
       {/* <Loader /> */}
@@ -312,6 +319,20 @@ useEffect(() => {
           />
         )
       }
+   <ERPModal
+        isOpen={popupData.printerList.isOpen || false}
+        title={t("set_default-printer")}
+        width={800}
+        height={700}
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleSelectPrinterPopup({ isOpen: false }));
+        }}
+        content={<AccessPrinterList templateData={popupData.priceList?.template} t={t} />}
+      /> 
+    
+
+ 
     </Fragment>
   );
 }

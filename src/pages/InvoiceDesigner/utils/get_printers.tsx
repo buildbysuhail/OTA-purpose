@@ -26,8 +26,8 @@ interface PrinterInfo {
 
 interface usePrinterProps {
   templateData: any
-  t: any
-  handlePagePropsChange: (property: keyof PropertiesState, value: any) => void
+  t?: any
+  handlePagePropsChange?: (property: keyof PropertiesState, value: any) => void
 }
 
 export enum InstallationStatus {
@@ -315,7 +315,7 @@ const handleInstallJSPrintManager = useCallback(async () => {
                 value: p.name,
                 label: `${p.name} ${p.isConnected ? "(Ready)" : "(Offline)"}`,
               }))}
-              onChange={(e) => handlePagePropsChange("printer", e.value)}
+              onChange={(e) =>handlePagePropsChange && handlePagePropsChange("printer", e.value)}
             />
           ) : (
             <Alert severity="warning">

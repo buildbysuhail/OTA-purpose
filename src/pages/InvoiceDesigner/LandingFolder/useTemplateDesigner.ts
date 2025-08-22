@@ -24,6 +24,7 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 
 const api = new APIClient();
 
@@ -50,7 +51,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const templateStyleProperties = useMemo(() => {
     const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
-    const backgroundColor = templateData?.activeTemplate?.propertiesState?.bg_color ?? "#ffffff";
     const paddingLeft = templateData?.activeTemplate?.propertiesState?.padding?.left ;
     const paddingRight = templateData?.activeTemplate?.propertiesState?.padding?.right ;
     const paddingTop = templateData?.activeTemplate?.propertiesState?.padding?.top ;
@@ -67,7 +67,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     const previewHeight = orientedDimensions.height * scale;
 
     return {
-      backgroundColor,
       previewWidth,
       previewHeight,
       paddingLeft,
@@ -97,7 +96,10 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
     background_image_footer: null,
   });
   const [maxHeight, setMaxHeight] = useState<number>(500);
+  useEffect(() => {
+console.log("userSession",userSession,"currentBranch",currentBranch,);
 
+  }, []);
   // Stabilize props for PDFViewer
   const stableTemplateProps = useMemo(
     () => ({
@@ -142,7 +144,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
           ...cc,
           id: res.id,
           branchId: res.branchId,
-          content: res.content,
+          // content: res.content,
           isCurrent: res.isCurrent,
           templateGroup: res.templateGroup,
           templateKind: res.templateKind,

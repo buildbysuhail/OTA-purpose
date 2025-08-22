@@ -9,6 +9,7 @@ export interface popupDataProps {
   id?:number;
   name?:string;
   customTemplate?:string;
+  template?:any;
 
 }
 interface popupData {
@@ -75,10 +76,12 @@ interface popupData {
   testPopup: popupDataProps
   products: popupDataProps
   productSummaryReport: popupDataProps
+  printerList:popupDataProps
   GrnNumber: popupDataProps
   CustomDesignerPopup: popupDataProps;
 }
 const initialState: popupData = {
+  printerList:{isOpen:false},
   CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" },
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -362,15 +365,15 @@ const popupDataSlice = createSlice({
     updateProductSummaryData: (state, action: PayloadAction<popupDataProps>) => {
       state.productSummaryReport = action.payload;
     },
-    // togglePriceListPopup: (state, action: PayloadAction<popupDataProps>) => {
-    //   state.priceList = action.payload;
-    // },
+    toggleSelectPrinterPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.printerList = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
-  // togglePriceListPopup,
+  toggleSelectPrinterPopup,
   toggleCustomDesignerPopup,
   onCloseWithUnsavedChange,
   toggleTestPopup,

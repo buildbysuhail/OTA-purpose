@@ -73,12 +73,13 @@ export default function ERPAlert({
 
 // Utility function for showing alerts
 ERPAlert.show = async (options: ERPAlertProps) => {
+  const showCancel = options.showCancelButton ?? true;
   return await Swal.fire({
     title: options.title,
     text: options.text,
     width: options.width || 450,
     icon: options.icon || 'warning',
-    showCancelButton:options.showCancelButton,
+    showCancelButton:showCancel,
     allowOutsideClick: false ,
     returnFocus: false,
     // focusConfirm: false,

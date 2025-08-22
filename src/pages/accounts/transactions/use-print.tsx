@@ -105,7 +105,7 @@ export const useAccPrint = () => {
         background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
         signature_image: res?.payload?.data?.signature_image as string | undefined,
         branchId: res.branchId,
-        content: res.content,
+        // content: res.content,
         isCurrent: res.isCurrent,
         templateGroup: res.templateGroup,
         templateKind: res.templateKind,
@@ -135,16 +135,31 @@ export const useAccPrint = () => {
     } else {
       return await fetchDefaultTemplates(voucherTypes)
     }
+  };
+
+ const getTemplate = async (
+  voucherType: string | undefined,
+  formState: any,
+ 
+) => {
+  // ensure voucherType is resolved
+  const finalVoucherType = isNullOrUndefinedOrEmpty(voucherType)
+    ? formState.transaction.master.voucherType
+    : voucherType;
+
+  let template = formState.template;
+
+  if (!template || template.id === 0) {
+    template = await getOrFetchTemplate(finalVoucherType);
+    dispatch(accFormStateHandleFieldChange({ fields: { template } }));
   }
+
+  return template;
+};
 
   const printVoucher = async (voucherType?: any, voucher?: AccTransactionFormState) => {
    
-    voucherType = isNullOrUndefinedOrEmpty(voucherType) ? formState.transaction.master.voucherType : voucherType
-    let template = formState.template
-    if (formState.template == undefined || formState.template == null || formState.template.id == 0) {
-      template = await getOrFetchTemplate(voucherType)
-      dispatch(accFormStateHandleFieldChange({ fields: { template: template } }))
-    }
+    const template = await getTemplate(voucherType, formState);
     if (template?.id == 0) {
       // ERPAlert.show({ title: "Please Set Template For Print" })
       ERPToast.showWith("Please Set Template For Print", "warning");
@@ -202,6 +217,7 @@ export const useAccPrint = () => {
     printVoucher,
     printCheque,
     printPaymentReceiptAdvice,
+    getTemplate,
   }
 }
 

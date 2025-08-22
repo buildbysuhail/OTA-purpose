@@ -1511,7 +1511,7 @@ const handleRemoveImage =()=>{
   const labelHeightPx = pointToPx(labelHeightPt);
   return (
     <div
-      className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden
+      className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full
        ${
          templateData.propertiesState?.language_prefer === "Eng"
            ? "dir-ltr"
@@ -3412,34 +3412,6 @@ padding: `${
         </div>
       </ResizableBox>
 
-      {/* Save Dialog */}
-
-      {/* Preview Dialog */}
-      <ERPModal
-        title="Preview"
-        isOpen={isPreviewOpen}
-        closeModal={() => setIsPreviewOpen(false)}
-        content={
-          <div
-            className="bg-white p-4"
-            style={{
-              width: "8.5in",
-              height: "11in",
-              margin: `${pxToPoint(
-                templateData?.propertiesState?.padding?.top || 0
-              )}pt ${pxToPoint(
-                templateData?.propertiesState?.padding?.right || 0
-              )}pt ${pxToPoint(
-                templateData?.propertiesState?.padding?.bottom || 0
-              )}pt ${pxToPoint(
-                templateData?.propertiesState?.padding?.left || 0
-              )}pt`,
-            }}
-          >
-            {templateData?.barcodeState?.placedComponents?.map(renderComponent)}
-          </div>
-        }
-      />
     </div>
   );
 };

@@ -19,6 +19,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
 import CustomDesignerButton from "./customDesignerButton";
+import useLogo from "../utils/useLogo";
 
 
 interface TempImageProps {
@@ -36,7 +37,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
     const inputFooterFile = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
     const userSession = useSelector((state: RootState) => state?.UserSession);
-    let userBranches = useAppSelector((state: RootState) => state.UserBranches);
+    const userBranches = useAppSelector((state: RootState) => state.UserBranches);
     const templateGroup = searchParams?.get("template_group");
     const [maxHeight, setMaxHeight] = useState<number>(500);
     const { t } = useTranslation('system');
@@ -58,7 +59,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
             dispatch(setTemplateFooterState({ ...footerState, [key]: value }));
         }
     }
-
+    const Logo = useLogo()
     return (
         <ERPScrollArea
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
@@ -87,17 +88,47 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                     checked={headerState?.showLogo}
                     onChange={(e) => handleChange("header", "showLogo", e.target.checked)}
                 />
-
-                {headerState?.showLogo && userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined &&
-                    userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== null && (
+{/* userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined &&
+                    userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== null && //the condition of show logo now it remove temp)*/} 
+                {headerState?.showLogo && Logo && (
                         <div className="flex flex-col gap-2">
-                            <img src={userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
-                            <ERPSlider
-                                id="logoSize"
+                            <img src={Logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
+
+                            <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                              id="logoSize"
                                 label={t("logo_size")}
                                 defaultValue={headerState?.logoSize}
                                 onChange={(e) => handleChange("header", "logoSize", e.target?.value)}
-                            />
+                                className="bg-slate-300"
+                                value={headerState?.logoSize??10}
+                                min={5}
+                                max={28}
+                                step={1}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="logoSize"
+                                type="number"
+                                noLabel
+                                value={headerState?.logoSize??10}
+                                data={headerState}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                              
+                                   handleChange("header", "logoSize",  parseInt(value, 10))
+                                }
+                                }
+                            
+                               min={5}
+                               max={28}
+                               step={1}
+                              />
+                            </div>
+                          </div>
+                          
                         </div>
                     )}
 
@@ -114,19 +145,22 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                             label={t("show_organization_address")}
                             onChange={(e) => handleChange("header", "showOrgAddress", e.target.checked)}
                         />
+
                         <ERPInput
+                            data={headerState}
                             value={headerState?.OrganizationFontColor}
                             onChange={(e) => handleChange("header", "OrganizationFontColor", e.target?.value)}
                             label={t("font_color")}
-                            id="bg_color"
+                            id="OrganizationFontColor"
                             type="color"
                             placeholder=""
                         />
                         <ERPStepInput
+                            data={headerState}
                             value={headerState?.OrganizationFontSize ?? 12}
                             onChange={(value) => handleChange("header", "OrganizationFontSize", value)}
                             label={t("font_size_(pts)")}
-                            id="font_size"
+                            id="OrganizationFontSize"
                             placeholder=" "
                             min={8}
                             max={28}

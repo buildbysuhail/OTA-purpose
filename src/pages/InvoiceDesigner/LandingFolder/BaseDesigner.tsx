@@ -138,13 +138,11 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
                 <div
-                ref={previewContainerRef}
+                  ref={previewContainerRef}
                   className="shadow-lg border border-gray-200  overflow-hidden"
                   style={{
                     width: `${templateStyleProperties.previewWidth??500}pt`,
                     height: `${templateStyleProperties.previewHeight??500}pt`,
-                    minHeight: "400px",
-                    backgroundColor:templateStyleProperties.backgroundColor,
                      paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
                     paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
                     paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
@@ -155,7 +153,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                   {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
 
                   {/* Template Content */}
-                  <div className="relative h-full overflow-auto">
+                  <div className="relative h-full w-full overflow-auto">
                     {React.cloneElement(templateComponent, stableTemplateProps)}
                   </div>
                 </div>

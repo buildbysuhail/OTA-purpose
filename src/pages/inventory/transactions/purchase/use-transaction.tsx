@@ -469,7 +469,7 @@ export const useTransaction = (
         voucherType ?? (formState.transaction?.master?.voucherType || ""),
       voucherForm:
         formType ?? (formState.transaction?.master?.voucherForm || ""),
-      pDTInvTransMasterID: transactionMasterID,
+      pDTInvTransMasterID: transactionMasterID ?? 0,
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible??false

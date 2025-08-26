@@ -936,13 +936,13 @@ export const useTransactionHelper = (transactionType: string) => {
   };
 
   const refactorDetails = (
-    details: any[],
+    _details: any[],
     formType: string,
     commonParams: CommonParams,
     loadType?: string
   ): TransactionDetail[] => {
-    const detailsLength = details.length;
-
+    const detailsLength = _details.length;
+let     details = [..._details];
     let validDetailsCount = 0;
     for (let i = 0; i < detailsLength; i++) {
       const row = details[i];

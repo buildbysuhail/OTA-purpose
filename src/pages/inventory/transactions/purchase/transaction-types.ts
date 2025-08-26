@@ -520,6 +520,7 @@ export interface TransactionFormState {
   selectedTheme?: any
   currentTheme?: any
   themeChangeCountdown?: number
+  isInitialLedger?: boolean;
 }
 interface loadingResult {
   isLoading: boolean;

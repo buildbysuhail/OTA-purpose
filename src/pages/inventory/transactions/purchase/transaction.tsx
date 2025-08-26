@@ -498,7 +498,8 @@ useEffect(() => {
     calculateTotal,
     applyDiscountsToItems,
     downloadImportTemplateHeadersOnly,
-    importFromExcel
+    importFromExcel,
+    loadLedgerData
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -521,7 +522,7 @@ useEffect(() => {
     refNoRef,
     discountRef,
     chequeStatusRef,
-    handleKeyDown
+    handleKeyDown,
   );
 
   const applicationSettings = useAppSelector(
@@ -565,97 +566,18 @@ useEffect(() => {
   }, [financialYearID]);
 
   useEffect(() => {
-    const loadLedgerData = async () => {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            ledgerDataLoading: true,
-            ledgerBalanceLoading: true,
-          },
-        })
-      );
-
-      try {
-        const ledgerID = formState.transaction.master.ledgerID;
-        let formElmns = {
-          ...formState.formElements,
-        };
-        if (!isNullOrUndefinedOrZero(ledgerID)) {
-          const [ledgerBalance, ledgerData] = await Promise.all([
-            (ledgerID ?? 0) > 0
-              ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
-              : 0,
-            api.getAsync(
-              `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
-            ),
-          ]);
-          debugger;
-          dispatch(formStateHandleFieldChangeKeysOnly({
-            fields:{
-              formElements:{
-                costCentreID: {
-                  visible:
-                    applicationSettings?.accountsSettings?.maintainCostCenter ||
-                    ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
-                },
-              },
-              ledgerBalance: (ledgerBalance??0) as number,
-              groupName: ledgerData?.accGroupName,
-              ledgerData: ledgerData,
-              ledgerDataLoading: false,
-              transaction:{
-                master: {
-                  tokenNumber: ledgerData?.taxNumber,
-                  ledgerID: ledgerID,
-                  partyName: ledgerData?.partyName ?? "",
-                  displayName: ledgerData?.displayName ?? "",
-                  address1: ledgerData?.address1 ?? "",address4: ledgerData?.mobileNumber ?? "",
-                  address3: ledgerData?.address3 ?? "",
-                }
-              }
-            }
-          }))
-
-        } else {
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                ledgerBalance: 0,
-                groupName: "",
-                ledgerData: undefined,
-                partyId: ""
-              },
-            })
-          );
-          dispatch(
-            formStateMasterHandleFieldChange({
-              fields: {
-
-                tokenNumber: "",
-                ledgerID: null,
-                partyName:  "",
-                displayName:  "",
-                address1:  "",
-                address4: "",
-                address3: "",
-              },
-            })
-          );
-        }
-      } catch (error) {
-        // Handle error
-      }
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            ledgerDataLoading: false,
-            ledgerBalanceLoading: false,
-          },
-        })
-      );
-    };
-
-    loadLedgerData();
+    debugger;
+   if(formState.isInitialLedger != true) {
+    loadLedgerData(undefined, dispatch);
+   } else{
+    dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          isInitialLedger: false
+        },
+      })
+    );
+   }
   }, [formState.transaction.master.ledgerID]);
 
   useEffect(() => {
@@ -899,7 +821,10 @@ useEffect(() => {
         column: editableColumn?.dataField??"",
         data: formState.transaction.details[0],
         rowIndex: 0,
-      },
+      }
+      debugger;
+      _formState = await loadLedgerData(_formState) as any;
+      _formState.isInitialLedger = true;
         setTransVoucher(_formState, true);
       // if (voucherNo != undefined && voucherNo > 0) {
       //   dispatch(

@@ -3678,6 +3678,106 @@ debugger;
       // setIsLoading(false);
     }
   };
+   const loadLedgerData = async (_formState?: DeepPartial<TransactionFormState>, _dispatch?: any) => {
+          const ledgerID = (_formState??formState)?.transaction?.master?.ledgerID;
+    _formState = _formState??{}
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              ledgerDataLoading: true,
+              ledgerBalanceLoading: true,
+            },
+          })
+        );
+  
+        try {
+         
+          if (!isNullOrUndefinedOrZero(ledgerID)) {
+            const [ledgerBalance, ledgerData] = await Promise.all([
+              (ledgerID ?? 0) > 0
+                ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
+                : 0,
+              api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
+              ),
+            ]);
+            debugger;
+            const ret = {
+                ..._formState,
+                formElements:{
+                  ..._formState.formElements,
+                  costCentreID: {
+                    ..._formState.formElements?.costCentreID,
+                    visible:
+                      applicationSettings?.accountsSettings?.maintainCostCenter ||
+                      ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
+                  },
+                },
+                ledgerBalance: (ledgerBalance??0) as number,
+                groupName: ledgerData?.accGroupName,
+                ledgerData: ledgerData,
+                ledgerDataLoading: false,
+                transaction:{
+                    ..._formState.transaction,
+                    master: {                      
+                      ..._formState.transaction?.master,
+                      tokenNumber: ledgerData?.taxNumber,
+                      ledgerID: ledgerID,
+                      partyName: ledgerData?.partyName ?? "",
+                      displayName: ledgerData?.displayName ?? "",
+                      address1: ledgerData?.address1 ?? "",address4: ledgerData?.mobileNumber ?? "",
+                      address3: ledgerData?.address3 ?? "",
+                    }
+                }
+              }
+            _dispatch &&_dispatch(formStateHandleFieldChangeKeysOnly({
+              fields: ret
+            }));
+            return ret;
+  
+          } else {
+            const ret = {
+                  ..._formState,
+                  ledgerBalance: 0,
+                  groupName: "",
+                  ledgerData: undefined,
+                  partyId: "",
+                  transaction:{
+                    ..._formState.transaction,
+                        master:{
+                      ..._formState.transaction?.master,
+      
+                      tokenNumber: "",
+                      ledgerID: null,
+                      partyName:  "",
+                      displayName:  "",
+                      address1:  "",
+                      address4: "",
+                      address3: "",
+                    }
+                  }
+                }
+            _dispatch && _dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: ret,
+              })
+            );
+            return ret;
+          }
+        } catch (error) {
+          // Handle error
+        }
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              ledgerDataLoading: false,
+              ledgerBalanceLoading: false,
+            },
+          })
+        );
+        return {}
+      };
+  
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -3718,6 +3818,7 @@ debugger;
     calculateSummary,
     calculateTotal,
     applyDiscountsToItems,
-    handlePrintBarcode
+    handlePrintBarcode,
+    loadLedgerData
   };
 };

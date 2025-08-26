@@ -112,7 +112,8 @@ export const useUnsavedChangesWarning = () => {
         )
       );
       const isEqual = _formState.prev === base64;
-      console.log(`isEqual fgfgdf: ${isEqual}`);
+      console.log(`isEqual fgfgdf: ${_formState.prev}`);
+      console.log(`isEqual fgfgdf: ${base64}`);
 
       return !isEqual;
     } catch (error) {

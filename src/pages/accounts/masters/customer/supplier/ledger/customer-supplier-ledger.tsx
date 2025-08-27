@@ -47,16 +47,25 @@ const CustomerSupplierLedger = () => {
     setStorePrev([...result]);
     setLoading(false);
   };
-  const handleCheckboxChange = (rowIndex: number) => {
-    setStore((prevStore: any[]) => {
-      const updatedStore = [...prevStore];
-      updatedStore[rowIndex] = {
-        ...updatedStore[rowIndex],
-        show: !updatedStore[rowIndex].show,
-      };
-      return updatedStore;
-    });
-  };
+  // const handleCheckboxChange = (rowIndex: number) => {
+  //   setStore((prevStore: any[]) => {
+  //     const updatedStore = [...prevStore];
+  //     updatedStore[rowIndex] = {
+  //       ...updatedStore[rowIndex],
+  //       show: !updatedStore[rowIndex].show,
+  //     };
+  //     return updatedStore;
+  //   });
+  // };
+const handleCheckboxChange = (ledgerID: number | string) => {
+  setStore((prev: any[]) =>
+    prev.map(item =>
+      item.ledgerID === ledgerID ? { ...item, show: !item.show } : item
+    )
+  );
+};
+
+
 
   const handleSubmit = async () => {
     setIsSaving(true);
@@ -130,6 +139,7 @@ const CustomerSupplierLedger = () => {
               <div className="grid grid-cols-1 gap-3">
                 <DataGrid
                   height={gridHeight.windows}
+                  keyExpr="ledgerID"
                   dataSource={store}
                   className="custom-data-grid"
                   showBorders={true}
@@ -138,12 +148,19 @@ const CustomerSupplierLedger = () => {
                   showRowLines={true}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
+                  repaintChangesOnly={true}  
+                  
+                  // <- IMPORTANT for smooth updates
+                  editing={{
+                  mode: "cell",
+                  allowUpdating: true,
+                  }}
                 // hoverStateEnabled={true}
                 >
                   <FilterRow visible={true} />
                   <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
-                  <Scrolling mode="virtual" />
+                  <Scrolling mode="virtual" rowRenderingMode="virtual" />
                   <Paging defaultPageSize={100} />
                   <LoadPanel visible={loading} />
 
@@ -157,6 +174,15 @@ const CustomerSupplierLedger = () => {
                     dataType="string"
                     minWidth={200}
                   />
+                   <Column
+                    allowSearch={true}
+                    allowEditing={false}
+                    allowFiltering={true}
+                    dataField="ledgerID"
+                    caption={t("ledgerID")}
+                    dataType="number"
+                    width={150}
+                  />
 
                   {/* Address Column */}
                   <Column
@@ -168,9 +194,15 @@ const CustomerSupplierLedger = () => {
                     caption={t("address")}
                     dataType="string"
                   />
+                  <Column
+                  width={200}
+    dataField="show"
+    dataType="boolean"
+    caption={gridType.customer ? t("show_in_suppliers") : t("show_in_customers")}
+  />
 
                   {/* Show Field (Checkbox for boolean) */}
-                  <Column
+                  {/* <Column
                     width={200}
                     allowSearch={true}
                     allowEditing={false}
@@ -183,15 +215,15 @@ const CustomerSupplierLedger = () => {
                     }
                     dataType="boolean"
                     cellRender={(cellData) => (
-                      <ERPCheckbox
-                        id={`show-${cellData.rowIndex}`}
-                        checked={cellData.data.show}
-                        data={cellData.data}
-                        noLabel={true}
-                        onChange={() => handleCheckboxChange(cellData.rowIndex)}
-                      />
+                         <ERPCheckbox
+                            id={`show-${cellData.data.ledgerID}`}          // use ledgerID
+                            checked={!!cellData.data.show}
+                            data={cellData.data}
+                            noLabel
+                            onChange={() => handleCheckboxChange(cellData.data.ledgerID)} 
+                          />
                     )}
-                  />
+                  /> */}
                 </DataGrid>
                 <div className="flex justify-end items-center space-x-4 m-3">
                   <ERPButton

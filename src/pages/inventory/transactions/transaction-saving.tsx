@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 interface SavingOverlayProps {
   saving: boolean;
@@ -16,11 +17,8 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompl
     setShowSuccess(saveCompleted)
 
     if (saveCompleted && savingSwitchAction) {
-      const timer = setTimeout(() => {
-        dispatch(savingSwitchAction)
-      }, 1200)
-
-      return () => clearTimeout(timer) // cleanup on unmount or re-run
+     dispatch(savingSwitchAction)
+     ERPToast.show("Transaction Saved Succussfully", "success");
     }
   }, [saveCompleted, dispatch])
   const overlayStyles: React.CSSProperties = {

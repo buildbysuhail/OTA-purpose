@@ -1006,7 +1006,8 @@ debugger;
       };
       
 params = sanitizeDataAdvanced(params, transactionInitialData)
-      const saveRes =
+      try {
+        const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(
               `${Urls.inv_transaction_base}${transactionType}`,
@@ -1025,7 +1026,7 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
         );
         clearControls(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID )
         if (formState.printOnSave == true) {
-          // printVoucher();
+          printVoucher();
         }
 dispatch(formStateHandleFieldChange({
           fields: {
@@ -1060,6 +1061,14 @@ dispatch(formStateHandleFieldChange({
           },
         })
       );
+      }
+      } catch (error) {
+         formStateHandleFieldChange({
+          fields: {
+            saving: false,
+            savingCompleted: undefined,
+          },
+        })
       }
 
     }

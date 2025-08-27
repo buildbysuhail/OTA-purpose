@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ResponseModelWithValidation } from '../../base/response-model';
 import { postAction } from '../../redux/slices/app-thunks';
 import { RootState } from '../../redux/store';
+import ERPFormButtons from '../../components/ERPComponents/erp-form-buttons';
 
 interface UserForm {
     userName: string;
@@ -374,7 +375,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                 />
             </div>
 
-            <div className="flex justify-end gap-4 pt-4">
+            {/* <div className="flex justify-end gap-4 pt-4">
                 <ERPButton
                     title={t("clear")}
                     variant="secondary"
@@ -393,7 +394,37 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     onClick={handleInvite}
                     disabled={isLoading}
                 />
-            </div>
+            </div> */}
+            <ERPFormButtons
+          isLoading={isLoading}
+          customButtons={[
+            {
+              title: t("clear"),
+              variant: "secondary",
+              disabled: isLoading,
+              loading: isLoading,
+              onClick: () => handleClear(),
+            },
+            {
+              title: t("cancel"),
+              variant: "secondary",
+              disabled: isLoading,
+              loading: isLoading,
+              onClick: () => handleClose(),
+            },
+            {
+              title: t("invite"),
+              variant: "primary",
+              disabled: isLoading,
+              loading: isLoading,
+              onClick: () => handleInvite(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />
         </div>
     ), [
         mode, 
@@ -415,8 +446,9 @@ const InviteModal: React.FC<InviteModalProps> = ({
             closeModal={handleClose}
             title={mode === 'new' ? t('invite_new_user') : t('invite_existing_user')}
             content={modalContent}
+            isForm={true}
             width={600}
-            height={600}
+            height={300}
             isButton={false}
             hasSubmit={false}
         />

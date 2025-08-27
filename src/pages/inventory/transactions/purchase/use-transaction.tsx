@@ -2093,8 +2093,8 @@ dispatch(formStateHandleFieldChange({
 
         // Show delete confirmation dialog
         const deleteConfirmResult = await ERPAlert.show({
-          title: t("confirm_delete"),
-          text: t("are_you_sure_delete"),
+          title: t("delete_transaction_question"),
+          text: t("once_deleted_this_transaction_cannot_be_recovered"),
           icon: "question",
           showCancelButton: true,
           confirmButtonText: t("yes"),

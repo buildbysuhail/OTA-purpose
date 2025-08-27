@@ -249,7 +249,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const outsideComponents = isNewFooter ? (
-    <div className="flex flex-col gap-1 pr-4">
+    <div className="flex flex-col gap-1 pr-4 ps-[6px]">
       {showCheckboxesOutside ? (
         <>
           <div className="flex flex-wrap items-end gap-1">
@@ -408,10 +408,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
           <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
             <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
-              <div className="absolute top-4 left-2">
+              <div className="absolute top-1.5 left-1">
                 <button
                   onClick={toggleFooterPosition}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
+                  className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
                   title={t("display_the_footer_on_the_right")}
                 >
                   <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
@@ -572,7 +572,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const dropdownContent = (
     <div className="p-4 md:p-2 dark:bg-dark-bg-card dark:border-t dark:border-r dark:border-l bg-white border-t border-r border-l border-gray-300 rounded-t-lg">
       {isNewFooter ? (
-        <div className="flex items-end gap-2 flex-wrap">
+        <div className="flex items-end ps-[23px] gap-2 flex-wrap">
           <div className="max-w-[180px]">
             <PriceCategoryCombobox
               formState={formState}

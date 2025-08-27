@@ -431,7 +431,8 @@ export const useTransaction = (
     formType?: string,
     manualInvoiceNumber?: any,
     transactionMasterID?: number,
-    loadVType?: string
+    loadVType?: string,
+    pDTInvTransMasterID?: number
   ) => {
     loadVType = loadVType ?? "PI";
     let voucher: TransactionFormState = JSON.parse(
@@ -469,11 +470,11 @@ export const useTransaction = (
         voucherType ?? (formState.transaction?.master?.voucherType || ""),
       voucherForm:
         formType ?? (formState.transaction?.master?.voucherForm || ""),
-      pDTInvTransMasterID: transactionMasterID ?? 0,
       manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible??false
     };
+debugger;
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
     if (loadVType == "GRN") {
@@ -528,9 +529,12 @@ export const useTransaction = (
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
-
     voucher.transaction = {
       ...(vch || {}),
+      master: {
+        ...(vch?.master || {}),
+        hasroundOff: vch?.master?.roundAmount != 0
+      },
       details: refactorDetails(
         vch.details,
         formType??vch.master.voucherForm,
@@ -555,9 +559,6 @@ export const useTransaction = (
       voucher.formElements,
       { result: voucher }
     ) as TransactionFormState;
-
-    voucher.transaction.master.hasroundOff =
-      voucher.transaction.master.roundAmount > 0;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
         ? moment().local().toISOString()
@@ -2948,7 +2949,6 @@ ERPAlert.show({
     showDialog?: boolean;
   }> => {
     let { result } = commonParams;
-debugger;
     try {
       const key = event.key;
       const isShiftPressed = event.shiftKey;
@@ -2994,17 +2994,20 @@ debugger;
           }
           break;
 
-        // case "i":
-        // case "I":
-        //   if (isCtrlPressed) {
-        //     dispatch(
-        //       commonParams.formStateHandleFieldChangeKeysOnly({
-        //         fields: { showProductInformation: true },
-        //       })
-        //     );
-        //     return { handled: true };
-        //   }
-        //   break;
+        case "i":
+        case "I":
+          if (isCtrlPressed) {
+          debugger;
+            dispatch(
+              formStateHandleFieldChange({
+                       fields: {
+                         showProductInformation: { show: true, index: rowIndex },
+                       },
+                     })
+            );
+            return { handled: true };
+          }
+          break;
         // Product Information ☝
 
         case " ": {
@@ -3678,6 +3681,106 @@ debugger;
       // setIsLoading(false);
     }
   };
+   const loadLedgerData = async (_formState?: DeepPartial<TransactionFormState>, _dispatch?: any) => {
+          const ledgerID = (_formState??formState)?.transaction?.master?.ledgerID;
+    _formState = _formState??{}
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              ledgerDataLoading: true,
+              ledgerBalanceLoading: true,
+            },
+          })
+        );
+  
+        try {
+         
+          if (!isNullOrUndefinedOrZero(ledgerID)) {
+            const [ledgerBalance, ledgerData] = await Promise.all([
+              (ledgerID ?? 0) > 0
+                ?  api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
+                : 0,
+              api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
+              ),
+            ]);
+            debugger;
+            const ret = {
+                ..._formState,
+                formElements:{
+                  ..._formState.formElements,
+                  costCentreID: {
+                    ..._formState.formElements?.costCentreID,
+                    visible:
+                      applicationSettings?.accountsSettings?.maintainCostCenter ||
+                      ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
+                  },
+                },
+                ledgerBalance: (ledgerBalance??0) as number,
+                groupName: ledgerData?.accGroupName,
+                ledgerData: ledgerData,
+                ledgerDataLoading: false,
+                transaction:{
+                    ..._formState.transaction,
+                    master: {                      
+                      ..._formState.transaction?.master,
+                      tokenNumber: ledgerData?.taxNumber,
+                      ledgerID: ledgerID,
+                      partyName: ledgerData?.partyName ?? "",
+                      displayName: ledgerData?.displayName ?? "",
+                      address1: ledgerData?.address1 ?? "",address4: ledgerData?.mobileNumber ?? "",
+                      address3: ledgerData?.address3 ?? "",
+                    }
+                }
+              }
+            _dispatch &&_dispatch(formStateHandleFieldChangeKeysOnly({
+              fields: ret
+            }));
+            return ret;
+  
+          } else {
+            const ret = {
+                  ..._formState,
+                  ledgerBalance: 0,
+                  groupName: "",
+                  ledgerData: undefined,
+                  partyId: "",
+                  transaction:{
+                    ..._formState.transaction,
+                        master:{
+                      ..._formState.transaction?.master,
+      
+                      tokenNumber: "",
+                      ledgerID: null,
+                      partyName:  "",
+                      displayName:  "",
+                      address1:  "",
+                      address4: "",
+                      address3: "",
+                    }
+                  }
+                }
+            _dispatch && _dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: ret,
+              })
+            );
+            return ret;
+          }
+        } catch (error) {
+          // Handle error
+        }
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              ledgerDataLoading: false,
+              ledgerBalanceLoading: false,
+            },
+          })
+        );
+        return {}
+      };
+  
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -3718,6 +3821,7 @@ debugger;
     calculateSummary,
     calculateTotal,
     applyDiscountsToItems,
-    handlePrintBarcode
+    handlePrintBarcode,
+    loadLedgerData
   };
 };

@@ -32,6 +32,11 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
 
   const rightInitialWidth = calculateInitialWidth(deviceInfo.isMobile);
 
+  // Handler for closing details sidebar
+  const handleDetailsClose = () => {
+    setIsDetailsOpen(false);
+  };
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -116,7 +121,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
                 </div>
               </div>
 
-              <button onClick={onClose} className=" group relative p-2 rounded-full text-[#64748b] hover:text-[#334155] dark:text-[#64748b] dark:hover:text-[#f1f5f9] bg-gradient-to-br from-[#f1f5f9] to-[#e2e8f0] hover:from-[#fee2e2] hover:to-[#fecaca] dark:from-[#1e293b] dark:to-[#334155] dark:hover:from-[#7f1d1d]/50 dark:hover:to-[#b91c1c]/50 transition-all duration-300 hover:scale-110 hover:rotate-90 focus:outline-none focus:ring-2 focus:ring-[#fca5a5]/50 dark:focus:ring-[#ef4444]/50 shadow-sm hover:shadow-md border border-[#e2e8f0]/50 dark:border-[#64748b]/50">
+              <button onClick={() => { onClose?.();  handleDetailsClose?.();  }} className=" group relative p-2 rounded-full text-[#64748b] hover:text-[#334155] dark:text-[#64748b] dark:hover:text-[#f1f5f9] bg-gradient-to-br from-[#f1f5f9] to-[#e2e8f0] hover:from-[#fee2e2] hover:to-[#fecaca] dark:from-[#1e293b] dark:to-[#334155] dark:hover:from-[#7f1d1d]/50 dark:hover:to-[#b91c1c]/50 transition-all duration-300 hover:scale-110 hover:rotate-90 focus:outline-none focus:ring-2 focus:ring-[#fca5a5]/50 dark:focus:ring-[#ef4444]/50 shadow-sm hover:shadow-md border border-[#e2e8f0]/50 dark:border-[#64748b]/50">
                 <X className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
               </button>
             </div>
@@ -151,58 +156,121 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
         </div>
       </ERPResizableSidebar>
 
-  {/* Details Sidebar on Left */}
-  {isDetailsOpen && (
-    <ERPResizableSidebar
-      isOpen={isDetailsOpen}
-      setIsOpen={setIsDetailsOpen}
-      position="left"
-      initialWidth={
-        deviceInfo.isMobile
-          ? window.innerWidth * 0.9
-          : window.innerWidth - rightInitialWidth // take rest of the space
-      }
-      minWidth={600}
-      maxWidth={window.innerWidth} // Allow full width to "cover" if resized
-      zIndex={54} // Higher z-index to overlay right if expanded
-    >
-      <div className="p-4 relative h-full">
-        {/* Header with Close Button */}
-        <div className="flex items-center justify-between mb-4 border-b pb-2">
-          <h2 className="text-xl font-bold">Transaction Details</h2>
-          <button
-            onClick={() => setIsDetailsOpen(false)}
-            className="group relative p-2 rounded-full text-[#64748b] hover:text-[#334155] 
-              dark:text-[#64748b] dark:hover:text-[#f1f5f9] 
-              bg-gradient-to-br from-[#f1f5f9] to-[#e2e8f0] 
-              hover:from-[#fee2e2] hover:to-[#fecaca] 
-              dark:from-[#1e293b] dark:to-[#334155] 
-              dark:hover:from-[#7f1d1d]/50 dark:hover:to-[#b91c1c]/50 
-              transition-all duration-300 hover:scale-110 hover:rotate-90 
-              focus:outline-none focus:ring-2 focus:ring-[#fca5a5]/50 
-              dark:focus:ring-[#ef4444]/50 shadow-sm hover:shadow-md 
-              border border-[#e2e8f0]/50 dark:border-[#64748b]/50"
-          >
-            <X className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-          </button>
-        </div>
+      {/* Details Sidebar on Left */}
+      {isDetailsOpen && (
+        <ERPResizableSidebar
+          isOpen={isDetailsOpen}
+          setIsOpen={handleDetailsClose}
+          position="left"
+          initialWidth={
+            deviceInfo.isMobile
+              ? Math.min(window.innerWidth * 0.9, 400)
+              : Math.max(600, window.innerWidth - rightInitialWidth - 25) // Leave some margin
+          }
+          minWidth={400}
+          maxWidth={deviceInfo.isMobile ? window.innerWidth : window.innerWidth - 100} // Leave some margin on desktop
+          zIndex={54} // Higher z-index to overlay right if expanded
+        >
+          <div className="h-[94vh] bg-gradient-to-b from-[#f8fafc] via-[#ffffff] to-[#f1f5f9]/80 dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#0f172a]/90 transition-all duration-300 relative overflow-hidden">
+            {/* Animated background pattern */}
+            <div className="absolute inset-0 opacity-30 dark:opacity-10">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#eff6ff]/20 via-transparent to-[#f3e8ff]/20 dark:from-[#1e3a8a]/10 dark:via-transparent dark:to-[#6d28d9]/10"></div>
+              <div className="absolute top-1/4 left-0 w-32 h-32 bg-gradient-radial from-[#bfdbfe]/20 to-transparent dark:from-[#1e40af]/20 rounded-full blur-xl animate-pulse"></div>
+              <div className="absolute bottom-1/4 right-0 w-40 h-40 bg-gradient-radial from-[#e9d5ff]/20 to-transparent dark:from-[#7c3aed]/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+            </div>
 
-        {/* Details Content */}
-        {selectedTransaction ? (
-          <div className="space-y-2">
-            <p><strong>Party Name:</strong> {selectedTransaction.partyName}</p>
-            <p><strong>Voucher Number:</strong> {selectedTransaction.voucherNumber}</p>
-            <p><strong>Date:</strong> {new Date(selectedTransaction.transactionDate).toLocaleDateString()}</p>
-            <p><strong>Grand Total:</strong> ₹{selectedTransaction.grandTotal?.toFixed(2)}</p>
-            {/* Add more details or fetch additional data here */}
+            {/* Header with Close Button */}
+            <div className="sticky top-0 z-20 relative bg-[#ffffff] dark:bg-[#0f172a] backdrop-blur-md border-b border-[#e5e7eb] dark:border-[#334155] px-6 py-4 before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#3b82f6]/5 before:to-[#a78bfa]/5 dark:before:from-[#60a5fa]/5 dark:before:to-[#a78bfa]/5">
+              <div className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-[#dbeafe] to-[#c7d2fe] dark:from-[#1e40af]/40 dark:to-[#312e81]/40 text-[#2563eb] dark:text-[#60a5fa] shadow-sm border border-[#bfdbfe]/50 dark:border-[#1e40af]/50 transform hover:scale-110 transition-transform duration-200">
+                    <Receipt className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h6 className="text-lg font-bold bg-gradient-to-r from-[#0f172a] to-[#334155] dark:from-[#f1f5f9] dark:to-[#cbd5e1] bg-clip-text text-transparent">Transaction Details</h6>
+                    <p className="text-xs text-[#64748b] dark:text-[#94a3b8] mt-0.5 font-medium bg-[#f1f5f9]/50 dark:bg-[#1e293b]/50 px-2 py-0.5 rounded-md border border-[#e2e8f0]/50 dark:border-[#334155]/50">
+                      {selectedTransaction?.voucherNumber || 'N/A'}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleDetailsClose}
+                  className="group relative p-2 rounded-full text-[#64748b] hover:text-[#334155] 
+                    dark:text-[#64748b] dark:hover:text-[#f1f5f9] 
+                    bg-gradient-to-br from-[#f1f5f9] to-[#e2e8f0] 
+                    hover:from-[#fee2e2] hover:to-[#fecaca] 
+                    dark:from-[#1e293b] dark:to-[#334155] 
+                    dark:hover:from-[#7f1d1d]/50 dark:hover:to-[#b91c1c]/50 
+                    transition-all duration-300 hover:scale-110 hover:rotate-90 
+                    focus:outline-none focus:ring-2 focus:ring-[#fca5a5]/50 
+                    dark:focus:ring-[#ef4444]/50 shadow-sm hover:shadow-md 
+                    border border-[#e2e8f0]/50 dark:border-[#64748b]/50"
+                >
+                  <X className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                </button>
+              </div>
+            </div>
+
+            {/* Details Content */}
+            <div className="relative z-10 p-6">
+              {selectedTransaction ? (
+                <div className="space-y-6">
+                  {/* Transaction Overview Card */}
+                  <div className="bg-gradient-to-br from-[#ffffff] via-[#f8fafc]/80 to-[#eff6ff]/30 dark:from-[#0f172a] dark:via-[#1e293b]/90 dark:to-[#1e40af]/20 p-6 border border-[#e2e8f0]/60 dark:border-[#334155]/60 shadow-sm rounded-xl backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-[#0f172a] dark:text-[#f1f5f9] mb-4 flex items-center space-x-2">
+                      <Receipt className="w-5 h-5 text-[#3b82f6] dark:text-[#60a5fa]" />
+                      <span>Transaction Overview</span>
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-xs font-medium text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wide">Party Name</label>
+                          <p className="text-sm font-semibold text-[#0f172a] dark:text-[#f1f5f9] mt-1">{selectedTransaction.partyName}</p>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wide">Voucher Number</label>
+                          <p className="text-sm font-semibold text-[#0f172a] dark:text-[#f1f5f9] mt-1 font-mono">{selectedTransaction.voucherNumber}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-xs font-medium text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wide">Transaction Date</label>
+                          <p className="text-sm font-semibold text-[#0f172a] dark:text-[#f1f5f9] mt-1">
+                            {new Date(selectedTransaction.transactionDate).toLocaleDateString("en-GB", {
+                              weekday: 'long',
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wide">Grand Total</label>
+                          <p className="text-lg font-bold text-[#059669] dark:text-[#34d399] mt-1">₹{selectedTransaction.grandTotal?.toFixed(2) || "0.00"}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Details */}
+                  <div className="bg-gradient-to-br from-[#ffffff] via-[#f8fafc]/80 to-[#eff6ff]/30 dark:from-[#0f172a] dark:via-[#1e293b]/90 dark:to-[#1e40af]/20 p-6 border border-[#e2e8f0]/60 dark:border-[#334155]/60 shadow-sm rounded-xl backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-[#0f172a] dark:text-[#f1f5f9] mb-4">Additional Information</h3>
+                    <div className="space-y-2 text-sm text-[#64748b] dark:text-[#94a3b8]">
+                      <p>More transaction details can be loaded here...</p>
+                      <p>This could include line items, payment details, etc.</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64">
+                  <p className="text-[#64748b] dark:text-[#94a3b8] text-lg">No transaction selected.</p>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <p>No transaction selected.</p>
-        )}
-      </div>
-    </ERPResizableSidebar>
-  )}
-
+        </ERPResizableSidebar>
+      )}
     </>
   );
 };

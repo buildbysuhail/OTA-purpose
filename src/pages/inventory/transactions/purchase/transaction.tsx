@@ -97,6 +97,7 @@ import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
 import { purchaseGridCol } from "./transaction-grid-cols";
+import SavingOverlay from "../transaction-saving";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2292,9 +2293,14 @@ useEffect(() => {
           />
         )}
       </div>
-      {/* {formState.loading && formState.loading.isLoading == true &&
-     <BlurLoader text={formState.loading.text}></BlurLoader>
-     } */}
+       {formState.saving && (
+          <SavingOverlay saving={true} saveCompleted={formState.savingCompleted??false} savingSwitchAction={ formStateHandleFieldChange({
+          fields: {
+            savingCompleted: undefined,saving: false
+          },
+        })}
+          />
+        )}
     </>
   );
 };

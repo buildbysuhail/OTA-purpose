@@ -52,7 +52,24 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             ref={ref}
             id="voucherNumber"
             localInputBox={formState?.userConfig?.inputBoxStyle}
-            onKeyUp={(e) => {
+            onKeyUp={async(e) => {
+              if(e.key == "Enter") {
+                const ret = await loadAndSetTransVoucher(
+                  false,
+                  parseFloat(e.target?.value),
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  e.mode == "down"
+                    ? "decrement"
+                    : e.mode == "up"
+                    ? "increment"
+                    : undefined,
+                  false
+                );
+              }
               handleKeyDown && handleKeyDown(e, "voucherNumber");
             }}
             min={1}

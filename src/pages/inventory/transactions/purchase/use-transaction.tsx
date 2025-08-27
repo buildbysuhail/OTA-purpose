@@ -474,6 +474,7 @@ export const useTransaction = (
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible??false
     };
+debugger;
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
     if (loadVType == "GRN") {
@@ -528,9 +529,12 @@ export const useTransaction = (
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
-
     voucher.transaction = {
       ...(vch || {}),
+      master: {
+        ...(vch?.master || {}),
+        hasroundOff: vch?.master?.roundAmount != 0
+      },
       details: refactorDetails(
         vch.details,
         formType??vch.master.voucherForm,
@@ -555,9 +559,6 @@ export const useTransaction = (
       voucher.formElements,
       { result: voucher }
     ) as TransactionFormState;
-
-    voucher.transaction.master.hasroundOff =
-      voucher.transaction.master.roundAmount > 0;
     voucher.transaction.master.prevTransDate =
       voucher.transaction.master.transactionDate == ""
         ? moment().local().toISOString()
@@ -2948,7 +2949,6 @@ ERPAlert.show({
     showDialog?: boolean;
   }> => {
     let { result } = commonParams;
-debugger;
     try {
       const key = event.key;
       const isShiftPressed = event.shiftKey;
@@ -2994,17 +2994,20 @@ debugger;
           }
           break;
 
-        // case "i":
-        // case "I":
-        //   if (isCtrlPressed) {
-        //     dispatch(
-        //       commonParams.formStateHandleFieldChangeKeysOnly({
-        //         fields: { showProductInformation: true },
-        //       })
-        //     );
-        //     return { handled: true };
-        //   }
-        //   break;
+        case "i":
+        case "I":
+          if (isCtrlPressed) {
+          debugger;
+            dispatch(
+              formStateHandleFieldChange({
+                       fields: {
+                         showProductInformation: { show: true, index: rowIndex },
+                       },
+                     })
+            );
+            return { handled: true };
+          }
+          break;
         // Product Information ☝
 
         case " ": {

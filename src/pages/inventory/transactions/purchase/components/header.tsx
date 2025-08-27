@@ -227,7 +227,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 ref={buttonRef}
                 onClick={togglePopupVisible}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? "p-0.5" : "p-3"}  rounded-md hover:bg-gray-200 transition-colors`}
-                title={t("previous_page")}>
+                title={t("more")}>
                 <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
 
@@ -471,12 +471,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
             {/* Previous Page Button */}
             {!phone && (
+               <div className="relative">
               <button
-                onClick={goToPreviousPage}
+                onClick={(e) => { debugger; e.preventDefault(); goToPreviousPage()}}
                 className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                 title={t("previous_page")}>
-                <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+               X
               </button>
+              </div>
             )}
           </div>
         )}

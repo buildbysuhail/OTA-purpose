@@ -59,7 +59,7 @@ import moment from "moment";
 import ERPAttachment from "../../../../components/ERPComponents/erp-attachment";
 import HistorySidebar from "./historySidebar";
 import UnsavedChangesModal from "./unsavedChangesModal";
-import AccHeader from "./components/header";
+import Header from "./components/header";
 import Urls from "../../../../redux/urls";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ProductSummaryMaster from "../../reports/other-inventory-reports/product-summary/product-summary-master";
@@ -1357,8 +1357,22 @@ useEffect(() => {
   const handleChange = (selectedOption: { value: string; label: string }) => {};
 
   const goToPreviousPage = () => {
+    debugger;
+  if (window.history.length <= 1) {
+    // No history to go back to, attempt to close the tab
+    window.close();
+    
+    // If window.close() doesn't work (common in modern browsers),
+    // you can try this alternative approach
+    window.open('', '_self', '');
+    window.close();
+    
+    // Or as a last resort, redirect to a blank page
+    // window.location.href = 'about:blank';
+  } else {
     window.history.back();
-  };
+  }
+};
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -1497,7 +1511,7 @@ useEffect(() => {
                     </h6>
                     <i className="fas fa-cog ms-1"></i>
                   </div>
-                  <AccHeader
+                  <Header
                     formState={formState}
                     dispatch={dispatch}
                     // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
@@ -1690,7 +1704,7 @@ useEffect(() => {
 
             {/* Main Content */}
             <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
-              <AccHeader
+              <Header
                 formState={formState}
                 dispatch={dispatch}
                 // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler

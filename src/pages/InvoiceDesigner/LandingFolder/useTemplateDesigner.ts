@@ -32,9 +32,10 @@ interface UseTemplateDesignerProps {
   templateGroup: string;
   templateKind: string;
   designerType: string;
+  template?:any;
 }
 
-export const useTemplateDesigner = ({ templateGroup, templateKind, designerType }: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,template }: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,22 +44,24 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
   const currentBranch = useCurrentBranch();
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const templateData = useSelector((state: RootState) => state.Template) 
+  const storeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
+  const templateData = template ?? storeTemplate;
+
   // Add ref for preview container
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
 //  Create consolidated template style properties object
   const templateStyleProperties = useMemo(() => {
-    const pageOrientation = templateData?.activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-    const pageSize = templateData?.activeTemplate?.propertiesState?.pageSize ?? "A4";
-    const paddingLeft = templateData?.activeTemplate?.propertiesState?.padding?.left ;
-    const paddingRight = templateData?.activeTemplate?.propertiesState?.padding?.right ;
-    const paddingTop = templateData?.activeTemplate?.propertiesState?.padding?.top ;
-    const paddingBottom = templateData?.activeTemplate?.propertiesState?.padding?.bottom;
+    const pageOrientation = templateData.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+    const pageSize = templateData.propertiesState?.pageSize ?? "A4";
+    const paddingLeft = templateData.propertiesState?.padding?.left ;
+    const paddingRight = templateData.propertiesState?.padding?.right ;
+    const paddingTop = templateData.propertiesState?.padding?.top ;
+    const paddingBottom = templateData.propertiesState?.padding?.bottom;
     const selectedPageSize = getPageDimensions(
       pageSize,
-      templateData?.activeTemplate?.propertiesState?.width,
-      templateData?.activeTemplate?.propertiesState?.height,
+      templateData.propertiesState?.width,
+      templateData.propertiesState?.height,
     );
 
     const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
@@ -75,15 +78,15 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType 
       paddingBottom
     };
   }, [
-    templateData?.activeTemplate?.propertiesState?.orientation,
-    templateData?.activeTemplate?.propertiesState?.pageSize,
-    templateData?.activeTemplate?.propertiesState?.bg_color,
-    templateData?.activeTemplate?.propertiesState?.width,
-    templateData?.activeTemplate?.propertiesState?.height,
-    templateData?.activeTemplate?.propertiesState?.padding?.bottom,
-    templateData?.activeTemplate?.propertiesState?.padding?.left,
-    templateData?.activeTemplate?.propertiesState?.padding?.right,
-    templateData?.activeTemplate?.propertiesState?.padding?.top,
+    templateData.propertiesState?.orientation,
+    templateData.propertiesState?.pageSize,
+    templateData.propertiesState?.bg_color,
+    templateData.propertiesState?.width,
+    templateData.propertiesState?.height,
+    templateData.propertiesState?.padding?.bottom,
+    templateData.propertiesState?.padding?.left,
+    templateData.propertiesState?.padding?.right,
+    templateData.propertiesState?.padding?.top,
   
   ]);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
@@ -103,13 +106,13 @@ console.log("userSession",userSession,"currentBranch",currentBranch,);
   // Stabilize props for PDFViewer
   const stableTemplateProps = useMemo(
     () => ({
-      template: templateData.activeTemplate,
+      template: templateData,
       data: DummyVoucherData,
       currentBranch,
       userSession,
       clientSession,
     }),
-    [templateData.activeTemplate, currentBranch, userSession, clientSession]
+    [templateData, currentBranch, userSession, clientSession]
   );
 
   // Set max height based on window size
@@ -195,9 +198,9 @@ try {
   const handleSave = useCallback(
     async (dataUrl: string) => {
       const tmpTemplate = {
-        ...templateData.activeTemplate,
+        ...templateData,
         propertiesState: {
-          ...templateData.activeTemplate.propertiesState,
+          ...templateData.propertiesState,
           template_group: templateGroup,
           template_kind: templateKind,
           template_type:designerType,
@@ -217,7 +220,7 @@ try {
         backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
         signatureImage: tmpTemplate.signature_image ?? "",
         branchId: 0,
-        id: templateData.activeTemplate?.id ?? 0,
+        id: templateData?.id ?? 0,
       };
 
       dispatch(setTemplate(activeTemplate));
@@ -240,7 +243,7 @@ try {
 
   // Updated save function that captures preview as image
   const manageSaveAccTemplate = useCallback(async () => {
-    if (id === "new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
+    if (id === "new" && !templateData.propertiesState?.templateName) {
       ERPToast.show(t("template_name_is_required"));
       return;
     }

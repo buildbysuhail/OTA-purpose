@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import Urls from "../../../redux/urls";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams,useParams,useNavigate,useLocation } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
@@ -14,14 +14,13 @@ import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { APIClient } from "../../../helpers/api-client";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { isChooseVoucherEnabled } from "../../../components/common/content/transaction-routes";
+import { isChooseVoucherEnabled, transactionRoutes } from "../../../components/common/content/transaction-routes";
 import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { useUnsavedChangesWarning } from "../../use-unsaved-changes-warning";
-import { useNavigate } from "react-router-dom";
 import HistorySidebar from "../../inventory/transactions/purchase/historySidebar";
 import Header from "../../inventory/transactions/purchase/components/header";
-
+import { useTemplateDesigner } from "../../InvoiceDesigner/LandingFolder/useTemplateDesigner"
 import {
   Box,
   Button,
@@ -65,6 +64,8 @@ import { useAccPrint } from "./use-print";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { useAccTransaction } from "./use-acc-transaction";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
+import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+import { TransactionFormState } from "../../inventory/transactions/purchase/transaction-types";
 
 const invoices = [
   {
@@ -102,8 +103,10 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
+
 const { printVoucher, getTemplate } = useAccPrint();
   const [searchParams] = useSearchParams();
+  const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();
   const getParamOrProp = <T extends string | number>(
     key: keyof AccTransactionProps,
@@ -127,8 +130,7 @@ const { printVoucher, getTemplate } = useAccPrint();
     formType: getParamOrProp<string>("formType") || props.formType,
     title: getParamOrProp<string>("title") || props.title,
     drCr: getParamOrProp<string>("drCr") || props.drCr,
-    voucherNo:
-      getParamOrProp<number>("voucherNo", true) || props.voucherNo || 0,
+    voucherNo: Number(voucherNoParam) || props.voucherNo || 0,
     transactionMasterID:
       getParamOrProp<number>("transactionMasterID", true) ||
       props.transactionMasterID ||
@@ -139,64 +141,49 @@ const { printVoucher, getTemplate } = useAccPrint();
       0,
   });
 
-  // Sync state when query parameters or props change
-  useEffect(() => {
-    setInput({
-      voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
-      transactionType:
-        getParamOrProp<string>("transactionType") || props.transactionType,
-      formCode: getParamOrProp<string>("formCode") || props.formCode,
-      voucherPrefix:
-        getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
-      formType: getParamOrProp<string>("formType") || props.formType,
-      title: getParamOrProp<string>("title") || props.title,
-      drCr: getParamOrProp<string>("drCr") || props.drCr,
-      voucherNo:
-        getParamOrProp<number>("voucherNo", true) || props.voucherNo || 0,
-      transactionMasterID:
-        getParamOrProp<number>("transactionMasterID", true) ||
-        props.transactionMasterID ||
-        0,
-      financialYearID:
-        getParamOrProp<number>("financialYearID", true) ||
-        props.financialYearID ||
-        0,
-    });
-  }, [searchParams, props]); // Runs when query params or props change
+const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
+  for (const k of aKeys) {
+    if (String(a[k]) !== String(b[k])) return false; // string compare to normalize types
+  }
+  return true;
+};
+
+useEffect(() => {
+  const newInput = {
+    voucherType: getParamOrProp<string>("voucherType") || input.voucherType,
+    transactionType: input.transactionType, // keep existing transactionType unless you REALLY need to change it
+    formCode: getParamOrProp<string>("formCode") || input.formCode,
+    voucherPrefix: getParamOrProp<string>("voucherPrefix") || input.voucherPrefix,
+    formType: getParamOrProp<string>("formType") || input.formType,
+    title: getParamOrProp<string>("title") || input.title,
+    drCr: getParamOrProp<string>("drCr") || input.drCr,
+    voucherNo: Number(voucherNoParam) || input.voucherNo,
+    transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || input.transactionMasterID,
+    financialYearID: getParamOrProp<number>("financialYearID", true) || input.financialYearID,
+  };
+
+  if (!shallowEqual(newInput, input)) {
+    setInput(newInput);
+  }
+  // intentionally exclude `input` from deps to avoid infinite loop,
+  // but include searchParams and voucherNoParam so effect runs when URL changes
+}, [searchParams, voucherNoParam, props]); // if you need props in compare, include them too
+
+  // Set max height based on window size
 
   const [template,setTemplate]= useState<any>(null)
+  const [vchr, setVchr] = useState<any>(null);
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const [openVoucherSelector, setOpenVoucherSelector] =
-    useState<boolean>(false);
-  const [store, setStore] = useState<{ data: any; totalCount: number }>();
+
   const navigate = useNavigate();
-  const [data, setData] = useState<{
-    voucherPrefix: string;
-    formType: string;
-    voucherNo: number;
-  }>({ voucherPrefix: "", formType: input.formType ?? "", voucherNo: 1 });
-  const [readyToShowVoucher, setReadyToShowVoucher] = useState<{
-    ready: boolean;
-    input: any;
-    data: any;
-  }>({ ready: false, input: null, data: null });
+   const location = useLocation();
   const { hasUnsavedChanges, setIsModalOpen } = useUnsavedChangesWarning();
   const dispatch = useDispatch();
-  const [prevState, setPrevState] = useState({
-    voucherType: undefined as string | undefined,
-    transactionType: undefined as string | undefined,
-    formCode: undefined as string | undefined,
-    voucherPrefix: undefined as string | undefined,
-    formType: undefined as string | undefined,
-    title: undefined as string | undefined,
-    drCr: undefined as string | undefined,
-    voucherNo: undefined as number | undefined,
-    transactionMasterID: undefined as number | undefined,
-    financialYearID: undefined as number | undefined,
-  });
- 
 
   const goBack = async () => {
     const has = await hasUnsavedChanges();
@@ -209,153 +196,64 @@ const { printVoucher, getTemplate } = useAccPrint();
   // const goBack = () => {
   //   navigate(-1); // Goes back to the previous page
   // };
-  const initializeVoucher = async (_input: any, _data: any) => {
-    try {
-      setReadyToShowVoucher({ ready: true, input: _input, data: _data });
-    } catch (error) {
-      console.error("Error initializing voucher:", error);
-    }
-  };
 
-  useEffect(() => {
-    const _input = {
-      voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
-      transactionType:
-        getParamOrProp<string>("transactionType") || props.transactionType,
-      formCode: getParamOrProp<string>("formCode") || props.formCode,
-      voucherPrefix:
-        getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
-      formType: getParamOrProp<string>("formType") || props.formType,
-      title: getParamOrProp<string>("title") || props.title,
-      drCr: getParamOrProp<string>("drCr") || props.drCr,
-      voucherNo:
-        getParamOrProp<number>("voucherNo", true) || props.voucherNo || 0,
-      transactionMasterID:
-        getParamOrProp<number>("transactionMasterID", true) ||
-        props.transactionMasterID ||
-        0,
-      financialYearID:
-        getParamOrProp<number>("financialYearID", true) ||
-        props.financialYearID ||
-        0,
-    };
-    let isDirty = false;
-    Object.keys(_input).forEach((key) => {
-      if (
-        _input[key as keyof typeof _input] !==
-        prevState[key as keyof typeof prevState]
-      ) {
-        console.log(
-          `Value changed for ${key}:`,
-          prevState[key as keyof typeof prevState],
-          "→",
-          _input[key as keyof typeof _input]
-        );
-        isDirty = true;
-      }
-    });
-    if (isDirty) {
-      if (
-        isChooseVoucherEnabled(_input.title ?? "", userSession) &&
-        (_input.voucherNo == undefined || _input.voucherNo <= 0)
-      ) {
-        const fetchData = async () => {
-          try {
-            const res = await api.getAsync(
-              `${Urls.voucher_selector}${_input.voucherType}`
-            );
 
-            if (
-              res == undefined ||
-              res == null ||
-              (res != undefined && res != null && res.length <= 1)
-            ) {
-              if (res?.length == 1) {
-                setData((prev: any) => ({
-                  ...prev,
-                  formType: res[0].formType,
-                  voucherNo: res[0].lastVNo,
-                  voucherPrefix: res[0].lastPrefix?.toUpperCase(),
-                }));
 
-                await initializeVoucher(_input, {
-                  formType: res[0].formType,
-                  voucherNo: res[0].lastVNo,
-                  voucherPrefix: res[0].lastPrefix?.toUpperCase(),
-                }); // Call initializeVoucher here
-              } else {
-                setReadyToShowVoucher({
-                  ready: true,
-                  input: _input,
-                  data: {
-                    formType: _input.formType,
-                    voucherNo: 0,
-                    voucherPrefix: _input.voucherPrefix,
-                  },
-                });
-              }
-            } else {
-              setStore(res);
-              setOpenVoucherSelector(true);
-            }
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-        fetchData();
-      } else {
-        initializeVoucher(_input, {
-          formType: _input.formType,
-          voucherNo: 0,
-          voucherPrefix: _input.voucherPrefix,
-        });
-      }
-      setPrevState(_input);
-    }
-  }, [searchParams, props]);
 
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
-  const onRowDblClick = useCallback(
+  const onRowClick = useCallback(
+   
     async (event: any) => {
+       debugger;
       const _event = event.data != undefined ? event : event?.event;
-      setSelectedRow(_event.data); // Set the selected row data
-      setData((prev: any) => ({
-        ...prev,
-        formType: _event.data.formType,
-        voucherNo: _event.data.lastVNo,
-        voucherPrefix: _event.data.lastPrefix?.toUpperCase(),
-      }));
-      const asd = {
-        voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
-        transactionType:
-          getParamOrProp<string>("transactionType") || props.transactionType,
-        formCode: getParamOrProp<string>("formCode") || props.formCode,
-        voucherPrefix:
-          getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
-        formType: getParamOrProp<string>("formType") || props.formType,
-        title: getParamOrProp<string>("title") || props.title,
-        drCr: getParamOrProp<string>("drCr") || props.drCr,
-        voucherNo:
-          getParamOrProp<number>("voucherNo", true) || props.voucherNo || 0,
-        transactionMasterID:
-          getParamOrProp<number>("transactionMasterID", true) ||
-          props.transactionMasterID ||
-          0,
-        financialYearID:
-          getParamOrProp<number>("financialYearID", true) ||
-          props.financialYearID ||
-          0,
+      const clickedRow = _event.data;
+        // Extract values
+    const transactionMasterID = parseInt(clickedRow.accTransactionMasterID || "0", 10);
+    const vchtype = clickedRow.voucherType;
+    const voucherform = clickedRow.formType;
+    const prefix = clickedRow.lastPrefix || clickedRow.voucherPrefix;
+    const vchno = clickedRow.lastVNo || clickedRow.voucherNumber;
+    const financialYearID = parseInt(clickedRow.financialYearID || "0", 10);
+
+    //  Find transaction route details
+    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+    //  Prepare full transaction data object (same as Component A)
+    let transactionData: Record<string, string | number | undefined> = {};
+    if (parseInt(vchno, 10) > 0) {
+      transactionData = {
+        transactionMasterID,
+        formType: voucherform,
+        voucherPrefix: prefix?.toUpperCase(),
+        voucherType: vchtype,
+        financialYearID,
+        formCode: tr?.formCode,
+        transactionBase: tr?.transactionBase,
+        title: tr?.title,
+        drCr: tr?.drCr,
       };
-      const asf = {
-        formType: _event.data.formType,
-        voucherNo: _event.data.lastVNo,
-        voucherPrefix: _event.data.lastPrefix?.toUpperCase(),
-      };
-      await initializeVoucher(asd, asf);
-      setOpenVoucherSelector(false);
+    }
+
+    //  Convert object to query string
+    const queryString = new URLSearchParams(
+      Object.entries(transactionData).reduce((acc, [key, value]) => {
+        acc[key] = String(value ?? "");
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${queryString}` : ""}`;
+
+  // IMPORTANT: Only navigate when URL actually changes
+  const currentFullUrl = `${location.pathname}${location.search || ""}`;
+  if (currentFullUrl !== newUrl) {
+    navigate(newUrl, { replace: true });
+  }
+      setSelectedRow(clickedRow); // Set the selected row data
+
     },
-    [searchParams, props]
+    []
   );
 
   const selectedInvoice = invoices[0];
@@ -541,19 +439,67 @@ const { printVoucher, getTemplate } = useAccPrint();
     const fetchTemplate = async () => {
       const result = await getTemplate(input?.voucherType, formState);
       setTemplate(result);
-
-      const vchr = loadAccTransVoucher(false,input?.voucherNo,input?.voucherPrefix,input?.voucherType,input?.formType)
+     const voucherData = await loadAccTransVoucher(
+      false,
+      input?.voucherNo,
+      input?.voucherPrefix,
+      input?.voucherType,
+      input?.formType,
+      "",
+      input?.transactionMasterID
+    );
+    setVchr(voucherData?.transaction);
+    console.log("template",result,"data",voucherData?.transaction);
     };
-
     fetchTemplate();
-  }, [input?.voucherType, formState]); 
+  }, [input, formState]); 
 
     const groupKey =input?.voucherType || "";
     const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
     const kindKey = template?.templateKind ;
-    const config = useMemo(() => {
+    const templateToRender = useMemo(() => {
       return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
     }, [groupKey, typeKey, kindKey]);
+
+     
+        const {
+          maxHeight,
+          stableTemplateProps,
+          templateStyleProperties
+        } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template })
+
+const MemoizedGrid = useMemo(() => {
+  return (
+    <ERPDevGrid
+      columns={columnstwo} // already stable? If dynamic, memoize separately
+      dataUrl={`${urls.acc_transaction_base}${input.transactionType}/List/`}
+      method={ActionType.GET}
+      postData={{ searchQuery }}
+      gridHeader={t("transactions")}
+      gridId="transaction-grid"
+      remoteOperations={{
+        paging: true,
+        filtering: true,
+        sorting: true,
+      }}
+      gridAddButtonIcon="ri-add-line"
+      pageSize={40}
+      scrollingMode="virtual"
+      allowExport={true}
+      allowSearching={true}
+      hideDefaultExportButton={true}
+      hideDefaultSearchPanel={false}
+      hideGridAddButton={true}
+      hideGridHeader={true}
+      showColumnHeaders={false}
+      className="HistorySidebarcustom"
+      ShowGridPreferenceChooser={false}
+      onRowClick={onRowClick}
+    />
+  );
+}, []);
+
+
   return (
     <>
       {/* <InvoiceView/> */}
@@ -585,37 +531,7 @@ const { printVoucher, getTemplate } = useAccPrint();
             {/* Content */}
             <div className="space-y-4">
               {/* {isOpen && */}
-              <ERPDevGrid
-                //  columns={columns}
-                columns={columnstwo}
-                dataUrl={`${urls.acc_transaction_base}${input.transactionType}/List/`}
-                method={ActionType.GET}
-                postData={{ searchQuery }}
-                // postData={{voucherType: voucherType, transactionType: transactionType}}
-                gridHeader={t("transactions")}
-                gridId="transaction-grid"
-                remoteOperations={{
-                  paging: true,
-                  filtering: true,
-                  sorting: true,
-                }}
-                gridAddButtonIcon="ri-add-line"
-                pageSize={40}
-                // onSearch={handleSearch}
-                // postData={{ searchQuery }}
-                allowExport={true}
-                allowSearching={true}
-                hideDefaultExportButton={true}
-                // showFilterRow ={false}
-                hideDefaultSearchPanel={false}
-                //  allowSearching={false}
-                hideGridAddButton={true}
-                hideGridHeader={true}
-                showColumnHeaders={false}
-                className="HistorySidebarcustom "
-                ShowGridPreferenceChooser={false}
-                onRowDblClick={onRowDblClick} // Add this line
-              />
+     {MemoizedGrid}
               {/* } */}
               {/* Transaction Date */}
             </div>
@@ -630,7 +546,7 @@ const { printVoucher, getTemplate } = useAccPrint();
             justifyContent="space-between"
           >
             <Typography variant="h5">
-              {selectedRow?.voucherNumber ?? selectedInvoice.number}
+              {input?.voucherNo}
             </Typography>
             <Box>
               <div
@@ -798,65 +714,61 @@ const { printVoucher, getTemplate } = useAccPrint();
           <Divider sx={{ my: 2 }} />
           <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
 
-{/*          
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={8}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Bill To
-                </Typography>
-                <Typography variant="body1">
-                  {selectedInvoice.customer}
-                </Typography>
-                <Typography variant="body2">Kerala, India</Typography>
-                <Typography variant="body2">safvan.work@gmail.com</Typography>
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="body2">
-                  <strong>Invoice Date:</strong> {selectedInvoice.date}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Terms:</strong> Due On Receipt
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Due Date:</strong> {selectedInvoice.date}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6" align="right" sx={{ mt: 2 }}>
-                  TAX INVOICE
-                </Typography>
-              </Grid>
-            </Grid>
-            <Divider sx={{ my: 2 }} />
-            <Box>
-              <Typography variant="subtitle2">Item & Description</Typography>
-              <Box display="flex" justifyContent="space-between" mt={1}>
-                <span>Apple</span>
-                <span>Qty: 1</span>
-                <span>Rate: 255.00</span>
-                <span>Amount: 255.00</span>
-              </Box>
-            </Box>
-            <Divider sx={{ my: 2 }} />
-            <Box display="flex" justifyContent="flex-end">
-              <Box>
-                <Typography>Sub Total: ₹255.00</Typography>
-                <Typography>
-                  Total: <strong>₹255.00</strong>
-                </Typography>
-                <Typography>
-                  Balance Due: <strong>₹255.00</strong>
-                </Typography>
-              </Box>
-            </Box>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="body2" sx={{ mt: 2 }}>
-              <strong>Total In Words:</strong> Indian Rupees Two Hundred
-              Fifty-Five Only
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              <strong>Notes:</strong> Thanks for your business.
-            </Typography> */}
-          </Paper>
+                        <div className="flex justify-center p-6 "  >
+                          <div className="relative">
+                            {/* Preview Container with Modern Styling */}
+                            <div
+                              
+                              className=" shadow-lg border border-gray-200 overflow-hidden"
+                              style={{
+                                      width: `${templateStyleProperties.previewWidth??500}pt`,
+                                      height: `${templateStyleProperties.previewHeight??500}pt`,
+                                      paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
+                                      paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
+                                      paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
+                                      paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
+
+                                    }}
+                            >
+
+            
+                              {/* Template Content */}
+                              <div className="relative "
+                              style={{
+                              width: "100%", 
+                              height: "100%",
+
+                              }}
+                              >
+                        {templateToRender?.PreviewComponent && template && vchr ? (
+                          React.cloneElement(templateToRender.PreviewComponent, {
+                            ...stableTemplateProps,
+                            template,
+                            data: vchr,
+                          })
+                        ) : (
+                          <div>Loading...</div>
+                        )}
+
+
+                              </div>
+                            </div>
+            
+                            {/* Drop Shadow Effect */}
+                            <div
+                              className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
+                              style={{
+                                width: `${templateStyleProperties.previewWidth}pt`,
+                                height: `${templateStyleProperties.previewHeight}pt`,
+                                minHeight: "400px",
+                                
+                              }}
+                            />
+                          </div>
+                        </div> 
+
+
+           </Paper>
 
         </Box>
       </Box>

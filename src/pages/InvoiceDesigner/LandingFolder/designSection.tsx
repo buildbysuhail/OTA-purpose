@@ -20,7 +20,7 @@ import AccountTransactionsUniversal from "../DownloadPreview/account/account_tra
 import AdviceTemplate  from "../DownloadPreview/advice-template";
 import ChequeTemplate  from "../DownloadPreview/cheque-template";
 import CustomerBalanceTemplateDesigner   from "./reports/customerBalace/customer-balance-report-designe";
-import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transaction_standard";
+import AccountPrvTransactionsVoucher from "../DesignPreview/account/acc_transaction_standard/prevIndex";
 import RetailRollSheetPrev from "../DesignPreview/RetailPreview/two-inch-preview";
 import { TransactionDetail } from "../../inventory/transactions/purchase/transaction-types";
 import AccountTransactionsTemplatePreview from "../DesignPreview/account/acc_transaction_premium";

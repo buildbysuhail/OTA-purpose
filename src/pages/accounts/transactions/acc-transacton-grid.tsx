@@ -135,14 +135,57 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         showInPdf: true,
         bold: true,
         cssClass: "centered-header",
-        cellRender: (data) => (
-          <div style={{ textAlign: "center" }}>
-            <Link to={`/accounts/transactions/CashPayment/${data.value}`} style={{ color: "#1b6de0", textDecoration: "underline" }}>
-              {data.value}
-            </Link>
-          </div>
-        )
+        cellRender: (cellInfo) => {
+          const row = cellInfo.data;
+          const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
+          const vchtype = row.voucherType;
+          const voucherform = row.formType;
+          const prefix = row.voucherPrefix;
+          const vchno = row.voucherNumber;
+          const financialYearID = parseInt(row.financialYearID || "0", 10);
+
+          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+          let transactionData: any = {};
+          if (parseInt(vchno, 10) > 0) {
+            transactionData = {
+              transactionMasterID,
+              formType: voucherform,
+              voucherPrefix: prefix,
+              voucherType: vchtype,
+              financialYearID,
+              formCode: tr?.formCode,
+              transactionType: tr?.transactionType,
+              transactionBase: tr?.transactionBase,
+              title: tr?.title,
+              drCr: tr?.drCr,
+            };
+          }
+ // Convert object to query string
+    const queryString = new URLSearchParams(
+      Object.entries(transactionData).reduce((acc, [key, value]) => {
+        acc[key] = String(value ?? "");
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+    
+          return (
+            <div style={{ textAlign: "center" }}>
+              <Link
+                to={`/accounts/transactions/CashPayment/${cellInfo.value}?${queryString}`}
+                style={{ color: "#1b6de0", textDecoration: "underline" }}
+                onClick={() => {
+                  console.log("cellInfo", cellInfo);
+                  console.log("transactionData", transactionData);
+                }}
+              >
+                {cellInfo.value}
+              </Link>
+            </div>
+          );
+        }
       },
+
       {
         dataField: "referenceNumber",
         caption: t("ref_no"),

@@ -3,6 +3,7 @@ import { Currencies,  useNumberToWords } from "./number-to-words";
 import { isNullOrUndefinedOrEmpty } from "./Utils";
 import { useNumberFormat } from "./hooks/use-number-format";
 import { RootState } from "../redux/store";
+import { UserModel } from "../redux/slices/user-session/reducer";
 
 // ==================== COUNTRY ID TO CURRENCY MAPPING ====================
 
@@ -150,26 +151,211 @@ export const getModeOfPaymentArabic = (
 };
 
 // ==================== MAIN HOOK ====================
+export interface PrintCustomFields {
+  amountInWords: string;
+  amountInWordsLine2: string;
+  amountInWordsInArabic: string;
+  mannualOrAutoBarcode: string;
+  billNumberBarcode: string;
+  transactionBarcode: string;
+  qrCodeKsaEinvoicePhase1: string;
+  billNumberPrefBarcode: string;
+  tokenBarcode: string;
+  voucherNumberBarcode: string;
+  groupNameHead: string;
+  printTime: string;
+  printDate: string;
+  date: string;
+  printCopyStatus: string;
+  printCopyStatus2: string;
+  salesBillNumbers: string;
 
-export const useCommonValues = () => {
-  const userSession = useSelector(
-    (state: RootState) => state.UserSession
-  );
-  const headerFooter = useSelector((state: RootState) => state);
-  const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
-const{posRoundAmount} = useNumberFormat()
-  const getCommonValues = (
-    fieldName: string,
+  totalItems: string;
+  sumOfQty: string;
+  sumOfFree: string;
+  sumOfQtyAndFree: string;
+  sumOfCgst: string;
+  sumOfSgst: string;
+  sumOfIgst: string;
+  sumOfCessAmt: string;
+  sumOfAddCessAmt: string;
+  sumOfGst: string;
+
+  taxable0: string;
+  sgst0: string;
+  cgst0: string;
+  igst0: string;
+  total0: string;
+
+  taxable3: string;
+  sgst3: string;
+  cgst3: string;
+  igst3: string;
+  total3: string;
+
+  taxable5: string;
+  sgst5: string;
+  cgst5: string;
+  igst5: string;
+  total5: string;
+
+  taxable12: string;
+  sgst12: string;
+  cgst12: string;
+  igst12: string;
+  total12: string;
+
+  taxable18: string;
+  sgst18: string;
+  cgst18: string;
+  igst18: string;
+  total18: string;
+
+  taxable28: string;
+  sgst28: string;
+  cgst28: string;
+  igst28: string;
+  total28: string;
+
+  youSaved: string;
+
+  // Commented-out page totals
+  pageTotalOfGross: string;
+  pageTotalOfDisc: string;
+  pageTotalOfTax: string;
+  pageTotalOfNetAmt: string;
+  pageTotalOfSchemeDisc: string;
+  pageTotalOfVat: string;
+  pageTotalOfTotDisc: string;
+  pageTotalOfCst: string;
+  pageTotalOfNetValue: string;
+  pageTotalOfNosQty: string;
+
+  pageTotAmount: string;
+  totalNetAmount: string;
+  totalQty: string;
+  totalPageQty: string;
+  pageTotDebit: string;
+
+  // Additional totals
+  totalAmount: string;
+  totalDiscount: string;
+  totalTax: string;
+  totalPayable: string;
+  roundOff: string;
+  QRCODE_KSA_EINVOICE_PHASE1: string;
+  BILLNUMBER_PREF_BARCODE: string;
+}
+export const initialPrintCustomFields: PrintCustomFields = {
+  amountInWords: "",
+  amountInWordsLine2: "",
+  amountInWordsInArabic: "",
+  mannualOrAutoBarcode: "",
+  billNumberBarcode: "",
+  transactionBarcode: "",
+  qrCodeKsaEinvoicePhase1: "",
+  billNumberPrefBarcode: "",
+  tokenBarcode: "",
+  voucherNumberBarcode: "",
+  groupNameHead: "",
+  printTime: "",
+  printDate: "",
+  date: "",
+  printCopyStatus: "",
+  printCopyStatus2: "",
+  salesBillNumbers: "",
+
+  totalItems: "",
+  sumOfQty: "",
+  sumOfFree: "",
+  sumOfQtyAndFree: "",
+  sumOfCgst: "",
+  sumOfSgst: "",
+  sumOfIgst: "",
+  sumOfCessAmt: "",
+  sumOfAddCessAmt: "",
+  sumOfGst: "",
+
+  taxable0: "",
+  sgst0: "",
+  cgst0: "",
+  igst0: "",
+  total0: "",
+
+  taxable3: "",
+  sgst3: "",
+  cgst3: "",
+  igst3: "",
+  total3: "",
+
+  taxable5: "",
+  sgst5: "",
+  cgst5: "",
+  igst5: "",
+  total5: "",
+
+  taxable12: "",
+  sgst12: "",
+  cgst12: "",
+  igst12: "",
+  total12: "",
+
+  taxable18: "",
+  sgst18: "",
+  cgst18: "",
+  igst18: "",
+  total18: "",
+
+  taxable28: "",
+  sgst28: "",
+  cgst28: "",
+  igst28: "",
+  total28: "",
+
+  youSaved: "",
+
+  pageTotalOfGross: "",
+  pageTotalOfDisc: "",
+  pageTotalOfTax: "",
+  pageTotalOfNetAmt: "",
+  pageTotalOfSchemeDisc: "",
+  pageTotalOfVat: "",
+  pageTotalOfTotDisc: "",
+  pageTotalOfCst: "",
+  pageTotalOfNetValue: "",
+  pageTotalOfNosQty: "",
+
+  pageTotAmount: "",
+  totalNetAmount: "",
+  totalQty: "",
+  totalPageQty: "",
+  pageTotDebit: "",
+
+  totalAmount: "",
+  totalDiscount: "",
+  totalTax: "",
+  totalPayable: "",
+  roundOff: "",
+  
+  QRCODE_KSA_EINVOICE_PHASE1: "",
+  BILLNUMBER_PREF_BARCODE: ""
+};
+
+  export const getCommonValues = (
+    fieldName: keyof PrintCustomFields,
     master: any,
     details: any[],
     detail: any,
     copyCount: number,
+    userSession: UserModel,
+    convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,
+    convertAmountToArabic: (amount: number, currency?: Currencies | undefined) => string,
     options?: {
       fieldLength?: number;
       isCashInHandLedger?: boolean;
       isLedgerUnderBank?: boolean;
     }
-  ): { value: string; result: boolean } => {
+  ):string => {
     let result = false;
     let value = "";
     const fieldLength = options?.fieldLength ?? 0;
@@ -178,12 +364,12 @@ const{posRoundAmount} = useNumberFormat()
     const transMasterID =
       master?.accTransactionMasterID ?? master?.invTransactionMasterID ?? 0;
     try {
-      switch (fieldName.toUpperCase()) {
-        case "AMOUNTINWORDS":
+      switch (fieldName) {
+        case "amountInWords":
           value = convertAmountToEnglish(master?.grantTotal);
           break;
 
-        case "AMOUNTINWORDSLINE2":
+        case "amountInWordsLine2":
           const amountInWords = convertAmountToEnglish(master?.grantTotal);
           if (amountInWords.length > fieldLength) {
             value = amountInWords.substring(fieldLength);
@@ -192,23 +378,23 @@ const{posRoundAmount} = useNumberFormat()
           }
           break;
 
-        case "AMOUNTINWORDSINARABIC":
+        case "amountInWordsInArabic":
           const countryId = userSession.countryId??0;
           const currency =
             COUNTRY_ID_TO_CURRENCY[countryId] ?? Currencies.OTHER;
           value = convertAmountToArabic(master?.grantTotal, currency);
           break;
 
-        case "MANNUALORAUTOBARCODE":
+        case "mannualOrAutoBarcode":
           value =
             isNullOrUndefinedOrEmpty(detail?.mBarcode) ? detail?.mBarcode : detail?.AutoBarcode;
           break;
 
-        case "BILLNUMBERBARCODE":
+        case "billNumberBarcode":
           value = `(1${master?.voucherType}${master?.voucherNumber})`;
           break;
 
-        case "TRANSACTIONBARCODE":
+        case "transactionBarcode":
           value = `*${
             transMasterID < 10
               ? "00000" + transMasterID
@@ -316,11 +502,11 @@ const{posRoundAmount} = useNumberFormat()
           value = `(${master?.voucherPrefix}.1${master?.voucherType}${master?.voucherNumber})`;
           break;
 
-        case "TOKENBARCODE":
+        case "tokenBarcode":
           value = `(${master?.voucherNumber})`;
           break;
 
-        case "VOUCHERNUMBERBARCODE":
+        case "voucherNumberBarcode":
           value =
             master.voucherNumber.length < 2
               ? `(00${master.voucherNumber})`
@@ -329,11 +515,11 @@ const{posRoundAmount} = useNumberFormat()
               : `(${master.voucherNumber})`;
           break;
 
-        case "GROUPNAMEHEAD":
+        case "groupNameHead":
           value = details?.findLast(x => x != undefined)?.groupName;
           break;
 
-        case "PRINTTIME":
+        case "printTime":
           value = formatTime(new Date());
           break;
 
@@ -341,23 +527,23 @@ const{posRoundAmount} = useNumberFormat()
         //   value = formatTime(data.TransactionTime);
         //   break;
 
-        case "PRINTDATE":
+        case "printDate":
           value = formatDate(new Date());
           break;
 
-        case "DATE":
+        case "date":
           value = new Date().toString();
           break;
 
-        case "PRINTCOPYSTATUS":
+        case "printCopyStatus":
           value = getPrintCopyStatus(copyCount);
           break;
 
-        case "PRINTCOPYSTATUS2":
+        case "printCopyStatus2":
           value = getPrintCopyStatus2(copyCount);
           break;
 
-        case "SALESBILLNUMBERS":
+        case "salesBillNumbers":
           value =
             details?.flatMap(x => x?.fieldName ? [x.fieldName] : []).join(",") ?? "";
           break;
@@ -387,187 +573,187 @@ const{posRoundAmount} = useNumberFormat()
         //   break;
 
         // Quantity and totals
-        case "TOTALITEMS":
+        case "totalItems":
           value = details?.length.toString();
           break;
-        case "SUM OF QTY":
-          value = details?.reduce((acc, x) => acc + (x?.qty ?? 0), 0);
-          break;
-        // case "PAGE TOTAL OF QTY": value = data.TotalPageQty.toString(); break;
-        case "SUM OF FREE":
-          value = details?.reduce((acc, x) => acc + (x?.free ?? 0), 0);
-          break;
-        case "SUM OF QTY+FREE":
-        case "TOTAL QTY AND FREE":
-          const totalQtyFree = details?.reduce(
-            (acc, x) => acc + (x?.qty ?? 0) + (x?.free ?? 0),
-            0
-          );
-          break;
-          value = totalQtyFree.toString();
-          break;
+        // case "SumOfQty":
+        //   value = details?.reduce((acc, x) => acc + (x?.qty ?? 0), 0);
+        //   break;
+        // // case "PAGE TOTAL OF QTY": value = data.TotalPageQty.toString(); break;
+        // case "SUM OF FREE":
+        //   value = details?.reduce((acc, x) => acc + (x?.free ?? 0), 0);
+        //   break;
+        // case "SUM OF QTY+FREE":
+        // case "TOTAL QTY AND FREE":
+        //   const totalQtyFree = details?.reduce(
+        //     (acc, x) => acc + (x?.qty ?? 0) + (x?.free ?? 0),
+        //     0
+        //   );
+        //   break;
+        //   value = totalQtyFree.toString();
+        //   break;
 
-        // case "PAGE TOTAL OF FREE": value = data.PageTotFree.toString(); break;
+        // // case "PAGE TOTAL OF FREE": value = data.PageTotFree.toString(); break;
 
-        // GST fields
-        case "SUM OF CGST":
-          value = details?.reduce((acc, x) => acc + (x?.cgst ?? 0), 0);
-          break;
-        case "SUM OF SGST":
-          value = details?.reduce((acc, x) => acc + (x?.sgst ?? 0), 0);
-          break;
-        case "SUM OF IGST":
-          value = details?.reduce((acc, x) => acc + (x?.igst ?? 0), 0);
-          break;
-        case "SUM OF CESSAMT":
-          value = details?.reduce((acc, x) => acc + (x?.cessAmt ?? 0), 0);
-          break;
-        case "SUM OF ADDCESSAMT":
-          value = details?.reduce(
-            (acc, x) => acc + (x?.additionalCess ?? 0),
-            0
-          );
-          break;
-        case "SUM OF GST":
-          value = details?.reduce(
-            (acc, x) =>
-              acc +
-              (x?.cgst ?? 0) +
-              (x?.sgst ?? 0) +
-              (x?.igst ?? 0) +
-              (x?.cessAmt ?? 0) +
-              (x?.additionalCess ?? 0),
-            0
-          );
-          break;
+        // // GST fields
+        // case "SUM OF CGST":
+        //   value = details?.reduce((acc, x) => acc + (x?.cgst ?? 0), 0);
+        //   break;
+        // case "SUM OF SGST":
+        //   value = details?.reduce((acc, x) => acc + (x?.sgst ?? 0), 0);
+        //   break;
+        // case "SUM OF IGST":
+        //   value = details?.reduce((acc, x) => acc + (x?.igst ?? 0), 0);
+        //   break;
+        // case "SUM OF CESSAMT":
+        //   value = details?.reduce((acc, x) => acc + (x?.cessAmt ?? 0), 0);
+        //   break;
+        // case "SUM OF ADDCESSAMT":
+        //   value = details?.reduce(
+        //     (acc, x) => acc + (x?.additionalCess ?? 0),
+        //     0
+        //   );
+        //   break;
+        // case "SUM OF GST":
+        //   value = details?.reduce(
+        //     (acc, x) =>
+        //       acc +
+        //       (x?.cgst ?? 0) +
+        //       (x?.sgst ?? 0) +
+        //       (x?.igst ?? 0) +
+        //       (x?.cessAmt ?? 0) +
+        //       (x?.additionalCess ?? 0),
+        //     0
+        //   );
+        //   break;
 
-        // Tax rate specific fields
-        case "TAXABLE 0%":
-          value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 0%":
-         value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 0%":
-          value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 0%":
-          value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 0%":
-          value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.sGST ?? 0)+ (x?.cGST ?? 0)+ (x?.iGST ?? 0), 0);
-          break;
+        // // Tax rate specific fields
+        // case "TAXABLE 0%":
+        //   value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 0%":
+        //  value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 0%":
+        //   value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 0%":
+        //   value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 0%":
+        //   value = details?.filter(x => x.sGSTPerc == 0 && x.cGSTPerc == 0 && x.iGSTPerc == 0).reduce((acc, x) => acc + (x?.sGST ?? 0)+ (x?.cGST ?? 0)+ (x?.iGST ?? 0), 0);
+        //   break;
 
-        case "TAXABLE 3%":
-          value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 3%":
-         value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 3%":
-          value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 3%":
-          value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 3%":
-          value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.sGST ?? 0)+ (x?.cGST ?? 0)+ (x?.iGST ?? 0), 0);
-          break;
+        // case "TAXABLE 3%":
+        //   value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 3%":
+        //  value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 3%":
+        //   value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 3%":
+        //   value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 3%":
+        //   value = details?.filter(x => x.sGSTPerc == 3 && x.cGSTPerc == 3 && x.iGSTPerc == 3).reduce((acc, x) => acc + (x?.sGST ?? 0)+ (x?.cGST ?? 0)+ (x?.iGST ?? 0), 0);
+        //   break;
 
-        // 5% GST Cases
-        case "TAXABLE 5%":
-          value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 5%":
-          value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 5%":
-          value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 5%":
-          value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 5%":
-          value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
-          break;
+        // // 5% GST Cases
+        // case "TAXABLE 5%":
+        //   value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 5%":
+        //   value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 5%":
+        //   value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 5%":
+        //   value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 5%":
+        //   value = details?.filter(x => x.sGSTPerc == 5 && x.cGSTPerc == 5 && x.iGSTPerc == 5).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
+        //   break;
 
-        // 12% GST Cases
-        case "TAXABLE 12%":
-          value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 12%":
-          value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 12%":
-          value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 12%":
-          value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 12%":
-          value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
-          break;
+        // // 12% GST Cases
+        // case "TAXABLE 12%":
+        //   value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 12%":
+        //   value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 12%":
+        //   value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 12%":
+        //   value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 12%":
+        //   value = details?.filter(x => x.sGSTPerc == 12 && x.cGSTPerc == 12 && x.iGSTPerc == 12).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
+        //   break;
 
-        // 18% GST Cases
-        case "TAXABLE 18%":
-          value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 18%":
-          value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 18%":
-          value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 18%":
-          value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 18%":
-          value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
-          break;
+        // // 18% GST Cases
+        // case "TAXABLE 18%":
+        //   value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 18%":
+        //   value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 18%":
+        //   value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 18%":
+        //   value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 18%":
+        //   value = details?.filter(x => x.sGSTPerc == 18 && x.cGSTPerc == 18 && x.iGSTPerc == 18).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
+        //   break;
 
-        // 28% GST Cases
-        case "TAXABLE 28%":
-          value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
-          break;
-        case "SGST 28%":
-          value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
-          break;
-        case "CGST 28%":
-          value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
-          break;
-        case "IGST 28%":
-          value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
-          break;
-        case "TOTAL 28%":
-          value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
-          break;
+        // // 28% GST Cases
+        // case "TAXABLE 28%":
+        //   value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.netValue ?? 0), 0);
+        //   break;
+        // case "SGST 28%":
+        //   value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.sGST ?? 0), 0);
+        //   break;
+        // case "CGST 28%":
+        //   value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.cGST ?? 0), 0);
+        //   break;
+        // case "IGST 28%":
+        //   value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.iGST ?? 0), 0);
+        //   break;
+        // case "TOTAL 28%":
+        //   value = details?.filter(x => x.sGSTPerc == 28 && x.cGSTPerc == 28 && x.iGSTPerc == 28).reduce((acc, x) => acc + (x?.sGST ?? 0) + (x?.cGST ?? 0) + (x?.iGST ?? 0), 0);
+        //   break;
 
         
 
-        // case "MRPDIFFERENCE":
-        //   value = data.MRPDifference.toString();
-        //   break;
-        // case "QRPAY":
-        //   value = data.QRpay.toString();
-        //   break;
-        // case "BANKCARD":
-        //   value = data.BankCard.toString();
-        //   break;
+        // // case "MRPDIFFERENCE":
+        // //   value = data.MRPDifference.toString();
+        // //   break;
+        // // case "QRPAY":
+        // //   value = data.QRpay.toString();
+        // //   break;
+        // // case "BANKCARD":
+        // //   value = data.BankCard.toString();
+        // //   break;
 
 
-        // case "STATENAME":
-        //   value = data.StateName;
-        //   break;
-        // case "STATECODE":
-        //   value = data.StateCode;
-        //   break;
+        // // case "STATENAME":
+        // //   value = data.StateName;
+        // //   break;
+        // // case "STATECODE":
+        // //   value = data.StateCode;
+        // //   break;
 
-        case "YOU SAVED":
-          const bill = master.netAmount - master.billDiscount;
-          const totalSaved = details?.reduce((acc, x) => acc + (x?.mrp ?? 0), 0) - bill;
-          const roundSaved = posRoundAmount(totalSaved);
-          value = roundSaved.toString();
-          break;
+        // case "YOU SAVED":
+        //   const bill = master.netAmount - master.billDiscount;
+        //   const totalSaved = details?.reduce((acc, x) => acc + (x?.mrp ?? 0), 0) - bill;
+        //   const roundSaved = posRoundAmount(totalSaved);
+        //   value = roundSaved.toString();
+        //   break;
 
         // // Page totals
         // case "PAGE TOTAL OF GROSS":
@@ -1111,78 +1297,6 @@ const{posRoundAmount} = useNumberFormat()
       value = "";
     }
 
-    return { value, result };
+    return value;
   };
 
-  return {
-    getCommonValues,
-    formatNumericValue,
-    formatCurrencyValue,
-    roundAmount,
-    parseAddress,
-    formatDate,
-    formatTime,
-    getPrintCopyStatus,
-    getPrintCopyStatus2,
-    getInOutArabic,
-    getModeOfPayment,
-    getModeOfPaymentArabic,
-  };
-};
-
-// ==================== EXPORT TYPES ====================
-
-export type UseCommonValuesReturn = ReturnType<typeof useCommonValues>;
-export type GetCommonValuesFunction = UseCommonValuesReturn["getCommonValues"];
-export type CommonValuesResult = ReturnType<GetCommonValuesFunction>;
-
-// ==================== EXAMPLE USAGE COMPONENT ====================
-
-// export const CommonValuesExample: React.FC = () => {
-//   const { getCommonValues } = useCommonValues();
-
-//   // Example data structure
-//   const exampleData: CommonValuesData = {
-//     dtTranMaster: [
-//       {
-//         CreatedDate: "2024-01-01T10:00:00",
-//         GrandTotal: "1234.56",
-//         VatAmount: "123.45",
-//         IQR: "sample-iqr",
-//         EInvoiceQRCode: "sample-qr",
-//         SRAmount: "0",
-//         BillDiscount: "50.00",
-//         CouponAmt: "0",
-//         VehicleNumber: "ABC123",
-//         PartyDisplayName: "John Doe",
-//         VehicleName: "Toyota Camry",
-//         VehicleModel: "2024",
-//         VehicleCapacity: "5",
-//         VehicleManufacturer: "Toyota",
-//         VehicleOwner: "John Doe",
-//         VehicleColor: "White",
-//         VehicleOdometer: "15000",
-//         VehicleRemarks: "Good condition",
-//         OldInvTransactionID: "0",
-//         InOut: "DINE IN",
-//         CashReturned: "0"
-//       }
-//     ],
-//     GrantTotal: 1234.56,
-//     FldLength: 50,
-//     // ... other required fields would be initialized here
-//   } as CommonValuesData;
-
-//   const result = getCommonValues("AMOUNTINWORDS", exampleData);
-
-//   return (
-//     <div className="p-6">
-//       <h2 className="text-xl font-bold mb-4">Common Values Example</h2>
-//       <div className="bg-gray-50 p-4 rounded">
-//         <p><strong>Field:</strong> AMOUNTINWORDS</p>
-//         <p><strong>Value:</strong> {result.value}</p>
-//         <p><strong>Result:</strong> {result.result.toString()}</p>
-//       </div>
-//     </div>
-//   );
-// };

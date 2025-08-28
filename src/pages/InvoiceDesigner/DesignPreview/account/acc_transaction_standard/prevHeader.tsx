@@ -3,6 +3,7 @@ import { DesignerElementType, PlacedComponent, TemplateState } from "../../../De
 import useLogo from "../../../utils/useLogo";
 import { generateQRCodeDataUrl } from "../../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../../customPrvElement";
+import { useNumberToWords } from "../../../../../utilities/number-to-words";
 
 const PrevHeader = ({ data, template, currentBranch,userSession }: {
   data: any;
@@ -13,7 +14,7 @@ const PrevHeader = ({ data, template, currentBranch,userSession }: {
   userSession?: any;
   bindData?:any;
 }) => {
-
+const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
 
   const headerState = template?.headerState;
@@ -66,7 +67,9 @@ const Logo = useLogo()
         setQrCodeImages(images);
       };
       generateQRCodes();
-    },[template]);
+    },[template?.headerState?.customTop?.customElements,template?.headerState?.customBottom?.customElements]);
+
+
 
 
   return (
@@ -91,7 +94,7 @@ const Logo = useLogo()
                 style={{
                 minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
                 width: "100%",
-                position: "relative",
+                // position: "relative",
                 }
 
                 }
@@ -100,8 +103,12 @@ const Logo = useLogo()
                     <RenderPreviewComponent
                       key={component.id}
                       component={component}
-                      data={userSession?.headerFooter}
+                      data={data}
+                      userSession={userSession}
+                      currentBranch={currentBranch}
                       qrCodeImages={qrCodeImages}
+                      convertAmountToArabic={convertAmountToArabic}
+                      convertAmountToEnglish={convertAmountToEnglish}
                     />
                   ))}
               </div>
@@ -181,6 +188,8 @@ const Logo = useLogo()
                       component={component}
                       data={userSession?.headerFooter}
                       qrCodeImages={qrCodeImages}
+                      convertAmountToArabic={convertAmountToArabic}
+                      convertAmountToEnglish={convertAmountToEnglish}
                     />
                   ))}
               </div>

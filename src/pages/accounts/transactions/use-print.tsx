@@ -115,8 +115,6 @@ export const useAccPrint = () => {
       }
 
       dispatch(acctemplatesData(_template))
-
-      const template = formState.templatesData?.find((item) => item.templateGroup === voucherType)
       if (voucherTypeSet.has(voucherType)) {
         dispatch(accFormStateHandleFieldChange({ fields: { template: _template } }))
       }
@@ -127,7 +125,7 @@ export const useAccPrint = () => {
     }
   }
 
-  const getOrFetchTemplate = async (voucherTypes: string, voucher = formState) => {
+  const getOrFetchTemplate = async (voucherTypes: string, voucher:any) => {
     const existingTemplate = voucher.templatesData?.find((template: any) => template.templateGroup === voucherTypes)
 
     if (existingTemplate) {
@@ -139,18 +137,17 @@ export const useAccPrint = () => {
 
  const getTemplate = async (
   voucherType: string | undefined,
-  formState: any,
+  givenFormState: any,
  
 ) => {
-  // ensure voucherType is resolved
-  const finalVoucherType = isNullOrUndefinedOrEmpty(voucherType)
-    ? formState.transaction.master.voucherType
-    : voucherType;
+  const finalVoucherType: string =
+    !isNullOrUndefinedOrEmpty(voucherType) ? voucherType!: formState.transaction?.master?.voucherType || "";
 
-  let template = formState.template;
+  const finalFormState = !isNullOrUndefinedOrEmpty(givenFormState) ? givenFormState : formState;
+  let template = finalFormState.template;
 
   if (!template || template.id === 0) {
-    template = await getOrFetchTemplate(finalVoucherType);
+    template = await getOrFetchTemplate(finalVoucherType,finalFormState);
     dispatch(accFormStateHandleFieldChange({ fields: { template } }));
   }
 

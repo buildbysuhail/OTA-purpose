@@ -3,20 +3,30 @@ import {
   DesignerElementType,
   PlacedComponent,
 } from "../Designer/interfaces";
+import { bindDataForPrint } from "../../../utilities/Utils";
 
 interface Props {
   component: PlacedComponent;
   data?: any;
   qrCodeImages?: { [key: string]: string };
   bindData?: any;
+  userSession?: any;
+  currentBranch?: any;
+  convertAmountToEnglish: any;
+  convertAmountToArabic: any;
 }
 
 const pxToPt = (px: number) => px * (72 / 96);
+
 
 export const RenderPreviewComponent: React.FC<Props> = ({
   component,
   data,
   qrCodeImages,
+  userSession,
+  currentBranch,
+  convertAmountToEnglish,
+  convertAmountToArabic
 }) => {
   const baseStyle: React.CSSProperties = {
     position: "absolute",
@@ -76,7 +86,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               margin: 0,
             }}
           >
-            {data?.[component.content] || "N/A"}
+            {bindDataForPrint(component.content, data?.master, data?.details, data?.details,userSession,convertAmountToEnglish,convertAmountToArabic)}
           </p>
         </div>
       );

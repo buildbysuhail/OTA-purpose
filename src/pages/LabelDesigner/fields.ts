@@ -1,5 +1,10 @@
+
 import { Option, OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
-import { BarcodeLabel } from "../inventory/transactions/purchase/transaction-types";
+import { CompanyDetails, initialCompanyDetails, BranchDetails, initialBranchDetails, HeaderFooter, initialHeaderFooter } from "../../redux/slices/user-session/reducer";
+import { initialPrintCustomFields, PrintCustomFields } from "../../utilities/use-common-values";
+import { modelToListFromObject } from "../../utilities/Utils";
+import { initialProductData, initialTransactionDetailData, TransactionMasterInitialData } from "../inventory/transactions/purchase/transaction-type-data";
+import { BarcodeLabel, TransactionDetail, TransactionMaster } from "../inventory/transactions/purchase/transaction-types";
 
 export const fields = [
    "org_name",
@@ -208,73 +213,27 @@ const headerFields = [
 
 // Array of all fields with their labels id's are BarcodeLabel keys
 
-export const barcodeLabelFields: Option[] = [  
-  { id: 'labelCount', label: 'Label Count' },
-  { id: 'productCode', label: 'Product Code' },
-  { id: 'productName', label: 'Product Name' },
-  { id: 'arabicName', label: 'Arabic Name' },
-  { id: 'salesPrice', label: 'Sales Price' },
-  { id: 'salesPrice2', label: 'Sales Price 2' },
-  { id: 'salesPrice3', label: 'Sales Price 3' },
-  { id: 'cost', label: 'Cost' },
-  { id: 'autoBarcode', label: 'Auto Barcode' },
-  { id: 'manualBarcode', label: 'Manual Barcode' },
-  { id: 'costCode', label: 'Cost Code' },
-  { id: 'note1', label: 'Note 1' },
-  { id: 'note2', label: 'Note 2' },
-  { id: 'note3', label: 'Note 3' },
-  { id: 'note4', label: 'Note 4' },
-  { id: 'unit', label: 'Unit' },
-  { id: 'unitRemarks', label: 'Unit Remarks' },
-  { id: 'unit1Remarks', label: 'Unit 1 Remarks' },
-  { id: 'unit2Remarks', label: 'Unit 2 Remarks' },
-  { id: 'unit3Remarks', label: 'Unit 3 Remarks' },
-  { id: 'qty', label: 'Quantity' },
-  { id: 'salesPriceWithVAT', label: 'Sales Price with VAT' },
-  { id: 'salesPrice2WithVAT', label: 'Sales Price 2 with VAT' },
-  { id: 'salesPrice3WithVAT', label: 'Sales Price 3 with VAT' },
-  { id: 'batchNo', label: 'Batch Number' },
-  { id: 'expiryDate', label: 'Expiry Date' },
-  { id: 'partNumber', label: 'Part Number' },
-  { id: 'mfdDate', label: 'Manufacturing Date' },
-  { id: 'packingDate', label: 'Packing Date' },
-  { id: 'warrantyPeriod', label: 'Warranty Period' },
-  { id: 'expiryDays', label: 'Expiry Days' },
-  { id: 'brand', label: 'Brand' },
-  { id: 'groupName', label: 'Group Name' },
-  { id: 'specification', label: 'Specification' },
-  { id: 'itemAliasName', label: 'Item Alias Name' },
-  { id: 'unit2', label: 'Unit 2' },
-  { id: 'unit2SalesPrice', label: 'Unit 2 Sales Price' },
-  { id: 'unit3', label: 'Unit 3' },
-  { id: 'unit3SalesPrice', label: 'Unit 3 Sales Price' },
-  { id: 'partyCode', label: 'Party Code' },
-  { id: 'productDescription', label: 'Product Description' },
-  { id: 'voucherNo', label: 'Voucher Number' },
-  { id: 'transDate', label: 'Transaction Date' },
-  { id: 'siNo', label: 'SI Number' },
-  { id: 'size', label: 'Size' },
-  { id: 'productId', label: 'Product ID' },
-  { id: 'invQty', label: 'Quantity' },
-  { id: 'isCalculate', label: 'Is Calculate' },
-  { id: 'reQty', label: 'Re-Quantity' },
-  { id: 'vatPerc', label: 'VAT Percentage' },
-  { id: 'pPrice', label: 'Purchase Price' },
-  { id: 'mrp', label: 'MRP' },
-  { id: 'msp', label: 'MSP' },
-  { id: 'sPrice', label: 'Sale Price' },
-  { id: 'showPreview', label: 'Show Preview' },
-  { id: 'pluCode', label: 'PLU Code' }
+interface fdf  {
+  fdd: number
+}
+export const inventoryFields: OptionGroup[] = [
+  { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
+  { groupName: 'InvMaster', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
+  { groupName: 'InvDetails',  options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData,"details___") },
+  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+  { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
-
-
-export const groupedField: OptionGroup[] = [
-  { groupName: 'General', options: generalFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
-  { groupName: 'Footer', options: footerFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
-  { groupName: 'Header', options: headerFields.map(f => ({ id: f, label: f.replace(/_/g, ' '), })) },
+export const accountsFields: OptionGroup[] = [
+  { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
+  { groupName: 'AccMaster',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
+  { groupName: 'AccDetails',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"details___") },
+  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+  { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
 export const barCodeField: OptionGroup[] = [
-  {groupName: "BarCodeField",options:barcodeLabelFields}
+  {groupName: "BarCodeField",options:modelToListFromObject<BarcodeLabel>(initialProductData,"barcode___")}
 ]
 export const bindingDemoData = {
   org_name: "Acme Corporation Pvt Ltd",

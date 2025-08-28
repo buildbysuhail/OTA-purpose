@@ -64,3 +64,6 @@ export const purchaseVoucherTypes=[
 export const salesVoucherTypes=[
   VoucherType.SalesInvoice,VoucherType.SalesOrder,,VoucherType.SalesQuotation,VoucherType.SalesEstimate,VoucherType.SalesReturn,VoucherType.SaleReturnEstimate
 ]
+export const accountsVoucherTypes=[
+  VoucherType.CashPayment
+]

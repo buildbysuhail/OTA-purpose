@@ -93,8 +93,8 @@ import { convertFileToBase64 } from "../../utilities/file-utils";
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { useTranslation } from "react-i18next";
-import VoucherType from "../../enums/voucher-types";
-import { AccountMasterFields, barCodeField, fields, groupedField } from "./fields";
+import VoucherType, {purchaseVoucherTypes, salesVoucherTypes, accountsVoucherTypes} from "../../enums/voucher-types";
+import { AccountMasterFields, accountsFields, inventoryFields, barCodeField, fields } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
@@ -1509,6 +1509,13 @@ const handleRemoveImage =()=>{
     templateData?.barcodeState?.labelState?.labelHeight ?? 200;
   const labelWidthPx = pointToPx(labelWidthPt);
   const labelHeightPx = pointToPx(labelHeightPt);
+
+  const getFieldContent = () => {
+  if (!forCustomRows) return barCodeField;
+  return accountsVoucherTypes.includes(templateGroup as VoucherType)
+    ? accountsFields
+    : inventoryFields;
+};
   return (
     <div
       className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full
@@ -1798,8 +1805,10 @@ padding: `${
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type ===
                         DesignerElementType.field ? (
+                          <>
+                             {selectedComponent.content}
                           <GroupedComboBox
-                            options={forCustomRows?groupedField:barCodeField}
+                            options={getFieldContent()}
                             value={selectedComponent.content} 
                             onChange={(selectedId) => {
                               if (selectedId) {
@@ -1810,31 +1819,8 @@ padding: `${
                             placeholder="Select content field..."
                             className="w-full"
                           />
-                          // <ERPDataCombobox
-                          //   id="content"
-                          //   data={selectedComponent}
-                          //   label="Content"
-                          //   field={{
-                          //     id: "content",
-                          //     valueKey: "value",
-                          //     labelKey: "label",
-                          //   }}
-                          //   options={fields.map((field) => ({
-                          //     value: field
-                          //       .replace(/[\[\]]/g, "") // Remove square brackets
-                          //       .replace(/([-_\s][a-z])/gi, (match) =>
-                          //         match.toUpperCase().replace(/[-_\s]/g, "")
-                          //       ) // Convert to camelCase
-                          //       .replace(/^[A-Z]/, (match) =>
-                          //         match.toLowerCase()
-                          //       ), // Ensure the first character is lowercase
-                          //     label: field.replace(/[\[\]]/g, ""), // Remove square brackets for the label
-                          //   }))}
-                          //   onChangeData={(data) =>
-                          //     handlePropertyChange("content", data.content)
-                          //   }
-                          // />
-
+                          </>
+                       
                         ) : selectedComponent.type ===
                           DesignerElementType.qrCode ? (
                           <ERPDataCombobox

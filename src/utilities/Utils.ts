@@ -12,6 +12,9 @@ import { TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
 import Urls from "../redux/urls";
 import { customJsonParse } from "./jsonConverter";
 import { APIClient } from "../helpers/api-client";
+import { getCommonValues } from "./use-common-values";
+import { Currencies } from "./number-to-words";
+import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux/slices/user-session/reducer";
 const api = new APIClient();
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -1086,3 +1089,63 @@ if(key == "cashReceived") {
 
   return sanitized;
 };
+
+
+
+
+interface IdLabel {
+  id: string;
+  label: string;
+}
+
+// Helper function to convert camelCase/PascalCase to readable labels
+function toReadableLabel(key: string): string {
+  return key
+    // 1. Split lower-to-upper transitions: salesPrice -> sales Price
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    // 2. Split acronym + normal word: VATCode -> VAT Code
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    // 3. Split digit-to-letter transitions: Price2With -> Price2 With
+    .replace(/([0-9])([A-Z])/g, '$1 $2')
+    // 4. Capitalize first letter
+    .replace(/^./, str => str.toUpperCase())
+    .trim();
+}
+
+
+// More practical approach: convert from an object instance
+export function modelToListFromObject<T extends Record<string, any>>(obj: T, idPrefix?: string): IdLabel[] {
+  return Object.keys(obj).map(key => ({
+    id: `${idPrefix??""}${key}`,
+    label: toReadableLabel(key)
+  }));
+}
+// More practical approach: convert from an object instance
+export function bindDataForPrint(field: string,master: any, details: any, detail: any , userSession: UserModel,
+  convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,
+  convertAmountToArabic: (amount: number, currency?: Currencies | undefined) => string,): any {
+  const splitData = field.split("___");
+  const group = splitData[0] as any;
+  const key = splitData[1];
+
+  debugger;
+  if(group == "master") {
+    return master?.[key]
+  }
+  else if(group == "details") {
+    return master?.[key]
+  }
+  else if(group == "custom") {
+    return getCommonValues(key as any,master,details,detail,1,userSession,convertAmountToEnglish, convertAmountToArabic)
+  }
+  else if(group == "branch") {
+    return userSession.currentBranchDetails?.[key as keyof BranchDetails]
+  }
+  else if(group == "org") {
+    return userSession.currentCompanyDetails?.[key as keyof CompanyDetails]
+  }
+  else if(group == "headerFooter") {
+    return userSession.headerFooter?.[key as keyof HeaderFooter]
+  }
+}
+

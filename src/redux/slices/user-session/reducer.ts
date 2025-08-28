@@ -22,6 +22,111 @@ export enum Countries {
   Malaysia = 50,
   UnitedStates = 9
 }
+export interface CompanyDetails {
+  Name: string;
+  NameInSecondLanguage: string;
+  BuildingNumber: string;
+  StreetName: string;
+  City: string;
+  District: string;
+  Country: string;
+  PinCode: string;
+  Mobile: string;
+  TelePhone: string;
+  TaxNumber: string;
+  Email: string;
+  AdditionalNumber: string;
+}
+
+export interface BranchDetails {
+  Name: string;
+  Address1: string;
+  Address2: string;
+  City: string;
+  District: string;
+  Country: string;
+  PinCode: string;
+  Mobile: string;
+  Phone: string;
+  TaxNumber: string;
+  Email: string;
+}
+export interface HeaderFooter {
+  heading1: string;
+  heading2: string;
+  heading3: string;
+  heading4: string;
+  heading5: string;
+  heading6: string;
+  heading7: string;
+  heading8: string;
+  heading9: string;
+  heading10: string;
+
+  footer1: string;
+  footer2: string;
+  footer3: string;
+  footer4: string;
+  footer5: string;
+  footer6: string;
+  footer7: string;
+  footer8: string;
+  footer9: string;
+  footer10: string;
+}
+export const initialCompanyDetails: CompanyDetails = {
+  Name: "",
+  NameInSecondLanguage: "",
+  BuildingNumber: "",
+  StreetName: "",
+  City: "",
+  District: "",
+  Country: "",
+  PinCode: "",
+  Mobile: "",
+  TelePhone: "",
+  TaxNumber: "",
+  Email: "",
+  AdditionalNumber: ""
+};
+
+export const initialBranchDetails: BranchDetails = {
+  Name: "",
+  Address1: "",
+  Address2: "",
+  City: "",
+  District: "",
+  Country: "",
+  PinCode: "",
+  Mobile: "",
+  Phone: "",
+  TaxNumber: "",
+  Email: ""
+};
+
+export const initialHeaderFooter: HeaderFooter = {
+  heading1: "",
+  heading2: "",
+  heading3: "",
+  heading4: "",
+  heading5: "",
+  heading6: "",
+  heading7: "",
+  heading8: "",
+  heading9: "",
+  heading10: "",
+
+  footer1: "",
+  footer2: "",
+  footer3: "",
+  footer4: "",
+  footer5: "",
+  footer6: "",
+  footer7: "",
+  footer8: "",
+  footer9: "",
+  footer10: ""
+};
 export interface UserModel {
   userId: number;
   userName: string;
@@ -43,14 +148,12 @@ export interface UserModel {
     subUnitSymbol: string;
     currencyCode: string;
   };
-  headerFooter: {
-    heading7: string;
-    heading8: string;
-    heading9: string;
-  };
+  headerFooter: HeaderFooter;
   general: {
     syncState: string;
   };
+  currentCompanyDetails: CompanyDetails;
+  currentBranchDetails: BranchDetails;
   currencySymbol: string | null;
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;
@@ -107,14 +210,12 @@ export const initialUserSessionData: UserModel = {
   financialYearStatus: "Closed",
   userName: "",
   counterName: "",
-  headerFooter: {
-    heading7: "",
-    heading8: "",
-    heading9: ""
-  },
+  headerFooter: initialHeaderFooter,
   general: {
     syncState: ""
-  }
+  },
+  currentCompanyDetails: initialCompanyDetails,
+  currentBranchDetails: initialBranchDetails
 };
 let ass = localStorage.getItem("up");
   

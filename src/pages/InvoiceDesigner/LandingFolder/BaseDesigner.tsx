@@ -92,7 +92,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <PropertiesDesigner
               templateGroup={templateGroup}
               tempImages={{ templateImages, setTemplateImages }}
-              propertiesState={templateData?.activeTemplate?.propertiesState}
+              propertiesState={templateData?.propertiesState}
               onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
             />
           )}

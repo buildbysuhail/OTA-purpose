@@ -4,8 +4,8 @@ import { TemplateState } from "../../../Designer/interfaces";
 import { AccTransactionRow } from "../../../../accounts/transactions/acc-transaction-types";
 
 import { AccountTransactionProps } from "../../../DownloadPreview/account/account_transactiocn-premium";
-import PrevHeader from "./header";
-import Content from "./content";
+import PrevHeader from "./prevHeader";
+import Content from "./prevContent";
 
 const AccountPrvTransactionsVoucher = ({ data, template, currentBranch, userSession, clientSession }: AccountTransactionProps) => {
 

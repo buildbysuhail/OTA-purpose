@@ -148,46 +148,47 @@ export const usePrint = () => {
         onCancel:()=>{noDefaultPrint = true}
       });
       }
-    console.log("noDefaulPrint",noDefaultPrint);
+  if(PrinterName ){
+    
+  }
+      // Create a PDF blob
+      const blob = await pdf(pdfDocument).toBlob();
+         // 3. Ensure JSPM agent is running and connected
+    if (JSPrintManager.websocket_status !== WSStatus.Open) {
+         JSPrintManager.auto_reconnect = true;
+         JSPrintManager.start();
+    }
+      // 4. Create a new print job
+    const cpj = new ClientPrintJob();
+       // 5. Choose the printer: user-selected or default
+    if ( PrinterName&& PrinterName.trim() !== "") {
+      cpj.clientPrinter = new InstalledPrinter(PrinterName);
+    } else {
+      cpj.clientPrinter = new DefaultPrinter();
+    }
 
-//       // Create a PDF blob
-//       const blob = await pdf(pdfDocument).toBlob();
-//          // 3. Ensure JSPM agent is running and connected
-//     if (JSPrintManager.websocket_status !== WSStatus.Open) {
-//          JSPrintManager.auto_reconnect = true;
-//          JSPrintManager.start();
-//     }
-//       // 4. Create a new print job
-//     const cpj = new ClientPrintJob();
-//        // 5. Choose the printer: user-selected or default
-//     if ( PrinterName&& PrinterName.trim() !== "") {
-//       cpj.clientPrinter = new InstalledPrinter(PrinterName);
-//     } else {
-//       cpj.clientPrinter = new DefaultPrinter();
-//     }
+       // 6. Attach the PDF blob to the print job
+    cpj.files.push(
+    new PrintFilePDF(
+      blob,                       // fileContent: your Blob
+      FileSourceType.BLOB,        // fileContentType: Blob source
+      "barcode-labels.pdf",       // fileName: must include extension
+      1                           // copies (optional, default = 1)
+    )
+  );
+ // 7. Optional: Track status updates
+    cpj.onUpdated = (status) => {
+      console.log("Print job status update:", status);
+    };
+    cpj.onFinished = (result) => {
+      console.log("Print job finished:", result);
+      if (!result.success) {
+        console.error("Print job failed:", result.error);
+      }
+    };
 
-//        // 6. Attach the PDF blob to the print job
-//     cpj.files.push(
-//     new PrintFilePDF(
-//       blob,                       // fileContent: your Blob
-//       FileSourceType.BLOB,        // fileContentType: Blob source
-//       "barcode-labels.pdf",       // fileName: must include extension
-//       1                           // copies (optional, default = 1)
-//     )
-//   );
-//  // 7. Optional: Track status updates
-//     cpj.onUpdated = (status) => {
-//       console.log("Print job status update:", status);
-//     };
-//     cpj.onFinished = (result) => {
-//       console.log("Print job finished:", result);
-//       if (!result.success) {
-//         console.error("Print job failed:", result.error);
-//       }
-//     };
-
-//     // 8. Send the print job silently
-//     await cpj.sendToClient();
+    // 8. Send the print job silently
+    await cpj.sendToClient();
 
     } catch (error) {
       console.error("Error printing voucher:", error);

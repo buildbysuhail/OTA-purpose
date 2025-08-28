@@ -8,27 +8,37 @@ interface SavingOverlayProps {
   savingSwitchAction: any;
 }
 
-const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompleted = false, savingSwitchAction }) => {
-  const showOverlay = saving;
-  const showLoading = saving;
-  const [showSuccess, setShowSuccess] = useState<boolean>(saveCompleted);
-  const dispatch = useDispatch()
-  useEffect(() => {
-    setShowSuccess(saveCompleted)
+const SavingOverlay: React.FC<SavingOverlayProps> = ({ 
+  saving = false, 
+  saveCompleted = false, 
+  savingSwitchAction 
+}) => {
+  const showOverlay = saving || saveCompleted;
+  const showLoading = saving && !saveCompleted;
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
-    if (saveCompleted && savingSwitchAction) {
-     dispatch(savingSwitchAction)
-     ERPToast.show("Transaction Saved Succussfully", "success");
+  useEffect(() => {
+    if (saveCompleted) {
+      setShowSuccess(true);
+      if (savingSwitchAction) {
+        dispatch(savingSwitchAction);
+        ERPToast.show("Transaction Saved Successfully", "success");
+      }
+    } else {
+      setShowSuccess(false);
     }
-  }, [saveCompleted, dispatch])
+  }, [saveCompleted, dispatch, savingSwitchAction]);
+
   const overlayStyles: React.CSSProperties = {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'rgba(15, 23, 42, 0.4)', // Dark semi-transparent background
     backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)', // Safari support
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -36,62 +46,101 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompl
     borderRadius: '12px',
     opacity: showOverlay ? 1 : 0,
     visibility: showOverlay ? 'visible' : 'hidden',
-    transition: 'opacity 0.3s ease, visibility 0.3s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 1000,
   };
 
+  const contentCardStyles: React.CSSProperties = {
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '20px',
+    padding: '40px 50px',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    minWidth: '300px',
+    transform: showOverlay ? 'scale(1)' : 'scale(0.9)',
+    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
   const loaderStyles: React.CSSProperties = {
-    width: '60px',
-    height: '60px',
+    width: '80px',
+    height: '80px',
     position: 'relative',
-    marginBottom: '20px',
+    marginBottom: '30px',
   };
 
   const loaderCircleStyles: React.CSSProperties = {
     width: '100%',
     height: '100%',
-    border: '4px solid #e5e7eb',
+    border: '3px solid #e2e8f0',
     borderTopColor: '#6366f1',
+    borderRightColor: '#8b5cf6',
     borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
+    animation: 'spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite',
+    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)',
   };
 
   const savingTextStyles: React.CSSProperties = {
-    color: '#6366f1',
-    fontSize: '18px',
+    color: '#374151',
+    fontSize: '20px',
     fontWeight: '600',
     display: 'flex',
     alignItems: 'center',
+    letterSpacing: '-0.025em',
+    marginBottom: '8px',
+  };
+
+  const savingSubtextStyles: React.CSSProperties = {
+    color: '#6b7280',
+    fontSize: '14px',
+    fontWeight: '400',
+    opacity: 0.8,
   };
 
   const dotsContainerStyles: React.CSSProperties = {
     display: 'inline-block',
-    marginLeft: '5px',
+    marginLeft: '8px',
   };
 
   const dotStyles = (delay: string): React.CSSProperties => ({
     display: 'inline-block',
-    width: '8px',
-    height: '8px',
+    width: '6px',
+    height: '6px',
     borderRadius: '50%',
-    background: '#6366f1',
+    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
     margin: '0 2px',
-    animation: `dots 1.4s infinite ease-in-out both`,
+    animation: `dots 1.6s infinite ease-in-out both`,
     animationDelay: delay,
+    boxShadow: '0 2px 4px rgba(99, 102, 241, 0.3)',
   });
 
-  const checkmarkStyles: React.CSSProperties = {
-    width: '60px',
-    height: '60px',
-    marginBottom: '20px',
-    animation: showSuccess ? 'pop-in 0.5s ease forwards' : 'none',
+  const checkmarkContainerStyles: React.CSSProperties = {
+    width: '100px',
+    height: '100px',
+    marginBottom: '30px',
+    position: 'relative',
+    animation: showSuccess ? 'pop-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards' : 'none',
   };
 
   const successTextStyles: React.CSSProperties = {
-    color: '#10b981',
-    fontSize: '18px',
-    fontWeight: '600',
-    animation: showSuccess ? 'fade-in 0.4s ease 0.8s forwards' : 'none',
+    color: '#059669',
+    fontSize: '22px',
+    fontWeight: '700',
+    animation: showSuccess ? 'fade-in 0.5s ease 0.4s forwards' : 'none',
+    opacity: 0,
+    letterSpacing: '-0.025em',
+    marginBottom: '8px',
+  };
+
+  const successSubtextStyles: React.CSSProperties = {
+    color: '#6b7280',
+    fontSize: '14px',
+    fontWeight: '400',
+    animation: showSuccess ? 'fade-in 0.5s ease 0.6s forwards' : 'none',
     opacity: 0,
   };
 
@@ -104,23 +153,27 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompl
         
         @keyframes dots {
           0%, 80%, 100% {
-            opacity: 0;
+            opacity: 0.3;
             transform: scale(0.8);
           }
           40% {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1.1);
           }
         }
         
         @keyframes pop-in {
-          from {
+          0% {
             opacity: 0;
-            transform: scale(0);
+            transform: scale(0) rotate(-180deg);
           }
-          to {
+          50% {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1.1) rotate(-90deg);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
           }
         }
         
@@ -129,16 +182,29 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompl
         }
         
         @keyframes fade-in {
-          to { opacity: 1; }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { 
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+          }
+          50% { 
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+          }
         }
         
         .checkmark-circle {
           stroke-dasharray: 166;
           stroke-dashoffset: 166;
-          stroke-width: 3;
+          stroke-width: 2.5;
           stroke: #10b981;
-          fill: none;
-          animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+          fill: rgba(16, 185, 129, 0.1);
+          animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+          filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
         }
         
         .checkmark-check {
@@ -148,36 +214,67 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({ saving = false, saveCompl
           stroke: #10b981;
           stroke-width: 3;
           fill: none;
-          animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        .success-container {
+          transform: translateY(10px);
         }
       `}</style>
 
       <div style={overlayStyles}>
-        {showLoading && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={loaderStyles}>
-              <div style={loaderCircleStyles}></div>
-            </div>
-            <div style={savingTextStyles}>
-              Saving
-              <div style={dotsContainerStyles}>
-                <span style={dotStyles('-0.32s')}></span>
-                <span style={dotStyles('-0.16s')}></span>
-                <span style={dotStyles('0s')}></span>
+        <div style={contentCardStyles}>
+          {showLoading && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={loaderStyles}>
+                <div style={loaderCircleStyles}></div>
+              </div>
+              <div style={savingTextStyles}>
+                Saving Transaction
+                <div style={dotsContainerStyles}>
+                  <span style={dotStyles('-0.4s')}></span>
+                  <span style={dotStyles('-0.2s')}></span>
+                  <span style={dotStyles('0s')}></span>
+                </div>
+              </div>
+              <div style={savingSubtextStyles}>
+                Please wait while we process your request
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {showSuccess && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <svg style={checkmarkStyles} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-              <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-              <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-            <div style={successTextStyles}>Saved Successfully!</div>
-          </div>
-        )}
+          {showSuccess && (
+            <div 
+              className="success-container"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <div style={checkmarkContainerStyles}>
+                <svg 
+                  style={{ width: '100%', height: '100%' }} 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  viewBox="0 0 52 52"
+                >
+                  <circle 
+                    className="checkmark-circle" 
+                    cx="26" 
+                    cy="26" 
+                    r="25" 
+                  />
+                  <path 
+                    className="checkmark-check" 
+                    d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                  />
+                </svg>
+              </div>
+              <div style={successTextStyles}>Transaction Saved!</div>
+              <div style={successSubtextStyles}>
+                Your changes have been saved successfully
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

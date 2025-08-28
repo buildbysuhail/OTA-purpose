@@ -97,6 +97,7 @@ import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
 import { purchaseGridCol } from "./transaction-grid-cols";
+import SavingOverlay from "../transaction-saving";
 interface BilledItem {
   id?: number;
   name: string;
@@ -136,14 +137,85 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const _st: UserConfig = customJsonParse(st);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
-  const handleClearControls = () => {
-    clearControls(
+  // const handleClearControls = () => {
+  //   clearControls(
+  //     formState.isEdit,
+  //     formState.transaction.master.invTransactionMasterID
+  //   );
+  //   // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
+  //   // setTriggerEffect(true);
+  // };
+  const handleClearControls = async () => {
+  // 1) Guard: check voucher locked
+  if (formState?.transaction?.master?.isLocked) {
+    ERPAlert.show({
+      title: t("warning"),
+      text: t("voucher_is_locked"),
+      icon: "warning",
+    });
+    return;
+  }
+
+  try {
+    // 2) Ask for confirmation
+    const result: any = await ERPAlert.show({
+      title: t("clearing_transaction_question"),
+      text: t("once_clearing_this_transaction_cannot_be_recovered"),
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+    });
+
+    console.log("ERPAlert result:", result);
+
+    // 3) Normalize confirmation result (supports multiple shapes)
+    const confirmed =
+      !!result &&
+      (result.isConfirmed === true ||
+        result.value === true ||
+        result === true);
+
+    if (!confirmed) {
+      // user cancelled
+      return;
+    }
+
+    // 4) Call clearControls and await if it returns a promise
+    console.log("Calling clearControls...", {
+      isEdit: formState?.isEdit,
+      id: formState?.transaction?.master?.invTransactionMasterID,
+    });
+
+    const maybePromise = clearControls(
       formState.isEdit,
       formState.transaction.master.invTransactionMasterID
     );
-    // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
-    // setTriggerEffect(true);
-  };
+
+    if (maybePromise && typeof maybePromise.then === "function") {
+      await maybePromise;
+    }
+
+    // 5) Force UI refresh if you used that pattern earlier (uncomment/wire setTriggerEffect)
+    if (typeof setTriggerEffect === "function") {
+      // toggle to force re-render/update data grid etc.
+      setTriggerEffect((prev: any) => !prev);
+    }
+
+    // ERPAlert.show({
+    //   title: t("success"),
+    //   text: t("controls_cleared_successfully"),
+    //   icon: "success",
+    // });
+  } catch (err) {
+    console.error("Error in handleClearControls:", err);
+    ERPAlert.show({
+      title: t("error"),
+      text: t("something_went_wrong_clearing_controls"),
+      icon: "error",
+    });
+  }
+};
 
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
@@ -2221,9 +2293,14 @@ useEffect(() => {
           />
         )}
       </div>
-      {/* {formState.loading && formState.loading.isLoading == true &&
-     <BlurLoader text={formState.loading.text}></BlurLoader>
-     } */}
+       {formState.saving && (
+          <SavingOverlay saving={true} saveCompleted={formState.savingCompleted??false} savingSwitchAction={ formStateHandleFieldChange({
+          fields: {
+            savingCompleted: undefined,saving: false
+          },
+        })}
+          />
+        )}
     </>
   );
 };

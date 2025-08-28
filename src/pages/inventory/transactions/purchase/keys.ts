@@ -30,3 +30,7 @@
 // void_report
 // stock_journal_reports
 // sales_other_reports
+// delete_transaction_question
+// once_deleted_this_transaction_cannot_be_recovered
+// clearing_transaction_question
+// once_clearing_this_transaction_cannot_be_recovered

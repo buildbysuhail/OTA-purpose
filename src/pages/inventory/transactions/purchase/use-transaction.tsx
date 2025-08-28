@@ -1006,7 +1006,8 @@ debugger;
       };
       
 params = sanitizeDataAdvanced(params, transactionInitialData)
-      const saveRes =
+      try {
+        const saveRes =
         formState.transaction.master.invTransactionMasterID > 0
           ? await api.putAsync(
               `${Urls.inv_transaction_base}${transactionType}`,
@@ -1027,8 +1028,12 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
         if (formState.printOnSave == true) {
           printVoucher();
         }
-
-        ERPToast.show(saveRes.message, "success");
+dispatch(formStateHandleFieldChange({
+          fields: {
+            savingCompleted: true,
+          },
+        }))
+        // ERPToast.show(saveRes.message, "success");
       } else {
         // dispatch(acc)
         ERPAlert.show({
@@ -1048,15 +1053,24 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
             value: saveRes.validations,
           })
         );
-      }
-
-      dispatch(
+         dispatch(
         formStateHandleFieldChange({
           fields: {
             saving: false,
+            savingCompleted: undefined,
           },
         })
       );
+      }
+      } catch (error) {
+         formStateHandleFieldChange({
+          fields: {
+            saving: false,
+            savingCompleted: undefined,
+          },
+        })
+      }
+
     }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
@@ -1131,6 +1145,7 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
                 transaction: {
                   master: master,
                   details: [],
+                  
                 },
               },
               "inv"
@@ -1147,6 +1162,8 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
     );
     dispatch(formStateClearDetails())
     dispatch(formStateClearAttachments())
+    dispatch(
+      formStateTransactionUpdate({key:  "invAccTransactions" , value:[]}));
     dispatch(
       formStateHandleFieldChangeKeysOnly({
           // Form elements
@@ -2085,8 +2102,8 @@ params = sanitizeDataAdvanced(params, transactionInitialData)
 
         // Show delete confirmation dialog
         const deleteConfirmResult = await ERPAlert.show({
-          title: t("confirm_delete"),
-          text: t("are_you_sure_delete"),
+          title: t("delete_transaction_question"),
+          text: t("once_deleted_this_transaction_cannot_be_recovered"),
           icon: "question",
           showCancelButton: true,
           confirmButtonText: t("yes"),
@@ -2560,7 +2577,6 @@ ERPAlert.show({
             return {};
           } else {
           }
-          return {};
         }
 
         outDetail.pCode = product.productCode;

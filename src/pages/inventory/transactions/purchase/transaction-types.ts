@@ -440,6 +440,7 @@ export interface TransactionFormState {
   isRowEdit: boolean;
   ledgerDataLoading: boolean;
   saving: boolean;
+  savingCompleted?: boolean;
   ledgerBalanceLoading: boolean;
   ledgerBalance: number;
   ledgerData: any;

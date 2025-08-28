@@ -20,6 +20,7 @@ import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
 import { useTranslation } from "react-i18next";
 import { setUserSessionItem } from "../../redux/slices/user-session/reducer";
+import ERPFormButtons from "../../components/ERPComponents/erp-form-buttons";
 
 interface WorkSpaceSettingsProps { }
 
@@ -189,7 +190,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
             value={postEmail}
           />
         </div>
-        <div className="w-full p-2 flex justify-end">
+        {/* <div className="w-full p-2 flex justify-end">
           <ERPButton
             type="reset"
             title={t("cancel")}
@@ -205,7 +206,30 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
             loading={emailLoading}
             title={t("update")}
           />
-        </div>
+        </div> */}
+        <ERPFormButtons
+          isLoading={emailLoading}
+          customButtons={[
+            {
+              title: t("cancel"),
+              variant: "secondary",
+              disabled: emailLoading,
+              loading: emailLoading,
+              onClick: () => setIsOpenEmailChange(false),
+            },
+            {
+              title: t("update"),
+              variant: "primary",
+              disabled: emailLoading,
+              loading: emailLoading,
+              onClick: () => changeEmail(),
+            },
+          ]}
+          customButtonsPosition="right"
+          skipSubmit={true}
+          skipCancel={true}
+          skipClear={true}
+        />
       </div>
     );
   };

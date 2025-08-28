@@ -173,7 +173,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     if (updateTriggered) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(Urls.update_order_status, {
+          const response = await axios.post(Urls.update_order_status, {
             params: {
               vocherNumber: formState.transaction.master.voucherNumber,
               vocherForm: formState.transaction.master.voucherForm,

@@ -1393,6 +1393,7 @@ let     details = [..._details];
     master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID : 
      master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
     master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
+    master.supplyType =  master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
           
     return master;
   };
